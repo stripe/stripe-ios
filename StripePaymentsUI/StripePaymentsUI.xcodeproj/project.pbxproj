@@ -131,6 +131,7 @@
 		3159F7E92888C5FD007C8C3A /* card_cvc_amex_updated_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3159F7B22888C47B007C8C3A /* card_cvc_amex_updated_icon@3x.png */; };
 		3159F7EA2888C5FD007C8C3A /* card_unknown_updated_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3159F7BA2888C47B007C8C3A /* card_unknown_updated_icon_dark@3x.png */; };
 		31904C6628D9206F00E1F9F5 /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 31904C6528D9206F00E1F9F5 /* au_becs_bsb.json */; };
+		31DCB11B28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB11A28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -310,6 +311,7 @@
 		3159F7C12888C47C007C8C3A /* card_unionpay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_unionpay@3x.png"; sourceTree = "<group>"; };
 		3159F7C22888C47C007C8C3A /* card_mastercard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_mastercard@3x.png"; sourceTree = "<group>"; };
 		31904C6528D9206F00E1F9F5 /* au_becs_bsb.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = au_becs_bsb.json; sourceTree = "<group>"; };
+		31DCB11A28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+PaymentsUITests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -519,6 +521,7 @@
 			isa = PBXGroup;
 			children = (
 				3139D289286E34C400C9744B /* StripePaymentsUITests.swift */,
+				31DCB11A28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift */,
 			);
 			path = StripePaymentsUITests;
 			sourceTree = "<group>";
@@ -909,6 +912,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31DCB11B28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift in Sources */,
 				3139D28A286E34C400C9744B /* StripePaymentsUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

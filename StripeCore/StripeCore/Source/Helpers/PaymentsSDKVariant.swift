@@ -11,7 +11,7 @@ import Foundation
             // This is the full legacy Payments SDK, including Basic Integration
             return "legacy"
         }
-        if NSClassFromString("PaymentSheet") != nil {
+        if NSClassFromString("STP_Internal_PaymentSheetViewController") != nil {
             // This is the PaymentSheet SDK
             return "paymentsheet"
         }
