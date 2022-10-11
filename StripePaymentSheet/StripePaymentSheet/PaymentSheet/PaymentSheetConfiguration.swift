@@ -79,17 +79,17 @@ extension PaymentSheet {
         /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
         public var allowsDelayedPaymentMethods: Bool = false
         
+        /// If `true`, allows payment methods that require a shipping address, like Afterpay and Affirm. Defaults to `false`.
+        /// Set this to `true` if you collect shipping addresses and set `Configuration.shippingDetails` or set `shipping` details directly on the PaymentIntent.
+        /// - Note: PaymentSheet considers this property `true` and allows payment methods that require a shipping address if `shipping` details are present on the PaymentIntent when PaymentSheet loads.
+        public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
+        
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
 
         /// Configuration related to Apple Pay
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration? = nil
-
-        /// The amount of billing address details to collect
-        /// Intentionally non-public.
-        /// @see BillingAddressCollection
-        var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
@@ -137,8 +137,6 @@ extension PaymentSheet {
         /// @see SavePaymentMethodOptInBehavior
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
         
-        internal var linkPaymentMethodsOnly: Bool = false
-        
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
         
@@ -150,6 +148,14 @@ extension PaymentSheet {
         
         /// Initializes a Configuration with default values
         public init() {}
+        
+        // MARK: Internal
+        internal var linkPaymentMethodsOnly: Bool = false
+        
+        /// The amount of billing address details to collect
+        /// Intentionally non-public.
+        /// @see BillingAddressCollection
+        var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
     }
 
     /// Configuration related to the Stripe Customer
