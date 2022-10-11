@@ -43,7 +43,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.textFields["City"].tap()
         app.typeText("San Francisco")
         app.textFields["State"].tap()
-        app.typeText("California")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+        app.toolbars.buttons["Done"].tap()
         // The save address button should still be disabled until we fill in all required fields
         XCTAssertFalse(saveAddressButton.isEnabled)
         app.textFields["ZIP"].tap()
@@ -55,7 +56,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         saveAddressButton.tap()
         
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St, Apt 152, San Francisco California 94102, US, +15555555555")
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St, Apt 152, San Francisco CA 94102, US, +15555555555")
         
         // Opening the shipping address back up...
         shippingButton.tap()
@@ -86,7 +87,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         saveAddressButton.tap()
         
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St., San Francisco California 94102, CA, +15555555555")
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St., San Francisco CA 94102, US, +15555555555")
     }
     
     func testAddressAutoComplete_UnitedStates() throws {
@@ -113,7 +114,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertEqual(app.textFields["Address line 1"].value as! String, "4 Pennsylvania Plaza")
         XCTAssertEqual(app.textFields["Address line 2"].value as! String, "")
         XCTAssertEqual(app.textFields["City"].value as! String, "New York")
-        XCTAssertEqual(app.textFields["State"].value as! String, "NY")
+        XCTAssertEqual(app.textFields["State"].value as! String, "New York")
         XCTAssertEqual(app.textFields["ZIP"].value as! String, "10001")
         
         // Type in phone number

@@ -89,10 +89,9 @@ class VerifyCardViewController: SimpleScanViewController {
         scanEventsDelegate = fraudData
         
         super.viewDidLoad()
-        setUpUxMainLoop()
     }
     
-    func setUpUxMainLoop() {
+    override func createOcrMainLoop() -> OcrMainLoop? {
         var uxAndOcrMainLoop = UxAndOcrMainLoop(
             stateMachine: CardVerifyStateMachine(
                 requiredLastFour: expectedCard.last4,
@@ -112,9 +111,9 @@ class VerifyCardViewController: SimpleScanViewController {
             )
         }
         
-        uxAndOcrMainLoop.mainLoopDelegate = self
-        mainLoop = uxAndOcrMainLoop
+        return uxAndOcrMainLoop
     }
+
     // MARK: -UI effects and customizations for the VerifyCard flow
     
     override func setupUiComponents() {

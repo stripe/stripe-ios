@@ -24,7 +24,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - FinancialConnectionsAPIClient
 
-    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
 

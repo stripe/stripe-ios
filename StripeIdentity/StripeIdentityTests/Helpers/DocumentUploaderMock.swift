@@ -18,11 +18,17 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
     var frontUploadStatus: DocumentUploader.UploadStatus = .notStarted
     var backUploadStatus: DocumentUploader.UploadStatus = .notStarted
 
-    var frontBackUploadFuture: Future<CombinedFileData> {
-        return frontBackUploadPromise
+    var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
+        return frontUploadPromise
     }
-
-    let frontBackUploadPromise = Promise<CombinedFileData>()
+    
+    var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
+        return backUploadPromise
+    }
+    
+    let frontUploadPromise = Promise<StripeAPI.VerificationPageDataDocumentFileData>()
+    
+    let backUploadPromise = Promise<StripeAPI.VerificationPageDataDocumentFileData>()
 
     private(set) var uploadImagesExp = XCTestExpectation(description: "Document Images uploaded")
     private(set) var uploadedSide: DocumentSide?

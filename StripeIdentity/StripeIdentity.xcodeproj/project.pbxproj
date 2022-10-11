@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */; };
+		D48DA57928CD15DF00050C06 /* VerificationPageData_no_errors_needback.json in Resources */ = {isa = PBXBuildFile; fileRef = D48DA57828CD15DF00050C06 /* VerificationPageData_no_errors_needback.json */; };
 		E606936F2702A2C100742859 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606936E2702A2C100742859 /* String+Localized.swift */; };
 		E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */; };
 		E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */; };
@@ -229,6 +230,7 @@
 		36F4BC8526C1BCCF001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC9E26C1BDEF001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BCA626C1BE96001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D48DA57828CD15DF00050C06 /* VerificationPageData_no_errors_needback.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPageData_no_errors_needback.json; sourceTree = "<group>"; };
 		E606936E2702A2C100742859 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactoryTest.swift; sourceTree = "<group>"; };
 		E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentFileUploadViewController+Strings.swift"; sourceTree = "<group>"; };
@@ -745,6 +747,7 @@
 				E6548F5A2731DEAA00F399B2 /* VerificationPageData_200.json */,
 				E6B906F427CB122200D0A703 /* VerificationPageData_no_errors.json */,
 				E6B906F527CB128A00D0A703 /* VerificationPageData_submitted.json */,
+				D48DA57828CD15DF00050C06 /* VerificationPageData_no_errors_needback.json */,
 			);
 			path = VerificationPageData;
 			sourceTree = "<group>";
@@ -1258,6 +1261,7 @@
 				F322C36927ABC41F0087CCBA /* header_icon.png in Resources */,
 				E66B82B327F7D17700C6A662 /* VerificationPage_require_live_capture.json in Resources */,
 				E6AADF36286AAFD000C46665 /* VerificationPage_no_selfie.json in Resources */,
+				D48DA57928CD15DF00050C06 /* VerificationPageData_no_errors_needback.json in Resources */,
 				E6548F5B2731E13F00F399B2 /* VerificationPageData_200.json in Resources */,
 				E657B58A27681B7F00134033 /* cgimage_stripeidentity_test.png in Resources */,
 				E6B906F627CB2B1F00D0A703 /* VerificationPageData_submitted.json in Resources */,

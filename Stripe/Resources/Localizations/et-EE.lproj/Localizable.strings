@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA otsekorraldus";
 
+"Save address" = "Salvesta aadress";
+
 "Save for future payments" = "Salvestage tulevasteks makseteks";
 
 "Save my info for secure 1-click checkout" = "Salvesta minu teave, et võimaldada turvaline ühe klõpsuga makse lõpuleviimine";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Tarneaadress";
 
 "Shipping Method" = "Tarneviis";
+
+"Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
 
 "Show menu" = "Kuva menüü";
 

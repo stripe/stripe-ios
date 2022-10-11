@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA-direktedebitering";
 
+"Save address" = "Lagre adresse";
+
 "Save for future payments" = "Lagre til fremtidige betalinger";
 
 "Save my info for secure 1-click checkout" = "Lagre informasjonen min for sikker 1-klikk-utsjekking";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Forsendelsesadresse";
 
 "Shipping Method" = "Forsendelsesmetode";
+
+"Shipping to %@ is not supported." = "Levering til %@ støttes ikke.";
 
 "Show menu" = "Vis meny";
 

@@ -106,7 +106,7 @@ import Foundation
             public var checkboxLabel: String?
             
             /// Initializes an AdditionalFields
-            public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .optional, checkboxLabel: String? = nil) {
+            public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .hidden, checkboxLabel: String? = nil) {
                 self.name = name
                 self.phone = phone
                 self.checkboxLabel = checkboxLabel

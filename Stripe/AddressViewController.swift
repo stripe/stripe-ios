@@ -28,7 +28,9 @@ import UIKit
     /// Configuration containing e.g. appearance styling properties, default values, etc.
     public let configuration: Configuration
     /// A valid address or nil.
-    public var addressDetails: AddressDetails? {
+    private var addressDetails: AddressDetails? {
+        guard let addressSection = addressSection else { return nil }
+        
         guard case .valid = addressSection.validationState,
               let line1 = addressSection.line1?.text.nonEmpty
         else {
@@ -40,7 +42,7 @@ import UIKit
             line1: line1,
             line2: addressSection.line2?.text.nonEmpty,
             postalCode: addressSection.postalCode?.text.nonEmpty,
-            state: addressSection.state?.text.nonEmpty
+            state: addressSection.state?.rawData.nonEmpty
         )
         return .init(
             address: address,
@@ -69,7 +71,7 @@ import UIKit
     // MARK: - Views
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
-            state: addressSection.validationState.isValid ? .enabled : .disabled,
+            state: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
             callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in
@@ -97,20 +99,7 @@ import UIKit
         formElement.delegate = self
         return formElement
     }()
-    lazy var addressSection: AddressSectionElement = {
-        let additionalFields = configuration.additionalFields
-        let defaultValues = configuration.defaultValues
-        let allowedCountries = configuration.allowedCountries
-        let address = AddressSectionElement(
-            countries: allowedCountries.isEmpty ? nil : allowedCountries,
-            addressSpecProvider: addressSpecProvider,
-            defaults: .init(from: defaultValues),
-            collectionMode: configuration.defaultValues.address != .init() ? .all : .autoCompletable,
-            additionalFields: .init(from: additionalFields),
-            theme: configuration.appearance.asElementsTheme
-        )
-        return address
-    }()
+    var addressSection: AddressSectionElement?
     lazy var checkboxElement: CheckboxElement? = {
         guard let checkboxLabel = configuration.additionalFields.checkboxLabel  else { return nil }
         let element = CheckboxElement(
@@ -127,6 +116,16 @@ import UIKit
         button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        if #available(iOS 13.0, *) {
+            return UIActivityIndicatorView(style: .medium)
+        } else {
+            return UIActivityIndicatorView(style: .gray)
+        }
+    }()
+
+    private var hasLoadedSpecs = false
     
     // MARK: - Initializers
     /// Initializes an `AddressViewController`.
@@ -168,35 +167,19 @@ import UIKit
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
 
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.spacing = PaymentSheetUI.defaultPadding
-        stackView.axis = .vertical
-        
-        [scrollView, stackView, button].forEach {
+        activityIndicator.color = configuration.appearance.colors.background.contrastingColor
+        [activityIndicator].forEach {
+            view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-        view.addSubview(scrollView)
-        scrollView.addSubview(stackView)
-        scrollView.addSubview(button)
-
         NSLayoutConstraint.activate([
-            scrollViewBottomConstraint,
-            scrollView.frameLayoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.frameLayoutGuide.widthAnchor.constraint(equalTo: scrollView.contentLayoutGuide.widthAnchor),
-            
-            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -PaymentSheetUI.defaultPadding),
-            
-            button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
-            button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.leading),
-            button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+            activityIndicator.centerXAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.centerYAnchor),
         ])
+        
+        loadSpecsIfNeeded()
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -206,11 +189,11 @@ import UIKit
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        addressSection.beginEditing()
         if !didLogAddressShow {
-            STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection.selectedCountryCode, apiClient: configuration.apiClient)
+            STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
             didLogAddressShow = true
         }
+        addressSection?.beginEditing()
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -252,19 +235,6 @@ extension AddressViewController {
 
 // MARK: - Internal methods
 extension AddressViewController {
-    private func logAddressCompleted() {
-        var editDistance: Int? = nil
-        if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
-            editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
-        }
-        
-        STPAnalyticsClient.sharedClient.logAddressCompleted(
-            addressCountyCode: addressSection.selectedCountryCode,
-            autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
-            editDistance: editDistance,
-            apiClient: configuration.apiClient
-        )
-    }
     
     func didContinue() {
         logAddressCompleted()
@@ -292,22 +262,106 @@ extension AddressViewController {
     /// Expands the address section element and begin editing if the current country selection does not support auto copmlete
     private func expandAddressSectionIfNeeded() {
         // If we're in autocomplete mode and the country is not supported by autocomplete, switch to normal address collection
-        if addressSection.collectionMode == .autoCompletable,
+        if let addressSection = addressSection, addressSection.collectionMode == .autoCompletable,
             !AutoCompleteConstants.supportedCountries.contains(addressSection.selectedCountryCode) {
             addressSection.collectionMode = .all
         }
+    }
+    
+    private func initAddressSection() {
+        guard hasLoadedSpecs else { return }
+        
+        let additionalFields = configuration.additionalFields
+        let defaultValues = configuration.defaultValues
+        let allowedCountries = configuration.allowedCountries
+        addressSection = AddressSectionElement(
+            countries: allowedCountries.isEmpty ? nil : allowedCountries,
+            addressSpecProvider: addressSpecProvider,
+            defaults: .init(from: defaultValues),
+            collectionMode: configuration.defaultValues.address != .init() ? .all : .autoCompletable,
+            additionalFields: .init(from: additionalFields),
+            theme: configuration.appearance.asElementsTheme
+        )
+        addressSection?.autoCompleteLine?.didTap = { [weak self] in
+            self?.didTapAutoCompleteLine()
+        }
+    }
+    
+    private func loadUI() {
+        initAddressSection()
+        
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
+        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.spacing = PaymentSheetUI.defaultPadding
+        stackView.axis = .vertical
+
+        [scrollView, stackView, button].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        view.addSubview(scrollView)
+        scrollView.addSubview(stackView)
+        scrollView.addSubview(button)
+
+        NSLayoutConstraint.activate([
+            scrollViewBottomConstraint,
+            scrollView.frameLayoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.frameLayoutGuide.widthAnchor.constraint(equalTo: scrollView.contentLayoutGuide.widthAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -PaymentSheetUI.defaultPadding),
+
+            button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
+            button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.leading),
+            button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+            button.heightAnchor.constraint(equalToConstant: 44)
+        ])
+    }
+    
+    private func loadSpecsIfNeeded() {
+        if addressSpecProvider.countries.isEmpty {
+            activityIndicator.startAnimating()
+
+            // Load address specs
+            self.addressSpecProvider.loadAddressSpecs {
+                DispatchQueue.main.async {
+                    self.hasLoadedSpecs = true
+                    self.activityIndicator.stopAnimating()
+                    self.loadUI()
+                }
+            }
+        } else {
+            self.hasLoadedSpecs = true
+            self.loadUI()
+        }
+    }
+    
+    private func logAddressCompleted() {
+        var editDistance: Int? = nil
+        if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
+            editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
+        }
+        
+        STPAnalyticsClient.sharedClient.logAddressCompleted(
+            addressCountyCode: addressSection?.selectedCountryCode ?? "",
+            autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
+            editDistance: editDistance,
+            apiClient: configuration.apiClient
+        )
     }
 }
 
 // MARK: - ElementDelegate
  extension AddressViewController: ElementDelegate {
      @_spi(STP) public func didUpdate(element: Element) {
+         guard let addressSection = addressSection else { assertionFailure(); return }
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
          button.update(state: enabled ? .enabled : .disabled, animated: true)
-         addressSection.autoCompleteLine?.didTap = { [weak self] in
-             self?.didTapAutoCompleteLine()
-         }
          expandAddressSectionIfNeeded()
      }
      
@@ -320,12 +374,14 @@ extension AddressViewController {
 
 extension AddressViewController: AutoCompleteViewControllerDelegate {
     func didSelectManualEntry(_ line1: String) {
+        guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
         addressSection.collectionMode = .all
         addressSection.line1?.setText(line1)
     }
     
     func didSelectAddress(_ address: PaymentSheet.Address?) {
+        guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
         // Disable auto complete after address is selected
         addressSection.collectionMode = .all
@@ -348,7 +404,8 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
         addressSection.postalCode?.setText(address.postalCode ?? "")
-        addressSection.state?.setText(address.state ?? "")
+        addressSection.state?.setRawData(address.state ?? "")
+        addressSection.state?.view.resignFirstResponder()
         
         self.selectedAutoCompleteResult = address
     }

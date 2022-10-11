@@ -9,11 +9,13 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /// Analytic that contains a `financial connections session clientSecret` payload param
+@available(iOSApplicationExtension, unavailable)
 protocol FinancialConnectionsSheetAnalytic: Analytic {
     var clientSecret: String { get }
     var additionalParams: [String: Any] { get }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsSheetAnalytic {
     var params: [String : Any] {
         var params = additionalParams
@@ -23,6 +25,7 @@ extension FinancialConnectionsSheetAnalytic {
 }
 
 /// Logged when the sheet is presented
+@available(iOSApplicationExtension, unavailable)
 struct FinancialConnectionsSheetPresentedAnalytic: FinancialConnectionsSheetAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetPresented
     let clientSecret: String
@@ -30,6 +33,7 @@ struct FinancialConnectionsSheetPresentedAnalytic: FinancialConnectionsSheetAnal
 }
 
 /// Logged when the sheet is closed by the end-user
+@available(iOSApplicationExtension, unavailable)
 struct FinancialConnectionsSheetClosedAnalytic: FinancialConnectionsSheetAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetClosed
     let clientSecret: String
@@ -43,6 +47,7 @@ struct FinancialConnectionsSheetClosedAnalytic: FinancialConnectionsSheetAnalyti
 }
 
 /// Logged if there's an error presenting the sheet
+@available(iOSApplicationExtension, unavailable)
 struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalytic, ErrorAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetFailed
     let clientSecret: String
@@ -51,6 +56,7 @@ struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalyti
 }
 
 /// Helper to determine if we should log a failed analytic or closed analytic from the sheet's completion block
+@available(iOSApplicationExtension, unavailable)
 struct FinancialConnectionsSheetCompletionAnalytic {
     /// Returns either a `FinancialConnectionsSheetClosedAnalytic` or `FinancialConnectionsSheetFailedAnalytic` depending on the result
     static func make(

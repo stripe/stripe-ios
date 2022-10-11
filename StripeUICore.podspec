@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '22.8.1'
+  s.version                        = '22.8.3'
 
   s.summary                        = 'StripeUICore contains shared infrastructure used by all Stripe pods. '\
                                      'It is not meant to be used without other Stripe pods.'
@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'StripeUICore/StripeUICore/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeUICore' => 'StripeUICore/StripeUICore/Resources/**/*.{lproj,png,xcassets,json}' }
+  s.ios.resource_bundle            = { 'StripeUICore' => 'StripeUICore/StripeUICore/Resources/**/*.{lproj,png,json}' }
   s.dependency                       'StripeCore', "#{s.version}"
 end

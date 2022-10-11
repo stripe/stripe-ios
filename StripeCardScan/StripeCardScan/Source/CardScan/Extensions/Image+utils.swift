@@ -1,5 +1,30 @@
-import VideoToolbox
+//
+//  Image+utils.swift
+//  StripeCardScan
+//
+//  Created by Sam King on 11/08/21.
+//
+
+import CoreGraphics
 import UIKit
+import VideoToolbox
+
+extension CGSize {
+    func scaledAndCentered(centerIn: CGRect) -> CGRect {
+        let targetWidth = centerIn.width
+        let targetHeight = centerIn.height
+
+        let scale = min(targetWidth / self.width, targetHeight / self.height)
+
+        let scaledWidth = self.width * scale
+        let scaledHeight = self.height * scale
+
+        let x = (targetWidth - scaledWidth) / 2.0
+        let y = (targetHeight - scaledHeight) / 2.0
+
+        return CGRect(x: x, y: y, width: scaledWidth, height: scaledHeight)
+    }
+}
 
 extension UIImage {
     static func grayImage(size: CGSize) -> UIImage? {
@@ -14,7 +39,34 @@ extension UIImage {
 }
 
 extension CGImage {
-    
+
+    func extendedEdges(targetSize: CGSize) -> CGImage? {
+        var result: CGImage?
+
+        let size = CGSize(width: self.width, height: self.height)
+        let targetRect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
+        let centeredRect = size.scaledAndCentered(centerIn: targetRect)
+
+        if let context = CGContext(
+            data: nil,
+            width: Int(targetRect.width),
+            height: Int(targetRect.height),
+            bitsPerComponent: self.bitsPerComponent,
+            bytesPerRow: self.bytesPerRow,
+            space: self.colorSpace!,
+            bitmapInfo: self.bitmapInfo.rawValue) {
+
+            context.setFillColor(UIColor.white.cgColor)
+            context.fill([targetRect])
+
+            context.draw(self, in: centeredRect)
+
+            result = context.makeImage()
+        }
+
+        return result
+    }
+
     // Crop a full image
     func croppedImageForSsd(roiRectangle: CGRect) -> (CGImage, CGRect)? {
         

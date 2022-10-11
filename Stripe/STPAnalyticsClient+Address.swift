@@ -38,7 +38,7 @@ extension STPAnalyticsClient {
                                                autoCompleteResultedSelected: nil,
                                                editDistance: nil)
         
-        self.logAddressControllerEvent(event: .adddressShow, addressAnalyticData: analyticData, apiClient: apiClient)
+        self.logAddressControllerEvent(event: .addressShow, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
     func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {

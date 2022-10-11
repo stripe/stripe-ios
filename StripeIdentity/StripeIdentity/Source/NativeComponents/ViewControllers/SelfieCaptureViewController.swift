@@ -125,7 +125,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     SelfieCaptureViewController.capturingInstructionText
             ))
         case .scanned(_, let faceCaptureData),
-             .saving(let faceCaptureData):
+             .saving(_, let faceCaptureData):
             return .scan(.init(
                 state: .scanned(
                     faceCaptureData.toArray.map { UIImage(cgImage: $0.image) },
@@ -278,7 +278,7 @@ extension SelfieCaptureViewController {
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
-        imageScanningSession.setStateSaving(faceCaptureData)
+        imageScanningSession.setStateSaving(expectedClassification:.empty, capturedData:faceCaptureData)
         self.sheetController?.saveSelfieFileDataAndTransition(
             from: analyticsScreenName,
             selfieUploader: selfieUploader,

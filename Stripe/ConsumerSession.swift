@@ -123,6 +123,7 @@ extension ConsumerSession {
         locale: Locale = .autoupdatingCurrent,
         legalName: String?,
         countryCode: String?,
+        consentAction: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         completion: @escaping (Result<ConsumerSession.SignupResponse, Error>) -> Void
@@ -133,6 +134,7 @@ extension ConsumerSession {
             locale: locale,
             legalName: legalName,
             countryCode: countryCode,
+            consentAction: consentAction,
             cookieStore: cookieStore,
             completion: completion
         )

@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA Direct Debit";
 
+"Save address" = "Save address";
+
 "Save for future payments" = "Save for future payments";
 
 "Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Shipping Address";
 
 "Shipping Method" = "Shipping Method";
+
+"Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
 
 "Show menu" = "Show menu";
 

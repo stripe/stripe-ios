@@ -433,16 +433,17 @@ extension STPAPIClient {
         request: URLRequest,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        urlSession.stp_performDataTask(with: request, completionHandler: { (data, _, error) in
+        urlSession.stp_performDataTask(with: request, completionHandler: { (data, response, error) in
             DispatchQueue.main.async {
-                completion(STPAPIClient.decodeResponse(data: data, error: error))
+                completion(STPAPIClient.decodeResponse(data: data, error: error, response: response))
             }
         })
     }
 
     @_spi(STP) public static func decodeResponse<T: Decodable>(
         data: Data?,
-        error: Error?
+        error: Error?,
+        response: URLResponse?
     ) -> Result<T, Error> {
         if let error = error {
             return .failure(error)
@@ -454,7 +455,7 @@ extension STPAPIClient {
         do {
             /// HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
             if T.self == EmptyResponse.self,
-               let decodedStripeError = decodeStripeErrorResponse(data: data) {
+               let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
                 return .failure(decodedStripeError)
             }
 
@@ -462,7 +463,7 @@ extension STPAPIClient {
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
-            if let decodedStripeError = decodeStripeErrorResponse(data: data) {
+            if let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
                 return .failure(decodedStripeError)
             } else {
                 // Return decoding error directly
@@ -472,11 +473,12 @@ extension STPAPIClient {
     }
 
     /// Decodes request data to see if it can be parsed as a Stripe error
-    private static func decodeStripeErrorResponse(data: Data) -> StripeError? {
+    private static func decodeStripeErrorResponse(data: Data, response: URLResponse?) -> StripeError? {
         var decodedError: StripeError?
 
         if let decodedErrorResponse: StripeAPIErrorResponse = try? StripeJSONDecoder.decode(jsonData: data),
-           let apiError = decodedErrorResponse.error {
+           var apiError = decodedErrorResponse.error {
+            apiError.statusCode = (response as? HTTPURLResponse)?.statusCode
             decodedError = StripeError.apiError(apiError)
         }
 

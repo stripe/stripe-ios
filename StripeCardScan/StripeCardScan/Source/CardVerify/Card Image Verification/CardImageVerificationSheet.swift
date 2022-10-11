@@ -51,7 +51,8 @@ final public class CardImageVerificationSheet {
      */
     public func present(
         from presentingViewController: UIViewController,
-        completion: @escaping (CardImageVerificationSheetResult) -> Void
+        completion: @escaping (CardImageVerificationSheetResult) -> Void,
+        animated: Bool =  true
     ) {
         /// Overwrite completion closure to retain self until called
         let completion: (CardImageVerificationSheetResult) -> Void = { result in
@@ -81,7 +82,8 @@ final public class CardImageVerificationSheet {
                 cardImageVerificationController.present(
                     with: response?.expectedCard,
                     and: response?.acceptedImageConfigs,
-                    from: presentingViewController
+                    from: presentingViewController,
+                    animated: animated
                 )
             case .failure(let error):
                 self.completion?(.failed(error: error))

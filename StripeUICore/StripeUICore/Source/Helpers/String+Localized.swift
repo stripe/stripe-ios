@@ -278,4 +278,14 @@ import Foundation
             "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
         )
     }
+    
+    // MARK: UPI
+    
+    static var upi_id: String {
+        STPLocalizedString("UPI ID", "Label for UPI ID number field on form")
+    }
+    
+    static var invalid_upi_id: String {
+        STPLocalizedString("Invalid UPI ID", "Error message when UPI ID is invalid")
+    }
 }

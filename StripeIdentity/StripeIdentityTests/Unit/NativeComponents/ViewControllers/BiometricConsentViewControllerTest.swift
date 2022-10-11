@@ -28,6 +28,7 @@ final class BiometricConsentViewControllerTest: XCTestCase {
     }
 
     func testAccept() {
+        vc.scrolledToBottom = true
         // Tap accept button
         vc.flowViewModel.buttons.first?.didTap()
 

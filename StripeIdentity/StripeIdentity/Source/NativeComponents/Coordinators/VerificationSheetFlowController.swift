@@ -48,7 +48,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
 @available(iOS 13, *)
 @objc(STP_Internal_VerificationSheetFlowController)
-final class VerificationSheetFlowController: NSObject {
+final class VerificationSheetFlowController: NSObject, IdentityFlowNavigationControllerDelegate, VerificationSheetFlowControllerProtocol {
 
     let brandLogo: UIImage
 

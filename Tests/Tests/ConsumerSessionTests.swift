@@ -167,6 +167,7 @@ class ConsumerSessionTests: XCTestCase {
             phoneNumber: "+13105551234",
             legalName: nil,
             countryCode: "US",
+            consentAction: nil,
             with: apiClient,
             cookieStore: cookieStore
         ) { result in

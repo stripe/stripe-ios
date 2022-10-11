@@ -69,7 +69,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(addressSection.line2?.text, defaultAddress.address.line2)
         XCTAssertEqual(addressSection.city?.text, defaultAddress.address.city)
         XCTAssertEqual(addressSection.postalCode?.text, defaultAddress.address.postalCode)
-        XCTAssertEqual(addressSection.state?.text, defaultAddress.address.state)
+        XCTAssertEqual(addressSection.state?.rawData, defaultAddress.address.state)
         XCTAssertEqual(addressSection.selectedCountryCode, defaultAddress.address.country)
     }
     

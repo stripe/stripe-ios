@@ -12,6 +12,7 @@ struct FinancialConnectionsSessionsGenerateHostedUrlBody: Encodable {
     let clientSecret: String
     let fullscreen: Bool
     let hideCloseButton: Bool
+    let appReturnUrl: String?
 }
 
 struct FinancialConnectionsSessionsClientSecretBody: Encodable {

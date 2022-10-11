@@ -45,6 +45,7 @@ struct HTMLStyle {
     let h6Color: UIColor?
 
     let isLinkUnderlined: Bool
+    let shouldCenterText: Bool
 
     init(
         bodyFont: UIFont,
@@ -61,7 +62,8 @@ struct HTMLStyle {
         h5Color: UIColor? = nil,
         h6Font: UIFont? = nil,
         h6Color: UIColor? = nil,
-        isLinkUnderlined: Bool = false
+        isLinkUnderlined: Bool = false,
+        shouldCenterText: Bool = false
     ) {
         self.bodyFont = bodyFont
         self.bodyColor = bodyColor
@@ -78,12 +80,14 @@ struct HTMLStyle {
         self.h6Font = h6Font
         self.h6Color = h6Color
         self.isLinkUnderlined = isLinkUnderlined
+        self.shouldCenterText = shouldCenterText
     }
 
     fileprivate static func cssText(
         _ cssName: String,
         font: UIFont?,
-        color: UIColor?
+        color: UIColor?,
+        shouldCenterText: Bool
     ) -> String {
         guard font != nil || color != nil else {
             return ""
@@ -113,11 +117,14 @@ struct HTMLStyle {
         let colorAttributes = color.map { color -> String in
             return "color: \(color.cssValue);"
         }
+        
+        let centerAttribute = shouldCenterText ? "text-align: center;" : ""
 
         return """
         \(cssName) {
         \(fontAttributes ?? "")
         \(colorAttributes ?? "")
+        \(centerAttribute)
         }
         """
     }
@@ -126,13 +133,13 @@ struct HTMLStyle {
     fileprivate var styleElementText: String {
         var text = "<style>\n"
 
-        text += HTMLStyle.cssText("body", font: bodyFont, color: bodyColor)
-        text += HTMLStyle.cssText("h1", font: h1Font, color: h1Color)
-        text += HTMLStyle.cssText("h2", font: h2Font, color: h2Color)
-        text += HTMLStyle.cssText("h3", font: h3Font, color: h3Color)
-        text += HTMLStyle.cssText("h4", font: h4Font, color: h4Color)
-        text += HTMLStyle.cssText("h5", font: h5Font, color: h5Color)
-        text += HTMLStyle.cssText("h6", font: h6Font, color: h6Color)
+        text += HTMLStyle.cssText("body", font: bodyFont, color: bodyColor, shouldCenterText: shouldCenterText)
+        text += HTMLStyle.cssText("h1", font: h1Font, color: h1Color, shouldCenterText: shouldCenterText)
+        text += HTMLStyle.cssText("h2", font: h2Font, color: h2Color, shouldCenterText: shouldCenterText)
+        text += HTMLStyle.cssText("h3", font: h3Font, color: h3Color, shouldCenterText: shouldCenterText)
+        text += HTMLStyle.cssText("h4", font: h4Font, color: h4Color, shouldCenterText: shouldCenterText)
+        text += HTMLStyle.cssText("h5", font: h5Font, color: h5Color, shouldCenterText: shouldCenterText)
+        text += HTMLStyle.cssText("h6", font: h6Font, color: h6Color, shouldCenterText: shouldCenterText)
 
         text += """
         a {

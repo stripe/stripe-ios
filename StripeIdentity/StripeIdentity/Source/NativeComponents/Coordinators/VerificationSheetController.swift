@@ -29,7 +29,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
     var analyticsClient: IdentityAnalyticsClient { get }
-    var collectedData: StripeAPI.VerificationPageCollectedData { get }
+    var collectedData: StripeAPI.VerificationPageCollectedData { get set }
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>? { get }
 
     var delegate: VerificationSheetControllerDelegate? { get set }
@@ -41,8 +41,14 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     )
-
-    func saveDocumentFileDataAndTransition(
+    
+    func saveDocumentFrontAndDecideBack(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        documentUploader: DocumentUploaderProtocol,
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void
+    )
+    
+    func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
@@ -68,7 +74,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let analyticsClient: IdentityAnalyticsClient
 
     /// Cache of the data that's been sent to the server
-    private(set) var collectedData = StripeAPI.VerificationPageCollectedData()
+    var collectedData = StripeAPI.VerificationPageCollectedData()
+
 
     // MARK: API Response Properties
 
@@ -172,22 +179,104 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             )
         }
     }
+    
+    /**
+     1. Check If all fields have been collected, submits the verification page
+     2. Transition to the next screen
+     */
+    private func checkSubmitAndTransition(
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>? = nil,
+        completion: @escaping () -> Void
+    ) {
+        guard case .success(let verificationPage) = verificationPageResponse
+        else {
+            // Transition to generic error screen
+            transitionWithVerificaionPageDataResult(
+                nil, completion: completion
+            )
+            return
+        }
+        
+        // If finished collecting, submit and transition
+        if flowController.isFinishedCollectingData(for: verificationPage) {
+            apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
+                self?.isVerificationPageSubmitted = (try? result.get())?.submitted == true
+                self?.transitionWithVerificaionPageDataResult(
+                    result,
+                    completion: completion
+                )
+            }
+        } else {
+            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
+        }
+    }
 
     /**
-     Waits until documents are done uploading then saves front and back of document to the server
+     Save update VerificationPage with document front, checks if back is needed
+     If back is needed, invokes onNeedBack
+     Otherwise submit the Verification session, transition and invokes onNotNeedBack
+     */
+    func saveDocumentFrontAndDecideBack(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        documentUploader: DocumentUploaderProtocol,
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void
+    ) {
+        
+        var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
+        documentUploader.frontUploadFuture?.chained { [weak flowController, apiClient] front -> Future<StripeAPI.VerificationPageData> in
+            let collectedData = StripeAPI.VerificationPageCollectedData(
+                idDocumentFront: front
+            )
+            optionalCollectedData = collectedData
+            var clearFields = flowController?.uncollectedFields ?? []
+            clearFields.insert(.idDocumentBack)
+            return apiClient.updateIdentityVerificationPageData(
+                updating: StripeAPI.VerificationPageDataUpdate(
+                    clearData: .init(clearFields: clearFields),
+                    collectedData: collectedData
+                )
+            )
+        }.observe(on: .main) { result in
+            switch(result) {
+            case .success(let resultData):
+                guard resultData.requirements.errors.isEmpty else {
+                    self.transitionWithVerificaionPageDataResult(result)
+                    return
+                }
+                
+                if let optionalCollectedData = optionalCollectedData {
+                    self.collectedData.merge(optionalCollectedData)
+                }
+                
+                guard !resultData.requirements.missing.contains(.idDocumentBack) else {
+                    onCompletion(true)
+                    return
+                }
+                
+                self.analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+                self.checkSubmitAndTransition() {
+                    onCompletion(false)
+                }
+            case .failure(_):
+                self.transitionWithVerificaionPageDataResult(result)
+            }
+        }
+    }
+    
+    /**
+     Waits until document back are done uploading then saves back of document to the server
      - Note: `completion` block is always executed on the main thread.
      */
-    func saveDocumentFileDataAndTransition(
+    func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
-        documentUploader.frontBackUploadFuture.chained { [weak flowController, apiClient] (front, back) -> Future<StripeAPI.VerificationPageData> in
+        documentUploader.backUploadFuture?.chained { [weak flowController, apiClient]  back -> Future<StripeAPI.VerificationPageData> in
             let collectedData = StripeAPI.VerificationPageCollectedData(
-                idDocumentBack: back,
-                idDocumentFront: front
+                idDocumentBack: back
             )
             optionalCollectedData = collectedData
             return apiClient.updateIdentityVerificationPageData(
@@ -204,7 +293,30 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             )
         }
     }
+    
+    /**
+     * Assert verificationPageResponse to be correct, then transition with the PageDataResult.
+     */
+    private func transitionWithVerificaionPageDataResult(
+        _ result: Result<StripeAPI.VerificationPageData, Error>?,
+        completion: @escaping () -> Void = {}
+    ) {
+        // Only mutate properties on the main thread
+        assert(Thread.isMainThread)
 
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure("verificationPageResponse is nil")
+            return
+        }
+        
+        flowController.transitionToNextScreen(
+            staticContentResult: verificationPageResponse,
+            updateDataResult: result,
+            sheetController: self,
+            completion: completion
+        )
+    }
+    
     func saveSelfieFileDataAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
@@ -249,51 +361,23 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
-        // Only mutate properties on the main thread
-        assert(Thread.isMainThread)
-
-        guard let verificationPageResponse = verificationPageResponse else {
-            assertionFailure("verificationPageResponse is nil")
-            return
-        }
-
-        // Setup block to transition to next screen with a given result
-        let transitionBlock: (Result<StripeAPI.VerificationPageData, Error>?) -> Void = { [weak self] result in
-            guard let self = self else { return }
-
-            self.flowController.transitionToNextScreen(
-                staticContentResult: verificationPageResponse,
-                updateDataResult: result,
-                sheetController: self,
-                completion: completion
-            )
-        }
-
-        // Check if result is a failure
-        guard case .success = updateDataResult,
-              case .success(let verificationPage) = verificationPageResponse
+        guard case .success(let resultData) = updateDataResult
         else {
-            transitionBlock(updateDataResult)
+            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
             return
         }
-
-        // Cache collected data if response is a success
-        if let collectedData = collectedData {
+        
+        // Only merge when updateDatResult is successful and has no errors
+        if let collectedData = collectedData, resultData.requirements.errors.isEmpty {
             self.collectedData.merge(collectedData)
         }
-
-        // Check if more data needs to be collected
-        guard flowController.isFinishedCollectingData(for: verificationPage) else {
-            transitionBlock(updateDataResult)
-            return
-        }
-
-        // Submit VerificationPage and transition
-        apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            self?.isVerificationPageSubmitted = (try? result.get())?.submitted == true
-            transitionBlock(result)
-        }
+        
+        checkSubmitAndTransition(
+            updateDataResult: updateDataResult,
+            completion: completion
+        )
     }
+    
 }
 
 // MARK: - VerificationSheetFlowControllerDelegate
