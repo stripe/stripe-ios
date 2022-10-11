@@ -10,13 +10,13 @@ import UIKit
 
 extension UIImageView {
     
-    func setImage(with urlString: String?, placeholder: UIImage? = nil, completionHandler: (() -> Void)? = nil) {
+    func setImage(with urlString: String?, placeholder: UIImage? = nil, completionHandler: ((_ didDownloadImage: Bool) -> Void)? = nil) {
         if let placeholder = placeholder {
             image = placeholder
         }
         
         guard let urlString = urlString else {
-            completionHandler?()
+            completionHandler?(false)
             return
         }
         
@@ -30,13 +30,13 @@ extension UIImageView {
                 DispatchQueue.main.async {
                     if self?.tag == urlString.hashValue {
                         self?.image = image
-                        completionHandler?()
+                        completionHandler?(true)
                     }
                 }
             } else {
                 DispatchQueue.main.async {
                     if self?.tag == urlString.hashValue {
-                        completionHandler?()
+                        completionHandler?(false)
                     }
                 }
             }

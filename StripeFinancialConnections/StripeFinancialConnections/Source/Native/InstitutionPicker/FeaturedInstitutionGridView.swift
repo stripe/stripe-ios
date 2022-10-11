@@ -80,7 +80,7 @@ class FeaturedInstitutionGridView: UIView {
         flowLayout.minimumInteritemSpacing = itemSpacing
         flowLayout.itemSize = CGSize(
             width: (bounds.width - itemSpacing - (2 * horizontalPadding)) / 2,
-            height: 70
+            height: 80
         )
     }
 }

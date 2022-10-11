@@ -7,11 +7,18 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 class FeaturedInstitutionGridCell: UICollectionViewCell {
     
-    // TODO(kgaidis): temporary until we get images working
-    private lazy var temporaryLabel: UILabel = {
+    private lazy var logoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = .clear
+        return imageView
+    }()
+    
+    // only shown if logo fails loading
+    private lazy var optionalTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .textPrimary
         label.font = .stripeFont(forTextStyle: .detail)
@@ -43,7 +50,25 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 8
         contentView.layer.borderWidth = 1
         
-        contentView.addSubview(temporaryLabel)
+        contentView.addAndPinSubview(
+            optionalTitleLabel,
+            insets: NSDirectionalEdgeInsets(
+                top: 12,
+                leading: 12,
+                bottom: 12,
+                trailing: 12
+            )
+        )
+        optionalTitleLabel.isHidden = true
+        
+        contentView.addSubview(logoImageView)
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            logoImageView.widthAnchor.constraint(equalToConstant: 88),
+            logoImageView.heightAnchor.constraint(equalToConstant: 40),
+            logoImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            logoImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+        ])
         
         // toggle setter so the coloring applies
         isHighlighted = false
@@ -52,11 +77,6 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        temporaryLabel.frame = contentView.bounds.inset(by: UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))
-    }
 }
 
 // MARK: - Customize
@@ -64,6 +84,19 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
 extension FeaturedInstitutionGridCell {
     
     func customize(with institution: FinancialConnectionsInstitution) {
-        temporaryLabel.text = institution.name
+        optionalTitleLabel.isHidden = true
+        logoImageView.isHidden = false
+        optionalTitleLabel.text = institution.name
+        
+        logoImageView.setImage(
+            with: institution.logo?.default,
+            completionHandler: { [weak self] didDownloadLogo in
+                guard let self = self else {
+                    return
+                }
+                self.logoImageView.isHidden = !didDownloadLogo
+                self.optionalTitleLabel.isHidden = !self.logoImageView.isHidden
+            }
+        )
     }
 }
