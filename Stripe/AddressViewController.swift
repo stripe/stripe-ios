@@ -263,7 +263,7 @@ extension AddressViewController {
     private func expandAddressSectionIfNeeded() {
         // If we're in autocomplete mode and the country is not supported by autocomplete, switch to normal address collection
         if let addressSection = addressSection, addressSection.collectionMode == .autoCompletable,
-           !configuration.autocompleteCountries.contains(addressSection.selectedCountryCode) {
+           !configuration.autocompleteCountries.map({ $0.lowercased() }).contains(addressSection.selectedCountryCode.lowercased()) {
             addressSection.collectionMode = .all
         }
     }
