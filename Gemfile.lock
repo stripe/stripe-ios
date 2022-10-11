@@ -227,7 +227,6 @@ GEM
     mime-types-data (3.2022.0105)
     mini_magick (4.11.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
     minitest (5.16.3)
     molinillo (0.8.0)
     multi_json (1.15.0)
@@ -271,8 +270,7 @@ GEM
     simctl (1.6.8)
       CFPropertyList
       naturally
-    sqlite3 (1.5.0)
-      mini_portile2 (~> 2.8.0)
+    sqlite3 (1.4.4)
     terminal-notifier (2.0.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
@@ -326,7 +324,7 @@ DEPENDENCIES
   octokit (~> 4.25.1)
   plist
   rubyzip
-  sqlite3
+  sqlite3 (~> 1.4.4)
   terminal-table
   xcode-install (~> 2.6)
 
