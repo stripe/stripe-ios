@@ -172,16 +172,15 @@ class PollingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let parent = parent else {
-            assertionFailure("PollingViewController must have a parent view controller")
-            return
-        }
+        // Height of the polling view controller is either the height of the parent, or the height of the screen (flow controller use case)
+        let height = parent?.view.frame.size.height ?? UIScreen.main.bounds.height
         
         let stackView = UIStackView(arrangedSubviews: [formStackView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.backgroundColor = appearance.colors.background
+        view.backgroundColor = appearance.colors.background
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -189,7 +188,7 @@ class PollingViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            view.heightAnchor.constraint(equalToConstant: parent.view.frame.size.height - SheetNavigationBar.height), // polling view should always be the same height as the presenting view controller
+            view.heightAnchor.constraint(equalToConstant: height - SheetNavigationBar.height),
         ])
     }
     
