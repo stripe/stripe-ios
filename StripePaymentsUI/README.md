@@ -5,9 +5,9 @@ The StripePaymentsUI module contains UI elements and API bindings for building a
 
 It contains:
 
-* [STPPaymentCardTextField tk url](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), a single-line interface for users to input their credit card details.
-* [STPCardFormView tk url](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), a multi-line interface for users to input their credit card details.
-* [STPAUBECSDebitFormView tk url](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), a UIControl that contains all of the necessary fields and legal text for collecting AU BECS Debit payments.
+* [STPPaymentCardTextField](https://stripe.dev/stripe-ios/stripe-payments-ui/Classes/STPPaymentCardTextField.html), a single-line interface for users to input their credit card details.
+* [STPCardFormView](https://stripe.dev/stripe-ios/stripe-payments-ui/Classes/STPCardFormView.html), a multi-line interface for users to input their credit card details.
+* [STPAUBECSDebitFormView](https://stripe.dev/stripe-ios/stripe-payments-ui/Classes/STPAUBECSDebitFormView.html), a UIControl that contains all of the necessary fields and legal text for collecting AU BECS Debit payments.
 
 # Table of contents
 
