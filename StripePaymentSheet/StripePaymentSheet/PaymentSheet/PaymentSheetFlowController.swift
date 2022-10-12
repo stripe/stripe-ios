@@ -336,21 +336,18 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
 /// For internal SDK use only
 @objc(STP_Internal_AuthenticationContext)
 class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
-    func present(_ viewController: BottomSheetContentViewController) {
-        presentingViewController.present(viewController, animated: true, completion: nil)
-
+    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
+        presentingViewController.present(authenticationViewController, animated: true, completion: nil)
     }
     
-    func dismiss(_ viewController: BottomSheetContentViewController) {
-        viewController.dismiss(animated: true, completion: nil)
+    func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams) {
+        let pollingVC = PollingViewController(currentAction: action,
+                                                      appearance: self.appearance)
+        presentingViewController.present(pollingVC, animated: true, completion: nil)
     }
     
-    func present(_ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void) {
-        presentingViewController.present(threeDS2ChallengeViewController, animated: true, completion: nil)
-    }
-    
-    func dismiss(_ threeDS2ChallengeViewController: UIViewController) {
-        threeDS2ChallengeViewController.dismiss(animated: true, completion: nil)
+    func dismiss(_ authenticationViewController: UIViewController) {
+        authenticationViewController.dismiss(animated: true, completion: nil)
     }
     
     let presentingViewController: UIViewController

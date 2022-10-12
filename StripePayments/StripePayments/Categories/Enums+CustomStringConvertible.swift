@@ -77,6 +77,20 @@ extension STPCardFundingType: CustomStringConvertible {
 }
 
 /// :nodoc:
+extension STPCollectBankAccountError: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .financialConnectionsSDKNotLinked:
+            return "financialConnectionsSDKNotLinked"
+        case .invalidClientSecret:
+            return "invalidClientSecret"
+        case .unexpectedError:
+            return "unexpectedError"
+        }
+    }
+}
+
+/// :nodoc:
 extension STPConnectAccountBusinessType: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -164,6 +178,8 @@ extension STPIntentActionType: CustomStringConvertible {
             return "redirectToURL"
         case .unknown:
             return "unknown"
+        case .upiAwaitNotification:
+            return "upiAwaitNotification"
         case .useStripeSDK:
             return "useStripeSDK"
         case .verifyWithMicrodeposits:
@@ -859,16 +875,3 @@ extension STPTokenType: CustomStringConvertible {
     }
 }
 
-/// :nodoc:
-extension STPCollectBankAccountError: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .financialConnectionsSDKNotLinked:
-            return "financialConnectionsSDKNotLinked"
-        case .invalidClientSecret:
-            return "invalidClientSecret"
-        case .unexpectedError:
-            return "unexpectedError"
-        }
-    }
-}

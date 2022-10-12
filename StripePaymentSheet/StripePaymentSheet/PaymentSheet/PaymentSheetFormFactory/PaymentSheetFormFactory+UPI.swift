@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 extension PaymentSheetFormFactory {
     

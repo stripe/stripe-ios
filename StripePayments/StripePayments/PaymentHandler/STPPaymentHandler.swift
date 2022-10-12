@@ -1156,8 +1156,7 @@ public class STPPaymentHandler: NSObject {
             guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
                 return
             }
-            presentingVC.present(PollingViewController(currentAction: currentAction,
-                                                          appearance: presentingVC.appearance))
+            presentingVC.presentPollingVCForAction(currentAction)
             break
         @unknown default:
             fatalError()
@@ -1958,8 +1957,9 @@ extension STPPaymentHandler {
 
 /// Internal authentication context for PaymentSheet magic
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
-    func present(_ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void)
-    func dismiss(_ threeDS2ChallengeViewController: UIViewController)
+    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
+    func dismiss(_ authenticationViewController: UIViewController)
+    func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams)
 }
 
 

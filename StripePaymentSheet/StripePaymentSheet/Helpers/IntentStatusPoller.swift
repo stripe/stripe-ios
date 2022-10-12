@@ -8,6 +8,7 @@
 
 import Foundation
 import StripeCore
+import StripePayments
 
 protocol IntentStatusPollerDelegate: AnyObject {
     func didUpdate(paymentIntent: STPPaymentIntent)

@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 
 /// For internal SDK use only
 @objc(STP_Internal_PollingViewController)
