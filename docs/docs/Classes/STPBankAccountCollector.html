@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 22.8.3
+          Stripe iOS SDKs 22.8.4
         </a>
         
       </p>
@@ -919,7 +919,7 @@
             <p>A class responsible for collecting bank account information</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.8.3/Stripe/STPBankAccountCollector.swift#L30-L313">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/22.8.4/Stripe/STPBankAccountCollector.swift#L30-L367">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -953,7 +953,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.3/Stripe/STPBankAccountCollector.swift#L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.4/Stripe/STPBankAccountCollector.swift#L33">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -985,7 +985,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.3/Stripe/STPBankAccountCollector.swift#L37-L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.4/Stripe/STPBankAccountCollector.swift#L37-L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1091,7 +1091,113 @@ and if completed successfully, link your bank account to a PaymentIntent</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.3/Stripe/STPBankAccountCollector.swift#L92-L135">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.4/Stripe/STPBankAccountCollector.swift#L92-L101">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@objc(cs)STPBankAccountCollector(im)collectBankAccountForPaymentWithClientSecret:returnURL:params:from:completion:"></a>
+                    <a name="//apple_ref/swift/Method/collectBankAccountForPayment(clientSecret:returnURL:params:from:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@objc(cs)STPBankAccountCollector(im)collectBankAccountForPaymentWithClientSecret:returnURL:params:from:completion:">collectBankAccountForPayment(clientSecret:<wbr>returnURL:<wbr>params:<wbr>from:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Presents a modal from the viewController to collect bank account
+and if completed successfully, link your bank account to a PaymentIntent</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 12, *)</span>
+<span class="kd">@objc(collectBankAccountForPaymentWithClientSecret:returnURL:params:from:completion:)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForPayment</span><span class="p">(</span><span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                                         <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+                                         <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
+                                         <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+                                         <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForPaymentCompletionBlock</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Client secret of the payment intent</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>params</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Parameters for this call</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>viewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Presenting view controller that will present the modal</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion block to be called on completion of the operation.
+               Upon success, the <code><a href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a></code> instance will have an
+               expanded <code>paymentMethod</code> containing detailed payment method information</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.4/Stripe/STPBankAccountCollector.swift#L115-L160">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1197,7 +1303,113 @@ and if completed successfully, link your bank account to a SetupIntent</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.3/Stripe/STPBankAccountCollector.swift#L212-L254">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.4/Stripe/STPBankAccountCollector.swift#L239-L248">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@objc(cs)STPBankAccountCollector(im)collectBankAccountForSetupWithClientSecret:returnURL:params:from:completion:"></a>
+                    <a name="//apple_ref/swift/Method/collectBankAccountForSetup(clientSecret:returnURL:params:from:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@objc(cs)STPBankAccountCollector(im)collectBankAccountForSetupWithClientSecret:returnURL:params:from:completion:">collectBankAccountForSetup(clientSecret:<wbr>returnURL:<wbr>params:<wbr>from:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Presents a modal from the viewController to collect bank account
+and if completed successfully, link your bank account to a SetupIntent</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 12, *)</span>
+<span class="kd">@objc(collectBankAccountForSetupWithClientSecret:returnURL:params:from:completion:)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForSetup</span><span class="p">(</span><span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                                       <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+                                       <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
+                                       <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+                                       <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForSetupCompletionBlock</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Client secret of the setup intent</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>params</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Parameters for this call</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>viewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Presenting view controller that will present the modal</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion block to be called on completion of the operation.
+               Upon success, the <code><a href="../Classes/STPSetupIntent.html">STPSetupIntent</a></code> instance will have an
+               expanded <code>paymentMethod</code> containing detailed payment method information</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.4/Stripe/STPBankAccountCollector.swift#L262-L306">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1210,7 +1422,7 @@ and if completed successfully, link your bank account to a SetupIntent</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-03)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-12)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
