@@ -6,14 +6,6 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-//
-//  STPImages.m
-//  Stripe
-//
-//  Created by Jack Flintermann on 6/30/16.
-//  Copyright © 2016 Stripe, Inc. All rights reserved.
-//
-
 import Foundation
 import UIKit
 
@@ -148,23 +140,6 @@ public class STPImageLibrary: NSObject {
             templateIfAvailable: shouldUseTemplate)
         return image
     }
-
-    class func image(
-        withTintColor color: UIColor,
-        for image: UIImage
-    ) -> UIImage {
-        var newImage: UIImage?
-        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
-        color.set()
-        let templateImage = image.withRenderingMode(.alwaysTemplate)
-        templateImage.draw(
-            in: CGRect(
-                x: 0, y: 0, width: templateImage.size.width, height: templateImage.size.height))
-        newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage!
-    }
-
 }
 
 // MARK: - ImageMaker

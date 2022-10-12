@@ -13,6 +13,7 @@ import XCTest
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+import StripeApplePay
 
 class STPAnalyticsClientPaymentsTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -35,52 +36,6 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         // Clear it
         client.clearAdditionalInfo()
         XCTAssertEqual(client.additionalInfo(), [])
-    }
-
-    func testProductUsageFull() {
-        client.addClass(toProductUsageIfNecessary: MockAnalyticsClass1.self)
-        client.addClass(toProductUsageIfNecessary: STPPaymentContext.self)
-
-        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
-
-        XCTAssertEqual(usageLevel, "full")
-        XCTAssertEqual(client.productUsage, Set([
-            MockAnalyticsClass1.stp_analyticsIdentifier,
-            STPPaymentContext.stp_analyticsIdentifier,
-        ]))
-    }
-
-    func testProductUsageCardTextField() {
-        client.addClass(toProductUsageIfNecessary: STPPaymentCardTextField.self)
-
-        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
-
-        XCTAssertEqual(usageLevel, "card_text_field")
-        XCTAssertEqual(client.productUsage, Set([
-            STPPaymentCardTextField.stp_analyticsIdentifier,
-        ]))
-    }
-
-    func testProductUsagePartial() {
-        client.addClass(toProductUsageIfNecessary: STPPaymentCardTextField.self)
-        client.addClass(toProductUsageIfNecessary: MockAnalyticsClass1.self)
-        client.addClass(toProductUsageIfNecessary: MockAnalyticsClass2.self)
-
-        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
-
-        XCTAssertEqual(usageLevel, "partial")
-        XCTAssertEqual(client.productUsage, Set([
-            MockAnalyticsClass1.stp_analyticsIdentifier,
-            MockAnalyticsClass2.stp_analyticsIdentifier,
-            STPPaymentCardTextField.stp_analyticsIdentifier,
-        ]))
-    }
-
-    func testProductUsageNone() {
-        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
-
-        XCTAssertEqual(usageLevel, "none")
-        XCTAssert(client.productUsage.isEmpty)
     }
 
     func testPayloadFromAnalytic() throws {

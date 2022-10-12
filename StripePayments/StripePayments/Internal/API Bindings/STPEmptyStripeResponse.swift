@@ -11,7 +11,7 @@ import Foundation
 /// An STPAPIResponseDecodable implementation to use for endpoints that don't
 /// actually return objects, like /v1/3ds2/challenge_completed
 @_spi(STP) public class STPEmptyStripeResponse: NSObject, STPAPIResponseDecodable {
-    @_spi(STP) public var allResponseFields: [AnyHashable: Any] = [:]
+    @_spi(STP) public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     required internal override init() {
         super.init()

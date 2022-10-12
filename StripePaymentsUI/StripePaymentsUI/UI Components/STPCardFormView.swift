@@ -370,8 +370,7 @@ public class STPCardFormView: STPFormView {
                     var scannerClassObject: AnyObject.Type?
                     if let scanner = NSClassFromString("STPCardScanner") {
                         scannerClassObject = scanner
-                    }
-                    if let scanner = NSClassFromString("STPCardScanner_legacy") {
+                    } else if let scanner = NSClassFromString("STPCardScanner_legacy") {
                         scannerClassObject = scanner
                     }
                     let scannerClass = scannerClassObject as? STPCardScanningProtocol.Type

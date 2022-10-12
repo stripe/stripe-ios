@@ -37,8 +37,8 @@ extension GenericPaymentAnalytic {
 
         params["company_name"] = Bundle.stp_applicationName() ?? ""
         params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
-        params["ocr_type"] = STPAnalyticsClient.ocrTypeString()
-        params["pay_var"] = STPAnalyticsClient.paymentsSDKVariant
+        params["ocr_type"] = PaymentsSDKVariant.ocrTypeString
+        params["pay_var"] = PaymentsSDKVariant.variant
 
         if let paymentConfiguration = paymentConfiguration, let analyticsSerializerClass = GenericPaymentAnalytic.STPBasicUIAnalyticsSerializerClass {
             let configurationDictionary = analyticsSerializerClass.serializeConfiguration(paymentConfiguration)
@@ -54,6 +54,5 @@ extension GenericPaymentAnalytic {
 
 
 @_spi(STP) public protocol STPAnalyticsSerializer {
-    static func serializeConfiguration(_ configuration: NSObject) -> [String:
-                                                                        String]
+    static func serializeConfiguration(_ configuration: NSObject) -> [String: String]
 }

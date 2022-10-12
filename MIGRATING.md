@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from versions < 23.0.0
+* The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+
 ### Migrating from versions < 22.8.0
 * `PaymentSheet.reset()` has been renamed to `PaymentSheet.resetCustomer()`. If calling the former method, follow the warning in Xcode and apply the suggested fix-it.
 
