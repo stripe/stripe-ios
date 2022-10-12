@@ -28,7 +28,6 @@
 		310F6FDF28D4FA5E00C9580D /* UIViewController+BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FDE28D4FA5E00C9580D /* UIViewController+BottomSheet.swift */; };
 		310F6FE228D4FAE700C9580D /* STPAnalyticsClient+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FE028D4FAE700C9580D /* STPAnalyticsClient+Address.swift */; };
 		310F6FE328D4FAE700C9580D /* STPAnalyticsClient+LUXE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FE128D4FAE700C9580D /* STPAnalyticsClient+LUXE.swift */; };
-		310F6FE528D52CE300C9580D /* AutoCompleteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FE428D52CE300C9580D /* AutoCompleteConstants.swift */; };
 		310F6FE728D5346D00C9580D /* STPAPIClient+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FE628D5346D00C9580D /* STPAPIClient+PaymentSheet.swift */; };
 		310F6FE928D5361200C9580D /* STPPaymentIntentShippingDetailsParams+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FE828D5361200C9580D /* STPPaymentIntentShippingDetailsParams+PaymentSheet.swift */; };
 		31138E8428DCDEAC008AF554 /* FormSpecPaymentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E8328DCDEAC008AF554 /* FormSpecPaymentHandler.swift */; };
@@ -284,7 +283,6 @@
 		310F6FDE28D4FA5E00C9580D /* UIViewController+BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+BottomSheet.swift"; sourceTree = "<group>"; };
 		310F6FE028D4FAE700C9580D /* STPAnalyticsClient+Address.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Address.swift"; sourceTree = "<group>"; };
 		310F6FE128D4FAE700C9580D /* STPAnalyticsClient+LUXE.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+LUXE.swift"; sourceTree = "<group>"; };
-		310F6FE428D52CE300C9580D /* AutoCompleteConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoCompleteConstants.swift; sourceTree = "<group>"; };
 		310F6FE628D5346D00C9580D /* STPAPIClient+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+PaymentSheet.swift"; sourceTree = "<group>"; };
 		310F6FE828D5361200C9580D /* STPPaymentIntentShippingDetailsParams+PaymentSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPPaymentIntentShippingDetailsParams+PaymentSheet.swift"; sourceTree = "<group>"; };
 		31138E8328DCDEAC008AF554 /* FormSpecPaymentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSpecPaymentHandler.swift; sourceTree = "<group>"; };
@@ -607,7 +605,6 @@
 		310F6FD428D4F9D200C9580D /* AddressViewController */ = {
 			isa = PBXGroup;
 			children = (
-				310F6FE428D52CE300C9580D /* AutoCompleteConstants.swift */,
 				310F6FD628D4F9E200C9580D /* AddressViewController.swift */,
 				310F6FD528D4F9E200C9580D /* AddressViewController+Configuration.swift */,
 			);
@@ -1503,7 +1500,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3122720F287630B80007ED5E /* Images.swift in Sources */,
-				310F6FE528D52CE300C9580D /* AutoCompleteConstants.swift in Sources */,
 				310F6FC228D4F55600C9580D /* LinkVerificationView.swift in Sources */,
 				312270DC286E3D8A0007ED5E /* PayWithLinkViewController-SignUpViewModel.swift in Sources */,
 				310F6FC028D4F55600C9580D /* LinkCookieKey.swift in Sources */,
