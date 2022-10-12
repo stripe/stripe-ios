@@ -2,8 +2,8 @@
 //  Stripe+Exports.swift
 //  StripeiOS
 //
-//  Created by David Estes on 10/10/22.
-//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//  This file re-exports classes from Stripe's dependent SDKs, enabling users to use classes from all
+//  Stripe Payments SDKs with one `import Stripe` declaration.
 //
 
 import Foundation
