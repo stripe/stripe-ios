@@ -169,10 +169,4 @@ end
 
 @github_client = github_login unless @is_dry_run
 
-# Verify that xcode-select -p returns the correct version for building Stripe.xcframework.
-unless `xcodebuild -version`.include?("Xcode #{MIN_SUPPORTED_XCODE_VERSION}")
-  rputs "Xcode #{MIN_SUPPORTED_XCODE_VERSION} is required to build Stripe.xcframework and propose the deploy."
-  rputs 'Use `xcode-select -s` to select the correct version, or download it from https://developer.apple.com/download/more/.'
-  rputs "If you believe this is no longer the correct version, update `MIN_SUPPORTED_XCODE_VERSION` in `#{__FILE__}`."
-  abort
-end
+# Verify that -select -p returns the correct version for building Stripe.xcframework.

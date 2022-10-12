@@ -149,6 +149,20 @@ extension STPCardValidationState: CustomStringConvertible {
 }
 
 /// :nodoc:
+extension STPCollectBankAccountError: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .financialConnectionsSDKNotLinked:
+            return "financialConnectionsSDKNotLinked"
+        case .invalidClientSecret:
+            return "invalidClientSecret"
+        case .unexpectedError:
+            return "unexpectedError"
+        }
+    }
+}
+
+/// :nodoc:
 extension STPConnectAccountBusinessType: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -236,14 +250,14 @@ extension STPIntentActionType: CustomStringConvertible {
             return "redirectToURL"
         case .unknown:
             return "unknown"
+        case .upiAwaitNotification:
+            return "upiAwaitNotification"
         case .useStripeSDK:
             return "useStripeSDK"
         case .verifyWithMicrodeposits:
             return "verifyWithMicrodeposits"
         case .weChatPayRedirectToApp:
             return "weChatPayRedirectToApp"
-        case .upiAwaitNotification:
-            return "upiAwaitNotification"
         }
     }
 }
@@ -585,6 +599,34 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "unknown"
         case .weChatPay:
             return "weChatPay"
+        }
+    }
+}
+
+/// :nodoc:
+extension STPPaymentMethodUSBankAccountHolderType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .company:
+            return "company"
+        case .individual:
+            return "individual"
+        case .unknown:
+            return "unknown"
+        }
+    }
+}
+
+/// :nodoc:
+extension STPPaymentMethodUSBankAccountType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .checking:
+            return "checking"
+        case .savings:
+            return "savings"
+        case .unknown:
+            return "unknown"
         }
     }
 }
