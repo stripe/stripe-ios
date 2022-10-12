@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";
+
+"Address line 2 (optional)" = "Adresregel 2 (optioneel)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Bankrekening";
+
+"Billing Address" = "Factuuradres";
+
+"Billing address" = "Factuuradres";
+
+"CVC" = "Cvc";
+
+"CVV" = "Cvv";
+
+"Card information" = "Kaartgegevens";
+
+"Card number" = "Kaartnummer";
+
+"Invalid data." = "Ongeldige gegevens.";
+
+"MM / YY" = "MM / JJ";
+
+"MM/YY" = "MM/JJ";
+
+"Postal Code" = "Postcode";
+
+"Shipping Address" = "Verzendadres";
+
+"State / Province / Region" = "Staat/provincie/regio";
+
+"The BSB you entered is invalid." = "Het ingevoerde BSB-nummer is ongeldig.";
+
+"To scan your card, allow camera access in Settings." = "Sta toegang tot je camera toe in Instellingen om je kaart te scannen.";
+
+"Your ZIP is invalid." = "Je ZIP is ongeldig.";
+
+"Your card number is incomplete." = "Je kaartnummer is onvolledig.";
+
+"Your card number is invalid." = "Je kaartnummer is ongeldig.";
+
+"Your card's expiration date is incomplete." = "De vervaldatum van je kaart is onvolledig.";
+
+"Your card's expiration date is invalid." = "De vervaldatum van je kaart is ongeldig.";
+
+"Your card's expiration month is invalid." = "De vervalmaand van de kaart is ongeldig.";
+
+"Your card's expiration year is invalid." = "Het vervaljaar van de kaart is ongeldig.";
+
+"Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
+
+"Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
+
+"Your postal code is invalid." = "Je postcode is ongeldig.";
+
+"card number" = "kaartnummer";
+
+"example@example.com" = "voorbeeld@voorbeeld.com";
+
+"expiration date" = "vervaldatum";

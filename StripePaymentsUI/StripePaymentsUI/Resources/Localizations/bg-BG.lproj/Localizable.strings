@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ завършващо на %2$@";
+
+"Address line 2 (optional)" = "Ред 2 на адреса (по желание)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Банкова сметка";
+
+"Billing Address" = "Адрес за фактуриране";
+
+"Billing address" = "Адрес за фактуриране";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Информация за картата";
+
+"Card number" = "Номер на картата";
+
+"Invalid data." = "Невалидни данни.";
+
+"MM / YY" = "ММ / ГГ";
+
+"MM/YY" = "ММ/ГГ";
+
+"Postal Code" = "Пощенски код";
+
+"Shipping Address" = "Адрес за доставка";
+
+"State / Province / Region" = "Щат/Област/Регион";
+
+"The BSB you entered is invalid." = "BSB, който сте въвели, е невалиден.";
+
+"To scan your card, allow camera access in Settings." = "За да сканирате картата си, разрешете достъп до камерата в Настройки.";
+
+"Your ZIP is invalid." = "Вашият ZIP код е невалиден.";
+
+"Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
+
+"Your card number is invalid." = "Номерът на Вашата карта е невалиден.";
+
+"Your card's expiration date is incomplete." = "Срокът на валидност на Вашата карта е непълен.";
+
+"Your card's expiration date is invalid." = "Датата на валидност на Вашата карта е невалидна.";
+
+"Your card's expiration month is invalid." = "Месецът на валидност на Вашата карта е невалиден.";
+
+"Your card's expiration year is invalid." = "Годината на валидност на Вашата карта е невалидна.";
+
+"Your card's security code is incomplete." = "Кодът за сигурност на Вашата карта е непълен.";
+
+"Your card's security code is invalid." = "Кодът за сигурност на Вашата карта е невалиден.";
+
+"Your postal code is invalid." = "Вашият пощенски код е невалиден.";
+
+"card number" = "номер на картата";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "дата на валидност";

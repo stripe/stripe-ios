@@ -1,0 +1,161 @@
+"+ Add" = "+ Pridať";
+
+"Add a card" = "Pridať kartu";
+
+"Add a payment method" = "Pridať spôsob platby";
+
+"Add bank account" = "Pridať bankový účet";
+
+"Add new payment method" = "Pridajte nový spôsob platby";
+
+"Add your payment information" = "Pridajte svoje informácie o platbe";
+
+"Are you sure you want to remove this card?" = "Naozaj chcete odstrániť túto kartu?";
+
+"Are you sure you want to remove this linked account?" = "Naozaj chcete odstrániť tento prepojený účet?";
+
+"Back" = "Späť";
+
+"Bank account" = "Bankový účet";
+
+"Buy now or pay later with Klarna." = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa týchto <terms>podmienok</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Poskytnutím informácií o platbe a potvrdením tejto platby splnomocňujete (A) spoločnosti %@ a Stripe, nášho poskytovateľa platobných služieb, na posielanie platobných príkazov do vašej banky na odpísanie finančných prostriedkov z vášho účtu a (B) vašu banku na odpísanie finančných prostriedkov z vášho účtu v súlade s pokynmi. V rámci vašich práv máte právo na refundáciu od vašej banky podľa zmluvných podmienok uvedených v zmluve s vašou bankou. Refundáciu si musíte vyžiadať do 8 týždňov odo dňa, kedy boli finančné prostriedky odpísané z vášho účtu. Vaše práva sú vysvetlené vo vyhlásení, ktoré môžete získať od svojej banky. Súhlasíte s tým, že budete dostávať oznámenia o budúcich debetných platbách až 2 dni pred ich uskutočnením.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankového účtu pre spoločnosť %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
+
+"Change email" = "Zmeniť e-mail";
+
+"Choose a payment method" = "Vyberte spôsob platby";
+
+"Close card scanner" = "Zatvoriť snímačku kariet";
+
+"Code field" = "Pole kódu";
+
+"Code sent" = "Kód odoslaný";
+
+"Default" = "Predvolené";
+
+"Double tap to edit" = "Dvojitým ťuknutím upravte";
+
+"EPS Bank" = "EPS Bank";
+
+"Enter address manually" = "Zadať adresu manuálne";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Zadajte kód odoslaný na telefónne číslo %@ a používajte službu Link ako predvolenú platobnú službu.";
+
+"Enter your verification code" = "Zadajte overovací kód";
+
+"For security, please re-enter your card’s security code." = "Z dôvodu bezpečnosti znovu zadajte bezpečnostný kód vašej karty.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Pripojiť sa do služby Link";
+
+"Log out of Link" = "Odhlásiť sa zo služby Link";
+
+"Not %@?" = "E-mailová adresa %@ nie je vaša?";
+
+"Or" = "Alebo";
+
+"Or pay using" = "Alebo zaplaťte pomocou";
+
+"Or pay with a card" = "Alebo zaplaťte kartou";
+
+"Pay %@" = "Zaplatiť %@";
+
+"Pay another way" = "Zaplatiť iným spôsobom";
+
+"Pay faster at %@ and thousands of merchants." = "Plaťte rýchlejšie v spoločnosti %@ a u tisícoch ďalších obchodníkov.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zaplaťte v <num_installments/>bezúročných splátkach čiastku <installment_price/> pomocou <img/>";
+
+"Pay later with Klarna." = "Zaplatiť neskôr pomocou služby Klarna";
+
+"Pay over time with %@" = "Zaplatiť postupne pomocou %@";
+
+"Pay using" = "Zaplatiť pomocou";
+
+"Pay with %@" = "Zaplaťte s %@";
+
+"Pay with your bank account in just a few steps." = "Zaplaťte pomocou bankového účtu v niekoľkých jednoduchých krokoch.";
+
+"Payment" = "Platba";
+
+"Payment methods" = "Spôsoby platby";
+
+"Point the camera at your card." = "Nasmerujte kameru na svoju kartu.";
+
+"Processing..." = "Prebieha spracovanie…";
+
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
+"Remove %1$@ ending in %2$@" = "Odstrániť %1$@ končiace na %2$@";
+
+"Remove Card" = "Odstrániť kartu";
+
+"Remove card" = "Odstrániť kartu";
+
+"Remove linked account" = "Odstrániť prepojený účet";
+
+"Resend code" = "Znovu odoslať kód";
+
+"Save address" = "Uložiť adresu";
+
+"Save for future payments" = "Uložiť pre budúce platby";
+
+"Save my info for secure 1-click checkout" = "Uložiť moje údaje pre bezpečnú platbu jedným kliknutím";
+
+"Save this account for future %@ payments" = "Uložiť tento účet pre budúce platby obchodníkovi %@";
+
+"Save this card for future %@ payments" = "Uložiť túto kartu pre budúce platby obchodníkovi %@";
+
+"Secure 1⁠-⁠click checkout" = "Bezpečná platba jedným kliknutím";
+
+"Select your payment method" = "Vyberte svoj spôsob platby";
+
+"Set as default" = "Nastaviť ako predvolený spôsob";
+
+"Set as default payment method" = "Nastaviť ako predvolený spôsob platby";
+
+"Set up" = "Nastaviť";
+
+"Shipping to %@ is not supported." = "Dodanie na/do %@ sa nepodporuje.";
+
+"Show menu" = "Zobraziť ponuku";
+
+"Sign in to your Link account" = "Prihláste sa do svojho účtu Link";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie platby spoločnosti %@.";
+
+"Tap to close" = "Ťuknutím zatvorte";
+
+"Tap to expand" = "Ťuknutím rozbaľte";
+
+"The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
+
+"The provided verification code has expired." = "Platnosť zadaného overovacieho kódu skončila.";
+
+"The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Platnosť tejto karty vypršala. Aktualizujte údaje karty alebo zvoľte iný spôsob platby.";
+
+"This is your default" = "Toto je váš predvolený spôsob platby";
+
+"Too many attempts. Please try again in a few minutes." = "Príliš veľa pokusov. Skúste to znova o niekoľko minút.";
+
+"Unavailable for this purchase" = "Nie je k dispozícii pre tento nákup";
+
+"Update card" = "Aktualizovať kartu";
+
+"Use your saved info to check out faster" = "Použite vaše uložené údaje a plaťte rýchlejšie";
+
+"Your IBAN should start with a two-letter country code." = "Váš IBAN by mal začínať dvojpísmenovým kódom krajiny.";
+
+"iDEAL Bank" = "iDEAL banka";

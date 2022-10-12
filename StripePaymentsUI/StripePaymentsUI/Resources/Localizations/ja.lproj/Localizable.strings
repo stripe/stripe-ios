@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
+
+"Address line 2 (optional)" = "住所 (2 行目、省略可)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "銀行口座";
+
+"Billing Address" = "請求先住所";
+
+"Billing address" = "請求先住所";
+
+"CVC" = "セキュリティコード";
+
+"CVV" = "CVV";
+
+"Card information" = "カード情報";
+
+"Card number" = "カード番号";
+
+"Invalid data." = "データが無効です。";
+
+"MM / YY" = "月 / 年";
+
+"MM/YY" = "MM/YY";
+
+"Postal Code" = "郵便番号";
+
+"Shipping Address" = "配送先住所";
+
+"State / Province / Region" = "都道府県";
+
+"The BSB you entered is invalid." = "入力した BSB コードが無効です。";
+
+"To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
+
+"Your ZIP is invalid." = "郵便番号が無効です。";
+
+"Your card number is incomplete." = "カード番号に不備があります。";
+
+"Your card number is invalid." = "カード番号が無効です。";
+
+"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
+
+"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
+
+"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
+
+"Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
+
+"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
+
+"Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
+
+"Your postal code is invalid." = "郵便番号が無効です";
+
+"card number" = "カード番号";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "有効期限";

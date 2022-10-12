@@ -1,339 +1,39 @@
-"%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
-
 "%@ - Offline" = "%@ - オフライン";
 
-"+ Add" = "+ 追加";
-
 "3D Secure" = "3D セキュア";
-
-"AU BECS Direct Debit" = "BECS ダイレクトデビット (オーストラリア)";
 
 "Add New Card…" = "新しいクレジットカードを追加...";
 
 "Add a Card" = "カードを追加";
 
-"Add a card" = "カードを追加";
-
-"Add a payment method" = "決済手段を追加";
-
-"Add bank account" = "銀行口座を追加する";
-
-"Add new payment method" = "新たな支払い方法を追加";
-
-"Add your payment information" = "支払い情報を追加";
-
-"Address line 2 (optional)" = "住所 (2 行目、省略可)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "建物名";
 
-"Are you sure you want to remove this card?" = "このカードを削除しますか？";
-
-"Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "戻る";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "銀行";
-
-"Bank Account" = "銀行口座";
-
-"Bank account" = "銀行口座";
-
-"Billing Address" = "請求先住所";
-
-"Billing address" = "請求先住所";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Klarna で後払いします。";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "続行すると、これらの<terms>規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "お客様の銀行情報を提供し、この支払いを確認することで、お客様はこの口座引き落とし依頼および<terms>ダイレクトデビットリクエスト利用規約</terms>に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (「Stripe」) が、%@ (「加盟店」) の代理として、加盟店から別途連絡された金額について、Bulk Electronic Clearing System (BECS 振替) を通して口座引き落としを行うことを承認したものとします。お客様が上記の口座の口座名義人または承認された署名者であることを保証したものとみなされます。";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
-
-"CVC" = "セキュリティコード";
-
-"CVV" = "CVV";
-
-"Card" = "クレジットカード番号";
-
-"Card information" = "カード情報";
-
-"Card number" = "カード番号";
-
-"Change email" = "メールアドレスを変更";
-
-"Choose a payment method" = "支払い方法を選択";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "カードスキャナを閉じる";
-
-"Code field" = "コードフィールド";
-
-"Code sent" = "コードが送信されました";
-
 "Contact" = "連絡先";
-
-"Default" = "デフォルト";
 
 "Delivery" = "配達先情報";
 
 "Delivery Address" = "配達先住所";
 
-"Double tap to edit" = "ダブルタップして編集します";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS 銀行";
-
-"Edit" = "編集";
-
-"Enter address manually" = "住所を手動で入力";
-
-"Enter the code sent to %@ to use Link to pay by default." = "デフォルトで Link を使用して支払うには %@ に送信されたコードを入力してください。";
-
-"Enter your verification code" = "確認コードを入力してください";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
-
 "Free" = "無料";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "配送先住所が無効です";
 
-"Invalid data." = "データが無効です。";
-
-"Join Link" = "Link に申し込む";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "ロード中...";
-
-"Log out of Link" = "Link からログアウト";
-
-"MM / YY" = "月 / 年";
-
-"MM/YY" = "MM/YY";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "ネットバンキング";
-
 "Next" = "次へ";
-
-"Not %@?" = "%@ ではありませんか？";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "オンラインバンキング (FPX)";
 
-"Or" = "または";
-
-"Or pay using" = "または別の方法で支払う";
-
-"Or pay with a card" = "または、カードで支払う";
-
-"P24" = "P24";
-
-"Pay %@" = "%@ を支払う";
-
-"Pay another way" = "別の方法で支払う";
-
-"Pay faster at %@ and thousands of merchants." = "%@ やその他多数の加盟店で支払いをスピードアップします。";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/> で毎回 <installment_price/> ずつ、無利息の <num_installments/> 回の分割払いで支払う";
-
-"Pay later with Klarna." = "Klarna での後払いにします。";
-
-"Pay over time with %@" = "%@ で時間をかけて支払う";
-
-"Pay using" = "下記の方法で支払う";
-
-"Pay with %@" = "%@ で支払う";
-
-"Pay with your bank account in just a few steps." = "銀行口座を使用して簡単に支払えます。";
-
-"PayPal" = "PayPal";
-
-"Payment" = "決済";
-
 "Payment Method" = "お支払い方法";
-
-"Payment methods" = "決済手段";
-
-"Point the camera at your card." = "カメラをカードに向けてください。";
-
-"Postal Code" = "郵便番号";
-
-"Processing..." = "処理中...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 銀行";
-
-"Remove %1$@ ending in %2$@" = "末尾が %2$@ の %1$@ を削除";
-
-"Remove Card" = "カードを削除";
-
-"Remove card" = "カードを削除";
-
-"Remove linked account" = "関連付けられた口座を削除";
-
-"Resend code" = "コードを再送信";
-
-"SEPA Debit" = "SEPA デビット";
-
-"SEPA Direct Debit" = "SEPA ダイレクトデビット";
-
-"Save address" = "住所を保存する";
-
-"Save for future payments" = "今後の支払いのために保存する";
-
-"Save my info for secure 1-click checkout" = "安全なワンクリックでの購入に使用する情報を保存する";
-
-"Save this account for future %@ payments" = "今後の %@ の支払いのためにこの口座を保存する";
-
-"Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
-
-"Secure 1⁠-⁠click checkout" = "安全なワンクリックでの購入";
-
-"Select your payment method" = "支払い方法を選択してください";
-
-"Set as default" = "デフォルトとして設定";
-
-"Set as default payment method" = "デフォルトの決済手段として設定する";
-
-"Set up" = "設定";
 
 "Shipping" = "配送先情報";
 
-"Shipping Address" = "配送先住所";
-
 "Shipping Method" = "配送方法";
-
-"Shipping to %@ is not supported." = "%@ への配送には対応していません。";
-
-"Show menu" = "メニューを表示";
-
-"Sign in to your Link account" = "Link アカウントにサインイン";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "口座を関連付ける際に問題が発生しました。\n後でやり直してください。";
-
-"State / Province / Region" = "都道府県";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
-
-"Tap to close" = "タップして閉じます";
-
-"Tap to expand" = "タップして展開します";
-
-"The BSB you entered is invalid." = "入力した BSB コードが無効です。";
-
-"The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。\"%@\" はサポートされている国コードではありません。";
-
-"The provided verification code has expired." = "入力された確認コードは期限が切れています。";
-
-"The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
-
-"This card has expired. Update your card info or choose a different payment method." = "このカードは有効期限が切れています。カード情報を更新するか、別の決済手段を選択してください。";
-
-"This is your default" = "これはデフォルトです";
-
-"Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
-
-"To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
-
-"Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "アメリカの銀行口座";
-
-"Unavailable for this purchase" = "この購入には利用できません";
-
-"Unknown" = "不明";
-
-"Update card" = "カードを更新";
 
 "Use Billing" = "請求先を使用";
 
 "Use Delivery" = "配達先を使用";
 
 "Use Shipping" = "配送先を使用";
-
-"Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
-
-"Your ZIP is invalid." = "郵便番号が無効です。";
-
-"Your card number is incomplete." = "カード番号に不備があります。";
-
-"Your card number is invalid." = "カード番号が無効です。";
-
-"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
-
-"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
-
-"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
-
-"Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
-
-"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
-
-"Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
-
-"Your postal code is invalid." = "郵便番号が無効です";
-
-"ZIP Code" = "郵便番号";
-
-"card number" = "カード番号";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "有効期限";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL銀行";

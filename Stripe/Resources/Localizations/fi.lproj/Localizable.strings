@@ -1,339 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
-
 "%@ - Offline" = "%@ Offline-tila";
 
-"+ Add" = "+ Lisää";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "AU BECS -suoraveloitus";
 
 "Add New Card…" = "Lisää uusi kortti...";
 
 "Add a Card" = "Lisää kortti";
 
-"Add a card" = "Lisää kortti";
-
-"Add a payment method" = "Lisää maksutapa";
-
-"Add bank account" = "Lisää pankkitili";
-
-"Add new payment method" = "Lisää uusi maksutapa";
-
-"Add your payment information" = "Lisää maksutiedot";
-
-"Address line 2 (optional)" = "Osoiterivi 2 (valinnainen)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Asunto";
 
-"Are you sure you want to remove this card?" = "Haluatko varmasti poistaa tämän kortin?";
-
-"Are you sure you want to remove this linked account?" = "Haluatko varmasti poistaa tämän linkitetyn tilin?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Takaisin";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Pankki";
-
-"Bank Account" = "Pankkitili";
-
-"Bank account" = "Pankkitili";
-
-"Billing Address" = "Laskutusosoite";
-
-"Billing address" = "Laskutusosoite";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Osta nyt tai maksa myöhemmin Klarnalla.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Jatkamalla hyväksyt maksut näiden <terms>ehtojen</terms> mukaisesti.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Liittymällä Linkiin hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Antamalla pankkitilisi tiedot ja vahvistamalla tämän maksun hyväksyt suoraveloituspyynnön ja <terms>suoraveloituspyynnön palvelusopimuksen</terms> ja valtuutat Stripe Payments Australia Pty Ltd:n ACN, 160 180 343 suoraveloituksen käyttäjätunnus 507156 (\"Stripe\"), veloittamaan tililtäsi BECS:n kautta kohteen %@ (\"Kauppias\") puolesta kaikista kauppiaan erikseen ilmoittamista summista. Vakuutat, että olet joko tilinhaltija tai valtuutettu allekirjoittaja yllä mainitulla tilillä.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Antamalla maksutiedot ja vahvistamalla tämän maksun, valtuutat (A) %@ ja Stripen, maksupalvelun tarjoajamme, lähettämään ohjeita pankillesi tilisi veloittamiseksi ja (B) pankkisi veloittamaan tiliäsi annettujen ohjeiden mukaisesti. Oikeuksiesi mukaisesti olet oikeutettu maksun palautukseen pankiltasi heidän kanssaan tekemäsi sopimuksen mukaisesti. Maksun palautus on lunastettava kahdeksan viikon kuluessa tilisi veloituksesta. Oikeutesi kerrotaan lausunnossa, jonka voit hankkia pankiltasi. Hyväksyt vastaanottamaan ilmoituksia tulevista veloituksista kaksi päivää ennen niiden tapahtumista.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
-
-"CVC" = "CVC-tunnus";
-
-"CVV" = "CVV-koodi";
-
-"Card" = "Kortti";
-
-"Card information" = "Kortin tiedot";
-
-"Card number" = "Kortin numero";
-
-"Change email" = "Vaihda sähköposti";
-
-"Choose a payment method" = "Valitse maksutapa";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Sulje korttiskanneri";
-
-"Code field" = "Koodikenttä";
-
-"Code sent" = "Koodi lähetetty";
-
 "Contact" = "Yhteystiedot";
-
-"Default" = "Oletus";
 
 "Delivery" = "Toimitus";
 
 "Delivery Address" = "Toimitusosoite";
 
-"Double tap to edit" = "Napauta kahdesti ja muokkaa";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS-pankki";
-
-"Edit" = "Muokkaa";
-
-"Enter address manually" = "Syötä osoite manuaalisesti";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Syötä numeroon %@ lähetetty koodi käyttääksesi Link-maksua oletuksena.";
-
-"Enter your verification code" = "Syötä vahvistuskoodi";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Turvallisuussyistä sinun on annettava korttisi turvakoodi uudelleen.";
-
 "Free" = "Maksuton";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Toimitusosoite ei kelpaa";
 
-"Invalid data." = "Virheelliset tiedot.";
-
-"Join Link" = "Liity Link-palveluun";
-
-"Klarna" = "Klarna";
-
-"Link" = "Linkki";
-
 "Loading…" = "Lataa...";
-
-"Log out of Link" = "Kirjaudu ulos Link-palvelusta";
-
-"MM / YY" = "KK/VV";
-
-"MM/YY" = "KK/VV";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Seuraava";
-
-"Not %@?" = "Ei %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Verkkopankki (FPX)";
 
-"Or" = "Tai";
-
-"Or pay using" = "Tai käytä maksutapaa";
-
-"Or pay with a card" = "Tai maksa kortilla";
-
-"P24" = "P24";
-
-"Pay %@" = "Maksa %@";
-
-"Pay another way" = "Maksa toisella tavalla";
-
-"Pay faster at %@ and thousands of merchants." = "Maksa nopeammin palvelussa %@ ja tuhansilla muilla kauppiailla.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksu <num_installments/> korottomassa <installment_price/> osassa maksutavalla <img/>";
-
-"Pay later with Klarna." = "Maksa myöhemmin Klarnalla.";
-
-"Pay over time with %@" = "Maksa aikanaan kohteella %@";
-
-"Pay using" = "Käytä maksutapaa";
-
-"Pay with %@" = "Maksutapa: %@";
-
-"Pay with your bank account in just a few steps." = "Maksa pankkitiliäsi käyttäen vain muutamassa vaiheessa.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Maksu";
-
 "Payment Method" = "Maksutapa";
-
-"Payment methods" = "Maksutavat";
-
-"Point the camera at your card." = "Osoita kamera korttia kohti.";
-
-"Postal Code" = "Postinumero";
-
-"Processing..." = "Käsitellään...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 Bank";
-
-"Remove %1$@ ending in %2$@" = "Poista %1$@, joka päättyy numeroihin %2$@";
-
-"Remove Card" = "Poista kortti";
-
-"Remove card" = "Poista kortti";
-
-"Remove linked account" = "Poista linkitetty tili";
-
-"Resend code" = "Lähetä koodi uudelleen";
-
-"SEPA Debit" = "SEPA Debit";
-
-"SEPA Direct Debit" = "SEPA-suoraveloitus";
-
-"Save address" = "Tallenna osoite";
-
-"Save for future payments" = "Tallenna tulevia maksuja varten";
-
-"Save my info for secure 1-click checkout" = "Tallenna tietoni turvalliselle yhden napsautuksen maksamiselle";
-
-"Save this account for future %@ payments" = "Tallenna tämä tili tulevia maksuja %@ varten";
-
-"Save this card for future %@ payments" = "Tallenna tämä kortti tulevia maksuja (%@) varten";
-
-"Secure 1⁠-⁠click checkout" = "Turvallinen kerran napsautettava maksaminen";
-
-"Select your payment method" = "Valitse maksutapa";
-
-"Set as default" = "Aseta oletusarvoiseksi";
-
-"Set as default payment method" = "Aseta oletusarvoiseksi maksutavaksi";
-
-"Set up" = "Määritä";
 
 "Shipping" = "Toimitus";
 
-"Shipping Address" = "Lähetysosoite";
-
 "Shipping Method" = "Toimitustapa";
-
-"Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
-
-"Show menu" = "Näytä valikko";
-
-"Sign in to your Link account" = "Kirjaudu sisään Link-tiliisi";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Jokin meni pieleen tilisi linkityksen aikana.\nYritä myöhemmin uudelleen.";
-
-"State / Province / Region" = "Osavaltio/maakunta/alue";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe tallettaa 0,01 dollaria tilillesi 1–2 arkipäivän kuluessa. Saat myös sähköpostiisi ohjeet maksun suorittamiseksi loppuun yritykselle %@.";
-
-"Tap to close" = "Suljet napauttamalla";
-
-"Tap to expand" = "Laajenna napauttamalla";
-
-"The BSB you entered is invalid." = "Antamasi BSB-numero on virheellinen.";
-
-"The IBAN you entered is incomplete." = "IBAN on puutteellinen.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Antamasi IBAN on virheellinen, \"%@\" ei ole tuettu maakoodi.";
-
-"The provided verification code has expired." = "Annettu vahvistuskoodi on vanhentunut.";
-
-"The provided verification code is incorrect." = "Annettu vahvistuskoodi on virheellinen.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Tämä kortti on erääntynyt. Päivitä kortin tiedot tai valitse toinen maksutapa.";
-
-"This is your default" = "Tämä on oletusarvoinen";
-
-"Timed out authenticating your payment method -- try again" = "Maksutapasi todennus aikakatkaistiin – yritä uudelleen.";
-
-"To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
-
-"Too many attempts. Please try again in a few minutes." = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Yhdysvaltalainen pankkitili";
-
-"Unavailable for this purchase" = "Ei käytettävissä tälle ostolle";
-
-"Unknown" = "Tuntematon";
-
-"Update card" = "Päivitä kortti";
 
 "Use Billing" = "Käytä laskutusosoitetta";
 
 "Use Delivery" = "Käytä toimitusosoitetta";
 
 "Use Shipping" = "Käytä lähetysosoitetta";
-
-"Use your saved info to check out faster" = "Käytä tallennettuja tietoja nopeampaan maksamiseen";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Emme pystyneet todentamaan maksutapaasi. Valitse toinen maksutapa ja yritä uudelleen.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
-
-"Your ZIP is invalid." = "Postinumero on virheellinen.";
-
-"Your card number is incomplete." = "Kortin numero on puutteellinen.";
-
-"Your card number is invalid." = "Kortin numero on virheellinen.";
-
-"Your card's expiration date is incomplete." = "Kortin voimassaoloaika on puutteellinen.";
-
-"Your card's expiration date is invalid." = "Kortin voimassaoloaika on virheellinen.";
-
-"Your card's expiration month is invalid." = "Kortin erääntymiskuukausi ei kelpaa.";
-
-"Your card's expiration year is invalid." = "Kortin voimassaolovuosi ei kelpaa.";
-
-"Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
-
-"Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
-
-"Your postal code is invalid." = "Postinumeroon virheellinen.";
-
-"ZIP Code" = "Postinumero";
-
-"card number" = "kortin numero";
-
-"example@example.com" = "esimerkki@esimerkki.com";
-
-"expiration date" = "erääntymispäivä";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL-pankki";

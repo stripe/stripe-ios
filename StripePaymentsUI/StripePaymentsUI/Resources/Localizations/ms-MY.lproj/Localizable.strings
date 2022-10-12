@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ – berakhiran %2$@";
+
+"Address line 2 (optional)" = "Alamat baris 2 (opsyenal)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Akaun Bank";
+
+"Billing Address" = "Alamat Pengebilan";
+
+"Billing address" = "Alamat pengebilan";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Maklumat kad";
+
+"Card number" = "Nombor kad";
+
+"Invalid data." = "Data tidak sah.";
+
+"MM / YY" = "BB / TT";
+
+"MM/YY" = "BB/TT";
+
+"Postal Code" = "Poskod";
+
+"Shipping Address" = "Alamat Pengiriman";
+
+"State / Province / Region" = "Negeri/Wilayah/Rantau";
+
+"The BSB you entered is invalid." = "BSB yang anda masukkan tidak sah.";
+
+"To scan your card, allow camera access in Settings." = "Untuk mengimbas kad anda, benarkan akses kamera dalam Tetapan.";
+
+"Your ZIP is invalid." = "Kod ZIP anda tidak sah.";
+
+"Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
+
+"Your card number is invalid." = "Nombor kad anda tidak sah.";
+
+"Your card's expiration date is incomplete." = "Tarikh tamat tempoh kad anda tidak lengkap.";
+
+"Your card's expiration date is invalid." = "Tarikh tamat tempoh kad anda tidak sah.";
+
+"Your card's expiration month is invalid." = "Bulan tamat tempoh kad anda tidak sah.";
+
+"Your card's expiration year is invalid." = "Tahun tamat tempoh kad anda tidak sah.";
+
+"Your card's security code is incomplete." = "Kod keselamatan kad anda tidak lengkap.";
+
+"Your card's security code is invalid." = "Kod keselamatan kad anda tidak sah.";
+
+"Your postal code is invalid." = "Poskod anda tidak sah.";
+
+"card number" = "nombor kad";
+
+"example@example.com" = "contoh@contoh.com";
+
+"expiration date" = "Tarikh tamat tempoh";

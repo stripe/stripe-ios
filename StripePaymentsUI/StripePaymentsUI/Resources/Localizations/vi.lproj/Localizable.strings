@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
+
+"Address line 2 (optional)" = "Dòng địa chỉ 2 (tùy chọn)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Tài khoản ngân hàng";
+
+"Billing Address" = "Địa chỉ thanh toán";
+
+"Billing address" = "Địa chỉ thanh toán";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Thông tin thẻ";
+
+"Card number" = "Số thẻ";
+
+"Invalid data." = "Dữ liệu không hợp lệ.";
+
+"MM / YY" = "Tháng /Năm";
+
+"MM/YY" = "Tháng/Năm";
+
+"Postal Code" = "Mã bưu điện";
+
+"Shipping Address" = "Địa chỉ vận chuyển";
+
+"State / Province / Region" = "Tiểu bang/Tỉnh/Khu vực";
+
+"The BSB you entered is invalid." = "BSB mà bạn nhập không hợp lệ.";
+
+"To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
+
+"Your ZIP is invalid." = "Mã ZIP không hợp lệ";
+
+"Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
+
+"Your card number is invalid." = "Số thẻ không hợp lệ.";
+
+"Your card's expiration date is incomplete." = "Ngày hết hạn trên thẻ không hợp lệ.";
+
+"Your card's expiration date is invalid." = "Ngày hết hạn trên thẻ không hợp lệ.";
+
+"Your card's expiration month is invalid." = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
+
+"Your card's expiration year is invalid." = "Năm hết hạn trên thẻ của bạn không hợp lệ.";
+
+"Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
+
+"Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
+
+"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
+
+"card number" = "số thẻ";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "Ngày hết hạn";
