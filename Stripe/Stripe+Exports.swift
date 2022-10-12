@@ -11,3 +11,4 @@ import Foundation
 @_exported import StripePaymentsUI
 @_exported import StripePayments
 @_exported import StripeCore
+@_exported import StripeApplePay
