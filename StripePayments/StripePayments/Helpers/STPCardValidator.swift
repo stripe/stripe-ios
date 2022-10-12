@@ -30,6 +30,7 @@ import Foundation
 /// This class contains static methods to validate card numbers, expiration dates,
 /// and CVCs. For a list of test card numbers to use with this code,
 /// see https://stripe.com/docs/testing
+@objc(STPCardValidator)
 public class STPCardValidator: NSObject {
     /// Returns a copy of the passed string with all non-numeric characters removed.
     @objc(sanitizedNumericStringForString:)

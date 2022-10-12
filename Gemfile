@@ -9,7 +9,7 @@ gem "rubyzip"
 gem "octokit", "~> 4.25.1"
 gem "mime-types"
 gem "CFPropertyList"
-gem "sqlite3"
+gem "sqlite3", "~> 1.4.4"
 gem "terminal-table"
 
 gem "jazzy", "0.14.1"

@@ -34,7 +34,7 @@ extension STPAPIClient {
                 completion(nil, error)
                 return
             case .success(let fraudDetectionDataData):
-                let paymentUserAgent = STPAPIClient.paymentUserAgent
+                let paymentUserAgent = PaymentsSDKVariant.paymentUserAgent
                 let parameters = [
                     "muid": fraudDetectionDataData.muid ?? "",
                     "sid": fraudDetectionDataData.sid ?? "",

@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
   s.version                        = '22.8.1'
 
-  s.summary                        = 'UI elements for Stripe Payments, including STPPaymentCardTextField.'
+  s.summary                        = 'UI elements and API bindings for building a custom payment flow using Stripe.'
   s.license                        = { type: 'MIT', file: 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }

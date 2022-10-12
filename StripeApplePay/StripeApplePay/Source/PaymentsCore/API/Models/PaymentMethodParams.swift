@@ -25,7 +25,7 @@ extension StripeAPI {
         
         /// Used internally to identify the version of the SDK sending the request
         @_spi(STP) public var paymentUserAgent: String? = {
-            return STPAPIClient.paymentUserAgent
+            return PaymentsSDKVariant.paymentUserAgent
         }()
 
         /// :nodoc:

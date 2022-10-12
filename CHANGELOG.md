@@ -1,3 +1,7 @@
+## X.Y.Z
+### Payments
+* The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+
 ## 22.8.1 2022-09-12
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using Link in Mac Catalyst.

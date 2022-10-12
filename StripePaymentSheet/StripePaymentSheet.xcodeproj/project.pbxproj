@@ -243,6 +243,7 @@
 		319567F428D3D41800BFF5D1 /* icon-pm-bank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 319567F328D3D41800BFF5D1 /* icon-pm-bank@3x.png */; };
 		319567F628D3D53100BFF5D1 /* apple_pay_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 319567F528D3D53100BFF5D1 /* apple_pay_mark@3x.png */; };
 		31DCB11528F4D256002EF128 /* LinkFinancialConnectionsAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB11428F4D255002EF128 /* LinkFinancialConnectionsAuthManager.swift */; };
+		31DCB11928F4EC09002EF128 /* STPAnalyticsClient+PaymentSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB11828F4EC09002EF128 /* STPAnalyticsClient+PaymentSheetTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -535,6 +536,7 @@
 		319567F328D3D41800BFF5D1 /* icon-pm-bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-bank@3x.png"; sourceTree = "<group>"; };
 		319567F528D3D53100BFF5D1 /* apple_pay_mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "apple_pay_mark@3x.png"; sourceTree = "<group>"; };
 		31DCB11428F4D255002EF128 /* LinkFinancialConnectionsAuthManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkFinancialConnectionsAuthManager.swift; sourceTree = "<group>"; };
+		31DCB11828F4EC09002EF128 /* STPAnalyticsClient+PaymentSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+PaymentSheetTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1090,6 +1092,7 @@
 			isa = PBXGroup;
 			children = (
 				3139D2AB286E34DF00C9744B /* StripePaymentSheetTests.swift */,
+				31DCB11828F4EC09002EF128 /* STPAnalyticsClient+PaymentSheetTests.swift */,
 				31138E8828DD1E63008AF554 /* DictionaryTests.swift */,
 			);
 			path = StripePaymentSheetTests;
@@ -1646,6 +1649,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31DCB11928F4EC09002EF128 /* STPAnalyticsClient+PaymentSheetTests.swift in Sources */,
 				3139D2AC286E34DF00C9744B /* StripePaymentSheetTests.swift in Sources */,
 				31138E8928DD1E63008AF554 /* DictionaryTests.swift in Sources */,
 			);
