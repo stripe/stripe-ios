@@ -141,12 +141,8 @@ public class STPBankAccountCollector: NSObject {
                                      financialConnectionsCompletion: financialConnectionsCompletion)
     }
 
-<<<<<<< HEAD:StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift
     @_spi(STP) public func collectBankAccountForPayment(clientSecret: String,
-=======
-    func collectBankAccountForPayment(clientSecret: String,
                                       returnURL: String?,
->>>>>>> origin/private:Stripe/STPBankAccountCollector.swift
                                       params: STPCollectBankAccountParams,
                                       from viewController: UIViewController,
                                       financialConnectionsCompletion: @escaping (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void) {
@@ -291,12 +287,8 @@ public class STPBankAccountCollector: NSObject {
                                    financialConnectionsCompletion: financialConnectionsCompletion)
     }
 
-<<<<<<< HEAD:StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift
     @_spi(STP) public func collectBankAccountForSetup(clientSecret: String,
-=======
-    func collectBankAccountForSetup(clientSecret: String,
                                     returnURL: String?,
->>>>>>> origin/private:Stripe/STPBankAccountCollector.swift
                                     params: STPCollectBankAccountParams,
                                     from viewController: UIViewController,
                                     financialConnectionsCompletion: @escaping (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void) {
