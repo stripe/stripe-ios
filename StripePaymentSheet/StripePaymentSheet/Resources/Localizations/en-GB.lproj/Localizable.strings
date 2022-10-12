@@ -1,0 +1,161 @@
+"+ Add" = "+ Add";
+
+"Add a card" = "Add a card";
+
+"Add a payment method" = "Add a payment method";
+
+"Add bank account" = "Add bank account";
+
+"Add new payment method" = "Add new payment method";
+
+"Add your payment information" = "Add your payment information";
+
+"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
+
+"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
+
+"Back" = "Back";
+
+"Bank account" = "Bank account";
+
+"Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorise payments pursuant to these <terms>terms</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+"Change email" = "Change email";
+
+"Choose a payment method" = "Choose a payment method";
+
+"Close card scanner" = "Close card scanner";
+
+"Code field" = "Code field";
+
+"Code sent" = "Code sent";
+
+"Default" = "Default";
+
+"Double tap to edit" = "Double tap to edit";
+
+"EPS Bank" = "EPS Bank";
+
+"Enter address manually" = "Enter address manually";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
+
+"Enter your verification code" = "Enter your verification code";
+
+"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Join Link";
+
+"Log out of Link" = "Log out of Link";
+
+"Not %@?" = "Not %@?";
+
+"Or" = "Or";
+
+"Or pay using" = "Or pay using";
+
+"Or pay with a card" = "Or pay with a card";
+
+"Pay %@" = "Pay %@";
+
+"Pay another way" = "Pay another way";
+
+"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
+
+"Pay later with Klarna." = "Pay later with Klarna.";
+
+"Pay over time with %@" = "Pay over time with %@";
+
+"Pay using" = "Pay using";
+
+"Pay with %@" = "Pay with %@";
+
+"Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
+
+"Payment" = "Payment";
+
+"Payment methods" = "Payment methods";
+
+"Point the camera at your card." = "Point the camera at your card.";
+
+"Processing..." = "Processing…";
+
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
+"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
+
+"Remove Card" = "Remove Card";
+
+"Remove card" = "Remove card";
+
+"Remove linked account" = "Remove linked account";
+
+"Resend code" = "Resend code";
+
+"Save address" = "Save address";
+
+"Save for future payments" = "Save for future payments";
+
+"Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
+
+"Save this account for future %@ payments" = "Save this account for future %@ payments";
+
+"Save this card for future %@ payments" = "Save this card for future %@ payments";
+
+"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
+
+"Select your payment method" = "Select your payment method";
+
+"Set as default" = "Set as default";
+
+"Set as default payment method" = "Set as default payment method";
+
+"Set up" = "Set up";
+
+"Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
+
+"Show menu" = "Show menu";
+
+"Sign in to your Link account" = "Sign in to your Link account";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
+
+"Tap to close" = "Tap to close";
+
+"Tap to expand" = "Tap to expand";
+
+"The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
+
+"The provided verification code has expired." = "The provided verification code has expired.";
+
+"The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
+
+"This is your default" = "This is your default";
+
+"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
+
+"Unavailable for this purchase" = "Unavailable for this purchase";
+
+"Update card" = "Update card";
+
+"Use your saved info to check out faster" = "Use your saved info to check out faster";
+
+"Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
+
+"iDEAL Bank" = "iDEAL Bank";

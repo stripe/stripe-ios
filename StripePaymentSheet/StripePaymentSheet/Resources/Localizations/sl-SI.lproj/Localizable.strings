@@ -1,0 +1,161 @@
+"+ Add" = "+ Dodaj";
+
+"Add a card" = "Dodajte kartico";
+
+"Add a payment method" = "Dodaj način plačila";
+
+"Add bank account" = "Dodaj bančni račun";
+
+"Add new payment method" = "Dodaj nov način plačila";
+
+"Add your payment information" = "Dodajte podatke o plačilu";
+
+"Are you sure you want to remove this card?" = "Ali res želite odstraniti to kartico?";
+
+"Are you sure you want to remove this linked account?" = "Ali res želite odstraniti ta povezan račun?";
+
+"Back" = "Nazaj";
+
+"Bank account" = "Bančni račun";
+
+"Buy now or pay later with Klarna." = "Kupite zdaj ali pa plačajte pozneje s storitvijo Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če nadaljujete postopek, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Če nadaljujete postopek, se strinjate z odobritvijo plačil v skladu s temi <terms>pogoji</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če se pridružite storitvi Link, se strinjate s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Z navedbo podatkov o plačilu in potrditvijo tega plačila pooblaščate (A) podjetje %@ in družbo Stripe, našega ponudnika plačilnih storitev, da posreduje navodila vaši banki za bremenitev vašega računa, in (B) vašo banko, da bremeni vaš račun v skladu s temi navodili. Vaše pravice vključujejo tudi pravico do povračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Povračilo denarnih sredstev morate zahtevati v 8 tednih od dneva bremenitve vašega računa. Vaše pravice so podrobno opisane na izpisku, ki ga lahko pridobite v banki. Strinjate se s prejemom obvestil za prihodnje bremenitve največ 2 dni pred njihovo izvedbo.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
+
+"Change email" = "Spremeni e-poštni naslov";
+
+"Choose a payment method" = "Izberite način plačila";
+
+"Close card scanner" = "Zapri optični bralnik kartic";
+
+"Code field" = "Polje za kodo";
+
+"Code sent" = "Koda je bila poslana";
+
+"Default" = "Privzeto";
+
+"Double tap to edit" = "Dvotapnite, da uredite";
+
+"EPS Bank" = "Banka EPS";
+
+"Enter address manually" = "Naslov vnesite ročno";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Vnesite kodo, ki ste jo prejeli na številko %@, če želite uporabljati Link kot privzeti način plačila.";
+
+"Enter your verification code" = "Vnesite svojo potrditveno kodo";
+
+"For security, please re-enter your card’s security code." = "Iz varnostnih razlogov morate znova vnesti varnostno kodo svoje kartice.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Pridružite se storitvi Link";
+
+"Log out of Link" = "Odjava iz storitve Link";
+
+"Not %@?" = "Niste %@?";
+
+"Or" = "Ali";
+
+"Or pay using" = "Ali pa za plačilo uporabite";
+
+"Or pay with a card" = "Ali pa plačajte s kartico";
+
+"Pay %@" = "Plačaj %@";
+
+"Pay another way" = "Plačaj na drugačen način";
+
+"Pay faster at %@ and thousands of merchants." = "Plačajte hitreje pri podjetju %@ in več tisoč trgovcih.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Plačajte v <num_installments/> obrokih po <installment_price/> brez obresti s storitvijo <img/>.";
+
+"Pay later with Klarna." = "Plačajte pozneje s storitvijo Klarna.";
+
+"Pay over time with %@" = "Uporabite %@ za poznejše plačilo";
+
+"Pay using" = "Za plačilo uporabite";
+
+"Pay with %@" = "Za plačilo uporabi %@";
+
+"Pay with your bank account in just a few steps." = "Z bančnim računom lahko plačate v le nekaj korakih.";
+
+"Payment" = "Plačilo";
+
+"Payment methods" = "Načini plačila";
+
+"Point the camera at your card." = "Usmerite kamero v kartico.";
+
+"Processing..." = "Obdelovanje ...";
+
+"Przelewy24 Bank" = "Banka Przelewy24";
+
+"Remove %1$@ ending in %2$@" = "Odstranite kartico %1$@, ki se konča s/z %2$@";
+
+"Remove Card" = "Odstranite kartico";
+
+"Remove card" = "Odstrani kartico";
+
+"Remove linked account" = "Odstrani povezan račun";
+
+"Resend code" = "Znova pošlji kodo";
+
+"Save address" = "Shrani naslov";
+
+"Save for future payments" = "Shrani za prihodnja plačila";
+
+"Save my info for secure 1-click checkout" = "Shrani moje podatke za varno izvedbo plačila z enim klikom";
+
+"Save this account for future %@ payments" = "Shrani ta računa za prihodnja plačila %@";
+
+"Save this card for future %@ payments" = "Shrani to kartico za prihodnja plačila trgovcu %@";
+
+"Secure 1⁠-⁠click checkout" = "Varna izvedba plačila z enim klikom";
+
+"Select your payment method" = "Izberite način plačila";
+
+"Set as default" = "Nastavi kot privzeti";
+
+"Set as default payment method" = "Nastavi kot privzeti način plačila";
+
+"Set up" = "Nastavi";
+
+"Shipping to %@ is not supported." = "Dostava v državo %@ ni podprta.";
+
+"Show menu" = "Pokaži meni";
+
+"Sign in to your Link account" = "Vpišite se v svoj račun za Link";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe bo v 1–2 delovnih dneh na vaš račun nakazal znesek v višini 0,01 USD. Nato boste prejeli e-poštno sporočilo z navodili za dokončanje plačila podjetju %@.";
+
+"Tap to close" = "Tapnite, da zaprete";
+
+"Tap to expand" = "Tapnite, da razširite";
+
+"The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
+
+"The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
+
+"The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Ta kartica je potekla. Posodobite podatke o kartici ali izberite drug način plačila.";
+
+"This is your default" = "To je vaš privzeti način plačila";
+
+"Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
+
+"Unavailable for this purchase" = "Ni na voljo za ta nakup";
+
+"Update card" = "Posodobi kartico";
+
+"Use your saved info to check out faster" = "Uporabite svoje shranjene podatke za hitrejšo izvedbo plačila";
+
+"Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
+
+"iDEAL Bank" = "Banka iDEAL";

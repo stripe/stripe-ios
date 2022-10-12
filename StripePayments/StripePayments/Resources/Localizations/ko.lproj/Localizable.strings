@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "AU BECS 자동 이체";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "은행";
+
+"Boleto" = "Boleto";
+
+"Card" = "카드";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "NetBanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "SEPA Debit";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "미국 은행 계좌";
+
+"Unknown" = "알 수 없음";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

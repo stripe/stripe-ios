@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "AU BECS директно дебитиране";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Банка";
+
+"Boleto" = "Boleto";
+
+"Card" = "Карта";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "Netbanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "SEPA дебит";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "Времето на изчакване на удостоверяването на Вашия метод на плащане изтече -- опитайте отново";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "Банкова сметка в САЩ";
+
+"Unknown" = "Непознат";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не можем да удостоверим Вашия метод на плащане. Моля, изберете различен метод на плащане и опитайте отново.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

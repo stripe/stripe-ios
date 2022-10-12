@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "AU BECS direkte debitering";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Bank";
+
+"Boleto" = "Boleto";
+
+"Card" = "Kort";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "Onlinebanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "SEPA Debit";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "Bekræftelsen af din betalingsmetode udløb -- prøv igen.";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "Bankkonto i USA";
+
+"Unknown" = "Ukendt";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kunne ikke bekræfte din betalingsmetode. Vælg venligst en anden betalingsmetode, og prøv igen.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

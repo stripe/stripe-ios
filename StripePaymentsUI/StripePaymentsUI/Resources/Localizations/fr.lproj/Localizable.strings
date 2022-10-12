@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ se terminant par %2$@";
+
+"Address line 2 (optional)" = "Adresse - Ligne 2 (facultatif)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Compte bancaire";
+
+"Billing Address" = "Adresse de facturation";
+
+"Billing address" = "Adresse de facturation";
+
+"CVC" = "Code CVC";
+
+"CVV" = "Code CVV";
+
+"Card information" = "Informations concernant la carte bancaire";
+
+"Card number" = "Numéro de carte bancaire";
+
+"Invalid data." = "Donnée non valide.";
+
+"MM / YY" = "MM / AA";
+
+"MM/YY" = "MM/AA";
+
+"Postal Code" = "Code postal";
+
+"Shipping Address" = "Adresse de livraison";
+
+"State / Province / Region" = "État/Province/Région";
+
+"The BSB you entered is invalid." = "Le numéro BSB que vous avez saisi n'est pas valide.";
+
+"To scan your card, allow camera access in Settings." = "Pour numériser votre carte bancaire, autorisez l'accès à l'appareil photo dans vos paramètres.";
+
+"Your ZIP is invalid." = "Votre code postal n'est pas valide.";
+
+"Your card number is incomplete." = "Votre numéro de carte bancaire est incomplet.";
+
+"Your card number is invalid." = "Votre numéro de carte bancaire n'est pas valide.";
+
+"Your card's expiration date is incomplete." = "La date d'expiration de votre carte bancaire est incomplète.";
+
+"Your card's expiration date is invalid." = "La date d'expiration de votre carte bancaire n'est pas valide.";
+
+"Your card's expiration month is invalid." = "Le mois d'expiration de votre carte n'est pas valide.";
+
+"Your card's expiration year is invalid." = "L'année d'expiration de votre carte n'est pas valide.";
+
+"Your card's security code is incomplete." = "Le code de sécurité de votre carte bancaire est incomplet.";
+
+"Your card's security code is invalid." = "Le code de sécurité de votre carte bancaire n'est pas valide.";
+
+"Your postal code is invalid." = "Votre code postal n'est pas valide.";
+
+"card number" = "numéro de carte";
+
+"example@example.com" = "exemple@exemple.fr";
+
+"expiration date" = "date d'expiration";

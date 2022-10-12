@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ végződése %2$@";
+
+"Address line 2 (optional)" = "Cím 2. sora (nem kötelező)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Bankszámla";
+
+"Billing Address" = "Számlázási cím";
+
+"Billing address" = "Számlázási cím";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Kártyaadatok";
+
+"Card number" = "Kártyaszám";
+
+"Invalid data." = "Érvénytelen adat.";
+
+"MM / YY" = "HH / ÉÉ";
+
+"MM/YY" = "HH/ÉÉ";
+
+"Postal Code" = "Postai irányítószám";
+
+"Shipping Address" = "Szállítási cím";
+
+"State / Province / Region" = "Állam/tartomány/régió";
+
+"The BSB you entered is invalid." = "A beírt BSB-szám érvénytelen.";
+
+"To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
+
+"Your ZIP is invalid." = "A ZIP érvénytelen.";
+
+"Your card number is incomplete." = "A kártyaszám hiányos.";
+
+"Your card number is invalid." = "A kártyaszám érvénytelen.";
+
+"Your card's expiration date is incomplete." = "A kártya lejárati dátuma hiányos.";
+
+"Your card's expiration date is invalid." = "A kártya lejárati dátuma érvénytelen.";
+
+"Your card's expiration month is invalid." = "Kártyájának lejárati hónapja érvénytelen.";
+
+"Your card's expiration year is invalid." = "Kártyájának lejárati éve érvénytelen.";
+
+"Your card's security code is incomplete." = "A kártya biztonsági kódja hiányos.";
+
+"Your card's security code is invalid." = "A kártya biztonsági kódja érvénytelen.";
+
+"Your postal code is invalid." = "Az irányítószám érvénytelen.";
+
+"card number" = "kártyaszám";
+
+"example@example.com" = "valaki@example.com";
+
+"expiration date" = "lejárati dátum";

@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
+
+"Address line 2 (optional)" = "Osoiterivi 2 (valinnainen)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Pankkitili";
+
+"Billing Address" = "Laskutusosoite";
+
+"Billing address" = "Laskutusosoite";
+
+"CVC" = "CVC-tunnus";
+
+"CVV" = "CVV-koodi";
+
+"Card information" = "Kortin tiedot";
+
+"Card number" = "Kortin numero";
+
+"Invalid data." = "Virheelliset tiedot.";
+
+"MM / YY" = "KK/VV";
+
+"MM/YY" = "KK/VV";
+
+"Postal Code" = "Postinumero";
+
+"Shipping Address" = "Lähetysosoite";
+
+"State / Province / Region" = "Osavaltio/maakunta/alue";
+
+"The BSB you entered is invalid." = "Antamasi BSB-numero on virheellinen.";
+
+"To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
+
+"Your ZIP is invalid." = "Postinumero on virheellinen.";
+
+"Your card number is incomplete." = "Kortin numero on puutteellinen.";
+
+"Your card number is invalid." = "Kortin numero on virheellinen.";
+
+"Your card's expiration date is incomplete." = "Kortin voimassaoloaika on puutteellinen.";
+
+"Your card's expiration date is invalid." = "Kortin voimassaoloaika on virheellinen.";
+
+"Your card's expiration month is invalid." = "Kortin erääntymiskuukausi ei kelpaa.";
+
+"Your card's expiration year is invalid." = "Kortin voimassaolovuosi ei kelpaa.";
+
+"Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
+
+"Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
+
+"Your postal code is invalid." = "Postinumeroon virheellinen.";
+
+"card number" = "kortin numero";
+
+"example@example.com" = "esimerkki@esimerkki.com";
+
+"expiration date" = "erääntymispäivä";

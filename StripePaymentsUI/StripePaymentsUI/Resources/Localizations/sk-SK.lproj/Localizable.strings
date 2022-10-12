@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "Karta %1$@ s poslednými štyrmi číslami %2$@";
+
+"Address line 2 (optional)" = "Riadok adresy 2 (voliteľne)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Bankový účet";
+
+"Billing Address" = "Fakturačná adresa";
+
+"Billing address" = "Fakturačná adresa";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Informácie o karte";
+
+"Card number" = "Číslo karty";
+
+"Invalid data." = "Neplatné údaje.";
+
+"MM / YY" = "MM / RR";
+
+"MM/YY" = "MM/RR";
+
+"Postal Code" = "PSČ";
+
+"Shipping Address" = "Dodacia adresa";
+
+"State / Province / Region" = "Štát/provincia/región";
+
+"The BSB you entered is invalid." = "Zadané BSB je neplatné.";
+
+"To scan your card, allow camera access in Settings." = "Na nasnímanie vašej karty umožnite prístup ku kamere pod položkou Nastavenia.";
+
+"Your ZIP is invalid." = "Vaše PSČ je neplatné.";
+
+"Your card number is incomplete." = "Číslo vašej karty je neúplné.";
+
+"Your card number is invalid." = "Číslo vašej karty je neplatné.";
+
+"Your card's expiration date is incomplete." = "Dátum vypršania platnosti vašej karty je neúplný.";
+
+"Your card's expiration date is invalid." = "Dátum vypršania platnosti vašej karty je neplatný.";
+
+"Your card's expiration month is invalid." = "Mesiac vypršania platnosti vašej karty je neplatný.";
+
+"Your card's expiration year is invalid." = "Rok ukončenia platnosti vašej karty je neplatný.";
+
+"Your card's security code is incomplete." = "Bezpečnostný kód vašej karty je neúplný.";
+
+"Your card's security code is invalid." = "Bezpečnostný kód vašej karty je neplatný.";
+
+"Your postal code is invalid." = "Vaše PSČ je neplatné.";
+
+"card number" = "číslo karty";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "dátum exspirácie";

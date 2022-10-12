@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "Domiciliació bancària AU BECS";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Banc";
+
+"Boleto" = "Boleto";
+
+"Card" = "Targeta";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "NetBanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "Domiciliació SEPA";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "S'ha esgotat el temps d'autenticació del teu mètode de pagament - intenta-ho un altre cop";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "Compte bancari dels EUA";
+
+"Unknown" = "Desconegut";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "No podem autenticar el teu mètode de pagament. Si us plau, escull un mètode de pagament diferent.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ λήγει σε %2$@";
+
+"Address line 2 (optional)" = "Γραμμή διεύθυνσης 2 (προαιρετικό)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "Κωδικός BSB";
+
+"Bank Account" = "Τραπεζικός λογαριασμός";
+
+"Billing Address" = "Διεύθυνση χρέωσης";
+
+"Billing address" = "Διεύθυνση χρέωσης";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Στοιχεία κάρτας";
+
+"Card number" = "Αριθμός κάρτας";
+
+"Invalid data." = "Μη έγκυρα δεδομένα.";
+
+"MM / YY" = "ΜΜ / ΕΕ";
+
+"MM/YY" = "ΜΜ/ΕΕ";
+
+"Postal Code" = "Ταχυδρομικός κώδικας";
+
+"Shipping Address" = "Διεύθυνση αποστολής";
+
+"State / Province / Region" = "Πολιτεία / Επαρχία / Περιοχή";
+
+"The BSB you entered is invalid." = "Ο κωδικός BSB που εισάγατε δεν είναι έγκυρος.";
+
+"To scan your card, allow camera access in Settings." = "Για να σαρώσετε την κάρτα σας, επιτρέψτε την πρόσβαση της κάμερας από τις Ρυθμίσεις.";
+
+"Your ZIP is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
+
+"Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
+
+"Your card number is invalid." = "Ο αριθμός της κάρτας σας δεν είναι έγκυρος.";
+
+"Your card's expiration date is incomplete." = "Η ημερομηνία λήξης της κάρτας σας είναι ελλιπής.";
+
+"Your card's expiration date is invalid." = "Η ημερομηνία λήξης της κάρτας σας δεν είναι έγκυρη.";
+
+"Your card's expiration month is invalid." = "Ο μήνας λήξης της κάρτας σας δεν είναι έγκυρος.";
+
+"Your card's expiration year is invalid." = "Το έτος λήξης της κάρτας σας δεν είναι έγκυρο.";
+
+"Your card's security code is incomplete." = "Ο κωδικός ασφαλείας της κάρτας σας είναι ελλιπής.";
+
+"Your card's security code is invalid." = "Ο κωδικός ασφαλείας της κάρτας σας δεν είναι έγκυρος.";
+
+"Your postal code is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
+
+"card number" = "αριθμός κάρτας";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "ημερομηνία λήξης";

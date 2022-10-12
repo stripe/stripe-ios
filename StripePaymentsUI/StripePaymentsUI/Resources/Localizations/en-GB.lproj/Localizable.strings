@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+
+"Address line 2 (optional)" = "Address line 2 (optional)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Bank Account";
+
+"Billing Address" = "Billing Address";
+
+"Billing address" = "Billing address";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Card information";
+
+"Card number" = "Card number";
+
+"Invalid data." = "Invalid data.";
+
+"MM / YY" = "MM / YY";
+
+"MM/YY" = "MM/YY";
+
+"Postal Code" = "Postcode";
+
+"Shipping Address" = "Shipping Address";
+
+"State / Province / Region" = "County / Region";
+
+"The BSB you entered is invalid." = "The BSB you entered is invalid.";
+
+"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+
+"Your ZIP is invalid." = "Your ZIP is invalid.";
+
+"Your card number is incomplete." = "Your card number is incomplete.";
+
+"Your card number is invalid." = "Your card number is invalid.";
+
+"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+
+"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
+
+"Your card's expiration month is invalid." = "Your card expiry month is invalid.";
+
+"Your card's expiration year is invalid." = "Your card's expiry year is invalid.";
+
+"Your card's security code is incomplete." = "Your card's security code is incomplete.";
+
+"Your card's security code is invalid." = "Your card's security code is invalid.";
+
+"Your postal code is invalid." = "Your postcode is invalid.";
+
+"card number" = "card number";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "expiry date";

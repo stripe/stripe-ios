@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "AU BECS-beszedés";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Bank";
+
+"Boleto" = "Boleto";
+
+"Card" = "Kártya";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "NetBanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "SEPA beszedés";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "Fizetési módjának hitelesítésénél időtúllépés történt, próbálja újra.";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "USA bankszámla";
+
+"Unknown" = "Ismeretlen";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nem tudjuk hitelesíteni a fizetési módját. Kérjük, válasszon másik fizetési módot, és próbálkozzon újból.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";
