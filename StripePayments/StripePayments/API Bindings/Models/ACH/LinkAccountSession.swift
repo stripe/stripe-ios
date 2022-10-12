@@ -7,18 +7,17 @@
 //
 
 import UIKit
-@_spi(STP) import StripePayments
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkAccountSession)
-class LinkAccountSession: NSObject, STPAPIResponseDecodable {
-    let stripeID: String
-    let livemode: Bool
-    let clientSecret: String
+@_spi(STP) public class LinkAccountSession: NSObject, STPAPIResponseDecodable {
+    @_spi(STP) public let stripeID: String
+    @_spi(STP) public let livemode: Bool
+    @_spi(STP) public let clientSecret: String
     
-    let allResponseFields: [AnyHashable : Any]
+    @_spi(STP) public let allResponseFields: [AnyHashable : Any]
 
-    required init(stripeID: String,
+    @_spi(STP) public required init(stripeID: String,
                   livemode: Bool,
                   clientSecret: String,
                   allResponseFields: [AnyHashable: Any]) {
@@ -30,7 +29,7 @@ class LinkAccountSession: NSObject, STPAPIResponseDecodable {
     }
     
     
-    static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+    @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
         guard let response = response,
               let stripeID = response["id"] as? String,
               let livemode = response["livemode"] as? Bool,

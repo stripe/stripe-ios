@@ -11,7 +11,7 @@ import Foundation
 /// Deserializes the response returned from https://stripe.com/docs/api/payment_methods/list
 @_spi(STP) public class STPPaymentMethodListDeserializer: NSObject, STPAPIResponseDecodable {
     @_spi(STP) public var paymentMethods: [STPPaymentMethod]?
-    @_spi(STP) public var allResponseFields: [AnyHashable: Any] = [:]
+    @_spi(STP) public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: STPAPIResponseDecodable
     override required init() {

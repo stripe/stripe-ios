@@ -6,14 +6,6 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-//
-//  STPImages.m
-//  Stripe
-//
-//  Created by Jack Flintermann on 6/30/16.
-//  Copyright © 2016 Stripe, Inc. All rights reserved.
-//
-
 import Foundation
 import UIKit
 
@@ -70,15 +62,6 @@ import UIKit
         return self.safeImageNamed("stp_shipping_form", templateIfAvailable: true)
     }
 
-    // TODO: This method can be removed when STPImageLibraryTest is converted to Swift
-    @objc(safeImageNamed:templateIfAvailable:)
-    class func _objc_safeImageNamed(
-        _ imageName: String,
-        templateIfAvailable: Bool
-    ) -> UIImage {
-        safeImageNamed(imageName, templateIfAvailable: templateIfAvailable)
-    }
-
     class func image(
         withTintColor color: UIColor,
         for image: UIImage
@@ -92,7 +75,7 @@ import UIKit
                 x: 0, y: 0, width: templateImage.size.width, height: templateImage.size.height))
         newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return newImage!
+        return newImage ?? image
     }
 }
 

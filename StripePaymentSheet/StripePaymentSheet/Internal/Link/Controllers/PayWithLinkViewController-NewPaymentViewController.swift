@@ -10,6 +10,7 @@ import UIKit
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripePayments
 
 extension PayWithLinkViewController {
 

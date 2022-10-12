@@ -21,4 +21,13 @@ class STPApplePaySwiftTest : XCTestCase {
         XCTAssertTrue(StripeAPI.supportedPKPaymentNetworks().contains(.JCB))
         StripeAPI.additionalEnabledApplePayNetworks = []
     }
+    
+    // Tests stp_tokenParameters in StripePayments, not StripeApplePay
+    func testStpTokenParameters() {
+        let applePay = STPFixtures.applePayPayment()
+        let applePayDict = applePay.stp_tokenParameters(apiClient: .shared)
+        XCTAssertNotNil(applePayDict["pk_token"])
+        XCTAssertEqual((applePayDict["card"] as! NSDictionary)["name"] as! String, "Test Testerson")
+        XCTAssertEqual(applePayDict["pk_token_instrument_name"] as! String, "Master Charge")
+    }
 }

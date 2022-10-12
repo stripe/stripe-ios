@@ -12,7 +12,7 @@ import UIKit
 import SwiftUI
 
 @available(iOS 12, *)
-struct FinancialConnectionsSDKAvailability {
+@_spi(STP) public struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? = NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation") as? FinancialConnectionsSDKInterface.Type
 
     static let isUnitOrUITest: Bool = {
@@ -23,7 +23,7 @@ struct FinancialConnectionsSDKAvailability {
 #endif
     }()
 
-    static var isFinancialConnectionsSDKAvailable: Bool {
+    @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
         // return true for tests
         if isUnitOrUITest {
             return true
