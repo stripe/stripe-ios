@@ -21,6 +21,8 @@ import Foundation
     @_spi(STP) public var message: String?
     /// If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
     @_spi(STP) public var param: String?
+    /// The response’s HTTP status code.
+    @_spi(STP) public var statusCode: Int?
     
     // More information may be available in `allResponseFields`, including
     // the PaymentIntent or PaymentMethod.

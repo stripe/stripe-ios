@@ -18,6 +18,9 @@ import StripeCoreTestUtils
 
 class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
+    private let emailAddress = "customer@example.com"
+    private let longEmailAddress = "long.customer.name@example.com"
+
     override func setUp() {
         super.setUp()
 //        recordMode = true
@@ -25,11 +28,18 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
     func testDefault() {
         let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "customer@example.com", isRegistered: false)
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)
         verify(sut)
 
         sut.isHighlighted = true
         verify(sut, identifier: "Highlighted")
+    }
+
+    func testDefault_rounded() {
+        let sut = makeSUT()
+        sut.cornerRadius = 16
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)
+        verify(sut)
     }
 
     func testDisabled() {
@@ -40,13 +50,27 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
     func testRegistered() {
         let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "customer@example.com", isRegistered: true)
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
         verify(sut)
     }
 
-    func testRegisteredWithLongEmailAddress() {
+    func testRegistered_rounded() {
+        let sut = makeSUT()
+        sut.cornerRadius = 16
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
+        verify(sut)
+    }
+
+    func testRegistered_square() {
+        let sut = makeSUT()
+        sut.cornerRadius = 0
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
+        verify(sut)
+    }
+
+    func testRegistered_withLongEmailAddress() {
         let sut = PayWithLinkButton()
-        sut.linkAccount = makeAccountStub(email: "long.customer.name@example.com", isRegistered: true)
+        sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
         verify(sut)
     }
 
@@ -83,4 +107,5 @@ private extension PayWithLinkButtonSnapshotTests {
     func makeSUT() -> PayWithLinkButton {
         return PayWithLinkButton()
     }
+
 }

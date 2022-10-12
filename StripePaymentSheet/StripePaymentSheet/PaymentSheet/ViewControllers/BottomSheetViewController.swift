@@ -14,6 +14,8 @@ import UIKit
 @_spi(STP) import StripePaymentsUI
 
 protocol BottomSheetContentViewController: UIViewController {
+    
+    /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
     var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
@@ -283,6 +285,14 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         guard contentViewController is BottomSheet3DS2ViewController else {
             return
         }
+        _ = popContentViewController()
+    }
+    
+    func present(_ viewController: BottomSheetContentViewController) {
+        pushContentViewController(viewController)
+    }
+    
+    func dismiss(_ viewController: BottomSheetContentViewController) {
         _ = popContentViewController()
     }
 }

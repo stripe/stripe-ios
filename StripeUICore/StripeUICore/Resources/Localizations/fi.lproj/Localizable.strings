@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB-numero";
 
+"Billing address is same as shipping" = "Laskutusosoite on sama kuin toimitusosoite";
+
 "Cancel" = "Peruuta";
 
 "City" = "Paikkakunta";

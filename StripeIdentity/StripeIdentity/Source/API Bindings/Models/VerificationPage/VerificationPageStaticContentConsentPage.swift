@@ -17,6 +17,7 @@ extension StripeAPI {
         let privacyPolicy: String
         let timeEstimate: String
         let title: String
+        let scrollToContinueButtonText: String
     }
 
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 protocol HostControllerDelegate: AnyObject {
 
     func hostController(
@@ -16,14 +17,16 @@ protocol HostControllerDelegate: AnyObject {
     )
 }
 
+@available(iOSApplicationExtension, unavailable)
 class HostController {
     
     // MARK: - Properties
     
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
+    private let returnURL: String?
 
-    lazy var hostViewController = HostViewController(clientSecret: clientSecret, apiClient: api, delegate: self)
+    lazy var hostViewController = HostViewController(clientSecret: clientSecret, returnURL: returnURL, apiClient: api, delegate: self)
     lazy var navigationController = UINavigationController(rootViewController: hostViewController)
 
     weak var delegate: HostControllerDelegate?
@@ -31,14 +34,17 @@ class HostController {
     // MARK: - Init
     
     init(api: FinancialConnectionsAPIClient,
-         clientSecret: String) {
+         clientSecret: String,
+         returnURL: String?) {
         self.api = api
         self.clientSecret = clientSecret
+        self.returnURL = returnURL
     }
 }
 
 // MARK: - HostViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension HostController: HostViewControllerDelegate {
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
@@ -55,7 +61,7 @@ extension HostController: HostViewControllerDelegate {
         let webFlowViewController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
                                                                               apiClient: api,
                                                                               manifest: didFetchManifest,
-                                                                              sessionFetcher: sessionFetcher)
+                                                                              sessionFetcher: sessionFetcher, returnURL: returnURL)
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
     }
@@ -63,6 +69,7 @@ extension HostController: HostViewControllerDelegate {
 
 // MARK: - ConnectionsWebFlowViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
     func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: FinancialConnectionsSheet.Result) {
         delegate?.hostController(self, viewController: viewController, didFinish: result)

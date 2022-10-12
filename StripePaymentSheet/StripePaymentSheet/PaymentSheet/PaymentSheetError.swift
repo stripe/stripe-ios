@@ -16,6 +16,9 @@ import Foundation
 public enum PaymentSheetError: Error {
     /// An unknown error.
     case unknown(debugDescription: String)
+    
+    /// No payment method types available error.
+    case noPaymentMethodTypesAvailable
 
     /// Localized description of the error
     public var localizedDescription: String {
@@ -32,6 +35,8 @@ extension PaymentSheetError {
     
     var debugDescription: String {
         switch self {
+        case .noPaymentMethodTypesAvailable:
+            return "No payment method types available"
         case .unknown(let debugDescription):
             return debugDescription
         }

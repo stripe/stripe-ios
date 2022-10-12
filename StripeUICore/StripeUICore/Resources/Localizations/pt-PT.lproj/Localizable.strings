@@ -12,6 +12,8 @@
 
 "BSB number" = "Número de BSB";
 
+"Billing address is same as shipping" = "O endereço de faturação é igual ao endereço de envio";
+
 "Cancel" = "Cancelar";
 
 "City" = "Cidade";

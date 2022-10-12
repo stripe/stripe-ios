@@ -336,15 +336,16 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         sheetController?.saveDocumentFrontAndDecideBack(
             from: analyticsScreenName,
             documentUploader: documentUploader,
-            onNeedBack: { [weak self] in
-                self?.imageScanningSession.startScanning(expectedClassification: DocumentSide.back)
-                self?.updateUI()
-            },
-            onNotNeedBack: { [weak self] in
-                self?.imageScanningSession.setStateScanned(
-                    expectedClassification: .front,
-                    capturedData: frontImage
-                )
+            onCompletion: { [weak self] isBackRequired in
+                if isBackRequired {
+                    self?.imageScanningSession.startScanning(expectedClassification: DocumentSide.back)
+                    self?.updateUI()
+                } else {
+                    self?.imageScanningSession.setStateScanned(
+                        expectedClassification: .front,
+                        capturedData: frontImage
+                    )
+                }
             }
         )
     }
@@ -488,6 +489,8 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
 
     func reset() {
         imageScanningSession.reset(to: .front)
+        sheetController?.collectedData.clearFront()
+        sheetController?.collectedData.clearBack()
     }
 }
 

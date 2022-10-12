@@ -77,7 +77,7 @@ class ConnectAccountViewController: UIViewController {
         // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
         STPAPIClient.shared.publishableKey = publishableKey
 
-        financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret)
+        financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret, returnURL: "financial-connections-example://redirect")
         financialConnectionsSheet?.present(
             from: self,
             completion: { [weak self] result in

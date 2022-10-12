@@ -31,32 +31,11 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
-        var recommendedPaymentMethodTypes = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent)
-        if configuration.linkPaymentMethodsOnly {
-            // If we're in the Link modal, manually add instant debit
-            // as an option and let the support calls decide if it's allowed
-            recommendedPaymentMethodTypes.append(.linkInstantDebit)
-        }
-
-        let paymentTypes = recommendedPaymentMethodTypes.filter {
-            PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: $0,
-                configuration: configuration,
-                intent: intent,
-                supportedPaymentMethods: configuration.linkPaymentMethodsOnly ?
-                    PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
-            )
-        }
-
-        let serverFilteredPaymentMethods = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent).filter({$0 != .USBankAccount && $0 != .link})
-        let paymentTypesFiltered = paymentTypes.filter({$0 != .USBankAccount && $0 != .link})
-        if serverFilteredPaymentMethods != paymentTypesFiltered {
-            let result = serverFilteredPaymentMethods.symmetricDifference(paymentTypes)
-            STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethods(clientFilteredPaymentMethods: result.stringList())
-        } else {
-            STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethodsNone()
-        }
-        return paymentTypes
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            configuration: configuration)
+        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
+        return paymentMethodTypes
     }()
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
@@ -348,11 +327,13 @@ class AddPaymentMethodViewController: UIViewController {
         switch(intent) {
         case .paymentIntent:
             client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
+                                                returnURL: configuration.returnURL,
                                                 params: params,
                                                 from: viewController,
                                                 financialConnectionsCompletion: financialConnectionsCompletion)
         case .setupIntent:
             client.collectBankAccountForSetup(clientSecret: intent.clientSecret,
+                                              returnURL: configuration.returnURL,
                                               params: params,
                                               from: viewController,
                                               financialConnectionsCompletion: financialConnectionsCompletion)

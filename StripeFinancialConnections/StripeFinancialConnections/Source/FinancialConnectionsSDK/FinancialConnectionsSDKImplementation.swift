@@ -11,16 +11,19 @@ import UIKit
 /**
  NOTE: If you change the name of this class, make sure to also change it FinancialConnectionsSDKAvailability file
  */
-@_spi(STP) public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInterface {
+@_spi(STP)
+@available(iOSApplicationExtension, unavailable)
+public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInterface {
     required public init() {}
 
     public func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
+        returnURL: String?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> ()
     ) {
-        let financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret)
+        let financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret, returnURL: returnURL)
         financialConnectionsSheet.apiClient = apiClient
         // Captures self explicitly until the callback is invoked
         financialConnectionsSheet.present(

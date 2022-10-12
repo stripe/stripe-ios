@@ -104,6 +104,19 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         verify(headerView)
     }
 
+    func testCustomCornerRadius() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.cornerRadius = 14.5
+
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: [.applePay, .link],
+            appearance: appearance,
+            delegate: nil
+        )
+
+        verify(headerView)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,

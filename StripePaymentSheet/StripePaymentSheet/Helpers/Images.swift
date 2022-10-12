@@ -34,6 +34,11 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_p24 = "icon-pm-p24"
     case pm_type_sepa = "icon-pm-sepa"
     case pm_type_paypal = "icon-pm-paypal"
+<<<<<<< HEAD:StripePaymentSheet/StripePaymentSheet/Helpers/Images.swift
+=======
+    case pm_type_link = "icon-pm-link"
+    case pm_type_upi = "icon-pm-upi"
+>>>>>>> origin/private:Stripe/Images.swift
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"
@@ -59,4 +64,7 @@ enum Image: String, CaseIterable, ImageMaker {
     // Affirm Images
     case affirm_copy = "affirm_mark"
     case affirm_copy_dark = "affirm_mark_dark"
+    
+    // Polling / UPI
+    case polling_error = "polling_error_icon"
 }

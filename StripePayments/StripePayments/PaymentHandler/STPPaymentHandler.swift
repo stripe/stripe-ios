@@ -1152,6 +1152,13 @@ public class STPPaymentHandler: NSObject {
             // which may take 1-2 business days
             currentAction.complete(with: .succeeded, error: nil)
 
+        case .upiAwaitNotification:
+            guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
+                return
+            }
+            presentingVC.present(PollingViewController(currentAction: currentAction,
+                                                          appearance: presentingVC.appearance))
+            break
         @unknown default:
             fatalError()
         }
@@ -1478,7 +1485,8 @@ public class STPPaymentHandler: NSObject {
                 return false
             case .OXXODisplayDetails,
                     .boletoDisplayDetails,
-                    .verifyWithMicrodeposits:
+                    .verifyWithMicrodeposits,
+                    .upiAwaitNotification:
                 return true
             }
         }
@@ -1502,7 +1510,7 @@ public class STPPaymentHandler: NSObject {
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
-                .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits:
+                .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits, .upiAwaitNotification:
             break
         @unknown default:
             fatalError()

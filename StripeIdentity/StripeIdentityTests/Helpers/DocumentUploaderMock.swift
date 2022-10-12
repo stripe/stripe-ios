@@ -13,10 +13,6 @@ import UIKit
 import XCTest
 
 final class DocumentUploaderMock: DocumentUploaderProtocol {
-    var isFrontUpdated = false
-    
-    var isBackUpdated = false
-    
     var delegate: DocumentUploaderDelegate?
 
     var frontUploadStatus: DocumentUploader.UploadStatus = .notStarted

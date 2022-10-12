@@ -167,6 +167,15 @@ extension PaymentSheet {
             ) { result in
                 switch result {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
+                    // Verify that there are payment method types available for the intent and configuration.
+                    let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(
+                        from: intent,
+                        configuration: configuration)
+                    guard !paymentMethodTypes.isEmpty else {
+                        completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable))
+                        return
+                    }
+
                     let manualFlow = FlowController(
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
@@ -243,7 +252,7 @@ extension PaymentSheet {
                 return
             }
 
-            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController)
+            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: configuration.appearance)
 
             PaymentSheet.confirm(
                 configuration: configuration,
@@ -327,6 +336,15 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
 /// For internal SDK use only
 @objc(STP_Internal_AuthenticationContext)
 class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
+    func present(_ viewController: BottomSheetContentViewController) {
+        presentingViewController.present(viewController, animated: true, completion: nil)
+
+    }
+    
+    func dismiss(_ viewController: BottomSheetContentViewController) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
+    
     func present(_ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void) {
         presentingViewController.present(threeDS2ChallengeViewController, animated: true, completion: nil)
     }
@@ -336,9 +354,11 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     }
     
     let presentingViewController: UIViewController
+    let appearance: PaymentSheet.Appearance
 
-    init(presentingViewController: UIViewController) {
+    init(presentingViewController: UIViewController, appearance: PaymentSheet.Appearance) {
         self.presentingViewController = presentingViewController
+        self.appearance = appearance
         super.init()
     }
     func authenticationPresentingViewController() -> UIViewController {

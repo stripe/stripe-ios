@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "Adeudo directo SEPA";
 
+"Save address" = "Guardar dirección";
+
 "Save for future payments" = "Guardar para futuros pagos";
 
 "Save my info for secure 1-click checkout" = "Guardar mis datos para un proceso de compra seguro en un clic";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Dirección de envío";
 
 "Shipping Method" = "Método de envío";
+
+"Shipping to %@ is not supported." = "No se admiten los envíos a %@.";
 
 "Show menu" = "Mostrar menú";
 
