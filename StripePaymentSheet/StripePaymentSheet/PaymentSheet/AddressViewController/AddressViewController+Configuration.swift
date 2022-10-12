@@ -161,5 +161,9 @@ import Foundation
         
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = .shared
+        
+        /// A list of two-letter country codes that support autocomplete
+        /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.
+        public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
     }
 }
