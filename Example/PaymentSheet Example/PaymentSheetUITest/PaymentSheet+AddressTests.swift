@@ -263,4 +263,23 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
         XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
     }
+    
+    func testManualAddressEntry_phoneCountryDoesPersist() throws {
+        loadPlayground(app, settings: [:])
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+        
+        // The Save Address button should be disabled
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertFalse(saveAddressButton.isEnabled)
+        
+        // Select UK for phone number country
+        app.textFields["United States +1"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇬🇧 United Kingdom +44")
+        app.toolbars.buttons["Done"].tap()
+        
+        // Ensure UK is persisted as phone country after tapping done
+        XCTAssert(app.textFields["United Kingdom +44"].exists)
+    }
 }

@@ -31,6 +31,14 @@ import UIKit
         return PhoneNumber(number: textFieldElement.text, countryCode: countryDropdownElement.selectedItem.rawData)
     }
     
+    public var hasBeenModified: Bool {
+        return defaultPhoneNumber?.number != phoneNumber?.number ||
+        defaultPhoneNumber?.countryCode != phoneNumber?.countryCode
+    }
+    
+    // MARK: - Private properties
+    private var defaultPhoneNumber: PhoneNumber?
+    
     // MARK: - Initializer
     /**
      Creates an address section with a country dropdown populated from the given list of countryCodes.
@@ -68,6 +76,7 @@ import UIKit
                 return countryDropdownElement.selectedItem.rawData
             }
         ).makeElement(theme: theme)
+        self.defaultPhoneNumber = phoneNumber
         self.countryDropdownElement.delegate = self
         self.textFieldElement.delegate = self
     }
@@ -105,6 +114,14 @@ import UIKit
             return (e164PhoneNumber.countryCode, e164PhoneNumber.number)
         } else {
             return (countryCode, phoneNumber)
+        }
+    }
+    
+    func selectCountry(index: Int, shouldUpdateDefaultNumber: Bool = false) {
+        countryDropdownElement.select(index: index)
+        
+        if shouldUpdateDefaultNumber {
+            self.defaultPhoneNumber = phoneNumber
         }
     }
 }
