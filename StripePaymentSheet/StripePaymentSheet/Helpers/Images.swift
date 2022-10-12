@@ -34,6 +34,8 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_p24 = "icon-pm-p24"
     case pm_type_sepa = "icon-pm-sepa"
     case pm_type_paypal = "icon-pm-paypal"
+    case pm_type_link = "icon-pm-link"
+    case pm_type_upi = "icon-pm-upi"
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"
@@ -53,10 +55,12 @@ enum Image: String, CaseIterable, ImageMaker {
     case link_logo = "link_logo"
     case icon_link_success = "icon_link_success"
     case icon_link_error = "icon_link_error"
-    case pm_type_link = "icon-pm-link"
     case link_carousel_logo = "link_carousel_logo"
     
     // Affirm Images
     case affirm_copy = "affirm_mark"
     case affirm_copy_dark = "affirm_mark_dark"
+    
+    // Polling / UPI
+    case polling_error = "polling_error_icon"
 }

@@ -1152,6 +1152,12 @@ public class STPPaymentHandler: NSObject {
             // which may take 1-2 business days
             currentAction.complete(with: .succeeded, error: nil)
 
+        case .upiAwaitNotification:
+            guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
+                return
+            }
+            presentingVC.presentPollingVCForAction(currentAction)
+            break
         @unknown default:
             fatalError()
         }
@@ -1478,7 +1484,8 @@ public class STPPaymentHandler: NSObject {
                 return false
             case .OXXODisplayDetails,
                     .boletoDisplayDetails,
-                    .verifyWithMicrodeposits:
+                    .verifyWithMicrodeposits,
+                    .upiAwaitNotification:
                 return true
             }
         }
@@ -1502,7 +1509,7 @@ public class STPPaymentHandler: NSObject {
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
-                .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits:
+                .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits, .upiAwaitNotification:
             break
         @unknown default:
             fatalError()
@@ -1950,8 +1957,9 @@ extension STPPaymentHandler {
 
 /// Internal authentication context for PaymentSheet magic
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
-    func present(_ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void)
-    func dismiss(_ threeDS2ChallengeViewController: UIViewController)
+    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
+    func dismiss(_ authenticationViewController: UIViewController)
+    func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams)
 }
 
 

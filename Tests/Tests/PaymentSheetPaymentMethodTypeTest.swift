@@ -160,6 +160,56 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types[3], .dynamic("futurePaymentMethod"))
     }
 
+    func testPaymentIntentFilteredPaymentMethodTypes() {
+        let paymentIntent = constructPI(paymentMethodTypes: ["card", "klarna", "p24"],
+                                        orderedPaymentMethodTypes: ["card", "klarna", "p24"])!
+        let intent = Intent.paymentIntent(paymentIntent)
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        configuration.allowsDelayedPaymentMethods = true
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+
+        XCTAssertEqual(types.count, 3)
+        XCTAssertEqual(types[0], .card)
+        XCTAssertEqual(types[1], .dynamic("klarna"))
+        XCTAssertEqual(types[2], .dynamic("p24"))
+    }
+
+    func testPaymentIntentFilteredPaymentMethodTypes_withUnfulfilledRequirements() {
+        let paymentIntent = constructPI(paymentMethodTypes: ["card", "klarna", "p24"],
+                                        orderedPaymentMethodTypes: ["card", "klarna", "p24"])!
+        let intent = Intent.paymentIntent(paymentIntent)
+        let configuration = PaymentSheet.Configuration()
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+
+        XCTAssertEqual(types.count, 1)
+        XCTAssertEqual(types[0], .card)
+    }
+
+
+    func testSetupIntentFilteredPaymentMethodTypes() {
+        let setupIntent = constructSI(paymentMethodTypes: ["card", "klarna", "p24"])!
+        let intent = Intent.setupIntent(setupIntent)
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+
+        XCTAssertEqual(types.count, 3)
+        XCTAssertEqual(types[0], .card)
+        XCTAssertEqual(types[1], .dynamic("klarna"))
+        XCTAssertEqual(types[2], .dynamic("p24"))
+    }
+
+    func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
+        let setupIntent = constructSI(paymentMethodTypes: ["card", "klarna", "p24"])!
+        let intent = Intent.setupIntent(setupIntent)
+        let configuration = PaymentSheet.Configuration()
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+
+        XCTAssertEqual(types.count, 1)
+        XCTAssertEqual(types[0], .card)
+    }
+    
     func testSupportsAdding() {
         let paymentIntent = constructPI(paymentMethodTypes: ["luxe_bucks"])!
         let intent = Intent.paymentIntent(paymentIntent)

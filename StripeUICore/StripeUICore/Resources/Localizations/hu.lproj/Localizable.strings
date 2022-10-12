@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB-szám";
 
+"Billing address is same as shipping" = "A számlázási cím megegyezik a szállítási címmel";
+
 "Cancel" = "Mégse";
 
 "City" = "Város";

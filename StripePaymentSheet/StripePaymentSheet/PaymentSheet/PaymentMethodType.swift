@@ -34,6 +34,7 @@ extension PaymentSheet {
         case linkInstantDebit
         case link
         case dynamic(String)
+        case UPI
 
         public init(from str: String) {
             switch(str) {
@@ -43,6 +44,8 @@ extension PaymentSheet {
                 self = .USBankAccount
             case STPPaymentMethod.string(from: .link):
                 self = .link
+            case STPPaymentMethod.string(from: .UPI):
+                self  = .UPI
             default:
                 self = .dynamic(str)
             }
@@ -58,6 +61,8 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .link)
             case .linkInstantDebit:
                 return nil
+            case .UPI:
+                return STPPaymentMethod.string(from: .UPI)
             case .dynamic(let str):
                 return str
             }
@@ -107,7 +112,10 @@ extension PaymentSheet {
             }
             return paymentMethodType
         }
-
+        
+        /// Extracts all the recommended `PaymentMethodType`s from the given `intent`.
+        /// - Parameter intent: The `intent` to extract `PaymentMethodType`s from.
+        /// - Returns: An ordered list of all the `PaymentMethodType`s for this `intent`.
         static func recommendedPaymentMethodTypes(from intent: Intent) -> [PaymentMethodType] {
             switch(intent) {
             case .paymentIntent(let paymentIntent):
@@ -123,6 +131,42 @@ extension PaymentSheet {
                 let paymentTypesString = setupIntent.allResponseFields["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
                 return paymentTypesString.map{ PaymentMethodType(from: $0) }
             }
+        }
+        
+        /// Extracts the recommended `PaymentMethodType`s from the given `intent` and filters out the ones that aren't supported by the given `configuration`.
+        /// - Parameters:
+        ///   - intent: An `intent` to extract `PaymentMethodType`s from.
+        ///   - configuration: A `PaymentSheet` configuration.
+        /// - Returns: An ordered list of `PaymentMethodType`s, including only the ones supported by this configuration.
+        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration) -> [PaymentMethodType] {
+            var recommendedPaymentMethodTypes = Self.recommendedPaymentMethodTypes(from: intent)
+            if configuration.linkPaymentMethodsOnly {
+                // If we're in the Link modal, manually add instant debit
+                // as an option and let the support calls decide if it's allowed
+                recommendedPaymentMethodTypes.append(.linkInstantDebit)
+            }
+
+            let paymentTypes = recommendedPaymentMethodTypes.filter {
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: $0,
+                    configuration: configuration,
+                    intent: intent,
+                    supportedPaymentMethods: configuration.linkPaymentMethodsOnly ?
+                        PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
+                )
+            }
+
+            let serverFilteredPaymentMethods = Self.recommendedPaymentMethodTypes(
+                from: intent
+            ).filter({$0 != .USBankAccount && $0 != .link})
+            let paymentTypesFiltered = paymentTypes.filter({$0 != .USBankAccount && $0 != .link})
+            if serverFilteredPaymentMethods != paymentTypesFiltered {
+                let result = serverFilteredPaymentMethods.symmetricDifference(paymentTypes)
+                STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethods(clientFilteredPaymentMethods: result.stringList())
+            } else {
+                STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethodsNone()
+            }
+            return paymentTypes
         }
 
         static func supportsAdding(

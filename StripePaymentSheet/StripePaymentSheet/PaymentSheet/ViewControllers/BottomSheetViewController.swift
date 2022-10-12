@@ -14,6 +14,8 @@ import UIKit
 @_spi(STP) import StripePaymentsUI
 
 protocol BottomSheetContentViewController: UIViewController {
+    
+    /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
     var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
@@ -270,17 +272,23 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     }
 
     func present(
-        _ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void
+        _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: threeDS2ChallengeViewController, appearance: appearance, isTestMode: isTestMode)
+            challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         completion()
     }
+    
+    func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams) {
+        let pollingVC = PollingViewController(currentAction: action,
+                                                      appearance: self.appearance)
+        pushContentViewController(pollingVC)
+    }
 
-    func dismiss(_ threeDS2ChallengeViewController: UIViewController) {
-        guard contentViewController is BottomSheet3DS2ViewController else {
+    func dismiss(_ authenticationViewController: UIViewController) {
+        guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
             return
         }
         _ = popContentViewController()

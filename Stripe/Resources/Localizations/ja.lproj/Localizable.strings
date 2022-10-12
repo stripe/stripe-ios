@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA ダイレクトデビット";
 
+"Save address" = "住所を保存する";
+
 "Save for future payments" = "今後の支払いのために保存する";
 
 "Save my info for secure 1-click checkout" = "安全なワンクリックでの購入に使用する情報を保存する";
@@ -239,6 +241,8 @@
 "Shipping Address" = "配送先住所";
 
 "Shipping Method" = "配送方法";
+
+"Shipping to %@ is not supported." = "%@ への配送には対応していません。";
 
 "Show menu" = "メニューを表示";
 

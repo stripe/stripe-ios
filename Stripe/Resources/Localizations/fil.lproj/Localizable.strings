@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA Direct Debit";
 
+"Save address" = "I-save ang address";
+
 "Save for future payments" = "I-save para sa mga pagbabayad sa hinaharap";
 
 "Save my info for secure 1-click checkout" = "I-save ang aking info para sa tiyak na 1-click na pag-checkout";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Adres ng Nagpadala";
 
 "Shipping Method" = "Paraan ng Pagpapadala";
+
+"Shipping to %@ is not supported." = "Hindi sinusuportahan ang pagpapadala sa %@.";
 
 "Show menu" = "Ipakita ang menu";
 

@@ -63,22 +63,24 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         completion()
     }
 
-    func checkSubmitAndTransition(completion: @escaping () -> Void) {
+    func checkSubmitAndTransition(
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>? = nil,
+        completion: @escaping () -> Void
+    ) {
         didCheckSubmitAndTransition = true
     }
     
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
-        onNeedBack: @escaping () -> Void,
-        onNotNeedBack: @escaping () -> Void) {
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void) {
         didSaveDocumentFrontAndDecideBack = true
         documentUploader.frontUploadFuture?.observe { [self] result in
             self.frontUploadedDocumentsResult = result
-            if( self.needBack ) {
-                onNeedBack()
+            if self.needBack {
+                onCompletion(true)
             } else {
-                onNotNeedBack()
+                onCompletion(false)
             }
             
         }

@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "Direktna obremenitev SEPA";
 
+"Save address" = "Shrani naslov";
+
 "Save for future payments" = "Shrani za prihodnja plačila";
 
 "Save my info for secure 1-click checkout" = "Shrani moje podatke za varno izvedbo plačila z enim klikom";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Dostavni naslov";
 
 "Shipping Method" = "Način dostave";
+
+"Shipping to %@ is not supported." = "Dostava v državo %@ ni podprta.";
 
 "Show menu" = "Pokaži meni";
 

@@ -118,4 +118,39 @@ extension String.Localized {
     static var save_address: String {
         STPLocalizedString("Save address", "Title for address entry section")
     }
+    
+    static var approve_payment: String {
+        STPLocalizedString(
+            "Approve payment",
+            "Text on a screen asking the user to approve a payment"
+        )
+    }
+    
+    static var cancel_pay_another_way: String {
+        STPLocalizedString(
+            "Cancel and pay another way",
+            "Button text on a screen asking the user to approve a payment"
+        )
+    }
+    
+    static var open_upi_app: String {
+        STPLocalizedString(
+            "Open your UPI app to approve your payment within %@",
+            "Countdown timer text on a screen asking the user to approve a payment"
+        )
+    }
+    
+    static var payment_failed: String {
+        STPLocalizedString(
+            "Payment failed",
+            "Text on a screen that indicates a payment has failed"
+        )
+    }
+    
+    static var please_go_back: String {
+        STPLocalizedString(
+            "Please go back and select another payment method",
+            "Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method"
+        )
+    }
 }

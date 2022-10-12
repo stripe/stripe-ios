@@ -1,6 +1,23 @@
 ## X.Y.Z
 ### Payments
 * The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+### PaymentSheet
+* [Fixed] Use `.formSheet` modal presentation in Mac Catalyst. [#2023](https://github.com/stripe/stripe-ios/issues/2023) (Thanks [sergiocampama](https://github.com/sergiocampama)!)
+
+## 22.8.3 2022-10-03
+### CardScan
+* [Fixed] [Garbled privacy link text in Card Scan UI](https://github.com/stripe/stripe-ios/issues/2015)
+
+## 22.8.2 2022-09-19
+### Identity
+* [Changed] Support uploading single side documents.
+* [Fixed] Fixed Xcode 14 support.
+### Financial Connections
+* [Fixed] Fixes an issue of returning canceled result from FinancialConnections if user taps cancel on the manual entry success screen.
+### CardScan
+* [Added] Added a new parameter to CardScanSheet.present() to specify if the presentation should be done animated or not. Defaults to true.
+* [Changed] Changed card scan ML model loading to be async.
+* [Changed] Changed minimum deployment target for card scan to iOS 13.
 
 ## 22.8.1 2022-09-12
 ### PaymentSheet

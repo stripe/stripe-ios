@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         }
 
         if #available(iOS 12.0, *) {
-            let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: "")
+            let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: "", returnURL: nil)
         }
 
         // Initialize a card field to make sure we can load image resources

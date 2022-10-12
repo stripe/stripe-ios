@@ -60,11 +60,21 @@ final class IdentityFlowNavigationController: UINavigationController {
             identityDelegate?.identityFlowNavigationControllerDidDismiss(self)
         }
     }
+
+    @discardableResult
+    override func popViewController(animated: Bool) -> UIViewController? {
+        (self.previousViewController as? IdentityDataCollecting)?.reset()
+        return super.popViewController(animated: animated)
+    }
 }
 
 // MARK: - IdentityFlowNavigationController Helpers
 
 private extension IdentityFlowNavigationController {
+    var previousViewController: UIViewController? {
+        viewControllers.dropLast().last
+    }
+    
     func configureAndPresentWarningAlert(with viewModel: WarningAlertViewModel) {
         let alertController = UIAlertController(
             title: viewModel.titleText,

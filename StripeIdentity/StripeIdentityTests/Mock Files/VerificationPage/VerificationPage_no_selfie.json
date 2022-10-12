@@ -5,7 +5,8 @@
         "decline_button_text": "No, don't verify",
         "privacy_policy": "Data will be stored and may be used according to the Stripe <a href='https://stripe.com'>Privacy Policy</a> and <a href='https://stripe.com'>Rocket Rides</a> Privacy Policy.",
         "time_estimate": "Takes about 1–2 minutes",
-        "title": "How Stripe will verify your identity"
+        "title": "How Stripe will verify your identity",
+        "scroll_to_continue_button_text": "Scroll to continue"
     },
     "document_capture": {
         "autocapture_timeout": 10000,

@@ -384,11 +384,14 @@ extension AddressSectionElement: ElementDelegate {
         }
         delegate?.didUpdate(element: self)
         
-        // Update the selected country in the phone element if the text is empty
+        // Update the selected country in the phone element if the no defaults have been provided
+        // and the phone number element hasn't been modified
         // to match the country picker if they don't match
-        if let phone = phone, phone.textFieldElement.text.isEmpty
+        if let phone = phone,
+            defaults.phone == nil,
+            !phone.hasBeenModified
             && phone.countryDropdownElement.selectedIndex != country.selectedIndex {
-            phone.countryDropdownElement.select(index: country.selectedIndex)
+            phone.selectCountry(index: country.selectedIndex, shouldUpdateDefaultNumber: true)
         }
     }
 }

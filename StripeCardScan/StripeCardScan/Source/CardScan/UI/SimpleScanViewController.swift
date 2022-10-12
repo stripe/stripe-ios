@@ -108,7 +108,7 @@ class SimpleScanViewController: ScanBaseViewController {
     static var enableCameraPermissionsDescriptionString = String.Localized.update_phone_settings
     static var closeButtonString = String.Localized.close
     static var torchButtonString = String.Localized.torch
-    static var privacyLinkString = String.Localized.scan_card_privacy_link_text
+    static var privacyLinkString = String.Localized.scanCardExpectedPrivacyLinkText()
     
     weak var delegate: SimpleScanDelegate?
     var scanPerformancePriority: ScanPerformance = .fast
@@ -265,9 +265,7 @@ class SimpleScanViewController: ScanBaseViewController {
     }
 
     func setupPrivacyLinkTextUi() {
-        let stringData = Data(SimpleScanViewController.privacyLinkString.utf8)
-
-        if let attributedString = try? NSAttributedString(data: stringData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+        if let attributedString = SimpleScanViewController.privacyLinkString {
             privacyLinkText.attributedText = attributedString
         }
 
@@ -281,6 +279,7 @@ class SimpleScanViewController: ScanBaseViewController {
         privacyLinkText.linkTextAttributes = [
             .foregroundColor: UIColor.white,
         ]
+        privacyLinkText.accessibilityIdentifier = "Privacy Link Text";
     }
     
     func setupDebugViewUi() {

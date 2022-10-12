@@ -165,7 +165,7 @@ extension NSError {
                 code = STPErrorCode.apiError.rawValue
             }
 
-            if let stripeErrorCode = stripeErrorCode {
+            if let stripeErrorCode = stripeErrorCode, !stripeErrorCode.isEmpty {
                 if let cardErrorCode = Utils.cardErrorCode(fromAPIErrorCode: stripeErrorCode) {
                     if cardErrorCode == STPCardErrorCode.cardDeclined,
                        let decline_code = declineCode {

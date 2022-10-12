@@ -495,10 +495,3 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     
     return rhs == lhsConverted
 }
-
-
-/// Internal authentication context for PaymentSheet magic
-protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
-    func present(_ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void)
-    func dismiss(_ threeDS2ChallengeViewController: UIViewController)
-}

@@ -272,6 +272,9 @@
 		36F9A11F25F6A3D600591514 /* STPPaymentHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F9A11E25F6A3D600591514 /* STPPaymentHandlerTests.swift */; };
 		448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
+		61078DA428C278B3007C7001 /* PollingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61078DA328C278B3007C7001 /* PollingViewController.swift */; };
+		61078DA828C7C49C007C7001 /* PaymentSheetFormFactory+UPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61078DA728C7C49C007C7001 /* PaymentSheetFormFactory+UPI.swift */; };
+		61078DAA28C7F28F007C7001 /* IntentStatusPoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61078DA928C7F28F007C7001 /* IntentStatusPoller.swift */; };
 		61202525285AD33F00B55402 /* AutoCompleteViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61202524285AD33F00B55402 /* AutoCompleteViewControllerSnapshotTests.swift */; };
 		612A871A285788D400E91CA8 /* MKPlacemark+PaymentSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612A8719285788D400E91CA8 /* MKPlacemark+PaymentSheetTests.swift */; };
 		615EF62B27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */; };
@@ -796,6 +799,9 @@
 		448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24ParamsTests.m; sourceTree = "<group>"; };
 		44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParamsTests.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		61078DA328C278B3007C7001 /* PollingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollingViewController.swift; sourceTree = "<group>"; };
+		61078DA728C7C49C007C7001 /* PaymentSheetFormFactory+UPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheetFormFactory+UPI.swift"; sourceTree = "<group>"; };
+		61078DA928C7F28F007C7001 /* IntentStatusPoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentStatusPoller.swift; sourceTree = "<group>"; };
 		61202524285AD33F00B55402 /* AutoCompleteViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		612A8719285788D400E91CA8 /* MKPlacemark+PaymentSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKPlacemark+PaymentSheetTests.swift"; sourceTree = "<group>"; };
 		615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmButtonSnapshotTests.swift; sourceTree = "<group>"; };

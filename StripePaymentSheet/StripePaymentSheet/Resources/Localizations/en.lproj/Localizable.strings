@@ -16,6 +16,9 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Add your payment information";
 
+/* Text on a screen asking the user to approve a payment */
+"Approve payment" = "Approve payment";
+
 /* Title of confirmation prompt when removing a saved card. */
 "Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
 
@@ -30,6 +33,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+
+/* Header text shown above a UPI ID text field */
+"Buy using a UPI ID" = "Buy using a UPI ID";
 
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
@@ -48,6 +54,9 @@
 
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+/* Button text on a screen asking the user to approve a payment */
+"Cancel and pay another way" = "Cancel and pay another way";
 
 /* Title for a button that allows the user to use a different email in the signup flow. */
 "Change email" = "Change email";
@@ -101,6 +110,9 @@ re-entering the security code (CVV/CVC). */
 /* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
 "Not %@?" = "Not %@?";
 
+/* Countdown timer text on a screen asking the user to approve a payment */
+"Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
+
 /* Separator label between two options */
 "Or" = "Or";
 
@@ -142,8 +154,14 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Label for a section displaying payment details. */
 "Payment" = "Payment";
 
+/* Text on a screen that indicates a payment has failed */
+"Payment failed" = "Payment failed";
+
 /* Title for a section listing one or more payment methods. */
 "Payment methods" = "Payment methods";
+
+/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+"Please go back and select another payment method" = "Please go back and select another payment method";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";

@@ -12,6 +12,8 @@
 
 "BSB number" = "Αριθμός BSB";
 
+"Billing address is same as shipping" = "Η διεύθυνση τιμολόγησης είναι ίδια με τη διεύθυνση αποστολής";
+
 "Cancel" = "Ακύρωση";
 
 "City" = "Πόλη";

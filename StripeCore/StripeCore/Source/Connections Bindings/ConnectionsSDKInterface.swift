@@ -17,6 +17,7 @@ import UIKit
     init()
     func presentFinancialConnectionsSheet(apiClient: STPAPIClient,
                                           clientSecret: String,
+                                          returnURL: String?,
                                           from presentingViewController: UIViewController,
                                           completion: @escaping (FinancialConnectionsSDKResult) -> ())
 }
