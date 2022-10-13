@@ -52,13 +52,16 @@ final class InstitutionSearchTableView: UIView {
         )
         return footerContainerView
     }()
+    private lazy var loadingContainerView: UIView = {
+        let loadingContainerView = UIView()
+        loadingContainerView.backgroundColor = .customBackgroundColor
+        loadingContainerView.isHidden = true
+        return loadingContainerView
+    }()
     private lazy var loadingView: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.color = .textDisabled
         activityIndicator.backgroundColor = .customBackgroundColor
-        activityIndicator.isHidden = true
-        activityIndicator.setContentHuggingPriority(.defaultLow, for: .vertical)
-        activityIndicator.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return activityIndicator
     }()
     
@@ -88,7 +91,17 @@ final class InstitutionSearchTableView: UIView {
         tableView.register(InstitutionSearchTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
-        addAndPinSubview(loadingView)
+        
+        addAndPinSubview(loadingContainerView)
+        loadingContainerView.addSubview(loadingView)
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // pin loading view to the top so it doesn't get blocked by keyboard
+            loadingView.topAnchor.constraint(equalTo: loadingContainerView.topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: loadingContainerView.leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: loadingContainerView.trailingAnchor),
+        ])
+        
         showTableFooterView(true)
     }
     
@@ -143,7 +156,7 @@ final class InstitutionSearchTableView: UIView {
     }
     
     func showLoadingView(_ show: Bool) {
-        loadingView.isHidden = !show
+        loadingContainerView.isHidden = !show
         if show {
             // do not call `startAnimating` if already animating because
             // it will cause an animation glitch otherwise
@@ -153,7 +166,7 @@ final class InstitutionSearchTableView: UIView {
         } else {
             loadingView.stopAnimating()
         }
-        bringSubviewToFront(loadingView) // defensive programming to avoid loadingView being hiddden
+        bringSubviewToFront(loadingContainerView) // defensive programming to avoid loadingView being hiddden
     }
     
     func showNoResultsNotice(query: String?) {
