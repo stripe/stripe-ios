@@ -91,7 +91,7 @@ final class APIPollingHelper<Value> {
                         let error = error as? StripeError,
                         case .apiError(let apiError) = error,
                         // we want to retry in the case of a 202
-                        apiError.code == "202" // TODO(kgaidis): change this to the status_code
+                        apiError.statusCode == 202
                     {
                         self.numberOfRetriesLeft -= 1
                         self.callApi(afterDelay: self.pollTimingOptions.retryInterval)
