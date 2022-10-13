@@ -254,7 +254,7 @@ final class APIPollingHelperTests: XCTestCase {
     func test202ErrorCreation() throws {
         let error = Create202Error()
         if case .apiError(let stripeAPIError) = error {
-            XCTAssert(stripeAPIError.code == "202")
+            XCTAssert(stripeAPIError.statusCode == 202)
         } else {
             XCTFail()
         }
@@ -326,7 +326,6 @@ private func Create202Error() -> StripeError {
     let errorJson: [String:Any] = [
         "error": [
             "type": "api_error",
-            "code": "202"
         ],
     ]
     let errorJsonData = try! JSONSerialization.data(
@@ -336,6 +335,7 @@ private func Create202Error() -> StripeError {
     let decodedErrorResponse: StripeAPIErrorResponse = try! StripeJSONDecoder.decode(
         jsonData: errorJsonData
     )
-    let apiError = decodedErrorResponse.error!
+    var apiError = decodedErrorResponse.error!
+    apiError.statusCode = 202
     return StripeError.apiError(apiError)
 }
