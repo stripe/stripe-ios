@@ -233,8 +233,7 @@ extension TextFieldElement {
                     return .invalid(Error.invalidMonth)
                 }
                 // Is the date expired?
-                let dateFormatter = DateFormatter(); dateFormatter.dateFormat = "MMyy"
-                guard let date = dateFormatter.date(from: text), date >= Date() else {
+                guard let expiryDate = CardExpiryDate(text), !expiryDate.expired() else {
                     return .invalid(Error.invalid)
                 }
                 return .valid

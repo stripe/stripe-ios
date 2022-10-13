@@ -1,6 +1,8 @@
 ## X.Y.Z
 ### Payments
 * The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+### PaymentSheet
+* [Fixed] Fixed a validation issue where cards expiring at the end of the current month were incorrectly treated as expired.
 
 ## 22.8.4 2022-10-12
 ### PaymentSheet
