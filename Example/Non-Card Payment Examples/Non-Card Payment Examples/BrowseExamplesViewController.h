@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @import Stripe;
+@import StripePayments;
 
 @protocol ExampleViewControllerDelegate <STPAuthenticationContext>
 

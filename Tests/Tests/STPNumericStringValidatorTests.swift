@@ -5,7 +5,11 @@
 //  Created by Cameron Sabol on 3/13/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
 
 class STPNumericStringValidatorTests: XCTestCase {

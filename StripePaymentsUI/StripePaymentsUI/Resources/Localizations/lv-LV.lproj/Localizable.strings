@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@, kuras numura pēdējie cipari ir %2$@";
+
+"Address line 2 (optional)" = "2. adreses rindiņa (nav obligāti)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Bankas konts";
+
+"Billing Address" = "Norēķinu adrese";
+
+"Billing address" = "Norēķinu adrese";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Kartes informācija";
+
+"Card number" = "Kartes numurs";
+
+"Invalid data." = "Nederīgi dati.";
+
+"MM / YY" = "MM/GG";
+
+"MM/YY" = "MM/GG";
+
+"Postal Code" = "Pasta indekss";
+
+"Shipping Address" = "Piegādes adrese";
+
+"State / Province / Region" = "Novads/štats/province/reģions";
+
+"The BSB you entered is invalid." = "Ievadītais BSB nav derīgs.";
+
+"To scan your card, allow camera access in Settings." = "Lai noskenētu karti, Iestatījumos atļaujiet piekļuvi kamerai.";
+
+"Your ZIP is invalid." = "Pasta indekss nav derīgs.";
+
+"Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
+
+"Your card number is invalid." = "Kartes numurs nav derīgs.";
+
+"Your card's expiration date is incomplete." = "Kartes derīguma termiņa datums nav pilnīgs.";
+
+"Your card's expiration date is invalid." = "Kartes derīguma termiņa beigu datums nav derīgs.";
+
+"Your card's expiration month is invalid." = "Kartes derīguma termiņa mēnesis nav derīgs.";
+
+"Your card's expiration year is invalid." = "Kartes derīguma termiņa gads nav derīgs.";
+
+"Your card's security code is incomplete." = "Kartes drošības kods nav pilnīgs.";
+
+"Your card's security code is invalid." = "Kartes drošības kods nav derīgs.";
+
+"Your postal code is invalid." = "Pasta indekss nav derīgs.";
+
+"card number" = "kartes numurs";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "derīguma termiņš";

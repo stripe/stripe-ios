@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ med slutsiffrorna %2$@";
+
+"Address line 2 (optional)" = "Adressrad 2 (valfritt)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Bankkonto";
+
+"Billing Address" = "Faktureringsadress";
+
+"Billing address" = "Faktureringsadress";
+
+"CVC" = "CVC-kod";
+
+"CVV" = "CVV-kod";
+
+"Card information" = "Kortinformation";
+
+"Card number" = "Kortnummer";
+
+"Invalid data." = "Ogiltiga data.";
+
+"MM / YY" = "MM/ÅÅ";
+
+"MM/YY" = "MM/ÅÅ";
+
+"Postal Code" = "Postnummer";
+
+"Shipping Address" = "Leveransadress";
+
+"State / Province / Region" = "Stat/provins/region";
+
+"The BSB you entered is invalid." = "Det BSB du angav är ogiltigt.";
+
+"To scan your card, allow camera access in Settings." = "Tillåt kameraåtkomst i Inställningar för att skanna kortet.";
+
+"Your ZIP is invalid." = "Ditt postnummer är ogiltigt.";
+
+"Your card number is incomplete." = "Ditt kortnummer är ofullständigt.";
+
+"Your card number is invalid." = "Ditt kortnummer är ogiltigt.";
+
+"Your card's expiration date is incomplete." = "Kortets utgångsdatum är ofullständigt.";
+
+"Your card's expiration date is invalid." = "Kortets utgångsdatum är ogiltigt.";
+
+"Your card's expiration month is invalid." = "Kortets utgångsmånad är ogiltig.";
+
+"Your card's expiration year is invalid." = "Kortets utgångsår är ogiltigt.";
+
+"Your card's security code is incomplete." = "Kortets säkerhetskod är ofullständig.";
+
+"Your card's security code is invalid." = "Kortets säkerhetskod är ogiltig.";
+
+"Your postal code is invalid." = "Ditt postnummer är ogiltigt.";
+
+"card number" = "kortnummer";
+
+"example@example.com" = "exempel@exempel.com";
+
+"expiration date" = "utgångsdatum";

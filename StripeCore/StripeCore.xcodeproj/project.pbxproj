@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		310AF470271E12F6007339F4 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310AF46F271E12F6007339F4 /* Dictionary+Stripe.swift */; };
+		31138E7A28DCD876008AF554 /* FraudDetectionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E7828DCD876008AF554 /* FraudDetectionData.swift */; };
+		31138E7B28DCD876008AF554 /* STPTelemetryClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E7928DCD876008AF554 /* STPTelemetryClient.swift */; };
+		31138E7D28DCD95A008AF554 /* UserDefaults+PaymentsCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E7C28DCD95A008AF554 /* UserDefaults+PaymentsCore.swift */; };
 		3126570327B4852600D2F8A8 /* URLRequest+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3126570227B4852600D2F8A8 /* URLRequest+StripeTest.swift */; };
 		31337A4926E04B6A005C7E02 /* URLSession+Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */; };
 		315BDBDF2788E2B4007BD11F /* STPDispatchFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315BDBDE2788E2B4007BD11F /* STPDispatchFunctions.swift */; };
@@ -28,6 +31,7 @@
 		31B49EA426E95DDA00A0464A /* STPURLCallbackHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B49EA326E95DDA00A0464A /* STPURLCallbackHandler.swift */; };
 		31B49EA626E95E0600A0464A /* NSURLComponents+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B49EA526E95E0600A0464A /* NSURLComponents+Stripe.swift */; };
 		31B4A0FF271F3FD200832DBD /* STPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B49EA926E9821100A0464A /* STPError.swift */; };
+		31DCB11728F4E763002EF128 /* PaymentsSDKVariant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB11628F4E763002EF128 /* PaymentsSDKVariant.swift */; };
 		31E6D962274444E300A89B6D /* STPNumericStringValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D961274444E300A89B6D /* STPNumericStringValidator.swift */; };
 		31E6D9642744451B00A89B6D /* NSCharacterSet+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9632744451B00A89B6D /* NSCharacterSet+StripeCore.swift */; };
 		31FDFF3226C5E37100E4B743 /* NSError+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FDFF3126C5E37100E4B743 /* NSError+Stripe.swift */; };
@@ -115,6 +119,9 @@
 
 /* Begin PBXFileReference section */
 		310AF46F271E12F6007339F4 /* Dictionary+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Stripe.swift"; sourceTree = "<group>"; };
+		31138E7828DCD876008AF554 /* FraudDetectionData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FraudDetectionData.swift; sourceTree = "<group>"; };
+		31138E7928DCD876008AF554 /* STPTelemetryClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPTelemetryClient.swift; sourceTree = "<group>"; };
+		31138E7C28DCD95A008AF554 /* UserDefaults+PaymentsCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+PaymentsCore.swift"; sourceTree = "<group>"; };
 		3126570227B4852600D2F8A8 /* URLRequest+StripeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLRequest+StripeTest.swift"; sourceTree = "<group>"; };
 		31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Retry.swift"; sourceTree = "<group>"; };
 		315BDBDE2788E2B4007BD11F /* STPDispatchFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPDispatchFunctions.swift; sourceTree = "<group>"; };
@@ -137,6 +144,7 @@
 		31B49EA326E95DDA00A0464A /* STPURLCallbackHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPURLCallbackHandler.swift; sourceTree = "<group>"; };
 		31B49EA526E95E0600A0464A /* NSURLComponents+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLComponents+Stripe.swift"; sourceTree = "<group>"; };
 		31B49EA926E9821100A0464A /* STPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPError.swift; sourceTree = "<group>"; };
+		31DCB11628F4E763002EF128 /* PaymentsSDKVariant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSDKVariant.swift; sourceTree = "<group>"; };
 		31E6D961274444E300A89B6D /* STPNumericStringValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPNumericStringValidator.swift; sourceTree = "<group>"; };
 		31E6D9632744451B00A89B6D /* NSCharacterSet+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSCharacterSet+StripeCore.swift"; sourceTree = "<group>"; };
 		31FDFF3126C5E37100E4B743 /* NSError+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+Stripe.swift"; sourceTree = "<group>"; };
@@ -289,6 +297,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		31138E7728DCD854008AF554 /* Telemetry */ = {
+			isa = PBXGroup;
+			children = (
+				31138E7828DCD876008AF554 /* FraudDetectionData.swift */,
+				31138E7C28DCD95A008AF554 /* UserDefaults+PaymentsCore.swift */,
+				31138E7928DCD876008AF554 /* STPTelemetryClient.swift */,
+			);
+			path = Telemetry;
+			sourceTree = "<group>";
+		};
 		31AEABAB27BED956000FB845 /* Coder */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +398,7 @@
 				31B49EA926E9821100A0464A /* STPError.swift */,
 				31A5269526C46EBD00F8AB59 /* STPURLCallbackHandler.swift */,
 				E66784AF26980677005F7CC8 /* StripeCoreBundleLocator.swift */,
+				31DCB11628F4E763002EF128 /* PaymentsSDKVariant.swift */,
 				31E6D961274444E300A89B6D /* STPNumericStringValidator.swift */,
 				E614AC9F268BE14B00C59B3D /* URLEncoder.swift */,
 				31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */,
@@ -546,6 +565,7 @@
 		E6B0F53126866DDD00055EAF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				31138E7728DCD854008AF554 /* Telemetry */,
 				31AEABAB27BED956000FB845 /* Coder */,
 				3CD1D39127C82C18001575BB /* Connections Bindings */,
 				E6AF1ED5269FD83E0091BE99 /* UI */,
@@ -809,6 +829,7 @@
 				3160673F2804DA6C0082B148 /* StripeJSONShared.swift in Sources */,
 				F338B9832748809200E9323D /* EmptyResponse.swift in Sources */,
 				31E6D9642744451B00A89B6D /* NSCharacterSet+StripeCore.swift in Sources */,
+				31DCB11728F4E763002EF128 /* PaymentsSDKVariant.swift in Sources */,
 				E6752D7826F413A00062B821 /* String+StripeCore.swift in Sources */,
 				319E36582719EBF700460867 /* ServerErrorMapper.swift in Sources */,
 				31606741280609840082B148 /* UnknownFields.swift in Sources */,
@@ -826,6 +847,7 @@
 				31B4A0FF271F3FD200832DBD /* STPError.swift in Sources */,
 				E6AF1ED7269FD8510091BE99 /* UIFont+Stripe.swift in Sources */,
 				E6AF1EDB269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift in Sources */,
+				31138E7A28DCD876008AF554 /* FraudDetectionData.swift in Sources */,
 				31B49EA426E95DDA00A0464A /* STPURLCallbackHandler.swift in Sources */,
 				E651289827A9CA8400586A1F /* FileDownloader.swift in Sources */,
 				31AEABB427BEDB49000FB845 /* StripeJSONEncoder.swift in Sources */,
@@ -833,6 +855,7 @@
 				E6A36A5F26BB404A002A4427 /* String+Localized.swift in Sources */,
 				E65C44C4273BA03300F753BC /* StripeFile.swift in Sources */,
 				E67377492808FD0C00DF966B /* Decimal+StripeCore.swift in Sources */,
+				31138E7B28DCD876008AF554 /* STPTelemetryClient.swift in Sources */,
 				317C4FE0275FF44D003771D7 /* InstallMethod.swift in Sources */,
 				31A5269E26C4796400F8AB59 /* StripeError.swift in Sources */,
 				31AEABAF27BED97A000FB845 /* StripeJSONDecoder.swift in Sources */,
@@ -844,6 +867,7 @@
 				3CD1D3A927C87191001575BB /* ConnectionsSDKInterface.swift in Sources */,
 				E61ADACB270E6146004ED998 /* NSArray+Stripe.swift in Sources */,
 				E61676FB284FFE3C00C9E44A /* AnalyticsClientV2.swift in Sources */,
+				31138E7D28DCD95A008AF554 /* UserDefaults+PaymentsCore.swift in Sources */,
 				E65C44C0273B9DB500F753BC /* STPMultipartFormDataEncoder.swift in Sources */,
 				315BDBDF2788E2B4007BD11F /* STPDispatchFunctions.swift in Sources */,
 				6142353626E12272004E4B37 /* AnalyticLoggableError.swift in Sources */,

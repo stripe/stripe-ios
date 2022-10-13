@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "AU BECS 直接借記";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "支付寶";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "銀行";
+
+"Boleto" = "Boleto";
+
+"Card" = "卡";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "NetBanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "SEPA Debit";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "驗證您的付款方式時超時 -- 請重試";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "美國銀行帳戶";
+
+"Unknown" = "未知";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們無法驗證您的付款方式。請選擇另一付款方式並重試。";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "Giropay";
+
+"iDEAL" = "iDEAL";

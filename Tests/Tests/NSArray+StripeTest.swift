@@ -6,7 +6,11 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class Array_StripeTest: XCTestCase {
     func test_arrayByRemovingNulls_removesNullsDeeply() {

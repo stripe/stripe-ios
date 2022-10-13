@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "Ghi nợ trực tiếp AU Becs";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Ngân hàng";
+
+"Boleto" = "Boleto";
+
+"Card" = "Thẻ";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "Ngân hàng trực tuyến";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "Ghi nợ SEPA";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "Đã hết thời gian xác thực phương thức thanh toán -- hãy thử lại sau";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "Tài khoản ngân hàng Mỹ";
+
+"Unknown" = "Không biết";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Chúng tôi không thể xác thực phương thức thanh toán của bạn. Vui lòng chọn phương thức thanh toán khác và thử lại.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

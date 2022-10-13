@@ -12,6 +12,7 @@ import StripeIdentity
 import StripeFinancialConnections
 import StripeCardScan
 import StripeApplePay
+import StripePaymentSheet
 
 class ViewController: UIViewController {
 
@@ -35,6 +36,8 @@ class ViewController: UIViewController {
             cardImageVerificationIntentId: "foo",
             cardImageVerificationIntentSecret: "foo"
         )
+        
+        let _ = PaymentSheet(setupIntentClientSecret: "", configuration: PaymentSheet.Configuration())
         // Do any additional setup after loading the view.
 
     }

@@ -5,12 +5,24 @@ let package = Package(
     name: "Stripe",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v12)
+        .iOS(.v13)
     ],
     products: [
         .library(
             name: "Stripe",
             targets: ["Stripe"]
+        ),
+        .library(
+            name: "StripePayments",
+            targets: ["StripePayments"]
+        ),
+        .library(
+            name: "StripePaymentsUI",
+            targets: ["StripePaymentsUI"]
+        ),
+        .library(
+            name: "StripePaymentSheet",
+            targets: ["StripePaymentSheet"]
         ),
         .library(
             name: "StripeApplePay",
@@ -32,14 +44,12 @@ let package = Package(
     targets: [
         .target(
             name: "Stripe",
-            dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore"],
+            dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore", "StripePayments", "StripePaymentsUI"],
             path: "Stripe",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
-                .process("Resources/Images"),
-                .process("Resources/au_becs_bsb.json"),
-                .process("Resources/form_specs.json")
+                .process("Resources/Images")
             ]
         ),
         .target(
@@ -101,6 +111,38 @@ let package = Package(
             name: "StripeUICore",
             dependencies: ["StripeCore"],
             path: "StripeUICore/StripeUICore",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist"),
+                .process("Resources/Images"),
+                .process("Resources/JSON")
+            ]
+        ),
+        .target(
+            name: "StripePayments",
+            dependencies: ["StripeCore", "Stripe3DS2", "StripeUICore"],
+            path: "StripePayments/StripePayments",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist"),
+                .process("Resources")
+            ]
+        ),
+        .target(
+            name: "StripePaymentsUI",
+            dependencies: ["StripeCore", "Stripe3DS2", "StripePayments", "StripeUICore"],
+            path: "StripePaymentsUI/StripePaymentsUI",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist"),
+                .process("Resources/Images"),
+                .process("Resources/JSON")
+            ]
+        ),
+        .target(
+            name: "StripePaymentSheet",
+            dependencies: ["StripePaymentsUI", "StripeApplePay", "StripePayments", "StripeCore", "StripeUICore"],
+            path: "StripePaymentSheet/StripePaymentSheet",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),

@@ -29,7 +29,7 @@ struct FaceScannerOutput: Equatable {
 }
 
 extension FaceScannerOutput {
-    @available(iOS 13, *)
+    
     init(
         faceDetectorOutput: FaceDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?,

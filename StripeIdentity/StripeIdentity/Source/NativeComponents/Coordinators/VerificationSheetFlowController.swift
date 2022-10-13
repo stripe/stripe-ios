@@ -46,9 +46,10 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var analyticsLastScreen: IdentityFlowViewController? { get }
 }
 
-@available(iOS 13, *)
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_VerificationSheetFlowController)
-final class VerificationSheetFlowController: NSObject, IdentityFlowNavigationControllerDelegate, VerificationSheetFlowControllerProtocol {
+final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
 
@@ -67,7 +68,7 @@ final class VerificationSheetFlowController: NSObject, IdentityFlowNavigationCon
     }()
 }
 
-@available(iOS 13, *)
+
 @available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
     /// Transitions to the next view controller in the flow with a 'push' animation.
@@ -461,7 +462,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
 // MARK: - IdentityFlowNavigationControllerDelegate
 
-@available(iOS 13, *)
+
 @available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
     func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
@@ -491,7 +492,8 @@ extension VerificationSheetFlowController: VerificationFlowWebViewControllerDele
 
 // MARK: - SFSafariViewControllerDelegate
 
-@available(iOS 13, *)
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         delegate?.verificationSheetFlowControllerDidDismissWebView(self)

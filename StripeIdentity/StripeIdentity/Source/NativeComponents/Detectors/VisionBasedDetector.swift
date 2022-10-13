@@ -11,7 +11,7 @@ import Vision
 // MARK: - VisionBasedDetector
 
 /// A Detector that scans an image using a VisionRequest
-@available(iOS 13, *)
+
 protocol VisionBasedDetector {
     associatedtype Configuration
     associatedtype Output: VisionBasedDetectorOutput where Output.Detector == Self
@@ -32,7 +32,7 @@ protocol VisionBasedDetector {
     func visionBasedDetectorMakeRequest() -> VNImageBasedRequest
 }
 
-@available(iOS 13, *)
+
 extension VisionBasedDetector {
 
     /**
@@ -104,7 +104,7 @@ extension VisionBasedDetector {
 // MARK: - VisionBasedDetectorOutput
 
 /// Output protocol for VisionBasedDetector
-@available(iOS 13, *)
+
 protocol VisionBasedDetectorOutput {
     associatedtype Detector: VisionBasedDetector
 
@@ -118,7 +118,7 @@ protocol VisionBasedDetectorOutput {
 // MARK: - OptionalVisionBasedDetectorOutput
 
 /// Optional variation of VisionBasedDetectorOutput
-@available(iOS 13, *)
+
 protocol OptionalVisionBasedDetectorOutput {
     associatedtype Detector: VisionBasedDetector
 
@@ -129,7 +129,7 @@ protocol OptionalVisionBasedDetectorOutput {
     ) throws
 }
 
-@available(iOS 13, *)
+
 extension Optional: VisionBasedDetectorOutput where Wrapped: OptionalVisionBasedDetectorOutput {
     typealias Detector = Wrapped.Detector
 

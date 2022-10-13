@@ -319,11 +319,24 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     @"\"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhKpIc6wTNQGy39bHM0a0qziDb20jMBFZT9XKSdjGULpDGRdyil6MLwMyIf3lQxaV/"
     @"P7CQztw28IvYozvKvjBPQ==\",\"publicKeyHash\":\"yRcyn7njT6JL3AY9nmg0KD/xm/ch7gW1sGl2OuEucZY=\"}}";
     NSData *data = [tokenDataString dataUsingEncoding:NSUTF8StringEncoding];
-
+    
+    NSPersonNameComponents *nameComponents = [[NSPersonNameComponents alloc] init];
+    [nameComponents setGivenName:@"Test"];
+    [nameComponents setFamilyName:@"Testerson"];
+    PKContact *contact = [[PKContact alloc] init];
+    contact.name = nameComponents;
+    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
+    // Add a fake display name
+    PKPaymentMethod *paymentMethod = [[PKPaymentMethod alloc] init];
+    [paymentMethod performSelector:@selector(setDisplayName:) withObject:@"Master Charge"];
+
+    [paymentToken performSelector:@selector(setPaymentMethod:) withObject:paymentMethod];
+    
     [paymentToken performSelector:@selector(setPaymentData:) withObject:data];
     [payment performSelector:@selector(setToken:) withObject:paymentToken];
+    [payment performSelector:@selector(setBillingContact:) withObject:contact];
 #pragma clang diagnostic pop
     return payment;
 }

@@ -11,9 +11,9 @@ import FBSnapshotTestCase
 import StripeCoreTestUtils
 import OHHTTPStubs
 
-@_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripeUICore
 @_spi(STP) @testable import StripeCore
+@_spi(STP) @testable import StripePaymentSheet
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 

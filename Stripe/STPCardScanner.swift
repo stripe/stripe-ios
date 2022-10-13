@@ -11,6 +11,8 @@ import Foundation
 import UIKit
 import Vision
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 
 enum STPCardScannerError: Int {
     /// Camera not available.
@@ -25,7 +27,8 @@ enum STPCardScannerError: Int {
 }
 
 @available(iOS 13, macCatalyst 14, *)
-class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+@objc(STPCardScanner_legacy)
+class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, STPCardScanningProtocol {
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static let cardScanningAvailableCameraHasUsageDescription = {
         return
@@ -33,7 +36,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             || Bundle.main.localizedInfoDictionary?["NSCameraUsageDescription"] != nil)
     }()
 
-    class func cardScanningAvailable() -> Bool {
+    static var cardScanningAvailable: Bool {
         // Always allow in tests:
         if NSClassFromString("XCTest") != nil {
             return true
@@ -149,10 +152,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     class func stp_cardScanningError() -> Error {
         let userInfo = [
-            NSLocalizedDescriptionKey: STPLocalizedString(
-                "To scan your card, allow camera access in Settings.",
-                "Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app."
-            ),
+            NSLocalizedDescriptionKey: String.Localized.allow_camera_access,
             STPError.errorMessageKey: "The camera couldn't be used.",
         ]
         return NSError(

@@ -25,9 +25,10 @@ extension StripeAPI {
         
         /// Used internally to identify the version of the SDK sending the request
         @_spi(STP) public var paymentUserAgent: String? = {
-            return STPAPIClient.paymentUserAgent
+            return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
             /// The card number, as a string without any separators. Ex. "4242424242424242"
             @_spi(STP) public var number: String?

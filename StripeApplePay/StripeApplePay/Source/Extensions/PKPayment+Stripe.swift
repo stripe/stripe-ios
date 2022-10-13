@@ -14,7 +14,7 @@ extension PKPayment {
     }
 
     /// Returns a fake transaction identifier with the expected ~-separated format.
-    @_spi(STP) public class func stp_testTransactionIdentifier() -> String? {
+    @_spi(STP) public class func stp_testTransactionIdentifier() -> String {
         var uuid = UUID().uuidString
         uuid = uuid.replacingOccurrences(of: "~", with: "")
 

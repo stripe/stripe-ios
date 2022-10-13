@@ -57,6 +57,9 @@ Label of an address field */
 /* Done button title */
 "Done" = "Done";
 
+/* Button title to enter editing mode */
+"Edit" = "Edit";
+
 /* Label of an address field */
 "Eircode" = "Eircode";
 
