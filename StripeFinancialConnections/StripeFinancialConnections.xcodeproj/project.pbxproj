@@ -57,6 +57,7 @@
 		3CE96D3427585BC6006B7059 /* FinancialConnectionsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3327585BC6006B7059 /* FinancialConnectionsAPIClient.swift */; };
 		3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */; };
 		3CE96D3A27586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */; };
+		3CFC631A28EDCF8E00DF9D28 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */; };
 		6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019D72880865E009D662A /* StringExtensionsTests.swift */; };
 		6A0019DC2885EAAA009D662A /* stripe_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */; };
 		6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */; };
@@ -96,6 +97,7 @@
 		6A4FA15628E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA15528E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift */; };
 		6A4FA15828E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA15728E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift */; };
 		6A50F0DD28F5B91A00214753 /* UIImageView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A50F0DC28F5B91A00214753 /* UIImageView+Extensions.swift */; };
+		6A50F0DF28F8649100214753 /* FinancialConnectionsAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A50F0DE28F8649100214753 /* FinancialConnectionsAnalyticsClient.swift */; };
 		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
 		6A542DB328889AC400958ED1 /* InstitutionSearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */; };
 		6A542DB52889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */; };
@@ -151,7 +153,6 @@
 		6AE5171C28AAF099006E8314 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */; };
 		6AE5171E28ABEF5A006E8314 /* SuccessAccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171D28ABEF5A006E8314 /* SuccessAccountListView.swift */; };
 		6AFD485128871A98003439CB /* FeaturedInstitutionGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD485028871A98003439CB /* FeaturedInstitutionGridView.swift */; };
-		3CFC631A28EDCF8E00DF9D28 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -270,6 +271,7 @@
 		3CE96D3327585BC6006B7059 /* FinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionManifest.swift; sourceTree = "<group>"; };
 		3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
+		3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueStateView.swift; sourceTree = "<group>"; };
 		6A0019D72880865E009D662A /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe_logo@3x.png"; sourceTree = "<group>"; };
 		6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 		6A4FA15528E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountViewController.swift; sourceTree = "<group>"; };
 		6A4FA15728E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountDataSource.swift; sourceTree = "<group>"; };
 		6A50F0DC28F5B91A00214753 /* UIImageView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extensions.swift"; sourceTree = "<group>"; };
+		6A50F0DE28F8649100214753 /* FinancialConnectionsAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAnalyticsClient.swift; sourceTree = "<group>"; };
 		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
 		6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableView.swift; sourceTree = "<group>"; };
 		6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableViewCell.swift; sourceTree = "<group>"; };
@@ -364,7 +367,6 @@
 		6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBodyView.swift; sourceTree = "<group>"; };
 		6AE5171D28ABEF5A006E8314 /* SuccessAccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessAccountListView.swift; sourceTree = "<group>"; };
 		6AFD485028871A98003439CB /* FeaturedInstitutionGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridView.swift; sourceTree = "<group>"; };
-		3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueStateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -576,6 +578,7 @@
 			isa = PBXGroup;
 			children = (
 				3C9F0BD8276293D300E1FDFA /* FinancialConnectionsSheetAnalytics.swift */,
+				6A50F0DE28F8649100214753 /* FinancialConnectionsAnalyticsClient.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -1014,6 +1017,7 @@
 				6A1E299C289DAEF200F99E9D /* AccountPickerViewController.swift in Sources */,
 				6A4FA15828E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
 				6A50F0DD28F5B91A00214753 /* UIImageView+Extensions.swift in Sources */,
+				6A50F0DF28F8649100214753 /* FinancialConnectionsAnalyticsClient.swift in Sources */,
 				3C3ADCBA2800C1E0008C24EF /* BankAccountToken.swift in Sources */,
 				6A99EF6428E5CFBD00C76293 /* AccountNumberRetrievalErrorView.swift in Sources */,
 				3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */,
@@ -1048,7 +1052,7 @@
 				3C5430E0274589E000B1E488 /* FinancialConnectionsSheetError.swift in Sources */,
 				3CA52D4A27517239001F511E /* UIColor+Extensions.swift in Sources */,
 				3C51656928D0F8BA00D41DCF /* APIVersion.swift in Sources */,
-				3CA52D4A27517239001F511E /* Extensions.swift in Sources */,
+				3CA52D4A27517239001F511E /* UIColor+Extensions.swift in Sources */,
 				3C4D9E87277E1CD5007C741B /* FinancialConnectionsAccountFetcher.swift in Sources */,
 				6A59FC9E28B668A700F0F33E /* ManualEntryFormView.swift in Sources */,
 				6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */,
