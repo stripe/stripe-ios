@@ -168,7 +168,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         apiClient.updateIdentityVerificationPageData(
             updating: .init(
-                clearData: .init(clearFields: flowController.uncollectedFields),
+                clearData: calculateClearData(dataToBecollected: collectedData),
                 collectedData: collectedData
             )
         ).observe(on: .main) { [weak self] result in
@@ -185,10 +185,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      2. Transition to the next screen
      */
     private func checkSubmitAndTransition(
-        updateDataResult: Result<StripeAPI.VerificationPageData, Error>? = nil,
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
-        guard case .success(let verificationPage) = verificationPageResponse
+        guard case .success(let updateData) = updateDataResult
         else {
             // Transition to generic error screen
             transitionWithVerificaionPageDataResult(
@@ -196,9 +196,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             )
             return
         }
-        
         // If finished collecting, submit and transition
-        if flowController.isFinishedCollectingData(for: verificationPage) {
+        if updateData.requirements.missing.isEmpty {
             apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
                 self?.isVerificationPageSubmitted = (try? result.get())?.submitted == true
                 self?.transitionWithVerificaionPageDataResult(
@@ -223,16 +222,14 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     ) {
         
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
-        documentUploader.frontUploadFuture?.chained { [weak flowController, apiClient] front -> Future<StripeAPI.VerificationPageData> in
+        documentUploader.frontUploadFuture?.chained { [apiClient] front -> Future<StripeAPI.VerificationPageData> in
             let collectedData = StripeAPI.VerificationPageCollectedData(
                 idDocumentFront: front
             )
             optionalCollectedData = collectedData
-            var clearFields = flowController?.uncollectedFields ?? []
-            clearFields.insert(.idDocumentBack)
             return apiClient.updateIdentityVerificationPageData(
                 updating: StripeAPI.VerificationPageDataUpdate(
-                    clearData: .init(clearFields: clearFields),
+                    clearData: self.calculateClearData(dataToBecollected: collectedData),
                     collectedData: collectedData
                 )
             )
@@ -247,14 +244,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 if let optionalCollectedData = optionalCollectedData {
                     self.collectedData.merge(optionalCollectedData)
                 }
-                
                 guard !resultData.requirements.missing.contains(.idDocumentBack) else {
                     onCompletion(true)
                     return
                 }
                 
                 self.analyticsClient.startTrackingTimeToScreen(from: fromScreen)
-                self.checkSubmitAndTransition() {
+                self.checkSubmitAndTransition(updateDataResult: result) {
                     onCompletion(false)
                 }
             case .failure(_):
@@ -274,14 +270,14 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
-        documentUploader.backUploadFuture?.chained { [weak flowController, apiClient]  back -> Future<StripeAPI.VerificationPageData> in
+        documentUploader.backUploadFuture?.chained { [apiClient]  back -> Future<StripeAPI.VerificationPageData> in
             let collectedData = StripeAPI.VerificationPageCollectedData(
                 idDocumentBack: back
             )
             optionalCollectedData = collectedData
             return apiClient.updateIdentityVerificationPageData(
                 updating: StripeAPI.VerificationPageDataUpdate(
-                    clearData: .init(clearFields: flowController?.uncollectedFields ?? []),
+                    clearData: self.calculateClearData(dataToBecollected: collectedData),
                     collectedData: collectedData
                 )
             )
@@ -326,7 +322,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
-        selfieUploader.uploadFuture?.chained { [weak flowController, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
+        selfieUploader.uploadFuture?.chained { [apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
             let collectedData = StripeAPI.VerificationPageCollectedData(
                 face: .init(
                     uploadedFiles: uploadedFiles,
@@ -338,7 +334,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             optionalCollectedData = collectedData
             return apiClient.updateIdentityVerificationPageData(
                 updating: StripeAPI.VerificationPageDataUpdate(
-                    clearData: .init(clearFields: flowController?.uncollectedFields ?? []),
+                    clearData: self.calculateClearData(dataToBecollected: collectedData),
                     collectedData: collectedData
                 )
             )
@@ -376,6 +372,14 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             updateDataResult: updateDataResult,
             completion: completion
         )
+    }
+    
+    /**
+     Calculate the clearData parameter from the collectedData to be generated by the following
+        allTypes - typesAlreadyCollected - typesToBeCollected
+     */
+    private func calculateClearData(dataToBecollected: StripeAPI.VerificationPageCollectedData) -> StripeAPI.VerificationPageClearData {
+        return .init(clearFields: Set(StripeAPI.VerificationPageFieldType.allCases).subtracting(collectedData.collectedTypes).subtracting(dataToBecollected.collectedTypes))
     }
     
 }

@@ -177,6 +177,10 @@ extension BiometricConsentViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.biometricConsent]
     }
+    
+    func reset() {
+        self.sheetController?.collectedData.clearBiometricConsent()
+    }
 }
 
 // MARK: - UIScrollViewDelegate

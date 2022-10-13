@@ -59,6 +59,45 @@ extension StripeAPI.VerificationPageCollectedData {
     }
     
     /**
+     Clear .biometricConsent.
+     */
+    mutating func clearBiometricConsent() {
+        self  = StripeAPI.VerificationPageCollectedData(
+                    biometricConsent: nil,
+                    face: self.face,
+                    idDocumentBack: self.idDocumentBack,
+                    idDocumentFront: self.idDocumentFront,
+                    idDocumentType: self.idDocumentType
+                )
+    }
+    
+    /**
+     Clear .idDocumentType.
+     */
+    mutating func clearType() {
+        self  = StripeAPI.VerificationPageCollectedData(
+                    biometricConsent: self.biometricConsent,
+                    face: self.face,
+                    idDocumentBack: self.idDocumentBack,
+                    idDocumentFront: self.idDocumentFront,
+                    idDocumentType: nil
+                )
+    }
+    
+    /**
+     Clear .face.
+     */
+    mutating func clearFace() {
+        self  = StripeAPI.VerificationPageCollectedData(
+                    biometricConsent: self.biometricConsent,
+                    face: nil,
+                    idDocumentBack: self.idDocumentBack,
+                    idDocumentFront: self.idDocumentFront,
+                    idDocumentType: self.idDocumentType
+                )
+    }
+    
+    /**
      Clear .idDocumentFront.
      */
     mutating func clearFront() {
@@ -95,5 +134,25 @@ extension StripeAPI.VerificationPageCollectedData {
         case .none:
             return nil
         }
+    }
+    
+    var collectedTypes: Set<StripeAPI.VerificationPageFieldType> {
+        var ret = Set<StripeAPI.VerificationPageFieldType>()
+        if self.biometricConsent != nil {
+            ret.insert(.biometricConsent)
+        }
+        if self.face != nil {
+            ret.insert(.face)
+        }
+        if self.idDocumentBack != nil {
+            ret.insert(.idDocumentBack)
+        }
+        if self.idDocumentFront != nil {
+            ret.insert(.idDocumentFront)
+        }
+        if self.idDocumentType != nil {
+            ret.insert(.idDocumentType)
+        }
+        return ret
     }
 }

@@ -182,4 +182,8 @@ extension DocumentTypeSelectViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.idDocumentType]
     }
+    
+    func reset() {
+        self.sheetController?.collectedData.clearType()
+    }
 }
