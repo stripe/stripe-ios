@@ -58,7 +58,7 @@ final class InstitutionSearchBar: UIView {
     }()
     private lazy var textFieldClearButton: UIButton = {
         let imageView = UIImageView()
-        let textFieldClearButton = UIButton()
+        let textFieldClearButton = TextFieldClearButton()
         if #available(iOS 13.0, *) {
             let cancelImage = Image.cancel_circle.makeImage()
                 .withTintColor(.textDisabled)
@@ -207,3 +207,15 @@ struct InstitutionSearchBar_Previews: PreviewProvider {
 }
 
 #endif
+
+private class TextFieldClearButton: UIButton {
+    
+    // increase hit-test area of the clear button
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let largerBounds = bounds.insetBy(
+            dx: -(50 - bounds.width) / 2,
+            dy: -(50 - bounds.height) / 2
+        )
+        return largerBounds.contains(point)
+    }
+}
