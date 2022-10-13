@@ -124,7 +124,8 @@ let package = Package(
             path: "StripePayments/StripePayments",
             exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist")
+                .process("Info.plist"),
+                .process("Resources")
             ]
         ),
         .target(
