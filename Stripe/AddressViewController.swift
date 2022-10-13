@@ -450,7 +450,7 @@ extension AddressSectionElement.AdditionalFields {
         }
 
         self.init(
-            name: config(from: additionalFields.name),
+            name: config(from: .required),
             phone: config(from: additionalFields.phone)
         )
     }

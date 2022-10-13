@@ -95,9 +95,6 @@ public extension AddressViewController {
                 case required
             }
             
-            /// Configuration for the field that collects a full name.
-            public var name: FieldConfiguration
-            
             /// Configuration for the field that collects a phone number.
             public var phone: FieldConfiguration
             
@@ -106,8 +103,7 @@ public extension AddressViewController {
             public var checkboxLabel: String?
             
             /// Initializes an AdditionalFields
-            public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .hidden, checkboxLabel: String? = nil) {
-                self.name = name
+            public init(phone: FieldConfiguration = .hidden, checkboxLabel: String? = nil) {
                 self.phone = phone
                 self.checkboxLabel = checkboxLabel
             }
