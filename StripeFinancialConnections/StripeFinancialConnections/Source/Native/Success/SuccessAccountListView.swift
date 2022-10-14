@@ -87,7 +87,7 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
 
 private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
     let institutionIconView = InstitutionIconView(size: .small)
-    institutionIconView.setImageUrl(instituion.smallImageUrl)
+    institutionIconView.setImageUrl(instituion.icon?.default)
     
     let label = UILabel()
     label.font = .stripeFont(forTextStyle: .captionEmphasized)

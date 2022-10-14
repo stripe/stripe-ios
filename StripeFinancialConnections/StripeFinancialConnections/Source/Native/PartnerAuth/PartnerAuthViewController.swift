@@ -78,7 +78,7 @@ final class PartnerAuthViewController: UIViewController {
         if authorizationSession.shouldShowPrepane {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
-                institutionImageUrl: institution.smallImageUrl,
+                institutionImageUrl: institution.icon?.default,
                 partner: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toPartner() : nil,
                 isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
                 didSelectContinue: { [weak self] in
@@ -115,7 +115,7 @@ final class PartnerAuthViewController: UIViewController {
             institutionUnavailable
         {
             let institutionIconView = InstitutionIconView(size: .large, showWarning: true)
-            institutionIconView.setImageUrl(institution.smallImageUrl)
+            institutionIconView.setImageUrl(institution.icon?.default)
             let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
                 title: String.Localized.select_another_bank,
                 action: { [weak self] in
