@@ -38,9 +38,14 @@ open class APIStubbedTestCase: XCTestCase {
 
     static public func stubbedAPIClient() -> STPAPIClient {
         let apiClient = STPAPIClient()
-        let urlSessionConfig = URLSessionConfiguration.default
-        HTTPStubs.setEnabled(true, for: urlSessionConfig)
+        let urlSessionConfig = stubbedURLSessionConfig()
         apiClient.urlSession = URLSession(configuration: urlSessionConfig)
         return apiClient
+    }
+
+    static public func stubbedURLSessionConfig() -> URLSessionConfiguration {
+        let urlSessionConfig = URLSessionConfiguration.default
+        HTTPStubs.setEnabled(true, for: urlSessionConfig)
+        return urlSessionConfig
     }
 }

@@ -40,6 +40,8 @@
 		6142353626E12272004E4B37 /* AnalyticLoggableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6142353526E12272004E4B37 /* AnalyticLoggableError.swift */; };
 		619E233526E9419700E06F1C /* Error_SerializeForLoggingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619E233426E9419700E06F1C /* Error_SerializeForLoggingTest.swift */; };
 		61DF180C2707822300E5ED13 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DF180B2707822300E5ED13 /* PluginDetector.swift */; };
+		6B08AB2228DE2AE900BF62E4 /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B08AB2128DE2AE900BF62E4 /* DownloadManager.swift */; };
+		6B08AB2528DF707700BF62E4 /* DownloadManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B08AB2428DF707700BF62E4 /* DownloadManagerTest.swift */; };
 		D0494A70273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */; };
 		D0CA3DA5279BE0CE00143B1C /* KeyPathExpectation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA3DA4279BE0CE00143B1C /* KeyPathExpectation.swift */; };
 		E28F2A0928E793B00026A860 /* STPAPIClient+ErrorResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28F2A0828E793B00026A860 /* STPAPIClient+ErrorResponseTest.swift */; };
@@ -169,6 +171,8 @@
 		6142353526E12272004E4B37 /* AnalyticLoggableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticLoggableError.swift; sourceTree = "<group>"; };
 		619E233426E9419700E06F1C /* Error_SerializeForLoggingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error_SerializeForLoggingTest.swift; sourceTree = "<group>"; };
 		61DF180B2707822300E5ED13 /* PluginDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginDetector.swift; sourceTree = "<group>"; };
+		6B08AB2128DE2AE900BF62E4 /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
+		6B08AB2428DF707700BF62E4 /* DownloadManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerTest.swift; sourceTree = "<group>"; };
 		D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
 		D0CA3DA4279BE0CE00143B1C /* KeyPathExpectation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPathExpectation.swift; sourceTree = "<group>"; };
 		E28F2A0828E793B00026A860 /* STPAPIClient+ErrorResponseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+ErrorResponseTest.swift"; sourceTree = "<group>"; };
@@ -333,6 +337,22 @@
 				3CD1D3A827C87191001575BB /* ConnectionsSDKInterface.swift */,
 			);
 			path = "Connections Bindings";
+			sourceTree = "<group>";
+		};
+		6B08AB2028DE2AB200BF62E4 /* DownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				6B08AB2128DE2AE900BF62E4 /* DownloadManager.swift */,
+			);
+			path = DownloadManager;
+			sourceTree = "<group>";
+		};
+		6B08AB2328DF705800BF62E4 /* DownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				6B08AB2428DF707700BF62E4 /* DownloadManagerTest.swift */,
+			);
+			path = DownloadManager;
 			sourceTree = "<group>";
 		};
 		E614AC95268BE14B00C59B3D /* API Bindings */ = {
@@ -530,6 +550,7 @@
 				E6548EE22728AEE700F399B2 /* API Bindings */,
 				E6FB9BC9268EAF90000FDB4F /* Categories */,
 				E6FB9BC7268EAF80000FDB4F /* Helpers */,
+				6B08AB2328DF705800BF62E4 /* DownloadManager */,
 				E69D640B26855B260090B43D /* Info.plist */,
 			);
 			path = StripeCoreTests;
@@ -574,6 +595,7 @@
 				E614AC9B268BE14B00C59B3D /* Categories */,
 				E614AC9E268BE14B00C59B3D /* Helpers */,
 				E6598C8B2696159500278740 /* Localization */,
+				6B08AB2028DE2AB200BF62E4 /* DownloadManager */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -884,6 +906,7 @@
 				31E6D962274444E300A89B6D /* STPNumericStringValidator.swift in Sources */,
 				31B49E9E26E951EB00A0464A /* STPAPIClient.swift in Sources */,
 				E614ACA1268BE14B00C59B3D /* STPAnalyticEvent.swift in Sources */,
+				6B08AB2228DE2AE900BF62E4 /* DownloadManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -903,6 +926,7 @@
 				31AEABB227BEDA03000FB845 /* TestJSONEncoder.swift in Sources */,
 				E6FB9BC5268EAEF3000FDB4F /* URLEncoderTest.swift in Sources */,
 				E616770828505A2300C9E44A /* AnalyticsClientV2Test.swift in Sources */,
+				6B08AB2528DF707700BF62E4 /* DownloadManagerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
