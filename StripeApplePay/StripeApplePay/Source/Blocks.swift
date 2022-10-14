@@ -10,6 +10,9 @@ import Foundation
 /// An empty block, called with no arguments, returning nothing.
 public typealias STPVoidBlock = () -> Void
 
+/// An block, called with boolean argument, returning nothing.
+public typealias STPBoolBlock = (Bool) -> Void
+
 /// A block to be run with the client secret of a PaymentIntent or SetupIntent.
 /// - Parameters:
 ///   - clientSecret:    The client secret of the PaymentIntent or SetupIntent. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret

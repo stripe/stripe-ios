@@ -227,14 +227,17 @@ public class _stpobjc_APContext: NSObject {
     /// @deprecated A presenting UIViewController is no longer needed. Use presentApplePay(completion:) instead.
     /// - Parameters:
     ///   - viewController:      The UIViewController instance to present the Apple Pay sheet on
-    ///   - completion:               Called after the Apple Pay sheet is presented
+    ///   - completion:          A block that is called after the sheet is presented.
+    ///                          This block is passed the following parameters: A Boolean value that indicates
+    ///                          whether the payment sheet was successfully presented.
+    ///                          true if the payment sheet was presented successfully; otherwise, false.
     @objc(presentApplePayOnViewController:completion:)
     @available(
         *, deprecated, message: "Use `presentApplePay(completion:)` instead.",
         renamed: "presentApplePay(completion:)"
     )
     public func presentApplePay(
-        on viewController: UIViewController, completion: STPVoidBlock? = nil
+        on viewController: UIViewController, completion: STPBoolBlock? = nil
     ) {
         _applePayContext.presentApplePay(on: viewController, completion: completion)
     }
@@ -252,17 +255,20 @@ public class _stpobjc_APContext: NSObject {
         macCatalystApplicationExtension, unavailable,
         message: "Use `presentApplePay(from:completion:)` in App Extensions."
     )
-    public func presentApplePay(completion: STPVoidBlock? = nil) {
+    public func presentApplePay(completion: STPBoolBlock? = nil) {
         _applePayContext.presentApplePay(completion: completion)
     }
 
     /// Presents the Apple Pay sheet from the specified window, starting the payment process.
     /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// - Parameters:
-    ///   - window:                   The UIWindow to host the Apple Pay sheet
-    ///   - completion:               Called after the Apple Pay sheet is presented
+    ///   - window:          The UIWindow to host the Apple Pay sheet
+    ///   - completion:      A block that is called after the sheet is presented.
+    ///                      This block is passed the following parameters: A Boolean value that indicates
+    ///                      whether the payment sheet was successfully presented.
+    ///                      true if the payment sheet was presented successfully; otherwise, false.
     @objc(presentApplePayFromWindow:withCompletion:)
-    public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil) {
+    public func presentApplePay(from window: UIWindow?, completion: STPBoolBlock? = nil) {
         _applePayContext.presentApplePay(from: window, completion: completion)
     }
     
