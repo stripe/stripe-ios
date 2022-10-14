@@ -11,11 +11,11 @@ import Foundation
 extension StripeAPI {
     struct VerificationPageCollectedData: Encodable, Equatable {
 
-        let biometricConsent: Bool?
-        let face: VerificationPageDataFace?
-        let idDocumentBack: VerificationPageDataDocumentFileData?
-        let idDocumentFront: VerificationPageDataDocumentFileData?
-        let idDocumentType: DocumentType?
+        private(set) var biometricConsent: Bool?
+        private(set) var face: VerificationPageDataFace?
+        private(set) var idDocumentBack: VerificationPageDataDocumentFileData?
+        private(set) var idDocumentFront: VerificationPageDataDocumentFileData?
+        private(set) var idDocumentType: DocumentType?
 
         init(
             biometricConsent: Bool? = nil,
@@ -58,71 +58,21 @@ extension StripeAPI.VerificationPageCollectedData {
         self = self.merging(otherData)
     }
     
-    /**
-     Clear .biometricConsent.
-     */
-    mutating func clearBiometricConsent() {
-        self  = StripeAPI.VerificationPageCollectedData(
-                    biometricConsent: nil,
-                    face: self.face,
-                    idDocumentBack: self.idDocumentBack,
-                    idDocumentFront: self.idDocumentFront,
-                    idDocumentType: self.idDocumentType
-                )
+    mutating func clearData(field: StripeAPI.VerificationPageFieldType) {
+        switch field {
+        case .biometricConsent:
+            self.biometricConsent = nil
+        case .face:
+            self.face = nil
+        case .idDocumentBack:
+            self.idDocumentBack = nil
+        case .idDocumentFront:
+            self.idDocumentFront = nil
+        case .idDocumentType:
+            self.idDocumentType = nil
+        }
     }
     
-    /**
-     Clear .idDocumentType.
-     */
-    mutating func clearType() {
-        self  = StripeAPI.VerificationPageCollectedData(
-                    biometricConsent: self.biometricConsent,
-                    face: self.face,
-                    idDocumentBack: self.idDocumentBack,
-                    idDocumentFront: self.idDocumentFront,
-                    idDocumentType: nil
-                )
-    }
-    
-    /**
-     Clear .face.
-     */
-    mutating func clearFace() {
-        self  = StripeAPI.VerificationPageCollectedData(
-                    biometricConsent: self.biometricConsent,
-                    face: nil,
-                    idDocumentBack: self.idDocumentBack,
-                    idDocumentFront: self.idDocumentFront,
-                    idDocumentType: self.idDocumentType
-                )
-    }
-    
-    /**
-     Clear .idDocumentFront.
-     */
-    mutating func clearFront() {
-        self = StripeAPI.VerificationPageCollectedData(
-                   biometricConsent: self.biometricConsent,
-                   face: self.face,
-                   idDocumentBack: self.idDocumentBack,
-                   idDocumentFront: nil,
-                   idDocumentType: self.idDocumentType
-               )
-    }
-    
-    /**
-     Clear .idDocumentBack.
-     */
-    mutating func clearBack() {
-        self  = StripeAPI.VerificationPageCollectedData(
-                    biometricConsent: self.biometricConsent,
-                    face: self.face,
-                    idDocumentBack: nil,
-                    idDocumentFront: self.idDocumentFront,
-                    idDocumentType: self.idDocumentType
-                )
-    }
-
     /// Helper to determine the front document score for analytics purposes
     var frontDocumentScore: TwoDecimalFloat? {
         switch idDocumentType {

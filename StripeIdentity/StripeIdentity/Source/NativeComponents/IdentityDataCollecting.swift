@@ -21,3 +21,13 @@ extension IdentityDataCollecting {
         // Default implementation
     }
 }
+
+extension IdentityDataCollecting where Self: IdentityFlowViewController {
+    func clearCollectedFields() {
+        collectedFields.forEach { self.sheetController?.collectedData.clearData(field: $0) }
+    }
+
+    func reset() {
+        clearCollectedFields()
+    }
+}

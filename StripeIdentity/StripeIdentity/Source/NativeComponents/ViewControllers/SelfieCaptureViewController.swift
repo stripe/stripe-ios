@@ -412,7 +412,7 @@ extension SelfieCaptureViewController: IdentityDataCollecting {
     }
 
     func reset() {
-        self.sheetController?.collectedData.clearFace()
         imageScanningSession.reset()
+        clearCollectedFields()
     }
 }

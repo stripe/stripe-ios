@@ -211,17 +211,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             ))
         }
 
-        // Determine which required fields we haven't collected data for yet
-        let missingRequirements: Set<StripeAPI.VerificationPageFieldType>
-        if let updateDataResponse = updateDataResponse {
-            // If updateDataResponse is not nil, then this transition is triggered by a
-            // VerificationPageDataUpdate request, get missing requirements from the response
-            missingRequirements = updateDataResponse.requirements.missing
-        } else {
-            // If updateDataResponse is nil, then this is the transition to initial page,
-            // nothing is collected yet, return missing requirement from staticContent
-            missingRequirements = staticContent.requirements.missing
-        }
+        // If updateDataResponse is not nil, then this transition is triggered by a
+        // VerificationPageDataUpdate request, get missing requirements from the response.
+        // Otherwise, this is the transition to initial page, nothing is collected yet,
+        // return missing requirement from staticContent.
+        let missingRequirements = updateDataResponse?.requirements.missing ?? staticContent.requirements.missing
         
         // Show success screen if submitted
         if updateDataResponse?.submitted == true {

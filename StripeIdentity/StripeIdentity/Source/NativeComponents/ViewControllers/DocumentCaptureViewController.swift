@@ -489,8 +489,7 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
 
     func reset() {
         imageScanningSession.reset(to: .front)
-        sheetController?.collectedData.clearFront()
-        sheetController?.collectedData.clearBack()
+        clearCollectedFields()
     }
 }
 
