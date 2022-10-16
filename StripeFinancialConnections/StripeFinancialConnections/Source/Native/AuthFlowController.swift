@@ -60,6 +60,14 @@ class AuthFlowController {
     }
     
     @objc private func didSelectNavigationBarCloseButton() {
+        dataManager.analyticsClient.log(
+            eventName: "click.nav_bar.close",
+            parameters: [
+                "pane": FinancialConnectionsAnalyticsClient
+                    .paneFromViewController(navigationController.topViewController)
+            ]
+        )
+        
         let showConfirmationAlert = (
             navigationController.topViewController is AccountPickerViewController
             || navigationController.topViewController is PartnerAuthViewController

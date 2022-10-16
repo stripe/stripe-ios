@@ -63,7 +63,9 @@ extension FinancialConnectionsAnalyticsClient {
 extension FinancialConnectionsAnalyticsClient {
     
     @available(iOSApplicationExtension, unavailable)
-    static func paneFromViewController(_ viewController: UIViewController) -> FinancialConnectionsSessionManifest.NextPane {
+    static func paneFromViewController(
+        _ viewController: UIViewController?
+    ) -> FinancialConnectionsSessionManifest.NextPane {
         switch viewController {
         case is ConsentViewController:
             return .consent
