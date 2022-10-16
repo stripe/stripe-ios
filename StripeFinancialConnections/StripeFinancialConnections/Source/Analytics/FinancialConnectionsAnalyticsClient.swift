@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 
 final class FinancialConnectionsAnalyticsClient {
@@ -17,7 +18,7 @@ final class FinancialConnectionsAnalyticsClient {
         self.analyticsClient = analyticsClient
     }
     
-    public func log(eventName: String, parameters: [String: Any]) {
+    public func log(eventName: String, parameters: [String: Any] = [:]) {
         let parameters = parameters.merging(
             additionalParameters,
             uniquingKeysWith: { eventParameter, _ in
@@ -55,5 +56,37 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["single_account"] = manifest.singleAccount
         additionalParameters["allow_manual_entry"] = manifest.singleAccount
         additionalParameters["account_holder_id"] = manifest.accountholderToken
+    }
+}
+
+
+extension FinancialConnectionsAnalyticsClient {
+    
+    @available(iOSApplicationExtension, unavailable)
+    static func paneFromViewController(_ viewController: UIViewController) -> FinancialConnectionsSessionManifest.NextPane {
+        switch viewController {
+        case is ConsentViewController:
+            return .consent
+        case is InstitutionPicker:
+            return .institutionPicker
+        case is PartnerAuthViewController:
+            return .partnerAuth
+        case is AccountPickerViewController:
+            return .accountPicker
+        case is AttachLinkedPaymentAccountViewController:
+            return .attachLinkedPaymentAccount
+        case is SuccessViewController:
+            return .success
+        case is ManualEntryViewController:
+            return .manualEntry
+        case is ManualEntrySuccessViewController:
+            return .manualEntrySuccess
+        case is ResetFlowViewController:
+            return .resetFlow
+        case is TerminalErrorViewController:
+            return .terminalError
+        default:
+            return .unparsable
+        }
     }
 }
