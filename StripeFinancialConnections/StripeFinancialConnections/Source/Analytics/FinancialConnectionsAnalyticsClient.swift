@@ -33,7 +33,13 @@ final class FinancialConnectionsAnalyticsClient {
     }
 }
 
+// MARK: - Helpers
+
 extension FinancialConnectionsAnalyticsClient {
+    
+    func logPaneLoaded(pane: FinancialConnectionsSessionManifest.NextPane) {
+        log(eventName: "pane.loaded", parameters: ["pane": pane.rawValue])
+    }
     
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
         // TODO(kgaidis): discuss with others on the need for the other events
@@ -57,10 +63,6 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["allow_manual_entry"] = manifest.singleAccount
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
-}
-
-
-extension FinancialConnectionsAnalyticsClient {
     
     @available(iOSApplicationExtension, unavailable)
     static func paneFromViewController(

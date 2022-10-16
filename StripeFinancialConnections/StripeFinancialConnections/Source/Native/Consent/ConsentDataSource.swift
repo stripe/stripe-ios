@@ -11,6 +11,7 @@ import Foundation
 protocol ConsentDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var consentModel: ConsentModel { get }
+    var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest>
 }
@@ -21,17 +22,20 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
     let consentModel: ConsentModel
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     
     init(
         manifest: FinancialConnectionsSessionManifest,
         consentModel: ConsentModel,
         apiClient: FinancialConnectionsAPIClient,
-        clientSecret: String
+        clientSecret: String,
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
         self.consentModel = consentModel
         self.apiClient = apiClient
         self.clientSecret = clientSecret
+        self.analyticsClient = analyticsClient
     }
     
     func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest> {

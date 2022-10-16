@@ -536,7 +536,8 @@ private func CreatePaneViewController(
             manifest: dataManager.manifest,
             consentModel: ConsentModel(businessName: dataManager.manifest.businessName),
             apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
         )
         let consentViewController = ConsentViewController(dataSource: consentDataSource)
         consentViewController.delegate = authFlowController
