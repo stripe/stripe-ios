@@ -163,6 +163,9 @@ extension InstitutionPicker {
                     if #available(iOS 13.0, *) {
                         self.featuredInstitutionGridView.loadInstitutions(institutions)
                     }
+                    self.dataSource
+                        .analyticsClient
+                        .logPaneLoaded(pane: .institutionPicker)
                 case .failure(_):
                     // TODO: add handling for failure (Stripe.js currently shows a terminal error)
                     break
@@ -209,6 +212,17 @@ extension InstitutionPicker {
                             if institutions.isEmpty {
                                 self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
                             }
+                            self.dataSource
+                                .analyticsClient
+                                .log(
+                                    eventName: "search.succeeded",
+                                    parameters: [
+                                        "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker,
+                                        "query": searchQuery,
+                                        "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate),
+                                        "result_count": institutions.count,
+                                    ]
+                                )
                         case .failure(_):
                             self.institutionSearchTableView.loadInstitutions([])
                             self.institutionSearchTableView.showError(true)
@@ -254,6 +268,10 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
         _ view: FeaturedInstitutionGridView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
+        dataSource.analyticsClient.log(
+            eventName: "search.featured_institution_selected",
+            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker]
+        )
         didSelectInstitution(institution)
     }
 }
@@ -268,6 +286,10 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
         _ tableView: InstitutionSearchTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
+        dataSource.analyticsClient.log(
+            eventName: "search.search_result_selected",
+            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker]
+        )
         didSelectInstitution(institution)
     }
     

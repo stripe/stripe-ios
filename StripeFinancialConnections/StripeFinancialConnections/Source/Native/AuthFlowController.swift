@@ -546,7 +546,8 @@ private func CreatePaneViewController(
         let dataSource = InstitutionAPIDataSource(
             manifest: dataManager.manifest,
             apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
         )
         let picker = InstitutionPicker(dataSource: dataSource)
         picker.delegate = authFlowController

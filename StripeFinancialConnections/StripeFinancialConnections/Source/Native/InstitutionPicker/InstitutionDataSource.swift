@@ -11,6 +11,7 @@ import Foundation
 protocol InstitutionDataSource: AnyObject {
     
     var manifest: FinancialConnectionsSessionManifest { get }
+    var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]>
     func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]>
@@ -23,17 +24,20 @@ class InstitutionAPIDataSource: InstitutionDataSource {
     let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     
     // MARK: - Init
     
     init(
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
-        clientSecret: String
+        clientSecret: String,
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
+        self.analyticsClient = analyticsClient
     }
     
     // MARK: - InstitutionDataSource
