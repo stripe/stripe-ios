@@ -65,6 +65,7 @@ class AuthFlowController {
             parameters: [
                 "pane": FinancialConnectionsAnalyticsClient
                     .paneFromViewController(navigationController.topViewController)
+                    .rawValue
             ]
         )
         

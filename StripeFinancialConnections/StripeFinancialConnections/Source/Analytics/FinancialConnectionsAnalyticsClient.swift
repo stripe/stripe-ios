@@ -28,7 +28,14 @@ final class FinancialConnectionsAnalyticsClient {
         )
         
         // TODO(kgaidis): uncomment when we are ready to fire events
+        #if DEBUG
         print("^ logging event: ", eventName, parameters)
+        #endif
+        assert(
+            !parameters.contains(where: { type(of: $0.value) == FinancialConnectionsSessionManifest.NextPane.self }),
+            "Do not pass NextPane enum. Use the raw value."
+        )
+        
         // analyticsClient.log(eventName: eventName, parameters: parameters)
     }
 }
