@@ -19,5 +19,6 @@ Pod::Spec.new do |s|
   s.source_files                   = 'StripePaymentsUI/StripePaymentsUI/**/*.swift'
   s.ios.resource_bundle            = { 'StripePaymentsUI' => 'StripePaymentsUI/StripePaymentsUI/Resources/**/*.{lproj,png,xcassets,json}' }
   s.dependency                       'StripeCore', s.version.to_s
+  s.dependency                       'StripeUICore', s.version.to_s
   s.dependency                       'StripePayments', s.version.to_s
 end
