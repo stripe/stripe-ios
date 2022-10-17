@@ -8,7 +8,6 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
 /// These fields indicate whether a card field represents a valid value, invalid
 /// value, or incomplete value.

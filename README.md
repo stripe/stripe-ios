@@ -63,22 +63,30 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 
 ## Releases
 
-We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
+We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the required frameworks.
+
+For the `Stripe` module, link the following frameworks:
 - `Stripe.xcframework`
 - `Stripe3DS2.xcframework`
 - `StripeApplePay.xcframework`
+- `StripePayments.xcframework`
+- `StripePaymentsUI.xcframework`
 - `StripeCore.xcframework`
 - `StripeUICore.xcframework`
 
-To manually link the **Stripe Identity iOS SDK**, follow [these instructions](StripeIdentity/README.md#manual-linking).
+For other modules, follow the instructions below:
+- [StripePaymentSheet](StripePaymentSheet/README.md#manual-linking)
+- [StripePayments](StripePayments/README.md#manual-linking)
+- [StripePaymentsUI](StripePaymentsUI/README.md#manual-linking)
+- [StripeIdentity](StripeIdentity/README.md#manual-linking)
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy.
 
 ## Requirements
 
-The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps targeting iOS 12 or above. We support Catalyst on macOS 10.15 or later.
+The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps targeting iOS 13 or above. We support Catalyst on macOS 10.16 or later.
 
-For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
+For iOS 12 support, please use [v22.8.4](https://github.com/stripe/stripe-ios/tree/v22.8.4). For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
 
 Requirements for the **Stripe Identity iOS SDK** can be found [here](StripeIdentity/README.md#requirements).
 

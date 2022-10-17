@@ -1,6 +1,8 @@
 ## X.Y.Z
 ### Payments
-* The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+* [Changed] The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+* [Changed] The minimum iOS version is now 13.0. If you'd like to deploy for iOS 12.0, please use Stripe SDK 22.8.4.
+
 ### PaymentSheet
 * [Fixed] Fixed a validation issue where cards expiring at the end of the current month were incorrectly treated as expired.
 
