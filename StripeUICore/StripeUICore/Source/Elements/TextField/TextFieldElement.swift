@@ -160,8 +160,8 @@ extension TextFieldElement: TextFieldViewDelegate {
             text = newText
             // Advance to the next field if text is maximum length and valid
             if text.count == configuration.maxLength(for: text), case .valid = validationState {
-                view.endEditing(true)
                 delegate?.continueToNextField(element: self)
+                view.resignFirstResponder()
             }
         }
         isEditing = view.isEditing

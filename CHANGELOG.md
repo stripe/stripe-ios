@@ -5,6 +5,7 @@
 
 ### PaymentSheet
 * [Fixed] Fixed a validation issue where cards expiring at the end of the current month were incorrectly treated as expired.
+* [Fixed] Fixed a visual bug in iOS 16 where advancing between text fields would momentarily dismiss the keyboard.
 
 ## 22.8.4 2022-10-12
 ### PaymentSheet
