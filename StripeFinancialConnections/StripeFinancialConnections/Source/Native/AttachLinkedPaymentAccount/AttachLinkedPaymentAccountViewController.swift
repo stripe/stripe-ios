@@ -64,6 +64,10 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
         
+        dataSource
+            .analyticsClient
+            .logPaneLoaded(pane: .attachLinkedPaymentAccount)
+        
         attachLinkedAccountIdToLinkAccountSession()
     }
     
@@ -76,11 +80,22 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
         )
         view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
         
+        let pollingStartDate = Date()
         dataSource.attachLinkedAccountIdToLinkAccountSession()
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let paymentAccountResource):
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "polling.attachPayment.success",
+                            parameters: [
+                                "duration": Date().timeIntervalSince(pollingStartDate),
+                                "authSessionId": self.dataSource.authSessionId ?? "unknown",
+                            ]
+                        )
+                    
                     self.delegate?.attachLinkedPaymentAccountViewController(
                         self,
                         didFinishWithPaymentAccountResource: paymentAccountResource

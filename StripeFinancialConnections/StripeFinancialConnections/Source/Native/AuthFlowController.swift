@@ -522,7 +522,9 @@ private func CreatePaneViewController(
                 clientSecret: dataManager.clientSecret,
                 manifest: dataManager.manifest,
                 institution: institution,
-                linkedAccountId: linkedAccountId
+                linkedAccountId: linkedAccountId,
+                analyticsClient: dataManager.analyticsClient,
+                authSessionId: dataManager.authorizationSession?.id
             )
             let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
                 dataSource: dataSource
