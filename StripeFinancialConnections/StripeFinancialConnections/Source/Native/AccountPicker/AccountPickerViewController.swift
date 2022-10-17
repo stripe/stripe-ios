@@ -68,7 +68,17 @@ final class AccountPickerViewController: UIViewController {
             permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
             didSelectLinkAccounts: { [weak self] in
-                self?.didSelectLinkAccounts()
+                guard let self = self else {
+                    return
+                }
+                self.dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: "click.link_accounts",
+                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.accountPicker.rawValue]
+                    )
+
+                self.didSelectLinkAccounts()
             }
         )
     }()
@@ -107,6 +117,7 @@ final class AccountPickerViewController: UIViewController {
         )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
         
+        let pollingStartDate = Date()
         dataSource
             .pollAuthSessionAccounts()
             .observe(on: .main) { [weak self] result in
@@ -114,6 +125,22 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accountsPayload):
                     let accounts = accountsPayload.data
+                    
+                    if !accounts.isEmpty {
+                        self.dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "polling.accounts.success",
+                                parameters: [
+                                    "duration": Date().timeIntervalSince(pollingStartDate),
+                                    "authSessionId": self.dataSource.authorizationSession.id,
+                                ]
+                            )
+                    }
+                    self.dataSource
+                        .analyticsClient
+                        .logPaneLoaded(pane: .accountPicker)
+                    
                     if accounts.isEmpty {
                         // if there were no accounts returned, API should have thrown an error
                         // ...handle it here since API did not throw error

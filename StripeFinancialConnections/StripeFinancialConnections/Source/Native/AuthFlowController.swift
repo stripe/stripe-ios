@@ -505,7 +505,8 @@ private func CreatePaneViewController(
                 clientSecret: dataManager.clientSecret,
                 authorizationSession: authorizationSession,
                 manifest: dataManager.manifest,
-                institution: institution
+                institution: institution,
+                analyticsClient: dataManager.analyticsClient
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = authFlowController
