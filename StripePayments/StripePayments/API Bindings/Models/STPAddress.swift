@@ -9,7 +9,6 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 
 

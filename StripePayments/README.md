@@ -35,4 +35,5 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 If you link this library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
 - `StripeCore.xcframework`
+- `Stripe3DS2.xcframework`
 - `StripePayments.xcframework`

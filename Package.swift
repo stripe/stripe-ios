@@ -120,7 +120,7 @@ let package = Package(
         ),
         .target(
             name: "StripePayments",
-            dependencies: ["StripeCore", "Stripe3DS2", "StripeUICore"],
+            dependencies: ["StripeCore", "Stripe3DS2"],
             path: "StripePayments/StripePayments",
             exclude: ["Info.plist"],
             resources: [
