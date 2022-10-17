@@ -11,6 +11,7 @@ import Foundation
 protocol ManualEntryDataSource: AnyObject {
     
     var manifest: FinancialConnectionsSessionManifest { get }
+    var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     func attachBankAccountToLinkAccountSession(routingNumber: String, accountNumber: String) -> Future<FinancialConnectionsPaymentAccountResource>
 }
@@ -20,15 +21,18 @@ final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     
     init(
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        manifest: FinancialConnectionsSessionManifest
+        manifest: FinancialConnectionsSessionManifest,
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.manifest = manifest
+        self.analyticsClient = analyticsClient
     }
     
     func attachBankAccountToLinkAccountSession(

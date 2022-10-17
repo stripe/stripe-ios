@@ -54,6 +54,9 @@ final class PartnerAuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
+        dataSource
+            .analyticsClient
+            .logPaneLoaded(pane: .partnerAuth)
         createAuthSession()
     }
     

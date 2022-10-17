@@ -61,6 +61,10 @@ final class ManualEntryViewController: UIViewController {
         stp_beginObservingKeyboardAndInsettingScrollView(paneWithHeaderLayoutView.scrollView, onChange: nil)
         
         adjustContinueButtonStateIfNeeded()
+        
+        dataSource
+            .analyticsClient
+            .logPaneLoaded(pane: .manualEntry)
     }
     
     private func didSelectContinue() {

@@ -11,6 +11,7 @@ import Foundation
 protocol PartnerAuthDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     func createAuthSession() -> Future<FinancialConnectionsAuthorizationSession>
     func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Promise<Void>
@@ -23,6 +24,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     
     // a "pending" auth session is a session which has started
     // BUT the session is still yet-to-be authorized
@@ -35,12 +37,14 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
-        clientSecret: String
+        clientSecret: String,
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.institution = institution
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
+        self.analyticsClient = analyticsClient
     }
     
     func createAuthSession() -> Future<FinancialConnectionsAuthorizationSession> {
