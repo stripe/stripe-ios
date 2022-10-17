@@ -609,7 +609,8 @@ private func CreatePaneViewController(
                 linkedAccounts: linkedAccounts,
                 institution: institution,
                 apiClient: dataManager.apiClient,
-                clientSecret: dataManager.clientSecret
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
             )
             let successViewController = SuccessViewController(dataSource: successDataSource)
             successViewController.delegate = authFlowController

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SafariServices
 import UIKit
 @_spi(STP) import StripeUICore
 
@@ -19,7 +20,9 @@ final class SuccessBodyView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod?,
-        isEndUserFacing: Bool
+        isEndUserFacing: Bool,
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        didSelectDisconnectYourAccounts: @escaping () -> Void
     ) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView()
@@ -45,7 +48,8 @@ final class SuccessBodyView: UIView {
             CreateDisconnectAccountLabel(
                 isLinkingOneAccount: (linkedAccounts.count == 1),
                 accountDisconnectionMethod: accountDisconnectionMethod ?? .email,
-                isEndUserFacing: isEndUserFacing
+                isEndUserFacing: isEndUserFacing,
+                didSelectDisconnectYourAccounts: didSelectDisconnectYourAccounts
             )
         )
         
@@ -114,7 +118,8 @@ private func CreateDataAccessDisclosureView(
 private func CreateDisconnectAccountLabel(
     isLinkingOneAccount: Bool,
     accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod,
-    isEndUserFacing: Bool
+    isEndUserFacing: Bool,
+    didSelectDisconnectYourAccounts: @escaping () -> Void
 ) -> UIView {
     let disconnectYourAccountLocalizedString: String = {
         if isLinkingOneAccount {
@@ -133,7 +138,11 @@ private func CreateDisconnectAccountLabel(
     disconnectAccountLabel.setText(
         String(format: fullLocalizedString, "[\(disconnectYourAccountLocalizedString)](\(disconnectionUrlString))"),
         font: .stripeFont(forTextStyle: .captionTight),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        action: { url in
+            SFSafariViewController.present(url: url)
+            didSelectDisconnectYourAccounts()
+        }
     )
     return disconnectAccountLabel
 }
