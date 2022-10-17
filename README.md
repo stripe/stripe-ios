@@ -78,6 +78,7 @@ For other modules, follow the instructions below:
 - [StripePaymentSheet](StripePaymentSheet/README.md#manual-linking)
 - [StripePayments](StripePayments/README.md#manual-linking)
 - [StripePaymentsUI](StripePaymentsUI/README.md#manual-linking)
+- [StripeApplePay](StripeApplePay/README.md#manual-linking)
 - [StripeIdentity](StripeIdentity/README.md#manual-linking)
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy.
