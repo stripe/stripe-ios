@@ -360,7 +360,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
                 paymentMethod: paymentOption.analyticsValue,
                 result: result,
                 linkEnabled: intent.supportsLink,
-                activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
+                activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+                paymentOption: paymentOption
             )
 
             completion(result)

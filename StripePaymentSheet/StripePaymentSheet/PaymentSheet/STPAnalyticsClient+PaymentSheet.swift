@@ -27,7 +27,8 @@ extension STPAnalyticsClient {
         paymentMethod: AnalyticsPaymentMethodType,
         result: PaymentSheetResult,
         linkEnabled: Bool,
-        activeLinkSession: Bool
+        activeLinkSession: Bool,
+        paymentOption: PaymentOption
     ) {
         var success = false
         switch result {
@@ -48,7 +49,8 @@ extension STPAnalyticsClient {
             ),
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
-            activeLinkSession: activeLinkSession
+            activeLinkSession: activeLinkSession,
+            params: ["selected_lpm": paymentOption.name.lowercased()]
         )
     }
 
