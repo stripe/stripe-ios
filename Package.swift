@@ -2,38 +2,38 @@
 import PackageDescription
 
 let package = Package(
-    name: "Stripe",
+    name: "Carded",
     defaultLocalization: "en",
     platforms: [
         .iOS(.v12)
     ],
     products: [
         .library(
-            name: "Stripe",
-            targets: ["Stripe"]
+            name: "Carded",
+            targets: ["Carded"]
         ),
         .library(
-            name: "StripeApplePay",
-            targets: ["StripeApplePay"]
+            name: "CardedApplePay",
+            targets: ["CardedApplePay"]
         ),
         .library(
-            name: "StripeIdentity",
-            targets: ["StripeIdentity"]
+            name: "CardedIdentity",
+            targets: ["CardedIdentity"]
         ),
         .library(
-            name: "StripeCardScan",
-            targets: ["StripeCardScan"]
+            name: "CardedCardScan",
+            targets: ["CardedCardScan"]
         ),
         .library(
-            name: "StripeFinancialConnections",
-            targets: ["StripeFinancialConnections"]
+            name: "CardedFinancialConnections",
+            targets: ["CardedFinancialConnections"]
         )
     ],
     targets: [
         .target(
-            name: "Stripe",
-            dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore"],
-            path: "Stripe",
+            name: "Carded",
+            dependencies: ["Carded3DS2", "CardedCore", "CardedApplePay", "CardedUICore"],
+            path: "Carded",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
@@ -43,44 +43,44 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Stripe3DS2",
-            path: "Stripe3DS2/Stripe3DS2",
-            exclude: ["Info.plist", "Resources/CertificateFiles", "include/Stripe3DS2-Prefix.pch"],
+            name: "Carded3DS2",
+            path: "Carded3DS2/Carded3DS2",
+            exclude: ["Info.plist", "Resources/CertificateFiles", "include/Carded3DS2-Prefix.pch"],
             resources: [
                 .process("Info.plist"),
                 .process("Resources")
             ]
         ),
         .target(
-            name: "StripeCameraCore",
-            dependencies: ["StripeCore"],
-            path: "StripeCameraCore/StripeCameraCore",
+            name: "CardedCameraCore",
+            dependencies: ["CardedCore"],
+            path: "CardedCameraCore/CardedCameraCore",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist")
             ]
         ),
         .target(
-            name: "StripeCore",
-            path: "StripeCore/StripeCore",
+            name: "CardedCore",
+            path: "CardedCore/CardedCore",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist")
             ]
         ),
         .target(
-            name: "StripeApplePay",
-            dependencies: ["StripeCore"],
-            path: "StripeApplePay/StripeApplePay",
+            name: "CardedApplePay",
+            dependencies: ["CardedCore"],
+            path: "CardedApplePay/CardedApplePay",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist")
             ]
         ),
         .target(
-            name: "StripeIdentity",
-            dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
-            path: "StripeIdentity/StripeIdentity",
+            name: "CardedIdentity",
+            dependencies: ["CardedCore", "CardedUICore", "CardedCameraCore"],
+            path: "CardedIdentity/CardedIdentity",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
@@ -88,9 +88,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "StripeCardScan",
-            dependencies: ["StripeCore"],
-            path: "StripeCardScan/StripeCardScan",
+            name: "CardedCardScan",
+            dependencies: ["CardedCore"],
+            path: "CardedCardScan/CardedCardScan",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
@@ -98,9 +98,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "StripeUICore",
-            dependencies: ["StripeCore"],
-            path: "StripeUICore/StripeUICore",
+            name: "CardedUICore",
+            dependencies: ["CardedCore"],
+            path: "CardedUICore/CardedUICore",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
@@ -109,9 +109,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "StripeFinancialConnections",
-            dependencies: ["StripeCore", "StripeUICore"],
-            path: "StripeFinancialConnections/StripeFinancialConnections",
+            name: "CardedFinancialConnections",
+            dependencies: ["CardedCore", "CardedUICore"],
+            path: "CardedFinancialConnections/CardedFinancialConnections",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
