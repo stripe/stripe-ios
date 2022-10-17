@@ -200,8 +200,19 @@ extension AuthFlowController {
                 .completeFinancialConnectionsSession()
                 .observe(on: .main) { [weak self] result in
                     guard let self = self else { return }
+                    let completeEventName = "complete"
                     switch result {
                     case .success(let session):
+                        self.dataManager
+                            .analyticsClient
+                            .log(
+                                eventName: completeEventName,
+                                parameters: [
+                                    "type": "object",
+                                    "num_linked_accounts": session.accounts.data.count,
+                                ]
+                            )
+                        
                         if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
                             finishAuthSession(.completed(session: session))
                         } else if let closeAuthFlowError = closeAuthFlowError {
@@ -214,6 +225,29 @@ extension AuthFlowController {
                             }
                         }
                     case .failure(let completeFinancialConnectionsSessionError):
+                        self.dataManager
+                            .analyticsClient
+                            .log(
+                                eventName: completeEventName,
+                                parameters: {
+                                    var parameters: [String:Any] = [:]
+                                    parameters["type"] = "error"
+                                    if
+                                        let stripeError = completeFinancialConnectionsSessionError as? StripeError,
+                                        case .apiError(let apiError) = stripeError
+                                    {
+                                        parameters["error_type"] = apiError.type.rawValue
+                                        parameters["error_message"] = apiError.message
+                                        parameters["code"] = apiError.code
+                                    } else {
+                                        parameters["error_type"] = (completeFinancialConnectionsSessionError as NSError).domain
+                                        parameters["error_message"] = (completeFinancialConnectionsSessionError as NSError).localizedDescription
+                                        parameters["code"] = (completeFinancialConnectionsSessionError as NSError).code
+                                    }
+                                    return parameters
+                                }()
+                            )
+                        
                         if let closeAuthFlowError = closeAuthFlowError {
                             finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
