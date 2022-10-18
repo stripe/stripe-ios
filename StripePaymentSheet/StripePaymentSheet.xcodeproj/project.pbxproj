@@ -161,8 +161,6 @@
 		3122720B28762CF90007ED5E /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122720A28762CF90007ED5E /* STPLocalizedString.swift */; };
 		3122720D28762D1D0007ED5E /* StripePaymentSheetBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122720C28762D1D0007ED5E /* StripePaymentSheetBundleLocator.swift */; };
 		3122720F287630B80007ED5E /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122720E287630B80007ED5E /* Images.swift */; };
-		31227212287632860007ED5E /* UIViewController+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227211287632860007ED5E /* UIViewController+Stripe.swift */; };
-		31227213287632860007ED5E /* UIWindow+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227210287632860007ED5E /* UIWindow+Stripe.swift */; };
 		312272152876336E0007ED5E /* NSAttributedString+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312272142876336E0007ED5E /* NSAttributedString+Stripe.swift */; };
 		31227217287633CB0007ED5E /* UIView+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227216287633CB0007ED5E /* UIView+StripePaymentSheet.swift */; };
 		31227219287637C00007ED5E /* Data+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227218287637C00007ED5E /* Data+SHA256.swift */; };
@@ -417,8 +415,6 @@
 		3122720A28762CF90007ED5E /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		3122720C28762D1D0007ED5E /* StripePaymentSheetBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentSheetBundleLocator.swift; sourceTree = "<group>"; };
 		3122720E287630B80007ED5E /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
-		31227210287632860007ED5E /* UIWindow+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Stripe.swift"; sourceTree = "<group>"; };
-		31227211287632860007ED5E /* UIViewController+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Stripe.swift"; sourceTree = "<group>"; };
 		312272142876336E0007ED5E /* NSAttributedString+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Stripe.swift"; sourceTree = "<group>"; };
 		31227216287633CB0007ED5E /* UIView+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripePaymentSheet.swift"; sourceTree = "<group>"; };
 		31227218287637C00007ED5E /* Data+SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+SHA256.swift"; sourceTree = "<group>"; };
@@ -1017,10 +1013,8 @@
 				31227218287637C00007ED5E /* Data+SHA256.swift */,
 				31DCB12228F6256D002EF128 /* Date+Distance.swift */,
 				31227216287633CB0007ED5E /* UIView+StripePaymentSheet.swift */,
-				31227211287632860007ED5E /* UIViewController+Stripe.swift */,
 				3122722A28763B590007ED5E /* UserDefaults+Stripe.swift */,
 				312272142876336E0007ED5E /* NSAttributedString+Stripe.swift */,
-				31227210287632860007ED5E /* UIWindow+Stripe.swift */,
 				312271A0286E62F20007ED5E /* STPPaymentMethod+PaymentSheet.swift */,
 				312271A2286E63140007ED5E /* STPPaymentMethodParams+PaymentSheet.swift */,
 			);
@@ -1592,10 +1586,8 @@
 				31227199286E61420007ED5E /* AnalyticsHelper.swift in Sources */,
 				31226FDB286E3AC50007ED5E /* AddPaymentMethodViewController.swift in Sources */,
 				31227016286E3B2B0007ED5E /* ShadowedRoundedRectangleView.swift in Sources */,
-				31227213287632860007ED5E /* UIWindow+Stripe.swift in Sources */,
 				312270F1286E3E640007ED5E /* LinkSecureCookieStore.swift in Sources */,
 				310F6FE728D5346D00C9580D /* STPAPIClient+PaymentSheet.swift in Sources */,
-				31227212287632860007ED5E /* UIViewController+Stripe.swift in Sources */,
 				3122701A286E3B2B0007ED5E /* UIKit+PaymentSheet.swift in Sources */,
 				312270C1286E3D6C0007ED5E /* LinkPaymentMethodPicker-CellContentView.swift in Sources */,
 				3122720B28762CF90007ED5E /* STPLocalizedString.swift in Sources */,

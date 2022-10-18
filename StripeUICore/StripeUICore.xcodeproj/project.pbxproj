@@ -32,6 +32,7 @@
 		B63C7E6D289333E6003BC68A /* AddressSectionElementSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C7E6C289333E6003BC68A /* AddressSectionElementSnapshotTest.swift */; };
 		B647A5F72889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A5F62889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift */; };
 		B67BC10628526385003EEFF0 /* AddressSpec+ElementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */; };
+		B6A0D60128FF4F9E00A9F7A7 /* UIWindow+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0D60028FF4F9E00A9F7A7 /* UIWindow+StripeUICore.swift */; };
 		B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */; };
 		B6DA0506285D0360003696BB /* TextFieldElement+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA0505285D0360003696BB /* TextFieldElement+Factory.swift */; };
 		B6DA050928627B29003696BB /* PhoneNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA050828627B29003696BB /* PhoneNumberElement.swift */; };
@@ -166,6 +167,7 @@
 		B63C7E6C289333E6003BC68A /* AddressSectionElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElementSnapshotTest.swift; sourceTree = "<group>"; };
 		B647A5F62889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSectionElement+DummyAddressLine.swift"; sourceTree = "<group>"; };
 		B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSpec+ElementFactory.swift"; sourceTree = "<group>"; };
+		B6A0D60028FF4F9E00A9F7A7 /* UIWindow+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+StripeUICore.swift"; sourceTree = "<group>"; };
 		B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
 		B6DA0505285D0360003696BB /* TextFieldElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Factory.swift"; sourceTree = "<group>"; };
 		B6DA050828627B29003696BB /* PhoneNumberElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElement.swift; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 				D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */,
 				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
 				E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */,
+				B6A0D60028FF4F9E00A9F7A7 /* UIWindow+StripeUICore.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -905,6 +908,7 @@
 				E6752D8226F417780062B821 /* DynamicHeightContainerView.swift in Sources */,
 				E6752DAD26F421200062B821 /* Events.swift in Sources */,
 				E606937327041A4400742859 /* TextFieldFormatter.swift in Sources */,
+				B6A0D60128FF4F9E00A9F7A7 /* UIWindow+StripeUICore.swift in Sources */,
 				E6752DA426F420F70062B821 /* Element.swift in Sources */,
 				E6752DA826F420F70062B821 /* TextFieldElementConfiguration.swift in Sources */,
 				E6752D6E26F4033B0062B821 /* String+Localized.swift in Sources */,
