@@ -9,6 +9,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 class FinancialConnectionsNavigationController: UINavigationController {
 
     // only currently set for native flow
@@ -34,14 +35,13 @@ class FinancialConnectionsNavigationController: UINavigationController {
             assertionFailure("Expected `analyticsClient` (\(FinancialConnectionsAnalyticsClient.self)) to be set.")
             return
         }
-        
         analyticsClient
             .log(
                 // we use the same event name for both clicks and swipes to
                 // simplify analytics logging (same event, different parameters)
                 eventName: "click.nav_bar.back",
                 parameters: [
-                    "pane": "TODO:replace", // FinancialConnectionsAnalyticsClient.paneFromViewController(fromViewController),
+                    "pane": FinancialConnectionsAnalyticsClient.paneFromViewController(fromViewController).rawValue,
                     "source": source,
                 ]
             )
@@ -50,10 +50,12 @@ class FinancialConnectionsNavigationController: UINavigationController {
 
 // MARK: - Track Swipe Back Analytics Events
 
+@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationControllerDelegate {
         
     private func listenToInteractivePopGestureRecognizer() {
         delegate = self
+        assert(interactivePopGestureRecognizer != nil)
         interactivePopGestureRecognizer?.addTarget(self, action: #selector(interactivePopGestureRecognizerDidChange))
     }
     
@@ -90,9 +92,11 @@ extension FinancialConnectionsNavigationController: UINavigationControllerDelega
 
 // MARK: - Track Back Button Press Analytics Events
 
+@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
     
-    // `UINavigationBarDelegate` 'magically' returns
+    // `UINavigationBarDelegate` methods "just work" on `UINavigationController`
+    // without having to set any delegates
     func navigationBar(
         _ navigationBar: UINavigationBar,
         shouldPop item: UINavigationItem
@@ -110,16 +114,14 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 
 // The purpose of this extension is to consolidate in one place
 // all the common changes to `UINavigationController`
+@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController {
     
     func configureAppearanceForNative() {
         if #available(iOS 13.0, *) {
-             let backButtonImage = Image.back_arrow.makeImage(template: false)
+            let backButtonImage = Image.back_arrow.makeImage(template: false)
             let appearance = UINavigationBarAppearance()
-            //appearance.setBackIndicatorImage(nil, transitionMaskImage: nil)
             appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
-            
-            appearance.setBackIndicatorImage(.none, transitionMaskImage: nil)
             appearance.backgroundColor = .customBackgroundColor
             appearance.shadowColor = .clear // remove border
             navigationBar.standardAppearance = appearance
@@ -162,10 +164,8 @@ extension FinancialConnectionsNavigationController {
             navigationItem?.leftBarButtonItem = UIBarButtonItem(customView: stripeLogoView)
         } else {
             navigationItem?.titleView = stripeLogoView
-            //navigationItem?.leftBarButtonItem = UIBarButtonItem(image: Image.back_arrow.makeImage(), style: .plain, target: nil, action: nil)
         }
-         navigationItem?.backButtonTitle = ""
-        // navigationItem?.backBarButtonItem = closeItem // UIBarButtonItem(image: Image.back_arrow.makeImage(), style: .plain, target: nil, action: nil)
+        navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem
     }
 }
