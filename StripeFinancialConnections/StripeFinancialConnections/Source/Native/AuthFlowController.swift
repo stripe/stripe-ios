@@ -671,7 +671,8 @@ private func CreatePaneViewController(
     case .resetFlow:
         let resetFlowDataSource = ResetFlowDataSourceImplementation(
             apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
         )
         let resetFlowViewController = ResetFlowViewController(
             dataSource: resetFlowDataSource

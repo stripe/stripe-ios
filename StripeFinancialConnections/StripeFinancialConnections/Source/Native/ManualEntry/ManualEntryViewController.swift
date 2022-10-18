@@ -96,6 +96,13 @@ final class ManualEntryViewController: UIViewController {
                     errorText = error.localizedDescription
                 }
                 self.manualEntryFormView.setError(text: errorText)
+                self.dataSource
+                    .analyticsClient
+                    .logUnexpectedError(
+                        error,
+                        errorName: "ManualEntryAttachBankAccountToLinkAccountSessionError",
+                        pane: .manualEntry
+                    )
             }
             self.footerView.setIsLoading(false)
         }

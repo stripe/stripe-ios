@@ -119,6 +119,13 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                             didSelectEnterBankDetailsManually: self.didSelectManualEntry
                         )
                         self.showErrorView(errorView)
+                        self.dataSource
+                            .analyticsClient
+                            .logExpectedError(
+                                error,
+                                errorName: "AccountNumberRetrievalError",
+                                pane: .attachLinkedPaymentAccount
+                            )
                     } else {
                         // something unknown happened here, allow a retry
                         let errorView = AccountPickerAccountLoadErrorView(
@@ -128,6 +135,13 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                             didSelectEnterBankDetailsManually: self.didSelectManualEntry
                         )
                         self.showErrorView(errorView)
+                        self.dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                error,
+                                errorName: "AttachLinkedPaymentAccountError",
+                                pane: .attachLinkedPaymentAccount
+                            )
                     }
                 }
             }

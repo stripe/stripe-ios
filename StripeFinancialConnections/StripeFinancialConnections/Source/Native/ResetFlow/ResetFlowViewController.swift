@@ -57,6 +57,13 @@ final class ResetFlowViewController: UIViewController {
                 case .success(let manifest):
                     self.delegate?.resetFlowViewController(self, didSucceedWithManifest: manifest)
                 case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "ResetFlowLinkMoreAccountsError",
+                            pane: .resetFlow
+                        )
                     self.delegate?.resetFlowViewController(self, didFailWithError: error)
                 }
             }

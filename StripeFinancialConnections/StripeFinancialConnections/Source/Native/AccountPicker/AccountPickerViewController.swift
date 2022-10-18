@@ -144,7 +144,11 @@ final class AccountPickerViewController: UIViewController {
                     if accounts.isEmpty {
                         // if there were no accounts returned, API should have thrown an error
                         // ...handle it here since API did not throw error
-                        self.showAccountLoadErrorView() // "API returned an empty list of accounts"
+                        self.showAccountLoadErrorView(
+                            error: FinancialConnectionsSheetError.unknown(
+                                debugDescription: "API returned an empty list of accounts"
+                            )
+                        )
                     } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
                         self.dataSource.updateSelectedAccounts(accounts)
                         self.didSelectLinkAccounts()
@@ -214,10 +218,17 @@ final class AccountPickerViewController: UIViewController {
                         // the user will never enter this instance of `AccountPickerViewController`
                         // again...they can only choose manual entry or go through "ResetFlow"
                         self.showErrorView(errorView)
+                        self.dataSource
+                            .analyticsClient
+                            .logExpectedError(
+                                error,
+                                errorName: "AccountNoneEligibleForPaymentMethodError",
+                                pane: .accountPicker
+                            )
                     } else {
                         // if we didn't get that specific error back, we don't know what's wrong. could the be
                         // aggregator, could be Stripe.
-                        self.showAccountLoadErrorView()
+                        self.showAccountLoadErrorView(error: error)
                     }
                 }
                 retreivingAccountsLoadingView.removeFromSuperview()
@@ -295,14 +306,21 @@ final class AccountPickerViewController: UIViewController {
         }
     }
     
-    private func showAccountLoadErrorView() {
+    private func showAccountLoadErrorView(error: Error) {
         let errorView = AccountPickerAccountLoadErrorView(
             institution: dataSource.institution,
             didSelectAnotherBank: didSelectAnotherBank,
             didSelectTryAgain: didSelectTryAgain,
             didSelectEnterBankDetailsManually: didSelectManualEntry
         )
-        self.showErrorView(errorView)
+        showErrorView(errorView)
+        dataSource
+            .analyticsClient
+            .logExpectedError(
+                error,
+                errorName: "AccountLoadError",
+                pane: .accountPicker
+            )
     }
     
     private func showErrorView(_ errorView: UIView?) {
@@ -334,6 +352,13 @@ final class AccountPickerViewController: UIViewController {
                         didSelectAccounts: linkedAccounts
                     )
                 case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "SelectAuthSessionAccountsError",
+                            pane: .accountPicker
+                        )
                     self.delegate?.accountPickerViewController(self, didReceiveTerminalError: error)
                 }
             }
