@@ -42,9 +42,11 @@ class AuthFlowController {
     ) {
         self.dataManager = dataManager
         self.navigationController = navigationController
+        navigationController.analyticsClient = dataManager.analyticsClient
     }
     
     func startFlow() {
+        assert(navigationController.analyticsClient != nil)
         guard
             let viewController = CreatePaneViewController(
                 pane: dataManager.manifest.nextPane,
@@ -88,7 +90,7 @@ extension AuthFlowController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
                 closeItem: navigationBarCloseBarButtonItem,
-                isFirstViewController: (viewControllers.first is ConsentViewController)
+                isFirstViewController: viewControllers.first === viewController
             )
         }
         navigationController.setViewControllers(viewControllers, animated: animated)
