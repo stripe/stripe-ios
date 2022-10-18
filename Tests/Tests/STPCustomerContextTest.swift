@@ -14,6 +14,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentsUI
 @testable @_spi(STP) import StripePayments
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 class MockEphemeralKeyManager: STPEphemeralKeyManagerProtocol {
     var ephemeralKey: STPEphemeralKey?

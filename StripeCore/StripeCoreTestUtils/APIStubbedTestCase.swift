@@ -9,6 +9,7 @@
 import Foundation
 import XCTest
 import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 
 /* A test case offering a custom STPAPIClient with manual JSON stubbing. */

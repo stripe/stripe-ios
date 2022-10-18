@@ -7,6 +7,7 @@
 
 @testable import StripeCardScan
 import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import UIKit
 import XCTest

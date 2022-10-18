@@ -8,16 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		31138E6928DBBB70008AF554 /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E6828DBBB70008AF554 /* Enums+CustomStringConvertible.swift */; };
-		31138E9928DE53CD008AF554 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E8F28DE53CC008AF554 /* StripeiOS Tests-Debug.xcconfig */; };
-		31138E9A28DE53CD008AF554 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9028DE53CC008AF554 /* StripeiOS-Debug.xcconfig */; };
-		31138E9B28DE53CD008AF554 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9128DE53CC008AF554 /* Project-Release.xcconfig */; };
-		31138E9C28DE53CD008AF554 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9228DE53CC008AF554 /* StripeiOS Tests-Release.xcconfig */; };
-		31138E9D28DE53CD008AF554 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9328DE53CC008AF554 /* Project-Shared.xcconfig */; };
-		31138E9E28DE53CD008AF554 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9428DE53CC008AF554 /* Version.xcconfig */; };
-		31138E9F28DE53CD008AF554 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9528DE53CC008AF554 /* StripeiOS Tests-Shared.xcconfig */; };
-		31138EA028DE53CD008AF554 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9628DE53CC008AF554 /* StripeiOS-Shared.xcconfig */; };
-		31138EA128DE53CD008AF554 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9728DE53CC008AF554 /* Project-Debug.xcconfig */; };
-		31138EA228DE53CD008AF554 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138E9828DE53CC008AF554 /* StripeiOS-Release.xcconfig */; };
 		31227111286E414A0007ED5E /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227109286E414A0007ED5E /* APIRequest.swift */; };
 		31227112286E414A0007ED5E /* STPIntentActionUseStripeSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710A286E414A0007ED5E /* STPIntentActionUseStripeSDK.swift */; };
 		31227113286E414A0007ED5E /* STPFormEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710B286E414A0007ED5E /* STPFormEncoder.swift */; };
@@ -941,7 +931,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					3139D259286E34A700C9744B = {
 						CreatedOnToolsVersion = 13.4;
@@ -1016,17 +1006,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31138E9C28DE53CD008AF554 /* StripeiOS Tests-Release.xcconfig in Resources */,
-				31138E9F28DE53CD008AF554 /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				31F7EBF528F787120007C0BB /* Localizable.strings in Resources */,
-				31138E9D28DE53CD008AF554 /* Project-Shared.xcconfig in Resources */,
-				31138E9928DE53CD008AF554 /* StripeiOS Tests-Debug.xcconfig in Resources */,
-				31138E9A28DE53CD008AF554 /* StripeiOS-Debug.xcconfig in Resources */,
-				31138EA228DE53CD008AF554 /* StripeiOS-Release.xcconfig in Resources */,
-				31138E9B28DE53CD008AF554 /* Project-Release.xcconfig in Resources */,
-				31138EA128DE53CD008AF554 /* Project-Debug.xcconfig in Resources */,
-				31138EA028DE53CD008AF554 /* StripeiOS-Shared.xcconfig in Resources */,
-				31138E9E28DE53CD008AF554 /* Version.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

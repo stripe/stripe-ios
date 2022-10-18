@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */; };
 		D48DA57928CD15DF00050C06 /* VerificationPageData_no_errors_needback.json in Resources */ = {isa = PBXBuildFile; fileRef = D48DA57828CD15DF00050C06 /* VerificationPageData_no_errors_needback.json */; };
+		E254413E28FDEF0500C6F5D3 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = E254413D28FDEF0500C6F5D3 /* iOSSnapshotTestCase */; };
+		E254414028FDEF0500C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = E254413D28FDEF0500C6F5D3 /* iOSSnapshotTestCase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E606936F2702A2C100742859 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606936E2702A2C100742859 /* String+Localized.swift */; };
 		E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */; };
 		E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */; };
@@ -25,7 +27,6 @@
 		E616770A2853F6A700C9E44A /* VerificationPageDataFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
 		E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */; };
-		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
 		E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */; };
 		E61EA92F26A0E00900CAEE52 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E61EA92E26A0E00900CAEE52 /* mock.html */; };
 		E6200DC02745E8F400A06A8E /* IdentityFlowNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6200DBF2745E8F400A06A8E /* IdentityFlowNavigationController.swift */; };
@@ -212,6 +213,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E254413F28FDEF0500C6F5D3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E254414028FDEF0500C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		36064BA426D6E70C002A8AAA /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36064BBD26D832F8002A8AAA /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -247,7 +262,6 @@
 		E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataFace.swift; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
 		E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewControllerTest.swift; sourceTree = "<group>"; };
-		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61EA92E26A0E00900CAEE52 /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
 		E6200DBF2745E8F400A06A8E /* IdentityFlowNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowNavigationController.swift; sourceTree = "<group>"; };
@@ -479,8 +493,8 @@
 			files = (
 				E63B674A2743487E00CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */,
 				E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */,
-				E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */,
 				E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */,
+				E254413E28FDEF0500C6F5D3 /* iOSSnapshotTestCase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1022,7 +1036,6 @@
 				E63B673D2743415300CFEDBA /* StripeCameraCore.framework */,
 				E6B3F63426FBFEA800963EAB /* StripeUICore.framework */,
 				E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */,
-				E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */,
 				E6CC14B7269E22060078837F /* StripeCore.framework */,
 			);
 			name = Frameworks;
@@ -1137,6 +1150,8 @@
 			dependencies = (
 			);
 			name = StripeIdentity;
+			packageProductDependencies = (
+			);
 			productName = StripeIdentity;
 			productReference = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1148,6 +1163,7 @@
 				E6E146AC26950E1E007BDCD8 /* Sources */,
 				E6E146AD26950E1E007BDCD8 /* Frameworks */,
 				E6E146AE26950E1E007BDCD8 /* Resources */,
+				E254413F28FDEF0500C6F5D3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1155,6 +1171,9 @@
 				E6E146B326950E1E007BDCD8 /* PBXTargetDependency */,
 			);
 			name = StripeIdentityTests;
+			packageProductDependencies = (
+				E254413D28FDEF0500C6F5D3 /* iOSSnapshotTestCase */,
+			);
 			productName = StripeIdentityTests;
 			productReference = E6E146B026950E1E007BDCD8 /* StripeIdentityTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -1226,6 +1245,9 @@
 				"sl-SI",
 			);
 			mainGroup = E6E1469D26950E1E007BDCD8;
+			packageReferences = (
+				E254413A28FDEEFE00C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+			);
 			productRefGroup = E6E146A826950E1E007BDCD8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1659,6 +1681,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E254413A28FDEEFE00C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E254413D28FDEF0500C6F5D3 /* iOSSnapshotTestCase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E254413A28FDEEFE00C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
+			productName = iOSSnapshotTestCase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E6E1469E26950E1E007BDCD8 /* Project object */;
 }

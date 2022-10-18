@@ -8,16 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		31138E6B28DBBB79008AF554 /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E6A28DBBB78008AF554 /* Enums+CustomStringConvertible.swift */; };
-		31138EAE28DE53D2008AF554 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EA428DE53D2008AF554 /* StripeiOS Tests-Debug.xcconfig */; };
-		31138EAF28DE53D2008AF554 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EA528DE53D2008AF554 /* StripeiOS-Debug.xcconfig */; };
-		31138EB028DE53D2008AF554 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EA628DE53D2008AF554 /* Project-Release.xcconfig */; };
-		31138EB128DE53D2008AF554 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EA728DE53D2008AF554 /* StripeiOS Tests-Release.xcconfig */; };
-		31138EB228DE53D2008AF554 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EA828DE53D2008AF554 /* Project-Shared.xcconfig */; };
-		31138EB328DE53D2008AF554 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EA928DE53D2008AF554 /* Version.xcconfig */; };
-		31138EB428DE53D2008AF554 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EAA28DE53D2008AF554 /* StripeiOS Tests-Shared.xcconfig */; };
-		31138EB528DE53D2008AF554 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EAB28DE53D2008AF554 /* StripeiOS-Shared.xcconfig */; };
-		31138EB628DE53D2008AF554 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EAC28DE53D2008AF554 /* Project-Debug.xcconfig */; };
-		31138EB728DE53D2008AF554 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EAD28DE53D2008AF554 /* StripeiOS-Release.xcconfig */; };
 		31227074286E3C0B0007ED5E /* STPCardFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122706B286E3C0A0007ED5E /* STPCardFormView.swift */; };
 		31227075286E3C0B0007ED5E /* STPFloatingPlaceholderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122706C286E3C0A0007ED5E /* STPFloatingPlaceholderTextField.swift */; };
 		31227076286E3C0B0007ED5E /* STPFormTextFieldContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122706D286E3C0B0007ED5E /* STPFormTextFieldContainer.swift */; };
@@ -696,7 +686,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					3139D27B286E34C400C9744B = {
 						CreatedOnToolsVersion = 13.4;
@@ -774,19 +764,14 @@
 				3159F7122888C261007C8C3A /* boq@3x.png in Resources */,
 				3159F7E72888C5FD007C8C3A /* card_jcb@3x.png in Resources */,
 				3159F6F42888C261007C8C3A /* stp_card_unknown@3x.png in Resources */,
-				31138EB228DE53D2008AF554 /* Project-Shared.xcconfig in Resources */,
 				3159F7E62888C5FD007C8C3A /* card_unknown_updated_icon@3x.png in Resources */,
-				31138EAE28DE53D2008AF554 /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				3159F7D92888C5FD007C8C3A /* card_diners@3x.png in Resources */,
 				3159F6FA2888C261007C8C3A /* stp_card_discover@3x.png in Resources */,
-				31138EB528DE53D2008AF554 /* StripeiOS-Shared.xcconfig in Resources */,
-				31138EAF28DE53D2008AF554 /* StripeiOS-Debug.xcconfig in Resources */,
 				3159F6F62888C261007C8C3A /* stp_card_amex_template@3x.png in Resources */,
 				3159F7142888C261007C8C3A /* banksa@3x.png in Resources */,
 				3159F7172888C261007C8C3A /* form_error_icon@3x.png in Resources */,
 				3159F6FE2888C261007C8C3A /* stp_card_jcb@3x.png in Resources */,
 				3159F6FD2888C261007C8C3A /* stp_card_jcb_template@3x.png in Resources */,
-				31138EB328DE53D2008AF554 /* Version.xcconfig in Resources */,
 				3159F7182888C261007C8C3A /* Localizable.strings in Resources */,
 				3159F70B2888C261007C8C3A /* form_error_icon_dark@3x.png in Resources */,
 				3159F7112888C261007C8C3A /* suncorpmetway@3x.png in Resources */,
@@ -794,21 +779,16 @@
 				3159F7E82888C5FD007C8C3A /* card_discover@3x.png in Resources */,
 				3159F6F12888C261007C8C3A /* stp_card_visa_template@3x.png in Resources */,
 				3159F7DB2888C5FD007C8C3A /* card_cvc_icon@3x.png in Resources */,
-				31138EB028DE53D2008AF554 /* Project-Release.xcconfig in Resources */,
-				31138EB428DE53D2008AF554 /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				3159F7092888C261007C8C3A /* stp_card_mastercard@3x.png in Resources */,
 				3159F70A2888C261007C8C3A /* stp_card_discover_template@3x.png in Resources */,
 				3159F6EF2888C261007C8C3A /* stp_icon_bank@3x.png in Resources */,
 				3159F7DE2888C5FD007C8C3A /* card_cvc_amex_icon_dark@3x.png in Resources */,
-				31138EB728DE53D2008AF554 /* StripeiOS-Release.xcconfig in Resources */,
 				3159F7002888C261007C8C3A /* stp_card_cvc@3x.png in Resources */,
 				3159F70E2888C261007C8C3A /* stgeorges@3x.png in Resources */,
 				3159F7DC2888C5FD007C8C3A /* card_cvc_amex_icon@3x.png in Resources */,
 				3159F7E12888C5FD007C8C3A /* card_visa@3x.png in Resources */,
 				3159F6F52888C261007C8C3A /* stp_card_amex@3x.png in Resources */,
-				31138EB128DE53D2008AF554 /* StripeiOS Tests-Release.xcconfig in Resources */,
 				3159F7062888C261007C8C3A /* stp_card_mastercard_template@3x.png in Resources */,
-				31138EB628DE53D2008AF554 /* Project-Debug.xcconfig in Resources */,
 				3159F70F2888C261007C8C3A /* westpac@3x.png in Resources */,
 				3159F7072888C261007C8C3A /* stp_card_unionpay_template_zh@3x.png in Resources */,
 				3159F7052888C261007C8C3A /* stp_card_unionpay_en@3x.png in Resources */,

@@ -7,9 +7,10 @@
 //
 
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 @_spi(STP) @testable import StripeUICore
 @_spi(STP) @testable import StripeCore

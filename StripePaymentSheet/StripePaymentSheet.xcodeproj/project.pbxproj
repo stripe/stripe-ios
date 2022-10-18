@@ -34,16 +34,6 @@
 		31138E8928DD1E63008AF554 /* DictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E8828DD1E63008AF554 /* DictionaryTests.swift */; };
 		31138E8C28DE11DA008AF554 /* clearpay_mark_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31138E8A28DE11DA008AF554 /* clearpay_mark_dark@3x.png */; };
 		31138E8D28DE11DA008AF554 /* clearpay_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31138E8B28DE11DA008AF554 /* clearpay_mark@3x.png */; };
-		31138EC328DE53D8008AF554 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EB928DE53D8008AF554 /* StripeiOS Tests-Debug.xcconfig */; };
-		31138EC428DE53D8008AF554 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EBA28DE53D8008AF554 /* StripeiOS-Debug.xcconfig */; };
-		31138EC528DE53D8008AF554 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EBB28DE53D8008AF554 /* Project-Release.xcconfig */; };
-		31138EC628DE53D8008AF554 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EBC28DE53D8008AF554 /* StripeiOS Tests-Release.xcconfig */; };
-		31138EC728DE53D8008AF554 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EBD28DE53D8008AF554 /* Project-Shared.xcconfig */; };
-		31138EC828DE53D8008AF554 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EBE28DE53D8008AF554 /* Version.xcconfig */; };
-		31138EC928DE53D8008AF554 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EBF28DE53D8008AF554 /* StripeiOS Tests-Shared.xcconfig */; };
-		31138ECA28DE53D8008AF554 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EC028DE53D8008AF554 /* StripeiOS-Shared.xcconfig */; };
-		31138ECB28DE53D8008AF554 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EC128DE53D8008AF554 /* Project-Debug.xcconfig */; };
-		31138ECC28DE53D8008AF554 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 31138EC228DE53D8008AF554 /* StripeiOS-Release.xcconfig */; };
 		31226FA1286E3A290007ED5E /* TextFieldElement+Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31226F9F286E3A290007ED5E /* TextFieldElement+Card.swift */; };
 		31226FA2286E3A290007ED5E /* TextFieldElement+IBAN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31226FA0286E3A290007ED5E /* TextFieldElement+IBAN.swift */; };
 		31226FA5286E3A2F0007ED5E /* ConnectionsElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31226FA3286E3A2F0007ED5E /* ConnectionsElement.swift */; };
@@ -1339,7 +1329,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					3139D29D286E34DF00C9744B = {
 						CreatedOnToolsVersion = 13.4;
@@ -1414,12 +1404,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31138EC328DE53D8008AF554 /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				3159F78A2888C3A4007C8C3A /* icon-pm-paypal_dark@3x.png in Resources */,
 				3159F7A12888C3A4007C8C3A /* icon_link_success@3x.png in Resources */,
 				3159F78F2888C3A4007C8C3A /* bank_icon_compass@3x.png in Resources */,
 				3159F79C2888C3A4007C8C3A /* bank_icon_usbank@3x.png in Resources */,
-				31138ECC28DE53D8008AF554 /* StripeiOS-Release.xcconfig in Resources */,
 				319567F628D3D53100BFF5D1 /* apple_pay_mark@3x.png in Resources */,
 				3159F7952888C3A4007C8C3A /* bank_icon_morganchase@3x.png in Resources */,
 				3159F7862888C3A4007C8C3A /* icon-pm-eps@3x.png in Resources */,
@@ -1433,12 +1421,10 @@
 				3159F7AA2888C3A4007C8C3A /* icon_chevron_left@3x.png in Resources */,
 				3159F7802888C3A4007C8C3A /* icon-pm-afterpay@3x.png in Resources */,
 				3159F7A32888C3A4007C8C3A /* icon_link_error@3x.png in Resources */,
-				31138EC828DE53D8008AF554 /* Version.xcconfig in Resources */,
 				319567F428D3D41800BFF5D1 /* icon-pm-bank@3x.png in Resources */,
 				3159F7A92888C3A4007C8C3A /* icon_checkmark@3x.png in Resources */,
 				3159F78C2888C3A4007C8C3A /* icon-pm-affirm@3x.png in Resources */,
 				3159F78D2888C3A4007C8C3A /* link_logo@3x.png in Resources */,
-				31138EC928DE53D8008AF554 /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				3159F7822888C3A4007C8C3A /* icon-pm-aubecsdebit@3x.png in Resources */,
 				3166C0A428DA514D003CAF10 /* link_carousel_logo@3x.png in Resources */,
 				3159F7902888C3A4007C8C3A /* bank_icon_nfcu@3x.png in Resources */,
@@ -1446,7 +1432,6 @@
 				3159F7A42888C3A4007C8C3A /* icon_x@3x.png in Resources */,
 				3159F7A52888C3A4007C8C3A /* icon_x_standalone@3x.png in Resources */,
 				3159F79B2888C3A4007C8C3A /* bank_icon_stripe@3x.png in Resources */,
-				31138ECA28DE53D8008AF554 /* StripeiOS-Shared.xcconfig in Resources */,
 				3159F78E2888C3A4007C8C3A /* bank_icon_wellsfargo@3x.png in Resources */,
 				3159F7A22888C3A4007C8C3A /* back_button@3x.png in Resources */,
 				3159F7A02888C3A4007C8C3A /* icon_add_bordered@3x.png in Resources */,
@@ -1454,7 +1439,6 @@
 				31DCB12928F62B07002EF128 /* polling_error_icon@3x.png in Resources */,
 				3159F79E2888C3A4007C8C3A /* icon_menu@3x.png in Resources */,
 				3159F7842888C3A4007C8C3A /* icon-pm-bancontact@3x.png in Resources */,
-				31138ECB28DE53D8008AF554 /* Project-Debug.xcconfig in Resources */,
 				3159F7912888C3A4007C8C3A /* bank_icon_boa@3x.png in Resources */,
 				3159F7832888C3A4007C8C3A /* icon-pm-ideal@3x.png in Resources */,
 				3166C0A628DA522C003CAF10 /* icon-pm-link@3x.png in Resources */,
@@ -1465,16 +1449,12 @@
 				3159F7962888C3A4007C8C3A /* bank_icon_svb@3x.png in Resources */,
 				3159F77F2888C3A4007C8C3A /* afterpay_mark@3x.png in Resources */,
 				3159F7942888C3A4007C8C3A /* bank_icon_td@3x.png in Resources */,
-				31138EC628DE53D8008AF554 /* StripeiOS Tests-Release.xcconfig in Resources */,
 				3159F7982888C3A4007C8C3A /* bank_icon_usaa@3x.png in Resources */,
-				31138EC728DE53D8008AF554 /* Project-Shared.xcconfig in Resources */,
-				31138EC428DE53D8008AF554 /* StripeiOS-Debug.xcconfig in Resources */,
 				3159F78B2888C3A4007C8C3A /* icon-pm-sepa@3x.png in Resources */,
 				31138E8D28DE11DA008AF554 /* clearpay_mark@3x.png in Resources */,
 				31138E8C28DE11DA008AF554 /* clearpay_mark_dark@3x.png in Resources */,
 				3159F7892888C3A4007C8C3A /* icon-pm-p24@3x.png in Resources */,
 				31904C6328D9205A00E1F9F5 /* form_specs.json in Resources */,
-				31138EC528DE53D8008AF554 /* Project-Release.xcconfig in Resources */,
 				3159F79A2888C3A4007C8C3A /* bank_icon_capitalone@3x.png in Resources */,
 				3159F7992888C3A4007C8C3A /* bank_icon_suntrust@3x.png in Resources */,
 				3159F7AB2888C3A4007C8C3A /* affirm_mark@3x.png in Resources */,

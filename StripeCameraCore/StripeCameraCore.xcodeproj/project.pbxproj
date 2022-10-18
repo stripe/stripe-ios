@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,7 +17,6 @@
 		E63B673427433CEA00CFEDBA /* StripeCameraCoreTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = E63B673227433CEA00CFEDBA /* StripeCameraCoreTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E63B673927433D1800CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673027433CEA00CFEDBA /* StripeCameraCoreTestUtils.framework */; };
 		E63B673A27433D6E00CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B66F92742EEBF00CFEDBA /* StripeCameraCore.framework */; };
-		E63B673C27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673B27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework */; };
 		E657B561275AF3E300134033 /* CameraPermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B560275AF3E300134033 /* CameraPermissionsManager.swift */; };
 		E657B563275AF8DE00134033 /* AppSettingsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B562275AF8DE00134033 /* AppSettingsHelper.swift */; };
 		E657B566275B005500134033 /* MockCameraPermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B565275B005500134033 /* MockCameraPermissionsManager.swift */; };
@@ -66,7 +65,6 @@
 		E63B673027433CEA00CFEDBA /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63B673227433CEA00CFEDBA /* StripeCameraCoreTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCameraCoreTestUtils.h; sourceTree = "<group>"; };
 		E63B673327433CEA00CFEDBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E63B673B27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		E657B560275AF3E300134033 /* CameraPermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionsManager.swift; sourceTree = "<group>"; };
 		E657B562275AF8DE00134033 /* AppSettingsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsHelper.swift; sourceTree = "<group>"; };
 		E657B565275B005500134033 /* MockCameraPermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraPermissionsManager.swift; sourceTree = "<group>"; };
@@ -94,7 +92,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E63B673C27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework in Frameworks */,
 				E63B673927433D1800CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */,
 				E63B67032742EEBF00CFEDBA /* StripeCameraCore.framework in Frameworks */,
 			);
@@ -205,7 +202,6 @@
 			children = (
 				E607C168279BFE9800724E7F /* StripeCore.framework */,
 				E657B569275ED57A00134033 /* XCTest.framework */,
-				E63B673B27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

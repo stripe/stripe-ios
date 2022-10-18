@@ -7,6 +7,7 @@
 
 import XCTest
 import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity

@@ -5,7 +5,7 @@
 //  Created by Jaime Park on 1/26/22.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore

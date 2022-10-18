@@ -13,6 +13,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentsUI
 @testable @_spi(STP) import StripePayments
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController) {

@@ -9,6 +9,7 @@
 import Foundation
 import XCTest
 import StripeCoreTestUtils
+import OHHTTPStubsSwift
 
 @_spi(STP) @testable import StripeCore
 import OHHTTPStubs

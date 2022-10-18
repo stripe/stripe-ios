@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/28/22.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 

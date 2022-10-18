@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 10/8/21.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 

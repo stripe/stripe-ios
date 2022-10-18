@@ -7,6 +7,7 @@
 
 import Foundation
 import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeApplePay
 @_spi(STP) @testable import StripeCore

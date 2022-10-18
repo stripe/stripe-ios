@@ -7,7 +7,7 @@
 
 import Foundation
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
 public extension FBSnapshotTestCase {
     // Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.

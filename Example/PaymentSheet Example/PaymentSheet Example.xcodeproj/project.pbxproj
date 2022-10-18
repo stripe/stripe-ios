@@ -24,7 +24,6 @@
 		36E5A2D225A79C7E001668C9 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */; };
 		36E5A2D325A79C94001668C9 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		611CF06C27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611CF06B27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift */; };
-		611CF06F27C9DA4900E43BB2 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 611CF06D27C9DA2A00E43BB2 /* FBSnapshotTestCase.xcframework */; };
 		615EF61927DA473A00F8E0EE /* AppearancePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615EF61827DA473A00F8E0EE /* AppearancePlaygroundView.swift */; };
 		61A20BC127CA767500260BC5 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61A20BC027CA767500260BC5 /* StripeCoreTestUtils.framework */; };
 		6B3F9F6A28078A0E00C81DDC /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8BD78527F555B8007463B3 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -42,6 +41,8 @@
 		B6ECC7212696551800E4783E /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6ECC7202696551800E4783E /* StripeCore.framework */; };
 		B6ECC7222696551800E4783E /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B6ECC7202696551800E4783E /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B6F09A95285B94F800751867 /* PaymentSheet+AddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F09A94285B94F800751867 /* PaymentSheet+AddressTests.swift */; };
+		E254413728FA26C200C6F5D3 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = E254413628FA26C200C6F5D3 /* iOSSnapshotTestCase */; };
+		E254413928FA26C200C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = E254413628FA26C200C6F5D3 /* iOSSnapshotTestCase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E6AFFAFD26E9737B0067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFC26E9737B0067462F /* StripeUICore.framework */; };
 		E6AFFAFE26E9737B0067462F /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFC26E9737B0067462F /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -78,6 +79,17 @@
 				3137B6A22743808F00CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
 				B6ECC7222696551800E4783E /* StripeCore.framework in Embed Frameworks */,
 				3122723028763D660007ED5E /* StripePaymentSheet.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E254413828FA26C200C6F5D3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E254413928FA26C200C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -182,7 +194,6 @@
 		36F4BCA726C1BE9E001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		36F4BCA826C1BE9E001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Main.strings; sourceTree = "<group>"; };
 		611CF06B27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetSnapshotTests.swift; sourceTree = "<group>"; };
-		611CF06D27C9DA2A00E43BB2 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		615EF61827DA473A00F8E0EE /* AppearancePlaygroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePlaygroundView.swift; sourceTree = "<group>"; };
 		61A20BC027CA767500260BC5 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B8BD78527F555B8007463B3 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,7 +224,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				61A20BC127CA767500260BC5 /* StripeCoreTestUtils.framework in Frameworks */,
-				611CF06F27C9DA4900E43BB2 /* FBSnapshotTestCase.xcframework in Frameworks */,
+				E254413728FA26C200C6F5D3 /* iOSSnapshotTestCase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,7 +326,6 @@
 				3122722E28763D660007ED5E /* StripePaymentSheet.framework */,
 				6B8BD78527F555B8007463B3 /* StripeFinancialConnections.framework */,
 				61A20BC027CA767500260BC5 /* StripeCoreTestUtils.framework */,
-				611CF06D27C9DA2A00E43BB2 /* FBSnapshotTestCase.xcframework */,
 				3137B6A02743808F00CE7F5C /* StripeApplePay.framework */,
 				E6AFFAFC26E9737B0067462F /* StripeUICore.framework */,
 				B67982B1268FD91C0058F7C8 /* StripeCore.framework */,
@@ -338,6 +348,7 @@
 				31D8F79125BA0200004502D9 /* Sources */,
 				31D8F79225BA0200004502D9 /* Frameworks */,
 				31D8F79325BA0200004502D9 /* Resources */,
+				E254413828FA26C200C6F5D3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -345,6 +356,9 @@
 				31D8F79B25BA0200004502D9 /* PBXTargetDependency */,
 			);
 			name = PaymentSheetUITest;
+			packageProductDependencies = (
+				E254413628FA26C200C6F5D3 /* iOSSnapshotTestCase */,
+			);
 			productName = PaymentSheetUITest;
 			productReference = 31D8F79525BA0200004502D9 /* PaymentSheetUITest.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -381,6 +395,8 @@
 			dependencies = (
 			);
 			name = "PaymentSheet Example";
+			packageProductDependencies = (
+			);
 			productName = "PaymentSheet Example";
 			productReference = B6370756251057890094499F /* PaymentSheet Example.app */;
 			productType = "com.apple.product-type.application";
@@ -457,6 +473,9 @@
 				"sl-SI",
 			);
 			mainGroup = B637074D251057890094499F;
+			packageReferences = (
+				E254413328FA26B300C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+			);
 			productRefGroup = B6370757251057890094499F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -930,6 +949,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E254413328FA26B300C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E254413628FA26C200C6F5D3 /* iOSSnapshotTestCase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E254413328FA26B300C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
+			productName = iOSSnapshotTestCase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B637074E251057890094499F /* Project object */;
 }

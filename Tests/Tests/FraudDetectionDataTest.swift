@@ -15,7 +15,7 @@ import XCTest
 
 class FraudDetectionDataTest: XCTestCase {
     func testResetsSIDIfExpired() {
-        FraudDetectionData.shared.sidCreationDate = Date(timeInterval: -30 * 60, since: Date())
+        FraudDetectionData.shared.sidCreationDate = Date(timeInterval: -30 * 60 - 1, since: Date())
         FraudDetectionData.shared.resetSIDIfExpired()
         XCTAssertNil(FraudDetectionData.shared.sid)
     }

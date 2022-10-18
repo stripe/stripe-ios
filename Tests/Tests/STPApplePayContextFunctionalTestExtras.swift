@@ -16,6 +16,7 @@ import Foundation
 @testable @_spi(STP) import StripeApplePay
 
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 @available(iOS 13.0, *)
 class STPApplePayContextFunctionalTestAPIClient: STPAPIClient {

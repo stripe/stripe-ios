@@ -6,7 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
 @testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore

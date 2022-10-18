@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 
 @testable @_spi(STP) import Stripe

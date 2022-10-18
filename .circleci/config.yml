@@ -11,11 +11,10 @@ commands:
       - prep_simulator
       - prep_environment
       - prep_clone
-      - prep_bundler_carthage
+      - prep_bundler_spm
   prep_installtests_132:
     description: "Preps the build environment for Xcode 13.2"
     steps:
-      - run: "brew upgrade carthage"
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - run: "bundle config set frozen 'true'"
@@ -30,21 +29,16 @@ commands:
     description: "Shallow clones the repo"
     steps:
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
-  prep_bundler_carthage:
-    description: "Prep the build environment, bundler, and carthage"
+  prep_bundler_spm:
+    description: "Prep the build environment, bundler, and spm"
     steps:
       - run: "bundle config set path 'vendor/bundle'"
       - run: "bundle config set frozen 'true'"
       - restore_cache:
-          key: v1-{{ checksum "Cartfile.resolved" }}-stp-carthage-xcode-133-cache # Update this if Xcode version change
+          key: v1-{{ checksum "Stripe.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}-stp-spm-xcode-133-cache # Update this if Xcode version change
       - restore_cache:
           key: v1-{{ checksum "Gemfile.lock" }}-stp-bundle-xcode-133-cache # Update this if Xcode version change
       - run: "bundle install"
-      - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
-      - save_cache:
-          key: v1-{{ checksum "Cartfile.resolved" }}-stp-carthage-xcode-133-cache
-          paths:
-            - Carthage
       - save_cache:
           key: v1-{{ checksum "Gemfile.lock" }}-stp-bundle-xcode-133-cache
           paths:
@@ -72,6 +66,13 @@ commands:
       - store_artifacts:
           path: circle-results
           destination: logs
+  save_spm_cache:
+    description: Save SPM cache
+    steps:
+      - save_cache:
+          key: v1-{{ checksum "Stripe.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}-stp-spm-xcode-133-cache
+          paths:
+            - SourcePackages/
 
 executors:
   mac-executor:
@@ -115,6 +116,7 @@ jobs:
       - run: "bundle exec fastlane stripecardscan_tests"
       - run: "bundle exec fastlane stripeapplepay_tests"
       - run: "bundle exec fastlane stripeuicore_tests"
+      - save_spm_cache
       - archive_logs
 
   install-tests:
@@ -128,6 +130,7 @@ jobs:
       - run: "bundle exec fastlane installation_spm_objc"
       - run: "bundle exec fastlane installation_spm_swift"
       - run: "bundle exec fastlane installation_carthage"
+      - save_spm_cache
       - archive_logs
 
   lint-tests:
@@ -139,6 +142,7 @@ jobs:
       - run: "bundle exec fastlane build_extras"
       - run: "bundle exec fastlane analyze"
       - run: "bundle exec fastlane objc_symbol_check"
+      - save_spm_cache
       - archive_logs
 
   check-docs:
@@ -148,6 +152,7 @@ jobs:
       - prep_all
       - run: "brew install sourcekitten"
       - run: "bundle exec fastlane check_docs"
+      - save_spm_cache
       - archive_logs
 
   ui-tests:
@@ -157,6 +162,7 @@ jobs:
       - prep_all
       - run: "bundle exec fastlane ui_tests"
       - run: "bundle exec fastlane paymentsheet_tests"
+      - save_spm_cache
       - archive_logs
 
   e2e-only:
@@ -165,6 +171,7 @@ jobs:
     steps:
       - prep_all
       - run: "bundle exec fastlane e2e_only"
+      - save_spm_cache
       - archive_logs
       - run:
           name: Notify on success
@@ -189,6 +196,7 @@ jobs:
           installation_spm_objc \
           installation_spm_swift \
           installation_carthage
+      - save_spm_cache
       - archive_logs
       - run:
           name: Notify on failure
@@ -217,6 +225,7 @@ jobs:
     steps:
       - prep_all
       - run: "bundle exec fastlane basic_integration_tests"
+      - save_spm_cache
       - archive_logs
       - run:
           name: Notify on failure
@@ -229,6 +238,7 @@ jobs:
     steps:
       - prep_all
       - run: "bundle exec fastlane export_builds"
+      - save_spm_cache
       - archive_logs
       - run:
           name: Notify on failure
@@ -241,6 +251,7 @@ jobs:
     steps:
       - prep_all
       - run: "bundle exec fastlane paymentsheet_tests"
+      - save_spm_cache
       - archive_logs
 
   integration-all:
@@ -249,6 +260,7 @@ jobs:
     steps:
       - prep_all
       - run: "bundle exec fastlane integration_all"
+      - save_spm_cache
       - archive_logs
       - run:
           name: Notify on failure
@@ -261,8 +273,9 @@ jobs:
     steps:
       - prep_environment
       - prep_clone
-      - prep_bundler_carthage
+      - prep_bundler_spm
       - run: "bundle exec fastlane linting_tests"
+      - save_spm_cache
       - archive_logs
 
   legacy-tests-13:
@@ -271,12 +284,13 @@ jobs:
     steps:
       - prep_environment
       - prep_clone
-      - prep_bundler_carthage
+      - prep_bundler_spm
       - run:
           name: "Install old simulator"
           no_output_timeout: 20m
           command: sudo bundle exec xcversion simulators --install="iOS 13.7" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_13"
+      - save_spm_cache
       - archive_logs
       - run:
           name: Notify on failure
@@ -289,8 +303,9 @@ jobs:
     steps:
       - prep_environment
       - prep_clone
-      - prep_bundler_carthage
+      - prep_bundler_spm
       - run: "bundle exec fastlane legacy_tests_14"
+      - save_spm_cache
       - archive_logs
       - run:
           name: Notify on failure

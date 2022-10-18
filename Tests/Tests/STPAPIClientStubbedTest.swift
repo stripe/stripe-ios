@@ -16,6 +16,7 @@ import XCTest
 
 import StripeCoreTestUtils
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 class STPAPIClientStubbedTest: APIStubbedTestCase {
     

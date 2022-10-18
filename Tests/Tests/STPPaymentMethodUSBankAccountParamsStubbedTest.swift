@@ -16,6 +16,7 @@ import XCTest
 
 import StripeCoreTestUtils
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 class STPPaymentMethodUSBankAccountParamsStubbedTest: APIStubbedTestCase {
     func testus_bank_account_withoutNetworks() {

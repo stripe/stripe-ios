@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
 @testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore

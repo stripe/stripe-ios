@@ -6,7 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import <FBSnapshotTestCase/FBSnapshotTestCase.h>
+@import iOSSnapshotTestCaseCore;
 
 @interface FBSnapshotTestCase (STPViewControllerLoading)
 

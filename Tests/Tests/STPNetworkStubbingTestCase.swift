@@ -7,7 +7,7 @@
 //
 
 import OHHTTPStubs
-import SWHttpTrafficRecorder
+
 
 @_spi(STP) import StripeCore
 @testable @_spi(STP) import Stripe

@@ -17,7 +17,6 @@
 		3160673F2804DA6C0082B148 /* StripeJSONShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3160673E2804DA6C0082B148 /* StripeJSONShared.swift */; };
 		31606741280609840082B148 /* UnknownFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31606740280609840082B148 /* UnknownFields.swift */; };
 		31606743280768EB0082B148 /* STPSnapshotVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31606742280768EB0082B148 /* STPSnapshotVerifyView.swift */; };
-		31606744280769070082B148 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61ADAA3270B9299004ED998 /* FBSnapshotTestCase.xcframework */; };
 		317C4FE0275FF44D003771D7 /* InstallMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FDF275FF44D003771D7 /* InstallMethod.swift */; };
 		319E36582719EBF700460867 /* ServerErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319E36572719EBF700460867 /* ServerErrorMapper.swift */; };
 		31A5269226C46D9600F8AB59 /* STPAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5269126C46D9500F8AB59 /* STPAppInfo.swift */; };
@@ -44,6 +43,10 @@
 		6B08AB2528DF707700BF62E4 /* DownloadManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B08AB2428DF707700BF62E4 /* DownloadManagerTest.swift */; };
 		D0494A70273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */; };
 		D0CA3DA5279BE0CE00143B1C /* KeyPathExpectation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA3DA4279BE0CE00143B1C /* KeyPathExpectation.swift */; };
+		E25440EC28F9C8BB00C6F5D3 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = E25440EB28F9C8BB00C6F5D3 /* iOSSnapshotTestCase */; };
+		E25440ED28F9C8BB00C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = E25440EB28F9C8BB00C6F5D3 /* iOSSnapshotTestCase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		E254411E28F9FBEB00C6F5D3 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = E254411D28F9FBEB00C6F5D3 /* OHHTTPStubs */; };
+		E254412028F9FBEB00C6F5D3 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E254411F28F9FBEB00C6F5D3 /* OHHTTPStubsSwift */; };
 		E28F2A0928E793B00026A860 /* STPAPIClient+ErrorResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28F2A0828E793B00026A860 /* STPAPIClient+ErrorResponseTest.swift */; };
 		E614ACA0268BE14B00C59B3D /* StripeAPIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC96268BE14B00C59B3D /* StripeAPIConfiguration.swift */; };
 		E614ACA1268BE14B00C59B3D /* STPAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC98268BE14B00C59B3D /* STPAnalyticEvent.swift */; };
@@ -65,7 +68,6 @@
 		E6548EDA2728AE6B00F399B2 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6548ED92728AE6B00F399B2 /* XCTest.framework */; };
 		E6548EDF2728AEBE00F399B2 /* APIStubbedTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EDE2728AEBE00F399B2 /* APIStubbedTestCase.swift */; };
 		E6548EE12728AED600F399B2 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE02728AED600F399B2 /* StripeCodableTest.swift */; };
-		E6548EE42728AF0900F399B2 /* OHHTTPStubs.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6548EE32728AF0900F399B2 /* OHHTTPStubs.xcframework */; };
 		E6548EE62728AFB400F399B2 /* TestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE52728AFB400F399B2 /* TestConstants.swift */; };
 		E6548EE82728D39600F399B2 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE72728D39500F399B2 /* Async.swift */; };
 		E6548EF22729BDD700F399B2 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EF12729BDD700F399B2 /* MockData.swift */; };
@@ -118,6 +120,20 @@
 			remoteInfo = StripeCore;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E200237128F8D51F001C02D4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E25440ED28F9C8BB00C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		310AF46F271E12F6007339F4 /* Dictionary+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Stripe.swift"; sourceTree = "<group>"; };
@@ -186,7 +202,6 @@
 		E61676FA284FFE3C00C9E44A /* AnalyticsClientV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClientV2.swift; sourceTree = "<group>"; };
 		E616770528504E8900C9E44A /* MockAnalyticsClientV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnalyticsClientV2.swift; sourceTree = "<group>"; };
 		E616770728505A2200C9E44A /* AnalyticsClientV2Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClientV2Test.swift; sourceTree = "<group>"; };
-		E61ADAA3270B9299004ED998 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		E61ADAA5270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
 		E61ADACA270E6146004ED998 /* NSArray+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArray+Stripe.swift"; sourceTree = "<group>"; };
 		E61ADAD0270E6AD4004ED998 /* NSArray+StripeCoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArray+StripeCoreTest.swift"; sourceTree = "<group>"; };
@@ -195,7 +210,6 @@
 		E6548ED92728AE6B00F399B2 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		E6548EDE2728AEBE00F399B2 /* APIStubbedTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIStubbedTestCase.swift; sourceTree = "<group>"; };
 		E6548EE02728AED600F399B2 /* StripeCodableTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StripeCodableTest.swift; sourceTree = "<group>"; };
-		E6548EE32728AF0900F399B2 /* OHHTTPStubs.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OHHTTPStubs.xcframework; path = ../Carthage/Build/OHHTTPStubs.xcframework; sourceTree = "<group>"; };
 		E6548EE52728AFB400F399B2 /* TestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestConstants.swift; sourceTree = "<group>"; };
 		E6548EE72728D39500F399B2 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		E6548EF12729BDD700F399B2 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
@@ -292,9 +306,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31606744280769070082B148 /* FBSnapshotTestCase.xcframework in Frameworks */,
-				E6548EE42728AF0900F399B2 /* OHHTTPStubs.xcframework in Frameworks */,
 				E6548EDA2728AE6B00F399B2 /* XCTest.framework in Frameworks */,
+				E254412028F9FBEB00C6F5D3 /* OHHTTPStubsSwift in Frameworks */,
+				E254411E28F9FBEB00C6F5D3 /* OHHTTPStubs in Frameworks */,
+				E25440EC28F9C8BB00C6F5D3 /* iOSSnapshotTestCase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,9 +455,7 @@
 		E6233B32269E62330062005D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E6548EE32728AF0900F399B2 /* OHHTTPStubs.xcframework */,
 				E6548ED92728AE6B00F399B2 /* XCTest.framework */,
-				E61ADAA3270B9299004ED998 /* FBSnapshotTestCase.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -693,6 +706,8 @@
 			dependencies = (
 			);
 			name = StripeCore;
+			packageProductDependencies = (
+			);
 			productName = StripeCore;
 			productReference = E69D63FB26855B250090B43D /* StripeCore.framework */;
 			productType = "com.apple.product-type.framework";
@@ -723,6 +738,7 @@
 				E6FB9BB4268EA95F000FDB4F /* Sources */,
 				E6FB9BB5268EA95F000FDB4F /* Frameworks */,
 				E6FB9BB6268EA95F000FDB4F /* Resources */,
+				E200237128F8D51F001C02D4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -730,6 +746,11 @@
 				E6FB9BC3268EAA21000FDB4F /* PBXTargetDependency */,
 			);
 			name = StripeCoreTestUtils;
+			packageProductDependencies = (
+				E25440EB28F9C8BB00C6F5D3 /* iOSSnapshotTestCase */,
+				E254411D28F9FBEB00C6F5D3 /* OHHTTPStubs */,
+				E254411F28F9FBEB00C6F5D3 /* OHHTTPStubsSwift */,
+			);
 			productName = StripeCoreTestUtils;
 			productReference = E6FB9BB8268EA95F000FDB4F /* StripeCoreTestUtils.framework */;
 			productType = "com.apple.product-type.framework";
@@ -805,6 +826,10 @@
 				"sl-SI",
 			);
 			mainGroup = E69D63F126855B250090B43D;
+			packageReferences = (
+				E25440E828F9C8B000C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				E254411828F9FBD200C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
+			);
 			productRefGroup = E69D63FC26855B250090B43D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1207,6 +1232,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E25440E828F9C8B000C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		E254411828F9FBD200C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/eurias-stripe/OHHTTPStubs";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E25440EB28F9C8BB00C6F5D3 /* iOSSnapshotTestCase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E25440E828F9C8B000C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
+			productName = iOSSnapshotTestCase;
+		};
+		E254411D28F9FBEB00C6F5D3 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E254411828F9FBD200C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		E254411F28F9FBEB00C6F5D3 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E254411828F9FBD200C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E69D63F226855B250090B43D /* Project object */;
 }

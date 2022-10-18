@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCore
 @testable import StripeIdentity
 @_spi(STP) import StripeCameraCoreTestUtils

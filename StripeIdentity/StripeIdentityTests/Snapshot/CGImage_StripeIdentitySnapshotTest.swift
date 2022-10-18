@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 12/13/21.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import CoreImage
 @testable import StripeIdentity
 

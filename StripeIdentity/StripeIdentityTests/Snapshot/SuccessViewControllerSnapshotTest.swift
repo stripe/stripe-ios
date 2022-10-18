@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 @testable import StripeIdentity
 
 final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
