@@ -74,9 +74,15 @@ class ConsentViewController: UIViewController {
                 switch result {
                 case .success(let manifest):
                     self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
-                case .failure(_):
+                case .failure(let error):
                     // we display no errors on failure
-                    break
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "ConsentAcquiredError",
+                            pane: .consent
+                        )
                 }
                 self.footerView.setIsLoading(false)
             }
