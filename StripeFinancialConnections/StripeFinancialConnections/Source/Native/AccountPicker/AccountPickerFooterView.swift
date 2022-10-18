@@ -33,7 +33,8 @@ final class AccountPickerFooterView: UIView {
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
-        didSelectLinkAccounts: @escaping () -> Void
+        didSelectLinkAccounts: @escaping () -> Void,
+        didSelectMerchantDataAccessLearnMore: @escaping () -> Void
     ) {
         self.singleAccount = singleAccount
         self.didSelectLinkAccounts = didSelectLinkAccounts
@@ -44,7 +45,8 @@ final class AccountPickerFooterView: UIView {
                 CreateDataAccessDisclosureView(
                     isStripeDirect: isStripeDirect,
                     businessName: businessName,
-                    permissions: permissions
+                    permissions: permissions,
+                    didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                 ),
                 linkAccountsButton,
             ]
@@ -87,14 +89,16 @@ final class AccountPickerFooterView: UIView {
 private func CreateDataAccessDisclosureView(
     isStripeDirect: Bool,
     businessName: String?,
-    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+    didSelectLearnMore: @escaping () -> Void
 ) -> UIView {
     let stackView = UIStackView(
         arrangedSubviews: [
             MerchantDataAccessView(
                 isStripeDirect: isStripeDirect,
                 businessName: businessName,
-                permissions: permissions
+                permissions: permissions,
+                didSelectLearnMore: didSelectLearnMore
             )
         ]
     )

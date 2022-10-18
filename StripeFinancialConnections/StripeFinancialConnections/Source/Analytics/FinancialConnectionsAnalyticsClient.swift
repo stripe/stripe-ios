@@ -98,6 +98,13 @@ extension FinancialConnectionsAnalyticsClient {
         log(eventName: eventName, parameters: parameters)
     }
     
+    func logMerchantDataAccessLearnMore(pane: FinancialConnectionsSessionManifest.NextPane) {
+        log(
+            eventName: "click.data_access.learn_more",
+            parameters: ["pane": pane.rawValue]
+        )
+    }
+    
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
         // TODO(kgaidis): discuss with others on the need for the other events
         

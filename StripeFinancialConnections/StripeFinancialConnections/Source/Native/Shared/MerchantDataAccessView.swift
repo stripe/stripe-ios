@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SafariServices
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -16,7 +17,8 @@ final class MerchantDataAccessView: UIView {
     init(
         isStripeDirect: Bool,
         businessName: String?,
-        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        didSelectLearnMore: @escaping () -> Void
     ) {
         super.init(frame: .zero)
         
@@ -63,7 +65,11 @@ final class MerchantDataAccessView: UIView {
             finalString,
             font: .stripeFont(forTextStyle: .captionTight),
             boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            action: { url in
+                SFSafariViewController.present(url: url)
+                didSelectLearnMore()
+            }
         )
         addAndPinSubview(label)
     }
@@ -126,7 +132,8 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
         MerchantDataAccessView(
             isStripeDirect: isStripeDirect,
             businessName: businessName,
-            permissions: permissions
+            permissions: permissions,
+            didSelectLearnMore: {}
         )
     }
     

@@ -22,7 +22,8 @@ final class SuccessBodyView: UIView {
         accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod?,
         isEndUserFacing: Bool,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        didSelectDisconnectYourAccounts: @escaping () -> Void
+        didSelectDisconnectYourAccounts: @escaping () -> Void,
+        didSelectMerchantDataAccessLearnMore: @escaping () -> Void
     ) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView()
@@ -39,7 +40,8 @@ final class SuccessBodyView: UIView {
                     dataDisclosureView: CreateDataAccessDisclosureView(
                         isStripeDirect: isStripeDirect,
                         businessName: businessName,
-                        permissions: permissions
+                        permissions: permissions,
+                        didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                     )
                 )
             )
@@ -90,7 +92,8 @@ private func CreateInformationBoxView(
 private func CreateDataAccessDisclosureView(
     isStripeDirect: Bool,
     businessName: String?,
-    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+    didSelectLearnMore: @escaping () -> Void
 ) -> UIView {
     let separatorView = UIView()
     separatorView.backgroundColor = .borderNeutral
@@ -105,7 +108,8 @@ private func CreateDataAccessDisclosureView(
             MerchantDataAccessView(
                 isStripeDirect: isStripeDirect,
                 businessName: businessName,
-                permissions: permissions
+                permissions: permissions,
+                didSelectLearnMore: didSelectLearnMore
             ),
         ]
     )
