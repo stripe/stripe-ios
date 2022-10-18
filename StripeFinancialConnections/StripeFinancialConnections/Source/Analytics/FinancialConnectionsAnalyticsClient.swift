@@ -67,7 +67,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["product"] = manifest.product
         additionalParameters["is_stripe_direct"] = manifest.isStripeDirect
         additionalParameters["single_account"] = manifest.singleAccount
-        additionalParameters["allow_manual_entry"] = manifest.singleAccount
+        additionalParameters["allow_manual_entry"] = manifest.allowManualEntry
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
     

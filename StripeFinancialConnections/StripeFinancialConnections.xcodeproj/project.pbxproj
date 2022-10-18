@@ -57,7 +57,6 @@
 		3CE96D3427585BC6006B7059 /* FinancialConnectionsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3327585BC6006B7059 /* FinancialConnectionsAPIClient.swift */; };
 		3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */; };
 		3CE96D3A27586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */; };
-		3CFC631A28EDCF8E00DF9D28 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */; };
 		6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019D72880865E009D662A /* StringExtensionsTests.swift */; };
 		6A0019DC2885EAAA009D662A /* stripe_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */; };
 		6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */; };
@@ -153,6 +152,7 @@
 		6AE5171C28AAF099006E8314 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */; };
 		6AE5171E28ABEF5A006E8314 /* SuccessAccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171D28ABEF5A006E8314 /* SuccessAccountListView.swift */; };
 		6AFD485128871A98003439CB /* FeaturedInstitutionGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD485028871A98003439CB /* FeaturedInstitutionGridView.swift */; };
+		3CFC631A28EDCF8E00DF9D28 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -271,7 +271,6 @@
 		3CE96D3327585BC6006B7059 /* FinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionManifest.swift; sourceTree = "<group>"; };
 		3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
-		3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueStateView.swift; sourceTree = "<group>"; };
 		6A0019D72880865E009D662A /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe_logo@3x.png"; sourceTree = "<group>"; };
 		6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
@@ -367,6 +366,7 @@
 		6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBodyView.swift; sourceTree = "<group>"; };
 		6AE5171D28ABEF5A006E8314 /* SuccessAccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessAccountListView.swift; sourceTree = "<group>"; };
 		6AFD485028871A98003439CB /* FeaturedInstitutionGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridView.swift; sourceTree = "<group>"; };
+		3CFC631928EDCF8E00DF9D28 /* ContinueStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueStateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
