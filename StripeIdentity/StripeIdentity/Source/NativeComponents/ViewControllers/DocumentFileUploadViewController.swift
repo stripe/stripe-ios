@@ -581,7 +581,6 @@ extension DocumentFileUploadViewController: IdentityDataCollecting {
 
     func reset() {
         documentUploader.reset()
-        sheetController?.collectedData.clearFront()
-        sheetController?.collectedData.clearBack()
+        clearCollectedFields()
     }
 }

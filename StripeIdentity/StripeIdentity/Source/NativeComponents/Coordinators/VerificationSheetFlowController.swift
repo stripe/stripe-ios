@@ -40,9 +40,6 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         shouldResetViewController: Bool
     )
 
-    var uncollectedFields: Set<StripeAPI.VerificationPageFieldType> { get }
-    func isFinishedCollectingData(for verificationPage: StripeAPI.VerificationPage) -> Bool
-
     var analyticsLastScreen: IdentityFlowViewController? { get }
 }
 
@@ -128,9 +125,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
 
         let viewControllers = Array(navigationController.viewControllers.dropLast(navigationController.viewControllers.count - index - 1))
-
+        
+        // Reset all ViewControllers to be popped
         if shouldResetViewController {
-            (viewControllers[index] as? IdentityDataCollecting)?.reset()
+            for i in index..<navigationController.viewControllers.count {
+                (navigationController.viewControllers[i] as? IdentityDataCollecting)?.reset()
+            }
         }
 
         navigationController.setViewControllers(viewControllers, animated: animated)
@@ -211,9 +211,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             ))
         }
 
-        // Determine which required fields we haven't collected data for yet
-        let missingRequirements = self.missingRequirements(for: staticContent)
-
+        // If updateDataResponse is not nil, then this transition is triggered by a
+        // VerificationPageDataUpdate request, get missing requirements from the response.
+        // Otherwise, this is the transition to initial page, nothing is collected yet,
+        // return missing requirement from staticContent.
+        let missingRequirements = updateDataResponse?.requirements.missing ?? staticContent.requirements.missing
+        
         // Show success screen if submitted
         if updateDataResponse?.submitted == true {
             return completion(SuccessViewController(
@@ -438,19 +441,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             }
             return partialResult.union(dataCollectingVC.collectedFields)
         }
-    }
-
-    /// Set of fields not collected by any of the view controllers in the navigation stack
-    var uncollectedFields: Set<StripeAPI.VerificationPageFieldType> {
-        return Set(StripeAPI.VerificationPageFieldType.allCases).subtracting(collectedFields)
-    }
-
-    func missingRequirements(for verificationPage: StripeAPI.VerificationPage) -> Set<StripeAPI.VerificationPageFieldType> {
-        verificationPage.requirements.missing.subtracting(collectedFields)
-    }
-
-    func isFinishedCollectingData(for verificationPage: StripeAPI.VerificationPage) -> Bool {
-        return missingRequirements(for: verificationPage).isEmpty
     }
 
     var analyticsLastScreen: IdentityFlowViewController? {

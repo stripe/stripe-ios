@@ -30,6 +30,21 @@ enum VerificationPageDataMock: String, MockData {
     case noErrors = "VerificationPageData_no_errors"
     case noErrorsNeedback = "VerificationPageData_no_errors_needback"
     case submitted = "VerificationPageData_submitted"
+    
+    static func noErrorsWithMissings(
+        with missingRequirements: Set<StripeAPI.VerificationPageFieldType>
+    ) throws -> ResponseType {
+        let noErrorsResponse = try noErrors.make()
+        return .init(
+            id: noErrorsResponse.id,
+            requirements: .init(
+                errors: noErrorsResponse.requirements.errors,
+                missing: missingRequirements
+            ),
+            status: noErrorsResponse.status,
+            submitted: noErrorsResponse.submitted
+        )
+    }
 }
 
 enum CapturedImageMock: String {

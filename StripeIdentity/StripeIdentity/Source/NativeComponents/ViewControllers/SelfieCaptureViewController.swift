@@ -413,5 +413,6 @@ extension SelfieCaptureViewController: IdentityDataCollecting {
 
     func reset() {
         imageScanningSession.reset()
+        clearCollectedFields()
     }
 }
