@@ -22,6 +22,15 @@ class ConsentViewController: UIViewController {
     private let dataSource: ConsentDataSource
     weak var delegate: ConsentViewControllerDelegate?
     
+    private lazy var titleLabel: ClickableLabel = {
+        let titleLabel = ClickableLabel(
+            font: .stripeFont(forTextStyle: .subtitle),
+            boldFont: .stripeFont(forTextStyle: .subtitle),
+            linkFont: .stripeFont(forTextStyle: .subtitle),
+            textColor: .textPrimary
+        )
+        return titleLabel
+    }()
     private lazy var footerView: ConsentFooterView = {
         return ConsentFooterView(
             footerText: dataSource.consentModel.footerText,
@@ -48,8 +57,10 @@ class ConsentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        let paneLayoutView = PaneWithHeaderLayoutView(
-            title: dataSource.consentModel.headerText,
+        
+        titleLabel.setText(dataSource.consentModel.headerText)
+        let paneLayoutView = PaneWithCustomHeaderLayoutView(
+            headerView: titleLabel,
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consentModel.bodyItems,
                 dataAccessNoticeModel: dataSource.consentModel.dataAccessNoticeModel

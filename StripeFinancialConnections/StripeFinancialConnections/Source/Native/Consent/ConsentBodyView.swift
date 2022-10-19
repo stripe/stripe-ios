@@ -70,7 +70,12 @@ private func CreateLabelView(text: String, action: @escaping (URL) -> Void) -> U
         // skip `imageView.heightAnchor` so the labels naturally expand
     ])
     
-    let label = ClickableLabel()
+    let label = ClickableLabel(
+        font: UIFont.stripeFont(forTextStyle: .detail),
+        boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        textColor: .textSecondary
+    )
     label.setText(text, action: action)
 
     let horizontalStackView = UIStackView(

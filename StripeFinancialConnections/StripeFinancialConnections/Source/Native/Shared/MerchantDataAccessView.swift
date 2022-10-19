@@ -26,14 +26,14 @@ final class MerchantDataAccessView: UIView {
         let leadingString: String
         if isStripeDirect {
             let localizedLeadingString = STPLocalizedString("Data accessible to Stripe:", "This text is a lead-up to a disclosure that lists all of the bank data that Stripe will have access to. For example, the full text may read 'Data accessible to Stripe: Account details, transactions.'")
-            leadingString = "*\(localizedLeadingString)*"
+            leadingString = "**\(localizedLeadingString)**"
         } else {
             if let businessName = businessName {
                 let localizedLeadingString = STPLocalizedString("Data accessible to %@:", "This text is a lead-up to a disclosure that lists all of the bank data that a merchant (ex. Coca-Cola) will have access to. For example, the full text may read 'Data accessible to Coca-Cola: Account details, transactions.'")
-                leadingString = "*\(String(format: localizedLeadingString, businessName))*"
+                leadingString = "**\(String(format: localizedLeadingString, businessName))**"
             } else {
                 let localizedLeadingString = STPLocalizedString("Data accessible to this business:", "This text is a lead-up to a disclosure that lists all of the bank data that a business will have access to. For example, the full text may read 'Data accessible to this business: Account details, transactions.'")
-                leadingString = "*\(localizedLeadingString)*"
+                leadingString = "**\(localizedLeadingString)**"
             }
         }
         
@@ -60,12 +60,14 @@ final class MerchantDataAccessView: UIView {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         }
         
-        let label = ClickableLabel()
-        label.setText(
-            finalString,
+        let label = ClickableLabel(
             font: .stripeFont(forTextStyle: .captionTight),
             boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
             linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            textColor: .textSecondary
+        )
+        label.setText(
+            finalString,
             action: { url in
                 SFSafariViewController.present(url: url)
                 didSelectLearnMore()

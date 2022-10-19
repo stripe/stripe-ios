@@ -122,14 +122,17 @@ private func CreatePartnerDisclosureView(
     }
     
     horizontalStackView.addArrangedSubview({
-        let partnerDisclosureLabel = ClickableLabel()
+        let partnerDisclosureLabel = ClickableLabel(
+            font: .stripeFont(forTextStyle: .captionTight),
+            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            textColor: .textSecondary
+        )
         partnerDisclosureLabel.setText(
             CreatePartnerDisclosureText(
                 partnerName: partner.name,
                 isStripeDirect: isStripeDirect
-            ),
-            font: .stripeFont(forTextStyle: .captionTight),
-            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            )
         )
         return partnerDisclosureLabel
     }())

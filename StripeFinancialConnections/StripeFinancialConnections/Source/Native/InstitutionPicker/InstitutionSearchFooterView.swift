@@ -150,24 +150,21 @@ private func CreateRowLabelView(
     title: String,
     customAction: (() -> Void)? = nil
 ) -> UIView {
-    let titleLabel = ClickableLabel()
+    let titleLabel = ClickableLabel(
+        font: .stripeFont(forTextStyle: .captionTightEmphasized),
+        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        textColor: .textPrimary
+    )
     if let customAction = customAction {
         titleLabel.setText(
             title,
-            font: .stripeFont(forTextStyle: .captionTightEmphasized),
-            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-            textColor: .textPrimary,
             action: { _ in
                 customAction()
             }
         )
     } else {
-        titleLabel.setText(
-            title,
-            font: .stripeFont(forTextStyle: .captionTightEmphasized),
-            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-            textColor: .textPrimary
-        )
+        titleLabel.setText(title)
     }
     return titleLabel
 }
