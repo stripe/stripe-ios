@@ -17,15 +17,18 @@ final class ManualEntrySuccessViewController: UIViewController {
     
     private let microdepositVerificationMethod: MicrodepositVerificationMethod?
     private let accountNumberLast4: String
+    private let analyticsClient: FinancialConnectionsAnalyticsClient
     
     weak var delegate: ManualEntrySuccessViewControllerDelegate?
     
     init(
         microdepositVerificationMethod: MicrodepositVerificationMethod?,
-        accountNumberLast4: String
+        accountNumberLast4: String,
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.microdepositVerificationMethod = microdepositVerificationMethod
         self.accountNumberLast4 = accountNumberLast4
+        self.analyticsClient = analyticsClient
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -57,6 +60,8 @@ final class ManualEntrySuccessViewController: UIViewController {
             footerView: CreateFooterView(self)
         )
         paneWithHeaderLayoutView.addTo(view: view)
+        
+        analyticsClient.logPaneLoaded(pane: .manualEntrySuccess)
     }
     
     @objc fileprivate func didSelectDone() {

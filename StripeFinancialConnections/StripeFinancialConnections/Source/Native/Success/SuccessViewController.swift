@@ -50,7 +50,17 @@ final class SuccessViewController: UIViewController {
                 businessName: dataSource.manifest.businessName,
                 permissions: dataSource.manifest.permissions,
                 accountDisconnectionMethod: dataSource.manifest.accountDisconnectionMethod,
-                isEndUserFacing: dataSource.manifest.isEndUserFacing ?? false
+                isEndUserFacing: dataSource.manifest.isEndUserFacing ?? false,
+                analyticsClient: dataSource.analyticsClient,
+                didSelectDisconnectYourAccounts: { [weak self] in
+                    guard let self = self else { return }
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "click.disconnect_link",
+                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                        )
+                }
             ),
             footerView: SuccessFooterView(
                 didSelectDone: { [weak self] footerView in
@@ -58,15 +68,31 @@ final class SuccessViewController: UIViewController {
                     // we NEVER set isLoading to `false` because
                     // we will always close the Auth Flow
                     footerView.setIsLoading(true)
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "click.done",
+                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                        )
                     self.delegate?.successViewControllerDidSelectDone(self)
                 },
                 didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton ? { [weak self] in
                     guard let self = self else { return }
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "click.link_another_account",
+                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                        )
                     self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
                 } : nil
             )
         )
         paneWithHeaderLayoutView.addTo(view: view)
+        
+        dataSource
+            .analyticsClient
+            .logPaneLoaded(pane: .success)
     }
 }
 

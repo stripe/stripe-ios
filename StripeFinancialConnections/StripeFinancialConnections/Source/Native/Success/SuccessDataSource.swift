@@ -13,6 +13,7 @@ protocol SuccessDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount] { get }
     var institution: FinancialConnectionsInstitution { get }
+    var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var showLinkMoreAccountsButton: Bool { get }
 }
 
@@ -23,6 +24,7 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
     let institution: FinancialConnectionsInstitution
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     var showLinkMoreAccountsButton: Bool {
         !manifest.singleAccount && !manifest.disableLinkMoreAccounts && !(manifest.isNetworkingUserFlow ?? false)
     }
@@ -32,12 +34,14 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
         linkedAccounts: [FinancialConnectionsPartnerAccount],
         institution: FinancialConnectionsInstitution,
         apiClient: FinancialConnectionsAPIClient,
-        clientSecret: String
+        clientSecret: String,
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
         self.linkedAccounts = linkedAccounts
         self.institution = institution
         self.apiClient = apiClient
         self.clientSecret = clientSecret
+        self.analyticsClient = analyticsClient
     }
 }

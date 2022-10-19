@@ -505,7 +505,8 @@ private func CreatePaneViewController(
                 clientSecret: dataManager.clientSecret,
                 authorizationSession: authorizationSession,
                 manifest: dataManager.manifest,
-                institution: institution
+                institution: institution,
+                analyticsClient: dataManager.analyticsClient
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = authFlowController
@@ -521,7 +522,9 @@ private func CreatePaneViewController(
                 clientSecret: dataManager.clientSecret,
                 manifest: dataManager.manifest,
                 institution: institution,
-                linkedAccountId: linkedAccountId
+                linkedAccountId: linkedAccountId,
+                analyticsClient: dataManager.analyticsClient,
+                authSessionId: dataManager.authorizationSession?.id
             )
             let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
                 dataSource: dataSource
@@ -563,7 +566,8 @@ private func CreatePaneViewController(
         let dataSource = ManualEntryDataSourceImplementation(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
-            manifest: dataManager.manifest
+            manifest: dataManager.manifest,
+            analyticsClient: dataManager.analyticsClient
         )
         let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
         manualEntryViewController.delegate = authFlowController
@@ -572,7 +576,8 @@ private func CreatePaneViewController(
         if let paymentAccountResource = dataManager.paymentAccountResource, let accountNumberLast4 = dataManager.accountNumberLast4 {
             let manualEntrySuccessViewController = ManualEntrySuccessViewController(
                 microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
-                accountNumberLast4: accountNumberLast4
+                accountNumberLast4: accountNumberLast4,
+                analyticsClient: dataManager.analyticsClient
             )
             manualEntrySuccessViewController.delegate = authFlowController
             viewController = manualEntrySuccessViewController
@@ -592,7 +597,8 @@ private func CreatePaneViewController(
                 institution: institution,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
-                clientSecret: dataManager.clientSecret
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
             )
             let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
             partnerAuthViewController.delegate = authFlowController
@@ -608,7 +614,8 @@ private func CreatePaneViewController(
                 linkedAccounts: linkedAccounts,
                 institution: institution,
                 apiClient: dataManager.apiClient,
-                clientSecret: dataManager.clientSecret
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
             )
             let successViewController = SuccessViewController(dataSource: successDataSource)
             successViewController.delegate = authFlowController
