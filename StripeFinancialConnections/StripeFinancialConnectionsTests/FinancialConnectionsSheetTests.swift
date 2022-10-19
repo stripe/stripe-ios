@@ -115,7 +115,13 @@ class FinancialConnectionsSheetTests: XCTestCase {
         XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
 
         // Mock that financialConnections is completed
-        let host = HostController(api: EmptyFinancialConnectionsAPIClient(), clientSecret: "test", returnURL: nil)
+        let host = HostController(
+            api: EmptyFinancialConnectionsAPIClient(),
+            clientSecret: "test",
+            returnURL: nil,
+            publishableKey: "test",
+            stripeAccount: nil
+        )
         sheet.hostController(host, viewController: UIViewController(), didFinish: .canceled)
 
         // Verify closed analytic is logged

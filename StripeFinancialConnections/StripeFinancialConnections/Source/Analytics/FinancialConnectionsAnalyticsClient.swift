@@ -16,6 +16,8 @@ final class FinancialConnectionsAnalyticsClient {
     
     init(analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(clientId: "", origin: "")) {
         self.analyticsClient = analyticsClient
+        additionalParameters["is_webview"] = false
+        additionalParameters["navigator_language"] = Locale.current.identifier
     }
     
     public func log(eventName: String, parameters: [String: Any] = [:]) {
@@ -106,21 +108,17 @@ extension FinancialConnectionsAnalyticsClient {
         )
     }
     
+    func setAdditionalParameters(
+        linkAccountSessionClientSecret: String,
+        publishableKey: String?,
+        stripeAccount: String?
+    ) {
+        additionalParameters["las_client_secret"] = linkAccountSessionClientSecret
+        additionalParameters["key"] = publishableKey
+        additionalParameters["stripe_account"] = stripeAccount
+    }
+    
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
-        // TODO(kgaidis): discuss with others on the need for the other events
-        
-//        additionalParameters["hostname"] = document.location.hostname
-//        additionalParameters["las_client_secret"] = this.linkAccountSessionClientSecret
-//        additionalParameters["las_creator_client_secret"] = this.linkAccountSessionCreatorClientSecret
-//        additionalParameters["las_creator_type"] = this.linkAccountSessionCreatorType
-//        additionalParameters["las_creator_id"] = this.linkAccountSessionCreatorId
-
-//        additionalParameters["key"] = this.apiKey
-//        additionalParameters["stripe_account"] = this.stripeAccount
-//        additionalParameters["logger_id"] = this.getLoggerId(),
-//        additionalParameters["navigator_language"] = navigatorLanguage(),
-//        additionalParameters["is_webview"] = isWebView(window.navigator.userAgent)
-        
         additionalParameters["livemode"] = manifest.livemode
         additionalParameters["product"] = manifest.product
         additionalParameters["is_stripe_direct"] = manifest.isStripeDirect

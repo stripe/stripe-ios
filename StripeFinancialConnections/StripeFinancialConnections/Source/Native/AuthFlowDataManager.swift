@@ -47,7 +47,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient = FinancialConnectionsAnalyticsClient()
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
         self.apiClient = apiClient

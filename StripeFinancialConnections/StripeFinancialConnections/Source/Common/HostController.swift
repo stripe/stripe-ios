@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 @available(iOSApplicationExtension, unavailable)
 protocol HostControllerDelegate: AnyObject {
@@ -25,6 +26,7 @@ class HostController {
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let returnURL: String?
+    private let analyticsClient: FinancialConnectionsAnalyticsClient
 
     private var authFlowController: AuthFlowController?
     lazy var hostViewController = HostViewController(clientSecret: clientSecret, returnURL: returnURL, apiClient: api, delegate: self)
@@ -39,10 +41,18 @@ class HostController {
     
     init(api: FinancialConnectionsAPIClient,
          clientSecret: String,
-         returnURL: String?) {
+         returnURL: String?,
+         publishableKey: String?,
+         stripeAccount: String?) {
         self.api = api
         self.clientSecret = clientSecret
         self.returnURL = returnURL
+        self.analyticsClient = FinancialConnectionsAnalyticsClient()
+        analyticsClient.setAdditionalParameters(
+            linkAccountSessionClientSecret: clientSecret,
+            publishableKey: publishableKey,
+            stripeAccount: stripeAccount
+        )
     }
 }
 
@@ -70,7 +80,8 @@ extension HostController: HostViewControllerDelegate {
         let dataManager = AuthFlowAPIDataManager(
             manifest: manifest,
             apiClient: api,
-            clientSecret: clientSecret
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
         )
         authFlowController = AuthFlowController(
             dataManager: dataManager,
