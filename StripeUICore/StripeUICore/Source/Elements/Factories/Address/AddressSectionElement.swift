@@ -66,7 +66,7 @@ import UIKit
         case all
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
-        case countryAndPostal(countriesRequiringPostalCollection: [String])
+        case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
         
         case autoCompletable
     }

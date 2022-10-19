@@ -185,14 +185,6 @@ class AddPaymentMethodViewController: UIViewController {
     deinit {
         LinkAccountContext.shared.removeObserver(self)
     }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-
-        if let cardDetailsView = paymentMethodDetailsView as? CardDetailsEditView {
-            cardDetailsView.deviceOrientation = UIDevice.current.orientation
-        }
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

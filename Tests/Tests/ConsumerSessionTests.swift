@@ -311,18 +311,26 @@ class ConsumerSessionTests: XCTestCase {
         
         let updateExpectation = self.expectation(description: "update payment details")
         let paymentMethodToUpdate = try! XCTUnwrap(storedPaymentDetails.first)
-        guard let prefillDetails = paymentMethodToUpdate.prefillDetails else {
-            XCTFail("Payment method doesn't have expected prefill details")
+
+        guard case .card(let card) = paymentMethodToUpdate.details else {
+            XCTFail("Payment method must be `card` type")
             return
         }
+
+        let calendar = Calendar(identifier: .gregorian)
+        let yearOne = calendar.component(.year, from: Date()) + 1
+        let yearTwo = calendar.component(.year, from: Date()) + 2
+
         // toggle between expiry years/months
-        let expiryMonth = prefillDetails.expiryMonth == 1 ? 2 : 1
-        let expiryYear = prefillDetails.expiryYear == 25 ? 26 : 25
+        let newExpiryDate = CardExpiryDate(
+            month: card.expiryDate.month == 1 ? 2 : 1,
+            year: card.expiryDate.year == yearOne ? yearTwo : yearOne
+        )
 
         let updateParams = UpdatePaymentDetailsParams(
             isDefault: !paymentMethodToUpdate.isDefault,
             details: .card(
-                expiryDate: .init(month: expiryMonth, year: expiryYear),
+                expiryDate: newExpiryDate,
                 billingDetails: billingParams
             )
         )
@@ -336,9 +344,12 @@ class ConsumerSessionTests: XCTestCase {
             switch result {
             case .success(let paymentDetails):
                 XCTAssertNotEqual(paymentDetails.isDefault, paymentMethodToUpdate.isDefault)
-                let prefillDetails = try! XCTUnwrap(paymentDetails.prefillDetails)
-                XCTAssertEqual(expiryMonth, prefillDetails.expiryMonth)
-                XCTAssertEqual(CardExpiryDate.normalizeYear(expiryYear), prefillDetails.expiryYear)
+                switch paymentDetails.details {
+                case .card(let card):
+                    XCTAssertEqual(newExpiryDate, card.expiryDate)
+                case .bankAccount:
+                    XCTFail("Unexpected payment details type")
+                }
             case .failure(let error):
                 XCTFail("Received error: \(error.nonGenericDescription)")
             }

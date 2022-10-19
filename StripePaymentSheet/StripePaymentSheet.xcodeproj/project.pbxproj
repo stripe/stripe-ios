@@ -77,7 +77,6 @@
 		31226FFF286E3B1F0007ED5E /* AutoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31226FFC286E3B1F0007ED5E /* AutoCompleteViewController.swift */; };
 		31227000286E3B1F0007ED5E /* AddressSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31226FFD286E3B1F0007ED5E /* AddressSearchResult.swift */; };
 		31227001286E3B1F0007ED5E /* String+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31226FFE286E3B1F0007ED5E /* String+AutoComplete.swift */; };
-		31227013286E3B2B0007ED5E /* CardDetailsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227002286E3B290007ED5E /* CardDetailsEditView.swift */; };
 		31227014286E3B2B0007ED5E /* AfterpayPriceBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227003286E3B290007ED5E /* AfterpayPriceBreakdownView.swift */; };
 		31227015286E3B2B0007ED5E /* ManualEntryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227004286E3B2A0007ED5E /* ManualEntryButton.swift */; };
 		31227016286E3B2B0007ED5E /* ShadowedRoundedRectangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227005286E3B2A0007ED5E /* ShadowedRoundedRectangleView.swift */; };
@@ -239,6 +238,7 @@
 		31DCB12728F62865002EF128 /* icon-pm-upi@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31DCB12628F62865002EF128 /* icon-pm-upi@3x.png */; };
 		31DCB12928F62B07002EF128 /* polling_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31DCB12828F62B07002EF128 /* polling_error_icon@3x.png */; };
 		31DCB12B28F75531002EF128 /* PaymentSheetFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB12A28F75531002EF128 /* PaymentSheetFlowController.swift */; };
+		D06C829B28FEFEC600832267 /* LinkCardEditElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06C829A28FEFEC600832267 /* LinkCardEditElement.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -333,7 +333,6 @@
 		31226FFC286E3B1F0007ED5E /* AutoCompleteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoCompleteViewController.swift; sourceTree = "<group>"; };
 		31226FFD286E3B1F0007ED5E /* AddressSearchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressSearchResult.swift; sourceTree = "<group>"; };
 		31226FFE286E3B1F0007ED5E /* String+AutoComplete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+AutoComplete.swift"; sourceTree = "<group>"; };
-		31227002286E3B290007ED5E /* CardDetailsEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardDetailsEditView.swift; sourceTree = "<group>"; };
 		31227003286E3B290007ED5E /* AfterpayPriceBreakdownView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AfterpayPriceBreakdownView.swift; sourceTree = "<group>"; };
 		31227004286E3B2A0007ED5E /* ManualEntryButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManualEntryButton.swift; sourceTree = "<group>"; };
 		31227005286E3B2A0007ED5E /* ShadowedRoundedRectangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowedRoundedRectangleView.swift; sourceTree = "<group>"; };
@@ -537,6 +536,7 @@
 		31DCB12628F62865002EF128 /* icon-pm-upi@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-upi@3x.png"; sourceTree = "<group>"; };
 		31DCB12828F62B07002EF128 /* polling_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "polling_error_icon@3x.png"; sourceTree = "<group>"; };
 		31DCB12A28F75531002EF128 /* PaymentSheetFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSheetFlowController.swift; sourceTree = "<group>"; };
+		D06C829A28FEFEC600832267 /* LinkCardEditElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCardEditElement.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -728,7 +728,6 @@
 				31227003286E3B290007ED5E /* AfterpayPriceBreakdownView.swift */,
 				31227012286E3B2B0007ED5E /* Appearance+FontScaling.swift */,
 				3122700B286E3B2A0007ED5E /* AUBECSMandate.swift */,
-				31227002286E3B290007ED5E /* CardDetailsEditView.swift */,
 				3122700A286E3B2A0007ED5E /* CardScanButton.swift */,
 				3122700C286E3B2A0007ED5E /* CardScanningView.swift */,
 				3122700D286E3B2A0007ED5E /* CircularButton.swift */,
@@ -826,6 +825,7 @@
 			isa = PBXGroup;
 			children = (
 				312270AB286E3D250007ED5E /* InlineSignup */,
+				D06C829A28FEFEC600832267 /* LinkCardEditElement.swift */,
 				312270A9286E3D220007ED5E /* LinkEmailElement.swift */,
 			);
 			path = Elements;
@@ -1483,6 +1483,7 @@
 				310F6FC228D4F55600C9580D /* LinkVerificationView.swift in Sources */,
 				312270DC286E3D8A0007ED5E /* PayWithLinkViewController-SignUpViewModel.swift in Sources */,
 				310F6FC028D4F55600C9580D /* LinkCookieKey.swift in Sources */,
+				D06C829B28FEFEC600832267 /* LinkCardEditElement.swift in Sources */,
 				31227001286E3B1F0007ED5E /* String+AutoComplete.swift in Sources */,
 				312270FD286E3E6D0007ED5E /* ConsumerSession.swift in Sources */,
 				31226FF5286E3B100007ED5E /* PaymentSheetViewController.swift in Sources */,
@@ -1524,7 +1525,6 @@
 				3122720728762CA10007ED5E /* STPCameraView.swift in Sources */,
 				310F6FD228D4F5B300C9580D /* BottomSheetPresentationAnimator.swift in Sources */,
 				31227103286E3EA50007ED5E /* CardExpiryDate.swift in Sources */,
-				31227013286E3B2B0007ED5E /* CardDetailsEditView.swift in Sources */,
 				312270D9286E3D8A0007ED5E /* PayWithLinkViewController-BaseViewController.swift in Sources */,
 				31226FA5286E3A2F0007ED5E /* ConnectionsElement.swift in Sources */,
 				31227091286E3CF00007ED5E /* LinkMoreInfoView.swift in Sources */,

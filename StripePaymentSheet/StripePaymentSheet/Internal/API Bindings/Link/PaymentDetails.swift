@@ -233,8 +233,11 @@ extension ConsumerPaymentDetails.Details.Card {
         }
     }
 
+    var expiryDate: CardExpiryDate {
+        return CardExpiryDate(month: expiryMonth, year: expiryYear)
+    }
+
     var hasExpired: Bool {
-        let expiryDate = CardExpiryDate(month: expiryMonth, year: expiryYear)
         return expiryDate.expired()
     }
 
@@ -318,18 +321,6 @@ extension ConsumerPaymentDetails {
             return "••••\(card.last4)"
         case .bankAccount(let bank):
             return "••••\(bank.last4)"
-        }
-    }
-    
-    var prefillDetails: STPCardFormView.PrefillDetails? {
-        switch details {
-        case .card(let card):
-            return STPCardFormView.PrefillDetails(last4: card.last4,
-                                                  expiryMonth: card.expiryMonth,
-                                                  expiryYear: card.expiryYear,
-                                                  cardBrand: card.brand)
-        case .bankAccount:
-            return nil
         }
     }
     
