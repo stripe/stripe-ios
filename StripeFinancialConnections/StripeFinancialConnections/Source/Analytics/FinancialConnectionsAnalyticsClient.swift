@@ -48,6 +48,56 @@ extension FinancialConnectionsAnalyticsClient {
         log(eventName: "pane.loaded", parameters: ["pane": pane.rawValue])
     }
     
+    func logExpectedError(
+        _ error: Error,
+        errorName: String?,
+        pane: FinancialConnectionsSessionManifest.NextPane?
+    ) {
+        log(
+            error: error,
+            errorName: errorName,
+            eventName: "error.expected",
+            pane: pane
+        )
+    }
+    
+    func logUnexpectedError(
+        _ error: Error,
+        errorName: String?,
+        pane: FinancialConnectionsSessionManifest.NextPane?
+    ) {
+        log(
+            error: error,
+            errorName: errorName,
+            eventName: "error.unexpected",
+            pane: pane
+        )
+    }
+    
+    private func log(
+        error: Error,
+        errorName: String?,
+        eventName: String,
+        pane: FinancialConnectionsSessionManifest.NextPane?
+    ) {
+        var parameters: [String:Any] = [:]
+        parameters["pane"] = pane?.rawValue
+        parameters["error"] = errorName
+        if
+            let stripeError = error as? StripeError,
+            case .apiError(let apiError) = stripeError
+        {
+            parameters["error_type"] = apiError.type.rawValue
+            parameters["error_message"] = apiError.message
+            parameters["code"] = apiError.code
+        } else {
+            parameters["error_type"] = (error as NSError).domain
+            parameters["error_message"] = (error as NSError).localizedDescription
+            parameters["code"] = (error as NSError).code
+        }
+        log(eventName: eventName, parameters: parameters)
+    }
+    
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
         // TODO(kgaidis): discuss with others on the need for the other events
         

@@ -137,6 +137,11 @@ final class PartnerAuthViewController: UIViewController {
                     subtitle: String(format: STPLocalizedString("Maintenance is scheduled to end at %@. Please select another bank or try again later.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), expectedToBeAvailableTimeString),
                     primaryButtonConfiguration: primaryButtonConfiguration
                 )
+                dataSource.analyticsClient.logExpectedError(
+                    error,
+                    errorName: "InstitutionPlannedDowntimeError",
+                    pane: .partnerAuth
+                )
             } else {
                 errorView = ReusableInformationView(
                     iconType: .view(institutionIconView),
@@ -151,8 +156,19 @@ final class PartnerAuthViewController: UIViewController {
                         }
                     ) : nil
                 )
+                dataSource.analyticsClient.logExpectedError(
+                    error,
+                    errorName: "InstitutionUnplannedDowntimeError",
+                    pane: .partnerAuth
+                )
             }
         } else {
+            dataSource.analyticsClient.logUnexpectedError(
+                error,
+                errorName: "PartnerAuthError",
+                pane: .partnerAuth
+            )
+            
             // if we didn't get specific errors back, we don't know
             // what's wrong, so show a generic error
             delegate?.partnerAuthViewController(self, didReceiveTerminalError: error)
@@ -183,6 +199,16 @@ final class PartnerAuthViewController: UIViewController {
                 if error == nil, let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
                     self.authorizeAuthSession(authorizationSession)
                 } else {
+                    if let error = error {
+                        self.dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                error,
+                                errorName: "ASWebAuthenticationSessionError",
+                                pane: .partnerAuth
+                            )
+                    }
+                    
                     // cancel current auth session because something went wrong
                     self.dataSource.cancelPendingAuthSessionIfNeeded()
                     

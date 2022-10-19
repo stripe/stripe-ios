@@ -166,9 +166,15 @@ extension InstitutionPicker {
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .institutionPicker)
-                case .failure(_):
+                case .failure(let error):
                     // TODO: add handling for failure (Stripe.js currently shows a terminal error)
-                    break
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "FeaturedInstitutionsError",
+                            pane: .institutionPicker
+                        )
                 }
                 completionHandler()
             }
@@ -223,9 +229,16 @@ extension InstitutionPicker {
                                         "result_count": institutions.count,
                                     ]
                                 )
-                        case .failure(_):
+                        case .failure(let error):
                             self.institutionSearchTableView.loadInstitutions([])
                             self.institutionSearchTableView.showError(true)
+                            self.dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    error,
+                                    errorName: "SearchInstitutionsError",
+                                    pane: .institutionPicker
+                                )
                         }
                         self.institutionSearchTableView.showLoadingView(false)
                     }
