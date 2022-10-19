@@ -9,7 +9,13 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 class FinancialConnectionsNavigationController: UINavigationController {
+
+    // only currently set for native flow
+    weak var analyticsClient: FinancialConnectionsAnalyticsClient?
+    private var lastInteractivePopGestureRecognizerEndedDate: Date?
+    private weak var lastShownViewController: UIViewController?
 
     // MARK: - UIViewController
     
@@ -21,6 +27,86 @@ class FinancialConnectionsNavigationController: UINavigationController {
         if #available(iOS 13.0, *) {
             isModalInPresentation = true
         }
+        listenToInteractivePopGestureRecognizer()
+    }
+    
+    private func logNavigationBackEvent(fromViewController: UIViewController, source: String) {
+        guard let analyticsClient = analyticsClient else {
+            assertionFailure("Expected `analyticsClient` (\(FinancialConnectionsAnalyticsClient.self)) to be set.")
+            return
+        }
+        analyticsClient
+            .log(
+                // we use the same event name for both clicks and swipes to
+                // simplify analytics logging (same event, different parameters)
+                eventName: "click.nav_bar.back",
+                parameters: [
+                    "pane": FinancialConnectionsAnalyticsClient.paneFromViewController(fromViewController).rawValue,
+                    "source": source,
+                ]
+            )
+    }
+}
+
+// MARK: - Track Swipe Back Analytics Events
+
+@available(iOSApplicationExtension, unavailable)
+extension FinancialConnectionsNavigationController: UINavigationControllerDelegate {
+        
+    private func listenToInteractivePopGestureRecognizer() {
+        delegate = self
+        assert(interactivePopGestureRecognizer != nil)
+        interactivePopGestureRecognizer?.addTarget(self, action: #selector(interactivePopGestureRecognizerDidChange))
+    }
+    
+    @objc private func interactivePopGestureRecognizerDidChange() {
+        if interactivePopGestureRecognizer?.state == .ended {
+            // As soon as user releases the "interactive pop" the gesture will
+            // move to the `.ended` state. Note that this does NOT mean
+            // that the user actually finished the pop gesture and
+            // popped the view controller.
+            lastInteractivePopGestureRecognizerEndedDate = Date()
+        }
+    }
+    
+    func navigationController(
+        _ navigationController: UINavigationController,
+        didShow viewController: UIViewController,
+        animated: Bool
+    ) {
+        if
+            let lastInteractivePopGestureRecognizerEndedDate = lastInteractivePopGestureRecognizerEndedDate,
+            Date().timeIntervalSince(lastInteractivePopGestureRecognizerEndedDate) < 0.7,
+            let lastShownViewController = lastShownViewController
+        {
+            // If user _recently_ ended the interactive pop gesture
+            // AND navigation controller presented a new view controller
+            // it's extremely likely that user popped a view controller
+            // by using the swipe gesture.
+            logNavigationBackEvent(fromViewController: lastShownViewController, source: "interactive_pop_gesture")
+        }
+        lastInteractivePopGestureRecognizerEndedDate = nil
+        lastShownViewController = viewController
+    }
+}
+
+// MARK: - Track Back Button Press Analytics Events
+
+@available(iOSApplicationExtension, unavailable)
+extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
+    
+    // `UINavigationBarDelegate` methods "just work" on `UINavigationController`
+    // without having to set any delegates
+    func navigationBar(
+        _ navigationBar: UINavigationBar,
+        shouldPop item: UINavigationItem
+    ) -> Bool {
+        if let topViewController = topViewController {
+            logNavigationBackEvent(fromViewController: topViewController, source: "navigation_bar_button")
+        } else {
+            assertionFailure("Expected a `topViewConroller` to exist for \(FinancialConnectionsNavigationController.self)")
+        }
+        return true
     }
 }
 
@@ -28,6 +114,7 @@ class FinancialConnectionsNavigationController: UINavigationController {
 
 // The purpose of this extension is to consolidate in one place
 // all the common changes to `UINavigationController`
+@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController {
     
     func configureAppearanceForNative() {

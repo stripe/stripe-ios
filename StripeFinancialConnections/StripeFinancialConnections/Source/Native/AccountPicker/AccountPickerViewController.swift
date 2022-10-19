@@ -79,6 +79,12 @@ final class AccountPickerViewController: UIViewController {
                     )
 
                 self.didSelectLinkAccounts()
+            },
+            didSelectMerchantDataAccessLearnMore: { [weak self] in
+                guard let self = self else { return }
+                self.dataSource
+                    .analyticsClient
+                    .logMerchantDataAccessLearnMore(pane: .accountPicker)
             }
         )
     }()

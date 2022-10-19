@@ -60,6 +60,12 @@ final class SuccessViewController: UIViewController {
                             eventName: "click.disconnect_link",
                             parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
                         )
+                },
+                didSelectMerchantDataAccessLearnMore: { [weak self] in
+                    guard let self = self else { return }
+                    self.dataSource
+                        .analyticsClient
+                        .logMerchantDataAccessLearnMore(pane: .success)
                 }
             ),
             footerView: SuccessFooterView(

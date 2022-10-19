@@ -19,6 +19,7 @@ final class FinancialConnectionsAnalyticsClient {
     }
     
     public func log(eventName: String, parameters: [String: Any] = [:]) {
+        let eventName = "linked_accounts.\(eventName)"
         let parameters = parameters.merging(
             additionalParameters,
             uniquingKeysWith: { eventParameter, _ in
@@ -96,6 +97,13 @@ extension FinancialConnectionsAnalyticsClient {
             parameters["code"] = (error as NSError).code
         }
         log(eventName: eventName, parameters: parameters)
+    }
+    
+    func logMerchantDataAccessLearnMore(pane: FinancialConnectionsSessionManifest.NextPane) {
+        log(
+            eventName: "click.data_access.learn_more",
+            parameters: ["pane": pane.rawValue]
+        )
     }
     
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
