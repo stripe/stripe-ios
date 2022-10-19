@@ -18,7 +18,7 @@ struct ConsentModel {
     private let businessName: String
     
     var headerText: String {
-        return "\(businessName) works with Stripe to link your accounts."
+        return "\(businessName) works with **Stripe** to link your accounts."
     }
     
     var bodyItems: [BodyBulletItem] {
