@@ -9,9 +9,10 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol AuthFlowDataManager: AnyObject {
+    var manifest: FinancialConnectionsSessionManifest { get set }
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
-    var manifest: FinancialConnectionsSessionManifest { get set }
+    var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     var institution: FinancialConnectionsInstitution? { get set }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get set }
@@ -26,9 +27,14 @@ protocol AuthFlowDataManager: AnyObject {
 
 class AuthFlowAPIDataManager: AuthFlowDataManager {
 
-    var manifest: FinancialConnectionsSessionManifest
+    var manifest: FinancialConnectionsSessionManifest {
+        didSet {
+            didUpdateManifest()
+        }
+    }
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     
     var institution: FinancialConnectionsInstitution?
     var authorizationSession: FinancialConnectionsAuthorizationSession?
@@ -40,11 +46,14 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     init(
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
-        clientSecret: String
+        clientSecret: String,
+        analyticsClient: FinancialConnectionsAnalyticsClient = FinancialConnectionsAnalyticsClient()
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
+        self.analyticsClient = analyticsClient
+        didUpdateManifest()
     }
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
@@ -58,5 +67,9 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         accountNumberLast4 = nil
         linkedAccounts = nil
         manifest = newManifest
+    }
+    
+    private func didUpdateManifest() {
+        analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }
 }

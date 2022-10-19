@@ -57,9 +57,16 @@ class ConsentViewController: UIViewController {
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
+        
+        dataSource.analyticsClient.logPaneLoaded(pane: .consent)
     }
     
     private func didSelectAgree() {
+        dataSource.analyticsClient.log(
+            eventName: "click.agree",
+            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
+        )
+        
         footerView.setIsLoading(true)
         dataSource.markConsentAcquired()
             .observe(on: .main) { [weak self] result in

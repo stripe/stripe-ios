@@ -60,6 +60,15 @@ class AuthFlowController {
     }
     
     @objc private func didSelectNavigationBarCloseButton() {
+        dataManager.analyticsClient.log(
+            eventName: "click.nav_bar.close",
+            parameters: [
+                "pane": FinancialConnectionsAnalyticsClient
+                    .paneFromViewController(navigationController.topViewController)
+                    .rawValue
+            ]
+        )
+        
         let showConfirmationAlert = (
             navigationController.topViewController is AccountPickerViewController
             || navigationController.topViewController is PartnerAuthViewController
@@ -487,6 +496,7 @@ private func CreatePaneViewController(
     authFlowController: AuthFlowController,
     dataManager: AuthFlowDataManager
 ) -> UIViewController? {
+    let viewController: UIViewController?
     switch pane {
     case .accountPicker:
         if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
@@ -499,10 +509,10 @@ private func CreatePaneViewController(
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = authFlowController
-            return accountPickerViewController
+            viewController = accountPickerViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
-            return nil
+            viewController = nil
         }
     case .attachLinkedPaymentAccount:
         if let institution = dataManager.institution, let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId {
@@ -517,36 +527,38 @@ private func CreatePaneViewController(
                 dataSource: dataSource
             )
             attachedLinkedPaymentAccountViewController.delegate = authFlowController
-            return attachedLinkedPaymentAccountViewController
+            viewController = attachedLinkedPaymentAccountViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
-            return nil
+            viewController = nil
         }
     case .consent:
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,
             consentModel: ConsentModel(businessName: dataManager.manifest.businessName),
             apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
         )
         let consentViewController = ConsentViewController(dataSource: consentDataSource)
         consentViewController.delegate = authFlowController
-        return consentViewController
+        viewController = consentViewController
     case .institutionPicker:
         let dataSource = InstitutionAPIDataSource(
             manifest: dataManager.manifest,
             apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
         )
         let picker = InstitutionPicker(dataSource: dataSource)
         picker.delegate = authFlowController
-        return picker
+        viewController = picker
     case .linkConsent:
         assertionFailure("Not supported")
-        return nil
+        viewController = nil
     case .linkLogin:
         assertionFailure("Not supported")
-        return nil
+        viewController = nil
     case .manualEntry:
         let dataSource = ManualEntryDataSourceImplementation(
             apiClient: dataManager.apiClient,
@@ -555,7 +567,7 @@ private func CreatePaneViewController(
         )
         let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
         manualEntryViewController.delegate = authFlowController
-        return manualEntryViewController
+        viewController = manualEntryViewController
     case .manualEntrySuccess:
         if let paymentAccountResource = dataManager.paymentAccountResource, let accountNumberLast4 = dataManager.accountNumberLast4 {
             let manualEntrySuccessViewController = ManualEntrySuccessViewController(
@@ -563,17 +575,17 @@ private func CreatePaneViewController(
                 accountNumberLast4: accountNumberLast4
             )
             manualEntrySuccessViewController.delegate = authFlowController
-            return manualEntrySuccessViewController
+            viewController = manualEntrySuccessViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
-            return nil
+            viewController = nil
         }
     case .networkingLinkSignupPane:
         assertionFailure("Not supported")
-        return nil
+        viewController = nil
     case .networkingLinkVerification:
         assertionFailure("Not supported")
-        return nil
+        viewController = nil
     case .partnerAuth:
         if let institution = dataManager.institution {
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
@@ -584,10 +596,10 @@ private func CreatePaneViewController(
             )
             let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
             partnerAuthViewController.delegate = authFlowController
-            return partnerAuthViewController
+            viewController = partnerAuthViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
-            return nil
+            viewController = nil
         }
     case .success:
         if let linkedAccounts = dataManager.linkedAccounts, let institution = dataManager.institution {
@@ -600,19 +612,19 @@ private func CreatePaneViewController(
             )
             let successViewController = SuccessViewController(dataSource: successDataSource)
             successViewController.delegate = authFlowController
-            return successViewController
+            viewController = successViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
-            return nil
+            viewController = nil
         }
     case .unexpectedError:
-        return nil
+        viewController = nil
     case .authOptions:
         assertionFailure("Not supported")
-        return nil
+        viewController = nil
     case .networkingLinkLoginWarmup:
         assertionFailure("Not supported")
-        return nil
+        viewController = nil
     
     // client-side only panes below
     case .resetFlow:
@@ -624,7 +636,7 @@ private func CreatePaneViewController(
             dataSource: resetFlowDataSource
         )
         resetFlowViewController.delegate = authFlowController
-        return resetFlowViewController
+        viewController = resetFlowViewController
     case .terminalError:
         if let terminalError = dataManager.terminalError {
             let terminalErrorViewController = TerminalErrorViewController(
@@ -632,12 +644,33 @@ private func CreatePaneViewController(
                 allowManualEntry: dataManager.manifest.allowManualEntry
             )
             terminalErrorViewController.delegate = authFlowController
-            return terminalErrorViewController
+            viewController = terminalErrorViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
-            return nil
+            viewController = nil
         }
     case .unparsable:
-        return nil
+        viewController = nil
     }
+    
+    if let viewController = viewController {
+        // this assert should ensure that it's nearly impossible to miss
+        // adding new cases to `paneFromViewController`
+        assert(
+            FinancialConnectionsAnalyticsClient.paneFromViewController(viewController) == pane,
+            "Found a new view controller (\(viewController.self)) that needs to be added to `paneFromViewController`."
+        )
+        
+        // this logging isn't perfect because one could call `CreatePaneViewController`
+        // and never use the view controller, but that is not the case today
+        // and it is difficult to imagine when that would be the case in the future
+        dataManager
+            .analyticsClient
+            .log(
+                eventName: "pane.launched",
+                parameters: ["pane": pane.rawValue]
+            )
+    }
+    
+    return viewController
 }

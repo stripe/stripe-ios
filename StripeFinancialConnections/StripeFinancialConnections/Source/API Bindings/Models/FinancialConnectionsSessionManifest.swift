@@ -79,6 +79,8 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let paymentMethodType: FinancialConnectionsPaymentMethodType?
     let accountDisconnectionMethod: AccountDisconnectionMethod?
     let isEndUserFacing: Bool?
+    let product: String
+    let accountholderToken: String?
 }
 
 // this is a client-side enum (doesn't come from server)
