@@ -147,7 +147,13 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        hostController = HostController(api: apiClient, clientSecret: financialConnectionsSessionClientSecret, returnURL: returnURL)
+        hostController = HostController(
+            api: apiClient,
+            clientSecret: financialConnectionsSessionClientSecret,
+            returnURL: returnURL,
+            publishableKey: apiClient.publishableKey,
+            stripeAccount: apiClient.stripeAccount
+        )
         hostController?.delegate = self
 
         analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret), apiClient: apiClient)
