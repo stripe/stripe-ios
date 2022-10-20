@@ -2,6 +2,11 @@
 ### Migrating from versions < 23.0.0
 * The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
 * [Changed] The minimum iOS version is now 13.0. If you'd like to deploy for iOS 12.0, please use Stripe SDK 22.8.4.
+* [Changed] STPPaymentCardTextField's `cardParams` parameter has been deprecated in favor of `paymentMethodParams`, making it easier to include the postal code from the card field. If you need to access the `STPPaymentMethodCardParams`, use `.paymentMethodParams.card`.
+  * Note that `.paymentMethodParams` returns a copy, so `paymentMethodParams.card` should not be set directly. If you need to set the card information, set `.paymentMethodParams` to a new STPPaymentMethodParams:
+```
+cardField.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
+```
 
 ### Migrating from versions < 22.8.0
 * `PaymentSheet.reset()` has been renamed to `PaymentSheet.resetCustomer()`. If calling the former method, follow the warning in Xcode and apply the suggested fix-it.
@@ -68,7 +73,7 @@ You are affected by this change if:
 2. You use one of the above affected classes
 3. You set different `stripeAccount` values on `STPPaymentConfiguration` and `STPAPIClient`, i.e. `STPPaymentConfiguration.shared.stripeAccount != STPAPIClient.shared.stripeAccount`
 
-If all three of the above conditions are true, you must update your integration! The SDK used to send `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.  
+If all three of the above conditions are true, you must update your integration! The SDK used to send `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.
 
 For example, if you are a Connect user who stores Payment Methods on your platform, but clones PaymentMethods to a connected account and creates direct charges on that connected account i.e. if:
 

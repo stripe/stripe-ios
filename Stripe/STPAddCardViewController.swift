@@ -442,7 +442,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     @objc func nextPressed(_ sender: Any?) {
         loading = true
-        guard let cardParams = paymentCell?.paymentField?.cardParams else {
+        guard let cardParams = paymentCell?.paymentField?.paymentMethodParams.card else {
             return
         }
         // Create and return a Payment Method
@@ -796,9 +796,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                     } else {
                         newParams.number = number
                     }
-                    self.paymentCell?.paymentField?.cardParams = newParams
+                    self.paymentCell?.paymentField?.paymentMethodParams = STPPaymentMethodParams(card: newParams, billingDetails: nil, metadata: nil)
                     if i > number.count {
-                        self.paymentCell?.paymentField?.cardParams = cardParams
+                        self.paymentCell?.paymentField?.paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
                         self.isScanning = false
                         self.paymentCell?.paymentField?.inputView = nil
                         // Force the inputView to reload by asking the text field to resign/become first responder:

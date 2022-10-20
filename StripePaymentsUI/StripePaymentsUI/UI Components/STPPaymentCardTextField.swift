@@ -376,10 +376,29 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// Accessing this property returns a *copied* `cardParams`. The only way to change properties in this
     /// object is to make changes to a `STPPaymentMethodCardParams` you own (retrieved from this text field if desired),
     /// and then set this property to the new value.
-
+    ///
+    /// - Warning: Deprecated. Use `.paymentMethodParams` instead. If you must access the STPPaymentMethodCardParams, use `.paymentMethodParams.card`.
+    @available(*, deprecated, message: "Use .paymentMethodParams instead. If you must access the STPPaymentMethodCardParams, use .paymentMethodParams.card.")
     @objc open var cardParams: STPPaymentMethodCardParams {
         get {
-            let newParams = internalCardParams.copy() as! STPPaymentMethodCardParams
+            // `card` will always exist
+            return paymentMethodParams.card!
+        }
+        set {
+            paymentMethodParams = STPPaymentMethodParams(card: newValue, billingDetails: nil, metadata: nil)
+        }
+    }
+    
+    /// Convenience property for creating an `STPPaymentMethodParams` from the currently entered information
+    /// or programmatically setting the field's contents. For example, if you're using another library
+    /// to scan your user's credit card with a camera, you can assemble that data into an `STPPaymentMethodParams`
+    /// object and set this property to that object to prefill the fields you've collected.
+    /// Accessing this property returns a *copied* `paymentMethodParams`. The only way to change properties in this
+    /// object is to make changes to a `STPPaymentMethodParams` you own (retrieved from this text field if desired),
+    /// and then set this property to the new value.
+    @objc open var paymentMethodParams: STPPaymentMethodParams {
+        get {
+            let newParams = internalCardParams
             newParams.number = cardNumber
             if let monthString = viewModel.expirationMonth, let month = Int(monthString) {
                 newParams.expMonth = NSNumber(value: month)
@@ -389,10 +408,31 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
             newParams.cvc = cvc
             internalCardParams = newParams
-            return internalCardParams
+            let cardToReturn = newParams.copy() as! STPPaymentMethodCardParams
+            var billingDetails = internalBillingDetails?.copy() as? STPPaymentMethodBillingDetails
+            if let postalCode = self.postalCode, !postalCode.isEmpty {
+                // If we don't have an internal billing details, create a new one to populate the postal code
+                billingDetails = billingDetails ?? STPPaymentMethodBillingDetails()
+                let address = STPPaymentMethodAddress()
+                address.postalCode = postalCode
+                address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
+                billingDetails!.address = address // billingDetails will always be non-nil
+            }
+            return STPPaymentMethodParams(card: cardToReturn, billingDetails: billingDetails, metadata: internalMetadata)
         }
         set(callersCardParams) {
-            if callersCardParams.isEqual(self.cardParams) {
+            guard case .card = callersCardParams.type,
+                  callersCardParams.card != nil else {
+                assertionFailure("\(type(of: self)) only supports Card STPPaymentMethodParams")
+                return
+            }
+            
+            // Always set the metadata
+            internalMetadata = callersCardParams.metadata
+            
+            let currentPaymentMethodParams = self.paymentMethodParams
+            if (callersCardParams.card ?? STPPaymentMethodCardParams()).isEqual(currentPaymentMethodParams.card) &&
+                callersCardParams.billingDetails == currentPaymentMethodParams.billingDetails {
                 // These are identical card params: Don't take any action.
                 return
             }
@@ -417,9 +457,24 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                  `internalCardParams` in the `cardParams` property accessor and any mutations
                  the app code might make to their `callersCardParams` object.
                  */
-            let desiredCardParams = callersCardParams.copy() as! STPPaymentMethodCardParams
+            let desiredCardParams = (callersCardParams.card ?? STPPaymentMethodCardParams()).copy() as! STPPaymentMethodCardParams
             internalCardParams = desiredCardParams.copy() as! STPPaymentMethodCardParams
 
+            if let newBillingDetails = callersCardParams.billingDetails {
+                // If we receive billing details, set a copy of these as our internal billing details
+                internalBillingDetails = newBillingDetails.copy() as? STPPaymentMethodBillingDetails
+            } else {
+                // Otherwise, unset billing details
+                internalBillingDetails = nil
+            }
+            // Set the postal code, unsetting if nil
+            postalCode = internalBillingDetails?.address?.postalCode
+            
+            // If an explicit country code is passed, set it. Otherwise use the default behavior (NSLocale.current)
+            if let countryCode = callersCardParams.billingDetails?.address?.country {
+                self.countryCode = countryCode
+            }
+            
             setText(desiredCardParams.number, inField: .number)
             let expirationPresent =
                 desiredCardParams.expMonth != nil && desiredCardParams.expYear != nil
@@ -606,6 +661,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         STPPaymentCardTextFieldViewModel()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
+    @objc internal var internalBillingDetails: STPPaymentMethodBillingDetails? = nil
+    @objc internal var internalMetadata: [String: String]? = nil
+    
     @objc @_spi(STP) public var allFields: [STPFormTextField] = []
     private lazy var sizingField: STPFormTextField = {
         let field = build()

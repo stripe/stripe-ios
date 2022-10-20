@@ -59,6 +59,49 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         return nil
     }
 
+    
+    // MARK: - NSCopying
+    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
+        let copyBillingDetails = type(of: self).init()
+
+        copyBillingDetails.allResponseFields = allResponseFields
+        copyBillingDetails.address = address?.copy() as? STPPaymentMethodAddress
+        copyBillingDetails.email = email
+        copyBillingDetails.name = name
+        copyBillingDetails.phone = phone
+
+        return copyBillingDetails
+    }
+    
+  
+    // MARK: - Equality
+    /// :nodoc:
+    @objc
+    public override func isEqual(_ other: Any?) -> Bool {
+        return isEqual(to: other as? STPPaymentMethodBillingDetails)
+    }
+
+    func isEqual(to other: STPPaymentMethodBillingDetails?) -> Bool {
+        if self === other {
+            return true
+        }
+
+        guard let other = other else {
+            return false
+        }
+
+        if !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters))
+        {
+            return false
+        }
+        
+        return
+            address == other.address &&
+            email == other.email &&
+            name == other.name &&
+            phone == other.phone
+    }
+    
     // MARK: - STPAPIResponseDecodable
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
@@ -74,5 +117,17 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         billingDetails.name = dict.stp_string(forKey: "name")
         billingDetails.phone = dict.stp_string(forKey: "phone")
         return billingDetails
+    }
+}
+
+/// :nodoc:
+extension STPPaymentMethodBillingDetails {
+    /// Convenience initializer for creating an `STPPaymentMethodBillingDetails` instance with a postal and country code
+    @objc convenience init(postalCode: String, countryCode: String? = Locale.autoupdatingCurrent.regionCode) {
+        self.init()
+        let address = STPPaymentMethodAddress()
+        address.postalCode = postalCode
+        address.country = countryCode
+        self.address = address
     }
 }
