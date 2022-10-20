@@ -421,6 +421,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             return STPPaymentMethodParams(card: cardToReturn, billingDetails: billingDetails, metadata: internalMetadata)
         }
         set(callersCardParams) {
+            guard case .card = callersCardParams.type,
+                  callersCardParams.card != nil else {
+                assertionFailure("\(type(of: self)) only supports Card STPPaymentMethodParams")
+                return
+            }
+            
             // Always set the metadata
             internalMetadata = callersCardParams.metadata
             
