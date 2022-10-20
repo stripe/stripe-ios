@@ -16,17 +16,20 @@ import UIKit
      Configuration for the `PaymentMethodMessagingView` class.
      */
     struct Configuration {
-        public init(paymentMethods: [PaymentMethodMessagingView.Configuration.PaymentMethod], currency: String, amount: Int, locale: Locale = Locale.current, countryCode: String = Locale.current.regionCode ?? "", apiClient: STPAPIClient = .shared) {
+        public init(apiClient: STPAPIClient = .shared, paymentMethods: [PaymentMethodMessagingView.Configuration.PaymentMethod], currency: String, amount: Int, locale: Locale = Locale.current, countryCode: String = Locale.current.regionCode ?? "", font: UIFont = .preferredFont(forTextStyle: .footnote), textColor: UIColor = .label, imageColor: (userInterfaceStyleLight: PaymentMethodMessagingView.Configuration.ImageColor, userInterfaceStyleDark: PaymentMethodMessagingView.Configuration.ImageColor) = (userInterfaceStyleLight: .black, userInterfaceStyleDark: .white)) {
+            self.apiClient = apiClient
             self.paymentMethods = paymentMethods
             self.currency = currency
             self.amount = amount
             self.locale = locale
             self.countryCode = countryCode
-            self.apiClient = apiClient
+            self.font = font
+            self.textColor = textColor
+            self.imageColor = imageColor
         }
-        
+
         /// Payment methods that can be displayed by `PaymentMethodMessagingView`
-        public enum PaymentMethod {
+        public enum PaymentMethod: CaseIterable {
             case klarna
             case afterpayClearpay
         }
@@ -45,15 +48,17 @@ import UIKit
         /// The font of text displayed in the view. Defaults to the system font.
         public var font: UIFont = .preferredFont(forTextStyle: .footnote)
         /// The color of text displayed in the view. Defaults to `UIColor.labelColor`.
-        /// - Note: The color of images displayed in `PaymentMethodMessagingView` is either white or black, whichever color is closest to `textColor`.
         public var textColor: UIColor = .label
         
-        enum ImageColor: String {
+        /// The colors of the image
+        public enum ImageColor: String {
             case white
             case black
             case color
         }
-        var imageColor: (userInterfaceStyleLight: ImageColor, userInterfaceStyleDark: ImageColor) = (userInterfaceStyleLight: .black, userInterfaceStyleDark: .white)
+        /// The color of the images displayed in the view as a tuple specifying the color to use in light and dark mode.
+        /// Defaults to `(.black, .white)` i.e. the same colors as the text.
+        public var imageColor: (userInterfaceStyleLight: ImageColor, userInterfaceStyleDark: ImageColor) = (userInterfaceStyleLight: .black, userInterfaceStyleDark: .white)
     }
 }
 

@@ -11,6 +11,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentsUI
 
+@MainActor
 class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
     
     override func setUp() {
@@ -21,81 +22,70 @@ class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
     /// - Note: This mock HTML should include all HTML tags the server can send down
     let mockHTML =
     """
-    <img src=\"https://qa-b.stripecdn.com/payment-method-messaging-statics-srv/assets/klarna_logo_black.png\">&nbsp&nbsp<img src=\"https://qa-b.stripecdn.com/payment-method-messaging-statics-srv/assets/klarna_logo_black.png\">
+    <img src=\"https://cdn.glitch.global/2d9cc690-78ea-45e5-9a44-bb3f3d2128a0/afterpay_logo_black.png?v=1666388884862\"><img src=\"https://cdn.glitch.global/2d9cc690-78ea-45e5-9a44-bb3f3d2128a0/klarna_logo_black.png?v=1666388884862\">
     <br/>
     As low as 4 <i>interest-free</i> payments of <b> $24.75 </b> 🎉
     """
-    private var window: UIWindow {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 1026))
-        window.isHidden = false
-        return window
-    }
     var configuration: PaymentMethodMessagingView.Configuration {
         return .init(paymentMethods: [.afterpayClearpay, .klarna], currency: "USD", amount: 100)
     }
     
-    func makeMockAttributedString() -> NSAttributedString? {
-        var mockAttributedString: NSAttributedString?
-        let expectation = expectation(description: "")
-        PaymentMethodMessagingView.makeAttributedString(from: mockHTML, font: configuration.font, textColor: configuration.textColor) { result in
-            switch result {
-            case .success(let attributedString):
-                mockAttributedString = attributedString
-            case .failure(let error):
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 10)
-        return mockAttributedString
-    }
-    
-    func testDefaults() {
-        guard
-            let mockAttributedString = makeMockAttributedString() else {
+    func testDefaults() async {
+        guard let mockAttributedString = try? await PaymentMethodMessagingView.makeAttributedString(from: mockHTML, font: configuration.font) else {
             XCTFail()
             return
         }
-            let view = PaymentMethodMessagingView(attributedString: mockAttributedString, modalURL: "https://stripe.com", configuration: configuration)
-       
-        let stackView = UIStackView(arrangedSubviews: [view])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.addConstraint(stackView.widthAnchor.constraint(equalToConstant: 375))
-        stackView.backgroundColor = .white
-        
-        stackView.setNeedsLayout()
-        stackView.layoutIfNeeded()
-        
-        STPSnapshotVerifyView(stackView)
+        let view = PaymentMethodMessagingView(attributedString: mockAttributedString, modalURL: "https://stripe.com", configuration: configuration)
+        verify(view)
     }
     
-//    @available(iOS 13.0, *)
-//    func testDarkMode() {
-//        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 1026))
-//        window.isHidden = false
-//        window.overrideUserInterfaceStyle = .dark
-//        guard let view = try? PaymentMethodMessagingView(html: mockHTML, modalURL: "https://stripe.com", configuration: configuration) else {
-//            XCTFail()
-//            return
-//        }
-//        window.addSubview(view)
-//        verify(view)
-//    }
-//
-//    func testCustomFontAndCustomDarkColors() {
-//        guard
-//            let view = try? PaymentMethodMessagingView(html: mockHTML, modalURL: "https://stripe.com", configuration: configuration),
-//            let font = UIFont(name: "AmericanTypewriter", size: 10)
-//        else {
-//            XCTFail()
-//            return
-//        }
-//        view.font = font
-//        view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-//        view.textColor = .lightGray
-//        verify(view) // The images should be tinted white to match the text color
-//    }
+    let mockHTMLWithWhiteImages =
+    """
+    <img src=\"https://cdn.glitch.global/2d9cc690-78ea-45e5-9a44-bb3f3d2128a0/afterpay_logo_white.png?v=1666389081830\"><img src=\"https://cdn.glitch.global/2d9cc690-78ea-45e5-9a44-bb3f3d2128a0/klarna_logo_white.png?v=1666389081830\">
+    <br/>
+    As low as 4 <i>interest-free</i> payments of <b> $24.75 </b> 🎉
+    """
+    @available(iOS 13.0, *)
+    func testDarkMode() async {
+        guard let mockAttributedString = try? await PaymentMethodMessagingView.makeAttributedString(from: mockHTMLWithWhiteImages, font: configuration.font) else {
+            XCTFail()
+            return
+        }
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 1026))
+        window.isHidden = false
+        window.overrideUserInterfaceStyle = .dark
+        let view = PaymentMethodMessagingView(attributedString: mockAttributedString, modalURL: "https://stripe.com", configuration: configuration)
+        window.addSubview(view)
+        verify(view)
+    }
+
+    func testCustomFontAndCustomTextColor() async {
+        var configuration = configuration
+        configuration.font = UIFont(name: "AmericanTypewriter", size: 10)!
+        configuration.textColor = .darkGray
+        guard let mockAttributedString = try? await PaymentMethodMessagingView.makeAttributedString(from: self.mockHTML, font: configuration.font) else {
+            XCTFail()
+            return
+        }
+        let view = PaymentMethodMessagingView(attributedString: mockAttributedString, modalURL: "https://stripe.com", configuration: configuration)
+        verify(view)
+    }
+    
+    func testReal() {
+        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let config = PaymentMethodMessagingView.Configuration(apiClient: apiClient, paymentMethods: PaymentMethodMessagingView.Configuration.PaymentMethod.allCases, currency: "USD", amount: 1099)
+        let createViewExpectation = expectation(description: "")
+        PaymentMethodMessagingView.create(configuration: config) { [weak self] result in
+            switch result {
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            case .success(let view):
+                self?.verify(view)
+            }
+            createViewExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
     
     // MARK: - Helpers
     

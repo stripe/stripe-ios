@@ -42,7 +42,11 @@ class PaymentMethodMessagingViewController: UIViewController {
             containerView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
         
-        let config = PaymentMethodMessagingView.Configuration(paymentMethods: [.afterpayClearpay, .klarna], currency: "USD", amount: 2499)
+        let config = PaymentMethodMessagingView.Configuration(
+            paymentMethods: [.afterpayClearpay, .klarna],
+            currency: "USD",
+            amount: 2499
+        )
         PaymentMethodMessagingView.create(configuration: config) { [weak self] result in
             switch result {
             case .failure(let error):
