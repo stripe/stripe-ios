@@ -419,7 +419,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             return STPPaymentMethodParams(card: cardToReturn, billingDetails: billingDetails, metadata: nil)
         }
         set(callersCardParams) {
-            if callersCardParams.isEqual(self.internalCardParams) {
+            if (callersCardParams.card ?? STPPaymentMethodCardParams()).isEqual(self.internalCardParams) && callersCardParams.billingDetails?.address?.postalCode == self.postalCode {
                 // These are identical card params: Don't take any action.
                 return
             }
@@ -447,6 +447,14 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             let desiredCardParams = (callersCardParams.card ?? STPPaymentMethodCardParams()).copy() as! STPPaymentMethodCardParams
             internalCardParams = desiredCardParams.copy() as! STPPaymentMethodCardParams
 
+            // Set the postal code, unsetting if nil
+            postalCode = callersCardParams.billingDetails?.address?.postalCode
+            
+            // If an explicit country code is passed, set it. Otherwise use the default behavior (NSLocale.current)
+            if let countryCode = callersCardParams.billingDetails?.address?.country {
+                self.countryCode = countryCode
+            }
+            
             setText(desiredCardParams.number, inField: .number)
             let expirationPresent =
                 desiredCardParams.expMonth != nil && desiredCardParams.expYear != nil
