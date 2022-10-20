@@ -97,19 +97,33 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
         return copyPaymentMethodAddress
     }
     
-    static func == (lhs: STPPaymentMethodAddress, rhs: STPPaymentMethodAddress) -> Bool {
-        if !((lhs.additionalAPIParameters as NSDictionary).isEqual(to: rhs.additionalAPIParameters))
+    // MARK: - Equality
+    /// :nodoc:
+    @objc
+    public override func isEqual(_ other: Any?) -> Bool {
+        return isEqual(to: other as? STPPaymentMethodAddress)
+    }
+
+    func isEqual(to other: STPPaymentMethodAddress?) -> Bool {
+        if self === other {
+            return true
+        }
+
+        guard let other = other else {
+            return false
+        }
+
+        if !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters))
         {
             return false
         }
         
-        return
-            lhs.city == rhs.city &&
-            lhs.country == rhs.country &&
-            lhs.line1 == rhs.line1 &&
-            lhs.line2 == rhs.line2 &&
-            lhs.postalCode == rhs.postalCode &&
-            lhs.state == rhs.state
+        return city == other.city &&
+        country == other.country &&
+        line1 == other.line1 &&
+        line2 == other.line2 &&
+        postalCode == other.postalCode &&
+        state == other.state
     }
     
     // MARK: - STPAPIResponseDecodable

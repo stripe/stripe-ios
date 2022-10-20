@@ -73,17 +73,33 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         return copyBillingDetails
     }
     
-    static func == (lhs: STPPaymentMethodBillingDetails, rhs: STPPaymentMethodBillingDetails) -> Bool {
-        if !((lhs.additionalAPIParameters as NSDictionary).isEqual(to: rhs.additionalAPIParameters))
+  
+    // MARK: - Equality
+    /// :nodoc:
+    @objc
+    public override func isEqual(_ other: Any?) -> Bool {
+        return isEqual(to: other as? STPPaymentMethodBillingDetails)
+    }
+
+    func isEqual(to other: STPPaymentMethodBillingDetails?) -> Bool {
+        if self === other {
+            return true
+        }
+
+        guard let other = other else {
+            return false
+        }
+
+        if !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters))
         {
             return false
         }
         
         return
-            lhs.address == rhs.address &&
-            lhs.email == rhs.email &&
-            lhs.name == rhs.name &&
-            lhs.phone == rhs.phone
+            address == other.address &&
+            email == other.email &&
+            name == other.name &&
+            phone == other.phone
     }
     
     // MARK: - STPAPIResponseDecodable

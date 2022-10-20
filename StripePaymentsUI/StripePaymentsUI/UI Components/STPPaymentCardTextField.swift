@@ -424,8 +424,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // Always set the metadata
             internalMetadata = callersCardParams.metadata
             
-            if (callersCardParams.card ?? STPPaymentMethodCardParams()).isEqual(self.paymentMethodParams.card) &&
-                callersCardParams.billingDetails == self.internalBillingDetails {
+            let currentPaymentMethodParams = self.paymentMethodParams
+            if (callersCardParams.card ?? STPPaymentMethodCardParams()).isEqual(currentPaymentMethodParams.card) &&
+                callersCardParams.billingDetails == currentPaymentMethodParams.billingDetails {
                 // These are identical card params: Don't take any action.
                 return
             }

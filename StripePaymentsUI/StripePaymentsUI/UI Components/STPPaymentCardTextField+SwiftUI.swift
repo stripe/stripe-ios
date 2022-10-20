@@ -58,14 +58,6 @@ extension STPPaymentCardTextField {
                     parent.paymentMethodParams = nil
                     return
                 }
-                if let postalCode = cardField.postalCode, let countryCode = cardField.countryCode {
-                    let billingDetails = STPPaymentMethodBillingDetails()
-                    let address = STPPaymentMethodAddress()
-                    address.postalCode = postalCode
-                    address.country = countryCode
-                    billingDetails.address = address
-                    paymentMethodParams.billingDetails = billingDetails
-                }
                 parent.paymentMethodParams = paymentMethodParams
             }
         }
