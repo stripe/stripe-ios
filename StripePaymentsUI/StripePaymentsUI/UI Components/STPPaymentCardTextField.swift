@@ -385,7 +385,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             return paymentMethodParams.card!
         }
         set {
-            paymentMethodParams.card = newValue
+            paymentMethodParams = STPPaymentMethodParams(card: newValue, billingDetails: nil, metadata: nil)
         }
     }
     
