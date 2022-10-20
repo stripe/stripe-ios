@@ -59,6 +59,33 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         return nil
     }
 
+    
+    // MARK: - NSCopying
+    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
+        let copyBillingDetails = type(of: self).init()
+
+        copyBillingDetails.allResponseFields = allResponseFields
+        copyBillingDetails.address = address?.copy() as? STPPaymentMethodAddress
+        copyBillingDetails.email = email
+        copyBillingDetails.name = name
+        copyBillingDetails.phone = phone
+
+        return copyBillingDetails
+    }
+    
+    static func == (lhs: STPPaymentMethodBillingDetails, rhs: STPPaymentMethodBillingDetails) -> Bool {
+        if !((lhs.additionalAPIParameters as NSDictionary).isEqual(to: rhs.additionalAPIParameters))
+        {
+            return false
+        }
+        
+        return
+            lhs.address == rhs.address &&
+            lhs.email == rhs.email &&
+            lhs.name == rhs.name &&
+            lhs.phone == rhs.phone
+    }
+    
     // MARK: - STPAPIResponseDecodable
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {

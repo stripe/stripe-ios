@@ -409,17 +409,23 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             newParams.cvc = cvc
             internalCardParams = newParams
             let cardToReturn = newParams.copy() as! STPPaymentMethodCardParams
-            var billingDetails: STPPaymentMethodBillingDetails? = nil
-            if let postalCode = self.postalCode {
+            var billingDetails = internalBillingDetails?.copy() as? STPPaymentMethodBillingDetails
+            if let postalCode = self.postalCode, !postalCode.isEmpty {
+                // If we don't have an internal billing details, create a new one to populate the postal code
+                billingDetails = billingDetails ?? STPPaymentMethodBillingDetails()
                 let address = STPPaymentMethodAddress()
                 address.postalCode = postalCode
                 address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
-                billingDetails = STPPaymentMethodBillingDetails()
+                billingDetails!.address = address // billingDetails will always be non-nil
             }
-            return STPPaymentMethodParams(card: cardToReturn, billingDetails: billingDetails, metadata: nil)
+            return STPPaymentMethodParams(card: cardToReturn, billingDetails: billingDetails, metadata: internalMetadata)
         }
         set(callersCardParams) {
-            if (callersCardParams.card ?? STPPaymentMethodCardParams()).isEqual(self.internalCardParams) && callersCardParams.billingDetails?.address?.postalCode == self.postalCode {
+            // Always set the metadata
+            internalMetadata = callersCardParams.metadata
+            
+            if (callersCardParams.card ?? STPPaymentMethodCardParams()).isEqual(self.paymentMethodParams.card) &&
+                callersCardParams.billingDetails == self.internalBillingDetails {
                 // These are identical card params: Don't take any action.
                 return
             }
@@ -447,8 +453,15 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             let desiredCardParams = (callersCardParams.card ?? STPPaymentMethodCardParams()).copy() as! STPPaymentMethodCardParams
             internalCardParams = desiredCardParams.copy() as! STPPaymentMethodCardParams
 
+            if let newBillingDetails = callersCardParams.billingDetails {
+                // If we receive billing details, set a copy of these as our internal billing details
+                internalBillingDetails = newBillingDetails.copy() as? STPPaymentMethodBillingDetails
+            } else {
+                // Otherwise, unset billing details
+                internalBillingDetails = nil
+            }
             // Set the postal code, unsetting if nil
-            postalCode = callersCardParams.billingDetails?.address?.postalCode
+            postalCode = internalBillingDetails?.address?.postalCode
             
             // If an explicit country code is passed, set it. Otherwise use the default behavior (NSLocale.current)
             if let countryCode = callersCardParams.billingDetails?.address?.country {
@@ -641,6 +654,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         STPPaymentCardTextFieldViewModel()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
+    @objc internal var internalBillingDetails: STPPaymentMethodBillingDetails? = nil
+    @objc internal var internalMetadata: [String: String]? = nil
+    
     @objc @_spi(STP) public var allFields: [STPFormTextField] = []
     private lazy var sizingField: STPFormTextField = {
         let field = build()

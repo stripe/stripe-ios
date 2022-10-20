@@ -456,7 +456,19 @@
     XCTAssertEqualObjects(card.cvc, @"123");
     XCTAssertEqual(card.expMonth.integerValue, 10);
     XCTAssertEqual(card.expYear.integerValue, 99);
-    XCTAssertEqual(sut.paymentMethodParams.billingDetails.address.postalCode, @"90210");
+    XCTAssertEqualObjects(sut.paymentMethodParams.billingDetails.address.postalCode, @"90210");
+}
+
+- (void)testSettingBillingDetailsRetainsBillingDetails {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *params = [STPPaymentMethodCardParams new];
+    STPPaymentMethodBillingDetails *billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
+    billingDetails.name = @"Test test";
+    
+    sut.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:params billingDetails:billingDetails metadata:nil];
+    STPPaymentMethodParams *actual = sut.paymentMethodParams;
+    
+    XCTAssertEqualObjects(@"Test test", actual.billingDetails.name);
 }
 
 - (void)testSettingPostalCodeUpdatesCardParams {

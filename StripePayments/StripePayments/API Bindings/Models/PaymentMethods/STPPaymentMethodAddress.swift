@@ -83,6 +83,35 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
         return nil
     }
 
+    // MARK: - NSCopying
+    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
+        let copyPaymentMethodAddress = type(of: self).init()
+
+        copyPaymentMethodAddress.allResponseFields = allResponseFields
+        copyPaymentMethodAddress.city = city
+        copyPaymentMethodAddress.country = country
+        copyPaymentMethodAddress.line1 = line1
+        copyPaymentMethodAddress.line2 = line2
+        copyPaymentMethodAddress.postalCode = postalCode
+        copyPaymentMethodAddress.state = state
+        return copyPaymentMethodAddress
+    }
+    
+    static func == (lhs: STPPaymentMethodAddress, rhs: STPPaymentMethodAddress) -> Bool {
+        if !((lhs.additionalAPIParameters as NSDictionary).isEqual(to: rhs.additionalAPIParameters))
+        {
+            return false
+        }
+        
+        return
+            lhs.city == rhs.city &&
+            lhs.country == rhs.country &&
+            lhs.line1 == rhs.line1 &&
+            lhs.line2 == rhs.line2 &&
+            lhs.postalCode == rhs.postalCode &&
+            lhs.state == rhs.state
+    }
+    
     // MARK: - STPAPIResponseDecodable
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
