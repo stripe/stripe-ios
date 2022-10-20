@@ -376,10 +376,29 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// Accessing this property returns a *copied* `cardParams`. The only way to change properties in this
     /// object is to make changes to a `STPPaymentMethodCardParams` you own (retrieved from this text field if desired),
     /// and then set this property to the new value.
-
+    ///
+    /// - Warning: Deprecated. Use `.paymentMethodParams` instead. If you must access the STPPaymentMethodCardParams, use `.paymentMethodParams.card`.
+    @available(*, deprecated, message: "Use .paymentMethodParams instead. If you must access the STPPaymentMethodCardParams, use .paymentMethodParams.card.")
     @objc open var cardParams: STPPaymentMethodCardParams {
         get {
-            let newParams = internalCardParams.copy() as! STPPaymentMethodCardParams
+            // `card` will always exist
+            return paymentMethodParams.card!
+        }
+        set {
+            paymentMethodParams.card = newValue
+        }
+    }
+    
+    /// Convenience property for creating an `STPPaymentMethodParams` from the currently entered information
+    /// or programmatically setting the field's contents. For example, if you're using another library
+    /// to scan your user's credit card with a camera, you can assemble that data into an `STPPaymentMethodParams`
+    /// object and set this property to that object to prefill the fields you've collected.
+    /// Accessing this property returns a *copied* `paymentMethodParams`. The only way to change properties in this
+    /// object is to make changes to a `STPPaymentMethodParams` you own (retrieved from this text field if desired),
+    /// and then set this property to the new value.
+    @objc open var paymentMethodParams: STPPaymentMethodParams {
+        get {
+            let newParams = internalCardParams
             newParams.number = cardNumber
             if let monthString = viewModel.expirationMonth, let month = Int(monthString) {
                 newParams.expMonth = NSNumber(value: month)
@@ -389,10 +408,18 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
             newParams.cvc = cvc
             internalCardParams = newParams
-            return internalCardParams
+            let cardToReturn = newParams.copy() as! STPPaymentMethodCardParams
+            var billingDetails: STPPaymentMethodBillingDetails? = nil
+            if let postalCode = self.postalCode {
+                let address = STPPaymentMethodAddress()
+                address.postalCode = postalCode
+                address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
+                billingDetails = STPPaymentMethodBillingDetails()
+            }
+            return STPPaymentMethodParams(card: cardToReturn, billingDetails: billingDetails, metadata: nil)
         }
         set(callersCardParams) {
-            if callersCardParams.isEqual(self.cardParams) {
+            if callersCardParams.isEqual(self.internalCardParams) {
                 // These are identical card params: Don't take any action.
                 return
             }
@@ -417,7 +444,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                  `internalCardParams` in the `cardParams` property accessor and any mutations
                  the app code might make to their `callersCardParams` object.
                  */
-            let desiredCardParams = callersCardParams.copy() as! STPPaymentMethodCardParams
+            let desiredCardParams = (callersCardParams.card ?? STPPaymentMethodCardParams()).copy() as! STPPaymentMethodCardParams
             internalCardParams = desiredCardParams.copy() as! STPPaymentMethodCardParams
 
             setText(desiredCardParams.number, inField: .number)

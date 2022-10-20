@@ -31,14 +31,8 @@ extension STPPaymentCardTextField {
 
         public func makeUIView(context: Context) -> STPPaymentCardTextField {
             let paymentCardField = STPPaymentCardTextField()
-            if let cardParams = paymentMethodParams?.card {
-                paymentCardField.cardParams = cardParams
-            }
-            if let postalCode = paymentMethodParams?.billingDetails?.address?.postalCode {
-                paymentCardField.postalCode = postalCode
-            }
-            if let countryCode = paymentMethodParams?.billingDetails?.address?.country {
-                paymentCardField.countryCode = countryCode
+            if let paymentMethodParams = paymentMethodParams {
+                paymentCardField.paymentMethodParams = paymentMethodParams
             }
             paymentCardField.delegate = context.coordinator
             paymentCardField.setContentHuggingPriority(.required, for: .vertical)
@@ -47,14 +41,8 @@ extension STPPaymentCardTextField {
         }
 
         public func updateUIView(_ paymentCardField: STPPaymentCardTextField, context: Context) {
-            if let cardParams = paymentMethodParams?.card {
-                paymentCardField.cardParams = cardParams
-            }
-            if let postalCode = paymentMethodParams?.billingDetails?.address?.postalCode {
-                paymentCardField.postalCode = postalCode
-            }
-            if let countryCode = paymentMethodParams?.billingDetails?.address?.country {
-                paymentCardField.countryCode = countryCode
+            if let paymentMethodParams = paymentMethodParams {
+                paymentCardField.paymentMethodParams = paymentMethodParams
             }
         }
 
@@ -65,8 +53,7 @@ extension STPPaymentCardTextField {
             }
 
             public func paymentCardTextFieldDidChange(_ cardField: STPPaymentCardTextField) {
-                let paymentMethodParams = STPPaymentMethodParams(
-                    card: cardField.cardParams, billingDetails: nil, metadata: nil)
+                let paymentMethodParams = cardField.paymentMethodParams
                 if !cardField.isValid {
                     parent.paymentMethodParams = nil
                     return
