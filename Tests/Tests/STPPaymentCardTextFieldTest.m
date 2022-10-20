@@ -553,6 +553,335 @@
     XCTAssertNotEqualObjects(@"number 2", sut.paymentMethodParams.card.number, @"caller changed their copy after setCardParams:");
 }
 
+
+// MARK: - paymentMethodParams
+
+- (void)testSetCard_numberUnknown_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"1";
+    card.number = number;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandUnknown]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+}
+
+- (void)testSetCard_expiration_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_CVC_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *cvc = @"123";
+    card.cvc = cvc;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_numberVisa_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"424242";
+    card.number = number;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVC");
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_numberVisaInvalid_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"4242111111111111";
+    card.number = number;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+}
+
+- (void)testSetCard_numberAmex_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"378282";
+    card.number = number;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVV");
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_numberAmexInvalid_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"378282246311111";
+    card.number = number;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandAmex]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+}
+
+- (void)testSetCard_numberAndExpiration_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"4242424242424242";
+    card.number = number;
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_partialNumberAndExpiration_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"424242";
+    card.number = number;
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_numberAndCVC_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"378282246310005";
+    NSString *cvc = @"123";
+    card.number = number;
+    card.cvc = cvc;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_expirationAndCVC_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *cvc = @"123";
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    card.cvc = cvc;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_completeCardCountryWithoutPostal_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.countryCode = @"BZ";
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"4242424242424242";
+    NSString *cvc = @"123";
+    card.number = number;
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    card.cvc = cvc;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertTrue(sut.isValid);
+}
+
+- (void)testSetCard_completeCardNoPostal_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.postalCodeEntryEnabled = NO;
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"4242424242424242";
+    NSString *cvc = @"123";
+    card.number = number;
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    card.cvc = cvc;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertTrue(sut.isValid);
+}
+
+- (void)testSetCard_completeCard_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"4242424242424242";
+    NSString *cvc = @"123";
+    card.number = number;
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    card.cvc = cvc;
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:[[STPPaymentMethodBillingDetails alloc] initWithPostalCode:@"90210" countryCode:@"US"] metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    BOOL isvalid = sut.isValid;
+    XCTAssertTrue(isvalid);
+
+
+    STPPaymentMethodParams *paymentMethodParams = sut.paymentMethodParams;
+    XCTAssertNotNil(paymentMethodParams);
+
+    STPPaymentMethodCardParams *sutCardParams = paymentMethodParams.card;
+    XCTAssertNotNil(sutCardParams);
+
+    XCTAssertEqualObjects(sutCardParams.number, card.number);
+    XCTAssertEqualObjects(sutCardParams.expMonth, card.expMonth);
+    XCTAssertEqualObjects(sutCardParams.expYear, card.expYear);
+    XCTAssertEqualObjects(sutCardParams.cvc, card.cvc);
+
+    STPPaymentMethodBillingDetails *sutBillingDetails = paymentMethodParams.billingDetails;
+    XCTAssertNotNil(sutBillingDetails);
+
+    STPPaymentMethodAddress *sutAddress = sutBillingDetails.address;
+    XCTAssertNotNil(sutAddress);
+
+    XCTAssertEqualObjects(sutAddress.postalCode, @"90210");
+    XCTAssertEqualObjects(sutAddress.country, @"US");
+}
+
+- (void)testSetCard_empty_pm {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.numberField.text = @"4242424242424242";
+    sut.cvcField.text = @"123";
+    sut.expirationField.text = @"10/99";
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    [sut setPaymentMethodParams:[[STPPaymentMethodParams alloc] initWithCard:card billingDetails:nil metadata:nil]];
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
 @end
 
 @interface STPPaymentCardTextFieldUITests : XCTestCase

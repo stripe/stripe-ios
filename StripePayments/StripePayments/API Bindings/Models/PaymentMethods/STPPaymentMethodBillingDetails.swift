@@ -119,3 +119,15 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         return billingDetails
     }
 }
+
+/// :nodoc:
+extension STPPaymentMethodBillingDetails {
+    /// Convenience initializer for creating an `STPPaymentMethodBillingDetails` instance with a postal and country code
+    @objc convenience init(postalCode: String, countryCode: String? = Locale.autoupdatingCurrent.regionCode) {
+        self.init()
+        let address = STPPaymentMethodAddress()
+        address.postalCode = postalCode
+        address.country = countryCode
+        self.address = address
+    }
+}
