@@ -125,7 +125,6 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPickerContainerView)
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: cardDetailsRecollectionSection.view)
             stackView.isLayoutMarginsRelativeArrangement = true
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.directionalLayoutMargins = preferredContentMargins
             return stackView
         }()
@@ -175,19 +174,10 @@ extension PayWithLinkViewController {
 
             containerView.addArrangedSubview(cancelButton)
 
-            let scrollView = LinkKeyboardAvoidingScrollView()
+            let scrollView = LinkKeyboardAvoidingScrollView(contentView: containerView)
             scrollView.keyboardDismissMode = .interactive
-            scrollView.addSubview(containerView)
 
             contentView.addAndPinSubview(scrollView)
-
-            NSLayoutConstraint.activate([
-                containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-            ])
 
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.

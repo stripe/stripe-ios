@@ -113,7 +113,6 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: titleLabel)
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: subtitleLabel)
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
 
@@ -140,19 +139,10 @@ extension PayWithLinkViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
 
-            let scrollView = LinkKeyboardAvoidingScrollView()
+            let scrollView = LinkKeyboardAvoidingScrollView(contentView: stackView)
             scrollView.keyboardDismissMode = .interactive
-            scrollView.addSubview(stackView)
 
             contentView.addAndPinSubview(scrollView)
-
-            NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-            ])
 
             setupBindings()
             updateUI()

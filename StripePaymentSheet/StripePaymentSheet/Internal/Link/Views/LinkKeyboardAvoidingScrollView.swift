@@ -23,6 +23,26 @@ final class LinkKeyboardAvoidingScrollView: UIScrollView {
             object: nil)
     }
 
+    /// Creates a new keyboard-avoiding scrollview with the given view configured as content view.
+    ///
+    /// This initializer adds the content view as a subview and installs the appropriate set of constraints.
+    ///
+    /// - Parameter contentView: The view to be used as content view.
+    convenience init(contentView: UIView) {
+        self.init()
+
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(contentView)
+
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: widthAnchor)
+        ])
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
