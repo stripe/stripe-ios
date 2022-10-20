@@ -1,6 +1,6 @@
 //
 //  NSAttributedString+Stripe.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Ramon Torres on 1/11/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

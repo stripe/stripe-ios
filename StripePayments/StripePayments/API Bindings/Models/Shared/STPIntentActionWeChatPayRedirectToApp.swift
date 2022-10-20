@@ -1,6 +1,6 @@
 //
-//  STPIntentActionWechatPayRedirectToApp.swift
-//  Stripe
+//  STPIntentActionWeChatPayRedirectToApp.swift
+//  StripePayments
 //
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //

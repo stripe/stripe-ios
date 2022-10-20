@@ -261,6 +261,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1220;
+				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					311769DE2565E9B8008864DC = {
 						CreatedOnToolsVersion = 12.2;

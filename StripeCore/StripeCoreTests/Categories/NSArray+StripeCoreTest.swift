@@ -1,5 +1,5 @@
 //
-//  NSArray+StripeTest.swift
+//  NSArray+StripeCoreTest.swift
 //  StripeCoreTests
 //
 //  Created by Jack Flintermann on 1/19/16.

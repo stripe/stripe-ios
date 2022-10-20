@@ -1,6 +1,6 @@
 //
 //  StripeAPI+Deprecated.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by David Estes on 10/15/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

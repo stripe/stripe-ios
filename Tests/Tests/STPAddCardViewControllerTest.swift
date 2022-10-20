@@ -1,6 +1,6 @@
 //
 //  STPAddCardViewControllerTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 7/5/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

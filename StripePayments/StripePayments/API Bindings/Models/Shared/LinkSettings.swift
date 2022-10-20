@@ -1,6 +1,6 @@
 //
-//  STPLinkSettings.swift
-//  StripeiOS
+//  LinkSettings.swift
+//  StripePayments
 //
 //  Created by Ramon Torres on 4/20/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

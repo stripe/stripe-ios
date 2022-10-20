@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodAffirmParamsTest.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //

@@ -1,6 +1,6 @@
 //
 //  STPApplePayContext.swift
-//  Stripe
+//  StripeApplePay
 //
 //  Created by Yuki Tokuhiro on 2/20/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

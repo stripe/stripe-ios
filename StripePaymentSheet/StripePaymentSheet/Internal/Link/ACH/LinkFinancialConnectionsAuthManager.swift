@@ -1,6 +1,6 @@
 //
 //  LinkFinancialConnectionsAuthManager.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 5/8/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

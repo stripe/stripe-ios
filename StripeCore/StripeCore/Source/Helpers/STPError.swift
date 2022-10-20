@@ -1,9 +1,9 @@
 //
 //  STPError.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Saikat Chakrabarti on 11/4/12.
-//
+//  Copyright © 2012 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

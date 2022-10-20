@@ -1,6 +1,6 @@
 //
 //  STPPhoneNumberValidatorTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 3/22/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

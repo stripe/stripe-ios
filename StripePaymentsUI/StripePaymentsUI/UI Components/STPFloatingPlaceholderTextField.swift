@@ -1,6 +1,6 @@
 //
 //  STPFloatingPlaceholderTextField.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Cameron Sabol on 10/7/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  PollingViewController.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 9/2/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

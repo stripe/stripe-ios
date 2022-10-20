@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodKlarna.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Nick Porter on 10/19/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

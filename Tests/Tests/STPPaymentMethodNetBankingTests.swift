@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodNetBankingTests.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by Anirudh Bhargava on 11/19/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

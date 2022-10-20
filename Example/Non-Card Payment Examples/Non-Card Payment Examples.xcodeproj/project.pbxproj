@@ -326,7 +326,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1200;
-				ORGANIZATIONNAME = Stripe;
+				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					04533E861A687F5D00C7E52E = {
 						CreatedOnToolsVersion = 6.1.1;

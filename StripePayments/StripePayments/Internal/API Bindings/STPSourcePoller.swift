@@ -1,6 +1,6 @@
 //
 //  STPSourcePoller.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Ben Guo on 1/26/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

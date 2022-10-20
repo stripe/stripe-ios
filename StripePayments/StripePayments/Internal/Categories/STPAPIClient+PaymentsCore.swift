@@ -1,8 +1,9 @@
 //
 //  STPAPIClient+PaymentsCore.swift
-//  StripeApplePay
+//  StripePayments
 //
 //  Created by David Estes on 1/25/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

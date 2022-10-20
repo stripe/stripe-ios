@@ -1,6 +1,6 @@
 //
 //  STPSourceParamsTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 1/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

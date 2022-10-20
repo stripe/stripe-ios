@@ -1,6 +1,6 @@
 //
 //  STPTelemetryClient.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Ben Guo on 4/18/17.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

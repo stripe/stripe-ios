@@ -1,9 +1,9 @@
 //
 //  STPAPIClient.swift
-//  StripeExample
+//  StripeCore
 //
 //  Created by Jack Flintermann on 12/18/14.
-//  Copyright (c) 2014 Stripe. All rights reserved.
+//  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

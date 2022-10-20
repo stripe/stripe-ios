@@ -1,6 +1,6 @@
 //
-//  ApplePayHeaderView.swift
-//  StripeiOS
+//  WalletHeaderView.swift
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 11/9/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

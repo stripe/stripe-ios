@@ -1,6 +1,6 @@
 //
 //  FraudDetectionData.swift
-//  StripeiOS
+//  StripeCore
 //
 //  Created by Yuki Tokuhiro on 5/20/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  UIView+Stripe_SafeAreaBounds.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 12/12/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodBacsDebitParams.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 1/29/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

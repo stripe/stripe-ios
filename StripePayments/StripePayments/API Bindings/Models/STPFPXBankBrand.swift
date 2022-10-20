@@ -1,6 +1,6 @@
 //
 //  STPFPXBankBrand.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by David Estes on 8/8/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

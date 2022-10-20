@@ -1,6 +1,6 @@
 //
 //  STPFPXBankStatusResponse.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by David Estes on 10/21/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

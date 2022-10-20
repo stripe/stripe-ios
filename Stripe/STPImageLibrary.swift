@@ -1,6 +1,6 @@
 //
 //  STPImageLibrary.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 6/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  STPContactField.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 10/6/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

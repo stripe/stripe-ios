@@ -1,6 +1,6 @@
 //
 //  PaymentIntentParams.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 6/29/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

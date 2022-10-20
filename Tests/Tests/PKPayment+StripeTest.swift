@@ -1,6 +1,6 @@
 //
 //  PKPayment+StripeTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 7/6/15.
 //  Copyright © 2015 Stripe, Inc. All rights reserved.

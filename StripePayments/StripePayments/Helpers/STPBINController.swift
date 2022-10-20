@@ -1,6 +1,6 @@
 //
-//  STPBINRange.swift
-//  Stripe
+//  STPBINController.swift
+//  StripePayments
 //
 //  Created by Jack Flintermann on 5/24/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  LinkPaymentMethodPicker-RadioButton.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 11/15/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

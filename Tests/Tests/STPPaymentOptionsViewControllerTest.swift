@@ -1,6 +1,6 @@
 //
 //  STPPaymentOptionsViewControllerTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 10/10/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

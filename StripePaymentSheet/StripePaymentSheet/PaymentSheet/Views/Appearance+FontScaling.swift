@@ -1,6 +1,6 @@
 //
 //  Appearance+FontScaling.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/15/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

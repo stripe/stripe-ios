@@ -1,6 +1,6 @@
 //
 //  STPCardParams.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Jack Flintermann on 10/4/15.
 //  Copyright © 2015 Stripe, Inc. All rights reserved.

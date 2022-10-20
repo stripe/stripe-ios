@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodOXXOParams.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Polo Li on 6/16/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

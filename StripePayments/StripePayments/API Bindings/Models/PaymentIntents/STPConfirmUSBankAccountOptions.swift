@@ -1,6 +1,6 @@
 //
 //  STPConfirmUSBankAccountOptions.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Cameron Sabol on 3/16/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

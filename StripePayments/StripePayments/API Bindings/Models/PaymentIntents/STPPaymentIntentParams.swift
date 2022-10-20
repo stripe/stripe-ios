@@ -1,6 +1,6 @@
 //
 //  STPPaymentIntentParams.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Daniel Jackson on 7/3/18.
 //  Copyright © 2018 Stripe, Inc. All rights reserved.

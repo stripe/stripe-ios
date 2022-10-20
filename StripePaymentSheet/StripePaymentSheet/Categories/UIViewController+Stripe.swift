@@ -1,6 +1,6 @@
 //
 //  UIViewController+Stripe.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 5/20/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

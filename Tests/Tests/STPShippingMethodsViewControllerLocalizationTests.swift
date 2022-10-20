@@ -1,6 +1,6 @@
 //
 //  STPShippingMethodsViewControllerLocalizationTests.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 11/3/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

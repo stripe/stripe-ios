@@ -1,6 +1,6 @@
 //
 //  PayWithLinkViewController-UpdatePaymentViewController.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 1/27/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

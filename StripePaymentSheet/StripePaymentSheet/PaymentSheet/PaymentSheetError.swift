@@ -1,6 +1,6 @@
 //
 //  PaymentSheetError.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 12/7/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

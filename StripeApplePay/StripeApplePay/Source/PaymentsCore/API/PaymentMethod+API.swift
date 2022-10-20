@@ -1,6 +1,6 @@
 //
 //  PaymentMethod+API.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 8/10/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

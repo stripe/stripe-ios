@@ -3,6 +3,7 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 4/26/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

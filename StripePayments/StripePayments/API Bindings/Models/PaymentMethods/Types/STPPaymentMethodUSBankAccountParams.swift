@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodUSBankAccountParams.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Cameron Sabol on 2/24/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

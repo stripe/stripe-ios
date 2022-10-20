@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodBLIK.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 3/10/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

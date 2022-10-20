@@ -1,6 +1,6 @@
 //
 //  CardScanningView.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by David Estes on 12/2/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

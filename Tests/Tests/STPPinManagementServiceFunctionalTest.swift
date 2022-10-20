@@ -1,5 +1,5 @@
 //
-//  STPPinManagementFunctionalTest.m
+//  STPPinManagementServiceFunctionalTest.swift
 //  StripeiOS Tests
 //
 //  Created by Arnaud Cavailhez on 4/29/19.

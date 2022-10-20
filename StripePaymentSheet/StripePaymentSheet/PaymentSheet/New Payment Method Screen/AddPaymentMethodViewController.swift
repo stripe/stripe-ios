@@ -1,6 +1,6 @@
 //
 //  AddPaymentMethodViewController.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 10/13/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

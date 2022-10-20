@@ -1,6 +1,6 @@
 //
 //  STPSourceCardDetailsTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Joey Dong on 6/21/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

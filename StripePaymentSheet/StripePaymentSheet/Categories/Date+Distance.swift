@@ -1,6 +1,6 @@
 //
 //  Date+Distance.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 9/9/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

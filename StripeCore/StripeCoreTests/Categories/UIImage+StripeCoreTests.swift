@@ -1,6 +1,6 @@
 //
-//  UIImage+StripeTests.swift
-//  Stripe
+//  UIImage+StripeCoreTests.swift
+//  StripeCoreTests
 //
 //  Created by Brian Dorfman on 4/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

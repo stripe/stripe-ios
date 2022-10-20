@@ -1,6 +1,6 @@
 //
 //  STPBinRangeTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 5/24/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

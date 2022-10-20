@@ -1,5 +1,5 @@
 //
-//  TextFieldElement+PANTest.swift
+//  TextFieldElement+CardTest.swift
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 2/25/22.

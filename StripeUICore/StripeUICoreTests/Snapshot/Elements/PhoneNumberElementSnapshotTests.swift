@@ -3,6 +3,7 @@
 //  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 6/23/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import iOSSnapshotTestCase

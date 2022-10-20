@@ -1,6 +1,6 @@
 //
 //  AffirmCopyLabel.swift
-//
+//  StripePaymentSheet
 //
 //  Created by Reshma Karthikeyan on 2/22/22.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

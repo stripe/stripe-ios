@@ -2,6 +2,8 @@
 //  StripeJSONShared.swift
 //  StripeCore
 //
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//
 
 import Foundation
 

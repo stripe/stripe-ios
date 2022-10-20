@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodAlipay.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //

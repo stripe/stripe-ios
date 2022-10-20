@@ -1,9 +1,9 @@
 //
 //  STPFormEncoderTest.swift
-//  Stripe Tests
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 1/8/15.
-//
+//  Copyright © 2015 Stripe, Inc. All rights reserved.
 //
 
 import XCTest

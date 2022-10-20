@@ -1,6 +1,6 @@
 //
-//  CardElementView.swift
-//  StripeiOS
+//  CardSectionWithScannerView.swift
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 3/22/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

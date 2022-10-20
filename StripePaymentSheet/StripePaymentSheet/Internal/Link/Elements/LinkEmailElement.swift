@@ -1,6 +1,6 @@
 //
 //  LinkEmailElement.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Cameron Sabol on 1/13/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

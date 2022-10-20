@@ -1,9 +1,9 @@
 //
 //  STPCertTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Phillip Cohen on 4/14/14.
-//
+//  Copyright © 2014 Stripe, Inc. All rights reserved.
 //
 
 import XCTest

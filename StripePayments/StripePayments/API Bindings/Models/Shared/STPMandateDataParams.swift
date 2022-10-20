@@ -1,6 +1,6 @@
 //
 //  STPMandateDataParams.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Cameron Sabol on 10/17/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

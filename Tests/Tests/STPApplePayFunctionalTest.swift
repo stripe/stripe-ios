@@ -1,6 +1,6 @@
 //
-//  STPApplePayTest.m
-//  Stripe
+//  STPApplePayFunctionalTest.swift
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 12/21/14.
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  NSArray+Stripe.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Jack Flintermann on 1/19/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

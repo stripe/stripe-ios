@@ -1,6 +1,6 @@
 //
 //  UIKit+PaymentSheet.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 11/10/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

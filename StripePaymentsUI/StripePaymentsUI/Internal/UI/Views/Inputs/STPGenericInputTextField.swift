@@ -1,6 +1,6 @@
 //
 //  STPGenericInputTextField.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Cameron Sabol on 11/19/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

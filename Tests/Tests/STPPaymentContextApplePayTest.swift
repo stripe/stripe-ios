@@ -1,6 +1,6 @@
 //
 //  STPPaymentContextApplePayTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 8/1/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

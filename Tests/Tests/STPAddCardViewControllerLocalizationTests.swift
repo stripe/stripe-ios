@@ -1,6 +1,6 @@
 //
 //  STPAddCardViewControllerLocalizationTests.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 10/17/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

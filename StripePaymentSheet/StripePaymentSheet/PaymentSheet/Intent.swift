@@ -1,11 +1,12 @@
 //
 //  Intent.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 6/7/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 //  This file contains types that abstract over PaymentIntent and SetupIntent for convenience.
+//
 
 import Foundation
 import UIKit

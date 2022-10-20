@@ -1,6 +1,6 @@
 //
 //  STPAddressViewModelTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 10/21/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

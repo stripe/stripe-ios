@@ -1,6 +1,6 @@
 //
 //  STPGenericInputPickerField.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Mel Ludowise on 2/8/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

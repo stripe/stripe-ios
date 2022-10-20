@@ -3,6 +3,7 @@
 //  StripePaymentSheet
 //
 //  Created by David Estes on 9/22/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

@@ -1,6 +1,6 @@
 //
 //  STPCustomer.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Jack Flintermann on 6/9/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

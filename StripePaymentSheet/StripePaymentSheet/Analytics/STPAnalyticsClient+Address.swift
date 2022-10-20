@@ -1,6 +1,6 @@
 //
 //  STPAnalyticsClient+Address.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 7/25/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

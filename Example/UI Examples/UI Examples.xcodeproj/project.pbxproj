@@ -185,7 +185,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
 				LastUpgradeCheck = 1200;
-				ORGANIZATIONNAME = Stripe;
+				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					C1140CBC1F1EC0FC002084AB = {
 						CreatedOnToolsVersion = 9.0;

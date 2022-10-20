@@ -1,9 +1,9 @@
 //
 //  STPCard.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Saikat Chakrabarti on 11/2/12.
-//
+//  Copyright © 2012 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

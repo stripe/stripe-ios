@@ -687,6 +687,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1400;
+				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					3139D27B286E34C400C9744B = {
 						CreatedOnToolsVersion = 13.4;

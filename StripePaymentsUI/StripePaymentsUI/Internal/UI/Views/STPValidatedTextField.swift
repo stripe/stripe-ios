@@ -1,6 +1,6 @@
 //
 //  STPValidatedTextField.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Daniel Jackson on 12/14/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodAfterpayClearpayParams.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Ali Riaz on 1/12/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

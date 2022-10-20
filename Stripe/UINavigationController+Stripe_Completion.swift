@@ -1,6 +1,6 @@
 //
 //  UINavigationController+Stripe_Completion.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 3/23/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

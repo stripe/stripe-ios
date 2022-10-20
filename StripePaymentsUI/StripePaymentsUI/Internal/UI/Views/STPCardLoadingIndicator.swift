@@ -1,6 +1,6 @@
 //
 //  STPCardLoadingIndicator.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Cameron Sabol on 8/24/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

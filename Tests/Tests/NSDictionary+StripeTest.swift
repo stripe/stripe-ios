@@ -1,6 +1,6 @@
 //
 //  NSDictionary+StripeTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Joey Dong on 7/24/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

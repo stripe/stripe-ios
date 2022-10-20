@@ -1,6 +1,6 @@
 //
 //  StripeAPI.swift
-//  StripeiOS
+//  StripeCore
 //
 //  Created by Yuki Tokuhiro on 9/22/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

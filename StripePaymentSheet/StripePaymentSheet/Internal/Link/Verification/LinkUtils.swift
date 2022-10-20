@@ -1,6 +1,6 @@
 //
 //  LinkUtils.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 6/24/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

@@ -1,8 +1,9 @@
 //
 //  PKPayment+Stripe.swift
-//  Stripe
+//  StripeApplePay
 //
 //  Created by Ben Guo on 7/2/15.
+//  Copyright © 2015 Stripe, Inc. All rights reserved.
 //
 
 import PassKit

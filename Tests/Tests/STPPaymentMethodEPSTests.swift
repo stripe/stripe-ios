@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodEPSTest.m
+//  STPPaymentMethodEPSTests.swift
 //  StripeiOS Tests
 //
 //  Created by Shengwei Wu on 5/15/20.

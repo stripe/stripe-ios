@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodCardNetworks.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Cameron Sabol on 7/15/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

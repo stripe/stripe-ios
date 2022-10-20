@@ -409,7 +409,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1200;
-				ORGANIZATIONNAME = "stripe-ios";
+				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					31D8F79425BA0200004502D9 = {
 						CreatedOnToolsVersion = 12.2;

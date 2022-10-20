@@ -1,6 +1,6 @@
 //
 //  STPTelemetryClientFunctionalTest.swift
-//  StripeiOS Tests
+//  StripeApplePayTests
 //
 //  Created by Yuki Tokuhiro on 5/21/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

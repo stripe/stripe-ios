@@ -1,6 +1,6 @@
 //
 //  STPKlarnaLineItem.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by David Estes on 11/19/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

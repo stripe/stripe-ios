@@ -1,6 +1,6 @@
 //
 //  PaymentMethodElementWrapper.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 3/26/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

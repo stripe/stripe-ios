@@ -1,6 +1,6 @@
 //
 //  STPConfirmAlipayOptions.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 5/13/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

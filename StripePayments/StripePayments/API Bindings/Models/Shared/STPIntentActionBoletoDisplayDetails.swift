@@ -1,6 +1,6 @@
 //
 //  STPIntentActionBoletoDisplayDetails.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Ramon Torres on 9/8/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

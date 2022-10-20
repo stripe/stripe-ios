@@ -1,6 +1,6 @@
 //
 //  STPEmptyStripeResponse.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Cameron Sabol on 6/11/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

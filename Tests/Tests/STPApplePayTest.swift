@@ -1,6 +1,6 @@
 //
 //  STPApplePayTest.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by David Estes on 9/21/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

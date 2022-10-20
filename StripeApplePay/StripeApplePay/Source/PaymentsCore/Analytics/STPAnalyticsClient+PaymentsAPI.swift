@@ -1,8 +1,9 @@
 //
-//  STPAnalyticsClient+ApplePay.swift
+//  STPAnalyticsClient+PaymentsAPI.swift
 //  StripeApplePay
 //
 //  Created by David Estes on 1/21/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

@@ -1,6 +1,6 @@
 //
 //  LinkInstantDebitMandateView.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 2/17/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

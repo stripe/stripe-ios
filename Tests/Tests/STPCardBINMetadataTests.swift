@@ -1,5 +1,5 @@
 //
-//  STPCardBINMetadata.m
+//  STPCardBINMetadataTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 7/20/20.

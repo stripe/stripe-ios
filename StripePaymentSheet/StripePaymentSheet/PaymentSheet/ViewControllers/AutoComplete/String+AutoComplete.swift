@@ -1,6 +1,6 @@
 //
 //  String+AutoComplete.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 6/13/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

@@ -1,8 +1,9 @@
 //
 //  STPAPIClient+ApplePay.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Jack Flintermann on 12/19/14.
+//  Copyright © 2014 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

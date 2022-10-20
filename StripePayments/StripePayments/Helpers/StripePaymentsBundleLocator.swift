@@ -1,6 +1,8 @@
 //
-//  StripeBundleLocator.swift
-//  StripeiOS
+//  StripePaymentsBundleLocator.swift
+//  StripePayments
+//
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

@@ -1,6 +1,6 @@
 //
 //  STPBankAccountCollector.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //

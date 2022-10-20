@@ -2,6 +2,8 @@
 //  STPLocalizedString.swift
 //  StripePaymentSheet
 //
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//
 
 import Foundation
 @_spi(STP) import StripeCore

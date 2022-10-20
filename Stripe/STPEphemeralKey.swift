@@ -1,6 +1,6 @@
 //
 //  STPEphemeralKey.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 5/4/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

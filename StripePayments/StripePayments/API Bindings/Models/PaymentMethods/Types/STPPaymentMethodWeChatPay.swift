@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodWeChatPay.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //

@@ -1,6 +1,6 @@
 //
 //  STPBlocks.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Jack Flintermann on 3/23/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

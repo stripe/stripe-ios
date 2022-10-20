@@ -1,6 +1,6 @@
 //
 //  STPSourceWeChatPayDetails.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 6/4/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

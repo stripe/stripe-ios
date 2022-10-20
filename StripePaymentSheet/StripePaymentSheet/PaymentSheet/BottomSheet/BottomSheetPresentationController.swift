@@ -1,6 +1,6 @@
 //
 //  BottomSheetPresentationController.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //

@@ -1,6 +1,6 @@
 //
 //  STPBankSelectionTableViewCell.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by David Estes on 8/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

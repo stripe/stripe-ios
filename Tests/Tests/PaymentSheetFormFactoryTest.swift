@@ -1,6 +1,6 @@
 //
 //  PaymentSheetFormFactoryTest.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 6/19/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

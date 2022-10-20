@@ -1,6 +1,8 @@
 //
-//  STPAnalyticsClient+PaymentsTests.swift
-//  StripePaymentsTest
+//  STPAnalyticsClient+StripePayments.swift
+//  StripePaymentsTests
+//
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

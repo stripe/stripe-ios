@@ -1,6 +1,6 @@
 //
 //  TextFieldElement+IBAN.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 5/23/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

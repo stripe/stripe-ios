@@ -1,6 +1,6 @@
 //
 //  AddressViewController.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 5/24/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

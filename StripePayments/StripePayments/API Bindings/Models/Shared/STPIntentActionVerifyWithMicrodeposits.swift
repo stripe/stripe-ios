@@ -1,6 +1,6 @@
 //
 //  STPIntentActionVerifyWithMicrodeposits.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Cameron Sabol on 2/23/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

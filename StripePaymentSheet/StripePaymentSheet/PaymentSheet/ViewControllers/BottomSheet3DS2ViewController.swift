@@ -1,6 +1,6 @@
 //
 //  BottomSheet3DS2ViewController.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Cameron Sabol on 1/20/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

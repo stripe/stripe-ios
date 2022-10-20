@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodPrzelewy24Params.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Vineet Shah on 4/23/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

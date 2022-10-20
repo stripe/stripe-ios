@@ -1,6 +1,6 @@
 //
 //  STPPaymentIntentShippingDetailsParams.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 4/27/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

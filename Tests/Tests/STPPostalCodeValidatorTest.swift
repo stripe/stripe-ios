@@ -1,6 +1,6 @@
 //
 //  STPPostalCodeValidatorTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 4/14/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

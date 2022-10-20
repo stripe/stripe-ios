@@ -1,6 +1,6 @@
 //
 //  PayWithLinkViewController-WalletViewController.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 10/27/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

@@ -1,9 +1,9 @@
 //
 //  STPBankAccount.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Charles Scalesse on 10/1/14.
-//
+//  Copyright © 2014 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

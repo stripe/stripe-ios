@@ -1,6 +1,6 @@
 //
 //  STPiDEALBank.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Mel Ludowise on 2/4/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

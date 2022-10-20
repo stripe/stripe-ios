@@ -1,6 +1,6 @@
 //
 //  STPSetupIntentLastSetupError.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 8/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

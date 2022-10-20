@@ -1,6 +1,6 @@
 //
 //  Data+SHA256.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/7/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

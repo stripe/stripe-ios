@@ -1,6 +1,6 @@
 //
 //  ConfirmButton+Link.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 1/12/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

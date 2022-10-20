@@ -1,6 +1,6 @@
 //
 //  STPPaymentIntentShippingDetailsParams+PaymentSheet.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 8/3/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

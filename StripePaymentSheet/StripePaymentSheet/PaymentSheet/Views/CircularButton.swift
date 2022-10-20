@@ -1,6 +1,6 @@
 //
 //  CircularButton.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Cameron Sabol on 2/17/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

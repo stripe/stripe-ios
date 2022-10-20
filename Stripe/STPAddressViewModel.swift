@@ -1,6 +1,6 @@
 //
 //  STPAddressViewModel.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 4/21/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

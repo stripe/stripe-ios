@@ -1,5 +1,5 @@
 //
-//  StackViewWithSeparatorSnapshotTests.swift
+//  STPStackViewWithSeparatorSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/23/20.

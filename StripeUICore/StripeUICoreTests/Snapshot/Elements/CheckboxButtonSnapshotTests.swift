@@ -1,6 +1,6 @@
 //
 //  CheckboxButtonSnapshotTests.swift
-//  StripeiOS Tests
+//  StripeUICoreTests
 //
 //  Created by Ramon Torres on 12/14/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

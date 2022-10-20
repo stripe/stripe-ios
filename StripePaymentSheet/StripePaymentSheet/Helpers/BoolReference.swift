@@ -1,6 +1,6 @@
 //
 //  BoolReference.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Cameron Sabol on 4/20/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

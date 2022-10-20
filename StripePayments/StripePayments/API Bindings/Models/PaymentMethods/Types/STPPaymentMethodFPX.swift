@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodFPX.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by David Estes on 7/30/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

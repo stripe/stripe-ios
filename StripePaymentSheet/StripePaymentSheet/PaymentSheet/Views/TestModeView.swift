@@ -1,6 +1,6 @@
 //
 //  TestModeView.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 8/24/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  STPLabeledMultiFormTextFieldView.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Cameron Sabol on 3/12/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

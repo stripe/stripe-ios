@@ -1,6 +1,6 @@
 //
 //  LinkInlineSignupElementSnapshotTests.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by Ramon Torres on 1/21/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

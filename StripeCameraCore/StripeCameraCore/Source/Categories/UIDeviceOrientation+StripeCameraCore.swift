@@ -3,6 +3,7 @@
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 1/20/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

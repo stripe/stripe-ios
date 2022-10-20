@@ -1,6 +1,6 @@
 //
-//  STPAPIClient+PinManagement.h
-//  Stripe
+//  STPPinManagementService.swift
+//  StripeiOS
 //
 //  Created by Arnaud Cavailhez on 4/29/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

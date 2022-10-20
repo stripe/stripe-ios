@@ -1,5 +1,5 @@
 //
-//  STPInputTextFieldValidator.swift
+//  STPInputTextFieldValidatorTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/28/20.

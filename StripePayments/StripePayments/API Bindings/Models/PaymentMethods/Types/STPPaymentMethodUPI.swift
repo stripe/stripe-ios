@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodUPI.swift
-//  StripeiOS
+//  StripePayments
 //
 //  Created by Anirudh Bhargava on 11/6/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

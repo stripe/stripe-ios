@@ -1,6 +1,6 @@
 //
 //  STPConnectAccountParams.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Daniel Jackson on 1/4/18.
 //  Copyright © 2018 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  STPAppInfo.swift
-//  StripeiOS
+//  StripeCore
 //
 //  Created by Yuki Tokuhiro on 6/20/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

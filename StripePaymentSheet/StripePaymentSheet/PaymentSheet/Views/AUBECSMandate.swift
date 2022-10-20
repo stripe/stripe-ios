@@ -1,6 +1,6 @@
 //
-//  AUBECS.swift
-//  StripeiOS
+//  AUBECSMandate.swift
+//  StripePaymentSheet
 //
 //  Created by Reshma Karthikeyan on 2/25/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

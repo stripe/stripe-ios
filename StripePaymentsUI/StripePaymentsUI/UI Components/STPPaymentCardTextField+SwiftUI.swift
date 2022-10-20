@@ -1,6 +1,6 @@
 //
 //  STPPaymentCardTextField+SwiftUI.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by David Estes on 2/1/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

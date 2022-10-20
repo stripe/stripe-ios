@@ -1,6 +1,6 @@
 //
 //  STPCardFormView+SwiftUI.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by Cameron Sabol on 3/8/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

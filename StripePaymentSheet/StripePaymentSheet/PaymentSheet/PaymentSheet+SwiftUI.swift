@@ -1,12 +1,13 @@
 //
 //  PaymentSheet+SwiftUI.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by David Estes on 1/14/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 //  This is adapted from a strategy used in BetterSafariView by Dongkyu Kim.
 //  https://github.com/stleamist/BetterSafariView
+//
 
 import SwiftUI
 

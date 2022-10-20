@@ -1,6 +1,6 @@
 //
 //  STPIntentActionAlipayHandleRedirect.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Yuki Tokuhiro on 8/3/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

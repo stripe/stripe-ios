@@ -1,6 +1,6 @@
 //
 //  STPFile.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Charles Scalesse on 11/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

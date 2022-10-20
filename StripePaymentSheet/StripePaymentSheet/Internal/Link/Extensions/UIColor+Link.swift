@@ -1,6 +1,6 @@
 //
 //  UIColor+Link.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Ramon Torres on 11/1/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

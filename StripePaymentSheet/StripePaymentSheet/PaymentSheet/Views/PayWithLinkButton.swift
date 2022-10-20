@@ -1,6 +1,6 @@
 //
 //  PayWithLinkButton.swift
-//  StripeiOS
+//  StripePaymentSheet
 //
 //  Created by Cameron Sabol on 9/1/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

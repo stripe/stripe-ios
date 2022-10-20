@@ -1,6 +1,6 @@
 //
 //  STPPaymentMethodGiropay.swift
-//  Stripe
+//  StripePayments
 //
 //  Created by Cameron Sabol on 4/21/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
