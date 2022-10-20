@@ -471,6 +471,17 @@
     XCTAssertEqualObjects(@"Test test", actual.billingDetails.name);
 }
 
+
+- (void)testSettingMetadataRetainsMetadata {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPPaymentMethodCardParams *params = [STPPaymentMethodCardParams new];
+    sut.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:params billingDetails:nil metadata:@{@"hello": @"test"}];
+    STPPaymentMethodParams *actual = sut.paymentMethodParams;
+    
+    XCTAssertEqualObjects(@{@"hello": @"test"}, actual.metadata);
+}
+
+
 - (void)testSettingPostalCodeUpdatesCardParams {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     sut.numberField.text = @"4242424242424242";
