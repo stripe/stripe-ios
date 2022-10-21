@@ -233,7 +233,7 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        PaymentSheet.supportedPaymentMethods += [.UPI]
+//        PaymentSheet.supportedPaymentMethods += [.link]
         
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false

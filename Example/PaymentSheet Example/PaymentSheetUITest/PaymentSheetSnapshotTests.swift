@@ -596,9 +596,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testPaymentSheet_LPM_upi_only() {
-        PaymentSheet.supportedPaymentMethods += [.UPI] // TODO: (porter) Remove when UPI launches
-        
+    func testPaymentSheet_LPM_upi_only() {        
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
             return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"upi\"",

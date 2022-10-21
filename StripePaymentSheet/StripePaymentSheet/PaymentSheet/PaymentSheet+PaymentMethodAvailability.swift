@@ -23,7 +23,8 @@ extension PaymentSheet {
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
-        .AUBECSDebit
+        .AUBECSDebit,
+        .UPI
     ]
     
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
