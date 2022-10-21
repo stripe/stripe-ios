@@ -118,7 +118,10 @@ class ConsentViewController: UIViewController {
                 delegate?.consentViewControllerDidSelectManuallyVerify(self)
             } else if url.host == "data-access-notice" {
                 let dataAccessNoticeViewController = DataAccessNoticeViewController(
-                    model: dataSource.consentModel.dataAccessNoticeModel
+                    model: dataSource.consent.dataAccessNotice,
+                    didSelectURL: { [weak self] url in
+                        self?.didSelectURL(url)
+                    }
                 )
                 dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
                 dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext

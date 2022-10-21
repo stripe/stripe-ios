@@ -13,10 +13,10 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class ConsentBodyView: UIView {
     
-    private let bulletItems: [FinancialConnectionsBullet]
+    private let bulletItems: [FinancialConnectionsConsent.Body.BulletItem]
     
     init(
-        bulletItems: [FinancialConnectionsBullet],
+        bulletItems: [FinancialConnectionsConsent.Body.BulletItem],
         didSelectURL: @escaping (URL) -> Void
     ) {
         self.bulletItems = bulletItems
@@ -83,19 +83,16 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentBodyView {
         ConsentBodyView(
             bulletItems: [
-                FinancialConnectionsBullet(
+                FinancialConnectionsConsent.Body.BulletItem(
                     icon: "...",
-                    title: "",
                     content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
                 ),
-                FinancialConnectionsBullet(
+                FinancialConnectionsConsent.Body.BulletItem(
                     icon: "...",
-                    title: "",
                     content: "Your data is encrypted for your protection."
                 ),
-                FinancialConnectionsBullet(
+                FinancialConnectionsConsent.Body.BulletItem(
                     icon: "...",
-                    title: "",
                     content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
             ],
