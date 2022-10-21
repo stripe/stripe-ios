@@ -13,14 +13,12 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class ConsentFooterView: UIView {
     
-    
-    private let ctaText: String
+    private let agreeButtonText: String
     private let didSelectAgree: () -> Void
-    private let didSelectManuallyVerify: (() -> Void)?
     
     private lazy var agreeButton: StripeUICore.Button = {
         let agreeButton = Button(configuration: .financialConnectionsPrimary)
-        agreeButton.title = ctaText
+        agreeButton.title = agreeButtonText
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -32,15 +30,13 @@ class ConsentFooterView: UIView {
     init(
         aboveCtaText: String,
         ctaText: String,
+        belowCtaText: String?,
         didSelectAgree: @escaping () -> Void,
-        didSelectManuallyVerify: (() -> Void)?, // null if manual entry disabled
-        showManualEntryBusinessDaysNotice: Bool
+        didSelectURL: @escaping (URL) -> Void
     ) {
-        self.ctaText = ctaText
+        self.agreeButtonText = ctaText
         self.didSelectAgree = didSelectAgree
-        self.didSelectManuallyVerify = didSelectManuallyVerify
         super.init(frame: .zero)
-        
         backgroundColor = .customBackgroundColor
         
         let termsAndPrivacyPolicyLabel = ClickableLabel(
@@ -50,7 +46,10 @@ class ConsentFooterView: UIView {
             textColor: .textSecondary,
             alignCenter: true
         )
-        termsAndPrivacyPolicyLabel.setText(aboveCtaText)
+        termsAndPrivacyPolicyLabel.setText(
+            aboveCtaText,
+            action: didSelectURL
+        )
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -61,17 +60,7 @@ class ConsentFooterView: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 20
             
-        if let didSelectManuallyVerify = didSelectManuallyVerify {
-            let text: String
-            if showManualEntryBusinessDaysNotice {
-                let localizedManuallyVerifyText = STPLocalizedString("Manually verify instead", "The title of a button that allows the user to press it to enter bank account details manually.")
-                let localizedBusinessDaysNotice = STPLocalizedString("(takes 1-2 business days)", "An extra notice next to a title of a button that allows the user to press it to enter bank account details manually. The full text looks like: 'Manually verify instead (takes 1-2 business days)'")
-                text = "[\(localizedManuallyVerifyText)](https://www.urlIsIgnored.com) \(localizedBusinessDaysNotice)"
-            } else {
-                let localizedText = STPLocalizedString("Enter account details manually instead", "The title of a button that allows the user to press it to enter bank account details manually.")
-                text = "[\(localizedText)](https://www.urlIsIgnored.com)"
-            }
-            
+        if let belowCtaText = belowCtaText {
             let manuallyVerifyLabel = ClickableLabel(
                 font: UIFont.stripeFont(forTextStyle: .detail),
                 boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
@@ -80,10 +69,8 @@ class ConsentFooterView: UIView {
                 alignCenter: true
             )
             manuallyVerifyLabel.setText(
-                text,
-                action: { _ in
-                    didSelectManuallyVerify()
-                }
+                belowCtaText,
+                action: didSelectURL
             )
             verticalStackView.addArrangedSubview(manuallyVerifyLabel)
             verticalStackView.setCustomSpacing(24, after: agreeButton)
@@ -117,9 +104,9 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
         ConsentFooterView(
             aboveCtaText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
             ctaText: "Agree",
+            belowCtaText: "[Manually verify instead](https://www.stripe.com) (takes 1-2 business days)",
             didSelectAgree: {},
-            didSelectManuallyVerify: {},
-            showManualEntryBusinessDaysNotice: false
+            didSelectURL: { _ in }
         )
     }
 

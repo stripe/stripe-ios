@@ -14,7 +14,6 @@ struct FinancialConnectionsSynchronize: Decodable {
     
     struct Text: Decodable {
         let consentPane: FinancialConnectionsConsent
-        // let dataAccessNotice: FinancialConnectionsDataAccessNotice
     }
 }
 
@@ -25,6 +24,8 @@ struct FinancialConnectionsConsent: Decodable {
     let aboveCta: String
     let cta: String
     let belowCta: String?
+    
+    // let dataAccessNotice: FinancialConnectionsDataAccessNotice
     
     struct Body: Decodable {
         let bullets: [FinancialConnectionsBullet]

@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SafariServices
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 
@@ -29,20 +30,28 @@ class ConsentViewController: UIViewController {
             linkFont: .stripeFont(forTextStyle: .subtitle),
             textColor: .textPrimary
         )
+        titleLabel.setText(
+            dataSource.consent.title,
+            action: { [weak self] url in
+                // there are no known cases where we add a link to the title
+                // but we add this handling regardless in case this changes
+                // in the future
+                self?.didSelectURL(url)
+            }
+        )
         return titleLabel
     }()
     private lazy var footerView: ConsentFooterView = {
         return ConsentFooterView(
             aboveCtaText: dataSource.consent.aboveCta,
             ctaText: dataSource.consent.cta,
+            belowCtaText: dataSource.consent.belowCta,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
-            didSelectManuallyVerify: dataSource.manifest.allowManualEntry ? { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.consentViewControllerDidSelectManuallyVerify(self)
-            } : nil,
-            showManualEntryBusinessDaysNotice: !dataSource.manifest.customManualEntryHandling && dataSource.manifest.manualEntryUsesMicrodeposits
+            didSelectURL: { [weak self] url in
+                self?.didSelectURL(url)
+            }
         )
     }()
     
@@ -59,12 +68,13 @@ class ConsentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         
-        titleLabel.setText(dataSource.consent.title)
         let paneLayoutView = PaneWithCustomHeaderLayoutView(
             headerView: titleLabel,
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consent.body.bullets,
-                dataAccessNoticeModel: dataSource.consentModel.dataAccessNoticeModel
+                didSelectURL: { [weak self] url in
+                    self?.didSelectURL(url)
+                }
             ),
             footerView: footerView
         )
@@ -98,5 +108,27 @@ class ConsentViewController: UIViewController {
                 }
                 self.footerView.setIsLoading(false)
             }
+    }
+    
+    // this function will get called when user taps
+    // on ANY link returned from backend
+    private func didSelectURL(_ url: URL) {
+        if url.scheme == "stripe" {
+            if url.host == "manual-entry" {
+                delegate?.consentViewControllerDidSelectManuallyVerify(self)
+            } else if url.host == "data-access-notice" {
+                let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                    model: dataSource.consentModel.dataAccessNoticeModel
+                )
+                dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
+                dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
+                // `false` for animations because we do a custom animation inside VC logic
+                UIViewController
+                    .topMostViewController()?
+                    .present(dataAccessNoticeViewController, animated: false, completion: nil)
+            }
+        } else {
+            SFSafariViewController.present(url: url)
+        }
     }
 }

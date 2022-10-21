@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SafariServices
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -15,40 +14,23 @@ import UIKit
 class ConsentBodyView: UIView {
     
     private let bulletItems: [FinancialConnectionsBullet]
-    private let dataAccessNoticeModel: DataAccessNoticeModel
     
     init(
         bulletItems: [FinancialConnectionsBullet],
-        dataAccessNoticeModel: DataAccessNoticeModel
+        didSelectURL: @escaping (URL) -> Void
     ) {
         self.bulletItems = bulletItems
-        self.dataAccessNoticeModel = dataAccessNoticeModel
         super.init(frame: .zero)
-        
         backgroundColor = .customBackgroundColor
         
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
-        
-        let linkAction: (URL) -> Void = { url in
-            if let scheme = url.scheme, scheme.contains("stripe") {
-                let dataAccessNoticeViewController = DataAccessNoticeViewController(model: dataAccessNoticeModel)
-                dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
-                dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
-                // `false` for animations because we do a custom animation inside VC logic
-                UIViewController
-                    .topMostViewController()?
-                    .present(dataAccessNoticeViewController, animated: false, completion: nil)
-            } else {
-                SFSafariViewController.present(url: url)
-            }
-        }
         bulletItems.forEach { bulletItem in
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
                     text: bulletItem.content,
-                    action: linkAction
+                    action: didSelectURL
                 )
             )
         }
@@ -117,7 +99,7 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
                     content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
             ],
-            dataAccessNoticeModel: DataAccessNoticeModel(businessName: "Coca-Cola Inc")
+            didSelectURL: { _ in }
         )
     }
     
