@@ -14,11 +14,11 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class ConsentBodyView: UIView {
     
-    private let bulletItems: [ConsentModel.BodyBulletItem]
+    private let bulletItems: [FinancialConnectionsBullet]
     private let dataAccessNoticeModel: DataAccessNoticeModel
     
     init(
-        bulletItems: [ConsentModel.BodyBulletItem],
+        bulletItems: [FinancialConnectionsBullet],
         dataAccessNoticeModel: DataAccessNoticeModel
     ) {
         self.bulletItems = bulletItems
@@ -44,10 +44,10 @@ class ConsentBodyView: UIView {
                 SFSafariViewController.present(url: url)
             }
         }
-        bulletItems.forEach { item in
+        bulletItems.forEach { bulletItem in
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
-                    text: item.text,
+                    text: bulletItem.content,
                     action: linkAction
                 )
             )
@@ -101,17 +101,20 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentBodyView {
         ConsentBodyView(
             bulletItems: [
-                ConsentModel.BodyBulletItem(
-                    iconUrl: URL(string: "https://www.google.com/image.png")!,
-                    text: "Stripe will allow Goldilocks to access only the [data requested](https://www.google.com). We never share your login details with them."
+                FinancialConnectionsBullet(
+                    icon: "...",
+                    title: "",
+                    content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
                 ),
-                ConsentModel.BodyBulletItem(
-                    iconUrl: URL(string: "https://www.google.com/image.png")!,
-                    text: "Your data is encrypted for your protection."
+                FinancialConnectionsBullet(
+                    icon: "...",
+                    title: "",
+                    content: "Your data is encrypted for your protection."
                 ),
-                ConsentModel.BodyBulletItem(
-                    iconUrl: URL(string: "https://www.google.com/image.png")!,
-                    text: "You can [disconnect](meow.com) your accounts at any time."
+                FinancialConnectionsBullet(
+                    icon: "...",
+                    title: "",
+                    content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
             ],
             dataAccessNoticeModel: DataAccessNoticeModel(businessName: "Coca-Cola Inc")

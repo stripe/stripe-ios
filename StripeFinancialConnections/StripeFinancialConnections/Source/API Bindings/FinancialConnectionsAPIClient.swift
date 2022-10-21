@@ -10,7 +10,7 @@ import Foundation
 
 protocol FinancialConnectionsAPIClient {
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest>
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize>
 
     func fetchFinancialConnectionsAccounts(clientSecret: String,
                                            startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList>
@@ -77,10 +77,30 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         parameters: ["client_secret": clientSecret])
     }
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
-        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true, appReturnUrl: returnURL)
-        return self.post(resource: APIEndpointGenerateHostedURL,
-                         object: body)
+//    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
+//        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true, appReturnUrl: returnURL)
+//        return self.post(resource: APIEndpointGenerateHostedURL,
+//                         object: body)
+//    }
+    
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+        //        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true)
+        return self.post(
+            resource: "financial_connections/sessions/synchronize",
+            parameters: [
+                "client_secret": clientSecret,
+                "mobile" : [
+                    "sdk_type": "ios",
+                    "fullscreen": true,
+                    "hide_close_button": true,
+                    "sdk_version": 1,
+                ],
+                "locale": "en-us", // Locale.current.identifier,
+                // TODO: app return URL
+            ]
+        )
+//        return self.post(resource: APIEndpointGenerateHostedURL,
+//                         object: body)
     }
     
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {

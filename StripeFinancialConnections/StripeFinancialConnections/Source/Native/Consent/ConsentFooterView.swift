@@ -13,12 +13,14 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class ConsentFooterView: UIView {
     
+    
+    private let ctaText: String
     private let didSelectAgree: () -> Void
     private let didSelectManuallyVerify: (() -> Void)?
     
     private lazy var agreeButton: StripeUICore.Button = {
         let agreeButton = Button(configuration: .financialConnectionsPrimary)
-        agreeButton.title = "Agree"
+        agreeButton.title = ctaText
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -28,11 +30,13 @@ class ConsentFooterView: UIView {
     }()
     
     init(
-        footerText: String,
+        aboveCtaText: String,
+        ctaText: String,
         didSelectAgree: @escaping () -> Void,
         didSelectManuallyVerify: (() -> Void)?, // null if manual entry disabled
         showManualEntryBusinessDaysNotice: Bool
     ) {
+        self.ctaText = ctaText
         self.didSelectAgree = didSelectAgree
         self.didSelectManuallyVerify = didSelectManuallyVerify
         super.init(frame: .zero)
@@ -46,7 +50,7 @@ class ConsentFooterView: UIView {
             textColor: .textSecondary,
             alignCenter: true
         )
-        termsAndPrivacyPolicyLabel.setText(footerText)
+        termsAndPrivacyPolicyLabel.setText(aboveCtaText)
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -111,7 +115,8 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentFooterView {
         ConsentFooterView(
-            footerText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
+            aboveCtaText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
+            ctaText: "Agree",
             didSelectAgree: {},
             didSelectManuallyVerify: {},
             showManualEntryBusinessDaysNotice: false

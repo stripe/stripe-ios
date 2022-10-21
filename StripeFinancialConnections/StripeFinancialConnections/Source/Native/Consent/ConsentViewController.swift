@@ -33,7 +33,8 @@ class ConsentViewController: UIViewController {
     }()
     private lazy var footerView: ConsentFooterView = {
         return ConsentFooterView(
-            footerText: dataSource.consentModel.footerText,
+            aboveCtaText: dataSource.consent.aboveCta,
+            ctaText: dataSource.consent.cta,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
@@ -58,11 +59,11 @@ class ConsentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         
-        titleLabel.setText(dataSource.consentModel.headerText)
+        titleLabel.setText(dataSource.consent.title)
         let paneLayoutView = PaneWithCustomHeaderLayoutView(
             headerView: titleLabel,
             contentView: ConsentBodyView(
-                bulletItems: dataSource.consentModel.bodyItems,
+                bulletItems: dataSource.consent.body.bullets,
                 dataAccessNoticeModel: dataSource.consentModel.dataAccessNoticeModel
             ),
             footerView: footerView

@@ -80,6 +80,7 @@
 		6A2318D428B3C36000F2A7D8 /* AccountPickerSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2318D328B3C36000F2A7D8 /* AccountPickerSelectionListView.swift */; };
 		6A2318D728B571E000F2A7D8 /* ManualEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2318D628B571E000F2A7D8 /* ManualEntryViewController.swift */; };
 		6A2318D928B57E5100F2A7D8 /* ManualEntryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2318D828B57E5100F2A7D8 /* ManualEntryTextField.swift */; };
+		6A370F322901CA2C00A6DB9B /* FinancialConnectionsSynchronize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A370F312901CA2C00A6DB9B /* FinancialConnectionsSynchronize.swift */; };
 		6A4FA13928E11B3D00F07D42 /* CloseConfirmationAlertHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA13828E11B3D00F07D42 /* CloseConfirmationAlertHandler.swift */; };
 		6A4FA13B28E3340B00F07D42 /* check@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4FA13A28E3340B00F07D42 /* check@3x.png */; };
 		6A4FA13D28E346E600F07D42 /* warning_triangle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4FA13C28E346E600F07D42 /* warning_triangle@3x.png */; };
@@ -295,6 +296,7 @@
 		6A2318D328B3C36000F2A7D8 /* AccountPickerSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionListView.swift; sourceTree = "<group>"; };
 		6A2318D628B571E000F2A7D8 /* ManualEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryViewController.swift; sourceTree = "<group>"; };
 		6A2318D828B57E5100F2A7D8 /* ManualEntryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryTextField.swift; sourceTree = "<group>"; };
+		6A370F312901CA2C00A6DB9B /* FinancialConnectionsSynchronize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSynchronize.swift; sourceTree = "<group>"; };
 		6A4FA13828E11B3D00F07D42 /* CloseConfirmationAlertHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationAlertHandler.swift; sourceTree = "<group>"; };
 		6A4FA13A28E3340B00F07D42 /* check@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@3x.png"; sourceTree = "<group>"; };
 		6A4FA13C28E346E600F07D42 /* warning_triangle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_triangle@3x.png"; sourceTree = "<group>"; };
@@ -527,6 +529,7 @@
 				3C34E0E82798EB33002618E4 /* FinancialConnectionsSession.swift */,
 				3C3ADCB92800C1E0008C24EF /* BankAccountToken.swift */,
 				3CAD99BA284E381100B163EB /* FinancialConnectionsInstitution.swift */,
+				6A370F312901CA2C00A6DB9B /* FinancialConnectionsSynchronize.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1074,6 +1077,7 @@
 				6A2318D428B3C36000F2A7D8 /* AccountPickerSelectionListView.swift in Sources */,
 				6A1E29A228A1BB9100F99E9D /* PartnerAuthDataSource.swift in Sources */,
 				3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */,
+				6A370F322901CA2C00A6DB9B /* FinancialConnectionsSynchronize.swift in Sources */,
 				6ABE2D06285B72A30064B3A4 /* ClickableLabel.swift in Sources */,
 				3CAD99C7285032E600B163EB /* InstitutionPicker.swift in Sources */,
 				6AE2E5AD28DB916E00623523 /* MerchantDataAccessView.swift in Sources */,
