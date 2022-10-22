@@ -1,6 +1,7 @@
 ## Migration Guides
 ### Migrating from versions < 23.0.0
 * The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+* [Changed] If you use PaymentSheet, you must now `import StripePaymentSheet`. PaymentSheet users do not need to import the `Stripe` module.
 * [Changed] The minimum iOS version is now 13.0. If you'd like to deploy for iOS 12.0, please use Stripe SDK 22.8.4.
 * [Changed] STPPaymentCardTextField's `cardParams` parameter has been deprecated in favor of `paymentMethodParams`, making it easier to include the postal code from the card field. If you need to access the `STPPaymentMethodCardParams`, use `.paymentMethodParams.card`.
   * Note that `.paymentMethodParams` returns a copy, so `paymentMethodParams.card` should not be set directly. If you need to set the card information, set `.paymentMethodParams` to a new STPPaymentMethodParams:

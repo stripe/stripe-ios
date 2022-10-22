@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
   s.version                        = '22.8.4'
 
-  s.summary                        = 'API bindings for Stripe Payments.'
+  s.summary                        = 'Bindings for the Stripe Payments API.'
   s.license                        = { type: 'MIT', file: 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
