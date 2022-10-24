@@ -128,12 +128,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     }
     
     func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
-        let body = [
+        let body: [String:Any] = [
             "client_secret": clientSecret,
             "institution": institutionId,
-            "use_mobile_handoff": "false"
+            "use_mobile_handoff": "false",
+            "use_abstract_flow": true,
+            "return_url": "ios",
         ]
-        return self.post(resource: APIEndpointAuthorizationSessions, object: body)
+        return self.post(resource: APIEndpointAuthorizationSessions, parameters: body)
     }
     
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {

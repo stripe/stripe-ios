@@ -30,6 +30,7 @@ final class PartnerAuthViewController: UIViewController {
     private var institution: FinancialConnectionsInstitution {
         return dataSource.institution
     }
+    private var webAuthenticationSession: ASWebAuthenticationSession?
     weak var delegate: PartnerAuthViewControllerDelegate?
     
     private lazy var establishingConnectionLoadingView: UIView = {
@@ -78,7 +79,7 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func createdAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
-        if authorizationSession.shouldShowPrepane {
+        if authorizationSession.isOauth {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 institutionImageUrl: institution.icon?.default,
@@ -190,14 +191,20 @@ final class PartnerAuthViewController: UIViewController {
             return
         }
         
-        let authSession = ASWebAuthenticationSession(
+        let webAuthenticationSession = ASWebAuthenticationSession(
             url: url,
-            callbackURLScheme: "stripe-auth",
+            callbackURLScheme: "stripe",
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
                 
-                if error == nil, let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
-                    self.authorizeAuthSession(authorizationSession)
+                if error == nil, let returnUrl = returnUrl, returnUrl.scheme == "stripe" {
+                    if authorizationSession.isOauth {
+                        // for OAuth flows, we need to fetch OAuth results
+                        self.authorizeAuthSession(authorizationSession)
+                    } else {
+                        // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
+                        self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
+                    }
                 } else {
                     if let error = error {
                         self.dataSource
@@ -212,7 +219,7 @@ final class PartnerAuthViewController: UIViewController {
                     // cancel current auth session because something went wrong
                     self.dataSource.cancelPendingAuthSessionIfNeeded()
                     
-                    if authorizationSession.shouldShowPrepane {
+                    if authorizationSession.isOauth {
                         // for OAuth institutions, we remain on the pre-pane,
                         // but create a brand new auth session
                         self.createAuthSession()
@@ -221,13 +228,16 @@ final class PartnerAuthViewController: UIViewController {
                         self.navigateBack()
                     }
                 }
+                
+                self.webAuthenticationSession = nil
         })
+        self.webAuthenticationSession = webAuthenticationSession
         
-        authSession.presentationContextProvider = self
-        authSession.prefersEphemeralWebBrowserSession = true
+        webAuthenticationSession.presentationContextProvider = self
+        webAuthenticationSession.prefersEphemeralWebBrowserSession = true
 
         if #available(iOS 13.4, *) {
-            if !authSession.canStart {
+            if !webAuthenticationSession.canStart {
                 // navigate back to bank picker so user can try again
                 //
                 // this may be an odd way to handle an issue, but trying again
@@ -238,7 +248,7 @@ final class PartnerAuthViewController: UIViewController {
             }
         }
         
-        if !authSession.start() {
+        if !webAuthenticationSession.start() {
             // navigate back to bank picker so user can try again
             //
             // this may be an odd way to handle an issue, but trying again

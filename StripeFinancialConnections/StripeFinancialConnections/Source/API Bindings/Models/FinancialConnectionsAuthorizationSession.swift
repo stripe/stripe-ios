@@ -63,42 +63,6 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
                 return nil
             }
         }
-        
-        func isOAuth() -> Bool {
-            switch self {
-            case .directWebview:
-                fallthrough
-            case .finicityConnectV2Oauth:
-                fallthrough
-            case .finicityConnectV2OauthWebview:
-                fallthrough
-            case .finicityConnectV2OauthRedirect:
-                fallthrough
-            case .mxOauth:
-                fallthrough
-            case .mxOauthWebview:
-                fallthrough
-            case .testmodeOauth:
-                fallthrough
-            case .testmodeOauthWebview:
-                fallthrough
-            case .truelayerEmbedded:
-                fallthrough
-            case .truelayerOauth:
-                fallthrough
-            case .wellsFargo:
-                return true
-                
-            case .finicityConnectV2Lite:
-                fallthrough
-            case .mxConnect:
-                fallthrough
-            case .testmode:
-                fallthrough
-            case .unparsable:
-                return false
-            }
-        }
     }
 
     let id: String
@@ -108,10 +72,7 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
     let showPartnerDisclosure: Bool?
     let skipAccountSelection: Bool?
     let url: String?
-    
-    var shouldShowPrepane: Bool {
-        return flow?.isOAuth() ?? false
-    }
+    let isOauth: Bool
 }
 
 // this is a client-side enum (doesn't come from server)

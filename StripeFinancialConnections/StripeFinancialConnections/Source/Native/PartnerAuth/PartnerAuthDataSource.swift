@@ -88,7 +88,12 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
                 return self.apiClient.authorizeAuthSession(
                     clientSecret: clientSecret,
                     authSessionId: authSession.id,
-                    publicToken: mixedOAuthParameters.memberGuid
+                    publicToken: {
+                        if mixedOAuthParameters.memberGuid == nil && mixedOAuthParameters.code == "success" {
+                            return nil // TODO(kgaidis): special case for Test Mode OAuth (remove this!!!)
+                        }
+                        return mixedOAuthParameters.memberGuid ?? mixedOAuthParameters.code
+                    }()
                 )
             })
             .observe(on: DispatchQueue.main) { result in
