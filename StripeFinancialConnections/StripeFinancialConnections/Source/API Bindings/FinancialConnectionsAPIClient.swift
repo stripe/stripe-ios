@@ -76,31 +76,24 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.get(resource: APIEndpointSessionReceipt,
                         parameters: ["client_secret": clientSecret])
     }
-
-//    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
-//        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true, appReturnUrl: returnURL)
-//        return self.post(resource: APIEndpointGenerateHostedURL,
-//                         object: body)
-//    }
     
     func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
-        //        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true)
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "mobile" : [
+                "sdk_type": "ios",
+                "fullscreen": true,
+                "hide_close_button": true,
+                "sdk_version": 1,
+            ],
+            "locale": Locale.current.identifier,
+        ]
+        // parameters["app_return_url"] = returnURL // TODO(kgaidis): double-check these parameters
+        
         return self.post(
             resource: "financial_connections/sessions/synchronize",
-            parameters: [
-                "client_secret": clientSecret,
-                "mobile" : [
-                    "sdk_type": "ios",
-                    "fullscreen": true,
-                    "hide_close_button": true,
-                    "sdk_version": 1,
-                ],
-                "locale": "en-us", // Locale.current.identifier,
-                // TODO: app return URL
-            ]
+            parameters: parameters
         )
-//        return self.post(resource: APIEndpointGenerateHostedURL,
-//                         object: body)
     }
     
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {

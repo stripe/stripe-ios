@@ -8,13 +8,6 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct FinancialConnectionsSessionsGenerateHostedUrlBody: Encodable {
-    let clientSecret: String
-    let fullscreen: Bool
-    let hideCloseButton: Bool
-    let appReturnUrl: String?
-}
-
 struct FinancialConnectionsSessionsClientSecretBody: Encodable {
     let clientSecret: String
 }

@@ -24,8 +24,8 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - FinancialConnectionsAPIClient
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
-        return Promise<FinancialConnectionsSessionManifest>()
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+        return Promise<FinancialConnectionsSynchronize>()
     }
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
