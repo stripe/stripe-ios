@@ -3,9 +3,9 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '22.8.4'
+  s.version                        = '23.0.0'
 
-  s.summary                        = 'PaymentSheet is a prebuilt UI for Stripe. It combines all the steps required to pay - collecting payment details, billing details, and confirming the payment - into a single sheet that displays on top of your app.'
+  s.summary                        = "Stripe's prebuilt payment UI."
   s.license                        = { type: 'MIT', file: 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
