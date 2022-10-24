@@ -2,7 +2,6 @@
 
 require_relative 'release_common'
 
-
 @version = version_from_file
 
 @changelog = changelog(@version)
@@ -29,36 +28,11 @@ def approve_pr
   notify_user
 end
 
-def prepare_origins
-  # Fetch the latest version of the repo: git fetch origin
-  run_command('git fetch origin')
-  # Add the public origin if you don't already have it:
-  `git remote add public git@github.com:stripe/stripe-ios.git`
-  # Fetch the latest version of public: git fetch public
-  run_command('git fetch public')
-end
-
-def fast_forward_master
-  rputs 'About to fast-forward public/master to origin/private.'
-  rputs 'Disable "Do not allow bypassing the above settings" in the stripe-ios master branch protection settings: https://github.com/stripe/stripe-ios/settings/branch_protection_rules/193653'
-  rputs '(Make sure to re-enable this when done!)'
-  notify_user
-
-  # Fast forward public/master to the latest private branch
-  run_command('git checkout public/master')
-  run_command('git merge --ff-only origin/private')
-  run_command('git push public HEAD:master') unless @is_dry_run
-
-  rputs 'Re-enable "Do not allow bypassing the above settings" in the stripe-ios master branch protection settings: https://github.com/stripe/stripe-ios/settings/branch_protection_rules/193653'
-  notify_user
-end
-
 def push_tag
   unless @is_dry_run
-    # Create a signed git tag and push to GitHub: git tag -s X.Y.Z -m "Version X.Y.Z" && git push origin --tags && git push public --tags
+    # Create a signed git tag and push to GitHub: git tag -s X.Y.Z -m "Version X.Y.Z" && git push origin --tags
     run_command("git tag -s #{@version} -m \"Version #{@version}\"")
     run_command('git push origin --tags')
-    run_command('git push public --tags')
   end
 end
 
@@ -128,8 +102,6 @@ steps = [
   method(:pod_lint),
   method(:changedoc_approve),
   method(:approve_pr),
-  method(:prepare_origins),
-  method(:fast_forward_master),
   method(:push_tag),
   method(:create_release),
   method(:upload_framework),
