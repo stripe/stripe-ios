@@ -41,8 +41,7 @@ extension STPPaymentMethod {
                 guard let usBankAccount = self.usBankAccount else {
                     return nil
                 }
-                return String(format: String.Localized.card_brand_ending_in_last_4, usBankAccount.bankName, usBankAccount.last4)
-
+                return String(format: String.Localized.bank_name_account_ending_in_last_4, usBankAccount.bankName, usBankAccount.last4)
             default:
                 return nil
             }
