@@ -9,30 +9,65 @@
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 117,
+      "line": 118,
       "symbol": "AnalyticsClientV2Protocol.makeCommonPayload()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 146,
+      "line": 147,
       "symbol": "AnalyticsClientV2Protocol.payload(withEventName:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
-      "line": 122,
+      "line": 125,
       "symbol": "STPAnalyticsClient",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
-      "line": 56,
+      "line": 58,
       "symbol": "StripeJSONEncoder",
       "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 10,
+      "symbol": "UpdateImageHandler",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 15,
+      "symbol": "DownloadManager.sharedManager",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 31,
+      "symbol": "DownloadManager.init(urlSessionConfiguration:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 63,
+      "symbol": "DownloadManager.downloadImage(url:updateHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 202,
+      "symbol": "DownloadManager.imagePlaceHolder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {

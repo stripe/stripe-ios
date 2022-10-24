@@ -2,161 +2,161 @@
   "warnings": [
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/ImageScanner/FaceScanner/FaceScanner.swift",
-      "line": 47,
+      "line": 48,
       "symbol": "FaceScanner",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetController.swift",
-      "line": 386,
+      "line": 391,
       "symbol": "VerificationSheetController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 72,
+      "line": 71,
       "symbol": "VerificationSheetFlowController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 466,
+      "line": 458,
       "symbol": "VerificationSheetFlowController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 481,
+      "line": 473,
       "symbol": "VerificationSheetFlowController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 495,
+      "line": 488,
       "symbol": "VerificationSheetFlowController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Detectors/BarcodeDetector.swift",
-      "line": 18,
+      "line": 19,
       "symbol": "BarcodeDetectorOutput",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Detectors/FaceDetector/FaceDetectorOutput.swift",
-      "line": 31,
+      "line": 32,
       "symbol": "FaceDetectorPrediction",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/IdentityFlowNavigationController.swift",
-      "line": 106,
+      "line": 113,
       "symbol": "IdentityFlowNavigationController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/BiometricConsentViewController.swift",
-      "line": 176,
+      "line": 177,
       "symbol": "BiometricConsentViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/BiometricConsentViewController.swift",
-      "line": 185,
+      "line": 186,
       "symbol": "BiometricConsentViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/BiometricConsentViewController.swift",
-      "line": 197,
+      "line": 198,
       "symbol": "BiometricConsentViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentCaptureViewController.swift",
-      "line": 371,
+      "line": 372,
       "symbol": "DocumentCaptureViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentCaptureViewController.swift",
-      "line": 480,
+      "line": 481,
       "symbol": "DocumentCaptureViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
-      "line": 443,
+      "line": 444,
       "symbol": "DocumentFileUploadViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
-      "line": 450,
+      "line": 451,
       "symbol": "DocumentFileUploadViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
-      "line": 489,
+      "line": 490,
       "symbol": "DocumentFileUploadViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
-      "line": 544,
+      "line": 545,
       "symbol": "DocumentFileUploadViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
-      "line": 572,
+      "line": 573,
       "symbol": "DocumentFileUploadViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentTypeSelectViewController.swift",
-      "line": 181,
+      "line": 182,
       "symbol": "DocumentTypeSelectViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/SelfieCaptureViewController.swift",
-      "line": 295,
+      "line": 296,
       "symbol": "SelfieCaptureViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/SelfieCaptureViewController.swift",
-      "line": 409,
+      "line": 410,
       "symbol": "SelfieCaptureViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Views/IdentityHTMLView/HTMLTextView.swift",
-      "line": 112,
+      "line": 113,
       "symbol": "HTMLTextView",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
