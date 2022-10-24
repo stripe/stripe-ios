@@ -1,3 +1,8 @@
+## X.Y.Z 2022-XX-YY
+### PaymentSheet
+* [Added] Added `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress`. To allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, set this to `true` and set `PaymentSheet.Configuration.shippingDetails` to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
+
+
 ## 23.0.0 2022-10-24
 ### Payments
 * [Changed] The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
