@@ -24,7 +24,7 @@ end
 def approve_pr
   rputs 'Open the PR, approve it, and merge it.'
   rputs '(Use "Create merge commit" and not "Squash and merge")'
-  rputs 'Don\'t continue until the PR has been merged into `private`!'
+  rputs 'Don\'t continue until the PR has been merged into `master`!'
   notify_user
 end
 
