@@ -316,7 +316,10 @@ extension PaymentSheet {
                 }
                 intentPromise.resolve(with: .paymentIntent(paymentIntent))
             }
-            let additionalParameters = ["merchant_support_async": configuration.allowsDelayedPaymentMethods]
+            let additionalParameters = [
+                "merchant_support_async": configuration.allowsDelayedPaymentMethods,
+                "merchant_support_shipping": configuration.allowsPaymentMethodsRequiringShippingAddress
+            ]
             configuration.apiClient.retrievePaymentIntentWithPreferences(
                 withClientSecret: clientSecret,
                 additionalParameters: additionalParameters) { result in
