@@ -1,7 +1,7 @@
 StripePayments iOS SDK module
 ======
 
-The StripePayments module contains API bindings for Stripe Payments.
+The StripePayments module contains bindings for the Stripe Payments API.
 
 If you need to accept card payments, we advise using the [StripePaymentSheet](../StripePaymentSheet/README.md) or [StripePaymentsUI](../StripePaymentsUI/README.md) module. For more information, visit our [integration security guide](https://stripe.com/docs/security/guide).
 
