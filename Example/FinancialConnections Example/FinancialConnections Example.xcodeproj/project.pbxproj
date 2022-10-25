@@ -20,6 +20,7 @@
 		3CEB0CC0273EFEF5009680F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CBE273EFEF5009680F8 /* Main.storyboard */; };
 		3CEB0CC2273EFEF7009680F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */; };
 		3CEB0CC5273EFEF7009680F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CC3273EFEF7009680F8 /* LaunchScreen.storyboard */; };
+		6AE674A02908879F001854B2 /* PlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +52,7 @@
 		3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3CEB0CC4273EFEF7009680F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3CEB0CC6273EFEF7009680F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 		3CEB0CB7273EFEF5009680F8 /* FinancialConnections Example */ = {
 			isa = PBXGroup;
 			children = (
+				6AE6749E29088784001854B2 /* Playground */,
 				3CEB0CB8273EFEF5009680F8 /* AppDelegate.swift */,
 				3CEB0CBC273EFEF5009680F8 /* ConnectAccountViewController.swift */,
 				3CEB0CBE273EFEF5009680F8 /* Main.storyboard */,
@@ -107,6 +110,14 @@
 				3CD1DD062807218200A3A5CD /* CollectBankAccountTokenViewController.swift */,
 			);
 			path = "FinancialConnections Example";
+			sourceTree = "<group>";
+		};
+		6AE6749E29088784001854B2 /* Playground */ = {
+			isa = PBXGroup;
+			children = (
+				6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */,
+			);
+			path = Playground;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -184,6 +195,7 @@
 				3CD1DD05280711B400A3A5CD /* ExampleListViewController.swift in Sources */,
 				3CD1DD072807218200A3A5CD /* CollectBankAccountTokenViewController.swift in Sources */,
 				3CEB0CBD273EFEF5009680F8 /* ConnectAccountViewController.swift in Sources */,
+				6AE674A02908879F001854B2 /* PlaygroundViewController.swift in Sources */,
 				3CEB0CB9273EFEF5009680F8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
