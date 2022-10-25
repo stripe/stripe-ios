@@ -80,16 +80,18 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
-            "mobile" : [
-                "sdk_type": "ios",
-                "fullscreen": true,
-                "hide_close_button": true,
-                "sdk_version": 1,
-            ],
+            "mobile": {
+                var mobileParameters: [String:Any] = [
+                    "sdk_type": "ios",
+                    "fullscreen": true,
+                    "hide_close_button": true,
+                    "sdk_version": APIVersion.apiVersion,
+                ]
+                mobileParameters["app_return_url"] = returnURL
+                return mobileParameters
+            }(),
             "locale": Locale.current.identifier,
         ]
-        // parameters["app_return_url"] = returnURL // TODO(kgaidis): double-check these parameters
-        
         return self.post(
             resource: "financial_connections/sessions/synchronize",
             parameters: parameters
