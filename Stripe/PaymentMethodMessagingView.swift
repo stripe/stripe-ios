@@ -39,26 +39,6 @@ import WebKit
         Task {
             do {
                 let response = try await loadContent(configuration: configuration)
-
-//                let mockHTML =
-//                """
-//                <img src=\"https://cdn.glitch.global/954beed2-51a3-4c6b-93cc-df61c4bfce70/klarna_color.png?v=1666301088148\"><img src=\"https://cdn.glitch.global/954beed2-51a3-4c6b-93cc-df61c4bfce70/apple_pay.png?v=1666291694995\">
-//                <br/>
-//                As low as 4 interest-free payments of <b> $24.75 </b> 🎉
-//                """
-//                makeAttributedString(from: mockHTML, font: configuration.font, textColor: configuration.textColor) { result in
-//                    switch result {
-//                    case .success(let attributedString):
-//                        let view = PaymentMethodMessagingView(attributedString: attributedString, modalURL: "stripe.com", configuration: configuration)
-//                        STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadSucceeded(duration: loadDuration), apiClient: configuration.apiClient)
-//                        completion(.success(view))
-//                    case .failure(let error):
-//                        STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadFailed(duration: loadDuration), apiClient: configuration.apiClient)
-//                        completion(.failure(error))
-//                    }
-//                }
-
-                
                 let attributedString = try await makeAttributedString(from: response.display_l_html, font: configuration.font)
                 let view = PaymentMethodMessagingView(attributedString: attributedString, modalURL: response.learn_more_modal_url, configuration: configuration)
                 let loadDuration = Date().timeIntervalSince(loadStartTime)
@@ -70,50 +50,6 @@ import WebKit
                 completion(.failure(error))
             }
         }
-        
-//        configuration.apiClient.get(
-//            url: APIEndpoint,
-//            parameters: parameters
-//        ) { (result: Result<PaymentMethodMessagingContentResponse, Swift.Error>) in
-//            let loadDuration = Date().timeIntervalSince(loadStartTime)
-//
-//            let mockHTML =
-//            """
-//            <img src=\"https://cdn.glitch.global/954beed2-51a3-4c6b-93cc-df61c4bfce70/klarna_color.png?v=1666301088148\"><img src=\"https://cdn.glitch.global/954beed2-51a3-4c6b-93cc-df61c4bfce70/apple_pay.png?v=1666291694995\">
-//            <br/>
-//            As low as 4 interest-free payments of <b> $24.75 </b> 🎉
-//            """
-//            makeAttributedString(from: mockHTML, font: configuration.font, textColor: configuration.textColor) { result in
-//                switch result {
-//                case .success(let attributedString):
-//                    let view = PaymentMethodMessagingView(attributedString: attributedString, modalURL: "stripe.com", configuration: configuration)
-//                    STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadSucceeded(duration: loadDuration), apiClient: configuration.apiClient)
-//                    completion(.success(view))
-//                case .failure(let error):
-//                    STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadFailed(duration: loadDuration), apiClient: configuration.apiClient)
-//                    completion(.failure(error))
-//                }
-//            }
-
-            
-//            switch result {
-//            case .failure(let error):
-//                STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadFailed(duration: loadDuration), apiClient: configuration.apiClient)
-//                completion(.failure(error))
-//            case .success(let response):
-//                makeAttributedString(from: response.display_l_html, font: configuration.font, textColor: configuration.textColor) { result in
-//                    switch result {
-//                    case .success(let attributedString):
-//                        let view = PaymentMethodMessagingView(attributedString: attributedString, modalURL: response.learn_more_modal_url, configuration: configuration)
-//                        STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadSucceeded(duration: loadDuration), apiClient: configuration.apiClient)
-//                        completion(.success(view))
-//                    case .failure(let error):
-//                        STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadFailed(duration: loadDuration), apiClient: configuration.apiClient)
-//                        completion(.failure(error))
-//                    }
-//                }
-//            }
-//        }
     }
     
     public init(attributedString: NSAttributedString, modalURL: String, configuration: Configuration) {
@@ -160,7 +96,7 @@ import WebKit
     
     // MARK: Internal
     
-    static let APIEndpoint: URL = URL(string: "https://qa-ppm.stripe.com/content")!
+    static let APIEndpoint: URL = URL(string: "https://ppm.stripe.com/content")!
     let baseHTML: String
     let modalURL: URL?
     let configuration: Configuration
