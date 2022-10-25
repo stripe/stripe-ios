@@ -97,7 +97,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, updateHandler: UpdateImageHandler?) -> UIImage {
+        func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             if case .dynamic(let name) = self,
                let spec = FormSpecProvider.shared.formSpec(for: name),
                let selectorIcon = spec.selectorIcon,

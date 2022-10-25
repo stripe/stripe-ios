@@ -8,12 +8,13 @@
 
 import UIKit
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
 extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
-    func makeIcon(for traitCollection: UITraitCollection? = nil, updateImageHandler: UpdateImageHandler?) -> UIImage {
+    func makeIcon(for traitCollection: UITraitCollection? = nil, updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
@@ -73,7 +74,7 @@ extension STPPaymentMethod {
 
 
 extension STPPaymentMethodParams {
-    func makeIcon(updateHandler: UpdateImageHandler?) -> UIImage {
+    func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
             guard let card = card, let number = card.number else {
