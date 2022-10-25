@@ -14,10 +14,11 @@ final class FinancialConnectionsAnalyticsClient {
     private let analyticsClient: AnalyticsClientV2
     private var additionalParameters: [String:Any] = [:]
     
-    init(analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(clientId: "", origin: "")) {
+    init(analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(clientId: "mobile-clients-linked-accounts", origin: "stripe-linked-accounts-ios")) {
         self.analyticsClient = analyticsClient
         additionalParameters["is_webview"] = false
         additionalParameters["navigator_language"] = Locale.current.identifier
+        additionalParameters["platform"] = "ios"
     }
     
     public func log(eventName: String, parameters: [String: Any] = [:]) {
@@ -30,16 +31,12 @@ final class FinancialConnectionsAnalyticsClient {
             }
         )
         
-        // TODO(kgaidis): uncomment when we are ready to fire events
-        #if DEBUG
-        print("^ logging event: ", eventName, parameters)
-        #endif
         assert(
             !parameters.contains(where: { type(of: $0.value) == FinancialConnectionsSessionManifest.NextPane.self }),
             "Do not pass NextPane enum. Use the raw value."
         )
         
-        // analyticsClient.log(eventName: eventName, parameters: parameters)
+        analyticsClient.log(eventName: eventName, parameters: parameters)
     }
 }
 
