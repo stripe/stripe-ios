@@ -138,11 +138,14 @@ private func CreateDisconnectAccountLabel(
         isEndUserFacing: isEndUserFacing
     )
     
-    let disconnectAccountLabel = ClickableLabel()
+    let disconnectAccountLabel = ClickableLabel(
+        font: .stripeFont(forTextStyle: .captionTight),
+        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        textColor: .textSecondary
+    )
     disconnectAccountLabel.setText(
         String(format: fullLocalizedString, "[\(disconnectYourAccountLocalizedString)](\(disconnectionUrlString))"),
-        font: .stripeFont(forTextStyle: .captionTight),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
         action: { url in
             SFSafariViewController.present(url: url)
             didSelectDisconnectYourAccounts()

@@ -16,16 +16,34 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
         XCTAssert(attributedString == NSMutableAttributedString(string: ""))
     }
     
-    func testSingleAsterisk() {
+    func testOneAsterisk() {
         let attributedString = NSMutableAttributedString(string: "*")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: .stripeFont(forTextStyle: .captionTightEmphasized))
         XCTAssert(attributedString == NSMutableAttributedString(string: "*"))
     }
     
-    func testDoubleAsterisk() {
+    func testTwoAsterisk() {
         let attributedString = NSMutableAttributedString(string: "**")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: .stripeFont(forTextStyle: .captionTightEmphasized))
-        XCTAssert(attributedString == NSMutableAttributedString(string: ""))
+        XCTAssert(attributedString == NSMutableAttributedString(string: "**"))
+    }
+    
+    func testThreeAsterisk() {
+        let attributedString = NSMutableAttributedString(string: "***")
+        attributedString.addBoldFontAttributesByMarkdownRules(boldFont: .stripeFont(forTextStyle: .captionTightEmphasized))
+        XCTAssert(attributedString == NSMutableAttributedString(string: "***"))
+    }
+    
+    func testFourAsterisk() {
+        let attributedString = NSMutableAttributedString(string: "****")
+        attributedString.addBoldFontAttributesByMarkdownRules(boldFont: .stripeFont(forTextStyle: .captionTightEmphasized))
+        XCTAssert(attributedString == NSMutableAttributedString(string: "****"))
+    }
+    
+    func testFiveAsterisk() {
+        let attributedString = NSMutableAttributedString(string: "*****")
+        attributedString.addBoldFontAttributesByMarkdownRules(boldFont: .stripeFont(forTextStyle: .captionTightEmphasized))
+        XCTAssert(attributedString == NSMutableAttributedString(string: "*****"))
     }
     
     func testNoAsterisks() {
@@ -36,7 +54,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     
     func testOneBold() {
         let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
-        let attributedString = NSMutableAttributedString(string: "*One Bold*")
+        let attributedString = NSMutableAttributedString(string: "**One Bold**")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(attributedString == {
             let expectedAttributedString = NSMutableAttributedString(string: "One Bold")
@@ -48,14 +66,14 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     // this is a double-check that tests aren't just returning "true" all the time
     func testOneBoldNotEquals() {
         let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
-        let attributedString = NSMutableAttributedString(string: "*One Bold*")
+        let attributedString = NSMutableAttributedString(string: "**One Bold**")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(attributedString != NSMutableAttributedString(string: "One Bold"))
     }
     
     func testOneBoldComplex() {
         let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
-        let attributedString = NSMutableAttributedString(string: "*One - $1.00 Bold*")
+        let attributedString = NSMutableAttributedString(string: "**One - $1.00 Bold**")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(attributedString == {
             let expectedAttributedString = NSMutableAttributedString(string: "One - $1.00 Bold")
@@ -66,7 +84,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     
     func testOneBoldComplexVersionTwo() {
         let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
-        let attributedString = NSMutableAttributedString(string: "*One Bold* - $1.00")
+        let attributedString = NSMutableAttributedString(string: "**One Bold** - $1.00")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(attributedString == {
             let expectedAttributedString = NSMutableAttributedString(string: "One Bold - $1.00")
@@ -77,7 +95,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     
     func testOneBoldWithURL() {
         let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
-        let attributedString = NSMutableAttributedString(string: "[*One Bold*](https://www.stripe.com)")
+        let attributedString = NSMutableAttributedString(string: "[**One Bold**](https://www.stripe.com)")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(attributedString == {
             let expectedAttributedString = NSMutableAttributedString(string: "[One Bold](https://www.stripe.com)")
@@ -90,8 +108,8 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
         let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
         let url = URL(string: "https://www.stripe.com")!
         
-        let attributedString = NSMutableAttributedString(string: "word *One Bold* word")
-        attributedString.addAttributes([.link: url], range: NSRange(location: 5, length: 10))
+        let attributedString = NSMutableAttributedString(string: "word **One Bold** word")
+        attributedString.addAttributes([.link: url], range: NSRange(location: 5, length: 12))
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         
         XCTAssert(attributedString == {
@@ -104,7 +122,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     
     func testTwoBold() {
         let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
-        let attributedString = NSMutableAttributedString(string: "word *One Bold* word *Two Bold* word")
+        let attributedString = NSMutableAttributedString(string: "word **One Bold** word **Two Bold** word")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(attributedString == {
             let expectedAttributedString = NSMutableAttributedString(string: "word One Bold word Two Bold word")

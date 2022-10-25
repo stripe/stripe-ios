@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-class ClickableLabel: UIView {
+final class ClickableLabel: UIView {
     
     struct Link {
         let range: NSRange
@@ -19,12 +19,27 @@ class ClickableLabel: UIView {
         let action: (URL) -> Void
     }
     
+    private let font: UIFont
+    private let boldFont: UIFont
+    private let linkFont: UIFont
+    private let textColor: UIColor
+    private let alignCenter: Bool
     private let textView = UITextView()
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
     
-    init() {
+    init(
+        font: UIFont,
+        boldFont: UIFont,
+        linkFont: UIFont,
+        textColor: UIColor,
+        alignCenter: Bool = false
+    ) {
+        self.font = font
+        self.boldFont = boldFont
+        self.linkFont = linkFont
+        self.textColor = textColor
+        self.alignCenter = alignCenter
         super.init(frame: .zero)
-        
         textView.isScrollEnabled = false
         textView.isEditable = false
         textView.isSelectable = true
@@ -48,11 +63,6 @@ class ClickableLabel: UIView {
     @available(iOSApplicationExtension, unavailable)
     func setText(
         _ text: String,
-        font: UIFont = UIFont.stripeFont(forTextStyle: .detail),
-        boldFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
-        linkFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
-        textColor: UIColor = .textSecondary,
-        alignCenter: Bool = false,
         action: @escaping ((URL) -> Void) = { url in
             SFSafariViewController.present(url: url)
         }
@@ -66,23 +76,13 @@ class ClickableLabel: UIView {
                     urlString: $0.urlString,
                     action: action
                 )
-            },
-            font: font,
-            boldFont: boldFont,
-            linkFont: linkFont,
-            textColor: textColor,
-            alignCenter: alignCenter
+            }
         )
     }
     
     private func setText(
         _ text: String,
-        links: [Link],
-        font: UIFont,
-        boldFont: UIFont,
-        linkFont: UIFont,
-        textColor: UIColor,
-        alignCenter: Bool = false
+        links: [Link]
     ) {
         let paragraphStyle = NSMutableParagraphStyle()
         if alignCenter {

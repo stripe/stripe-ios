@@ -80,12 +80,13 @@ final class DataAccessNoticeView: UIView {
     }
     
     private func createLearnMoreLabel() -> UIView {
-        let label = ClickableLabel()
-        label.setText(
-            model.footerText,
+        let label = ClickableLabel(
             font: .stripeFont(forTextStyle: .caption),
-            linkFont: .stripeFont(forTextStyle: .captionEmphasized)
+            boldFont: .stripeFont(forTextStyle: .captionEmphasized),
+            linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+            textColor: .textSecondary
         )
+        label.setText(model.footerText)
         return label
     }
     

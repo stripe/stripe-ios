@@ -82,27 +82,25 @@ private func CreateTitleLabel() -> UIView {
 private func CreateSubtitleLabel(
     didSelectEnterYourBankDetailsManually: (() -> Void)?
 ) -> UIView {
-    let subtitleLabel = ClickableLabel()
+    let subtitleLabel = ClickableLabel(
+        font: .stripeFont(forTextStyle: .caption),
+        boldFont: .stripeFont(forTextStyle: .captionEmphasized),
+        linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+        textColor: .textSecondary,
+        alignCenter: true
+    )
     if let didSelectEnterYourBankDetailsManually = didSelectEnterYourBankDetailsManually {
         let pleaseTryAgainLaterString = STPLocalizedString("Please try again later or %@.", "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later. '%@' will be replaced by 'enter your bank details manually' to form 'Please try again later or enter your bank details manually.'.")
         let enterYourBankDetailsManuallyString = STPLocalizedString("enter your bank details manually", "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. This 'part' will be placed into a full string that says 'Please try again later or enter your bank details manually.'")
         subtitleLabel.setText(
             String(format: pleaseTryAgainLaterString, "[\(enterYourBankDetailsManuallyString)](https://www.use-action-instead.com)"),
-            font: .stripeFont(forTextStyle: .caption),
-            linkFont: .stripeFont(forTextStyle: .captionEmphasized),
-            textColor: .textSecondary,
-            alignCenter: true,
             action: { _ in
                 didSelectEnterYourBankDetailsManually()
             }
         )
     } else {
         subtitleLabel.setText(
-            STPLocalizedString("Please try again later.", "The subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later."),
-            font: .stripeFont(forTextStyle: .caption),
-            linkFont: .stripeFont(forTextStyle: .captionEmphasized),
-            textColor: .textSecondary,
-            alignCenter: true
+            STPLocalizedString("Please try again later.", "The subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later.")
         )
     }
     return subtitleLabel

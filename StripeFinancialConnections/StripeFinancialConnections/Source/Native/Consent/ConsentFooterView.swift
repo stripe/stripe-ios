@@ -39,11 +39,14 @@ class ConsentFooterView: UIView {
         
         backgroundColor = .customBackgroundColor
         
-        let termsAndPrivacyPolicyLabel = ClickableLabel()
-        termsAndPrivacyPolicyLabel.setText(
-            footerText,
+        let termsAndPrivacyPolicyLabel = ClickableLabel(
+            font: UIFont.stripeFont(forTextStyle: .detail),
+            boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+            linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+            textColor: .textSecondary,
             alignCenter: true
         )
+        termsAndPrivacyPolicyLabel.setText(footerText)
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -65,10 +68,15 @@ class ConsentFooterView: UIView {
                 text = "[\(localizedText)](https://www.urlIsIgnored.com)"
             }
             
-            let manuallyVerifyLabel = ClickableLabel()
+            let manuallyVerifyLabel = ClickableLabel(
+                font: UIFont.stripeFont(forTextStyle: .detail),
+                boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+                linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+                textColor: .textSecondary,
+                alignCenter: true
+            )
             manuallyVerifyLabel.setText(
                 text,
-                alignCenter: true,
                 action: { _ in
                     didSelectManuallyVerify()
                 }
