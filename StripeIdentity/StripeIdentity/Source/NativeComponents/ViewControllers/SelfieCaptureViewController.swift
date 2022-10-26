@@ -49,7 +49,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     var flowViewModel: IdentityFlowView.ViewModel {
         return .init(
             headerViewModel: .init(
-                backgroundColor: CompatibleColor.systemBackground,
+                backgroundColor: .systemBackground,
                 headerType: .plain,
                 titleText: STPLocalizedString(
                     "Selfie captures",

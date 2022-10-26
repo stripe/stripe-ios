@@ -79,7 +79,6 @@
 		E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */; };
 		E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */; };
 		E6752D8226F417780062B821 /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */; };
-		E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */; };
 		E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8726F420F70062B821 /* DropdownFieldElement.swift */; };
 		E6752D9C26F420F70062B821 /* PickerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8826F420F70062B821 /* PickerTextField.swift */; };
 		E6752D9E26F420F70062B821 /* FormElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8B26F420F70062B821 /* FormElement.swift */; };
@@ -211,7 +210,6 @@
 		E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDirectionalEdgeInsets+StripeUICore.swift"; sourceTree = "<group>"; };
 		E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISpringTimingParameters+StripeUICore.swift"; sourceTree = "<group>"; };
 		E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightContainerView.swift; sourceTree = "<group>"; };
-		E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackwardsCompatibleColors.swift; sourceTree = "<group>"; };
 		E6752D8726F420F70062B821 /* DropdownFieldElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownFieldElement.swift; sourceTree = "<group>"; };
 		E6752D8826F420F70062B821 /* PickerTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerTextField.swift; sourceTree = "<group>"; };
 		E6752D8B26F420F70062B821 /* FormElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormElement.swift; sourceTree = "<group>"; };
@@ -674,7 +672,6 @@
 		E6AFFB2526E977410067462F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */,
 				E665080726EC33260032DE21 /* ImageMaker.swift */,
 				36E1894926FBAFC700A57EF4 /* InputFormColors.swift */,
 				36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */,
@@ -896,7 +893,6 @@
 				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,
 				36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */,
 				E61ADAC4270E4916004ED998 /* AddressSpec.swift in Sources */,
-				E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */,
 				36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */,
 				B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */,
 				E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */,

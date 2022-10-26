@@ -404,12 +404,12 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             case .valid(let message) = firstCompleteWithMessageField.validationState,
             let nonNilMessage = message
         {
-            sectionView.footerTextColor = CompatibleColor.label
+            sectionView.footerTextColor = .label
             sectionView.footerText = nonNilMessage
             return
         }
 
-        sectionView.footerTextColor = CompatibleColor.label
+        sectionView.footerTextColor = .label
         sectionView.footerText = nil
     }
 
@@ -604,7 +604,7 @@ extension STPFormView {
                 let fontMetrics = UIFontMetrics(forTextStyle: .body)
                 titleLabel.font = fontMetrics.scaledFont(
                     for: UIFont.systemFont(ofSize: 13, weight: .semibold))
-                titleLabel.textColor = CompatibleColor.secondaryLabel
+                titleLabel.textColor = .secondaryLabel
                 titleLabel.accessibilityTraits = [.header]
 
                 titleLabel.translatesAutoresizingMaskIntoConstraints = false

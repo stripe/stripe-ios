@@ -13,7 +13,7 @@ import UIKit
 
 final class DocumentScanningView: UIView {
     struct Styling {
-        static let scannedOverlayColor = CompatibleColor.systemBackground.withAlphaComponent(0.7)
+        static let scannedOverlayColor = UIColor.systemBackground.withAlphaComponent(0.7)
         static let scannedOverlayImage = Image.iconCheckmark92
 
         static let containerAspectRatio = IdentityUI.documentCameraPreviewAspectRatio

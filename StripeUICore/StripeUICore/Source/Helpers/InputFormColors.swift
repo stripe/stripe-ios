@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) public enum InputFormColors {
 
     public static var textColor: UIColor {
-        return CompatibleColor.label
+        return .label
     }
 
     public static var disabledTextColor: UIColor {
@@ -42,7 +42,7 @@ import UIKit
     }
 
     public static var backgroundColor: UIColor {
-        let light = CompatibleColor.systemBackground
+        let light = UIColor.systemBackground
         let dark = UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
         if #available(iOS 13.0, *) {
             return UIColor(dynamicProvider: {

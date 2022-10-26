@@ -154,7 +154,7 @@ extension PaymentMethodTypeCollectionView {
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.75
-            label.textColor = CompatibleColor.label
+            label.textColor = .label
             label.adjustsFontForContentSizeCategory = true
             return label
         }()

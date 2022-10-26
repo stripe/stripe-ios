@@ -86,7 +86,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
         return .init(
             headerViewModel: .init(
-                backgroundColor: CompatibleColor.systemBackground,
+                backgroundColor: .systemBackground,
                 headerType: .banner(iconViewModel: .init(
                     iconType: .brand,
                     iconImage: brandLogo,
