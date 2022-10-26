@@ -1,6 +1,6 @@
 ## X.Y.Z 2022-XX-YY
 ### PaymentSheet
-* [Added] Added `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress`. To allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, set this to `true` and set `PaymentSheet.Configuration.shippingDetails` to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
+* [Added] Added PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress. Previously, to allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, you attached a shipping address to the PaymentIntent before initializing PaymentSheet. Now, you can instead set this property to true and set PaymentSheet.Configuration.shippingDetails to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
 
 
 ## 23.0.0 2022-10-24
