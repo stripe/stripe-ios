@@ -17,20 +17,7 @@ import UIKit
     public static var disabledTextColor: UIColor {
         let light = UIColor(red: 60.0 / 255.0, green: 60.0 / 255.0, blue: 67.0 / 255.0, alpha: 0.6)
         let dark = UIColor(red: 235.0 / 255.0, green: 235.0 / 255.0, blue: 245.0 / 255.0, alpha: 0.6)
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: {
-                switch $0.userInterfaceStyle {
-                case .light, .unspecified:
-                    return light
-                case .dark:
-                    return dark
-                @unknown default:
-                    return light
-                }
-            })
-        } else {
-            return light
-        }
+        return .dynamic(light: light, dark: dark)
     }
 
     public static var errorColor: UIColor {
@@ -44,38 +31,12 @@ import UIKit
     public static var backgroundColor: UIColor {
         let light = UIColor.systemBackground
         let dark = UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: {
-                switch $0.userInterfaceStyle {
-                case .light, .unspecified:
-                    return light
-                case .dark:
-                    return dark
-                @unknown default:
-                    return light
-                }
-            })
-        } else {
-            return light
-        }
+        return .dynamic(light: light, dark: dark)
     }
 
     public static var disabledBackgroundColor: UIColor {
         let light = UIColor(red: 248.0 / 255.0, green: 248.0 / 255.0, blue: 248.0 / 255.0, alpha: 1)
         let dark = UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: {
-                switch $0.userInterfaceStyle {
-                case .light, .unspecified:
-                    return light
-                case .dark:
-                    return dark
-                @unknown default:
-                    return light
-                }
-            })
-        } else {
-            return light
-        }
+        return .dynamic(light: light, dark: dark)
     }
 }

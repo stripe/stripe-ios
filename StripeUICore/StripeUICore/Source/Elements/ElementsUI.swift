@@ -25,18 +25,7 @@ import UIKit
     public static let defaultCornerRadius: CGFloat = 6
     public static let backgroundColor: UIColor = {
         // systemBackground has a 'base' and 'elevated' state; we don't want this behavior.
-        if #available(iOS 13.0, *) {
-            return UIColor { (traitCollection) -> UIColor in
-                switch traitCollection.userInterfaceStyle {
-                case .dark:
-                    return .secondarySystemBackground
-                default:
-                    return .systemBackground
-                }
-            }
-        } else {
-            return .systemBackground
-        }
+        return .dynamic(light: .systemBackground, dark: .secondarySystemBackground)
     }()
 
     public static func makeErrorLabel(theme: ElementsUITheme = .default) -> UILabel {

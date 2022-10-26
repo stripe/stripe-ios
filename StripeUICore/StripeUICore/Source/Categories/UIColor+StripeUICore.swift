@@ -29,19 +29,16 @@ import UIKit
     }
 
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: {
-                switch $0.userInterfaceStyle {
-                case .light, .unspecified:
-                    return light
-                case .dark:
-                    return dark
-                @unknown default:
-                    return light
-                }
-            })
-        }
-        return light
+        return UIColor(dynamicProvider: { (traitCollection) in
+            switch traitCollection.userInterfaceStyle {
+            case .light, .unspecified:
+                return light
+            case .dark:
+                return dark
+            @unknown default:
+                return light
+            }
+        })
     }
     
     /// The relative luminance of the color.
@@ -92,11 +89,8 @@ import UIKit
         let contrastRatioToWhite = contrastRatio(to: .white)
         let contrastRatioToBlack = contrastRatio(to: .black)
         
-        var isDarkMode = false
-        if #available(iOS 13.0, *) {
-            isDarkMode =  UITraitCollection.current.userInterfaceStyle == .dark
-        }
-        
+        let isDarkMode = UITraitCollection.current.userInterfaceStyle == .dark
+
         // Prefer using a white foreground as long as a minimum contrast threshold is met.
         // Factor the container color to compensate for "local adaptation".
         // https://github.com/w3c/wcag/issues/695
@@ -138,7 +132,7 @@ private extension UIColor {
     func byModifyingBrightness(_ transform: @escaping (CGFloat) -> CGFloat) -> UIColor {
         // Similar to `UIColor.withAlphaComponent()`, the returned color must be dynamic. This ensures
         // that the color automatically adapts between light and dark mode.
-        return .dynamic { _ in
+        return UIColor(dynamicProvider: { _ in
             var hue: CGFloat = 0
             var saturation: CGFloat = 0
             var brightness: CGFloat = 0
@@ -152,15 +146,7 @@ private extension UIColor {
                 brightness: transform(brightness),
                 alpha: alpha
             )
-        }
-    }
-
-    static func dynamic(_ provider: @escaping (UITraitCollection?) -> UIColor) -> UIColor {
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: { provider($0) })
-        } else {
-            return provider(nil)
-        }
+        })
     }
 
 }
