@@ -195,7 +195,7 @@ extension PaymentMethodMessagingView {
     }
     
     static func makeMessagingContentEndpointParams(configuration: Configuration) -> [String: Any] {
-        var parameters: [String: Any] = [
+        return [
             "payment_methods": configuration.paymentMethods.map { (paymentMethod) -> String in
                 switch paymentMethod {
                 case .klarna: return "klarna"
@@ -206,12 +206,9 @@ extension PaymentMethodMessagingView {
             "amount": configuration.amount,
             "country": configuration.countryCode,
             "client": "ios",
-            "logo_color": isDarkMode() ? configuration.imageColor.userInterfaceStyleDark : configuration.imageColor.userInterfaceStyleLight
-        ]
-        if let languageCode = configuration.locale.languageCode, let regionCode = configuration.locale.regionCode {
-            parameters["locale"] = "\(languageCode)-\(regionCode)"
-        }
-        return parameters
+            "logo_color": isDarkMode() ? configuration.imageColor.userInterfaceStyleDark : configuration.imageColor.userInterfaceStyleLight,
+            "locale": Locale.canonicalLanguageIdentifier(from: configuration.locale.identifier)
+       ]
     }
 }
 
