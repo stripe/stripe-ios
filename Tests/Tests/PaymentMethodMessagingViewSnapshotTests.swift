@@ -16,7 +16,7 @@ class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
-        self.recordMode = true
+//        self.recordMode = true
     }
     
     /// - Note: This mock HTML should include all HTML tags the server can send down
@@ -72,19 +72,20 @@ class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
     }
     
     func testReal() {
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let config = PaymentMethodMessagingView.Configuration(apiClient: apiClient, paymentMethods: PaymentMethodMessagingView.Configuration.PaymentMethod.allCases, currency: "USD", amount: 1099)
-        let createViewExpectation = expectation(description: "")
-        PaymentMethodMessagingView.create(configuration: config) { [weak self] result in
-            switch result {
-            case .failure(let error):
-                XCTFail(error.localizedDescription)
-            case .success(let view):
-                self?.verify(view)
-            }
-            createViewExpectation.fulfill()
-        }
-        waitForExpectations(timeout: 10)
+        // Uncomment to snapshot a real view
+//        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+//        let config = PaymentMethodMessagingView.Configuration(apiClient: apiClient, paymentMethods: PaymentMethodMessagingView.Configuration.PaymentMethod.allCases, currency: "USD", amount: 1099)
+//        let createViewExpectation = expectation(description: "")
+//        PaymentMethodMessagingView.create(configuration: config) { [weak self] result in
+//            switch result {
+//            case .failure(let error):
+//                XCTFail(error.localizedDescription)
+//            case .success(let view):
+//                self?.verify(view)
+//            }
+//            createViewExpectation.fulfill()
+//        }
+//        waitForExpectations(timeout: 10)
     }
     
     // MARK: - Helpers

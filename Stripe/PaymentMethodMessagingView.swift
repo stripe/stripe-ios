@@ -54,7 +54,6 @@ import WebKit
     
     public init(attributedString: NSAttributedString, modalURL: String, configuration: Configuration) {
         analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingView.self)
-        self.baseHTML = ""
         self.modalURL = URL(string: modalURL)
         self.configuration = configuration
         super.init(frame: .zero)
@@ -97,7 +96,6 @@ import WebKit
     // MARK: Internal
     
     static let APIEndpoint: URL = URL(string: "https://ppm.stripe.com/content")!
-    let baseHTML: String
     let modalURL: URL?
     let configuration: Configuration
     var analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
