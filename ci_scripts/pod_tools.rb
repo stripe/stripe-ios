@@ -44,18 +44,15 @@ def push
   puts 'Go for a 🚶 or take a ☕️ break.'
   puts ''
   puts "Pushing the following podspecs to #{'`trunk`'.bold.magenta}: "\
-  "#{PODSPECS.map { |s| s.underline }.join(' ')}"
+  "#{PODSPECS.map(&:underline).join(' ')}"
+
+  expected_pod_version = File.open('VERSION', &:readline).strip
 
   PODSPECS.each do |podspec|
-    stdout, stderr, status = Open3.capture3("pod spec cat #{podspec}")
-    abort "Failed on pod spec cat #{podspec}" unless status.success?
-    latest_pod_spec = JSON.parse(stdout)
-    latest_pod_version = latest_pod_spec['version']
-    file_version = File.open('VERSION').first.strip
-    if file_version == latest_pod_version
-      puts "No need to upload: #{podspec}.  Latest version is already #{latest_pod_version}"
+    if get_pod_version(podspec) == expected_pod_version
+      puts "No need to push: #{podspec}.  Latest version is already #{expected_pod_version}"
     else
-      system "pod trunk push #{podspec} --synchronous"
+      run_retrying("pod trunk push #{podspec} --synchronous", max_retries: 4)
       unless $?.success?
         abort "Unable to push pod #{podspec}.\n"\
               'If the spec failed to validate due to not finding a compatible version of a pod that was just pushed, wait a few minutes and try again.'
@@ -64,27 +61,50 @@ def push
   end
 end
 
-def run_retrying(cmd, max_retries = 10)
+def capture_retrying(cmd, max_retries: 10)
   retries = 0
   loop do
     stdout, stderr, status = Open3.capture3(cmd)
-    if status.success?
-      return stdout
-    elsif retries <= max_retries
+    if !status.success? && retries <= max_retries
       retries += 1
-      delay = 2**retries
+      delay = [2**retries, 32].min
       puts "Something went wrong. Trying again in #{delay} seconds..."
       sleep(delay)
       puts 'Retrying...'
     else
-      abort(stderr.red)
+      return stdout, stderr, status
     end
   end
 end
 
+def run_retrying(cmd, max_retries: 10)
+  retries = 0
+  loop do
+    result = system(cmd)
+    if !$?.success? && retries <= max_retries
+      retries += 1
+      delay = [2**retries, 32].min
+      puts "Something went wrong. Trying again in #{delay} seconds..."
+      sleep(delay)
+      puts 'Retrying...'
+    else
+      result
+    end
+  end
+end
+
+def get_pod_version(pod)
+  stdout, _stderr, status = Open3.capture3("pod spec cat #{pod}")
+  return nil unless status.success?
+
+  latest_pod_spec = JSON.parse(stdout)
+  latest_pod_spec['version']
+end
+
 def get_owners(pod)
   puts "Looking up owners of #{pod.magenta} pod..."
-  stdout = run_retrying("pod trunk info #{pod}")
+  stdout, stderr, status = capture_retrying("pod trunk info #{pod}")
+  abort(stderr.red) unless status.success?
 
   # Parse output and extract emails
   yaml = YAML.safe_load(stdout.lines[2..-1].join)
@@ -103,7 +123,10 @@ def add_owners(pod, owners)
 
   owners_to_be_added.each do |owner|
     puts "Adding #{owner.blue} to #{pod.magenta} owners."
-    run_retrying("pod trunk add-owner #{pod} #{owner}")
+
+    _stdout, stderr, status = capture_retrying("pod trunk add-owner #{pod} #{owner}")
+    abort(stderr.red) unless status.success?
+
     changes << "+ #{owner}".green
   end
 
@@ -124,7 +147,8 @@ end
 def add_owner(owner_email)
   all_pods_in_repo.each do |pod|
     puts "Adding #{owner_email.magenta} to #{pod.magenta} owners."
-    run_retrying("pod trunk add-owner #{pod} #{owner_email}")
+    _stdout, stderr, status = capture_retrying("pod trunk add-owner #{pod} #{owner_email}")
+    abort(stderr.red) unless status.success?
   end
 end
 
@@ -132,7 +156,8 @@ end
 def remove_owner(owner_email)
   all_pods_in_repo.each do |pod|
     puts "Removing #{owner_email.magenta} from #{pod.magenta} owners."
-    run_retrying("pod trunk remove-owner #{pod} #{owner_email}")
+    _stdout, stderr, status = capture_retrying("pod trunk remove-owner #{pod} #{owner_email}")
+    abort(stderr.red) unless status.success?
   end
 end
 
