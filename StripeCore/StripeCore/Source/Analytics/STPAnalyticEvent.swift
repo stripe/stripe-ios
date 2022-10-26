@@ -124,6 +124,10 @@ import Foundation
     case luxeClientFilteredPaymentMethods = "luxe_client_filtered_payment_methods"
     case luxeClientFilteredPaymentMethodsNone = "luxe_client_filtered_payment_methods_none"
 
+    case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
+    case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
+    case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
+
     // MARK: Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"

@@ -3,6 +3,7 @@
 //  StripeApplePayTests
 //
 //  Created by David Estes on 11/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest

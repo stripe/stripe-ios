@@ -15,5 +15,7 @@
 #import "STPBlocks.h"
 @import StripeApplePay;
 @import Stripe;
+@import StripePayments;
+@import StripePaymentsUI;
 
 #endif /* StripeTests_Prefix_pch */

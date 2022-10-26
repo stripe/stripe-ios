@@ -1,0 +1,161 @@
+"+ Add" = "+ lisa";
+
+"Add a card" = "Kaardi lisamine";
+
+"Add a payment method" = "Lisa makseviis";
+
+"Add bank account" = "Lisa pangakonto";
+
+"Add new payment method" = "Lisage uus makseviis";
+
+"Add your payment information" = "Lisage makseteave";
+
+"Are you sure you want to remove this card?" = "Kas olete kindel, et soovite selle kaardi eemaldada?";
+
+"Are you sure you want to remove this linked account?" = "Kas olete kindel, et soovite selle lingitud konto eemaldada?";
+
+"Back" = "Tagasi";
+
+"Bank account" = "Pangakonto";
+
+"Buy now or pay later with Klarna." = "Ostke nüüd või makske hiljem Klarnaga.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Makseteabe esitamise ja käesoleva makse kinnitamisega volitatate (A) ettevõtet %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka juhiseid teie konto debiteerimiseks ning (B) oma panka nende juhiste alusel teie kontot debiteerima. Vastavalt teie õigustele, pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus saada pangalt tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates teie konto debiteerimise kuupäevast. Teie õigusi selgitatakse avalduses, mille saate oma pangast. Nõustute saama teavitusi tulevaste debiteerimiste kohta kaks päeva enne nende toimumist.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvestades oma pangakonto %@, nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+"Change email" = "Muuda e-posti aadressi";
+
+"Choose a payment method" = "Valige makseviis";
+
+"Close card scanner" = "Kaardiskanneri sulgemine";
+
+"Code field" = "Koodi väli";
+
+"Code sent" = "Kood saadetud";
+
+"Default" = "Vaikimisi";
+
+"Double tap to edit" = "Redigeerimiseks topeltklõpsake";
+
+"EPS Bank" = "EPS pank";
+
+"Enter address manually" = "Sisestage aadress käsitsi";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Vaikimisi Linkiga maksmiseks sisestage numbrile %@ saadetud kood.";
+
+"Enter your verification code" = "Sisestage oma kinnituskood";
+
+"For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Liitu Linkiga";
+
+"Log out of Link" = "Logi Link välja";
+
+"Not %@?" = "Pole %@?";
+
+"Or" = "Või";
+
+"Or pay using" = "Või kasuta makseviisi";
+
+"Or pay with a card" = "Või makske kaardiga";
+
+"Pay %@" = "Maksa %@";
+
+"Pay another way" = "Maksa muul viisil";
+
+"Pay faster at %@ and thousands of merchants." = "Makske kiiremini saidil %@ ja tuhandete kauplejate saitidel.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Makske <num_installments/> <installment_price/> suuruse intressivaba osamaksega <img/> abil";
+
+"Pay later with Klarna." = "Makske hiljem Klarnaga.";
+
+"Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
+
+"Pay using" = "Kasuta makseviisi";
+
+"Pay with %@" = "Maksa %@-ga";
+
+"Pay with your bank account in just a few steps." = "Pangakontoga maksmine vaid mõne sammuga.";
+
+"Payment" = "Makse";
+
+"Payment methods" = "Makseviisid";
+
+"Point the camera at your card." = "Suunake kaamera oma kaardile.";
+
+"Processing..." = "Töötlemine ...";
+
+"Przelewy24 Bank" = "Pank Przelewy24";
+
+"Remove %1$@ ending in %2$@" = "Eemalda %1$@, mille lõpus on %2$@";
+
+"Remove Card" = "Kaardi eemaldamine";
+
+"Remove card" = "Eemalda kaart";
+
+"Remove linked account" = "Eemalda lingitud konto";
+
+"Resend code" = "Saada kood uuesti";
+
+"Save address" = "Salvesta aadress";
+
+"Save for future payments" = "Salvestage tulevasteks makseteks";
+
+"Save my info for secure 1-click checkout" = "Salvesta minu teave, et võimaldada turvaline ühe klõpsuga makse lõpuleviimine";
+
+"Save this account for future %@ payments" = "Salvesta see konto tulevaste %@ maksete jaoks";
+
+"Save this card for future %@ payments" = "Salvestage see kaart tulevasteks makseteks teenuses %@";
+
+"Secure 1⁠-⁠click checkout" = "Turvaline ühe klõpsuga makse lõpuleviimine";
+
+"Select your payment method" = "Valige makseviis";
+
+"Set as default" = "Muuda vaikimisi makseviisiks";
+
+"Set as default payment method" = "Määra vaikimisi makseviisiks";
+
+"Set up" = "Seadista";
+
+"Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
+
+"Show menu" = "Kuva menüü";
+
+"Sign in to your Link account" = "Logi oma Linki kontole sisse";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
+
+"Tap to close" = "Puudutage sulgemiseks";
+
+"Tap to expand" = "Puudutage laiendamiseks";
+
+"The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
+
+"The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
+
+"The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
+
+"This card has expired. Update your card info or choose a different payment method." = "See kaart on aegunud. Ajakohastage oma kaarditeavet või kasutage muud makseviisi.";
+
+"This is your default" = "See on teie vaikimisi makseviis";
+
+"Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
+
+"Unavailable for this purchase" = "Pole selle ostu puhul saadaval";
+
+"Update card" = "Uuenda kaarti";
+
+"Use your saved info to check out faster" = "Kasutage oma salvestatud teavet kiiremaks makse lõpuleviimiseks";
+
+"Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
+
+"iDEAL Bank" = "iDEALi pank";

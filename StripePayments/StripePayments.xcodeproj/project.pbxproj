@@ -1,0 +1,1413 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		31138E6928DBBB70008AF554 /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31138E6828DBBB70008AF554 /* Enums+CustomStringConvertible.swift */; };
+		31227111286E414A0007ED5E /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227109286E414A0007ED5E /* APIRequest.swift */; };
+		31227112286E414A0007ED5E /* STPIntentActionUseStripeSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710A286E414A0007ED5E /* STPIntentActionUseStripeSDK.swift */; };
+		31227113286E414A0007ED5E /* STPFormEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710B286E414A0007ED5E /* STPFormEncoder.swift */; };
+		31227114286E414A0007ED5E /* STP3DS2AuthenticateResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710C286E414A0007ED5E /* STP3DS2AuthenticateResponse.swift */; };
+		31227115286E414A0007ED5E /* STPPaymentMethodListDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710D286E414A0007ED5E /* STPPaymentMethodListDeserializer.swift */; };
+		31227116286E414A0007ED5E /* STPInternalAPIResponseDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710E286E414A0007ED5E /* STPInternalAPIResponseDecodable.swift */; };
+		31227117286E414A0007ED5E /* STPSourcePoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122710F286E414A0007ED5E /* STPSourcePoller.swift */; };
+		31227118286E414A0007ED5E /* STPEmptyStripeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227110286E414A0007ED5E /* STPEmptyStripeResponse.swift */; };
+		31227124286E43A00007ED5E /* STPThreeDSButtonCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122711A286E439F0007ED5E /* STPThreeDSButtonCustomization.swift */; };
+		31227125286E43A00007ED5E /* STPThreeDSSelectionCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122711B286E439F0007ED5E /* STPThreeDSSelectionCustomization.swift */; };
+		31227126286E43A00007ED5E /* STPThreeDSNavigationBarCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122711C286E439F0007ED5E /* STPThreeDSNavigationBarCustomization.swift */; };
+		31227127286E43A00007ED5E /* STPThreeDSUICustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122711D286E439F0007ED5E /* STPThreeDSUICustomization.swift */; };
+		31227128286E43A00007ED5E /* STPThreeDSLabelCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122711E286E439F0007ED5E /* STPThreeDSLabelCustomization.swift */; };
+		31227129286E43A00007ED5E /* STPAuthenticationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122711F286E43A00007ED5E /* STPAuthenticationContext.swift */; };
+		3122712A286E43A00007ED5E /* STPPaymentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227120286E43A00007ED5E /* STPPaymentHandler.swift */; };
+		3122712B286E43A00007ED5E /* STPThreeDSTextFieldCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227121286E43A00007ED5E /* STPThreeDSTextFieldCustomization.swift */; };
+		3122712C286E43A00007ED5E /* STPThreeDSCustomizationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227122286E43A00007ED5E /* STPThreeDSCustomizationSettings.swift */; };
+		3122712D286E43A00007ED5E /* STPThreeDSFooterCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227123286E43A00007ED5E /* STPThreeDSFooterCustomization.swift */; };
+		31227130286E44890007ED5E /* STPCardValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122712F286E44890007ED5E /* STPCardValidator.swift */; };
+		31227132286E448E0007ED5E /* STPBlocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227131286E448E0007ED5E /* STPBlocks.swift */; };
+		31227134286E44AB0007ED5E /* STPPaymentConfirmation+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227133286E44AB0007ED5E /* STPPaymentConfirmation+SwiftUI.swift */; };
+		3122713C286E455C0007ED5E /* STPPaymentHandlerActionParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122713B286E455C0007ED5E /* STPPaymentHandlerActionParams.swift */; };
+		3122713F286E54BA0007ED5E /* NSDictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122713E286E54BA0007ED5E /* NSDictionary+Stripe.swift */; };
+		31227148286E555B0007ED5E /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227147286E555B0007ED5E /* STPLocalizedString.swift */; };
+		3122714A286E557F0007ED5E /* StripePaymentsBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227149286E557F0007ED5E /* StripePaymentsBundleLocator.swift */; };
+		31227169286E56260007ED5E /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31227168286E56260007ED5E /* Stripe3DS2.framework */; };
+		31227175286E56D50007ED5E /* STPBINController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227174286E56D50007ED5E /* STPBINController.swift */; };
+		3122718C286E5C360007ED5E /* NSString+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122718B286E5C360007ED5E /* NSString+Stripe.swift */; };
+		3122718E286E5C6C0007ED5E /* NSArray+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122718D286E5C6C0007ED5E /* NSArray+Stripe.swift */; };
+		3122719C286E614C0007ED5E /* STPAnalyticsClient+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122719A286E614C0007ED5E /* STPAnalyticsClient+Payments.swift */; };
+		3122719D286E614C0007ED5E /* Analytic+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122719B286E614C0007ED5E /* Analytic+Payments.swift */; };
+		3122719F286E62C80007ED5E /* NSDecimalNumber+Stripe_Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122719E286E62C80007ED5E /* NSDecimalNumber+Stripe_Currency.swift */; };
+		31227203287629B90007ED5E /* StripePayments+Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227202287629B90007ED5E /* StripePayments+Export.swift */; };
+		3122723F28763F3A0007ED5E /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3122723E28763F3A0007ED5E /* StripeUICore.framework */; };
+		3122724328763F3E0007ED5E /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3122724228763F3E0007ED5E /* StripeCore.framework */; };
+		3122724D2876427A0007ED5E /* STPAPIClient+PaymentsCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122724C2876427A0007ED5E /* STPAPIClient+PaymentsCore.swift */; };
+		3139D263286E34A800C9744B /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3139D25A286E34A700C9744B /* StripePayments.framework */; };
+		3139D268286E34A800C9744B /* StripePaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3139D267286E34A800C9744B /* StripePaymentsTests.swift */; };
+		3139D269286E34A800C9744B /* StripePayments.h in Headers */ = {isa = PBXBuildFile; fileRef = 3139D25D286E34A700C9744B /* StripePayments.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		314D27A2286E35C9000076C8 /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D279E286E35C8000076C8 /* StripeCore+Import.swift */; };
+		314D27A3286E35C9000076C8 /* StripeApplePay+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D279F286E35C9000076C8 /* StripeApplePay+Import.swift */; };
+		314D27A5286E35C9000076C8 /* StripeAPI+Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27A1286E35C9000076C8 /* StripeAPI+Deprecated.swift */; };
+		314D27B7286E35F0000076C8 /* STPRadarSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27A7286E35EE000076C8 /* STPRadarSession.swift */; };
+		314D27B8286E35F0000076C8 /* STPiDEALBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27A8286E35EE000076C8 /* STPiDEALBank.swift */; };
+		314D27B9286E35F0000076C8 /* STPCardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27A9286E35EF000076C8 /* STPCardBrand.swift */; };
+		314D27BA286E35F0000076C8 /* STPAPIResponseDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27AA286E35EF000076C8 /* STPAPIResponseDecodable.swift */; };
+		314D27BB286E35F0000076C8 /* STPToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27AB286E35EF000076C8 /* STPToken.swift */; };
+		314D27BC286E35F0000076C8 /* STPFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27AC286E35EF000076C8 /* STPFile.swift */; };
+		314D27BD286E35F0000076C8 /* STPConnectAccountAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27AD286E35EF000076C8 /* STPConnectAccountAddress.swift */; };
+		314D27BE286E35F0000076C8 /* STPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27AE286E35EF000076C8 /* STPAddress.swift */; };
+		314D27BF286E35F0000076C8 /* STPConnectAccountCompanyParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27AF286E35EF000076C8 /* STPConnectAccountCompanyParams.swift */; };
+		314D27C0286E35F0000076C8 /* STPIssuingCardPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27B0286E35EF000076C8 /* STPIssuingCardPin.swift */; };
+		314D27C1286E35F0000076C8 /* STPContactField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27B1286E35EF000076C8 /* STPContactField.swift */; };
+		314D27C2286E35F0000076C8 /* STPFPXBankBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27B2286E35EF000076C8 /* STPFPXBankBrand.swift */; };
+		314D27C3286E35F0000076C8 /* STPConnectAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27B3286E35F0000076C8 /* STPConnectAccountParams.swift */; };
+		314D27C4286E35F0000076C8 /* STPFormEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27B4286E35F0000076C8 /* STPFormEncodable.swift */; };
+		314D27C5286E35F0000076C8 /* STPConnectAccountIndividualParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27B5286E35F0000076C8 /* STPConnectAccountIndividualParams.swift */; };
+		314D27C6286E35F0000076C8 /* STPCustomer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27B6286E35F0000076C8 /* STPCustomer.swift */; };
+		314D2807286E363B000076C8 /* STPPaymentMethodAfterpayClearpay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27CE286E3636000076C8 /* STPPaymentMethodAfterpayClearpay.swift */; };
+		314D2808286E363B000076C8 /* STPPaymentMethodAffirm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27CF286E3636000076C8 /* STPPaymentMethodAffirm.swift */; };
+		314D2809286E363B000076C8 /* STPPaymentMethodBacsDebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D0286E3636000076C8 /* STPPaymentMethodBacsDebit.swift */; };
+		314D280A286E363B000076C8 /* STPPaymentMethodAUBECSDebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D1286E3636000076C8 /* STPPaymentMethodAUBECSDebit.swift */; };
+		314D280B286E363B000076C8 /* STPPaymentMethodCardWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D2286E3636000076C8 /* STPPaymentMethodCardWallet.swift */; };
+		314D280C286E363B000076C8 /* STPPaymentMethodAffirmParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D3286E3636000076C8 /* STPPaymentMethodAffirmParams.swift */; };
+		314D280D286E363B000076C8 /* STPPaymentMethodPrzelewy24.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D4286E3636000076C8 /* STPPaymentMethodPrzelewy24.swift */; };
+		314D280E286E363B000076C8 /* STPPaymentMethodEPS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D5286E3636000076C8 /* STPPaymentMethodEPS.swift */; };
+		314D280F286E363B000076C8 /* STPPaymentMethodPayPal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D6286E3637000076C8 /* STPPaymentMethodPayPal.swift */; };
+		314D2810286E363B000076C8 /* STPPaymentMethodFPXParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D7286E3637000076C8 /* STPPaymentMethodFPXParams.swift */; };
+		314D2811286E363B000076C8 /* STPPaymentMethodBoletoParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D8286E3637000076C8 /* STPPaymentMethodBoletoParams.swift */; };
+		314D2812286E363B000076C8 /* STPPaymentMethodEPSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27D9286E3637000076C8 /* STPPaymentMethodEPSParams.swift */; };
+		314D2813286E363B000076C8 /* STPPaymentMethodAlipay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27DA286E3637000076C8 /* STPPaymentMethodAlipay.swift */; };
+		314D2814286E363B000076C8 /* STPPaymentMethodOXXOParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27DB286E3637000076C8 /* STPPaymentMethodOXXOParams.swift */; };
+		314D2815286E363B000076C8 /* STPPaymentMethodCardWalletMasterpass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27DC286E3637000076C8 /* STPPaymentMethodCardWalletMasterpass.swift */; };
+		314D2816286E363B000076C8 /* STPPaymentMethodNetBankingParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27DD286E3637000076C8 /* STPPaymentMethodNetBankingParams.swift */; };
+		314D2817286E363B000076C8 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27DE286E3637000076C8 /* STPPaymentMethodKlarna.swift */; };
+		314D2818286E363B000076C8 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27DF286E3637000076C8 /* STPPaymentMethodKlarnaParams.swift */; };
+		314D2819286E363B000076C8 /* STPPaymentMethodOXXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E0286E3638000076C8 /* STPPaymentMethodOXXO.swift */; };
+		314D281A286E363B000076C8 /* STPPaymentMethodCardParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E1286E3638000076C8 /* STPPaymentMethodCardParams.swift */; };
+		314D281B286E363B000076C8 /* STPPaymentMethodWeChatPayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E2286E3638000076C8 /* STPPaymentMethodWeChatPayParams.swift */; };
+		314D281C286E363B000076C8 /* STPPaymentMethodBacsDebitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E3286E3638000076C8 /* STPPaymentMethodBacsDebitParams.swift */; };
+		314D281D286E363C000076C8 /* STPPaymentMethodUSBankAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E4286E3638000076C8 /* STPPaymentMethodUSBankAccountParams.swift */; };
+		314D281E286E363C000076C8 /* STPPaymentMethodSofort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E5286E3638000076C8 /* STPPaymentMethodSofort.swift */; };
+		314D281F286E363C000076C8 /* STPPaymentMethodSofortParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E6286E3638000076C8 /* STPPaymentMethodSofortParams.swift */; };
+		314D2820286E363C000076C8 /* STPPaymentMethodBLIKParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E7286E3638000076C8 /* STPPaymentMethodBLIKParams.swift */; };
+		314D2821286E363C000076C8 /* STPPaymentMethodUPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E8286E3638000076C8 /* STPPaymentMethodUPI.swift */; };
+		314D2822286E363C000076C8 /* STPPaymentMethodFPX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27E9286E3638000076C8 /* STPPaymentMethodFPX.swift */; };
+		314D2823286E363C000076C8 /* STPPaymentMethodCardPresent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27EA286E3639000076C8 /* STPPaymentMethodCardPresent.swift */; };
+		314D2824286E363C000076C8 /* STPPaymentMethodLinkParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27EB286E3639000076C8 /* STPPaymentMethodLinkParams.swift */; };
+		314D2825286E363C000076C8 /* STPPaymentMethodGiropay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27EC286E3639000076C8 /* STPPaymentMethodGiropay.swift */; };
+		314D2826286E363C000076C8 /* STPPaymentMethodSEPADebitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27ED286E3639000076C8 /* STPPaymentMethodSEPADebitParams.swift */; };
+		314D2827286E363C000076C8 /* STPPaymentMethodCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27EE286E3639000076C8 /* STPPaymentMethodCard.swift */; };
+		314D2828286E363C000076C8 /* STPPaymentMethodBLIK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27EF286E3639000076C8 /* STPPaymentMethodBLIK.swift */; };
+		314D2829286E363C000076C8 /* STPPaymentMethodUSBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F0286E3639000076C8 /* STPPaymentMethodUSBankAccount.swift */; };
+		314D282A286E363C000076C8 /* STPPaymentMethodNetBanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F1286E3639000076C8 /* STPPaymentMethodNetBanking.swift */; };
+		314D282B286E363C000076C8 /* STPPaymentMethodGiropayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F2286E3639000076C8 /* STPPaymentMethodGiropayParams.swift */; };
+		314D282C286E363C000076C8 /* STPPaymentMethodLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F3286E3639000076C8 /* STPPaymentMethodLink.swift */; };
+		314D282D286E363C000076C8 /* STPPaymentMethodiDEAL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F4286E363A000076C8 /* STPPaymentMethodiDEAL.swift */; };
+		314D282E286E363C000076C8 /* STPPaymentMethodCardChecks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F5286E363A000076C8 /* STPPaymentMethodCardChecks.swift */; };
+		314D282F286E363C000076C8 /* STPPaymentMethodPayPalParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F6286E363A000076C8 /* STPPaymentMethodPayPalParams.swift */; };
+		314D2830286E363C000076C8 /* STPPaymentMethodBoleto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F7286E363A000076C8 /* STPPaymentMethodBoleto.swift */; };
+		314D2831286E363C000076C8 /* STPPaymentMethodThreeDSecureUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F8286E363A000076C8 /* STPPaymentMethodThreeDSecureUsage.swift */; };
+		314D2832286E363C000076C8 /* STPPaymentMethodCardWalletVisaCheckout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27F9286E363A000076C8 /* STPPaymentMethodCardWalletVisaCheckout.swift */; };
+		314D2833286E363C000076C8 /* STPPaymentMethodAfterpayClearpayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27FA286E363A000076C8 /* STPPaymentMethodAfterpayClearpayParams.swift */; };
+		314D2834286E363C000076C8 /* STPPaymentMethodSEPADebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27FB286E363A000076C8 /* STPPaymentMethodSEPADebit.swift */; };
+		314D2835286E363C000076C8 /* STPPaymentMethodBancontactParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27FC286E363A000076C8 /* STPPaymentMethodBancontactParams.swift */; };
+		314D2836286E363C000076C8 /* STPPaymentMethodPrzelewy24Params.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27FD286E363B000076C8 /* STPPaymentMethodPrzelewy24Params.swift */; };
+		314D2837286E363C000076C8 /* STPPaymentMethodGrabPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27FE286E363B000076C8 /* STPPaymentMethodGrabPay.swift */; };
+		314D2838286E363C000076C8 /* STPPaymentMethodGrabPayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D27FF286E363B000076C8 /* STPPaymentMethodGrabPayParams.swift */; };
+		314D2839286E363C000076C8 /* STPPaymentMethodiDEALParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2800286E363B000076C8 /* STPPaymentMethodiDEALParams.swift */; };
+		314D283A286E363C000076C8 /* STPPaymentMethodAUBECSDebitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2801286E363B000076C8 /* STPPaymentMethodAUBECSDebitParams.swift */; };
+		314D283B286E363C000076C8 /* STPPaymentMethodUPIParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2802286E363B000076C8 /* STPPaymentMethodUPIParams.swift */; };
+		314D283C286E363C000076C8 /* STPPaymentMethodAlipayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2803286E363B000076C8 /* STPPaymentMethodAlipayParams.swift */; };
+		314D283D286E363C000076C8 /* STPPaymentMethodBancontact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2804286E363B000076C8 /* STPPaymentMethodBancontact.swift */; };
+		314D283E286E363C000076C8 /* STPPaymentMethodCardNetworks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2805286E363B000076C8 /* STPPaymentMethodCardNetworks.swift */; };
+		314D283F286E363C000076C8 /* STPPaymentMethodWeChatPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2806286E363B000076C8 /* STPPaymentMethodWeChatPay.swift */; };
+		314D2849286E364B000076C8 /* STPKlarnaLineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2840286E364A000076C8 /* STPKlarnaLineItem.swift */; };
+		314D284A286E364B000076C8 /* STPCardParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2841286E364A000076C8 /* STPCardParams.swift */; };
+		314D284B286E364B000076C8 /* STPSourceWeChatPayDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2842286E364A000076C8 /* STPSourceWeChatPayDetails.swift */; };
+		314D284C286E364B000076C8 /* STPBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2843286E364A000076C8 /* STPBankAccount.swift */; };
+		314D284D286E364B000076C8 /* STPSourceSEPADebitDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2844286E364A000076C8 /* STPSourceSEPADebitDetails.swift */; };
+		314D284E286E364B000076C8 /* STPCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2845286E364A000076C8 /* STPCard.swift */; };
+		314D284F286E364B000076C8 /* STPBankAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2846286E364A000076C8 /* STPBankAccountParams.swift */; };
+		314D2850286E364B000076C8 /* STPSourceKlarnaDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2847286E364B000076C8 /* STPSourceKlarnaDetails.swift */; };
+		314D2851286E364B000076C8 /* STPSourceCardDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2848286E364B000076C8 /* STPSourceCardDetails.swift */; };
+		314D285A286E3657000076C8 /* STPSourceParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2852286E3656000076C8 /* STPSourceParams.swift */; };
+		314D285B286E3657000076C8 /* STPSourceRedirect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2853286E3656000076C8 /* STPSourceRedirect.swift */; };
+		314D285C286E3657000076C8 /* STPSourceVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2854286E3656000076C8 /* STPSourceVerification.swift */; };
+		314D285D286E3657000076C8 /* STPSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2855286E3656000076C8 /* STPSource.swift */; };
+		314D285E286E3657000076C8 /* STPSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2856286E3656000076C8 /* STPSourceProtocol.swift */; };
+		314D285F286E3657000076C8 /* STPSourceOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2857286E3656000076C8 /* STPSourceOwner.swift */; };
+		314D2860286E3657000076C8 /* STPSourceReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2858286E3657000076C8 /* STPSourceReceiver.swift */; };
+		314D2861286E3657000076C8 /* STPSourceEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2859286E3657000076C8 /* STPSourceEnums.swift */; };
+		314D286E286E3664000076C8 /* STPMandateDataParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2862286E3662000076C8 /* STPMandateDataParams.swift */; };
+		314D286F286E3664000076C8 /* LinkSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2863286E3663000076C8 /* LinkSettings.swift */; };
+		314D2870286E3664000076C8 /* STPPaymentMethodOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2864286E3663000076C8 /* STPPaymentMethodOptions.swift */; };
+		314D2871286E3664000076C8 /* STPIntentActionOXXODisplayDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2865286E3663000076C8 /* STPIntentActionOXXODisplayDetails.swift */; };
+		314D2872286E3664000076C8 /* STPMandateOnlineParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2866286E3663000076C8 /* STPMandateOnlineParams.swift */; };
+		314D2873286E3664000076C8 /* STPIntentActionAlipayHandleRedirect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2867286E3663000076C8 /* STPIntentActionAlipayHandleRedirect.swift */; };
+		314D2874286E3664000076C8 /* STPIntentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2868286E3663000076C8 /* STPIntentAction.swift */; };
+		314D2875286E3664000076C8 /* STPIntentActionBoletoDisplayDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2869286E3663000076C8 /* STPIntentActionBoletoDisplayDetails.swift */; };
+		314D2876286E3664000076C8 /* STPIntentActionRedirectToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D286A286E3663000076C8 /* STPIntentActionRedirectToURL.swift */; };
+		314D2877286E3664000076C8 /* STPIntentActionVerifyWithMicrodeposits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D286B286E3663000076C8 /* STPIntentActionVerifyWithMicrodeposits.swift */; };
+		314D2878286E3664000076C8 /* STPIntentActionWeChatPayRedirectToApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D286C286E3664000076C8 /* STPIntentActionWeChatPayRedirectToApp.swift */; };
+		314D2879286E3664000076C8 /* STPMandateCustomerAcceptanceParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D286D286E3664000076C8 /* STPMandateCustomerAcceptanceParams.swift */; };
+		314D287E286E3675000076C8 /* STPSetupIntentEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D287A286E3675000076C8 /* STPSetupIntentEnums.swift */; };
+		314D287F286E3675000076C8 /* STPSetupIntentLastSetupError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D287B286E3675000076C8 /* STPSetupIntentLastSetupError.swift */; };
+		314D2880286E3675000076C8 /* STPSetupIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D287C286E3675000076C8 /* STPSetupIntent.swift */; };
+		314D2881286E3675000076C8 /* STPSetupIntentConfirmParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D287D286E3675000076C8 /* STPSetupIntentConfirmParams.swift */; };
+		314D2887286E3680000076C8 /* STPPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2882286E367F000076C8 /* STPPaymentMethod.swift */; };
+		314D2888286E3680000076C8 /* STPPaymentMethodParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2883286E3680000076C8 /* STPPaymentMethodParams.swift */; };
+		314D2889286E3680000076C8 /* STPPaymentMethodBillingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2884286E3680000076C8 /* STPPaymentMethodBillingDetails.swift */; };
+		314D288A286E3680000076C8 /* STPPaymentMethodAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2885286E3680000076C8 /* STPPaymentMethodAddress.swift */; };
+		314D288B286E3680000076C8 /* STPPaymentMethodEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2886286E3680000076C8 /* STPPaymentMethodEnums.swift */; };
+		314D289E286E368C000076C8 /* STPPaymentIntentShippingDetailsAddressParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D288C286E368B000076C8 /* STPPaymentIntentShippingDetailsAddressParams.swift */; };
+		314D289F286E368C000076C8 /* STPConfirmWeChatPayOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D288D286E368B000076C8 /* STPConfirmWeChatPayOptions.swift */; };
+		314D28A0286E368C000076C8 /* STPConfirmUSBankAccountOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D288E286E368B000076C8 /* STPConfirmUSBankAccountOptions.swift */; };
+		314D28A1286E368C000076C8 /* STPConfirmCardOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D288F286E368B000076C8 /* STPConfirmCardOptions.swift */; };
+		314D28A2286E368C000076C8 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2890286E368B000076C8 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift */; };
+		314D28A3286E368C000076C8 /* STPPaymentIntentSourceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2891286E368B000076C8 /* STPPaymentIntentSourceAction.swift */; };
+		314D28A4286E368C000076C8 /* STPPaymentIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2892286E368B000076C8 /* STPPaymentIntent.swift */; };
+		314D28A5286E368C000076C8 /* STPPaymentIntentActionRedirectToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2893286E368B000076C8 /* STPPaymentIntentActionRedirectToURL.swift */; };
+		314D28A6286E368C000076C8 /* STPPaymentIntentShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2894286E368B000076C8 /* STPPaymentIntentShippingDetails.swift */; };
+		314D28A7286E368C000076C8 /* STPPaymentIntentEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2895286E368B000076C8 /* STPPaymentIntentEnums.swift */; };
+		314D28A8286E368C000076C8 /* STPConfirmBLIKOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2896286E368C000076C8 /* STPConfirmBLIKOptions.swift */; };
+		314D28A9286E368C000076C8 /* STPPaymentIntentShippingDetailsParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2897286E368C000076C8 /* STPPaymentIntentShippingDetailsParams.swift */; };
+		314D28AA286E368C000076C8 /* STPPaymentIntentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2898286E368C000076C8 /* STPPaymentIntentAction.swift */; };
+		314D28AB286E368C000076C8 /* STPPaymentIntentParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D2899286E368C000076C8 /* STPPaymentIntentParams.swift */; };
+		314D28AC286E368C000076C8 /* STPConfirmAlipayOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D289A286E368C000076C8 /* STPConfirmAlipayOptions.swift */; };
+		314D28AD286E368C000076C8 /* STPConfirmPaymentMethodOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D289B286E368C000076C8 /* STPConfirmPaymentMethodOptions.swift */; };
+		314D28AE286E368C000076C8 /* STPPaymentIntentShippingDetailsAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D289C286E368C000076C8 /* STPPaymentIntentShippingDetailsAddress.swift */; };
+		314D28AF286E368C000076C8 /* STPPaymentIntentLastPaymentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D289D286E368C000076C8 /* STPPaymentIntentLastPaymentError.swift */; };
+		31DCB10828F4CEAC002EF128 /* STPBankAccountCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB10728F4CEAC002EF128 /* STPBankAccountCollector.swift */; };
+		31DCB10B28F4CF04002EF128 /* STPCollectBankAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB10A28F4CF04002EF128 /* STPCollectBankAccountParams.swift */; };
+		31DCB10D28F4CF23002EF128 /* STPAPIClient+LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB10C28F4CF23002EF128 /* STPAPIClient+LinkAccountSession.swift */; };
+		31DCB10F28F4CF57002EF128 /* LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB10E28F4CF57002EF128 /* LinkAccountSession.swift */; };
+		31DCB11128F4CFE9002EF128 /* ConnectionsSDKAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB11028F4CFE9002EF128 /* ConnectionsSDKAvailability.swift */; };
+		31DCB11D28F4EEB6002EF128 /* STPAnalyticsClient+StripePayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB11C28F4EEB6002EF128 /* STPAnalyticsClient+StripePayments.swift */; };
+		31EBFBE1286E358C00911FA9 /* STPAPIClient+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EBFBD6286E358B00911FA9 /* STPAPIClient+Payments.swift */; };
+		31EBFBE3286E358C00911FA9 /* STPAPIClient+Radar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EBFBD8286E358B00911FA9 /* STPAPIClient+Radar.swift */; };
+		31EBFBE4286E358C00911FA9 /* STPAPIClient+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EBFBD9286E358B00911FA9 /* STPAPIClient+ApplePay.swift */; };
+		31EBFBE9286E358C00911FA9 /* STPRedirectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EBFBDE286E358C00911FA9 /* STPRedirectContext.swift */; };
+		31F7EBF528F787120007C0BB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 31F7EBCA28F787120007C0BB /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3139D264286E34A800C9744B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3139D251286E34A700C9744B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3139D259286E34A700C9744B;
+			remoteInfo = StripePayments;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		31138E6828DBBB70008AF554 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
+		31138E8F28DE53CC008AF554 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		31138E9028DE53CC008AF554 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
+		31138E9128DE53CC008AF554 /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		31138E9228DE53CC008AF554 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		31138E9328DE53CC008AF554 /* Project-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Shared.xcconfig"; sourceTree = "<group>"; };
+		31138E9428DE53CC008AF554 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		31138E9528DE53CC008AF554 /* StripeiOS Tests-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Shared.xcconfig"; sourceTree = "<group>"; };
+		31138E9628DE53CC008AF554 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
+		31138E9728DE53CC008AF554 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		31138E9828DE53CC008AF554 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		31227109286E414A0007ED5E /* APIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
+		3122710A286E414A0007ED5E /* STPIntentActionUseStripeSDK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentActionUseStripeSDK.swift; sourceTree = "<group>"; };
+		3122710B286E414A0007ED5E /* STPFormEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPFormEncoder.swift; sourceTree = "<group>"; };
+		3122710C286E414A0007ED5E /* STP3DS2AuthenticateResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STP3DS2AuthenticateResponse.swift; sourceTree = "<group>"; };
+		3122710D286E414A0007ED5E /* STPPaymentMethodListDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodListDeserializer.swift; sourceTree = "<group>"; };
+		3122710E286E414A0007ED5E /* STPInternalAPIResponseDecodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPInternalAPIResponseDecodable.swift; sourceTree = "<group>"; };
+		3122710F286E414A0007ED5E /* STPSourcePoller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourcePoller.swift; sourceTree = "<group>"; };
+		31227110286E414A0007ED5E /* STPEmptyStripeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPEmptyStripeResponse.swift; sourceTree = "<group>"; };
+		3122711A286E439F0007ED5E /* STPThreeDSButtonCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSButtonCustomization.swift; sourceTree = "<group>"; };
+		3122711B286E439F0007ED5E /* STPThreeDSSelectionCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSSelectionCustomization.swift; sourceTree = "<group>"; };
+		3122711C286E439F0007ED5E /* STPThreeDSNavigationBarCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSNavigationBarCustomization.swift; sourceTree = "<group>"; };
+		3122711D286E439F0007ED5E /* STPThreeDSUICustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSUICustomization.swift; sourceTree = "<group>"; };
+		3122711E286E439F0007ED5E /* STPThreeDSLabelCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSLabelCustomization.swift; sourceTree = "<group>"; };
+		3122711F286E43A00007ED5E /* STPAuthenticationContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAuthenticationContext.swift; sourceTree = "<group>"; };
+		31227120286E43A00007ED5E /* STPPaymentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentHandler.swift; sourceTree = "<group>"; };
+		31227121286E43A00007ED5E /* STPThreeDSTextFieldCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSTextFieldCustomization.swift; sourceTree = "<group>"; };
+		31227122286E43A00007ED5E /* STPThreeDSCustomizationSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSCustomizationSettings.swift; sourceTree = "<group>"; };
+		31227123286E43A00007ED5E /* STPThreeDSFooterCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSFooterCustomization.swift; sourceTree = "<group>"; };
+		3122712F286E44890007ED5E /* STPCardValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPCardValidator.swift; sourceTree = "<group>"; };
+		31227131286E448E0007ED5E /* STPBlocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPBlocks.swift; sourceTree = "<group>"; };
+		31227133286E44AB0007ED5E /* STPPaymentConfirmation+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentConfirmation+SwiftUI.swift"; sourceTree = "<group>"; };
+		3122713B286E455C0007ED5E /* STPPaymentHandlerActionParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentHandlerActionParams.swift; sourceTree = "<group>"; };
+		3122713E286E54BA0007ED5E /* NSDictionary+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+Stripe.swift"; sourceTree = "<group>"; };
+		31227147286E555B0007ED5E /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		31227149286E557F0007ED5E /* StripePaymentsBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentsBundleLocator.swift; sourceTree = "<group>"; };
+		31227168286E56260007ED5E /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		31227174286E56D50007ED5E /* STPBINController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPBINController.swift; sourceTree = "<group>"; };
+		3122718B286E5C360007ED5E /* NSString+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+Stripe.swift"; sourceTree = "<group>"; };
+		3122718D286E5C6C0007ED5E /* NSArray+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArray+Stripe.swift"; sourceTree = "<group>"; };
+		3122719A286E614C0007ED5E /* STPAnalyticsClient+Payments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Payments.swift"; sourceTree = "<group>"; };
+		3122719B286E614C0007ED5E /* Analytic+Payments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytic+Payments.swift"; sourceTree = "<group>"; };
+		3122719E286E62C80007ED5E /* NSDecimalNumber+Stripe_Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDecimalNumber+Stripe_Currency.swift"; sourceTree = "<group>"; };
+		31227202287629B90007ED5E /* StripePayments+Export.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripePayments+Export.swift"; sourceTree = "<group>"; };
+		3122723728763EE40007ED5E /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3122723E28763F3A0007ED5E /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3122724228763F3E0007ED5E /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3122724C2876427A0007ED5E /* STPAPIClient+PaymentsCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+PaymentsCore.swift"; sourceTree = "<group>"; };
+		3139D25A286E34A700C9744B /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3139D25D286E34A700C9744B /* StripePayments.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripePayments.h; sourceTree = "<group>"; };
+		3139D262286E34A800C9744B /* StripePaymentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripePaymentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3139D267286E34A800C9744B /* StripePaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentsTests.swift; sourceTree = "<group>"; };
+		314D279E286E35C8000076C8 /* StripeCore+Import.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
+		314D279F286E35C9000076C8 /* StripeApplePay+Import.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StripeApplePay+Import.swift"; sourceTree = "<group>"; };
+		314D27A1286E35C9000076C8 /* StripeAPI+Deprecated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StripeAPI+Deprecated.swift"; sourceTree = "<group>"; };
+		314D27A7286E35EE000076C8 /* STPRadarSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPRadarSession.swift; sourceTree = "<group>"; };
+		314D27A8286E35EE000076C8 /* STPiDEALBank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPiDEALBank.swift; sourceTree = "<group>"; };
+		314D27A9286E35EF000076C8 /* STPCardBrand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPCardBrand.swift; sourceTree = "<group>"; };
+		314D27AA286E35EF000076C8 /* STPAPIResponseDecodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAPIResponseDecodable.swift; sourceTree = "<group>"; };
+		314D27AB286E35EF000076C8 /* STPToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPToken.swift; sourceTree = "<group>"; };
+		314D27AC286E35EF000076C8 /* STPFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPFile.swift; sourceTree = "<group>"; };
+		314D27AD286E35EF000076C8 /* STPConnectAccountAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConnectAccountAddress.swift; sourceTree = "<group>"; };
+		314D27AE286E35EF000076C8 /* STPAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAddress.swift; sourceTree = "<group>"; };
+		314D27AF286E35EF000076C8 /* STPConnectAccountCompanyParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConnectAccountCompanyParams.swift; sourceTree = "<group>"; };
+		314D27B0286E35EF000076C8 /* STPIssuingCardPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIssuingCardPin.swift; sourceTree = "<group>"; };
+		314D27B1286E35EF000076C8 /* STPContactField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPContactField.swift; sourceTree = "<group>"; };
+		314D27B2286E35EF000076C8 /* STPFPXBankBrand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPFPXBankBrand.swift; sourceTree = "<group>"; };
+		314D27B3286E35F0000076C8 /* STPConnectAccountParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConnectAccountParams.swift; sourceTree = "<group>"; };
+		314D27B4286E35F0000076C8 /* STPFormEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPFormEncodable.swift; sourceTree = "<group>"; };
+		314D27B5286E35F0000076C8 /* STPConnectAccountIndividualParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConnectAccountIndividualParams.swift; sourceTree = "<group>"; };
+		314D27B6286E35F0000076C8 /* STPCustomer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPCustomer.swift; sourceTree = "<group>"; };
+		314D27CE286E3636000076C8 /* STPPaymentMethodAfterpayClearpay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAfterpayClearpay.swift; sourceTree = "<group>"; };
+		314D27CF286E3636000076C8 /* STPPaymentMethodAffirm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAffirm.swift; sourceTree = "<group>"; };
+		314D27D0286E3636000076C8 /* STPPaymentMethodBacsDebit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBacsDebit.swift; sourceTree = "<group>"; };
+		314D27D1286E3636000076C8 /* STPPaymentMethodAUBECSDebit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAUBECSDebit.swift; sourceTree = "<group>"; };
+		314D27D2286E3636000076C8 /* STPPaymentMethodCardWallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardWallet.swift; sourceTree = "<group>"; };
+		314D27D3286E3636000076C8 /* STPPaymentMethodAffirmParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAffirmParams.swift; sourceTree = "<group>"; };
+		314D27D4286E3636000076C8 /* STPPaymentMethodPrzelewy24.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodPrzelewy24.swift; sourceTree = "<group>"; };
+		314D27D5286E3636000076C8 /* STPPaymentMethodEPS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodEPS.swift; sourceTree = "<group>"; };
+		314D27D6286E3637000076C8 /* STPPaymentMethodPayPal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodPayPal.swift; sourceTree = "<group>"; };
+		314D27D7286E3637000076C8 /* STPPaymentMethodFPXParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodFPXParams.swift; sourceTree = "<group>"; };
+		314D27D8286E3637000076C8 /* STPPaymentMethodBoletoParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoletoParams.swift; sourceTree = "<group>"; };
+		314D27D9286E3637000076C8 /* STPPaymentMethodEPSParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodEPSParams.swift; sourceTree = "<group>"; };
+		314D27DA286E3637000076C8 /* STPPaymentMethodAlipay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAlipay.swift; sourceTree = "<group>"; };
+		314D27DB286E3637000076C8 /* STPPaymentMethodOXXOParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodOXXOParams.swift; sourceTree = "<group>"; };
+		314D27DC286E3637000076C8 /* STPPaymentMethodCardWalletMasterpass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardWalletMasterpass.swift; sourceTree = "<group>"; };
+		314D27DD286E3637000076C8 /* STPPaymentMethodNetBankingParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodNetBankingParams.swift; sourceTree = "<group>"; };
+		314D27DE286E3637000076C8 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
+		314D27DF286E3637000076C8 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
+		314D27E0286E3638000076C8 /* STPPaymentMethodOXXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodOXXO.swift; sourceTree = "<group>"; };
+		314D27E1286E3638000076C8 /* STPPaymentMethodCardParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardParams.swift; sourceTree = "<group>"; };
+		314D27E2286E3638000076C8 /* STPPaymentMethodWeChatPayParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodWeChatPayParams.swift; sourceTree = "<group>"; };
+		314D27E3286E3638000076C8 /* STPPaymentMethodBacsDebitParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBacsDebitParams.swift; sourceTree = "<group>"; };
+		314D27E4286E3638000076C8 /* STPPaymentMethodUSBankAccountParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUSBankAccountParams.swift; sourceTree = "<group>"; };
+		314D27E5286E3638000076C8 /* STPPaymentMethodSofort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSofort.swift; sourceTree = "<group>"; };
+		314D27E6286E3638000076C8 /* STPPaymentMethodSofortParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSofortParams.swift; sourceTree = "<group>"; };
+		314D27E7286E3638000076C8 /* STPPaymentMethodBLIKParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBLIKParams.swift; sourceTree = "<group>"; };
+		314D27E8286E3638000076C8 /* STPPaymentMethodUPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUPI.swift; sourceTree = "<group>"; };
+		314D27E9286E3638000076C8 /* STPPaymentMethodFPX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodFPX.swift; sourceTree = "<group>"; };
+		314D27EA286E3639000076C8 /* STPPaymentMethodCardPresent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardPresent.swift; sourceTree = "<group>"; };
+		314D27EB286E3639000076C8 /* STPPaymentMethodLinkParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodLinkParams.swift; sourceTree = "<group>"; };
+		314D27EC286E3639000076C8 /* STPPaymentMethodGiropay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodGiropay.swift; sourceTree = "<group>"; };
+		314D27ED286E3639000076C8 /* STPPaymentMethodSEPADebitParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSEPADebitParams.swift; sourceTree = "<group>"; };
+		314D27EE286E3639000076C8 /* STPPaymentMethodCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCard.swift; sourceTree = "<group>"; };
+		314D27EF286E3639000076C8 /* STPPaymentMethodBLIK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBLIK.swift; sourceTree = "<group>"; };
+		314D27F0286E3639000076C8 /* STPPaymentMethodUSBankAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUSBankAccount.swift; sourceTree = "<group>"; };
+		314D27F1286E3639000076C8 /* STPPaymentMethodNetBanking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodNetBanking.swift; sourceTree = "<group>"; };
+		314D27F2286E3639000076C8 /* STPPaymentMethodGiropayParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodGiropayParams.swift; sourceTree = "<group>"; };
+		314D27F3286E3639000076C8 /* STPPaymentMethodLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodLink.swift; sourceTree = "<group>"; };
+		314D27F4286E363A000076C8 /* STPPaymentMethodiDEAL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodiDEAL.swift; sourceTree = "<group>"; };
+		314D27F5286E363A000076C8 /* STPPaymentMethodCardChecks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardChecks.swift; sourceTree = "<group>"; };
+		314D27F6286E363A000076C8 /* STPPaymentMethodPayPalParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodPayPalParams.swift; sourceTree = "<group>"; };
+		314D27F7286E363A000076C8 /* STPPaymentMethodBoleto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoleto.swift; sourceTree = "<group>"; };
+		314D27F8286E363A000076C8 /* STPPaymentMethodThreeDSecureUsage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodThreeDSecureUsage.swift; sourceTree = "<group>"; };
+		314D27F9286E363A000076C8 /* STPPaymentMethodCardWalletVisaCheckout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardWalletVisaCheckout.swift; sourceTree = "<group>"; };
+		314D27FA286E363A000076C8 /* STPPaymentMethodAfterpayClearpayParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAfterpayClearpayParams.swift; sourceTree = "<group>"; };
+		314D27FB286E363A000076C8 /* STPPaymentMethodSEPADebit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSEPADebit.swift; sourceTree = "<group>"; };
+		314D27FC286E363A000076C8 /* STPPaymentMethodBancontactParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBancontactParams.swift; sourceTree = "<group>"; };
+		314D27FD286E363B000076C8 /* STPPaymentMethodPrzelewy24Params.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodPrzelewy24Params.swift; sourceTree = "<group>"; };
+		314D27FE286E363B000076C8 /* STPPaymentMethodGrabPay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodGrabPay.swift; sourceTree = "<group>"; };
+		314D27FF286E363B000076C8 /* STPPaymentMethodGrabPayParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodGrabPayParams.swift; sourceTree = "<group>"; };
+		314D2800286E363B000076C8 /* STPPaymentMethodiDEALParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodiDEALParams.swift; sourceTree = "<group>"; };
+		314D2801286E363B000076C8 /* STPPaymentMethodAUBECSDebitParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAUBECSDebitParams.swift; sourceTree = "<group>"; };
+		314D2802286E363B000076C8 /* STPPaymentMethodUPIParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUPIParams.swift; sourceTree = "<group>"; };
+		314D2803286E363B000076C8 /* STPPaymentMethodAlipayParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAlipayParams.swift; sourceTree = "<group>"; };
+		314D2804286E363B000076C8 /* STPPaymentMethodBancontact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBancontact.swift; sourceTree = "<group>"; };
+		314D2805286E363B000076C8 /* STPPaymentMethodCardNetworks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardNetworks.swift; sourceTree = "<group>"; };
+		314D2806286E363B000076C8 /* STPPaymentMethodWeChatPay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodWeChatPay.swift; sourceTree = "<group>"; };
+		314D2840286E364A000076C8 /* STPKlarnaLineItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPKlarnaLineItem.swift; sourceTree = "<group>"; };
+		314D2841286E364A000076C8 /* STPCardParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPCardParams.swift; sourceTree = "<group>"; };
+		314D2842286E364A000076C8 /* STPSourceWeChatPayDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceWeChatPayDetails.swift; sourceTree = "<group>"; };
+		314D2843286E364A000076C8 /* STPBankAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPBankAccount.swift; sourceTree = "<group>"; };
+		314D2844286E364A000076C8 /* STPSourceSEPADebitDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceSEPADebitDetails.swift; sourceTree = "<group>"; };
+		314D2845286E364A000076C8 /* STPCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPCard.swift; sourceTree = "<group>"; };
+		314D2846286E364A000076C8 /* STPBankAccountParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPBankAccountParams.swift; sourceTree = "<group>"; };
+		314D2847286E364B000076C8 /* STPSourceKlarnaDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceKlarnaDetails.swift; sourceTree = "<group>"; };
+		314D2848286E364B000076C8 /* STPSourceCardDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceCardDetails.swift; sourceTree = "<group>"; };
+		314D2852286E3656000076C8 /* STPSourceParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceParams.swift; sourceTree = "<group>"; };
+		314D2853286E3656000076C8 /* STPSourceRedirect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceRedirect.swift; sourceTree = "<group>"; };
+		314D2854286E3656000076C8 /* STPSourceVerification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceVerification.swift; sourceTree = "<group>"; };
+		314D2855286E3656000076C8 /* STPSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSource.swift; sourceTree = "<group>"; };
+		314D2856286E3656000076C8 /* STPSourceProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceProtocol.swift; sourceTree = "<group>"; };
+		314D2857286E3656000076C8 /* STPSourceOwner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceOwner.swift; sourceTree = "<group>"; };
+		314D2858286E3657000076C8 /* STPSourceReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceReceiver.swift; sourceTree = "<group>"; };
+		314D2859286E3657000076C8 /* STPSourceEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSourceEnums.swift; sourceTree = "<group>"; };
+		314D2862286E3662000076C8 /* STPMandateDataParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPMandateDataParams.swift; sourceTree = "<group>"; };
+		314D2863286E3663000076C8 /* LinkSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkSettings.swift; sourceTree = "<group>"; };
+		314D2864286E3663000076C8 /* STPPaymentMethodOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodOptions.swift; sourceTree = "<group>"; };
+		314D2865286E3663000076C8 /* STPIntentActionOXXODisplayDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentActionOXXODisplayDetails.swift; sourceTree = "<group>"; };
+		314D2866286E3663000076C8 /* STPMandateOnlineParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPMandateOnlineParams.swift; sourceTree = "<group>"; };
+		314D2867286E3663000076C8 /* STPIntentActionAlipayHandleRedirect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentActionAlipayHandleRedirect.swift; sourceTree = "<group>"; };
+		314D2868286E3663000076C8 /* STPIntentAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentAction.swift; sourceTree = "<group>"; };
+		314D2869286E3663000076C8 /* STPIntentActionBoletoDisplayDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentActionBoletoDisplayDetails.swift; sourceTree = "<group>"; };
+		314D286A286E3663000076C8 /* STPIntentActionRedirectToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentActionRedirectToURL.swift; sourceTree = "<group>"; };
+		314D286B286E3663000076C8 /* STPIntentActionVerifyWithMicrodeposits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentActionVerifyWithMicrodeposits.swift; sourceTree = "<group>"; };
+		314D286C286E3664000076C8 /* STPIntentActionWeChatPayRedirectToApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPIntentActionWeChatPayRedirectToApp.swift; sourceTree = "<group>"; };
+		314D286D286E3664000076C8 /* STPMandateCustomerAcceptanceParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPMandateCustomerAcceptanceParams.swift; sourceTree = "<group>"; };
+		314D287A286E3675000076C8 /* STPSetupIntentEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSetupIntentEnums.swift; sourceTree = "<group>"; };
+		314D287B286E3675000076C8 /* STPSetupIntentLastSetupError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSetupIntentLastSetupError.swift; sourceTree = "<group>"; };
+		314D287C286E3675000076C8 /* STPSetupIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSetupIntent.swift; sourceTree = "<group>"; };
+		314D287D286E3675000076C8 /* STPSetupIntentConfirmParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSetupIntentConfirmParams.swift; sourceTree = "<group>"; };
+		314D2882286E367F000076C8 /* STPPaymentMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethod.swift; sourceTree = "<group>"; };
+		314D2883286E3680000076C8 /* STPPaymentMethodParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodParams.swift; sourceTree = "<group>"; };
+		314D2884286E3680000076C8 /* STPPaymentMethodBillingDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBillingDetails.swift; sourceTree = "<group>"; };
+		314D2885286E3680000076C8 /* STPPaymentMethodAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAddress.swift; sourceTree = "<group>"; };
+		314D2886286E3680000076C8 /* STPPaymentMethodEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodEnums.swift; sourceTree = "<group>"; };
+		314D288C286E368B000076C8 /* STPPaymentIntentShippingDetailsAddressParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentShippingDetailsAddressParams.swift; sourceTree = "<group>"; };
+		314D288D286E368B000076C8 /* STPConfirmWeChatPayOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConfirmWeChatPayOptions.swift; sourceTree = "<group>"; };
+		314D288E286E368B000076C8 /* STPConfirmUSBankAccountOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConfirmUSBankAccountOptions.swift; sourceTree = "<group>"; };
+		314D288F286E368B000076C8 /* STPConfirmCardOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConfirmCardOptions.swift; sourceTree = "<group>"; };
+		314D2890286E368B000076C8 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentSourceActionAuthorizeWithURL.swift; sourceTree = "<group>"; };
+		314D2891286E368B000076C8 /* STPPaymentIntentSourceAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentSourceAction.swift; sourceTree = "<group>"; };
+		314D2892286E368B000076C8 /* STPPaymentIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntent.swift; sourceTree = "<group>"; };
+		314D2893286E368B000076C8 /* STPPaymentIntentActionRedirectToURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentActionRedirectToURL.swift; sourceTree = "<group>"; };
+		314D2894286E368B000076C8 /* STPPaymentIntentShippingDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentShippingDetails.swift; sourceTree = "<group>"; };
+		314D2895286E368B000076C8 /* STPPaymentIntentEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentEnums.swift; sourceTree = "<group>"; };
+		314D2896286E368C000076C8 /* STPConfirmBLIKOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConfirmBLIKOptions.swift; sourceTree = "<group>"; };
+		314D2897286E368C000076C8 /* STPPaymentIntentShippingDetailsParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentShippingDetailsParams.swift; sourceTree = "<group>"; };
+		314D2898286E368C000076C8 /* STPPaymentIntentAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentAction.swift; sourceTree = "<group>"; };
+		314D2899286E368C000076C8 /* STPPaymentIntentParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentParams.swift; sourceTree = "<group>"; };
+		314D289A286E368C000076C8 /* STPConfirmAlipayOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConfirmAlipayOptions.swift; sourceTree = "<group>"; };
+		314D289B286E368C000076C8 /* STPConfirmPaymentMethodOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPConfirmPaymentMethodOptions.swift; sourceTree = "<group>"; };
+		314D289C286E368C000076C8 /* STPPaymentIntentShippingDetailsAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentShippingDetailsAddress.swift; sourceTree = "<group>"; };
+		314D289D286E368C000076C8 /* STPPaymentIntentLastPaymentError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentLastPaymentError.swift; sourceTree = "<group>"; };
+		31DCB10728F4CEAC002EF128 /* STPBankAccountCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPBankAccountCollector.swift; sourceTree = "<group>"; };
+		31DCB10A28F4CF04002EF128 /* STPCollectBankAccountParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPCollectBankAccountParams.swift; sourceTree = "<group>"; };
+		31DCB10C28F4CF23002EF128 /* STPAPIClient+LinkAccountSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+LinkAccountSession.swift"; sourceTree = "<group>"; };
+		31DCB10E28F4CF57002EF128 /* LinkAccountSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAccountSession.swift; sourceTree = "<group>"; };
+		31DCB11028F4CFE9002EF128 /* ConnectionsSDKAvailability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionsSDKAvailability.swift; sourceTree = "<group>"; };
+		31DCB11C28F4EEB6002EF128 /* STPAnalyticsClient+StripePayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+StripePayments.swift"; sourceTree = "<group>"; };
+		31EBFBD6286E358B00911FA9 /* STPAPIClient+Payments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+Payments.swift"; sourceTree = "<group>"; };
+		31EBFBD8286E358B00911FA9 /* STPAPIClient+Radar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+Radar.swift"; sourceTree = "<group>"; };
+		31EBFBD9286E358B00911FA9 /* STPAPIClient+ApplePay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+ApplePay.swift"; sourceTree = "<group>"; };
+		31EBFBDE286E358C00911FA9 /* STPRedirectContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPRedirectContext.swift; sourceTree = "<group>"; };
+		31F7EBCB28F787120007C0BB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBCC28F787120007C0BB /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBCD28F787120007C0BB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBCE28F787120007C0BB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBCF28F787120007C0BB /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBD028F787120007C0BB /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBD128F787120007C0BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBD228F787120007C0BB /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBD328F787120007C0BB /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBD428F787120007C0BB /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBD528F787120007C0BB /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBD628F787120007C0BB /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBD728F787120007C0BB /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBD828F787120007C0BB /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBD928F787120007C0BB /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBDA28F787120007C0BB /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBDB28F787120007C0BB /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBDC28F787120007C0BB /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBDD28F787120007C0BB /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBDE28F787120007C0BB /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBDF28F787120007C0BB /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBE028F787120007C0BB /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBE128F787120007C0BB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBE228F787120007C0BB /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBE328F787120007C0BB /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBE428F787120007C0BB /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBE528F787120007C0BB /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBE628F787120007C0BB /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBE728F787120007C0BB /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBE828F787120007C0BB /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBE928F787120007C0BB /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBEA28F787120007C0BB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBEB28F787120007C0BB /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBEC28F787120007C0BB /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBED28F787120007C0BB /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBEE28F787120007C0BB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBEF28F787120007C0BB /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBF028F787120007C0BB /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBF128F787120007C0BB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		31F7EBF228F787120007C0BB /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBF328F787120007C0BB /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		31F7EBF428F787120007C0BB /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3139D257286E34A700C9744B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3122724328763F3E0007ED5E /* StripeCore.framework in Frameworks */,
+				31227169286E56260007ED5E /* Stripe3DS2.framework in Frameworks */,
+				3122723F28763F3A0007ED5E /* StripeUICore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3139D25F286E34A800C9744B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3139D263286E34A800C9744B /* StripePayments.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		31138E6728DBBB5C008AF554 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				31138E6828DBBB70008AF554 /* Enums+CustomStringConvertible.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		31138E8E28DE53CC008AF554 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				31138E8F28DE53CC008AF554 /* StripeiOS Tests-Debug.xcconfig */,
+				31138E9028DE53CC008AF554 /* StripeiOS-Debug.xcconfig */,
+				31138E9128DE53CC008AF554 /* Project-Release.xcconfig */,
+				31138E9228DE53CC008AF554 /* StripeiOS Tests-Release.xcconfig */,
+				31138E9328DE53CC008AF554 /* Project-Shared.xcconfig */,
+				31138E9428DE53CC008AF554 /* Version.xcconfig */,
+				31138E9528DE53CC008AF554 /* StripeiOS Tests-Shared.xcconfig */,
+				31138E9628DE53CC008AF554 /* StripeiOS-Shared.xcconfig */,
+				31138E9728DE53CC008AF554 /* Project-Debug.xcconfig */,
+				31138E9828DE53CC008AF554 /* StripeiOS-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		31227107286E41320007ED5E /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				31227194286E60F60007ED5E /* Analytics */,
+				3122718A286E5C290007ED5E /* Helpers */,
+				3122713D286E54AF0007ED5E /* Categories */,
+				3122713B286E455C0007ED5E /* STPPaymentHandlerActionParams.swift */,
+				31227108286E41360007ED5E /* API Bindings */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		31227108286E41360007ED5E /* API Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				31227109286E414A0007ED5E /* APIRequest.swift */,
+				3122710C286E414A0007ED5E /* STP3DS2AuthenticateResponse.swift */,
+				31227110286E414A0007ED5E /* STPEmptyStripeResponse.swift */,
+				3122710B286E414A0007ED5E /* STPFormEncoder.swift */,
+				3122710A286E414A0007ED5E /* STPIntentActionUseStripeSDK.swift */,
+				3122710E286E414A0007ED5E /* STPInternalAPIResponseDecodable.swift */,
+				3122710D286E414A0007ED5E /* STPPaymentMethodListDeserializer.swift */,
+				3122710F286E414A0007ED5E /* STPSourcePoller.swift */,
+			);
+			path = "API Bindings";
+			sourceTree = "<group>";
+		};
+		31227119286E43870007ED5E /* PaymentHandler */ = {
+			isa = PBXGroup;
+			children = (
+				3122711F286E43A00007ED5E /* STPAuthenticationContext.swift */,
+				31227120286E43A00007ED5E /* STPPaymentHandler.swift */,
+				3122711A286E439F0007ED5E /* STPThreeDSButtonCustomization.swift */,
+				31227122286E43A00007ED5E /* STPThreeDSCustomizationSettings.swift */,
+				31227123286E43A00007ED5E /* STPThreeDSFooterCustomization.swift */,
+				3122711E286E439F0007ED5E /* STPThreeDSLabelCustomization.swift */,
+				3122711C286E439F0007ED5E /* STPThreeDSNavigationBarCustomization.swift */,
+				3122711B286E439F0007ED5E /* STPThreeDSSelectionCustomization.swift */,
+				31227121286E43A00007ED5E /* STPThreeDSTextFieldCustomization.swift */,
+				3122711D286E439F0007ED5E /* STPThreeDSUICustomization.swift */,
+			);
+			path = PaymentHandler;
+			sourceTree = "<group>";
+		};
+		3122712E286E43E90007ED5E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				31227131286E448E0007ED5E /* STPBlocks.swift */,
+				31227174286E56D50007ED5E /* STPBINController.swift */,
+				31227202287629B90007ED5E /* StripePayments+Export.swift */,
+				31DCB10728F4CEAC002EF128 /* STPBankAccountCollector.swift */,
+				31227147286E555B0007ED5E /* STPLocalizedString.swift */,
+				31227149286E557F0007ED5E /* StripePaymentsBundleLocator.swift */,
+				31227133286E44AB0007ED5E /* STPPaymentConfirmation+SwiftUI.swift */,
+				3122712F286E44890007ED5E /* STPCardValidator.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		3122713D286E54AF0007ED5E /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				3122724C2876427A0007ED5E /* STPAPIClient+PaymentsCore.swift */,
+				3122719E286E62C80007ED5E /* NSDecimalNumber+Stripe_Currency.swift */,
+				3122718D286E5C6C0007ED5E /* NSArray+Stripe.swift */,
+				3122718B286E5C360007ED5E /* NSString+Stripe.swift */,
+				3122713E286E54BA0007ED5E /* NSDictionary+Stripe.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		31227167286E56260007ED5E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3122724228763F3E0007ED5E /* StripeCore.framework */,
+				3122723E28763F3A0007ED5E /* StripeUICore.framework */,
+				3122723728763EE40007ED5E /* StripeApplePay.framework */,
+				31227168286E56260007ED5E /* Stripe3DS2.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3122718A286E5C290007ED5E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				31DCB11028F4CFE9002EF128 /* ConnectionsSDKAvailability.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		31227194286E60F60007ED5E /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				3122719B286E614C0007ED5E /* Analytic+Payments.swift */,
+				3122719A286E614C0007ED5E /* STPAnalyticsClient+Payments.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		3139D250286E34A700C9744B = {
+			isa = PBXGroup;
+			children = (
+				31138E8E28DE53CC008AF554 /* BuildConfigurations */,
+				3139D25C286E34A700C9744B /* StripePayments */,
+				3139D266286E34A800C9744B /* StripePaymentsTests */,
+				3139D25B286E34A700C9744B /* Products */,
+				31227167286E56260007ED5E /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3139D25B286E34A700C9744B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3139D25A286E34A700C9744B /* StripePayments.framework */,
+				3139D262286E34A800C9744B /* StripePaymentsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3139D25C286E34A700C9744B /* StripePayments */ = {
+			isa = PBXGroup;
+			children = (
+				31F7EBC828F787120007C0BB /* Resources */,
+				31138E6728DBBB5C008AF554 /* Categories */,
+				3122712E286E43E90007ED5E /* Helpers */,
+				31227119286E43870007ED5E /* PaymentHandler */,
+				31227107286E41320007ED5E /* Internal */,
+				31EBFBD3286E357E00911FA9 /* API Bindings */,
+				3139D25D286E34A700C9744B /* StripePayments.h */,
+			);
+			path = StripePayments;
+			sourceTree = "<group>";
+		};
+		3139D266286E34A800C9744B /* StripePaymentsTests */ = {
+			isa = PBXGroup;
+			children = (
+				3139D267286E34A800C9744B /* StripePaymentsTests.swift */,
+				31DCB11C28F4EEB6002EF128 /* STPAnalyticsClient+StripePayments.swift */,
+			);
+			path = StripePaymentsTests;
+			sourceTree = "<group>";
+		};
+		314D27A6286E35E5000076C8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				314D27CB286E3611000076C8 /* Sources */,
+				314D27CA286E360C000076C8 /* Shared */,
+				314D27C9286E3608000076C8 /* SetupIntents */,
+				314D27C8286E35FE000076C8 /* PaymentMethods */,
+				314D27C7286E35F9000076C8 /* PaymentIntents */,
+				31DCB10928F4CF04002EF128 /* ACH */,
+				314D27AE286E35EF000076C8 /* STPAddress.swift */,
+				314D27AA286E35EF000076C8 /* STPAPIResponseDecodable.swift */,
+				314D27A9286E35EF000076C8 /* STPCardBrand.swift */,
+				314D27AD286E35EF000076C8 /* STPConnectAccountAddress.swift */,
+				314D27AF286E35EF000076C8 /* STPConnectAccountCompanyParams.swift */,
+				314D27B5286E35F0000076C8 /* STPConnectAccountIndividualParams.swift */,
+				314D27B3286E35F0000076C8 /* STPConnectAccountParams.swift */,
+				314D27B1286E35EF000076C8 /* STPContactField.swift */,
+				314D27B6286E35F0000076C8 /* STPCustomer.swift */,
+				314D27AC286E35EF000076C8 /* STPFile.swift */,
+				314D27B4286E35F0000076C8 /* STPFormEncodable.swift */,
+				314D27B2286E35EF000076C8 /* STPFPXBankBrand.swift */,
+				314D27A8286E35EE000076C8 /* STPiDEALBank.swift */,
+				314D27B0286E35EF000076C8 /* STPIssuingCardPin.swift */,
+				314D27A7286E35EE000076C8 /* STPRadarSession.swift */,
+				314D27AB286E35EF000076C8 /* STPToken.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		314D27C7286E35F9000076C8 /* PaymentIntents */ = {
+			isa = PBXGroup;
+			children = (
+				314D289A286E368C000076C8 /* STPConfirmAlipayOptions.swift */,
+				314D2896286E368C000076C8 /* STPConfirmBLIKOptions.swift */,
+				314D288F286E368B000076C8 /* STPConfirmCardOptions.swift */,
+				314D289B286E368C000076C8 /* STPConfirmPaymentMethodOptions.swift */,
+				314D288E286E368B000076C8 /* STPConfirmUSBankAccountOptions.swift */,
+				314D288D286E368B000076C8 /* STPConfirmWeChatPayOptions.swift */,
+				314D2892286E368B000076C8 /* STPPaymentIntent.swift */,
+				314D2898286E368C000076C8 /* STPPaymentIntentAction.swift */,
+				314D2893286E368B000076C8 /* STPPaymentIntentActionRedirectToURL.swift */,
+				314D2895286E368B000076C8 /* STPPaymentIntentEnums.swift */,
+				314D289D286E368C000076C8 /* STPPaymentIntentLastPaymentError.swift */,
+				314D2899286E368C000076C8 /* STPPaymentIntentParams.swift */,
+				314D2894286E368B000076C8 /* STPPaymentIntentShippingDetails.swift */,
+				314D289C286E368C000076C8 /* STPPaymentIntentShippingDetailsAddress.swift */,
+				314D288C286E368B000076C8 /* STPPaymentIntentShippingDetailsAddressParams.swift */,
+				314D2897286E368C000076C8 /* STPPaymentIntentShippingDetailsParams.swift */,
+				314D2891286E368B000076C8 /* STPPaymentIntentSourceAction.swift */,
+				314D2890286E368B000076C8 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift */,
+			);
+			path = PaymentIntents;
+			sourceTree = "<group>";
+		};
+		314D27C8286E35FE000076C8 /* PaymentMethods */ = {
+			isa = PBXGroup;
+			children = (
+				314D2882286E367F000076C8 /* STPPaymentMethod.swift */,
+				314D2885286E3680000076C8 /* STPPaymentMethodAddress.swift */,
+				314D2884286E3680000076C8 /* STPPaymentMethodBillingDetails.swift */,
+				314D2886286E3680000076C8 /* STPPaymentMethodEnums.swift */,
+				314D2883286E3680000076C8 /* STPPaymentMethodParams.swift */,
+				314D27CD286E3625000076C8 /* Types */,
+			);
+			path = PaymentMethods;
+			sourceTree = "<group>";
+		};
+		314D27C9286E3608000076C8 /* SetupIntents */ = {
+			isa = PBXGroup;
+			children = (
+				314D287C286E3675000076C8 /* STPSetupIntent.swift */,
+				314D287D286E3675000076C8 /* STPSetupIntentConfirmParams.swift */,
+				314D287A286E3675000076C8 /* STPSetupIntentEnums.swift */,
+				314D287B286E3675000076C8 /* STPSetupIntentLastSetupError.swift */,
+			);
+			path = SetupIntents;
+			sourceTree = "<group>";
+		};
+		314D27CA286E360C000076C8 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				314D2868286E3663000076C8 /* STPIntentAction.swift */,
+				314D2867286E3663000076C8 /* STPIntentActionAlipayHandleRedirect.swift */,
+				314D2869286E3663000076C8 /* STPIntentActionBoletoDisplayDetails.swift */,
+				314D2865286E3663000076C8 /* STPIntentActionOXXODisplayDetails.swift */,
+				314D286A286E3663000076C8 /* STPIntentActionRedirectToURL.swift */,
+				314D286B286E3663000076C8 /* STPIntentActionVerifyWithMicrodeposits.swift */,
+				314D286C286E3664000076C8 /* STPIntentActionWeChatPayRedirectToApp.swift */,
+				314D2863286E3663000076C8 /* LinkSettings.swift */,
+				314D286D286E3664000076C8 /* STPMandateCustomerAcceptanceParams.swift */,
+				314D2862286E3662000076C8 /* STPMandateDataParams.swift */,
+				314D2866286E3663000076C8 /* STPMandateOnlineParams.swift */,
+				314D2864286E3663000076C8 /* STPPaymentMethodOptions.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		314D27CB286E3611000076C8 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				314D2855286E3656000076C8 /* STPSource.swift */,
+				314D2859286E3657000076C8 /* STPSourceEnums.swift */,
+				314D2857286E3656000076C8 /* STPSourceOwner.swift */,
+				314D2852286E3656000076C8 /* STPSourceParams.swift */,
+				314D2856286E3656000076C8 /* STPSourceProtocol.swift */,
+				314D2858286E3657000076C8 /* STPSourceReceiver.swift */,
+				314D2853286E3656000076C8 /* STPSourceRedirect.swift */,
+				314D2854286E3656000076C8 /* STPSourceVerification.swift */,
+				314D27CC286E3621000076C8 /* Types */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		314D27CC286E3621000076C8 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				314D2843286E364A000076C8 /* STPBankAccount.swift */,
+				314D2846286E364A000076C8 /* STPBankAccountParams.swift */,
+				314D2845286E364A000076C8 /* STPCard.swift */,
+				314D2841286E364A000076C8 /* STPCardParams.swift */,
+				314D2840286E364A000076C8 /* STPKlarnaLineItem.swift */,
+				314D2848286E364B000076C8 /* STPSourceCardDetails.swift */,
+				314D2847286E364B000076C8 /* STPSourceKlarnaDetails.swift */,
+				314D2844286E364A000076C8 /* STPSourceSEPADebitDetails.swift */,
+				314D2842286E364A000076C8 /* STPSourceWeChatPayDetails.swift */,
+			);
+			path = Types;
+			sourceTree = "<group>";
+		};
+		314D27CD286E3625000076C8 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				314D27CF286E3636000076C8 /* STPPaymentMethodAffirm.swift */,
+				314D27D3286E3636000076C8 /* STPPaymentMethodAffirmParams.swift */,
+				314D27CE286E3636000076C8 /* STPPaymentMethodAfterpayClearpay.swift */,
+				314D27FA286E363A000076C8 /* STPPaymentMethodAfterpayClearpayParams.swift */,
+				314D27DA286E3637000076C8 /* STPPaymentMethodAlipay.swift */,
+				314D2803286E363B000076C8 /* STPPaymentMethodAlipayParams.swift */,
+				314D27D1286E3636000076C8 /* STPPaymentMethodAUBECSDebit.swift */,
+				314D2801286E363B000076C8 /* STPPaymentMethodAUBECSDebitParams.swift */,
+				314D27D0286E3636000076C8 /* STPPaymentMethodBacsDebit.swift */,
+				314D27E3286E3638000076C8 /* STPPaymentMethodBacsDebitParams.swift */,
+				314D2804286E363B000076C8 /* STPPaymentMethodBancontact.swift */,
+				314D27FC286E363A000076C8 /* STPPaymentMethodBancontactParams.swift */,
+				314D27EF286E3639000076C8 /* STPPaymentMethodBLIK.swift */,
+				314D27E7286E3638000076C8 /* STPPaymentMethodBLIKParams.swift */,
+				314D27F7286E363A000076C8 /* STPPaymentMethodBoleto.swift */,
+				314D27D8286E3637000076C8 /* STPPaymentMethodBoletoParams.swift */,
+				314D27EE286E3639000076C8 /* STPPaymentMethodCard.swift */,
+				314D27F5286E363A000076C8 /* STPPaymentMethodCardChecks.swift */,
+				314D2805286E363B000076C8 /* STPPaymentMethodCardNetworks.swift */,
+				314D27E1286E3638000076C8 /* STPPaymentMethodCardParams.swift */,
+				314D27EA286E3639000076C8 /* STPPaymentMethodCardPresent.swift */,
+				314D27D2286E3636000076C8 /* STPPaymentMethodCardWallet.swift */,
+				314D27DC286E3637000076C8 /* STPPaymentMethodCardWalletMasterpass.swift */,
+				314D27F9286E363A000076C8 /* STPPaymentMethodCardWalletVisaCheckout.swift */,
+				314D27D5286E3636000076C8 /* STPPaymentMethodEPS.swift */,
+				314D27D9286E3637000076C8 /* STPPaymentMethodEPSParams.swift */,
+				314D27E9286E3638000076C8 /* STPPaymentMethodFPX.swift */,
+				314D27D7286E3637000076C8 /* STPPaymentMethodFPXParams.swift */,
+				314D27EC286E3639000076C8 /* STPPaymentMethodGiropay.swift */,
+				314D27F2286E3639000076C8 /* STPPaymentMethodGiropayParams.swift */,
+				314D27FE286E363B000076C8 /* STPPaymentMethodGrabPay.swift */,
+				314D27FF286E363B000076C8 /* STPPaymentMethodGrabPayParams.swift */,
+				314D27F4286E363A000076C8 /* STPPaymentMethodiDEAL.swift */,
+				314D2800286E363B000076C8 /* STPPaymentMethodiDEALParams.swift */,
+				314D27DE286E3637000076C8 /* STPPaymentMethodKlarna.swift */,
+				314D27DF286E3637000076C8 /* STPPaymentMethodKlarnaParams.swift */,
+				314D27F3286E3639000076C8 /* STPPaymentMethodLink.swift */,
+				314D27EB286E3639000076C8 /* STPPaymentMethodLinkParams.swift */,
+				314D27F1286E3639000076C8 /* STPPaymentMethodNetBanking.swift */,
+				314D27DD286E3637000076C8 /* STPPaymentMethodNetBankingParams.swift */,
+				314D27E0286E3638000076C8 /* STPPaymentMethodOXXO.swift */,
+				314D27DB286E3637000076C8 /* STPPaymentMethodOXXOParams.swift */,
+				314D27D6286E3637000076C8 /* STPPaymentMethodPayPal.swift */,
+				314D27F6286E363A000076C8 /* STPPaymentMethodPayPalParams.swift */,
+				314D27D4286E3636000076C8 /* STPPaymentMethodPrzelewy24.swift */,
+				314D27FD286E363B000076C8 /* STPPaymentMethodPrzelewy24Params.swift */,
+				314D27FB286E363A000076C8 /* STPPaymentMethodSEPADebit.swift */,
+				314D27ED286E3639000076C8 /* STPPaymentMethodSEPADebitParams.swift */,
+				314D27E5286E3638000076C8 /* STPPaymentMethodSofort.swift */,
+				314D27E6286E3638000076C8 /* STPPaymentMethodSofortParams.swift */,
+				314D27F8286E363A000076C8 /* STPPaymentMethodThreeDSecureUsage.swift */,
+				314D27E8286E3638000076C8 /* STPPaymentMethodUPI.swift */,
+				314D2802286E363B000076C8 /* STPPaymentMethodUPIParams.swift */,
+				314D27F0286E3639000076C8 /* STPPaymentMethodUSBankAccount.swift */,
+				314D27E4286E3638000076C8 /* STPPaymentMethodUSBankAccountParams.swift */,
+				314D2806286E363B000076C8 /* STPPaymentMethodWeChatPay.swift */,
+				314D27E2286E3638000076C8 /* STPPaymentMethodWeChatPayParams.swift */,
+			);
+			path = Types;
+			sourceTree = "<group>";
+		};
+		31DCB10928F4CF04002EF128 /* ACH */ = {
+			isa = PBXGroup;
+			children = (
+				31DCB10E28F4CF57002EF128 /* LinkAccountSession.swift */,
+				31DCB10A28F4CF04002EF128 /* STPCollectBankAccountParams.swift */,
+			);
+			path = ACH;
+			sourceTree = "<group>";
+		};
+		31EBFBD3286E357E00911FA9 /* API Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				314D27A6286E35E5000076C8 /* Models */,
+				31EBFBEA286E359800911FA9 /* Legacy Compatability */,
+				31EBFBD6286E358B00911FA9 /* STPAPIClient+Payments.swift */,
+				31DCB10C28F4CF23002EF128 /* STPAPIClient+LinkAccountSession.swift */,
+				31EBFBD8286E358B00911FA9 /* STPAPIClient+Radar.swift */,
+				31EBFBD9286E358B00911FA9 /* STPAPIClient+ApplePay.swift */,
+				31EBFBDE286E358C00911FA9 /* STPRedirectContext.swift */,
+			);
+			path = "API Bindings";
+			sourceTree = "<group>";
+		};
+		31EBFBEA286E359800911FA9 /* Legacy Compatability */ = {
+			isa = PBXGroup;
+			children = (
+				314D279F286E35C9000076C8 /* StripeApplePay+Import.swift */,
+				314D279E286E35C8000076C8 /* StripeCore+Import.swift */,
+				314D27A1286E35C9000076C8 /* StripeAPI+Deprecated.swift */,
+			);
+			path = "Legacy Compatability";
+			sourceTree = "<group>";
+		};
+		31F7EBC828F787120007C0BB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				31F7EBC928F787120007C0BB /* Localizations */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		31F7EBC928F787120007C0BB /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				31F7EBCA28F787120007C0BB /* Localizable.strings */,
+			);
+			path = Localizations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3139D255286E34A700C9744B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3139D269286E34A800C9744B /* StripePayments.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3139D259286E34A700C9744B /* StripePayments */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3139D26C286E34A800C9744B /* Build configuration list for PBXNativeTarget "StripePayments" */;
+			buildPhases = (
+				3139D255286E34A700C9744B /* Headers */,
+				3139D256286E34A700C9744B /* Sources */,
+				3139D257286E34A700C9744B /* Frameworks */,
+				3139D258286E34A700C9744B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StripePayments;
+			productName = StripePayments;
+			productReference = 3139D25A286E34A700C9744B /* StripePayments.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		3139D261286E34A800C9744B /* StripePaymentsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3139D26F286E34A800C9744B /* Build configuration list for PBXNativeTarget "StripePaymentsTests" */;
+			buildPhases = (
+				3139D25E286E34A800C9744B /* Sources */,
+				3139D25F286E34A800C9744B /* Frameworks */,
+				3139D260286E34A800C9744B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3139D265286E34A800C9744B /* PBXTargetDependency */,
+			);
+			name = StripePaymentsTests;
+			productName = StripePaymentsTests;
+			productReference = 3139D262286E34A800C9744B /* StripePaymentsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3139D251286E34A700C9744B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1400;
+				ORGANIZATIONNAME = "Stripe, Inc";
+				TargetAttributes = {
+					3139D259286E34A700C9744B = {
+						CreatedOnToolsVersion = 13.4;
+					};
+					3139D261286E34A800C9744B = {
+						CreatedOnToolsVersion = 13.4;
+					};
+				};
+			};
+			buildConfigurationList = 3139D254286E34A700C9744B /* Build configuration list for PBXProject "StripePayments" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				de,
+				"lt-LT",
+				"zh-Hans",
+				ja,
+				"el-GR",
+				"ms-MY",
+				"zh-HK",
+				mt,
+				nb,
+				"ca-ES",
+				"en-GB",
+				es,
+				da,
+				"es-419",
+				it,
+				"nn-NO",
+				"fr-CA",
+				"bg-BG",
+				sv,
+				ko,
+				fil,
+				"zh-Hant",
+				tk,
+				"ro-RO",
+				hu,
+				tr,
+				"et-EE",
+				"pt-BR",
+				"lv-LV",
+				vi,
+				ru,
+				"cs-CZ",
+				"sk-SK",
+				"sl-SI",
+				fr,
+				fi,
+				id,
+				nl,
+				"pl-PL",
+				"pt-PT",
+				hr,
+			);
+			mainGroup = 3139D250286E34A700C9744B;
+			productRefGroup = 3139D25B286E34A700C9744B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3139D259286E34A700C9744B /* StripePayments */,
+				3139D261286E34A800C9744B /* StripePaymentsTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3139D258286E34A700C9744B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31F7EBF528F787120007C0BB /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3139D260286E34A800C9744B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3139D256286E34A700C9744B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				314D281E286E363C000076C8 /* STPPaymentMethodSofort.swift in Sources */,
+				314D2826286E363C000076C8 /* STPPaymentMethodSEPADebitParams.swift in Sources */,
+				31227130286E44890007ED5E /* STPCardValidator.swift in Sources */,
+				314D28AF286E368C000076C8 /* STPPaymentIntentLastPaymentError.swift in Sources */,
+				314D28A5286E368C000076C8 /* STPPaymentIntentActionRedirectToURL.swift in Sources */,
+				31DCB11128F4CFE9002EF128 /* ConnectionsSDKAvailability.swift in Sources */,
+				314D282E286E363C000076C8 /* STPPaymentMethodCardChecks.swift in Sources */,
+				314D281A286E363B000076C8 /* STPPaymentMethodCardParams.swift in Sources */,
+				3122724D2876427A0007ED5E /* STPAPIClient+PaymentsCore.swift in Sources */,
+				314D2818286E363B000076C8 /* STPPaymentMethodKlarnaParams.swift in Sources */,
+				314D2879286E3664000076C8 /* STPMandateCustomerAcceptanceParams.swift in Sources */,
+				31EBFBE1286E358C00911FA9 /* STPAPIClient+Payments.swift in Sources */,
+				314D2825286E363C000076C8 /* STPPaymentMethodGiropay.swift in Sources */,
+				314D27BA286E35F0000076C8 /* STPAPIResponseDecodable.swift in Sources */,
+				314D2814286E363B000076C8 /* STPPaymentMethodOXXOParams.swift in Sources */,
+				3122719F286E62C80007ED5E /* NSDecimalNumber+Stripe_Currency.swift in Sources */,
+				314D283F286E363C000076C8 /* STPPaymentMethodWeChatPay.swift in Sources */,
+				31227118286E414A0007ED5E /* STPEmptyStripeResponse.swift in Sources */,
+				3122713F286E54BA0007ED5E /* NSDictionary+Stripe.swift in Sources */,
+				314D282A286E363C000076C8 /* STPPaymentMethodNetBanking.swift in Sources */,
+				314D2878286E3664000076C8 /* STPIntentActionWeChatPayRedirectToApp.swift in Sources */,
+				3122712C286E43A00007ED5E /* STPThreeDSCustomizationSettings.swift in Sources */,
+				314D28AB286E368C000076C8 /* STPPaymentIntentParams.swift in Sources */,
+				314D2870286E3664000076C8 /* STPPaymentMethodOptions.swift in Sources */,
+				314D2875286E3664000076C8 /* STPIntentActionBoletoDisplayDetails.swift in Sources */,
+				314D2830286E363C000076C8 /* STPPaymentMethodBoleto.swift in Sources */,
+				314D2832286E363C000076C8 /* STPPaymentMethodCardWalletVisaCheckout.swift in Sources */,
+				31227175286E56D50007ED5E /* STPBINController.swift in Sources */,
+				314D2872286E3664000076C8 /* STPMandateOnlineParams.swift in Sources */,
+				314D2835286E363C000076C8 /* STPPaymentMethodBancontactParams.swift in Sources */,
+				314D2874286E3664000076C8 /* STPIntentAction.swift in Sources */,
+				3122719D286E614C0007ED5E /* Analytic+Payments.swift in Sources */,
+				314D2809286E363B000076C8 /* STPPaymentMethodBacsDebit.swift in Sources */,
+				314D2838286E363C000076C8 /* STPPaymentMethodGrabPayParams.swift in Sources */,
+				314D2808286E363B000076C8 /* STPPaymentMethodAffirm.swift in Sources */,
+				314D288A286E3680000076C8 /* STPPaymentMethodAddress.swift in Sources */,
+				314D284B286E364B000076C8 /* STPSourceWeChatPayDetails.swift in Sources */,
+				314D2829286E363C000076C8 /* STPPaymentMethodUSBankAccount.swift in Sources */,
+				314D288B286E3680000076C8 /* STPPaymentMethodEnums.swift in Sources */,
+				314D27A5286E35C9000076C8 /* StripeAPI+Deprecated.swift in Sources */,
+				314D2824286E363C000076C8 /* STPPaymentMethodLinkParams.swift in Sources */,
+				314D2828286E363C000076C8 /* STPPaymentMethodBLIK.swift in Sources */,
+				314D28AC286E368C000076C8 /* STPConfirmAlipayOptions.swift in Sources */,
+				314D284F286E364B000076C8 /* STPBankAccountParams.swift in Sources */,
+				314D287E286E3675000076C8 /* STPSetupIntentEnums.swift in Sources */,
+				314D2889286E3680000076C8 /* STPPaymentMethodBillingDetails.swift in Sources */,
+				314D2831286E363C000076C8 /* STPPaymentMethodThreeDSecureUsage.swift in Sources */,
+				314D27B9286E35F0000076C8 /* STPCardBrand.swift in Sources */,
+				314D287F286E3675000076C8 /* STPSetupIntentLastSetupError.swift in Sources */,
+				314D28A6286E368C000076C8 /* STPPaymentIntentShippingDetails.swift in Sources */,
+				314D2836286E363C000076C8 /* STPPaymentMethodPrzelewy24Params.swift in Sources */,
+				314D28A3286E368C000076C8 /* STPPaymentIntentSourceAction.swift in Sources */,
+				314D2812286E363B000076C8 /* STPPaymentMethodEPSParams.swift in Sources */,
+				31227114286E414A0007ED5E /* STP3DS2AuthenticateResponse.swift in Sources */,
+				314D2880286E3675000076C8 /* STPSetupIntent.swift in Sources */,
+				314D27A3286E35C9000076C8 /* StripeApplePay+Import.swift in Sources */,
+				31227125286E43A00007ED5E /* STPThreeDSSelectionCustomization.swift in Sources */,
+				31227115286E414A0007ED5E /* STPPaymentMethodListDeserializer.swift in Sources */,
+				314D282C286E363C000076C8 /* STPPaymentMethodLink.swift in Sources */,
+				314D282B286E363C000076C8 /* STPPaymentMethodGiropayParams.swift in Sources */,
+				314D282F286E363C000076C8 /* STPPaymentMethodPayPalParams.swift in Sources */,
+				314D28A7286E368C000076C8 /* STPPaymentIntentEnums.swift in Sources */,
+				314D283C286E363C000076C8 /* STPPaymentMethodAlipayParams.swift in Sources */,
+				314D27BF286E35F0000076C8 /* STPConnectAccountCompanyParams.swift in Sources */,
+				314D28A0286E368C000076C8 /* STPConfirmUSBankAccountOptions.swift in Sources */,
+				314D280C286E363B000076C8 /* STPPaymentMethodAffirmParams.swift in Sources */,
+				314D285A286E3657000076C8 /* STPSourceParams.swift in Sources */,
+				314D2813286E363B000076C8 /* STPPaymentMethodAlipay.swift in Sources */,
+				314D2807286E363B000076C8 /* STPPaymentMethodAfterpayClearpay.swift in Sources */,
+				314D2817286E363B000076C8 /* STPPaymentMethodKlarna.swift in Sources */,
+				31DCB10828F4CEAC002EF128 /* STPBankAccountCollector.swift in Sources */,
+				314D289E286E368C000076C8 /* STPPaymentIntentShippingDetailsAddressParams.swift in Sources */,
+				3122719C286E614C0007ED5E /* STPAnalyticsClient+Payments.swift in Sources */,
+				314D280A286E363B000076C8 /* STPPaymentMethodAUBECSDebit.swift in Sources */,
+				3122713C286E455C0007ED5E /* STPPaymentHandlerActionParams.swift in Sources */,
+				31DCB10F28F4CF57002EF128 /* LinkAccountSession.swift in Sources */,
+				314D283A286E363C000076C8 /* STPPaymentMethodAUBECSDebitParams.swift in Sources */,
+				314D285E286E3657000076C8 /* STPSourceProtocol.swift in Sources */,
+				314D284E286E364B000076C8 /* STPCard.swift in Sources */,
+				314D280D286E363B000076C8 /* STPPaymentMethodPrzelewy24.swift in Sources */,
+				314D2816286E363B000076C8 /* STPPaymentMethodNetBankingParams.swift in Sources */,
+				314D284D286E364B000076C8 /* STPSourceSEPADebitDetails.swift in Sources */,
+				314D27B7286E35F0000076C8 /* STPRadarSession.swift in Sources */,
+				31227129286E43A00007ED5E /* STPAuthenticationContext.swift in Sources */,
+				314D2810286E363B000076C8 /* STPPaymentMethodFPXParams.swift in Sources */,
+				31227116286E414A0007ED5E /* STPInternalAPIResponseDecodable.swift in Sources */,
+				314D27C2286E35F0000076C8 /* STPFPXBankBrand.swift in Sources */,
+				31227203287629B90007ED5E /* StripePayments+Export.swift in Sources */,
+				314D2834286E363C000076C8 /* STPPaymentMethodSEPADebit.swift in Sources */,
+				314D28A9286E368C000076C8 /* STPPaymentIntentShippingDetailsParams.swift in Sources */,
+				314D2877286E3664000076C8 /* STPIntentActionVerifyWithMicrodeposits.swift in Sources */,
+				314D27C0286E35F0000076C8 /* STPIssuingCardPin.swift in Sources */,
+				314D28A1286E368C000076C8 /* STPConfirmCardOptions.swift in Sources */,
+				314D28AE286E368C000076C8 /* STPPaymentIntentShippingDetailsAddress.swift in Sources */,
+				314D28A4286E368C000076C8 /* STPPaymentIntent.swift in Sources */,
+				314D2861286E3657000076C8 /* STPSourceEnums.swift in Sources */,
+				314D280B286E363B000076C8 /* STPPaymentMethodCardWallet.swift in Sources */,
+				314D2820286E363C000076C8 /* STPPaymentMethodBLIKParams.swift in Sources */,
+				314D289F286E368C000076C8 /* STPConfirmWeChatPayOptions.swift in Sources */,
+				3122712B286E43A00007ED5E /* STPThreeDSTextFieldCustomization.swift in Sources */,
+				314D27C3286E35F0000076C8 /* STPConnectAccountParams.swift in Sources */,
+				314D27BC286E35F0000076C8 /* STPFile.swift in Sources */,
+				314D281C286E363B000076C8 /* STPPaymentMethodBacsDebitParams.swift in Sources */,
+				314D27BE286E35F0000076C8 /* STPAddress.swift in Sources */,
+				314D27BD286E35F0000076C8 /* STPConnectAccountAddress.swift in Sources */,
+				314D2851286E364B000076C8 /* STPSourceCardDetails.swift in Sources */,
+				314D280F286E363B000076C8 /* STPPaymentMethodPayPal.swift in Sources */,
+				314D2823286E363C000076C8 /* STPPaymentMethodCardPresent.swift in Sources */,
+				314D27BB286E35F0000076C8 /* STPToken.swift in Sources */,
+				314D285D286E3657000076C8 /* STPSource.swift in Sources */,
+				31EBFBE3286E358C00911FA9 /* STPAPIClient+Radar.swift in Sources */,
+				314D27C4286E35F0000076C8 /* STPFormEncodable.swift in Sources */,
+				31EBFBE9286E358C00911FA9 /* STPRedirectContext.swift in Sources */,
+				31227117286E414A0007ED5E /* STPSourcePoller.swift in Sources */,
+				31EBFBE4286E358C00911FA9 /* STPAPIClient+ApplePay.swift in Sources */,
+				3122712A286E43A00007ED5E /* STPPaymentHandler.swift in Sources */,
+				314D2888286E3680000076C8 /* STPPaymentMethodParams.swift in Sources */,
+				314D2827286E363C000076C8 /* STPPaymentMethodCard.swift in Sources */,
+				31227148286E555B0007ED5E /* STPLocalizedString.swift in Sources */,
+				314D2849286E364B000076C8 /* STPKlarnaLineItem.swift in Sources */,
+				314D27A2286E35C9000076C8 /* StripeCore+Import.swift in Sources */,
+				31227127286E43A00007ED5E /* STPThreeDSUICustomization.swift in Sources */,
+				314D283B286E363C000076C8 /* STPPaymentMethodUPIParams.swift in Sources */,
+				314D27C6286E35F0000076C8 /* STPCustomer.swift in Sources */,
+				314D281D286E363C000076C8 /* STPPaymentMethodUSBankAccountParams.swift in Sources */,
+				314D28A2286E368C000076C8 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift in Sources */,
+				314D2850286E364B000076C8 /* STPSourceKlarnaDetails.swift in Sources */,
+				31227112286E414A0007ED5E /* STPIntentActionUseStripeSDK.swift in Sources */,
+				314D286F286E3664000076C8 /* LinkSettings.swift in Sources */,
+				314D28A8286E368C000076C8 /* STPConfirmBLIKOptions.swift in Sources */,
+				314D285C286E3657000076C8 /* STPSourceVerification.swift in Sources */,
+				314D2811286E363B000076C8 /* STPPaymentMethodBoletoParams.swift in Sources */,
+				314D2873286E3664000076C8 /* STPIntentActionAlipayHandleRedirect.swift in Sources */,
+				31227126286E43A00007ED5E /* STPThreeDSNavigationBarCustomization.swift in Sources */,
+				314D2837286E363C000076C8 /* STPPaymentMethodGrabPay.swift in Sources */,
+				314D2815286E363B000076C8 /* STPPaymentMethodCardWalletMasterpass.swift in Sources */,
+				314D2822286E363C000076C8 /* STPPaymentMethodFPX.swift in Sources */,
+				314D27C5286E35F0000076C8 /* STPConnectAccountIndividualParams.swift in Sources */,
+				3122714A286E557F0007ED5E /* StripePaymentsBundleLocator.swift in Sources */,
+				31227132286E448E0007ED5E /* STPBlocks.swift in Sources */,
+				314D280E286E363B000076C8 /* STPPaymentMethodEPS.swift in Sources */,
+				314D27C1286E35F0000076C8 /* STPContactField.swift in Sources */,
+				314D2821286E363C000076C8 /* STPPaymentMethodUPI.swift in Sources */,
+				314D2871286E3664000076C8 /* STPIntentActionOXXODisplayDetails.swift in Sources */,
+				314D284A286E364B000076C8 /* STPCardParams.swift in Sources */,
+				31DCB10D28F4CF23002EF128 /* STPAPIClient+LinkAccountSession.swift in Sources */,
+				314D283E286E363C000076C8 /* STPPaymentMethodCardNetworks.swift in Sources */,
+				314D282D286E363C000076C8 /* STPPaymentMethodiDEAL.swift in Sources */,
+				314D2887286E3680000076C8 /* STPPaymentMethod.swift in Sources */,
+				314D286E286E3664000076C8 /* STPMandateDataParams.swift in Sources */,
+				314D28AD286E368C000076C8 /* STPConfirmPaymentMethodOptions.swift in Sources */,
+				314D2833286E363C000076C8 /* STPPaymentMethodAfterpayClearpayParams.swift in Sources */,
+				314D28AA286E368C000076C8 /* STPPaymentIntentAction.swift in Sources */,
+				3122712D286E43A00007ED5E /* STPThreeDSFooterCustomization.swift in Sources */,
+				314D283D286E363C000076C8 /* STPPaymentMethodBancontact.swift in Sources */,
+				3122718E286E5C6C0007ED5E /* NSArray+Stripe.swift in Sources */,
+				314D284C286E364B000076C8 /* STPBankAccount.swift in Sources */,
+				31DCB10B28F4CF04002EF128 /* STPCollectBankAccountParams.swift in Sources */,
+				314D2839286E363C000076C8 /* STPPaymentMethodiDEALParams.swift in Sources */,
+				314D285B286E3657000076C8 /* STPSourceRedirect.swift in Sources */,
+				31227128286E43A00007ED5E /* STPThreeDSLabelCustomization.swift in Sources */,
+				314D2881286E3675000076C8 /* STPSetupIntentConfirmParams.swift in Sources */,
+				314D2819286E363B000076C8 /* STPPaymentMethodOXXO.swift in Sources */,
+				314D281B286E363B000076C8 /* STPPaymentMethodWeChatPayParams.swift in Sources */,
+				3122718C286E5C360007ED5E /* NSString+Stripe.swift in Sources */,
+				314D2876286E3664000076C8 /* STPIntentActionRedirectToURL.swift in Sources */,
+				31227124286E43A00007ED5E /* STPThreeDSButtonCustomization.swift in Sources */,
+				314D281F286E363C000076C8 /* STPPaymentMethodSofortParams.swift in Sources */,
+				314D285F286E3657000076C8 /* STPSourceOwner.swift in Sources */,
+				31227134286E44AB0007ED5E /* STPPaymentConfirmation+SwiftUI.swift in Sources */,
+				31227113286E414A0007ED5E /* STPFormEncoder.swift in Sources */,
+				31138E6928DBBB70008AF554 /* Enums+CustomStringConvertible.swift in Sources */,
+				314D2860286E3657000076C8 /* STPSourceReceiver.swift in Sources */,
+				31227111286E414A0007ED5E /* APIRequest.swift in Sources */,
+				314D27B8286E35F0000076C8 /* STPiDEALBank.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3139D25E286E34A800C9744B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3139D268286E34A800C9744B /* StripePaymentsTests.swift in Sources */,
+				31DCB11D28F4EEB6002EF128 /* STPAnalyticsClient+StripePayments.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3139D265286E34A800C9744B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3139D259286E34A700C9744B /* StripePayments */;
+			targetProxy = 3139D264286E34A800C9744B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		31F7EBCA28F787120007C0BB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				31F7EBCB28F787120007C0BB /* de */,
+				31F7EBCC28F787120007C0BB /* lt-LT */,
+				31F7EBCD28F787120007C0BB /* zh-Hans */,
+				31F7EBCE28F787120007C0BB /* ja */,
+				31F7EBCF28F787120007C0BB /* el-GR */,
+				31F7EBD028F787120007C0BB /* ms-MY */,
+				31F7EBD128F787120007C0BB /* en */,
+				31F7EBD228F787120007C0BB /* zh-HK */,
+				31F7EBD328F787120007C0BB /* mt */,
+				31F7EBD428F787120007C0BB /* nb */,
+				31F7EBD528F787120007C0BB /* ca-ES */,
+				31F7EBD628F787120007C0BB /* en-GB */,
+				31F7EBD728F787120007C0BB /* es */,
+				31F7EBD828F787120007C0BB /* da */,
+				31F7EBD928F787120007C0BB /* es-419 */,
+				31F7EBDA28F787120007C0BB /* it */,
+				31F7EBDB28F787120007C0BB /* nn-NO */,
+				31F7EBDC28F787120007C0BB /* fr-CA */,
+				31F7EBDD28F787120007C0BB /* bg-BG */,
+				31F7EBDE28F787120007C0BB /* sv */,
+				31F7EBDF28F787120007C0BB /* ko */,
+				31F7EBE028F787120007C0BB /* fil */,
+				31F7EBE128F787120007C0BB /* zh-Hant */,
+				31F7EBE228F787120007C0BB /* tk */,
+				31F7EBE328F787120007C0BB /* ro-RO */,
+				31F7EBE428F787120007C0BB /* hu */,
+				31F7EBE528F787120007C0BB /* tr */,
+				31F7EBE628F787120007C0BB /* et-EE */,
+				31F7EBE728F787120007C0BB /* pt-BR */,
+				31F7EBE828F787120007C0BB /* lv-LV */,
+				31F7EBE928F787120007C0BB /* vi */,
+				31F7EBEA28F787120007C0BB /* ru */,
+				31F7EBEB28F787120007C0BB /* cs-CZ */,
+				31F7EBEC28F787120007C0BB /* sk-SK */,
+				31F7EBED28F787120007C0BB /* sl-SI */,
+				31F7EBEE28F787120007C0BB /* fr */,
+				31F7EBEF28F787120007C0BB /* fi */,
+				31F7EBF028F787120007C0BB /* id */,
+				31F7EBF128F787120007C0BB /* nl */,
+				31F7EBF228F787120007C0BB /* pl-PL */,
+				31F7EBF328F787120007C0BB /* pt-PT */,
+				31F7EBF428F787120007C0BB /* hr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3139D26A286E34A800C9744B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31138E9728DE53CC008AF554 /* Project-Debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3139D26B286E34A800C9744B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31138E9128DE53CC008AF554 /* Project-Release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		3139D26D286E34A800C9744B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31138E9028DE53CC008AF554 /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3139D26E286E34A800C9744B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31138E9828DE53CC008AF554 /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		3139D270286E34A800C9744B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31138E8F28DE53CC008AF554 /* StripeiOS Tests-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3139D271286E34A800C9744B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31138E9228DE53CC008AF554 /* StripeiOS Tests-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3139D254286E34A700C9744B /* Build configuration list for PBXProject "StripePayments" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3139D26A286E34A800C9744B /* Debug */,
+				3139D26B286E34A800C9744B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3139D26C286E34A800C9744B /* Build configuration list for PBXNativeTarget "StripePayments" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3139D26D286E34A800C9744B /* Debug */,
+				3139D26E286E34A800C9744B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3139D26F286E34A800C9744B /* Build configuration list for PBXNativeTarget "StripePaymentsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3139D270286E34A800C9744B /* Debug */,
+				3139D271286E34A800C9744B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3139D251286E34A700C9744B /* Project object */;
+}

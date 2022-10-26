@@ -3,10 +3,12 @@
 //  StripeApplePayTests
 //
 //  Created by David Estes on 2/9/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeApplePay
 @_spi(STP) @testable import StripeCore

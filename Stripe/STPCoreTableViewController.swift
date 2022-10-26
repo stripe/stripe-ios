@@ -1,6 +1,6 @@
 //
 //  STPCoreTableViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Brian Dorfman on 1/6/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

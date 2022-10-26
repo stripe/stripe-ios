@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
+
+"Address line 2 (optional)" = "Indirizz linja 2 (mhux obbligatorju)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Kont bankarju";
+
+"Billing Address" = "Indirizz tal-Kont";
+
+"Billing address" = "Indirizz tal-kont";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "L-informazzjoni tal-kard";
+
+"Card number" = "In-numru tal-kard";
+
+"Invalid data." = "Data invalida.";
+
+"MM / YY" = "XX / SS";
+
+"MM/YY" = "XX/SS";
+
+"Postal Code" = "Kodiċi Postali";
+
+"Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";
+
+"State / Province / Region" = "Stat / Provinċja / Reġjun";
+
+"The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
+
+"To scan your card, allow camera access in Settings." = "Biex tiskennja l-kard tiegħek, ippermetti l-aċċess tal-kamera fis-Settings.";
+
+"Your ZIP is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
+
+"Your card number is incomplete." = "In-numru tal-kard tiegħek mhux komplut.";
+
+"Your card number is invalid." = "In-numru tal-kard tiegħek mhux validu.";
+
+"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex kompluta.";
+
+"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex valida.";
+
+"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-kard tiegħek mhux validu.";
+
+"Your card's expiration year is invalid." = "Is-sena tal-iskadenza tal-kard tiegħek mhijiex valida.";
+
+"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux komplut.";
+
+"Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux validu.";
+
+"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
+
+"card number" = "in-numru tal-kard";
+
+"example@example.com" = "eżempju@eżempju.com";
+
+"expiration date" = "id-data tal-iskadenza";

@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/11/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -581,7 +582,6 @@ extension DocumentFileUploadViewController: IdentityDataCollecting {
 
     func reset() {
         documentUploader.reset()
-        sheetController?.collectedData.clearFront()
-        sheetController?.collectedData.clearBack()
+        clearCollectedFields()
     }
 }

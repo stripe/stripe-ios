@@ -1,6 +1,6 @@
 //
 //  STPCameraView.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

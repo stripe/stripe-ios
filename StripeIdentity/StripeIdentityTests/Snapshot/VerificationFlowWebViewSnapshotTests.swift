@@ -7,7 +7,7 @@
 //
 
 import WebKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 
 @testable import StripeIdentity

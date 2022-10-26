@@ -1,5 +1,5 @@
 //
-//  STPAnalyticsTest.swift
+//  STPAnalyticsClientTest.swift
 //  StripeCoreTests
 //
 //  Created by Yuki Tokuhiro on 12/15/20.

@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "Prélèvement automatique BECS (Australie)";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Bancaire";
+
+"Boleto" = "Boleto";
+
+"Card" = "Carte";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "Netbanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "Prélèvement SEPA";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "La tentative d'identification de votre moyen de paiement a été interrompue, veuillez réessayer.";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "Compte bancaire aux États-Unis";
+
+"Unknown" = "Inconnu";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nous ne sommes pas en mesure d'identifier votre moyen de paiement. Veuillez sélectionner un autre moyen de paiement et réessayer.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "Giropay";
+
+"iDEAL" = "iDEAL";

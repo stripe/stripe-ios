@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
+
+"Address line 2 (optional)" = "Línia de l'adreça 2 (opcional)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Compte bancari";
+
+"Billing Address" = "Adreça de facturació";
+
+"Billing address" = "Adreça de facturació";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Informació de targeta";
+
+"Card number" = "Número de targeta";
+
+"Invalid data." = "Dades no vàlides.";
+
+"MM / YY" = "MM / AA";
+
+"MM/YY" = "MM / AA";
+
+"Postal Code" = "Codi postal";
+
+"Shipping Address" = "Adreça d'enviament";
+
+"State / Province / Region" = "País / Província / Regió";
+
+"The BSB you entered is invalid." = "El BSB que has introduït no és vàlid.";
+
+"To scan your card, allow camera access in Settings." = "Per escanejar la teva targeta, permet l'accès a la càmera a Ajusts.";
+
+"Your ZIP is invalid." = "El teu ZIP no és vàlid.";
+
+"Your card number is incomplete." = "El número de la teva targeta no està complet.";
+
+"Your card number is invalid." = "El número de la teva targeta no és vàlid.";
+
+"Your card's expiration date is incomplete." = "La data de caducitat de la teva targeta no està completa.";
+
+"Your card's expiration date is invalid." = "La data de caducitat de la teva targeta no és vàlida.";
+
+"Your card's expiration month is invalid." = "El mes de caducitat de la teva targeta no és vàlid.";
+
+"Your card's expiration year is invalid." = "L'any de caducitat de la teva targeta no és vàlid.";
+
+"Your card's security code is incomplete." = "El codi de seguretat de la teva targeta no està complet.";
+
+"Your card's security code is invalid." = "El codi de seguretat de la teva targeta no és vàlid";
+
+"Your postal code is invalid." = "El teu codi postal no és vàlid.";
+
+"card number" = "número de targeta";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "data de caducitat";

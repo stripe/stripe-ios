@@ -6,6 +6,8 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
+@import StripeCore;
+
 #import "PaymentExampleViewController.h"
 
 @interface PaymentExampleViewController ()
@@ -45,7 +47,7 @@
     [self.view addSubview:label];
     self.waitingLabel = label;
 
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
     activityIndicator.hidesWhenStopped = YES;
     self.activityIndicator = activityIndicator;
     [self.view addSubview:activityIndicator];

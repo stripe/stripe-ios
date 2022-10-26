@@ -3,6 +3,7 @@
 //  StripeUICore
 //
 //  Created by Cameron Sabol on 9/22/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit

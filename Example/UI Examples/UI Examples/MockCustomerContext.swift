@@ -10,6 +10,7 @@ import Foundation
 
 @testable import Stripe
 @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePayments
 
 class MockCustomer: STPCustomer {
     var mockPaymentMethods: [STPPaymentMethod] = []

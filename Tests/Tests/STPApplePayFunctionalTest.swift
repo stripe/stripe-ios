@@ -1,6 +1,6 @@
 //
-//  STPApplePayTest.m
-//  Stripe
+//  STPApplePayFunctionalTest.swift
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 12/21/14.
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
@@ -9,8 +9,12 @@
 import PassKit
 import XCTest
 
-@testable import Stripe
-@testable import StripeApplePay
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeApplePay
 
 class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
     override func setUp() {

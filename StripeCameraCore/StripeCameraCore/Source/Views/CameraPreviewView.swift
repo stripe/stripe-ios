@@ -3,6 +3,7 @@
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 12/1/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit

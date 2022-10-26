@@ -1,0 +1,161 @@
+"+ Add" = "+ Tambahkan";
+
+"Add a card" = "Tambahkan sebuah kartu";
+
+"Add a payment method" = "Tambahkan metode pembayaran";
+
+"Add bank account" = "Tambahkan rekening bank";
+
+"Add new payment method" = "Tambahkan metode pembayaran baru";
+
+"Add your payment information" = "Tambahkan informasi pembayaran Anda";
+
+"Are you sure you want to remove this card?" = "Anda yakin ingin menghapus kartu ini?";
+
+"Are you sure you want to remove this linked account?" = "Anda yakin ingin menghapus rekening tertaut ini?";
+
+"Back" = "Kembali";
+
+"Bank account" = "Rekening bank";
+
+"Buy now or pay later with Klarna." = "Beli sekarang atau bayar nanti dengan Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan melanjutkan, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Dengan melanjutkan, berarti Anda setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan</terms> ini.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan informasi pembayaran dan mengonfirmasi pembayaran ini, berarti Anda mengotorisasi (A) %@ dan Stripe, penyedia layanan pembayaran kami, untuk mengirim instruksi kepada bank untuk mendebit rekening Anda dan (B) kepada bank untuk mendebit rekening Anda sesuai instruksi itu. Sebagai bagian dari hak Anda, Anda berhak mendapat pengembalian dana dari bank berdasarkan ketentuan dan persyaratan perjanjian Anda dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu sejak tanggal pendebitan rekening Anda. Hak Anda dijelaskan dalam pernyataan yang dapat Anda peroleh dari bank Anda. Anda setuju untuk menerima notifikasi pendebitan di masa mendatang hingga 2 hari sebelum dilakukan.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan rekening bank Anda untuk %@, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
+
+"Change email" = "Ubah email";
+
+"Choose a payment method" = "Pilih metode pembayaran";
+
+"Close card scanner" = "Tutup pemindai kartu";
+
+"Code field" = "Bidang kode";
+
+"Code sent" = "Kode dikirim";
+
+"Default" = "Default";
+
+"Double tap to edit" = "Sentuh dua kali untuk mengedit";
+
+"EPS Bank" = "Bank EPS";
+
+"Enter address manually" = "Masukkan alamat secara manual";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Masukkan kode yang dikirim ke %@ untuk menggunakan Link untuk membayar secara default.";
+
+"Enter your verification code" = "Masukkan kode verifikasi Anda";
+
+"For security, please re-enter your card’s security code." = "Untuk keamanan, masukkan lagi kode keamanan kartu Anda.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Bergabunglah dengan Link";
+
+"Log out of Link" = "Keluar dari Link";
+
+"Not %@?" = "Bukan %@?";
+
+"Or" = "Atau";
+
+"Or pay using" = "Atau bayar menggunakan";
+
+"Or pay with a card" = "Atau bayar dengan kartu";
+
+"Pay %@" = "Bayar %@";
+
+"Pay another way" = "Bayar dengan cara lain";
+
+"Pay faster at %@ and thousands of merchants." = "Bayar lebih cepat di %@ dan ribuan merchant lainnya.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> angsuran bebas bunga sebesar <installment_price/> dengan <img/>";
+
+"Pay later with Klarna." = "Bayar nanti dengan Klarna.";
+
+"Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
+
+"Pay using" = "Bayar menggunakan";
+
+"Pay with %@" = "Bayar dengan %@";
+
+"Pay with your bank account in just a few steps." = "Bayar dengan rekening bank Anda hanya dalam beberapa langkah.";
+
+"Payment" = "Pembayaran";
+
+"Payment methods" = "Metode pembayaran";
+
+"Point the camera at your card." = "Arahkan kamera pada kartu Anda";
+
+"Processing..." = "Memproses...";
+
+"Przelewy24 Bank" = "Bank Przelewy24";
+
+"Remove %1$@ ending in %2$@" = "Hapus %1$@ yang berakhiran %2$@";
+
+"Remove Card" = "Hapus Kartu";
+
+"Remove card" = "Hapus kartu";
+
+"Remove linked account" = "Hapus rekening tertaut";
+
+"Resend code" = "Kirim ulang kode";
+
+"Save address" = "Simpan alamat";
+
+"Save for future payments" = "Simpan untuk pembayaran mendatang";
+
+"Save my info for secure 1-click checkout" = "Simpan info saya untuk checkout aman dengan 1-klik";
+
+"Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
+
+"Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
+
+"Secure 1⁠-⁠click checkout" = "Checkout 1-klik dengan aman";
+
+"Select your payment method" = "Pilih metode pembayaran Anda";
+
+"Set as default" = "Atur sebagai default";
+
+"Set as default payment method" = "Atur sebagai metode pembayaran default";
+
+"Set up" = "Siapkan";
+
+"Shipping to %@ is not supported." = "Pengiriman ke %@ tidak didukung.";
+
+"Show menu" = "Tampilkan menu";
+
+"Sign in to your Link account" = "Masuk ke akun Link Anda";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi petunjuk untuk menyelesaikan pembayaran kepada %@.";
+
+"Tap to close" = "Sentuh untuk menutup";
+
+"Tap to expand" = "Sentuh untuk memperluas";
+
+"The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
+
+"The provided verification code has expired." = "Kode verifikasi yang diberikan telah kedaluwarsa.";
+
+"The provided verification code is incorrect." = "Kode verifikasi yang diberikan salah.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Kartu ini telah kedaluwarsa. Perbarui info kartu Anda atau pilih metode pembayaran yang lain.";
+
+"This is your default" = "Ini default Anda";
+
+"Too many attempts. Please try again in a few minutes." = "Terlalu banyak percobaan. Cobalah lagi sebentar lagi.";
+
+"Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
+
+"Update card" = "Perbarui kartu";
+
+"Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
+
+"Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
+
+"iDEAL Bank" = "iDEAL Bank";

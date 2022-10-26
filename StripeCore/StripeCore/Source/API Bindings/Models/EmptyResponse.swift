@@ -3,6 +3,7 @@
 //  StripeCore
 //
 //  Created by Jaime Park on 11/19/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

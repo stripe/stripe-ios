@@ -1,6 +1,6 @@
 //
 //  STPPaymentOptionsInternalViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 6/9/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -107,12 +107,12 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         tableView?.reloadData()
 
         // Table header view
-        let cardImageView = UIImageView(image: STPImageLibrary.largeCardFrontImage())
+        let cardImageView = UIImageView(image: STPLegacyImageLibrary.largeCardFrontImage())
         cardImageView.contentMode = .center
         cardImageView.frame = CGRect(
             x: 0.0, y: 0.0, width: view.bounds.size.width,
             height: cardImageView.bounds.size.height + (57.0 * 2.0))
-        cardImageView.image = STPImageLibrary.largeCardFrontImage()
+        cardImageView.image = STPLegacyImageLibrary.largeCardFrontImage()
         cardImageView.tintColor = theme.accentColor
         self.cardImageView = cardImageView
 

@@ -9,6 +9,7 @@
 import Foundation
 import XCTest
 import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 
 /* A test case offering a custom STPAPIClient with manual JSON stubbing. */
@@ -38,9 +39,14 @@ open class APIStubbedTestCase: XCTestCase {
 
     static public func stubbedAPIClient() -> STPAPIClient {
         let apiClient = STPAPIClient()
-        let urlSessionConfig = URLSessionConfiguration.default
-        HTTPStubs.setEnabled(true, for: urlSessionConfig)
+        let urlSessionConfig = stubbedURLSessionConfig()
         apiClient.urlSession = URLSession(configuration: urlSessionConfig)
         return apiClient
+    }
+
+    static public func stubbedURLSessionConfig() -> URLSessionConfiguration {
+        let urlSessionConfig = URLSessionConfiguration.default
+        HTTPStubs.setEnabled(true, for: urlSessionConfig)
+        return urlSessionConfig
     }
 }

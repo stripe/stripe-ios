@@ -1,17 +1,20 @@
 //
 //  LinkLegalTermsViewSnapshotTests.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by Ramon Torres on 1/26/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
-@_spi(STP) import StripeUICore
+@testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeUICore
 
 class LinkLegalTermsViewSnapshotTests: FBSnapshotTestCase {
 

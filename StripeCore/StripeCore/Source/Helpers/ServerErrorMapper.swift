@@ -1,6 +1,6 @@
 //
 //  ServerErrorMapper.swift
-//  StripeiOS
+//  StripeCore
 //
 //  Created by Nick Porter on 9/13/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

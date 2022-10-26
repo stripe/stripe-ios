@@ -9,10 +9,14 @@
 import XCTest
 import Foundation
 import StripeCoreTestUtils
-@testable import Stripe
+@testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore
-@testable import Stripe3DS2
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import Stripe3DS2
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     override func setUp() {

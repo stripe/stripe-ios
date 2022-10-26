@@ -1,6 +1,6 @@
 //
 //  StripeCore+Import.swift
-//  StripeiOS
+//  StripeIdentity
 //
 //  Created by David Estes on 9/8/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

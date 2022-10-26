@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 @import Stripe;
+@import StripeCore;
 
 @interface ViewController ()
 

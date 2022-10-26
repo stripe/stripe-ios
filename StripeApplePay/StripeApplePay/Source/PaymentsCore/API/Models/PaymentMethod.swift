@@ -1,6 +1,6 @@
 //
 //  PaymentMethod.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 6/29/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -43,6 +43,7 @@ extension StripeAPI {
         /// If this is a card PaymentMethod (ie `self.type == .card`), this contains additional details.
         public var card: Card?
         
+        /// :nodoc:
         public struct Card: UnknownFieldsDecodable {
             public var _allResponseFieldsStorage: NonEncodableParameters?
             /// The issuer of the card.

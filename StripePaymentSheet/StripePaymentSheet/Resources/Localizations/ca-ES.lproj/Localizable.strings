@@ -1,0 +1,161 @@
+"+ Add" = "+ Afegir";
+
+"Add a card" = "Afegir una targeta";
+
+"Add a payment method" = "Afegeix un mètode de pagament";
+
+"Add bank account" = "Afegir compte bancari";
+
+"Add new payment method" = "Afegir nou mètode de pagament";
+
+"Add your payment information" = "Afegir la teva informació de pagament";
+
+"Are you sure you want to remove this card?" = "Segur que vols eliminar aquesta targeta?";
+
+"Are you sure you want to remove this linked account?" = "Segur que vols eliminar aquest compte vinculat?";
+
+"Back" = "Tornar";
+
+"Bank account" = "Compte bancari";
+
+"Buy now or pay later with Klarna." = "Compra ara o paga més endavant amb Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons aquests <terms>termes</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
+
+"Change email" = "Canvia el correu";
+
+"Choose a payment method" = "Escull un mètode de pagament";
+
+"Close card scanner" = "Tancar l'escàner de la targeta";
+
+"Code field" = "Camp pel codi";
+
+"Code sent" = "Codi enviat";
+
+"Default" = "Per defecte";
+
+"Double tap to edit" = "Toca dos cops per editar";
+
+"EPS Bank" = "Banc EPS";
+
+"Enter address manually" = "Introduir l'adreça manualment";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Introdueix el codi enviat a %@ per utilitzar Link per pagar per defecte.";
+
+"Enter your verification code" = "Introdueix el codi de verificació";
+
+"For security, please re-enter your card’s security code." = "Per raons de seguretat, torna a introduir el codi de seguretat de la targeta.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Uneix-te a Link";
+
+"Log out of Link" = "Tanca la sessió a Link";
+
+"Not %@?" = "No ets %@?";
+
+"Or" = "O";
+
+"Or pay using" = "O pagar fent servir";
+
+"Or pay with a card" = "O pagar amb una targeta";
+
+"Pay %@" = "Pagar %@";
+
+"Pay another way" = "Paga d'una altra manera";
+
+"Pay faster at %@ and thousands of merchants." = "Paga més ràpidament a %@ i a milers de comerciants.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Feu <num_installments/> pagaments sense interessos de <installment_price/> amb <img/>";
+
+"Pay later with Klarna." = "Paga més endavant amb Klarna.";
+
+"Pay over time with %@" = "Pagueu a terminis amb %@";
+
+"Pay using" = "Paga amb";
+
+"Pay with %@" = "Pagar amb %@";
+
+"Pay with your bank account in just a few steps." = "Pagueu amb el compte bancari en uns pocs passos.";
+
+"Payment" = "Pagament";
+
+"Payment methods" = "Mètodes de pagament";
+
+"Point the camera at your card." = "Apunta a la targeta amb la càmera.";
+
+"Processing..." = "Processant...";
+
+"Przelewy24 Bank" = "Banc Przelewy24";
+
+"Remove %1$@ ending in %2$@" = "Elimina %1$@ que acaba en %2$@";
+
+"Remove Card" = "ELiminar targeta";
+
+"Remove card" = "Elimina la targeta";
+
+"Remove linked account" = "Elimina el compte vinculat";
+
+"Resend code" = "Reenvia'm el codi";
+
+"Save address" = "Desar adreça";
+
+"Save for future payments" = "Guardar per a futurs pagaments";
+
+"Save my info for secure 1-click checkout" = "Desa la informació per al pagament segur amb 1 clic";
+
+"Save this account for future %@ payments" = "Desa aquest compte per a pagaments a %@ en el futur";
+
+"Save this card for future %@ payments" = "Desar aquesta tarjeta per futurs %@ pagaments";
+
+"Secure 1⁠-⁠click checkout" = "Pagament segur amb 1 clic";
+
+"Select your payment method" = "Selecciona el teu mètode de pagament";
+
+"Set as default" = "Targeta per defecte";
+
+"Set as default payment method" = "Configura com a mètode de pagament per defecte";
+
+"Set up" = "Configuració";
+
+"Shipping to %@ is not supported." = "L'enviament a %@ no s'admet.";
+
+"Show menu" = "Mostra el menú";
+
+"Sign in to your Link account" = "Inicia la sessió al compte de Link";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
+
+"Tap to close" = "Toca per tancar";
+
+"Tap to expand" = "Toca per ampliar";
+
+"The IBAN you entered is incomplete." = "L'BAN és incomplet.";
+
+"The provided verification code has expired." = "El codi de verificació proporcionat ha caducat.";
+
+"The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Aquesta targeta ha caducat. Actualitzeu-ne la informació o trieu un altre mètode de pagament.";
+
+"This is your default" = "Aquesta és l'opció per defecte";
+
+"Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
+
+"Unavailable for this purchase" = "No disponible per a aquesta compra";
+
+"Update card" = "Actualitza la targeta";
+
+"Use your saved info to check out faster" = "Utilitza la informació desada per pagar més ràpidament";
+
+"Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
+
+"iDEAL Bank" = "Bank iDeal";

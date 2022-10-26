@@ -1,0 +1,161 @@
+"+ Add" = "+ 추가";
+
+"Add a card" = "카드 추가";
+
+"Add a payment method" = "결제 방식 추가";
+
+"Add bank account" = "은행 계좌 추가";
+
+"Add new payment method" = "새 결제 방식 추가";
+
+"Add your payment information" = "결제 정보를 추가하세요.";
+
+"Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
+
+"Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
+
+"Back" = "뒤로";
+
+"Bank account" = "은행 계좌";
+
+"Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "계속하면 해당 <terms>약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
+
+"Change email" = "이메일 변경";
+
+"Choose a payment method" = "결제 방식 선택";
+
+"Close card scanner" = "카드 스캐너 닫기";
+
+"Code field" = "코드 필드";
+
+"Code sent" = "코드 전송 완료";
+
+"Default" = "기본값";
+
+"Double tap to edit" = "두 번 탭하여 편집";
+
+"EPS Bank" = "EPS 은행";
+
+"Enter address manually" = "주소 직접 입력";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Link를 기본값으로 결제하려면 %@에 전송된 코드를 입력해 주십시오.";
+
+"Enter your verification code" = "확인 코드 입력";
+
+"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Link 가입";
+
+"Log out of Link" = "Link 로그아웃";
+
+"Not %@?" = "%@ 님이 아니십니까?";
+
+"Or" = "또는";
+
+"Or pay using" = "또는 다음 결제 방식 사용";
+
+"Or pay with a card" = "또는 카드 결제";
+
+"Pay %@" = "%@ 결제";
+
+"Pay another way" = "다른 방법으로 결제";
+
+"Pay faster at %@ and thousands of merchants." = "%@ 및 수많은 가맹점에서 더 빠르게 결제하십시오.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
+
+"Pay later with Klarna." = "Klarna로 나중에 결제";
+
+"Pay over time with %@" = "%@으로 할부 결제";
+
+"Pay using" = "사용할 결제 수단";
+
+"Pay with %@" = "%@(으)로 결제";
+
+"Pay with your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌로 결제하십시오.";
+
+"Payment" = "결제";
+
+"Payment methods" = "결제 방식";
+
+"Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";
+
+"Processing..." = "처리 중...";
+
+"Przelewy24 Bank" = "Przelewy24 은행";
+
+"Remove %1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 제거";
+
+"Remove Card" = "카드 제거";
+
+"Remove card" = "카드 제거";
+
+"Remove linked account" = "연결된 계좌 제거";
+
+"Resend code" = "코드 재전송";
+
+"Save address" = "주소 저장";
+
+"Save for future payments" = "향후 결제에 사용하도록 저장";
+
+"Save my info for secure 1-click checkout" = "보안 원클릭 체크아웃을 위해 정보 저장";
+
+"Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
+
+"Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
+
+"Secure 1⁠-⁠click checkout" = "보안 원클릭 체크아웃";
+
+"Select your payment method" = "결제 수단을 선택하세요.";
+
+"Set as default" = "기본값으로 설정";
+
+"Set as default payment method" = "결제 방식 기본값으로 설정";
+
+"Set up" = "설정";
+
+"Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
+
+"Show menu" = "메뉴 표시";
+
+"Sign in to your Link account" = "Link 계정에 로그인";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
+
+"Tap to close" = "탭하여 닫기";
+
+"Tap to expand" = "탭하여 확장";
+
+"The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
+
+"The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
+
+"The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
+
+"This card has expired. Update your card info or choose a different payment method." = "이 카드의 유효기간이 만료되었습니다. 카드 정보를 업데이트하거나 다른 결제 방식을 선택하십시오.";
+
+"This is your default" = "기본값입니다";
+
+"Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
+
+"Unavailable for this purchase" = "해당 구매에는 사용 불가능";
+
+"Update card" = "카드 업데이트";
+
+"Use your saved info to check out faster" = "저장된 정보를 사용하여 더 빠르게 체크아웃";
+
+"Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
+
+"iDEAL Bank" = "iDEAL 은행";

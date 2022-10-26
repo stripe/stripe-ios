@@ -3,6 +3,7 @@
 //  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 6/23/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
@@ -85,6 +86,85 @@ class PhoneNumberElementTests: XCTestCase {
         simulateAutofill(sut, autofilledPhoneNumber: "+44 12 3456 7890")
         XCTAssertEqual(sut.textFieldElement.text, "441234567890")
         XCTAssertEqual(sut.phoneNumber?.number, "441234567890")
+    }
+    
+    func test_hasBeenModified_noDefaults_noModification() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            locale: Locale(identifier: "en_US")
+        )
+        XCTAssertFalse(sut.hasBeenModified)
+    }
+    
+    func test_hasBeenModified_defaultNumber() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            defaultPhoneNumber: "3105551234",
+            locale: Locale(identifier: "en_US")
+        )
+        XCTAssertFalse(sut.hasBeenModified)
+    }
+    
+    func test_hasBeenModified_isModified() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            locale: Locale(identifier: "en_US")
+        )
+        simulateAutofill(sut, autofilledPhoneNumber: "3")
+        XCTAssertTrue(sut.hasBeenModified)
+    }
+    
+    func test_hasBeenModified_defaultNumber_isModified() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            defaultPhoneNumber: "3105551234",
+            locale: Locale(identifier: "en_US")
+        )
+        simulateAutofill(sut, autofilledPhoneNumber: "3")
+        XCTAssertTrue(sut.hasBeenModified)
+    }
+    
+    func test_hasBeenModified_isNotModified() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            locale: Locale(identifier: "en_US")
+        )
+        simulateAutofill(sut, autofilledPhoneNumber: "3")
+        simulateAutofill(sut, autofilledPhoneNumber: "")
+        XCTAssertFalse(sut.hasBeenModified)
+    }
+    
+    func test_hasBeenModified_defaultNumber_isNotModified() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            defaultPhoneNumber: "3105551234",
+            locale: Locale(identifier: "en_US")
+        )
+        simulateAutofill(sut, autofilledPhoneNumber: "3")
+        simulateAutofill(sut, autofilledPhoneNumber: "3105551234")
+        XCTAssertFalse(sut.hasBeenModified)
+    }
+    
+    func test_selectCountry_dontUpdateDefault() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US", "CA"],
+            locale: Locale(identifier: "en_US")
+        )
+        
+        sut.selectCountry(index: 0, shouldUpdateDefaultNumber: false) // select CA
+        XCTAssertEqual(sut.countryDropdownElement.selectedIndex, 0)
+        XCTAssert(sut.hasBeenModified)
+    }
+    
+    func test_selectCountry_updateDefault() {
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US", "CA"],
+            locale: Locale(identifier: "en_US")
+        )
+        
+        sut.selectCountry(index: 0, shouldUpdateDefaultNumber: true) // select CA
+        XCTAssertEqual(sut.countryDropdownElement.selectedIndex, 0)
+        XCTAssertFalse(sut.hasBeenModified)
     }
     
     private func simulateAutofill(_ sut: PhoneNumberElement, autofilledPhoneNumber: String) {

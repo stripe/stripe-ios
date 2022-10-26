@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/4/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -29,7 +30,7 @@ struct FaceScannerOutput: Equatable {
 }
 
 extension FaceScannerOutput {
-    @available(iOS 13, *)
+    
     init(
         faceDetectorOutput: FaceDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?,

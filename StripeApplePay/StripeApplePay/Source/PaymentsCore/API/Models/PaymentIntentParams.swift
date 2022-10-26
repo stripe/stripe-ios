@@ -1,6 +1,6 @@
 //
 //  PaymentIntentParams.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 6/29/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -86,7 +86,7 @@ extension StripeAPI.PaymentIntentParams {
     static internal let isClientSecretValidRegex: NSRegularExpression = try! NSRegularExpression(
         pattern: "^pi_[^_]+_secret_[^_]+$", options: [])
 
-    static internal func isClientSecretValid(_ clientSecret: String) -> Bool {
+    @_spi(STP) public static func isClientSecretValid(_ clientSecret: String) -> Bool {
         return
             (isClientSecretValidRegex.numberOfMatches(
                 in: clientSecret,

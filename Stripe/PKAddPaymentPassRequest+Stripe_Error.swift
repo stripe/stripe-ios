@@ -1,6 +1,6 @@
 //
 //  PKAddPaymentPassRequest+Stripe_Error.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 9/29/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.

@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/1/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -47,7 +48,7 @@ protocol IdentityMLModelLoaderProtocol {
 /**
  Loads the ML models used by Identity.
  */
-@available(iOS 13, *)
+
 final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     private static let cacheDirectoryName = "com.stripe.stripe-identity"

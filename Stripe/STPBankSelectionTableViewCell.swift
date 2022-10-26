@@ -1,6 +1,6 @@
 //
 //  STPBankSelectionTableViewCell.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by David Estes on 8/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
@@ -19,7 +19,7 @@ class STPBankSelectionTableViewCell: UITableViewCell {
         backgroundColor = theme.secondaryBackgroundColor
 
         // Left icon
-        leftIcon?.image = STPImageLibrary.fpxBrandImage(for: bank)
+        leftIcon?.image = STPLegacyImageLibrary.fpxBrandImage(for: bank)
         leftIcon?.tintColor = primaryColorForPaymentOption(withSelected: selected, enabled: enabled)
 
         // Title label

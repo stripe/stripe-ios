@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "AU BECS tiesioginis debetas";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "„Alipay“";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "„Bancontact“";
+
+"Bank" = "Bankas";
+
+"Boleto" = "Boleto";
+
+"Card" = "Kortelė";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "\"Link\"";
+
+"NetBanking" = "NetBanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "SEPA debetas";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "Baigėsi mokėjimo būdui autentifikuoti skirtas laikas, bandykite dar kartą";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "JAV banko sąskaita";
+
+"Unknown" = "Nežinoma";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nepavyko autentifikuoti mokėjimo būdo. Pasirinkite kitą mokėjimo būdą ir bandykite dar kartą.";
+
+"WeChat Pay" = "„WeChat“ mokėjimas";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

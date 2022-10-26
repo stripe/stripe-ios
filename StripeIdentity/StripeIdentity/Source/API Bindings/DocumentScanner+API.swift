@@ -3,13 +3,14 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 4/14/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import Vision
 @_spi(STP) import StripeCore
 
-@available(iOS 13, *)
+
 extension DocumentScanner.Configuration {
     init(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,

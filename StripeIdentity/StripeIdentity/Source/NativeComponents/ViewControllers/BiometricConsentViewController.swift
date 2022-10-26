@@ -3,13 +3,14 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 10/29/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-@available(iOS 13, *)
+
 @available(iOSApplicationExtension, unavailable)
 final class BiometricConsentViewController: IdentityFlowViewController {
 
@@ -144,7 +145,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
 // MARK: - Private Helpers
 
-@available(iOS 13, *)
+
 @available(iOSApplicationExtension, unavailable)
 private extension BiometricConsentViewController {
 
@@ -171,7 +172,7 @@ private extension BiometricConsentViewController {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOS 13, *)
+
 @available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {

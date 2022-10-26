@@ -1,6 +1,6 @@
 //
 //  UIViewController+Stripe_NavigationItemProxy.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 6/9/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

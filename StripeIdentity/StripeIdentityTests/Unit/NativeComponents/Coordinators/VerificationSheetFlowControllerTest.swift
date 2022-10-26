@@ -3,6 +3,7 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 11/3/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
@@ -13,7 +14,7 @@ import Vision
 
 private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
-@available(iOS 13, *)
+
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
     let mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>] = [[.biometricConsent], [.idDocumentType], [.idDocumentFront, .idDocumentBack]]
@@ -129,8 +130,6 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     func testNoMoreMissingFieldsError() throws {
-        mockMissingFields([])
-
         let exp = expectation(description: "No more missing fields")
         flowController.nextViewController(
             staticContentResult: .success(try VerificationPageMock.response200.make()),
@@ -364,20 +363,11 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         XCTAssertTrue(mockDelegate.didDismissCalled)
     }
 
-    func testUncollectedFields() {
-        let allFields = Set(StripeAPI.VerificationPageFieldType.allCases)
-        mockMissingFields(allFields)
-        XCTAssertEqual(flowController.uncollectedFields, allFields)
-
-        mockMissingFields([.biometricConsent])
-        XCTAssertEqual(flowController.uncollectedFields, [.biometricConsent])
-
-        mockMissingFields([])
-        XCTAssertEqual(flowController.uncollectedFields, [])
-    }
-
     func testCanPopToScreen() {
-        mockMissingFields([.idDocumentFront, .idDocumentBack])
+        let mockViewController = MockIdentityDataCollectingViewController(
+            fields: Set(StripeAPI.VerificationPageFieldType.allCases).subtracting([.idDocumentFront, .idDocumentBack])
+        )
+        flowController.navigationController.setViewControllers([mockViewController], animated: false)
 
         XCTAssertTrue(flowController.canPopToScreen(withField: .biometricConsent))
         XCTAssertTrue(flowController.canPopToScreen(withField: .idDocumentType))
@@ -416,7 +406,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 }
 
-@available(iOS 13, *)
+
 private extension VerificationSheetFlowControllerTest {
     func nextViewController(
         missingRequirements: Set<StripeAPI.VerificationPageFieldType>,
@@ -424,25 +414,21 @@ private extension VerificationSheetFlowControllerTest {
         isSubmitted: Bool = false,
         completion: @escaping (UIViewController) -> Void
     ) throws {
-        mockMissingFields(missingRequirements)
-
+        let mockViewController = MockIdentityDataCollectingViewController(
+            fields: Set()
+        )
+        flowController.navigationController.setViewControllers([mockViewController], animated: false)
+        
         let dataResponse = isSubmitted
         ? try VerificationPageDataMock.submitted.make()
-        : try VerificationPageDataMock.noErrors.make()
-
+        : try VerificationPageDataMock.noErrorsWithMissings(with: missingRequirements)
+        
         flowController.nextViewController(
             staticContentResult: staticContentResult,
             updateDataResult: .success(dataResponse),
             sheetController: mockSheetController,
             completion: completion
         )
-    }
-
-    func mockMissingFields(_ missingFields: Set<StripeAPI.VerificationPageFieldType>) {
-        let mockViewController = MockIdentityDataCollectingViewController(
-            fields: Set(StripeAPI.VerificationPageFieldType.allCases).subtracting(missingFields)
-        )
-        flowController.navigationController.setViewControllers([mockViewController], animated: false)
     }
 
     func popToScreen(

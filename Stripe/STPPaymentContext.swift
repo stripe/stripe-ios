@@ -1,6 +1,6 @@
 //
 //  STPPaymentContext.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 4/20/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -347,17 +347,6 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     /// Defaults to STPAPIClient.shared
     public var apiClient: STPAPIClient = .shared
     
-    /// The STPAPIClient instance to use to make API requests.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
     /// If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
     /// can in turn call this method to try loading again (if that hasn't been called,
     /// calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:`
@@ -1048,6 +1037,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             return .shipping
         case .delivery:
             return .delivery
+        @unknown default:
+            fatalError()
         }
     }
 

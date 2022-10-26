@@ -41,14 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
         _footerCustomization = [STDSFooterCustomization defaultSettings];
         _selectionCustomization = [STDSSelectionCustomization defaultSettings];
         _backgroundColor = UIColor._stds_systemBackgroundColor;
-        if (@available(iOS 13.0, *)) {
-            _activityIndicatorViewStyle = UIActivityIndicatorViewStyleMedium;
-        } else {
-#if TARGET_OS_MACCATALYST
-#else
-            _activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-#endif
-        }
+        _activityIndicatorViewStyle = UIActivityIndicatorViewStyleMedium;
         _blurStyle = UIBlurEffectStyleRegular;
         _preferredStatusBarStyle = UIStatusBarStyleDefault;
     }

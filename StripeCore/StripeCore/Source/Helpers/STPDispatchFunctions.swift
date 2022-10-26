@@ -1,6 +1,6 @@
 //
 //  STPDispatchFunctions.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Brian Dorfman on 10/24/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

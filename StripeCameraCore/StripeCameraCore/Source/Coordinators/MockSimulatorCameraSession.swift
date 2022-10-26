@@ -3,6 +3,7 @@
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 1/21/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 #if targetEnvironment(simulator)

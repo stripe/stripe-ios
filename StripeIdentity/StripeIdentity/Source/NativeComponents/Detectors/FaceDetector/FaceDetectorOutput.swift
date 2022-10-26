@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -36,7 +37,7 @@ extension FaceDetectorPrediction: MLBoundingBox {
 }
 
 // MARK: - MultiArray
-@available(iOS 13, *)
+
 extension FaceDetectorOutput: VisionBasedDetectorOutput {
 
     /// We want to know if 0, 1, or > 1 faces are returned by the model, so tell

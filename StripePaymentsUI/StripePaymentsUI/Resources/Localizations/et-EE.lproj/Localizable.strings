@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
+
+"Address line 2 (optional)" = "Aadressirida 2 (valikuline)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Pangakonto";
+
+"Billing Address" = "Arveldusaadress";
+
+"Billing address" = "Arveldusaadress";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Kaardi andmed";
+
+"Card number" = "Kaardinumber";
+
+"Invalid data." = "Valed andmed.";
+
+"MM / YY" = "KK / AA";
+
+"MM/YY" = "KK/AA";
+
+"Postal Code" = "Sihtnumber";
+
+"Shipping Address" = "Tarneaadress";
+
+"State / Province / Region" = "Maakond";
+
+"The BSB you entered is invalid." = "Sisestatud BSB-number ei ole kehtiv.";
+
+"To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
+
+"Your ZIP is invalid." = "Teie sihtnumber on kehtetu.";
+
+"Your card number is incomplete." = "Teie kaardinumber on puudulik.";
+
+"Your card number is invalid." = "Teie kaardinumber on kehtetu.";
+
+"Your card's expiration date is incomplete." = "Kaardi aegumiskuupäev on puudulik.";
+
+"Your card's expiration date is invalid." = "Teie kaardi aegumiskuupäev on kehtetu.";
+
+"Your card's expiration month is invalid." = "Kaardi aegumiskuu on kehtetu.";
+
+"Your card's expiration year is invalid." = "Kaardi aegumisaasta on kehtetu.";
+
+"Your card's security code is incomplete." = "Teie kaardi turvakood on puudulik.";
+
+"Your card's security code is invalid." = "Kaardi turvakood on kehtetu.";
+
+"Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
+
+"card number" = "kaardinumber";
+
+"example@example.com" = "näide@näide.com";
+
+"expiration date" = "aegumiskuupäev";

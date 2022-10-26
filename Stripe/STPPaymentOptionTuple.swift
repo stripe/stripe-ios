@@ -1,6 +1,6 @@
 //
 //  STPPaymentOptionTuple.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 5/17/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

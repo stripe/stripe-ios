@@ -1,6 +1,6 @@
 //
 //  Address.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 8/9/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
