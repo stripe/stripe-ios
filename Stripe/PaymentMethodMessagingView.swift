@@ -42,18 +42,18 @@ import WebKit
                 let attributedString = try await makeAttributedString(from: response.display_l_html, font: configuration.font)
                 let view = PaymentMethodMessagingView(attributedString: attributedString, modalURL: response.learn_more_modal_url, configuration: configuration)
                 let loadDuration = Date().timeIntervalSince(loadStartTime)
-                STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadSucceeded(duration: loadDuration), apiClient: configuration.apiClient)
+                Self.analyticsClient.log(analytic: Analytic.loadSucceeded(duration: loadDuration), apiClient: configuration.apiClient)
                 completion(.success(view))
             } catch {
                 let loadDuration = Date().timeIntervalSince(loadStartTime)
-                STPAnalyticsClient.sharedClient.log(analytic: Analytic.loadFailed(duration: loadDuration), apiClient: configuration.apiClient)
+                Self.analyticsClient.log(analytic: Analytic.loadFailed(duration: loadDuration), apiClient: configuration.apiClient)
                 completion(.failure(error))
             }
         }
     }
     
     public init(attributedString: NSAttributedString, modalURL: String, configuration: Configuration) {
-        analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingView.self)
+        Self.analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingView.self)
         self.modalURL = URL(string: "https://" + modalURL)
         self.configuration = configuration
         super.init(frame: .zero)
@@ -98,7 +98,7 @@ import WebKit
     static let APIEndpoint: URL = URL(string: "https://ppm.stripe.com/content")!
     let modalURL: URL?
     let configuration: Configuration
-    var analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
+    static var analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
     
     lazy var textView: UITextView = {
         let textView = UITextView()
@@ -217,7 +217,7 @@ extension PaymentMethodMessagingView: STPAnalyticsProtocol {
  
 extension PaymentMethodMessagingView {
     func log(analytic: Analytic) {
-        analyticsClient.log(analytic: analytic, apiClient: configuration.apiClient)
+        Self.analyticsClient.log(analytic: analytic, apiClient: configuration.apiClient)
     }
     
     enum Analytic: StripeCore.Analytic {

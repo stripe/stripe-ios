@@ -9,11 +9,21 @@
 import XCTest
 @_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripePaymentsUI
+@_spi(STP) @testable import StripeCore
+@_spi(STP) @testable import StripeCoreTestUtils
 
 class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
-    func testCreatesViewFromServerResponse() {
+    let mockAnalyticsClient = MockAnalyticsClient()
+    let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    
+    override func setUp() {
+        super.setUp()
+        mockAnalyticsClient.reset()
+        PaymentMethodMessagingView.analyticsClient = mockAnalyticsClient
         URLSession.shared.configuration.urlCache?.removeAllCachedResponses()
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    }
+    
+    func testCreatesViewFromServerResponse() {
         let config = PaymentMethodMessagingView.Configuration(apiClient: apiClient, paymentMethods: PaymentMethodMessagingView.Configuration.PaymentMethod.allCases, currency: "USD", amount: 1099)
         let createViewExpectation = expectation(description: "")
         PaymentMethodMessagingView.create(configuration: config) { result in
@@ -23,6 +33,10 @@ class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
             case .success(let view):
                 // We can't snapshot test the real view, since its appearance can change
                 XCTAssertTrue(view.textView.attributedText.length > 0)
+                XCTAssertTrue(self.mockAnalyticsClient.productUsage.contains(PaymentMethodMessagingView.stp_analyticsIdentifier))
+                XCTAssertTrue(self.mockAnalyticsClient.loggedAnalytics.contains { analytic in
+                    analytic.event == .paymentMethodMessagingViewLoadSucceeded
+                })
             }
             createViewExpectation.fulfill()
         }
@@ -30,8 +44,6 @@ class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
     }
     
     func testInitializingWithBadConfigurationReturnsError() {
-        URLSession.shared.configuration.urlCache?.removeAllCachedResponses()
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let config = PaymentMethodMessagingView.Configuration(apiClient: apiClient, paymentMethods: [.klarna], currency: "FOO", amount: -100)
         let createViewExpectation = expectation(description: "")
         PaymentMethodMessagingView.create(configuration: config) { result in
@@ -39,6 +51,9 @@ class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
                 XCTFail()
                 return
             }
+            XCTAssertTrue(self.mockAnalyticsClient.loggedAnalytics.contains { analytic in
+                analytic.event == .paymentMethodMessagingViewLoadFailed
+            })
             createViewExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
