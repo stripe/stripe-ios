@@ -574,7 +574,7 @@ private func CreatePaneViewController(
     case .consent:
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,
-            consentModel: ConsentModel(businessName: dataManager.manifest.businessName),
+            consent: dataManager.consent,
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient

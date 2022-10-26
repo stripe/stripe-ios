@@ -13,38 +13,42 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class DataAccessNoticeView: UIView {
     
-    private let model: DataAccessNoticeModel
     private let didSelectOKAction: () -> Void
     
     init(
-        model: DataAccessNoticeModel,
-        didSelectOK: @escaping () -> Void
+        model: FinancialConnectionsDataAccessNotice,
+        didSelectOK: @escaping () -> Void,
+        didSelectURL: @escaping (URL) -> Void
     ) {
-        self.model = model
         self.didSelectOKAction = didSelectOK
         super.init(frame: .zero)
-        
         backgroundColor = .customBackgroundColor
         
         let padding: CGFloat = 24
-        
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                createContentView(),
-                createFooterView(),
+                CreateContentView(
+                    headerTitle: model.title,
+                    bulletItems: model.body.bullets,
+                    learnMoreText: model.learnMore,
+                    didSelectURL: didSelectURL
+                ),
+                CreateFooterView(
+                    cta: model.cta,
+                    actionTarget: self
+                ),
             ]
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 24
-        addAndPinSubviewToSafeArea(
-            verticalStackView,
-            insets: NSDirectionalEdgeInsets(
-                top: padding,
-                leading: padding,
-                bottom: padding,
-                trailing: padding
-            )
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: padding,
+            leading: padding,
+            bottom: padding,
+            trailing: padding
         )
+        addAndPinSubview(verticalStackView)
     }
     
     required init?(coder: NSCoder) {
@@ -54,53 +58,6 @@ final class DataAccessNoticeView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         roundCorners() // needs to be in `layoutSubviews` to get the correct size for the mask
-    }
-    
-    private func createContentView() -> UIView {
-        let verticalStackView = UIStackView(
-            arrangedSubviews: {
-                var subviews: [UIView] = []
-                subviews.append(CreateHeaderView(text: model.headerText))
-                model.bodyItems.forEach { item in
-                    subviews.append(
-                        CreateBulletinView(
-                            title: item.title,
-                            subtitle: item.subtitle
-                        )
-                    )
-                }
-                subviews.append(createLearnMoreLabel())
-                return subviews
-            }()
-        )
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 16
-        
-        return verticalStackView
-    }
-    
-    private func createLearnMoreLabel() -> UIView {
-        let label = ClickableLabel(
-            font: .stripeFont(forTextStyle: .caption),
-            boldFont: .stripeFont(forTextStyle: .captionEmphasized),
-            linkFont: .stripeFont(forTextStyle: .captionEmphasized),
-            textColor: .textSecondary
-        )
-        label.setText(model.footerText)
-        return label
-    }
-    
-    private func createFooterView() -> UIView {
-        let okButton = Button(configuration: .financialConnectionsPrimary)
-        okButton.title = "OK"
-        
-        okButton.addTarget(self, action: #selector(didSelectOK), for: .touchUpInside)
-        okButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            okButton.heightAnchor.constraint(equalToConstant: 56),
-        ])
-        
-        return okButton
     }
     
     private func roundCorners() {
@@ -115,43 +72,94 @@ final class DataAccessNoticeView: UIView {
         layer.mask = mask
     }
     
-    @IBAction private func didSelectOK() {
+    @IBAction fileprivate func didSelectOK() {
         didSelectOKAction()
     }
 }
 
-private func CreateHeaderView(text: String) -> UIView {
-    let headerLabel = UILabel()
-    headerLabel.numberOfLines = 0
-    headerLabel.text = text
-    headerLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-    headerLabel.textColor = UIColor.textPrimary
-    headerLabel.textAlignment = .left
+@available(iOSApplicationExtension, unavailable)
+private func CreateContentView(
+    headerTitle: String,
+    bulletItems: [FinancialConnectionsDataAccessNotice.Body.BulletItem],
+    learnMoreText: String,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let verticalStackView = UIStackView(
+        arrangedSubviews: {
+            var subviews: [UIView] = []
+            subviews.append(
+                CreateHeaderView(
+                    text: headerTitle,
+                    didSelectURL: didSelectURL
+                )
+            )
+            bulletItems.forEach { bulletItem in
+                subviews.append(
+                    CreateBulletinView(
+                        title: bulletItem.title,
+                        subtitle: bulletItem.content,
+                        didSelectURL: didSelectURL
+                    )
+                )
+            }
+            subviews.append(
+                CreateLearnMoreLabel(
+                    text: learnMoreText,
+                    didSelectURL: didSelectURL
+                )
+            )
+            return subviews
+        }()
+    )
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 16
+    return verticalStackView
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreateHeaderView(
+    text: String,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let headerLabel = ClickableLabel(
+        font: .stripeFont(forTextStyle: .bodyEmphasized),
+        boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
+        linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+        textColor: .textPrimary
+    )
+    headerLabel.setText(text, action: didSelectURL)
     return headerLabel
 }
 
-private func CreateBulletinView(title: String, subtitle: String) -> UIView {
-    let primaryLabel = UILabel()
-    primaryLabel.numberOfLines = 0
-    primaryLabel.text = title
-    primaryLabel.font = .stripeFont(forTextStyle: .detailEmphasized)
-    primaryLabel.textColor = UIColor.textPrimary
-    primaryLabel.textAlignment = .left
-    let secondaryLabel = UILabel()
-    secondaryLabel.numberOfLines = 0
-    secondaryLabel.text = subtitle
-    secondaryLabel.font = .stripeFont(forTextStyle: .caption)
-    secondaryLabel.textColor = UIColor.textSecondary
-    secondaryLabel.textAlignment = .left
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            primaryLabel,
-            secondaryLabel,
-        ]
-    )
+@available(iOSApplicationExtension, unavailable)
+private func CreateBulletinView(
+    title: String?,
+    subtitle: String,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let verticalStackView = UIStackView()
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 5
-
+    if let title = title {
+        let primaryLabel = ClickableLabel(
+            font: .stripeFont(forTextStyle: .detailEmphasized),
+            boldFont: .stripeFont(forTextStyle: .detailEmphasized),
+            linkFont: .stripeFont(forTextStyle: .detailEmphasized),
+            textColor: .textPrimary
+        )
+        primaryLabel.setText(title, action: didSelectURL)
+        verticalStackView.addArrangedSubview(primaryLabel)
+    }
+    
+    let secondaryLabel = ClickableLabel(
+        font: .stripeFont(forTextStyle: .caption),
+        boldFont: .stripeFont(forTextStyle: .captionEmphasized),
+        linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+        textColor: .textSecondary
+    )
+    secondaryLabel.setText(subtitle, action: didSelectURL)
+    verticalStackView.addArrangedSubview(secondaryLabel)
+    
     let imageView = UIImageView(image: Image.close.makeImage(template: false))
     imageView.contentMode = .scaleAspectFit
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -171,6 +179,35 @@ private func CreateBulletinView(title: String, subtitle: String) -> UIView {
     return horizontalStackView
 }
 
+@available(iOSApplicationExtension, unavailable)
+private func CreateLearnMoreLabel(
+    text: String,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let label = ClickableLabel(
+        font: .stripeFont(forTextStyle: .caption),
+        boldFont: .stripeFont(forTextStyle: .captionEmphasized),
+        linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+        textColor: .textSecondary
+    )
+    label.setText(text, action: didSelectURL)
+    return label
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreateFooterView(
+    cta: String,
+    actionTarget: DataAccessNoticeView
+) -> UIView {
+    let okButton = Button(configuration: .financialConnectionsPrimary)
+    okButton.title = cta
+    okButton.addTarget(actionTarget, action: #selector(DataAccessNoticeView.didSelectOK), for: .touchUpInside)
+    okButton.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        okButton.heightAnchor.constraint(equalToConstant: 56),
+    ])
+    return okButton
+}
 
 #if DEBUG
 
@@ -182,8 +219,18 @@ private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> DataAccessNoticeView {
         DataAccessNoticeView(
-            model: DataAccessNoticeModel(businessName: "Coca-Cola Inc"),
-            didSelectOK: {}
+            model: FinancialConnectionsDataAccessNotice(
+                title: "",
+                body: FinancialConnectionsDataAccessNotice.Body(
+                    bullets: [
+                        FinancialConnectionsDataAccessNotice.Body.BulletItem(icon: "", title: "...", content: "...")
+                    ]
+                ),
+                learnMore: "...",
+                cta: "..."
+            ),
+            didSelectOK: {},
+            didSelectURL: { _ in }
         )
     }
     

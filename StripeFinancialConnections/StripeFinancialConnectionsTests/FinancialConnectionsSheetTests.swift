@@ -19,8 +19,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
-        return Promise<FinancialConnectionsSessionManifest>()
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+        return Promise<FinancialConnectionsSynchronize>()
     }
     
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {

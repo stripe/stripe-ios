@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SafariServices
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 
@@ -29,19 +30,28 @@ class ConsentViewController: UIViewController {
             linkFont: .stripeFont(forTextStyle: .subtitle),
             textColor: .textPrimary
         )
+        titleLabel.setText(
+            dataSource.consent.title,
+            action: { [weak self] url in
+                // there are no known cases where we add a link to the title
+                // but we add this handling regardless in case this changes
+                // in the future
+                self?.didSelectURL(url)
+            }
+        )
         return titleLabel
     }()
     private lazy var footerView: ConsentFooterView = {
         return ConsentFooterView(
-            footerText: dataSource.consentModel.footerText,
+            aboveCtaText: dataSource.consent.aboveCta,
+            ctaText: dataSource.consent.cta,
+            belowCtaText: dataSource.consent.belowCta,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
-            didSelectManuallyVerify: dataSource.manifest.allowManualEntry ? { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.consentViewControllerDidSelectManuallyVerify(self)
-            } : nil,
-            showManualEntryBusinessDaysNotice: !dataSource.manifest.customManualEntryHandling && dataSource.manifest.manualEntryUsesMicrodeposits
+            didSelectURL: { [weak self] url in
+                self?.didSelectURL(url)
+            }
         )
     }()
     
@@ -58,12 +68,13 @@ class ConsentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         
-        titleLabel.setText(dataSource.consentModel.headerText)
         let paneLayoutView = PaneWithCustomHeaderLayoutView(
             headerView: titleLabel,
             contentView: ConsentBodyView(
-                bulletItems: dataSource.consentModel.bodyItems,
-                dataAccessNoticeModel: dataSource.consentModel.dataAccessNoticeModel
+                bulletItems: dataSource.consent.body.bullets,
+                didSelectURL: { [weak self] url in
+                    self?.didSelectURL(url)
+                }
             ),
             footerView: footerView
         )
@@ -97,5 +108,56 @@ class ConsentViewController: UIViewController {
                 }
                 self.footerView.setIsLoading(false)
             }
+    }
+    
+    // this function will get called when user taps
+    // on ANY link returned from backend
+    private func didSelectURL(_ url: URL) {
+        if url.scheme == "stripe" {
+            if url.host == "manual-entry" {
+                dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: "click.manual_entry",
+                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
+                    )
+                
+                delegate?.consentViewControllerDidSelectManuallyVerify(self)
+            } else if url.host == "data-access-notice" {
+                dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: "click.data_requested",
+                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
+                    )
+                
+                let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                    model: dataSource.consent.dataAccessNotice,
+                    didSelectURL: { [weak self] url in
+                        self?.didSelectURL(url)
+                    }
+                )
+                dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
+                dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
+                // `false` for animations because we do a custom animation inside VC logic
+                UIViewController
+                    .topMostViewController()?
+                    .present(dataAccessNoticeViewController, animated: false, completion: nil)
+            }
+        } else {
+            if
+                let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
+                let eventName = urlParameters.queryItems?.first(where: { $0.name == "eventName" })?.value
+            {
+                dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: eventName,
+                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
+                    )
+            }
+            
+            SFSafariViewController.present(url: url)
+        }
     }
 }

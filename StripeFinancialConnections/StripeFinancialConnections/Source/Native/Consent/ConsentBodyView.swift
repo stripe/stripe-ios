@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SafariServices
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -14,41 +13,24 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class ConsentBodyView: UIView {
     
-    private let bulletItems: [ConsentModel.BodyBulletItem]
-    private let dataAccessNoticeModel: DataAccessNoticeModel
+    private let bulletItems: [FinancialConnectionsConsent.Body.BulletItem]
     
     init(
-        bulletItems: [ConsentModel.BodyBulletItem],
-        dataAccessNoticeModel: DataAccessNoticeModel
+        bulletItems: [FinancialConnectionsConsent.Body.BulletItem],
+        didSelectURL: @escaping (URL) -> Void
     ) {
         self.bulletItems = bulletItems
-        self.dataAccessNoticeModel = dataAccessNoticeModel
         super.init(frame: .zero)
-        
         backgroundColor = .customBackgroundColor
         
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
-        
-        let linkAction: (URL) -> Void = { url in
-            if let scheme = url.scheme, scheme.contains("stripe") {
-                let dataAccessNoticeViewController = DataAccessNoticeViewController(model: dataAccessNoticeModel)
-                dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
-                dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
-                // `false` for animations because we do a custom animation inside VC logic
-                UIViewController
-                    .topMostViewController()?
-                    .present(dataAccessNoticeViewController, animated: false, completion: nil)
-            } else {
-                SFSafariViewController.present(url: url)
-            }
-        }
-        bulletItems.forEach { item in
+        bulletItems.forEach { bulletItem in
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
-                    text: item.text,
-                    action: linkAction
+                    text: bulletItem.content,
+                    action: didSelectURL
                 )
             )
         }
@@ -101,20 +83,20 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentBodyView {
         ConsentBodyView(
             bulletItems: [
-                ConsentModel.BodyBulletItem(
-                    iconUrl: URL(string: "https://www.google.com/image.png")!,
-                    text: "Stripe will allow Goldilocks to access only the [data requested](https://www.google.com). We never share your login details with them."
+                FinancialConnectionsConsent.Body.BulletItem(
+                    icon: "...",
+                    content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
                 ),
-                ConsentModel.BodyBulletItem(
-                    iconUrl: URL(string: "https://www.google.com/image.png")!,
-                    text: "Your data is encrypted for your protection."
+                FinancialConnectionsConsent.Body.BulletItem(
+                    icon: "...",
+                    content: "Your data is encrypted for your protection."
                 ),
-                ConsentModel.BodyBulletItem(
-                    iconUrl: URL(string: "https://www.google.com/image.png")!,
-                    text: "You can [disconnect](meow.com) your accounts at any time."
+                FinancialConnectionsConsent.Body.BulletItem(
+                    icon: "...",
+                    content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
             ],
-            dataAccessNoticeModel: DataAccessNoticeModel(businessName: "Coca-Cola Inc")
+            didSelectURL: { _ in }
         )
     }
     

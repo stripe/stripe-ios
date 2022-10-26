@@ -283,7 +283,10 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
     ) {
         dataSource.analyticsClient.log(
             eventName: "search.featured_institution_selected",
-            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue]
+            parameters: [
+                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
+                "institution_id": institution.id,
+            ]
         )
         didSelectInstitution(institution)
     }
@@ -301,7 +304,10 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
     ) {
         dataSource.analyticsClient.log(
             eventName: "search.search_result_selected",
-            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue]
+            parameters: [
+                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
+                "institution_id": institution.id,
+            ]
         )
         didSelectInstitution(institution)
     }

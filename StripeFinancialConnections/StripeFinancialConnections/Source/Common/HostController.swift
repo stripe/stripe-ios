@@ -69,16 +69,16 @@ extension HostController: HostViewControllerDelegate {
         delegate?.hostController(self, viewController: viewController, didFinish: .failed(error: error))
     }
 
-    func hostViewController(_ viewController: HostViewController, didFetch manifest: FinancialConnectionsSessionManifest) {
+    func hostViewController(_ viewController: HostViewController, didFetch synchronizePayload: FinancialConnectionsSynchronize) {
         guard useNative else {
-            continueWithWebFlow(manifest)
+            continueWithWebFlow(synchronizePayload.manifest)
             return
         }
         
         navigationController.configureAppearanceForNative()
 
         let dataManager = AuthFlowAPIDataManager(
-            manifest: manifest,
+            synchronizePayload: synchronizePayload,
             apiClient: api,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient

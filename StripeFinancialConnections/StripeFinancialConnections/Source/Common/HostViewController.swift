@@ -18,7 +18,7 @@ protocol HostViewControllerDelegate: AnyObject {
 
     func hostViewController(
         _ viewController: HostViewController,
-        didFetch manifest: FinancialConnectionsSessionManifest
+        didFetch synchronizePayload: FinancialConnectionsSynchronize
     )
 }
 
@@ -96,9 +96,9 @@ extension HostViewController {
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let manifest):
+                case .success(let synchronizePayload):
                     self.lastError = nil
-                    self.delegate?.hostViewController(self, didFetch: manifest)
+                    self.delegate?.hostViewController(self, didFetch: synchronizePayload)
                 case .failure(let error):
                     self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                     self.loadingView.errorView.isHidden = false

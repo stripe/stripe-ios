@@ -11,12 +11,18 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class DataAccessNoticeViewController: UIViewController {
     
-    private let model: DataAccessNoticeModel
-    private var openContraint: NSLayoutConstraint? = nil
-    private var closeContraint: NSLayoutConstraint? = nil
+    private let model: FinancialConnectionsDataAccessNotice
+    private let didSelectURL: (URL) -> Void
+    
+    private var openContraint: NSLayoutConstraint?
+    private var closeContraint: NSLayoutConstraint?
 
-    init(model: DataAccessNoticeModel) {
+    init(
+        model: FinancialConnectionsDataAccessNotice,
+        didSelectURL: @escaping (URL) -> Void
+    ) {
         self.model = model
+        self.didSelectURL = didSelectURL
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -34,8 +40,9 @@ final class DataAccessNoticeViewController: UIViewController {
         let dataAccessNoticeView = DataAccessNoticeView(
             model: model,
             didSelectOK: { [weak self] in
-            self?.dismiss(animated: true)
-            }
+                self?.dismiss(animated: true)
+            },
+            didSelectURL: didSelectURL
         )
         view.addSubview(dataAccessNoticeView)
         dataAccessNoticeView.translatesAutoresizingMaskIntoConstraints = false
