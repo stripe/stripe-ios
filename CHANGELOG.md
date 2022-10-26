@@ -1,3 +1,7 @@
+## X.Y.Z 2022-xx-xx
+### CardScan
+* [Added] Added a README.md for the `CardScanSheet` integration.
+
 ## 23.0.0 2022-10-24
 ### Payments
 * [Changed] The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).

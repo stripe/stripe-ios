@@ -168,6 +168,9 @@ modules:
   scheme: StripeCardScan
   framework_name: StripeCardScan
   supports_catalyst: false
+  docs:
+    output: docs/stripe-cardscan
+    readme: StripeCardScan/README.md
   localization_dir: StripeCardScan/StripeCardScan
 
 - podspec: StripeFinancialConnections.podspec
