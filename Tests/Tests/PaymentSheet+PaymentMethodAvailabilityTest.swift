@@ -111,7 +111,7 @@ class PaymentSheet_PaymentMethodAvailabilityTest: XCTestCase {
             paymentMethod: .afterpayClearpay,
             configuration: makeConfiguration(hasReturnURL: true),
             intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
-            supportedPaymentMethods: [.iDEAL])
+            supportedPaymentMethods: [.afterpayClearpay])
         )
     }
 
@@ -121,11 +121,11 @@ class PaymentSheet_PaymentMethodAvailabilityTest: XCTestCase {
             paymentMethod: .afterpayClearpay,
             configuration: makeConfiguration(hasReturnURL: false),
             intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
-            supportedPaymentMethods: [.iDEAL])
+            supportedPaymentMethods: [.afterpayClearpay])
         )
     }
 
-    /// Returns true, Afterpay in `supportedPaymentMethods` and both URL ands shipping requirements are met
+    /// Returns true, Afterpay in `supportedPaymentMethods` and both URL and shipping requirements are met
     func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_bothMet() {
         // Afterpay should be supported if PI has shipping...
         XCTAssertTrue(PaymentSheet.supportsAdding(
