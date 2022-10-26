@@ -54,7 +54,7 @@ import WebKit
     
     public init(attributedString: NSAttributedString, modalURL: String, configuration: Configuration) {
         analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingView.self)
-        self.modalURL = URL(string: modalURL)
+        self.modalURL = URL(string: "https://" + modalURL)
         self.configuration = configuration
         super.init(frame: .zero)
         backgroundColor = CompatibleColor.systemBackground
@@ -190,7 +190,7 @@ extension PaymentMethodMessagingView {
     }
     
     static func makeMessagingContentEndpointParams(configuration: Configuration) -> [String: Any] {
-        return [
+        var parameters: [String: Any] = [
             "payment_methods": configuration.paymentMethods.map { (paymentMethod) -> String in
                 switch paymentMethod {
                 case .klarna: return "klarna"
@@ -199,11 +199,14 @@ extension PaymentMethodMessagingView {
             },
             "currency": configuration.currency,
             "amount": configuration.amount,
-            "locale": configuration.locale,
             "country": configuration.countryCode,
             "client": "ios",
             "logo_color": isDarkMode() ? configuration.imageColor.userInterfaceStyleDark : configuration.imageColor.userInterfaceStyleLight
         ]
+        if let languageCode = configuration.locale.languageCode, let regionCode = configuration.locale.regionCode {
+            parameters["locale"] = "\(languageCode)-\(regionCode)"
+        }
+        return parameters
     }
 }
 
