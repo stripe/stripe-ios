@@ -76,7 +76,6 @@ private func CreateLabelView(text: String, action: @escaping (URL) -> Void) -> U
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     
@@ -105,7 +104,6 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
 
 @available(iOSApplicationExtension, unavailable)
 struct ConsentBodyView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack(alignment: .leading) {
             ConsentBodyViewUIViewRepresentable()

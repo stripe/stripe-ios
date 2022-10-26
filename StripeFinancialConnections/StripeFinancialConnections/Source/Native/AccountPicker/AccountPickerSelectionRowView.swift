@@ -131,7 +131,6 @@ extension RadioButtonView: SelectionView { }
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresentable {
     
@@ -172,7 +171,6 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
 
 @available(iOSApplicationExtension, unavailable)
 struct AccountPickerSelectionRowView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         if #available(iOS 14.0, *) {
             ScrollView {

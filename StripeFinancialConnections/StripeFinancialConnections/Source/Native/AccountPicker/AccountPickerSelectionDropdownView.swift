@@ -289,10 +289,8 @@ private func CreateDropdownControlView(
 private func CreateChevronView() -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    if #available(iOS 13.0, *) {
-        imageView.image = Image.chevron_down.makeImage()
-            .withTintColor(.textDisabled)
-    }
+    imageView.image = Image.chevron_down.makeImage()
+        .withTintColor(.textDisabled)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     imageView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)

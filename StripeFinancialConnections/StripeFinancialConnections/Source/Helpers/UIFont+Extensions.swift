@@ -84,11 +84,7 @@ extension UIFont {
             font = UIFont.systemFont(ofSize: 12, weight: .semibold)
             appleTextStyle = .caption1
         case .monospaced:
-            if #available(iOS 13.0, *) {
-                font = .monospacedSystemFont(ofSize: 16, weight: .bold)
-            } else {
-                font = UIFont.systemFont(ofSize: 16, weight: .bold)
-            }
+            font = .monospacedSystemFont(ofSize: 16, weight: .bold)
             appleTextStyle = .body
         }
         let metrics = UIFontMetrics(forTextStyle: appleTextStyle)

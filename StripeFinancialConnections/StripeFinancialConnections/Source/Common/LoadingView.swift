@@ -40,10 +40,7 @@ class LoadingView: UIView {
 
     internal let activityIndicatorView: UIActivityIndicatorView = {
         let activityIndicatorView = UIActivityIndicatorView()
-
-        if #available(iOS 13.0, *) {
-            activityIndicatorView.style = .large
-        }
+        activityIndicatorView.style = .large
         return activityIndicatorView
     }()
 

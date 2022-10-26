@@ -24,9 +24,7 @@ class FinancialConnectionsNavigationController: UINavigationController {
         // disable the ability for a user to swipe down to dismiss
         // because we want to make a network call (and wait for it)
         // before a user can fully dismiss
-        if #available(iOS 13.0, *) {
-            isModalInPresentation = true
-        }
+        isModalInPresentation = true
         listenToInteractivePopGestureRecognizer()
     }
     
@@ -118,19 +116,17 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 extension FinancialConnectionsNavigationController {
     
     func configureAppearanceForNative() {
-        if #available(iOS 13.0, *) {
-            let backButtonImage = Image.back_arrow.makeImage(template: false)
-            let appearance = UINavigationBarAppearance()
-            appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
-            appearance.backgroundColor = .customBackgroundColor
-            appearance.shadowColor = .clear // remove border
-            navigationBar.standardAppearance = appearance
-            navigationBar.scrollEdgeAppearance = appearance
-            navigationBar.compactAppearance = appearance
-            
-            // change the back button color
-            navigationBar.tintColor = UIColor.textDisabled
-        }
+        let backButtonImage = Image.back_arrow.makeImage(template: false)
+        let appearance = UINavigationBarAppearance()
+        appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
+        appearance.backgroundColor = .customBackgroundColor
+        appearance.shadowColor = .clear // remove border
+        navigationBar.standardAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
+        navigationBar.compactAppearance = appearance
+        
+        // change the back button color
+        navigationBar.tintColor = UIColor.textDisabled
         navigationBar.isTranslucent = false
     }
     

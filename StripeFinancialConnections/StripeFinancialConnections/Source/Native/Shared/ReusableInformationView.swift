@@ -116,7 +116,6 @@ private func CreateFooterView(
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
     
     let primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?
@@ -135,7 +134,6 @@ private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: ReusableInformationView, context: Context) {}
 }
 
-@available(iOS 13.0, *)
 struct ReusableInformationView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

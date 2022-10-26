@@ -122,7 +122,6 @@ private func LocalizedStringFromPermission(
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
     
@@ -144,7 +143,6 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
 
 @available(iOSApplicationExtension, unavailable)
 struct MerchantDataAccessView_Previews: PreviewProvider {
-    @available(iOS 13.0, *)
     static var previews: some View {
         VStack(spacing: 20) {
             MerchantDataAccessViewUIViewRepresentable(

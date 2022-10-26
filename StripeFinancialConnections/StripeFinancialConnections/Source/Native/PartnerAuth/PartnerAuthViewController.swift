@@ -223,10 +223,8 @@ final class PartnerAuthViewController: UIViewController {
                 }
         })
         
-        if #available(iOS 13.0, *) {
-            authSession.presentationContextProvider = self
-            authSession.prefersEphemeralWebBrowserSession = true
-        }
+        authSession.presentationContextProvider = self
+        authSession.prefersEphemeralWebBrowserSession = true
 
         if #available(iOS 13.4, *) {
             if !authSession.canStart {

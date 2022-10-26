@@ -160,7 +160,6 @@ private func CreatePartnerDisclosureText(
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
     
@@ -177,7 +176,6 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: PrepaneView, context: Context) {}
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 struct PrepaneView_Previews: PreviewProvider {
     static var previews: some View {

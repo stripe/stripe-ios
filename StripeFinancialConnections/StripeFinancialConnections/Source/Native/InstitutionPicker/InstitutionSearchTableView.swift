@@ -14,14 +14,12 @@ private enum Section {
     case main
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 protocol InstitutionSearchTableViewDelegate: AnyObject {
     func institutionSearchTableView(_ tableView: InstitutionSearchTableView, didSelectInstitution institution: FinancialConnectionsInstitution)
     func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView)
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchTableView: UIView {
     
@@ -217,7 +215,6 @@ final class InstitutionSearchTableView: UIView {
 
 // MARK: - UITableViewDelegate
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionSearchTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

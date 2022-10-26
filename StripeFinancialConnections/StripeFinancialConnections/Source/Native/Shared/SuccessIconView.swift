@@ -13,13 +13,9 @@ final class SuccessIconView: UIView {
     
     private lazy var iconImageView: UIImageView = {
         let iconImageView = UIImageView()
-        if #available(iOS 13.0, *) {
-            let image = Image.check.makeImage()
-                .withTintColor(.white)
-            iconImageView.image = image
-        } else {
-            assertionFailure()
-        }
+        let image = Image.check.makeImage()
+            .withTintColor(.white)
+        iconImageView.image = image
         return iconImageView
     }()
     
@@ -55,7 +51,6 @@ final class SuccessIconView: UIView {
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct SuccessIconViewUIViewRepresentable: UIViewRepresentable {
     
@@ -68,7 +63,6 @@ private struct SuccessIconViewUIViewRepresentable: UIViewRepresentable {
 
 @available(iOSApplicationExtension, unavailable)
 struct SuccessIconView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack {
             SuccessIconViewUIViewRepresentable()

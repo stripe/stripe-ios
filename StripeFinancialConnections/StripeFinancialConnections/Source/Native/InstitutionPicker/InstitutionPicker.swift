@@ -40,26 +40,16 @@ class InstitutionPicker: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
-    private var _featuredInstitutionGridView: Any? = nil
-    @available(iOS 13.0, *)
-    private var featuredInstitutionGridView: FeaturedInstitutionGridView {
-        if _featuredInstitutionGridView == nil {
-            let featuredInstitutionGridView = FeaturedInstitutionGridView()
-            featuredInstitutionGridView.delegate = self
-            _featuredInstitutionGridView = featuredInstitutionGridView
-        }
-        return _featuredInstitutionGridView as! FeaturedInstitutionGridView
-    }
-    private var _institutionSearchTableView: Any? = nil
-    @available(iOS 13.0, *)
-    private var institutionSearchTableView: InstitutionSearchTableView {
-        if _institutionSearchTableView == nil {
-            let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
-            institutionSearchTableView.delegate = self
-            _institutionSearchTableView = institutionSearchTableView
-        }
-        return _institutionSearchTableView as! InstitutionSearchTableView
-    }
+    private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
+        let featuredInstitutionGridView = FeaturedInstitutionGridView()
+        featuredInstitutionGridView.delegate = self
+        return featuredInstitutionGridView
+    }()
+    private lazy var institutionSearchTableView: InstitutionSearchTableView = {
+        let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
+        institutionSearchTableView.delegate = self
+        return institutionSearchTableView
+    }()
     // Only used for iOS12 fallback where we don't ahve the diffable datasource
     private lazy var institutions: [FinancialConnectionsInstitution]? = nil
     
@@ -101,10 +91,8 @@ class InstitutionPicker: UIViewController {
                 contentContainerView: contentContainerView
             )
         )
-        if #available(iOS 13.0, *) {
-            contentContainerView.addAndPinSubview(featuredInstitutionGridView)
-            contentContainerView.addAndPinSubview(institutionSearchTableView)
-        }
+        contentContainerView.addAndPinSubview(featuredInstitutionGridView)
+        contentContainerView.addAndPinSubview(institutionSearchTableView)
         
         toggleContentContainerViewVisbility()
         
@@ -114,11 +102,9 @@ class InstitutionPicker: UIViewController {
     }
     
     private func toggleContentContainerViewVisbility() {
-        if #available(iOS 13.0, *) {
-            let isUserCurrentlySearching = !searchBar.text.isEmpty
-            featuredInstitutionGridView.isHidden = isUserCurrentlySearching
-            institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
-        }
+        let isUserCurrentlySearching = !searchBar.text.isEmpty
+        featuredInstitutionGridView.isHidden = isUserCurrentlySearching
+        institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
     }
     
     @IBAction private func didTapOutsideOfSearchBar() {
@@ -127,12 +113,10 @@ class InstitutionPicker: UIViewController {
     
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
         searchBar.resignFirstResponder()
-        if #available(iOS 13.0, *) {
-            // clear search results
-            searchBar.text = ""
-            institutionSearchTableView.loadInstitutions([])
-            toggleContentContainerViewVisbility()
-        }
+        // clear search results
+        searchBar.text = ""
+        institutionSearchTableView.loadInstitutions([])
+        toggleContentContainerViewVisbility()
         delegate?.institutionPicker(self, didSelect: institution)
     }
     
@@ -160,9 +144,7 @@ extension InstitutionPicker {
                 guard let self = self else { return }
                 switch(result) {
                 case .success(let institutions):
-                    if #available(iOS 13.0, *) {
-                        self.featuredInstitutionGridView.loadInstitutions(institutions)
-                    }
+                    self.featuredInstitutionGridView.loadInstitutions(institutions)
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .institutionPicker)
@@ -182,67 +164,59 @@ extension InstitutionPicker {
     
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
-        if #available(iOS 13.0, *) {
-            institutionSearchTableView.showError(false)
-        }
+        institutionSearchTableView.showError(false)
         
         guard !searchQuery.isEmpty else {
             // clear data because search query is empty
-            if #available(iOS 13.0, *) {
-                institutionSearchTableView.loadInstitutions([])
-            }
+            institutionSearchTableView.loadInstitutions([])
             return
         }
         
-        if #available(iOS 13.0, *) {
-            institutionSearchTableView.showLoadingView(true)
-        }
+        institutionSearchTableView.showLoadingView(true)
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
             
-            if #available(iOS 13.0, *) {
-                let lastInstitutionSearchFetchDate = Date()
-                self.lastInstitutionSearchFetchDate = lastInstitutionSearchFetchDate
-                self.dataSource
-                    .fetchInstitutions(searchQuery: searchQuery)
-                    .observe(on: DispatchQueue.main) { [weak self] result in
-                        guard let self = self else { return }
-                        guard lastInstitutionSearchFetchDate == self.lastInstitutionSearchFetchDate else {
-                            // ignore any search result that came before
-                            // the lastest search attempt
-                            return
-                        }
-                        switch(result) {
-                        case .success(let institutions):
-                            self.institutionSearchTableView.loadInstitutions(institutions)
-                            if institutions.isEmpty {
-                                self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
-                            }
-                            self.dataSource
-                                .analyticsClient
-                                .log(
-                                    eventName: "search.succeeded",
-                                    parameters: [
-                                        "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
-                                        "query": searchQuery,
-                                        "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate),
-                                        "result_count": institutions.count,
-                                    ]
-                                )
-                        case .failure(let error):
-                            self.institutionSearchTableView.loadInstitutions([])
-                            self.institutionSearchTableView.showError(true)
-                            self.dataSource
-                                .analyticsClient
-                                .logUnexpectedError(
-                                    error,
-                                    errorName: "SearchInstitutionsError",
-                                    pane: .institutionPicker
-                                )
-                        }
-                        self.institutionSearchTableView.showLoadingView(false)
+            let lastInstitutionSearchFetchDate = Date()
+            self.lastInstitutionSearchFetchDate = lastInstitutionSearchFetchDate
+            self.dataSource
+                .fetchInstitutions(searchQuery: searchQuery)
+                .observe(on: DispatchQueue.main) { [weak self] result in
+                    guard let self = self else { return }
+                    guard lastInstitutionSearchFetchDate == self.lastInstitutionSearchFetchDate else {
+                        // ignore any search result that came before
+                        // the lastest search attempt
+                        return
                     }
-            }
+                    switch(result) {
+                    case .success(let institutions):
+                        self.institutionSearchTableView.loadInstitutions(institutions)
+                        if institutions.isEmpty {
+                            self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
+                        }
+                        self.dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "search.succeeded",
+                                parameters: [
+                                    "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
+                                    "query": searchQuery,
+                                    "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate),
+                                    "result_count": institutions.count,
+                                ]
+                            )
+                    case .failure(let error):
+                        self.institutionSearchTableView.loadInstitutions([])
+                        self.institutionSearchTableView.showError(true)
+                        self.dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                error,
+                                errorName: "SearchInstitutionsError",
+                                pane: .institutionPicker
+                            )
+                    }
+                    self.institutionSearchTableView.showLoadingView(false)
+                }
         })
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newFetchInstitutionsDispatchWorkItem)
@@ -273,7 +247,6 @@ extension InstitutionPicker: UIGestureRecognizerDelegate {
 
 // MARK: - FeaturedInstitutionGridViewDelegate
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
     
@@ -294,7 +267,6 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
 
 // MARK: - InstitutionSearchTableViewDelegate
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: InstitutionSearchTableViewDelegate {
     
