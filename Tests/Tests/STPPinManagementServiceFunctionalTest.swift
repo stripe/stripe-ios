@@ -1,5 +1,5 @@
 //
-//  STPPinManagementFunctionalTest.m
+//  STPPinManagementServiceFunctionalTest.swift
 //  StripeiOS Tests
 //
 //  Created by Arnaud Cavailhez on 4/29/19.
@@ -9,7 +9,11 @@
 import PassKit
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
     func createIssuingCardKey(

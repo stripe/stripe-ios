@@ -3,9 +3,10 @@
 //  StripeIdentityTests
 //
 //  Created by Jaime Park on 1/26/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore

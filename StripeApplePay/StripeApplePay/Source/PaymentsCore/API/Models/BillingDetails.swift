@@ -1,6 +1,6 @@
 //
 //  BillingDetails.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 7/15/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

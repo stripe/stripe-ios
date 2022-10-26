@@ -3,6 +3,7 @@
 //  StripeUICoreTests
 //
 //  Created by Cameron Sabol on 10/11/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest

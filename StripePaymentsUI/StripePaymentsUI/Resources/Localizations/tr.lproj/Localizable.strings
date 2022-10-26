@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
+
+"Address line 2 (optional)" = "Adres satırı 2 (isteğe bağlı)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Banka Hesabı";
+
+"Billing Address" = "Fatura Adresi";
+
+"Billing address" = "Fatura adresi";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Kart bilgileri";
+
+"Card number" = "Kart numarası";
+
+"Invalid data." = "Geçersiz veri.";
+
+"MM / YY" = "AA / YY";
+
+"MM/YY" = "AA/YY";
+
+"Postal Code" = "Posta Kodu";
+
+"Shipping Address" = "Gönderi Adresi";
+
+"State / Province / Region" = "İl/İlçe/Bölge";
+
+"The BSB you entered is invalid." = "Girdiğiniz BSB geçersiz.";
+
+"To scan your card, allow camera access in Settings." = "Kartınızı taramak için Ayarlar'da kamera erişimine izin verin.";
+
+"Your ZIP is invalid." = "Posta kodunuz geçersiz.";
+
+"Your card number is incomplete." = "Kart numaranız eksik.";
+
+"Your card number is invalid." = "Kart numaranız geçersiz.";
+
+"Your card's expiration date is incomplete." = "Kartınızın son kullanma tarihi eksik.";
+
+"Your card's expiration date is invalid." = "Kartınızın son kullanma tarihi geçersiz.";
+
+"Your card's expiration month is invalid." = "Kartınızın son kullanma ayı geçersiz.";
+
+"Your card's expiration year is invalid." = "Kartınızın son kullanma yılı geçersiz.";
+
+"Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
+
+"Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
+
+"Your postal code is invalid." = "Posta kodunuz geçersiz.";
+
+"card number" = "kart numarası";
+
+"example@example.com" = "ornek@ornek.com";
+
+"expiration date" = "son kullanma tarihi";

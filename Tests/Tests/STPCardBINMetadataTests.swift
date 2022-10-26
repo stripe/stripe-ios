@@ -1,5 +1,5 @@
 //
-//  STPCardBINMetadata.m
+//  STPCardBINMetadataTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 7/20/20.
@@ -7,7 +7,11 @@
 //
 
 import StripeCoreTestUtils
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPCardBINMetadataTests: XCTestCase {
     func testAPICall() {

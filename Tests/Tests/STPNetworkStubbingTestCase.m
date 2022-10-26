@@ -7,9 +7,9 @@
 //
 
 #import "STPNetworkStubbingTestCase.h"
-#import <SWHttpTrafficRecorder/SWHttpTrafficRecorder.h>
-#import <OHHTTPStubs/HTTPStubs.h>
-#import <OHHTTPStubs/HTTPStubs+Mocktail.h>
+#import "SWHttpTrafficRecorder.h"
+
+@import OHHTTPStubs;
 
 @implementation STPNetworkStubbingTestCaseObjc
 

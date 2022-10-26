@@ -1,15 +1,19 @@
 //
 //  AutoCompleteViewControllerSnapshotTests.swift
-//  PaymentSheetUITest
+//  StripeiOS Tests
 //
 //  Created by Nick Porter on 6/7/22.
-//  Copyright © 2022 stripe-ios. All rights reserved.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import FBSnapshotTestCase
-@_spi(STP) @testable import Stripe
-@_spi(STP) @testable import StripeUICore
+import iOSSnapshotTestCase
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeUICore
 
 class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
     

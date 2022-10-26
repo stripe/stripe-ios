@@ -1,5 +1,5 @@
 //
-//  TextFieldElement+PANTest.swift
+//  TextFieldElement+CardTest.swift
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 2/25/22.
@@ -7,9 +7,18 @@
 //
 
 import XCTest
-@_spi(STP) @testable import Stripe
-@_spi(STP) @testable import StripeUICore
-@_spi(STP) @testable import StripeCore
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripeUICore
 
 class TextFieldElementCardTest: XCTestCase {
     func testPANValidation() throws {
@@ -230,14 +239,19 @@ class TextFieldElementCardTest: XCTestCase {
         }
     }
     
-    func testExpiryValidation() {
+    func testExpiryValidation() throws {
         typealias Error = TextFieldElement.ExpiryDateConfiguration.Error
+
+        let calendar = Calendar(identifier: .gregorian)
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMyy"
-        let firstDayOfThisMonth = Calendar.current.date(bySetting: .day, value: 1, of: Date())
-        let oneMonthAgo = Calendar.current.date(byAdding: .month, value: -1, to: firstDayOfThisMonth!)
-        let oneMonthFromNow = Calendar.current.date(byAdding: .month, value: 1, to: firstDayOfThisMonth!)
-        let oneYearFromNow = Calendar.current.date(byAdding: .year, value: 1, to: firstDayOfThisMonth!)
+        dateFormatter.calendar = calendar
+
+        let currentMonth = try XCTUnwrap(calendar.date(from: calendar.dateComponents([.year, .month], from: Date())))
+        let lastMonth = try XCTUnwrap(calendar.date(byAdding: .month, value: -1, to: currentMonth))
+        let nextMonth = try XCTUnwrap(calendar.date(byAdding: .month, value: 1, to: currentMonth))
+        let oneYearFromNow = try XCTUnwrap(calendar.date(byAdding: .year, value: 1, to: currentMonth))
         
         let testcases: [String: ElementValidationState] = [
             // Test empty -> incomplete -> complete
@@ -247,8 +261,9 @@ class TextFieldElementCardTest: XCTestCase {
             "12": .invalid(error: Error.incomplete, shouldDisplay: true),
             "12/2": .invalid(error: Error.incomplete, shouldDisplay: true),
             "12/49": .valid,
-            dateFormatter.string(from: oneYearFromNow!): .valid,
-            dateFormatter.string(from: oneMonthFromNow!): .valid,
+            dateFormatter.string(from: currentMonth): .valid, // Cards expire at end of last day of printed month.
+            dateFormatter.string(from: oneYearFromNow): .valid,
+            dateFormatter.string(from: nextMonth): .valid,
             
             // Test invalid months
             "00": .invalid(error: Error.invalidMonth, shouldDisplay: true),
@@ -259,7 +274,7 @@ class TextFieldElementCardTest: XCTestCase {
             // Test expired dates
             "12/21": .invalid(error: Error.invalid, shouldDisplay: true),
             "01/22": .invalid(error: Error.invalid, shouldDisplay: true),
-            dateFormatter.string(from: oneMonthAgo!): .invalid(error: Error.invalid, shouldDisplay: true),
+            dateFormatter.string(from: lastMonth): .invalid(error: Error.invalid, shouldDisplay: true),
         ]
         let configuration = TextFieldElement.ExpiryDateConfiguration()
         for (text, expected) in testcases {

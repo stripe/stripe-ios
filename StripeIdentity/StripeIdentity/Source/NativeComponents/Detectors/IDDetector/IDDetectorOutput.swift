@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/27/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -56,7 +57,7 @@ struct IDDetectorPrediction: MLBoundingBox {
 
 // MARK: - MultiArray
 
-@available(iOS 13, *)
+
 extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
 
     /// Expected feature names from the ML model output

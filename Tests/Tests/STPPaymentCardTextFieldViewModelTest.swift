@@ -1,6 +1,6 @@
 //
-//  STPCreditCardTextFieldTest.m
-//  Stripe
+//  STPPaymentCardTextFieldViewModelTest.swift
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 7/16/15.
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPPaymentCardTextFieldViewModelTest: XCTestCase {
     var viewModel: STPPaymentCardTextFieldViewModel?

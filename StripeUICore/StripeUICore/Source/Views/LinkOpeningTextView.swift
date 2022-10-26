@@ -3,6 +3,7 @@
 //  StripeUICore
 //
 //  Created by Mel Ludowise on 5/11/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

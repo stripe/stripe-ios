@@ -532,13 +532,13 @@
                 XCTAssertEqualObjects(source.label, @"Visa 5556");
                 break;
             case STPSourceTypeGiropay:
-                XCTAssertEqualObjects(source.label, @"Giropay");
+                XCTAssertEqualObjects(source.label, @"giropay");
                 break;
             case STPSourceTypeiDEAL:
                 XCTAssertEqualObjects(source.label, @"iDEAL");
                 break;
             case STPSourceTypeSEPADebit:
-                XCTAssertEqualObjects(source.label, @"SEPA Direct Debit");
+                XCTAssertEqualObjects(source.label, @"SEPA Debit");
                 break;
             case STPSourceTypeSofort:
                 XCTAssertEqualObjects(source.label, @"Sofort");
@@ -550,7 +550,7 @@
                 XCTAssertEqualObjects(source.label, @"Alipay");
                 break;
             case STPSourceTypeP24:
-                XCTAssertEqualObjects(source.label, @"P24");
+                XCTAssertEqualObjects(source.label, @"Przelewy24");
                 break;
             case STPSourceTypeEPS:
                 XCTAssertEqualObjects(source.label, @"EPS");

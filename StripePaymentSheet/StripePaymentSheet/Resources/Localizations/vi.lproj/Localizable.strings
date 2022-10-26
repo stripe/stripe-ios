@@ -1,0 +1,161 @@
+"+ Add" = "+ Thêm";
+
+"Add a card" = "Thêm một thẻ";
+
+"Add a payment method" = "Thêm phương thức thanh toán";
+
+"Add bank account" = "Thêm tài khoản ngân hàng";
+
+"Add new payment method" = "Thêm phương thức thanh toán mới";
+
+"Add your payment information" = "Thêm thông tin thanh toán của bạn";
+
+"Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
+
+"Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
+
+"Back" = "Quay lại";
+
+"Bank account" = "Tài khoản ngân hàng";
+
+"Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Bằng việc tiếp tục, quý vị đồng ý xác thực thanh toán tuân theo các <terms>điều khoản</terms> sau.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
+
+"Change email" = "Đổi email";
+
+"Choose a payment method" = "Chọn phương thức thanh toán";
+
+"Close card scanner" = "Đóng máy quét thẻ";
+
+"Code field" = "Trường mã";
+
+"Code sent" = "Mã đã được gửi";
+
+"Default" = "Mặc định";
+
+"Double tap to edit" = "Nhấp chạm đúp để hiệu đính";
+
+"EPS Bank" = "Ngân hàng EPS";
+
+"Enter address manually" = "Nhập địa chỉ thủ công";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Nhập mã được gửi tới %@ để dùng Link làm phương thức thanh toán mặc định.";
+
+"Enter your verification code" = "Nhập mã xác minh của bạn";
+
+"For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Tham gia Link";
+
+"Log out of Link" = "Đăng xuất khỏi Link";
+
+"Not %@?" = "Không phải %@?";
+
+"Or" = "Hoặc";
+
+"Or pay using" = "Hoặc thanh toán bằng";
+
+"Or pay with a card" = "Hoặc thanh toán bằng thẻ";
+
+"Pay %@" = "Thanh toán %@";
+
+"Pay another way" = "Thanh toán theo cách khác";
+
+"Pay faster at %@ and thousands of merchants." = "Thanh toán nhanh hơn tại %@ và hàng ngàn người bán.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Trả bằng <num_installments/> khoản thanh toán không lãi suất là <installment_price/> bằng <img/>";
+
+"Pay later with Klarna." = "Thanh toán sau bằng Klarna.";
+
+"Pay over time with %@" = "Trả dần bằng %@";
+
+"Pay using" = "Thanh toán bằng";
+
+"Pay with %@" = "Thanh toán bằng %@";
+
+"Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
+
+"Payment" = "Thanh toán";
+
+"Payment methods" = "Phương thức thanh toán";
+
+"Point the camera at your card." = "Hướng camera vào thẻ.";
+
+"Processing..." = "Đang xử lý...";
+
+"Przelewy24 Bank" = "Ngân hàng Przelewy24";
+
+"Remove %1$@ ending in %2$@" = "Xóa thẻ %1$@ kết thúc bằng %2$@";
+
+"Remove Card" = "Xóa thẻ";
+
+"Remove card" = "Xóa thẻ";
+
+"Remove linked account" = "Xóa tài khoản liên kết";
+
+"Resend code" = "Gửi lại mã";
+
+"Save address" = "Lưu địa chỉ";
+
+"Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
+
+"Save my info for secure 1-click checkout" = "Lưu thông tin của tôi để thanh toán bảo mật bằng 1 cú nhấp chuột";
+
+"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
+
+"Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
+
+"Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
+
+"Select your payment method" = "Chọn phương thức thanh toán của bạn";
+
+"Set as default" = "Đặt làm mặc định";
+
+"Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
+
+"Set up" = "Cài đặt";
+
+"Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
+
+"Show menu" = "Hiển thị trình đơn";
+
+"Sign in to your Link account" = "Đăng nhập vào tài khoản Link của bạn";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
+
+"Tap to close" = "Nhấp chạm vào để đóng";
+
+"Tap to expand" = "Nhấp chạm vào để mở rộng";
+
+"The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
+
+"The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
+
+"The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
+
+"This is your default" = "Đây là thông tin mặc định của bạn";
+
+"Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
+
+"Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
+
+"Update card" = "Cập nhật thẻ";
+
+"Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
+
+"Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
+
+"iDEAL Bank" = "Ngân hàng iDEAL";

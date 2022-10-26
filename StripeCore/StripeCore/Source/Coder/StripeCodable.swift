@@ -1,6 +1,6 @@
 //
-//  UnknownFieldsCodable.swift
-//  StripeiOS
+//  StripeCodable.swift
+//  StripeCore
 //
 //  Created by David Estes on 7/20/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

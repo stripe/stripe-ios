@@ -1,339 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ terminada en %2$@";
-
 "%@ - Offline" = "%@ - Fuera de línea";
 
-"+ Add" = "Agregar otro";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "Débito directo BECS (Australia)";
 
 "Add New Card…" = "Agregar nueva tarjeta...";
 
 "Add a Card" = "Agrega una tarjeta";
 
-"Add a card" = "Agrega una tarjeta";
-
-"Add a payment method" = "Agregar un método de pago";
-
-"Add bank account" = "Agregar cuenta bancaria";
-
-"Add new payment method" = "Agregar nuevo método de pago";
-
-"Add your payment information" = "Agrega la información de pago";
-
-"Address line 2 (optional)" = "Segunda línea de la dirección (opcional)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Apto.";
 
-"Are you sure you want to remove this card?" = "¿Deseas quitar esta tarjeta?";
-
-"Are you sure you want to remove this linked account?" = "¿Deseas quitar esta cuenta vinculada?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Atrás";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Banco";
-
-"Bank Account" = "Cuenta bancaria";
-
-"Bank account" = "Cuenta bancaria";
-
-"Billing Address" = "Dirección de facturación";
-
-"Billing address" = "Dirección de facturación";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Compra ahora y paga después con Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al continuar, aceptas autorizar pagos conforme a <terms>estas condiciones</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Al continuar, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al unirte a Link, aceptas las <terms>Condiciones de servicio</terms> y la <privacy>Política de privacidad</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Al brindar los datos de tu cuenta bancaria y confirmar el pago, aceptas esta solicitud de débito directo y el <terms>contrato de servicio de solicitud de débito directo</terms>, y autorizas a Stripe Payments Australia Pty Ltd, ACN 160 180 343, número de ID de usuario de débito directo 507156 (“Stripe”), a efectuar débitos en tu cuenta mediante el sistema Bulk Electronic Clearing System (BECS) en nombre de %@ (el “Comerciante”) por los importes que te comunique por separado el Comerciante. Certificas que eres titular de una cuenta o signatario autorizado de la cuenta especificada arriba.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Al suministrar tus datos de pago y confirmar el pago, autorizas (A) a %@ y a Stripe, nuestro proveedor de servicios de pago, a enviar instrucciones a tu banco para que efectúe débitos en tu cuenta y (B) al banco a que efectúe los débitos en tu cuenta siguiendo esas instrucciones. Como parte de tus prerrogativas, tienes derecho a un rembolso del banco conforme a los términos y condiciones del contrato suscripto con dicha entidad. La solicitud de rembolso deberá efectuarse dentro de las 8 semanas posteriores a la fecha en que se efectuó el débito en tu cuenta. Tus derechos se explican en una declaración que puedes solicitarle a tu banco. Aceptas recibir notificaciones sobre próximos débitos con hasta 2 días de antelación a que estos ocurran.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Tarjeta";
-
-"Card information" = "Información de la tarjeta";
-
-"Card number" = "Número de tarjeta";
-
-"Change email" = "Cambiar correo electrónico";
-
-"Choose a payment method" = "Elegir un método de pago";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Cerrar escáner de tarjetas";
-
-"Code field" = "Campo del código";
-
-"Code sent" = "Código enviado";
-
 "Contact" = "Contacto";
-
-"Default" = "Predeterminado";
 
 "Delivery" = "Entrega";
 
 "Delivery Address" = "Dirección de entrega";
 
-"Double tap to edit" = "Pulsa dos veces para editar";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "Banco que opera con EPS";
-
-"Edit" = "Editar";
-
-"Enter address manually" = "Ingresar dirección manualmente";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Ingresa el código enviado al %@ para utilizar Link como método de pago predeterminado.";
-
-"Enter your verification code" = "Ingresa el código de verificación";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Por razones de seguridad, vuelve a ingresar el código de seguridad de tu tarjeta.";
-
 "Free" = "Gratis";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Dirección de envío inválida";
 
-"Invalid data." = "Datos no válidos.";
-
-"Join Link" = "Únete a Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Cargando...";
-
-"Log out of Link" = "Cerrar sesión de Link";
-
-"MM / YY" = "MM/AA";
-
-"MM/YY" = "MM/AA";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Siguiente";
-
-"Not %@?" = "¿No eres %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Banca electrónica (FPX)";
 
-"Or" = "O";
-
-"Or pay using" = "O pagar con";
-
-"Or pay with a card" = "O pagar con tarjeta";
-
-"P24" = "P24";
-
-"Pay %@" = "Pagar %@";
-
-"Pay another way" = "Pagar de otra manera";
-
-"Pay faster at %@ and thousands of merchants." = "Paga más rápido en %@ y en miles de comercios.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Paga en <num_installments/> cuotas sin interés de <installment_price/> con <img/>";
-
-"Pay later with Klarna." = "Paga después con Klarna.";
-
-"Pay over time with %@" = "Paga a lo largo del tiempo con %@";
-
-"Pay using" = "Pagar con";
-
-"Pay with %@" = "Pagar con %@";
-
-"Pay with your bank account in just a few steps." = "Paga con tu cuenta bancaria en unos pocos pasos.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Pago";
-
 "Payment Method" = "Método de pago";
-
-"Payment methods" = "Métodos de pago";
-
-"Point the camera at your card." = "Apunta la cámara a la tarjeta.";
-
-"Postal Code" = "Código postal";
-
-"Processing..." = "Procesando...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Banco que opera con Przelewy24";
-
-"Remove %1$@ ending in %2$@" = "Elimina la tarjeta %1$@ terminada en %2$@";
-
-"Remove Card" = "Eliminación de la tarjeta";
-
-"Remove card" = "Quitar tarjeta";
-
-"Remove linked account" = "Eliminar cuenta vinculada";
-
-"Resend code" = "Reenviar código";
-
-"SEPA Debit" = "Débito SEPA";
-
-"SEPA Direct Debit" = "Débito directo SEPA";
-
-"Save address" = "Guardar dirección";
-
-"Save for future payments" = "Guardar para futuros pagos";
-
-"Save my info for secure 1-click checkout" = "Guardar mis datos para hacer el pago en 1 click en modo seguro";
-
-"Save this account for future %@ payments" = "Guardar esta cuenta para realizar futuros pagos a %@";
-
-"Save this card for future %@ payments" = "Guardar esta tarjeta para futuros pagos de %@";
-
-"Secure 1⁠-⁠click checkout" = "Pago seguro en un click";
-
-"Select your payment method" = "Selecciona el método de pago";
-
-"Set as default" = "Establecer como valor predeterminado";
-
-"Set as default payment method" = "Establecer como método de pago predeterminado";
-
-"Set up" = "Configurar";
 
 "Shipping" = "Envío";
 
-"Shipping Address" = "Dirección de envío";
-
 "Shipping Method" = "Método de envío";
-
-"Shipping to %@ is not supported." = "No se aceptan envíos a %@.";
-
-"Show menu" = "Mostrar menú";
-
-"Sign in to your Link account" = "Inicia sesión en tu cuenta de Link";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Ocurrió un error al intentar vincular tu cuenta.\nVuelve a intentarlo más tarde.";
-
-"State / Province / Region" = "Estado/Provincia/Región";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe depositará $0.01 en tu cuenta dentro de 1 o 2 días hábiles. Luego, recibirás un correo electrónico con instrucciones para completar el pago de %@.";
-
-"Tap to close" = "Pulsa para cerrar";
-
-"Tap to expand" = "Pulsa para expandir";
-
-"The BSB you entered is invalid." = "El BSB que ingresaste no es válido.";
-
-"The IBAN you entered is incomplete." = "El IBAN que ingresaste está incompleto.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "El IBAN que ingresaste no es válido; \"%@\" no es un código de país admitido.";
-
-"The provided verification code has expired." = "El código de verificación suministrado está vencido.";
-
-"The provided verification code is incorrect." = "El código de verificación proporcionado es incorrecto.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Esta tarjeta se venció. Actualiza los datos de la tarjeta o elige un método de pago diferente.";
-
-"This is your default" = "Tu método predeterminado";
-
-"Timed out authenticating your payment method -- try again" = "Se agotó el tiempo para autenticar el método de pago. Vuelve a intentarlo.";
-
-"To scan your card, allow camera access in Settings." = "Para escanear la tarjeta, permite el acceso a la cámara en Configuración.";
-
-"Too many attempts. Please try again in a few minutes." = "Se hicieron demasiados intentos. Vuelve a intentarlo en unos minutos.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Cuenta bancaria de EE. UU.";
-
-"Unavailable for this purchase" = "No disponible para esta compra";
-
-"Unknown" = "Desconocido";
-
-"Update card" = "Actualizar tarjeta";
 
 "Use Billing" = "Usar la de facturación";
 
 "Use Delivery" = "Usar la de entrega";
 
 "Use Shipping" = "Usar la de envío";
-
-"Use your saved info to check out faster" = "Utiliza la información guardada para finalizar la compra más rápido";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "No pudimos autenticar tu método de pago. Elige otro método y vuelve a intentarlo.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "El IBAN debe empezar con un código de país de dos letras.";
-
-"Your ZIP is invalid." = "El código postal no es válido.";
-
-"Your card number is incomplete." = "El número de tarjeta está incompleto.";
-
-"Your card number is invalid." = "El número de tarjeta no es válido.";
-
-"Your card's expiration date is incomplete." = "La fecha de vencimiento de la tarjeta está incompleta.";
-
-"Your card's expiration date is invalid." = "La fecha de vencimiento de la tarjeta no es válida.";
-
-"Your card's expiration month is invalid." = "El mes de vencimiento de la tarjeta no es válido.";
-
-"Your card's expiration year is invalid." = "El año de vencimiento de la tarjeta no es válido.";
-
-"Your card's security code is incomplete." = "El código de seguridad de la tarjeta está incompleto.";
-
-"Your card's security code is invalid." = "El código de seguridad de la tarjeta no es válido.";
-
-"Your postal code is invalid." = "El código postal no es válido.";
-
-"ZIP Code" = "Código ZIP";
-
-"card number" = "número de tarjeta";
-
-"example@example.com" = "ejemplo@ejemplo.com";
-
-"expiration date" = "fecha de vencimiento";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "Banco iDEAL";

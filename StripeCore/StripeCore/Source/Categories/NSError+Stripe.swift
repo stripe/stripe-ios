@@ -1,6 +1,6 @@
 //
 //  NSError+Stripe.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Brian Dorfman on 8/4/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.

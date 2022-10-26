@@ -1,30 +1,30 @@
 //
 //  STPAPIClient.swift
-//  StripeExample
+//  StripeCore
 //
 //  Created by Jack Flintermann on 12/18/14.
-//  Copyright (c) 2014 Stripe. All rights reserved.
+//  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
 /// A client for making connections to the Stripe API.
-public class STPAPIClient {
+@objc public class STPAPIClient: NSObject {
     /// The current version of this library.
-    public static let STPSDKVersion = StripeAPIConfiguration.STPSDKVersion
+    @objc public static let STPSDKVersion = StripeAPIConfiguration.STPSDKVersion
 
     /// A shared singleton API client.
     /// By default, the SDK uses this instance to make API requests
     /// eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
-    public static let shared: STPAPIClient = {
+    @objc(sharedClient) public static let shared: STPAPIClient = {
         let client = STPAPIClient()
         return client
     }()
 
     /// The client's publishable key.
     /// The default value is `StripeAPI.defaultPublishableKey`.
-    public var publishableKey: String? {
+    @objc public var publishableKey: String? {
         get {
             if let publishableKey = _publishableKey {
                 return publishableKey
@@ -55,14 +55,14 @@ public class STPAPIClient {
     /// create a Source or Payment Method on a connected account, set this property to the ID of the
     /// account for which this request is being made.
     /// - seealso: https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
-    public var stripeAccount: String?
+    @objc public var stripeAccount: String?
 
     /// Libraries wrapping the Stripe SDK should set this, so that Stripe can contact you about future issues or critical updates.
     /// - seealso: https://stripe.com/docs/building-plugins#setappinfo
-    public var appInfo: STPAppInfo?
+    @objc public var appInfo: STPAppInfo?
 
     /// The API version used to communicate with Stripe.
-    public static let apiVersion = APIVersion
+    @objc public static let apiVersion = APIVersion
 
     // MARK: Internal/private properties
     @_spi(STP) public var apiURL: URL! = URL(string: APIBaseURL)
@@ -79,7 +79,7 @@ public class STPAPIClient {
     }
 
     // MARK: Initializers
-    public init() {
+    override public init() {
         sourcePollers = [:]
         sourcePollersQueue = DispatchQueue(label: "com.stripe.sourcepollers")
     }
@@ -87,6 +87,7 @@ public class STPAPIClient {
     /// Initializes an API client with the given publishable key.
     /// - Parameter publishableKey: The publishable key to use.
     /// - Returns: An instance of STPAPIClient.
+    @objc(initWithPublishableKey:)
     public convenience init(publishableKey: String) {
         self.init()
         self.publishableKey = publishableKey

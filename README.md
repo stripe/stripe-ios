@@ -35,7 +35,7 @@ Table of contents
 
 **Simplified security**: We make it simple for you to collect sensitive data such as credit card numbers and remain [PCI compliant](https://stripe.com/docs/security#pci-dss-guidelines). This means the sensitive data is sent directly to Stripe instead of passing through your server. For more information, see our [integration security guide](https://stripe.com/docs/security).
 
-**Apple Pay**: We provide a [seamless integration with Apple Pay](https://stripe.com/docs/apple-pay).
+**Apple Pay**: [StripeApplePay](StripeApplePay/README.md) provides a [seamless integration with Apple Pay](https://stripe.com/docs/apple-pay).
 
 **SCA-ready**: The SDK automatically performs native [3D Secure authentication](https://stripe.com/docs/payments/3d-secure) if needed to comply with [Strong Customer Authentication](https://stripe.com/docs/strong-customer-authentication) regulation in Europe.
 
@@ -43,7 +43,7 @@ Table of contents
 
 <img src="https://user-images.githubusercontent.com/89988962/153276097-9b3369a0-e732-45c4-96ec-ff9d48ad0fb6.png" alt="PaymentSheet" align="center"/>
 
-**Stripe API**: We provide [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user’s input.
+**Stripe API**: [StripePayments](StripePayments/README.md) provides [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user’s input.
 
 **Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning) section.
 
@@ -61,24 +61,44 @@ The Stripe iOS SDK collects data to help us improve our products and prevent fra
 
 For help with Apple's App Privacy Details form in App Store Connect, visit [Stripe iOS SDK Privacy Details](https://support.stripe.com/questions/stripe-ios-sdk-privacy-details).
 
+## Modules
+|Module|Description|Compressed|Uncompressed|
+|------|-----------|----------|------------|
+|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|2.7MB|6.3MB|
+|Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](/docs/mobile/ios/basic).|2.3MB|5.1MB|
+|StripeApplePay|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.4MB|1.0MB|
+|StripePayments|Bindings for the Stripe Payments API.|1.0MB|2.6MB|
+|StripePaymentsUI|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|1.7MB|3.9MB|
+
 ## Releases
 
-We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
+We support Cocoapods, Carthage, and Swift Package Manager.
+
+If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the required frameworks.
+
+For the `Stripe` module, link the following frameworks:
 - `Stripe.xcframework`
 - `Stripe3DS2.xcframework`
 - `StripeApplePay.xcframework`
+- `StripePayments.xcframework`
+- `StripePaymentsUI.xcframework`
 - `StripeCore.xcframework`
 - `StripeUICore.xcframework`
 
-To manually link the **Stripe Identity iOS SDK**, follow [these instructions](StripeIdentity/README.md#manual-linking).
+For other modules, follow the instructions below:
+- [StripePaymentSheet](StripePaymentSheet/README.md#manual-linking)
+- [StripePayments](StripePayments/README.md#manual-linking)
+- [StripePaymentsUI](StripePaymentsUI/README.md#manual-linking)
+- [StripeApplePay](StripeApplePay/README.md#manual-linking)
+- [StripeIdentity](StripeIdentity/README.md#manual-linking)
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy.
 
 ## Requirements
 
-The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps targeting iOS 12 or above. We support Catalyst on macOS 10.15 or later.
+The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps targeting iOS 13 or above. We support Catalyst on macOS 10.16 or later.
 
-For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
+For iOS 12 support, please use [v22.8.4](https://github.com/stripe/stripe-ios/tree/v22.8.4). For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
 
 Requirements for the **Stripe Identity iOS SDK** can be found [here](StripeIdentity/README.md#requirements).
 

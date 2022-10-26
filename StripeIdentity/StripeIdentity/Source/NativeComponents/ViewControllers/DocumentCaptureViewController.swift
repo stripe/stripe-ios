@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -489,8 +490,7 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
 
     func reset() {
         imageScanningSession.reset(to: .front)
-        sheetController?.collectedData.clearFront()
-        sheetController?.collectedData.clearBack()
+        clearCollectedFields()
     }
 }
 

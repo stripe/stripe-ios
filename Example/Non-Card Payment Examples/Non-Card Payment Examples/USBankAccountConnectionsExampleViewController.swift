@@ -9,7 +9,7 @@
 import UIKit
 
 import StripeFinancialConnections
-
+import StripePayments
 import StripeApplePay
 
 class USBankAccountFinancialConnectionsExampleViewController: UIViewController {

@@ -1,6 +1,6 @@
 //
 //  STPApplePayContext.swift
-//  Stripe
+//  StripeApplePay
 //
 //  Created by Yuki Tokuhiro on 2/20/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
@@ -87,7 +87,7 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// 5. After payment completes/errors and the sheet is dismissed, this class informs you in the applePayContext:didCompleteWithStatus: delegate method
 /// - seealso: https://stripe.com/docs/apple-pay#native for a full guide
 /// - seealso: ApplePayExampleViewController for an example
-@objc(_stpinternal_APContextSwift)
+@objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
     /// Initializes this class.
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
@@ -95,6 +95,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Parameters:
     ///   - paymentRequest:      The payment request to use with Apple Pay.
     ///   - delegate:                    The delegate.
+    @objc(initWithPaymentRequest:delegate:)
     public required init?(paymentRequest: PKPaymentRequest, delegate: _stpinternal_STPApplePayContextDelegateBase?) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
         if !StripeAPI.canSubmitPaymentRequest(paymentRequest) {
@@ -112,35 +113,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         authorizationController?.delegate = self
     }
     
-    /// Initializes this class.
-    /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
-    /// - Parameters:
-    ///   - paymentRequest:      The payment request to use with Apple Pay.
-    ///   - delegate:                    The delegate.
-    public required init?(paymentRequest: PKPaymentRequest, delegate: ApplePayContextDelegate) {
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: ModernApplePayContext.self)
-        if !StripeAPI.canSubmitPaymentRequest(paymentRequest) {
-            return nil
-        }
-
-        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
-        if authorizationController == nil {
-            return nil
-        }
-
-        self.delegate = delegate
-
-        super.init()
-        authorizationController?.delegate = self
-    }
-
-    /// This is used internally to hold a reference to the Objective-C bridge,
-    /// as we attach it to the Apple Pay sheet to keep the bridge from dealloc-ing
-    /// while presented.
-    /// :nodoc:
-    @_spi(STP) public weak var applePayContextObjCBridge: NSObject?
-    
     private var presentationWindow: UIWindow?
 
     /// Presents the Apple Pay sheet from the key window, starting the payment process.
@@ -155,6 +127,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         macCatalystApplicationExtension, unavailable,
         message: "Use `presentApplePay(from:completion:)` in App Extensions."
     )
+    @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
         let window = UIApplication.shared.windows.first { $0.isKeyWindow }
         self.presentApplePay(from: window, completion: completion)
@@ -165,6 +138,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Parameters:
     ///   - window:                   The UIWindow to host the Apple Pay sheet
     ///   - completion:               Called after the Apple Pay sheet is presented
+    @objc(presentApplePayFromWindow:completion:)
     public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil) {
         presentationWindow = window
         guard !didPresentApplePay, let applePayController = self.authorizationController else {
@@ -180,9 +154,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         // that the apple pay sheet is dismissed; until then, the app is effectively frozen.
         objc_setAssociatedObject(
             applePayController, UnsafeRawPointer(&kApplePayContextAssociatedObjectKey), self,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(
-            applePayController, UnsafeRawPointer(&kApplePayContextObjcBridgeAssociatedObjectKey), applePayContextObjCBridge,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
         applePayController.present { (presented) in
@@ -212,7 +183,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
-    public var apiClient: STPAPIClient = STPAPIClient.shared
+    @objc public var apiClient: STPAPIClient = STPAPIClient.shared
     /// ApplePayContext passes this to the /confirm endpoint for PaymentIntents if it did not collect shipping details itself.
     /// :nodoc:
     @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
@@ -226,7 +197,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     private var didPresentApplePay = false
 
     /// :nodoc:
-    public override func responds(to aSelector: Selector!) -> Bool {
+    @objc public override func responds(to aSelector: Selector!) -> Bool {
         // ApplePayContextDelegate exposes methods that map 1:1 to PKPaymentAuthorizationControllerDelegate methods
         // We want this method to return YES for these methods IFF they are implemented by our delegate
 
@@ -285,9 +256,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 authorizationController, UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
                 nil,
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            objc_setAssociatedObject(
-                authorizationController, UnsafeRawPointer(&kApplePayContextObjcBridgeAssociatedObjectKey), nil,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         authorizationController = nil
         delegate = nil
@@ -314,6 +282,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     // MARK: - PKPaymentAuthorizationControllerDelegate
     /// :nodoc:
+    @objc(paymentAuthorizationController:didAuthorizePayment:handler:)
     public func paymentAuthorizationController(
         _ controller: PKPaymentAuthorizationController,
         didAuthorizePayment payment: PKPayment,
@@ -369,7 +338,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     /// :nodoc:
-    public func paymentAuthorizationControllerDidFinish(
+    @objc public func paymentAuthorizationControllerDidFinish(
         _ controller: PKPaymentAuthorizationController
     ) {
         // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.
@@ -403,7 +372,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
     }
 
-    public func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+    /// :nodoc:
+    @objc public func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
         return presentationWindow
     }
 
@@ -676,4 +646,3 @@ fileprivate class _stpinternal_STPApplePayContextLegacyHelper: NSObject {
 }
 
 private var kApplePayContextAssociatedObjectKey = 0
-private var kApplePayContextObjcBridgeAssociatedObjectKey = 0

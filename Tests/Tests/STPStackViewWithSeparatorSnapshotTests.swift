@@ -1,14 +1,18 @@
 //
-//  StackViewWithSeparatorSnapshotTests.swift
+//  STPStackViewWithSeparatorSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/23/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {

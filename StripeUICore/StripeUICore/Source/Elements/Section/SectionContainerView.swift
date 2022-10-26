@@ -1,5 +1,5 @@
 //
-//  ContainerView.swift
+//  SectionContainerView.swift
 //  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/4/21.

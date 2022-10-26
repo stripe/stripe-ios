@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 7/13/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 @_spi(STP) import StripeCore

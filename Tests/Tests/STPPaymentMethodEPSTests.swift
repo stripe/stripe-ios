@@ -1,12 +1,16 @@
 //
-//  STPPaymentMethodEPSTest.m
+//  STPPaymentMethodEPSTests.swift
 //  StripeiOS Tests
 //
 //  Created by Shengwei Wu on 5/15/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 import StripeCoreTestUtils
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPPaymentMethodEPSTests: XCTestCase {
     private(set) var epsJSON: [AnyHashable: Any]?

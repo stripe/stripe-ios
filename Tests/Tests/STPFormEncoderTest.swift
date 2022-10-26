@@ -1,15 +1,19 @@
 //
 //  STPFormEncoderTest.swift
-//  Stripe Tests
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 1/8/15.
-//
+//  Copyright © 2015 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
 
 @_spi(STP) import StripeCore
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPTestFormEncodableObject: NSObject, STPFormEncodable {
     var additionalAPIParameters: [AnyHashable: Any] = [:]

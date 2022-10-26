@@ -3,12 +3,13 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 5/5/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 
 import Foundation
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
 @testable import StripeIdentity

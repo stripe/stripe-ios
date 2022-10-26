@@ -178,7 +178,7 @@ def setup_project(branch, directory, sdk)
     unless sdk.nil?
       # Apply patch adding module named '{{SDK}}'
       patched_files = `patch -p4 < include_framework.patch`.lines.map do |l|
-        l.partition('patching file').last.strip
+        l.partition('patching file').last.strip.tr("'", '') # Recent versions of patch in macOS add a ' to the filename
       end
 
       # Do a find/replace of '{{SDK}}' with SDK name for each patched file

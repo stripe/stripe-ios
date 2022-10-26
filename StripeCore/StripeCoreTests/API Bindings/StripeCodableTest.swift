@@ -1,5 +1,5 @@
 //
-//  UnknownFieldsCodableTest.swift
+//  StripeCodableTest.swift
 //  StripeCoreTests
 //
 //  Created by David Estes on 8/10/21.
@@ -9,6 +9,7 @@
 import Foundation
 import XCTest
 import StripeCoreTestUtils
+import OHHTTPStubsSwift
 
 @_spi(STP) @testable import StripeCore
 import OHHTTPStubs

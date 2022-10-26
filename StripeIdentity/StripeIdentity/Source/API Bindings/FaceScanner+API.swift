@@ -3,12 +3,13 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 6/2/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
 
-@available(iOS 13, *)
+
 extension FaceScanner.Configuration {
     init(from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage) {
         self.init(

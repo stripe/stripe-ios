@@ -2,6 +2,8 @@
 //  StripeJSONEncoder.swift
 //  StripeCore
 //
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//
 //  This is a bridge between NSJSONSerialization and Encoder, including some Stripe-specific behavior.
 //
 

@@ -1,6 +1,6 @@
 //
 //  STPAPIClientTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 12/19/14.
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
@@ -10,6 +10,8 @@ import XCTest
 
 @testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeApplePay
 
 class STPAPIClientTest: XCTestCase {

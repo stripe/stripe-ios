@@ -1,15 +1,19 @@
 //
 //  STPAddCardViewControllerTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 7/5/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
 import StripeCoreTestUtils
-@testable import Stripe
-@_spi(STP) @testable import StripeCore
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController) {

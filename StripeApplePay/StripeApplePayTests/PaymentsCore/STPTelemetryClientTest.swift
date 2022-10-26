@@ -1,6 +1,6 @@
 //
 //  STPTelemetryClientTest.swift
-//  StripeiOS Tests
+//  StripeApplePayTests
 //
 //  Created by Yuki Tokuhiro on 9/24/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
@@ -9,6 +9,7 @@
 import XCTest
 
 @testable @_spi(STP) import StripeApplePay
+@testable @_spi(STP) import StripeCore
 
 class STPTelemetryClientTest: XCTestCase {
 

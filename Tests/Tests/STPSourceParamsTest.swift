@@ -1,6 +1,6 @@
 //
 //  STPSourceParamsTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 1/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPSourceParamsTest: XCTestCase {
     // MARK: -

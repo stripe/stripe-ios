@@ -3,6 +3,7 @@
 //  StripeApplePay
 //
 //  Created by David Estes on 1/6/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation

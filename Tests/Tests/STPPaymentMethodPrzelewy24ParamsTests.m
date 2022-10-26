@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+@import StripeCore;
 @import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 

@@ -10,6 +10,9 @@
 #import <OCMock/OCMock.h>
 #import <PassKit/PassKit.h>
 @import Stripe;
+@import StripeCore;
+@import StripePayments;
+@import StripePaymentsUI;
 
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const STPTestJSONCustomer;

@@ -230,6 +230,5 @@ class AddressSectionElementTest: XCTestCase {
         sut.phone?.textFieldElement.setText("555")
         sut.country.select(index: 0)
         XCTAssertNotEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
-
     }
 }

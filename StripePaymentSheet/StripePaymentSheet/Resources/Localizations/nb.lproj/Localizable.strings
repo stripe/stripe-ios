@@ -1,0 +1,161 @@
+"+ Add" = "+ Legg til";
+
+"Add a card" = "Legg til et kort";
+
+"Add a payment method" = "Legg til betalingsmetode";
+
+"Add bank account" = "Legg til bankkonto";
+
+"Add new payment method" = "Legg til ny betalingsmetode";
+
+"Add your payment information" = "Legg til betalingsinformasjon";
+
+"Are you sure you want to remove this card?" = "Er du sikker på at du vil fjerne dette kortet?";
+
+"Are you sure you want to remove this linked account?" = "Er du sikker på at du vil fjerne denne tilkoblede kontoen?";
+
+"Back" = "Tilbake";
+
+"Bank account" = "Bankkonto";
+
+"Buy now or pay later with Klarna." = "Kjøp nå eller betal senere med Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>vilkårene</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link, godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgi betalingsinformasjonen din og bekrefte denne betalingen gir du tillatelse til at (A) %@ og Stripe, vår leverandør for betalingstjenesten, sende anmodning til banken din om å belaste kontoen din og (B) banken din belaster kontoen din i samsvar med anmodningen. Som del av dine rettigheter kan du kreve å få beløpet tilbakeført i henhold til avtalen du har med banken. Tilbakeføringskrav må fremsettes innen 8 uker etter at kontoen ble belastet. Rettighetene dine blir forklart i en erklæring som du kan få fra banken. Du godtar å motta varsler om fremtidige belastninger opptil to dager før de skjer.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen for %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
+
+"Change email" = "Endre e-post";
+
+"Choose a payment method" = "Velg en betalingsmetode";
+
+"Close card scanner" = "Lukk kortskanner";
+
+"Code field" = "Kodefelt";
+
+"Code sent" = "Kode sendt";
+
+"Default" = "Standard";
+
+"Double tap to edit" = "Dobbelttrykk for å redigere";
+
+"EPS Bank" = "EPS Bank";
+
+"Enter address manually" = "Skriv inn adresse manuelt";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Skriv inn koden sendt til %@ for å bruke Link til å betale som standard.";
+
+"Enter your verification code" = "Skriv inn verifiseringskoden";
+
+"For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Bli med i Link";
+
+"Log out of Link" = "Logg ut av Link";
+
+"Not %@?" = "Er du ikke %@?";
+
+"Or" = "Eller";
+
+"Or pay using" = "Eller betal med";
+
+"Or pay with a card" = "Eller betal med et kort";
+
+"Pay %@" = "Betal %@";
+
+"Pay another way" = "Betal på en annen måte";
+
+"Pay faster at %@ and thousands of merchants." = "Betal raskere hos %@ og tusenvis av andre forhandlere.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal med <num_installments/> rentefri avdrag på <installment_price/> med <img/>";
+
+"Pay later with Klarna." = "Betal senere med Klarna.";
+
+"Pay over time with %@" = "Betal over tid med%@";
+
+"Pay using" = "Betal ved å bruke";
+
+"Pay with %@" = "Betal med %@";
+
+"Pay with your bank account in just a few steps." = "Betal med bankkontoen din med noen få trinn.";
+
+"Payment" = "Betaling";
+
+"Payment methods" = "Betalingsmetoder";
+
+"Point the camera at your card." = "Rett kameraet mot kortet.";
+
+"Processing..." = "Behandler …";
+
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
+"Remove %1$@ ending in %2$@" = "Fjern %1$@ som slutter på %2$@";
+
+"Remove Card" = "Fjern kort";
+
+"Remove card" = "Fjern kort";
+
+"Remove linked account" = "Fjern tilkoblet konto";
+
+"Resend code" = "Send koden på nytt";
+
+"Save address" = "Lagre adresse";
+
+"Save for future payments" = "Lagre til fremtidige betalinger";
+
+"Save my info for secure 1-click checkout" = "Lagre informasjonen min for sikker 1-klikk-utsjekking";
+
+"Save this account for future %@ payments" = "Lagre kontoen til fremtidige betalinger hos %@";
+
+"Save this card for future %@ payments" = "Lagre kortet til fremtidige betalinger hos %@";
+
+"Secure 1⁠-⁠click checkout" = "Sikker 1-klikk-utsjekking";
+
+"Select your payment method" = "Velg betalingsmetode";
+
+"Set as default" = "Angi som standard";
+
+"Set as default payment method" = "Angi som standard betalingsmetode";
+
+"Set up" = "Konfigurer";
+
+"Shipping to %@ is not supported." = "Levering til %@ støttes ikke.";
+
+"Show menu" = "Vis meny";
+
+"Sign in to your Link account" = "Logg inn på Link-kontoen din";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sette inn et innskudd på USD 0,01 på kontoen din innen 1–2 virkedager. Deretter vil du få en e-post med instruksjoner for å fullføre betalingen til %@.";
+
+"Tap to close" = "Trykk for å lukke";
+
+"Tap to expand" = "Trykk for å utvide";
+
+"The IBAN you entered is incomplete." = "IBAN-nummeret du la inn er ufullstendig.";
+
+"The provided verification code has expired." = "Den oppgitte verifiseringskoden er utløpt.";
+
+"The provided verification code is incorrect." = "Den oppgitte verifiseringskoden er ikke korrekt.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller velg en annen betalingsmetode.";
+
+"This is your default" = "Dette er standarden din";
+
+"Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om noen få minutter.";
+
+"Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
+
+"Update card" = "Oppdater kort";
+
+"Use your saved info to check out faster" = "Bruk den lagrede informasjonen din til å betale raskere";
+
+"Your IBAN should start with a two-letter country code." = "IBAN-nummeret skal starte med en tosifret landskode.";
+
+"iDEAL Bank" = "iDEAL Bank";

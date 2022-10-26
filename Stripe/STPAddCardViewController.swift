@@ -1,6 +1,6 @@
 //
 //  STPAddCardViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 3/23/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -9,6 +9,8 @@
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 
 /// This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
 public class STPAddCardViewController: STPCoreTableViewController, STPAddressViewModelDelegate,
@@ -68,18 +70,6 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
     public var apiClient: STPAPIClient = STPAPIClient.shared
-    
-    /// The API Client to use to make requests.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
 
     /// Use init: or initWithConfiguration:theme:
     required init(theme: STPTheme?) {
@@ -271,7 +261,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         stp_navigationItemProxy?.rightBarButtonItem?.accessibilityIdentifier =
             "AddCardViewControllerNavBarDoneButtonIdentifier"
 
-        let cardImageView = UIImageView(image: STPImageLibrary.largeCardFrontImage())
+        let cardImageView = UIImageView(image: STPLegacyImageLibrary.largeCardFrontImage())
         cardImageView.contentMode = .center
         cardImageView.frame = CGRect(
             x: 0, y: 0, width: view.bounds.size.width,
@@ -306,8 +296,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
         let addressHeaderView = STPSectionHeaderView()
         addressHeaderView.theme = theme
-        addressHeaderView.title = STPLocalizedString(
-            "Billing Address", "Title for billing address entry section")
+        addressHeaderView.title = String.Localized.billing_address
         switch configuration?.shippingType {
         case .shipping:
             addressHeaderView.button?.setTitle(
@@ -336,8 +325,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         self.addressHeaderView = addressHeaderView
         let cardHeaderView = STPSectionHeaderView()
         cardHeaderView.theme = theme
-        cardHeaderView.title = STPLocalizedString(
-            "Card", "Title for credit card number entry field")
+        cardHeaderView.title = STPPaymentMethodType.card.displayName
         cardHeaderView.buttonHidden = true
         self.cardHeaderView = cardHeaderView
 
@@ -367,7 +355,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     func setUpCardScanningIfAvailable() {
         if #available(iOS 13.0, macCatalyst 14, *) {
-            if !STPCardScanner.cardScanningAvailable() || configuration?.cardScanningEnabled != true
+            if !STPCardScanner.cardScanningAvailable || configuration?.cardScanningEnabled != true
             {
                 return
             }
@@ -454,7 +442,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     @objc func nextPressed(_ sender: Any?) {
         loading = true
-        guard let cardParams = paymentCell?.paymentField?.cardParams else {
+        guard let cardParams = paymentCell?.paymentField?.paymentMethodParams.card else {
             return
         }
         // Create and return a Payment Method
@@ -551,10 +539,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         var animationTransition: UIView.AnimationOptions
 
         if isAmex {
-            newImage = STPImageLibrary.largeCardAmexCVCImage()
+            newImage = STPLegacyImageLibrary.largeCardAmexCVCImage()
             animationTransition = .transitionCrossDissolve
         } else {
-            newImage = STPImageLibrary.largeCardBackImage()
+            newImage = STPLegacyImageLibrary.largeCardBackImage()
             animationTransition = .transitionFlipFromRight
         }
 
@@ -581,7 +569,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                 duration: 0.2,
                 options: animationTransition,
                 animations: {
-                    self.cardImageView?.image = STPImageLibrary.largeCardFrontImage()
+                    self.cardImageView?.image = STPLegacyImageLibrary.largeCardFrontImage()
                 })
         }
     }
@@ -808,9 +796,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                     } else {
                         newParams.number = number
                     }
-                    self.paymentCell?.paymentField?.cardParams = newParams
+                    self.paymentCell?.paymentField?.paymentMethodParams = STPPaymentMethodParams(card: newParams, billingDetails: nil, metadata: nil)
                     if i > number.count {
-                        self.paymentCell?.paymentField?.cardParams = cardParams
+                        self.paymentCell?.paymentField?.paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
                         self.isScanning = false
                         self.paymentCell?.paymentField?.inputView = nil
                         // Force the inputView to reload by asking the text field to resign/become first responder:

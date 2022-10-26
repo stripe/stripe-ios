@@ -1,6 +1,6 @@
 //
 //  Token+API.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 8/10/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -48,7 +48,7 @@ extension StripeAPI.Token {
     static let Resource = "tokens"
 }
 
-@_spi(STP) public extension PKPayment {
+extension PKPayment {
     func stp_tokenParameters(apiClient: STPAPIClient) -> [String: Any] {
         let paymentString = String(data: self.token.paymentData, encoding: .utf8)
         var payload: [String: Any] = [:]
@@ -78,7 +78,7 @@ extension StripeAPI.Token {
         var transactionIdentifier = self.token.transactionIdentifier
         if transactionIdentifier != "" {
             if self.stp_isSimulated() {
-                transactionIdentifier = PKPayment.stp_testTransactionIdentifier() ?? ""
+                transactionIdentifier = PKPayment.stp_testTransactionIdentifier()
             }
             payload["pk_token_transaction_id"] = transactionIdentifier
         }

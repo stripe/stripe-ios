@@ -7,10 +7,12 @@
 //
 
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 
 @testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 
 class ButtonLinkSnapshotTests: FBSnapshotTestCase {

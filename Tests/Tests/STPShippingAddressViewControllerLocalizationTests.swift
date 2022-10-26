@@ -1,15 +1,19 @@
 //
 //  STPShippingAddressViewControllerLocalizationTests.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 11/3/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
 
 class STPShippingAddressViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {

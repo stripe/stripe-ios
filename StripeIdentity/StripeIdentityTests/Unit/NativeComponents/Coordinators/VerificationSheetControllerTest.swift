@@ -3,6 +3,7 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 10/27/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
@@ -11,7 +12,7 @@ import UIKit
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
-@available(iOS 13, *)
+
 final class VerificationSheetControllerTest: XCTestCase {
 
     let mockVerificationSessionId = "vs_123"
@@ -131,7 +132,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             .init(
                 clearData: .init(
                     biometricConsent: false,
-                    face: false,
+                    face: true,
                     idDocumentBack: true,
                     idDocumentFront: true,
                     idDocumentType: true
@@ -142,6 +143,16 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+        
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        // Verify submit request
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
@@ -220,6 +231,15 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        // Verify submit request
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
         
         // Verify completion block is called
         wait(for: [notNeedbackExp], timeout: 1)
@@ -335,6 +355,16 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+        
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        // Verify submit request
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
         
         // Verify completion block is called
         wait(for: [exp], timeout: 1)

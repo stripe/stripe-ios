@@ -1,339 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ - 尾号：%2$@";
-
 "%@ - Offline" = "%@ - 离线";
 
-"+ Add" = "+ 添加";
-
 "3D Secure" = "3DS 验证";
-
-"AU BECS Direct Debit" = "AU BECS 直接借记";
 
 "Add New Card…" = "添加新卡……";
 
 "Add a Card" = "添加卡";
 
-"Add a card" = "添加卡";
-
-"Add a payment method" = "添加支付方式";
-
-"Add bank account" = "添加银行账户";
-
-"Add new payment method" = "添加新支付方式";
-
-"Add your payment information" = "添加您的支付信息";
-
-"Address line 2 (optional)" = "地址第 2 行（可选）";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "支付宝";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "公寓";
 
-"Are you sure you want to remove this card?" = "您确定要移除此卡吗？";
-
-"Are you sure you want to remove this linked account?" = "您确定要移除这个关联的账户吗？";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "返回";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "银行";
-
-"Bank Account" = "银行账户";
-
-"Bank account" = "银行账户";
-
-"Billing Address" = "账单地址";
-
-"Billing address" = "账单地址";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "用 Klarna 先买后付。";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "继续操作即表示您同意按照<terms>这些条款</terms>授权付款。";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "点击“继续”，即表示您同意按照这些<terms>条款</terms>授权付款。";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "提供您的银行账户详情并确认这笔付款即表示您同意该“直接借记请求”以及<terms>“直接借记请求”服务协议</terms>，并授权 Payments Australia Pty Ltd ACN 160 180 343，直接借记用户 ID 507156 (\"Stripe\") 通过“批量电子清算系统” (BECS) 代 %@（“商家”）向您收取“商家”单独与您议定的金额。您确认您是上述所列账户的账户持有人或授权签字者。";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行借记的指令以及 (B) 您的银行按照这些指令对您的账户进行借记。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内申请，从您的帐户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续借记的通知。";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "银行卡";
-
-"Card information" = "银行卡信息";
-
-"Card number" = "卡号";
-
-"Change email" = "更改邮件地址";
-
-"Choose a payment method" = "选择一个支付方式";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "关闭银行卡扫描器";
-
-"Code field" = "代码字段";
-
-"Code sent" = "验证码已发送";
-
 "Contact" = "联系信息";
-
-"Default" = "默认";
 
 "Delivery" = "收货信息";
 
 "Delivery Address" = "收货地址";
 
-"Double tap to edit" = "双击可编辑";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS 银行";
-
-"Edit" = "编辑";
-
-"Enter address manually" = "手动输入地址";
-
-"Enter the code sent to %@ to use Link to pay by default." = "输入发送到 %@ 的验证码，以默认用 Link 支付。";
-
-"Enter your verification code" = "输入您的验证码";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "出于安全原因，请重新输入您银行卡的安全码。";
-
 "Free" = "免费";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "无效的送货地址";
 
-"Invalid data." = "数据无效。";
-
-"Join Link" = "加入 Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "正在加载……";
-
-"Log out of Link" = "退出 Link";
-
-"MM / YY" = "月份/年份";
-
-"MM/YY" = "月份/年份";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "下一步";
-
-"Not %@?" = "不是 %@？";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "网上银行 (FPX)";
 
-"Or" = "或";
-
-"Or pay using" = "或用以下方式支付";
-
-"Or pay with a card" = "或用银行卡支付";
-
-"P24" = "P24";
-
-"Pay %@" = "支付%@";
-
-"Pay another way" = "用另一方式支付";
-
-"Pay faster at %@ and thousands of merchants." = "在 %@ 及数千商家那里更快结账。";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "用 <img/> 分 <num_installments/> 支付，无利息，每期 <installment_price/>";
-
-"Pay later with Klarna." = "用 Klarna 延后支付。";
-
-"Pay over time with %@" = "用 %@ 慢慢支付";
-
-"Pay using" = "用以下方式支付";
-
-"Pay with %@" = "用 %@ 支付";
-
-"Pay with your bank account in just a few steps." = "只需少许几步，即可用您的银行账户付款。";
-
-"PayPal" = "PayPal";
-
-"Payment" = "支付方式";
-
 "Payment Method" = "支付方式";
-
-"Payment methods" = "支付方式";
-
-"Point the camera at your card." = "将摄像头正对银行卡。";
-
-"Postal Code" = "邮编";
-
-"Processing..." = "正在处理...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 银行";
-
-"Remove %1$@ ending in %2$@" = "移除尾号为 %2$@ 的 %1$@";
-
-"Remove Card" = "移除卡";
-
-"Remove card" = "移除卡";
-
-"Remove linked account" = "移除关联账户";
-
-"Resend code" = "重新发送验证码";
-
-"SEPA Debit" = "SEPA 借记";
-
-"SEPA Direct Debit" = "SEPA 直接借记";
-
-"Save address" = "保存地址";
-
-"Save for future payments" = "保存以用于未来的付款";
-
-"Save my info for secure 1-click checkout" = "保存我的信息，安全地一键结账";
-
-"Save this account for future %@ payments" = "保存该账户，方便今后向 %@ 付款";
-
-"Save this card for future %@ payments" = "保存该卡，用于未来在 %@ 付款";
-
-"Secure 1⁠-⁠click checkout" = "安全地一键结账";
-
-"Select your payment method" = "选择您的支付方式";
-
-"Set as default" = "设为默认值";
-
-"Set as default payment method" = "设置为默认支付方式";
-
-"Set up" = "设置";
 
 "Shipping" = "配送";
 
-"Shipping Address" = "送货地址";
-
 "Shipping Method" = "配送方式";
-
-"Shipping to %@ is not supported." = "不支持向 %@ 配送。";
-
-"Show menu" = "显示菜单";
-
-"Sign in to your Link account" = "登录您的 Link 账户";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "关联您的账户时发生了错误。\n请稍后重试。";
-
-"State / Province / Region" = "州/省/地区";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封邮件，指导您完成向 %@ 的付款。";
-
-"Tap to close" = "点击关闭";
-
-"Tap to expand" = "点击扩展";
-
-"The BSB you entered is invalid." = "您输入的 BSB 无效。";
-
-"The IBAN you entered is incomplete." = "您输入的 IBAN 不完整。";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您输入的 IBAN 无效，\"%@\" 是不支持的国家代码。";
-
-"The provided verification code has expired." = "提供的验证码已过期。";
-
-"The provided verification code is incorrect." = "提供的验证码不正确。";
-
-"This card has expired. Update your card info or choose a different payment method." = "该卡已过期。更新您的银行卡信息或选择另一支付方式。";
-
-"This is your default" = "这是您的默认地址";
-
-"Timed out authenticating your payment method -- try again" = "验证您的支付方式时失败——请重试";
-
-"To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
-
-"Too many attempts. Please try again in a few minutes." = "尝试次数过多。请几分钟后重试。";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "美国银行账户";
-
-"Unavailable for this purchase" = "无法完成这笔订单";
-
-"Unknown" = "未知";
-
-"Update card" = "更新卡";
 
 "Use Billing" = "使用账单地址";
 
 "Use Delivery" = "使用收货地址";
 
 "Use Shipping" = "使用送货地址";
-
-"Use your saved info to check out faster" = "用您保存的信息，更快结账";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我们未能验证您的支付方式。请选择另一支付方式并重试。";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "您的 IBAN 应以一个两字母国家代码开头。";
-
-"Your ZIP is invalid." = "您的邮编无效。";
-
-"Your card number is incomplete." = "您的银行卡号不完整。";
-
-"Your card number is invalid." = "您的卡号无效。";
-
-"Your card's expiration date is incomplete." = "您的银行卡的不完整。";
-
-"Your card's expiration date is invalid." = "您银行卡的有效期无效。";
-
-"Your card's expiration month is invalid." = "您的银行卡的到期月份无效。";
-
-"Your card's expiration year is invalid." = "您的银行卡的到期年份无效。";
-
-"Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
-
-"Your card's security code is invalid." = "您的银行卡安全码无效。";
-
-"Your postal code is invalid." = "您的邮编无效。";
-
-"ZIP Code" = "邮编";
-
-"card number" = "卡号";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "有效期";
-
-"giropay" = "Giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL 银行";

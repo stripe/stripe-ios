@@ -10,6 +10,7 @@ import XCTest
 
 import StripeCoreTestUtils
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import Stripe
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
@@ -117,7 +118,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     func testPaymentSheetAnalyticPayload() throws {
         // setup
         let analytic = PaymentSheetAnalytic(event: STPAnalyticEvent.mcInitCompleteApplePay,
-                                            paymentConfiguration: nil,
                                             productUsage: Set<String>([STPPaymentContext.stp_analyticsIdentifier]),
                                             additionalParams: ["testKey": "testVal"])
 
