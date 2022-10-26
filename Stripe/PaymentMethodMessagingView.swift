@@ -28,7 +28,6 @@ import WebKit
     /// - Parameter configuration: A Configuration object containing details like the payment methods to display and the purchase amount.
     /// - Parameter completion: A completion block called when the view is loaded or failed to load.
     /// - Note: You must use this method to initialize a `PaymentMethodMessagingView`.
-    @available(iOS 13, *)
     public static func create(configuration: Configuration, completion: @escaping (Result<PaymentMethodMessagingView, Swift.Error>) -> ()) {
         assert(!configuration.paymentMethods.isEmpty)
         assert(configuration.apiClient.publishableKey?.nonEmpty != nil)
@@ -60,8 +59,14 @@ import WebKit
         backgroundColor = CompatibleColor.systemBackground
         textView.attributedText = attributedString
         textView.textColor = configuration.textColor
-        
-        addAndPinSubview(textView)
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(textView)
+        NSLayoutConstraint.activate([
+            textView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            textView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            textView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            textView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+        ])
         addSubview(dummyLabelForDynamicType)
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTap))
         addGestureRecognizer(tap)
