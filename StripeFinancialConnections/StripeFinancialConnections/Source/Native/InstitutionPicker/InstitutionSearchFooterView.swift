@@ -120,12 +120,10 @@ private func CreateRowView(
 private func CreateRowIconView(image: Image, isHighlighted: Bool) -> UIView {
     let iconImageView = UIImageView()
     iconImageView.contentMode = .scaleAspectFit
-    if #available(iOS 13.0, *) {
-        iconImageView.image = image.makeImage()
-            .withTintColor(
-                isHighlighted ? .textBrand : .textSecondary
-            )
-    }
+    iconImageView.image = image.makeImage()
+        .withTintColor(
+            isHighlighted ? .textBrand : .textSecondary
+        )
     
     let iconContainerView = UIView()
     iconContainerView.backgroundColor = isHighlighted ? .info100 : .borderNeutral
@@ -173,7 +171,6 @@ private func CreateRowLabelView(
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentable {
     
@@ -188,7 +185,6 @@ private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentab
 
 @available(iOSApplicationExtension, unavailable)
 struct InstitutionSearchFooterView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack {
             InstitutionSearchFooterViewUIViewRepresentable()

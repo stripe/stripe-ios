@@ -59,11 +59,9 @@ final class InstitutionSearchBar: UIView {
     private lazy var textFieldClearButton: UIButton = {
         let imageView = UIImageView()
         let textFieldClearButton = TextFieldClearButton()
-        if #available(iOS 13.0, *) {
-            let cancelImage = Image.cancel_circle.makeImage()
-                .withTintColor(.textDisabled)
-            textFieldClearButton.setImage(cancelImage, for: .normal)
-        }
+        let cancelImage = Image.cancel_circle.makeImage()
+            .withTintColor(.textDisabled)
+        textFieldClearButton.setImage(cancelImage, for: .normal)
         textFieldClearButton.addTarget(
             self,
             action: #selector(didSelectClearButton),
@@ -158,10 +156,8 @@ extension InstitutionSearchBar: UITextFieldDelegate {
 
 private func CreateSearchIconView() -> UIView {
     let searchIconImageView = UIImageView()
-    if #available(iOS 13.0, *) {
-        searchIconImageView.image = Image.search.makeImage()
+    searchIconImageView.image = Image.search.makeImage()
             .withTintColor(.textPrimary)
-    }
     searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         searchIconImageView.widthAnchor.constraint(equalToConstant: 16),
@@ -174,7 +170,6 @@ private func CreateSearchIconView() -> UIView {
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 private struct InstitutionSearchBarUIViewRepresentable: UIViewRepresentable {
     
     let text: String
@@ -188,7 +183,6 @@ private struct InstitutionSearchBarUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOS 13.0, *)
 struct InstitutionSearchBar_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {

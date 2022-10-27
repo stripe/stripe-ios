@@ -84,20 +84,18 @@ private func CreateWarningIconView() -> UIView {
         circleContainerView.heightAnchor.constraint(equalToConstant: diameter),
     ])
     
-    if #available(iOS 13.0, *) {
-        let image = Image.warning_circle.makeImage()
-            .withTintColor(.textCritical)
-        let imageView = UIImageView(image: image)
-        circleContainerView.addAndPinSubview(
-            imageView,
-            insets: NSDirectionalEdgeInsets(
-                top: 2,
-                leading: 2,
-                bottom: 2,
-                trailing: 2
-            )
+    let image = Image.warning_circle.makeImage()
+        .withTintColor(.textCritical)
+    let imageView = UIImageView(image: image)
+    circleContainerView.addAndPinSubview(
+        imageView,
+        insets: NSDirectionalEdgeInsets(
+            top: 2,
+            leading: 2,
+            bottom: 2,
+            trailing: 2
         )
-    }
+    )
     
     return circleContainerView
 }
@@ -106,7 +104,6 @@ private func CreateWarningIconView() -> UIView {
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct InstitutionIconViewUIViewRepresentable: UIViewRepresentable {
     
@@ -130,7 +127,6 @@ private struct InstitutionIconViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 struct InstitutionIconView_Previews: PreviewProvider {
     static var previews: some View {

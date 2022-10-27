@@ -38,10 +38,8 @@ final class InstitutionSearchErrorView: UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateIconView() -> UIView {
     let iconImageView = UIImageView()
-    if #available(iOS 13.0, *) {
-        iconImageView.image = Image.warning_triangle.makeImage()
+    iconImageView.image = Image.warning_triangle.makeImage()
             .withTintColor(.textSecondary)
-    }
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         iconImageView.widthAnchor.constraint(equalToConstant: 24),
@@ -110,7 +108,6 @@ private func CreateSubtitleLabel(
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct InstitutionSearchErrorViewUIViewRepresentable: UIViewRepresentable {
     
@@ -129,7 +126,6 @@ private struct InstitutionSearchErrorViewUIViewRepresentable: UIViewRepresentabl
 
 @available(iOSApplicationExtension, unavailable)
 struct InstitutionSearchErrorView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack(spacing: 50) {
             InstitutionSearchErrorViewUIViewRepresentable(didSelectEnterYourBankDetailsManually: {})

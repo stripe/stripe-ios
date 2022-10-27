@@ -76,7 +76,6 @@ final class AccountPickerAccountLoadErrorView: UIView {
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepresentable {
     
@@ -102,7 +101,6 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
 
 @available(iOSApplicationExtension, unavailable)
 struct AccountPickerAccountLoadErrorView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         AccountPickerAccountLoadErrorViewUIViewRepresentable(
             institutionName: "Chase",

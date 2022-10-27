@@ -65,7 +65,6 @@ final class AccountNumberRetrievalErrorView: UIView {
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewRepresentable {
     
@@ -89,7 +88,6 @@ private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewReprese
 
 @available(iOSApplicationExtension, unavailable)
 struct AccountNumberRetrievalErrorView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         AccountNumberRetrievalErrorViewUIViewRepresentable(
             institutionName: "Chase",

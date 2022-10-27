@@ -14,12 +14,8 @@ final class ManualEntryErrorView: UIView {
     init(text: String) {
         super.init(frame: .zero)
         let warningIconImageView = UIImageView()
-        if #available(iOS 13.0, *) {
-            warningIconImageView.image = Image.warning_triangle.makeImage()
-                .withTintColor(.textCritical)
-        } else {
-            assertionFailure()
-        }
+        warningIconImageView.image = Image.warning_triangle.makeImage()
+            .withTintColor(.textCritical)
         warningIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             warningIconImageView.widthAnchor.constraint(equalToConstant: 14),

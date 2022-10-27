@@ -91,12 +91,8 @@ private func CreateRows(
 
 private func CreateTableTitleView(title: String) -> UIView {
     let iconImageView = UIImageView()
-    if #available(iOS 13.0, *) {
-        iconImageView.image = Image.bank.makeImage()
+    iconImageView.image = Image.bank.makeImage()
             .withTintColor(.textSecondary)
-    } else {
-        assertionFailure()
-    }
     NSLayoutConstraint.activate([
         iconImageView.widthAnchor.constraint(equalToConstant: 16),
         iconImageView.heightAnchor.constraint(equalToConstant: 16),
@@ -240,7 +236,6 @@ private func CreateColumnView(
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIViewRepresentable {
     
@@ -259,7 +254,6 @@ private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIView
 
 @available(iOSApplicationExtension, unavailable)
 struct ManualEntrySuccessTransactionTableView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack(spacing: 16) {

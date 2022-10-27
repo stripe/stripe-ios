@@ -96,7 +96,6 @@ class ConsentFooterView: UIView {
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
@@ -117,7 +116,6 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
 @available(iOSApplicationExtension, unavailable)
 struct ConsentFooterView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack {

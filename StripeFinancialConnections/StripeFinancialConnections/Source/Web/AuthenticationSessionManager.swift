@@ -78,10 +78,8 @@ final class AuthenticationSessionManager: NSObject {
                     promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Nil return URL"))
                 }
         })
-        if #available(iOS 13.0, *) {
-            authSession.presentationContextProvider = self
-            authSession.prefersEphemeralWebBrowserSession = true
-        }
+        authSession.presentationContextProvider = self
+        authSession.prefersEphemeralWebBrowserSession = true
 
         self.authSession = authSession
         if #available(iOS 13.4, *) {

@@ -14,12 +14,8 @@ final class CheckboxView: UIView {
     private let checkboxImageView: UIImageView = {
         let checkboxImageView = UIImageView()
         checkboxImageView.contentMode = .scaleAspectFit
-        if #available(iOS 13.0, *) {
-            checkboxImageView.image = Image.check.makeImage()
-                .withTintColor(.customBackgroundColor, renderingMode: .alwaysOriginal)
-        } else {
-            assertionFailure()
-        }
+        checkboxImageView.image = Image.check.makeImage()
+            .withTintColor(.customBackgroundColor, renderingMode: .alwaysOriginal)
         return checkboxImageView
     }()
     

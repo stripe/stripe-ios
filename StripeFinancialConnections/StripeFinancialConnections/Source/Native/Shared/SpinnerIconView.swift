@@ -14,10 +14,8 @@ final class SpinnerIconView: UIView {
     private lazy var iconImageView: UIImageView = {
         let iconImageView = UIImageView()
         iconImageView.backgroundColor = .clear
-        if #available(iOS 13.0, *) {
-            let image = Image.spinner.makeImage()
-            iconImageView.image = image
-        }
+        let image = Image.spinner.makeImage()
+        iconImageView.image = image
         return iconImageView
     }()
     
@@ -63,7 +61,6 @@ final class SpinnerIconView: UIView {
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 private struct SpinnerIconViewUIViewRepresentable: UIViewRepresentable {
     
@@ -76,7 +73,6 @@ private struct SpinnerIconViewUIViewRepresentable: UIViewRepresentable {
 
 @available(iOSApplicationExtension, unavailable)
 struct SpinnerIconView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack {
             SpinnerIconViewUIViewRepresentable()
