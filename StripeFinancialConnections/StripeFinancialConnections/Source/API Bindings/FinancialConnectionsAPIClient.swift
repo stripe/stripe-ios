@@ -99,8 +99,13 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     }
     
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        let body = FinancialConnectionsSessionsClientSecretBody(clientSecret: clientSecret)
-        return self.post(resource: APIEndpointConsentAcquired, object: body)
+        let parameters = [
+            "client_secret": clientSecret,
+        ]
+        return self.post(
+            resource: APIEndpointConsentAcquired,
+            parameters: parameters
+        )
     }
 
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
