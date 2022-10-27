@@ -207,6 +207,14 @@ Generate new localized screenshots
 
 
 
+### ios emerge_tools
+
+```sh
+[bundle exec] fastlane ios emerge_tools
+```
+
+
+
 ### ios installation_cocoapods_without_frameworks_objc
 
 ```sh
