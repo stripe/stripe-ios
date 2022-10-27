@@ -217,7 +217,7 @@ final class PartnerAuthViewController: UIViewController {
                         // but create a brand new auth session
                         self.createAuthSession()
                     } else {
-                        // for legacy (non-OAuth) institutions, we navigate back to InstitutionPicker
+                        // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
                         self.navigateBack()
                     }
                 }

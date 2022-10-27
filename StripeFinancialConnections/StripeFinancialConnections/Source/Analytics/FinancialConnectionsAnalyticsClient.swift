@@ -18,7 +18,6 @@ final class FinancialConnectionsAnalyticsClient {
         self.analyticsClient = analyticsClient
         additionalParameters["is_webview"] = false
         additionalParameters["navigator_language"] = Locale.current.identifier
-        additionalParameters["platform"] = "ios"
     }
     
     public func log(eventName: String, parameters: [String: Any] = [:]) {
@@ -131,7 +130,7 @@ extension FinancialConnectionsAnalyticsClient {
         switch viewController {
         case is ConsentViewController:
             return .consent
-        case is InstitutionPicker:
+        case is InstitutionPickerViewController:
             return .institutionPicker
         case is PartnerAuthViewController:
             return .partnerAuth
