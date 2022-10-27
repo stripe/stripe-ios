@@ -197,7 +197,7 @@ final class PartnerAuthViewController: UIViewController {
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
                 
-                if error == nil, let returnUrl = returnUrl, returnUrl.scheme == "stripe" {
+                if error == nil, let returnUrl = returnUrl, returnUrl.scheme == "stripe", returnUrl.absoluteString.contains("success") {
                     if authorizationSession.isOauth {
                         // for OAuth flows, we need to fetch OAuth results
                         self.authorizeAuthSession(authorizationSession)
@@ -265,7 +265,7 @@ final class PartnerAuthViewController: UIViewController {
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success():
+                case .success(let authorizationSession):
                     self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
                     self.showEstablishingConnectionLoadingView(false)
                 case .failure(let error):

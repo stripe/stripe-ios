@@ -43,7 +43,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
     
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams> {
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
         return Promise<FinancialConnectionsMixedOAuthParams>()
     }
     

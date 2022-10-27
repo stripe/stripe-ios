@@ -27,7 +27,7 @@ protocol FinancialConnectionsAPIClient {
     
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
     
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams>
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams>
     
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
@@ -146,12 +146,25 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointAuthorizationSessionsCancel, object: body)
     }
     
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams> {
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
         let body = [
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        return self.post(resource: APIEndpointAuthorizationSessionsOAuthResults, object: body)
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
+                }
+                return self.post(resource: APIEndpointAuthorizationSessionsOAuthResults, object: body)
+            },
+            pollTimingOptions: APIPollingHelper<FinancialConnectionsMixedOAuthParams>.PollTimingOptions(
+                initialPollDelay: 0,
+                maxNumberOfRetries: 300, // Stripe.js has 600 second timeout, 600 / 2 = 300 retries
+                retryInterval: 2.0
+            )
+        )
+        return pollingHelper.startPollingApiCall()
     }
     
     func authorizeAuthSession(clientSecret: String,
