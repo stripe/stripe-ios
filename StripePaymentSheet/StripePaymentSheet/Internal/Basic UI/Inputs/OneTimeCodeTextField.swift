@@ -49,13 +49,7 @@ final class OneTimeCodeTextField: UIControl {
 
     var keyboardType: UIKeyboardType = .asciiCapableNumberPad
 
-    var textContentType: UITextContentType? = {
-        if #available(iOS 12.0, *) {
-            return .oneTimeCode
-        } else {
-            return nil
-        }
-    }()
+    var textContentType: UITextContentType? = .oneTimeCode
 
     var inputDelegate: UITextInputDelegate?
 
@@ -227,20 +221,11 @@ private extension OneTimeCodeTextField {
             return activeDigitView.convert(activeDigitView.bounds, to: self)
         }()
 
-        if #available(iOS 13.0, *) {
-            UIMenuController.shared.showMenu(from: self, rect: menuRect)
-        } else {
-            UIMenuController.shared.setTargetRect(menuRect, in: self)
-            UIMenuController.shared.setMenuVisible(true, animated: true)
-        }
+        UIMenuController.shared.showMenu(from: self, rect: menuRect)
     }
 
     func hideMenu() {
-        if #available(iOS 13.0, *) {
-            UIMenuController.shared.hideMenu()
-        } else {
-            UIMenuController.shared.setMenuVisible(false, animated: true)
-        }
+        UIMenuController.shared.hideMenu()
     }
 
     @objc func applicationWillEnterForeground(_ notification: Notification) {
