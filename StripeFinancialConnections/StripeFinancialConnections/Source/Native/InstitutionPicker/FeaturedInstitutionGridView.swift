@@ -63,7 +63,7 @@ class FeaturedInstitutionGridView: UIView {
     }
     
     func loadInstitutions(_ institutions: [FinancialConnectionsInstitution]) {
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        assertMainQueue()
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([.main])

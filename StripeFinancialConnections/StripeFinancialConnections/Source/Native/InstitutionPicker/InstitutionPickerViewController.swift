@@ -137,7 +137,7 @@ class InstitutionPickerViewController: UIViewController {
 extension InstitutionPickerViewController {
     
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        assertMainQueue()
         dataSource
             .fetchFeaturedInstitutions()
             .observe(on: .main) { [weak self] result in
