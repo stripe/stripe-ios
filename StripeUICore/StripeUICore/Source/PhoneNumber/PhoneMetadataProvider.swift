@@ -65,7 +65,7 @@ private extension PhoneMetadataProvider {
 
     static func getFallbackMetadata() -> [Metadata] {
         // TODO(ramont): Remove after determining success rate.
-        let data: [(region: String, String, String?)] = [
+        let data: [(String, String, String?)] = [
             ("US", "1", "1"),
             ("AG", "1", "1"),
             ("AI", "1", "1"),
