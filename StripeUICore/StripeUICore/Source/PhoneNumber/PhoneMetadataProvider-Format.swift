@@ -24,7 +24,9 @@ extension PhoneMetadataProvider {
 
         private static let regexCache: NSCache<NSString, NSRegularExpression> = {
             let cache = NSCache<NSString, NSRegularExpression>()
-            cache.countLimit = 30
+            // Set `countLimit` to 2x the max number of matchers for a single region. Note that
+            // this limit is not strict, and eviction policy is implementation-dependent.
+            cache.countLimit = 48
             return cache
         }()
 
