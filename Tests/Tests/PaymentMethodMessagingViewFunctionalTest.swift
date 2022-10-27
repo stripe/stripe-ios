@@ -32,7 +32,7 @@ class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
                 XCTFail(error.localizedDescription)
             case .success(let view):
                 // We can't snapshot test the real view, since its appearance can change
-                XCTAssertTrue(view.textView.attributedText.length > 0)
+                XCTAssertTrue(view.label.attributedText?.length ?? 0 > 0)
                 XCTAssertTrue(self.mockAnalyticsClient.productUsage.contains(PaymentMethodMessagingView.stp_analyticsIdentifier))
                 XCTAssertTrue(self.mockAnalyticsClient.loggedAnalytics.contains { analytic in
                     analytic.event == .paymentMethodMessagingViewLoadSucceeded

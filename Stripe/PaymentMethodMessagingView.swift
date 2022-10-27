@@ -58,15 +58,15 @@ import WebKit
         self.configuration = configuration
         super.init(frame: .zero)
         backgroundColor = CompatibleColor.systemBackground
-        textView.attributedText = attributedString
-        textView.textColor = configuration.textColor
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(textView)
+        label.attributedText = attributedString
+        label.textColor = configuration.textColor
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
         NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            textView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            textView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            label.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            label.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            label.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])
         addSubview(dummyLabelForDynamicType)
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTap))
@@ -83,7 +83,7 @@ import WebKit
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         Task {
-            var attributedString = textView.attributedText
+            var attributedString = label.attributedText
             if previousTraitCollection?.isDarkMode != traitCollection.isDarkMode {
                 // Update images by reloading content from the server
                 let content = try await Self.loadContent(configuration: configuration)
@@ -94,8 +94,8 @@ import WebKit
                 let adjustedFontSize = dummyLabelForDynamicType.font?.pointSize ?? configuration.font.pointSize
                 attributedString = attributedString?.withFontSize(adjustedFontSize)
             }
-            textView.attributedText = attributedString
-            textView.textColor = configuration.textColor
+            label.attributedText = attributedString
+            label.textColor = configuration.textColor
         }
     }
     
@@ -106,13 +106,10 @@ import WebKit
     let configuration: Configuration
     static var analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
     
-    lazy var textView: UITextView = {
-        let textView = UITextView()
-        textView.isEditable = false
-        textView.isScrollEnabled = false
-        textView.isSelectable = false
-        textView.backgroundColor = nil
-        return textView
+    lazy var label: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        return label
     }()
     
     @objc func didTap() {
