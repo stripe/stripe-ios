@@ -7,7 +7,6 @@
 //
 
 import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
 

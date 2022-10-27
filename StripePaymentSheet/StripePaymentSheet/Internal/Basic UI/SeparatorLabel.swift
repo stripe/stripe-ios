@@ -7,7 +7,6 @@
 //
 
 import UIKit
-@_spi(STP) import StripeUICore
 
 /// A separator with label.
 /// For internal SDK use only
