@@ -31,6 +31,7 @@ import WebKit
     public static func create(configuration: Configuration, completion: @escaping (Result<PaymentMethodMessagingView, Swift.Error>) -> ()) {
         assert(!configuration.paymentMethods.isEmpty)
         assert(configuration.apiClient.publishableKey?.nonEmpty != nil)
+        assert(!configuration.countryCode.isEmpty)
         let loadStartTime = Date()
         let parameters = Self.makeMessagingContentEndpointParams(configuration: configuration)
         var request = configuration.apiClient.configuredRequest(for: APIEndpoint, additionalHeaders: [:])
@@ -51,7 +52,7 @@ import WebKit
         }
     }
     
-    public init(attributedString: NSAttributedString, modalURL: String, configuration: Configuration) {
+    init(attributedString: NSAttributedString, modalURL: String, configuration: Configuration) {
         Self.analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingView.self)
         self.modalURL = URL(string: "https://" + modalURL)
         self.configuration = configuration

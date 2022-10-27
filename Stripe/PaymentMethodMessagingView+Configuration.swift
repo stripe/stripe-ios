@@ -16,7 +16,18 @@ import UIKit
      Configuration for the `PaymentMethodMessagingView` class.
      */
     struct Configuration {
-        public init(apiClient: STPAPIClient = .shared, paymentMethods: [PaymentMethodMessagingView.Configuration.PaymentMethod], currency: String, amount: Int, locale: Locale = Locale.current, countryCode: String = Locale.current.regionCode ?? "", font: UIFont = .preferredFont(forTextStyle: .footnote), textColor: UIColor = .label, imageColor: (userInterfaceStyleLight: PaymentMethodMessagingView.Configuration.ImageColor, userInterfaceStyleDark: PaymentMethodMessagingView.Configuration.ImageColor) = (userInterfaceStyleLight: .black, userInterfaceStyleDark: .white)) {
+        /// Initializes a `PaymentMethodMessagingView.Configuration`
+        public init(
+            apiClient: STPAPIClient = .shared,
+            paymentMethods: [PaymentMethodMessagingView.Configuration.PaymentMethod],
+            currency: String,
+            amount: Int,
+            locale: Locale = Locale.current,
+            countryCode: String = Locale.current.regionCode ?? "",
+            font: UIFont = .preferredFont(forTextStyle: .footnote),
+            textColor: UIColor = .label,
+            imageColor: (userInterfaceStyleLight: PaymentMethodMessagingView.Configuration.ImageColor, userInterfaceStyleDark: PaymentMethodMessagingView.Configuration.ImageColor) = (userInterfaceStyleLight: .black, userInterfaceStyleDark: .white)
+        ) {
             self.apiClient = apiClient
             self.paymentMethods = paymentMethods
             self.currency = currency
