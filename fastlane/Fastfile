@@ -204,17 +204,18 @@ platform :ios do
   lane :emerge_tools do
     Dir.chdir('..') do
       sh('./ci_scripts/archive-for-emerge.rb')
-      emerge(file_path: 'build/StripeCore-iOS.xcarchive')
-      emerge(file_path: 'build/StripeUICore-iOS.xcarchive')
-      emerge(file_path: 'build/StripeCameraCore-iOS.xcarchive')
-      emerge(file_path: 'build/StripeApplePay-iOS.xcarchive')
-      emerge(file_path: 'build/StripePayments-iOS.xcarchive')
-      emerge(file_path: 'build/StripePaymentsUI-iOS.xcarchive')
-      emerge(file_path: 'build/StripePaymentSheet-iOS.xcarchive')
-      emerge(file_path: 'build/StripeIdentity-iOS.xcarchive')
-      emerge(file_path: 'build/StripeFinancialConnections-iOS.xcarchive')
-      emerge(file_path: 'build/StripeCardScan-iOS.xcarchive')
-      emerge(file_path: 'build/Stripe-iOS.xcarchive')
+      archive_path = Dir.pwd + '/build/'
+      emerge(file_path: archive_path + 'StripeCore-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripeUICore-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripeCameraCore-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripeApplePay-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripePayments-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripePaymentsUI-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripePaymentSheet-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripeIdentity-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripeFinancialConnections-iOS.xcarchive')
+      emerge(file_path: archive_path + 'StripeCardScan-iOS.xcarchive')
+      emerge(file_path: archive_path + 'Stripe-iOS.xcarchive')
     end
   end
 
