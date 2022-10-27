@@ -1,5 +1,5 @@
 //
-//  InstitutionPicker.swift
+//  InstitutionPickerViewController.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 6/7/22.
@@ -11,18 +11,18 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
-protocol InstitutionPickerDelegate: AnyObject {
-    func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution)
-    func institutionPickerDidSelectManuallyAddYourAccount(_ picker: InstitutionPicker)
+protocol InstitutionPickerViewControllerDelegate: AnyObject {
+    func institutionPickerViewController(_ viewController: InstitutionPickerViewController, didSelect institution: FinancialConnectionsInstitution)
+    func institutionPickerViewControllerDidSelectManuallyAddYourAccount(_ viewController: InstitutionPickerViewController)
 }
 
 @available(iOSApplicationExtension, unavailable)
-class InstitutionPicker: UIViewController {
+class InstitutionPickerViewController: UIViewController {
     
     // MARK: - Properties
     
     private let dataSource: InstitutionDataSource
-    weak var delegate: InstitutionPickerDelegate?
+    weak var delegate: InstitutionPickerViewControllerDelegate?
     
     private lazy var loadingView: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
@@ -117,7 +117,7 @@ class InstitutionPicker: UIViewController {
         searchBar.text = ""
         institutionSearchTableView.loadInstitutions([])
         toggleContentContainerViewVisbility()
-        delegate?.institutionPicker(self, didSelect: institution)
+        delegate?.institutionPickerViewController(self, didSelect: institution)
     }
     
     private func showLoadingView(_ show: Bool) {
@@ -134,7 +134,7 @@ class InstitutionPicker: UIViewController {
 // MARK: - Data
 
 @available(iOSApplicationExtension, unavailable)
-extension InstitutionPicker {
+extension InstitutionPickerViewController {
     
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
@@ -226,7 +226,7 @@ extension InstitutionPicker {
 // MARK: - InstitutioNSearchBarDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension InstitutionPicker: InstitutionSearchBarDelegate {
+extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
     
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
         toggleContentContainerViewVisbility()
@@ -237,7 +237,7 @@ extension InstitutionPicker: InstitutionSearchBarDelegate {
 // MARK: - UIGestureRecognizerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension InstitutionPicker: UIGestureRecognizerDelegate {
+extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         let touchPoint = touch.location(in: view)
@@ -248,7 +248,7 @@ extension InstitutionPicker: UIGestureRecognizerDelegate {
 // MARK: - FeaturedInstitutionGridViewDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
+extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
     
     func featuredInstitutionGridView(
         _ view: FeaturedInstitutionGridView,
@@ -268,7 +268,7 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
 // MARK: - InstitutionSearchTableViewDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension InstitutionPicker: InstitutionSearchTableViewDelegate {
+extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
     
     func institutionSearchTableView(
         _ tableView: InstitutionSearchTableView,
@@ -285,14 +285,14 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
     }
     
     func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView) {
-        delegate?.institutionPickerDidSelectManuallyAddYourAccount(self)
+        delegate?.institutionPickerViewControllerDidSelectManuallyAddYourAccount(self)
     }
 }
 
 // MARK: - Constants
 
 @available(iOSApplicationExtension, unavailable)
-extension InstitutionPicker {
+extension InstitutionPickerViewController {
     enum Constants {
         static let queryDelay = TimeInterval(0.2)
     }

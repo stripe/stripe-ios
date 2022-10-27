@@ -296,12 +296,12 @@ extension AuthFlowController: ConsentViewControllerDelegate {
     }
 }
 
-// MARK: - InstitutionPickerDelegate
+// MARK: - InstitutionPickerViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: InstitutionPickerDelegate {
+extension AuthFlowController: InstitutionPickerViewControllerDelegate {
     
-    func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution) {
+    func institutionPickerViewController(_ viewController: InstitutionPickerViewController, didSelect institution: FinancialConnectionsInstitution) {
         dataManager.institution = institution
         
         let partnerAuthViewController = CreatePaneViewController(
@@ -312,7 +312,7 @@ extension AuthFlowController: InstitutionPickerDelegate {
         pushViewController(partnerAuthViewController, animated: true)
     }
     
-    func institutionPickerDidSelectManuallyAddYourAccount(_ picker: InstitutionPicker) {
+    func institutionPickerViewControllerDidSelectManuallyAddYourAccount(_ viewController: InstitutionPickerViewController) {
         pushManualEntry()
     }
 }
@@ -589,7 +589,7 @@ private func CreatePaneViewController(
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient
         )
-        let picker = InstitutionPicker(dataSource: dataSource)
+        let picker = InstitutionPickerViewController(dataSource: dataSource)
         picker.delegate = authFlowController
         viewController = picker
     case .linkConsent:
