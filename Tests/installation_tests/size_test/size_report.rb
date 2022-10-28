@@ -91,7 +91,7 @@ def die(string)
   abort "[#{File.basename(__FILE__)}] [ERROR] #{string}"
 end
 
-def build(dir)
+def build(dir, target_name = 'SPMTest')
   Dir.chdir(dir) do
     # Xcode's ipatool relies on the system ruby, so break out of Bundler's environment here to avoid
     # "The data couldn’t be read because it isn’t in the correct format" errors.
@@ -130,8 +130,8 @@ def build(dir)
 
     # Find the last app size result (which corresponds to the thinned universal app, not an individual device slice).
     app_size = Plist.parse_xml('build/SPMTestArchived/app-thinning.plist')
-    compressed_size = app_size['variants']['Apps/SPMTest.ipa']['sizeCompressedApp']
-    uncompressed_size = app_size['variants']['Apps/SPMTest.ipa']['sizeUncompressedApp']
+    compressed_size = app_size['variants']["Apps/#{target_name}.ipa"]['sizeCompressedApp']
+    uncompressed_size = app_size['variants']["Apps/#{target_name}.ipa"]['sizeUncompressedApp']
     return bytes_to_kb(compressed_size), bytes_to_kb(uncompressed_size)
   end
 end
@@ -187,11 +187,11 @@ def setup_project(branch, directory, sdk)
   end
 end
 
-def build_from_branch(branch, dir)
+def build_from_branch(branch, dir, target_name)
   Dir.chdir(@project_dir) do
     `git checkout #{branch}`
   end
-  build(dir)
+  build(dir, target_name)
 end
 
 def check_size(modules, first_branch, second_branch, keep_xcarchive)
@@ -238,7 +238,7 @@ def check_size(modules, first_branch, second_branch, keep_xcarchive)
 
       # Checkout first branch and build with SDK
       puts "Building with #{sdk} on #{first_branch}...".green
-      first_compressed_size, first_uncompressed_size = build_from_branch(first_branch, @temp_dir)
+      first_compressed_size, first_uncompressed_size = build_from_branch(first_branch, @temp_dir, sdk)
 
       if keep_xcarchive
         archive_dir = "#{@project_dir}/build/size_tests"
@@ -256,7 +256,7 @@ def check_size(modules, first_branch, second_branch, keep_xcarchive)
       second_compressed_size, second_uncompressed_size = nil
       unless second_branch.nil?
         puts "Building with #{sdk} on #{second_branch}...".green
-        second_compressed_size, second_uncompressed_size = build_from_branch(second_branch, @temp_dir)
+        second_compressed_size, second_uncompressed_size = build_from_branch(second_branch, @temp_dir, sdk)
 
         second_sdk_compressed = second_compressed_size - unincluded_compressed_size
         second_sdk_uncompressed = second_uncompressed_size - unincluded_uncompressed_size
