@@ -278,17 +278,6 @@ jobs:
       - save_spm_cache
       - archive_logs
 
-  emerge-tools:
-    executor: mac-executor
-
-    steps:
-      - prep_environment
-      - prep_clone
-      - prep_bundler_spm
-      - run: "bundle exec fastlane emerge_tools"
-      - save_spm_cache
-      - archive_logs
-
   legacy-tests-13:
     executor: mac-executor
 
@@ -344,15 +333,14 @@ workflows:
   version: 2.1
   build-and-test:
     jobs:
-      - size-report
+      - size-report:
+          context:
+            - EmergeTools
       - framework-tests
       - ui-tests
       - install-tests
       - lint-tests
       - check-docs
-      - emerge-tools:
-          context:
-            - EmergeTools
       - legacy-tests-13:
           filters:
             branches:

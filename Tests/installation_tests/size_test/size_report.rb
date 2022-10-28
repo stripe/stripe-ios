@@ -251,7 +251,7 @@ def check_size(modules, measure_branch, base_branch)
       `cp "#{@temp_dir}/build/#{sdk}Size-LinkMap.txt" "#{@temp_dir}/build/SPMTest.xcarchive/Linkmaps/"`
       `mv "#{@temp_dir}/build/SPMTest.xcarchive" "#{@archive_dir}/#{sdk}.xcarchive"`
 
-      measure_sdk_compressed = measure_uncompressed_size - unincluded_compressed_size
+      measure_sdk_compressed = measure_compressed_size - unincluded_compressed_size
       measure_sdk_uncompressed = measure_uncompressed_size - unincluded_uncompressed_size
 
       puts "SPMTest with #{sdk.underline} on #{measure_branch}: Compressed size: #{format_size(measure_compressed_size)}, uncompressed size: #{format_size(measure_uncompressed_size)}".blue
