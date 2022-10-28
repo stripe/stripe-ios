@@ -110,6 +110,8 @@ def build(dir, target_name = 'SPMTest')
         'CODE_SIGN_IDENTITY="-" ' +
         'CODE_SIGNING_REQUIRED="NO" ' +
         'CODE_SIGN_ENTITLEMENTS="" ' +
+        'LD_GENERATE_MAP_FILE="YES" ' +
+        "LD_MAP_FILE_PATH=\"build/#{target_name}-LinkMap.txt\" " +
         'CODE_SIGNING_ALLOWED="NO"').to_s)
 
       raise StandardError, 'Build failed' unless command_succeeded
@@ -141,6 +143,10 @@ end
 @project_dir = File.expand_path(File.join_if_safe(@script_dir, '/../../../'), Dir.getwd)
 
 @temp_dir = `mktemp -d`.chomp("\n")
+
+@archive_dir = "#{@project_dir}/build/size_tests"
+FileUtils.rm_rf(@archive_dir)
+Dir.mkdir(@archive_dir)
 
 def setup_project(branch, directory, sdk)
   Dir.chdir(@project_dir) do
@@ -194,14 +200,14 @@ def build_from_branch(branch, dir, target_name)
   build(dir, target_name)
 end
 
-def check_size(modules, first_branch, second_branch, keep_xcarchive)
+def check_size(modules, measure_branch, base_branch)
   # Try to check out the branches - this will fail if there are unstaged changes,
   # so this also helps prevent us from unintentionally messing up any uncommitted work:
   current_branch = nil
   Dir.chdir(@project_dir) do
     current_branch = `git rev-parse --abbrev-ref HEAD`.chomp("\n")
-    `git checkout #{first_branch}`
-    `git checkout #{second_branch}` unless second_branch.nil?
+    `git checkout #{measure_branch}`
+    `git checkout #{base_branch}` unless base_branch.nil?
 
     `git checkout #{current_branch}`
   end
@@ -236,52 +242,51 @@ def check_size(modules, first_branch, second_branch, keep_xcarchive)
       # Setup project to include SDK
       setup_project(current_branch, @temp_dir, sdk)
 
-      # Checkout first branch and build with SDK
-      puts "Building with #{sdk} on #{first_branch}...".green
-      first_compressed_size, first_uncompressed_size = build_from_branch(first_branch, @temp_dir, sdk)
+      # Checkout measure branch and build with SDK
+      puts "Building with #{sdk} on #{measure_branch}...".green
+      measure_compressed_size, measure_uncompressed_size = build_from_branch(measure_branch, @temp_dir, sdk + 'Size')
 
-      if keep_xcarchive
-        archive_dir = "#{@project_dir}/build/size_tests"
-        `mkdir -p #{archive_dir}`
-        `cp -a "#{@temp_dir}/build/SPMTest.xcarchive" "#{archive_dir}/#{sdk}.xcarchive"`
-      end
+      # Keep the xcarchive around to send to Emerge
+      `mkdir -p "#{@temp_dir}/build/SPMTest.xcarchive/Linkmaps/"`
+      `cp "#{@temp_dir}/build/#{sdk}Size-LinkMap.txt" "#{@temp_dir}/build/SPMTest.xcarchive/Linkmaps/"`
+      `mv "#{@temp_dir}/build/SPMTest.xcarchive" "#{@archive_dir}/#{sdk}.xcarchive"`
 
-      first_sdk_compressed = first_compressed_size - unincluded_compressed_size
-      first_sdk_uncompressed = first_uncompressed_size - unincluded_uncompressed_size
+      measure_sdk_compressed = measure_uncompressed_size - unincluded_compressed_size
+      measure_sdk_uncompressed = measure_uncompressed_size - unincluded_uncompressed_size
 
-      puts "SPMTest with #{sdk.underline} on #{first_branch}: Compressed size: #{format_size(first_compressed_size)}, uncompressed size: #{format_size(first_uncompressed_size)}".blue
-      puts "Size of #{sdk.underline} on #{first_branch} is #{format_size(first_sdk_compressed)} when compressed, #{format_size(first_sdk_uncompressed)} when uncompressed".blue
+      puts "SPMTest with #{sdk.underline} on #{measure_branch}: Compressed size: #{format_size(measure_compressed_size)}, uncompressed size: #{format_size(measure_uncompressed_size)}".blue
+      puts "Size of #{sdk.underline} on #{measure_branch} is #{format_size(measure_sdk_compressed)} when compressed, #{format_size(measure_sdk_uncompressed)} when uncompressed".blue
 
-      # Checkout second branch and build with SDK
-      second_compressed_size, second_uncompressed_size = nil
-      unless second_branch.nil?
-        puts "Building with #{sdk} on #{second_branch}...".green
-        second_compressed_size, second_uncompressed_size = build_from_branch(second_branch, @temp_dir, sdk)
+      # Checkout base branch and build with SDK
+      base_compressed_size, base_uncompressed_size = nil
+      unless base_branch.nil?
+        puts "Building with #{sdk} on #{base_branch}...".green
+        base_compressed_size, base_uncompressed_size = build_from_branch(base_branch, @temp_dir, sdk + 'Size')
 
-        second_sdk_compressed = second_compressed_size - unincluded_compressed_size
-        second_sdk_uncompressed = second_uncompressed_size - unincluded_uncompressed_size
+        base_sdk_compressed = base_compressed_size - unincluded_compressed_size
+        base_sdk_uncompressed = base_uncompressed_size - unincluded_uncompressed_size
 
-        incremental_diff_uncompressed = second_uncompressed_size - first_uncompressed_size
-        incremental_diff_compressed = second_compressed_size - first_compressed_size
+        incremental_diff_uncompressed = measure_uncompressed_size - base_uncompressed_size
+        incremental_diff_compressed = measure_compressed_size - base_compressed_size
 
-        puts "SPMTest with #{sdk.underline} on #{second_branch}: Compressed size: #{format_size(second_compressed_size)}, uncompressed size: #{format_size(second_uncompressed_size)}".blue
+        puts "SPMTest with #{sdk.underline} on #{base_branch}: Compressed size: #{format_size(base_compressed_size)}, uncompressed size: #{format_size(base_uncompressed_size)}".blue
 
-        puts "Size of #{sdk.underline} on #{second_branch} is #{format_size(second_sdk_compressed)} when compressed, #{format_size(second_sdk_uncompressed)} when uncompressed".blue
+        puts "Size of #{sdk.underline} on #{base_branch} is #{format_size(base_sdk_compressed)} when compressed, #{format_size(base_sdk_uncompressed)} when uncompressed".blue
 
         exceeds_max_size = false
-        if !max_compressed_size.nil? && second_sdk_compressed > max_compressed_size
+        if !max_compressed_size.nil? && measure_sdk_compressed > max_compressed_size
           puts "This is over the #{max_compressed_size}kb compressed threshold, failing build.".red
           exceeds_max_size = true
         end
 
-        if !max_uncompressed_size.nil? && second_sdk_uncompressed > max_uncompressed_size
+        if !max_uncompressed_size.nil? && measure_sdk_uncompressed > max_uncompressed_size
           puts "This is over the #{max_uncompressed_size}kb uncompressed threshold, failing build.".red
           exceeds_max_size = true
         end
 
         sdks_exceeding_max_size.append(sdk) if exceeds_max_size
 
-        puts "#{second_branch} adds #{incremental_diff_uncompressed}kb when compressed, #{incremental_diff_compressed}kb when uncompressed to #{sdk.underline}".blue
+        puts "#{measure_branch} adds #{incremental_diff_uncompressed}kb when compressed, #{incremental_diff_compressed}kb when uncompressed to #{sdk.underline}".blue
         exceeds_max_incremental_size = false
         if !max_incremental_uncompressed_size.nil? && incremental_diff_uncompressed > max_incremental_uncompressed_size
           puts "This is over the #{max_incremental_uncompressed_size}kb incremental uncompressed threshold.".red
@@ -291,8 +296,8 @@ def check_size(modules, first_branch, second_branch, keep_xcarchive)
 
         size_report << [
           sdk,
-          format_size(second_sdk_compressed),
-          format_size(second_sdk_uncompressed),
+          format_size(measure_sdk_compressed),
+          format_size(measure_sdk_uncompressed),
           format_delta(incremental_diff_compressed),
           format_delta(incremental_diff_uncompressed),
           format_result(
@@ -301,8 +306,9 @@ def check_size(modules, first_branch, second_branch, keep_xcarchive)
           )
         ]
       end
-    rescue StandardError
+    rescue StandardError => e
       puts "#{sdk} could not be built on one of the specified branches".red
+      puts e.message.to_s.red
     end
   end
 
@@ -319,21 +325,19 @@ def check_size(modules, first_branch, second_branch, keep_xcarchive)
 end
 
 if ARGV.empty?
-  puts 'Usage: size_report.sh ref [other_ref] [--keep-xcarchive]'
+  puts 'Usage: size_report.sh ref [other_ref]'
   puts 'Calculates the App Store thinned size of frameworks when packaged with a basic test app'
   puts 'Only frameworks with `size_report` specified in modules.yaml will have a size report'
-  puts 'ref: the tag/branch to be calculated (e.g. private)'
+  puts 'ref: the tag/branch to be calculated (e.g. master)'
   puts 'other_ref (optional): a tag/branch to compare (e.g. 21.1.0)'
-  puts '--keep-xcarchive (optional): keep a copy of the xcarchive for each app in /build/size_tests/'
   exit 1
 end
 
-first_branch = ARGV[0]
-second_branch = ARGV[1]
-keep_xcarchive = ARGV.include? '--keep-xcarchive'
+measure_branch = ARGV[0]
+base_branch = ARGV[1]
 
 modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| !m['size_report'].nil? }
-sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, first_branch, second_branch, keep_xcarchive)
+sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, measure_branch, base_branch)
 
 # Clean up temp directory
 FileUtils.rm_rf(@temp_dir)

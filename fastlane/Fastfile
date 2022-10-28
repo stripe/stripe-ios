@@ -201,21 +201,17 @@ platform :ios do
     end
   end
 
-  lane :emerge_tools do
+  lane :size_report do
     Dir.chdir('..') do
-      sh('./ci_scripts/archive-for-emerge.rb')
-      archive_path = Dir.pwd + '/build/'
-      emerge(file_path: archive_path + 'StripeCore-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripeUICore-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripeCameraCore-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripeApplePay-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripePayments-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripePaymentsUI-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripePaymentSheet-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripeIdentity-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripeFinancialConnections-iOS.xcarchive')
-      emerge(file_path: archive_path + 'StripeCardScan-iOS.xcarchive')
-      emerge(file_path: archive_path + 'Stripe-iOS.xcarchive')
+      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb master #{ENV['CIRCLE_BRANCH']}")
+      archive_path = Dir.pwd + '/build/size_tests/'
+      emerge(file_path: archive_path + 'Stripe.xcarchive')
+      emerge(file_path: archive_path + 'StripeApplePay.xcarchive')
+      emerge(file_path: archive_path + 'StripeFinancialConnections.xcarchive')
+      emerge(file_path: archive_path + 'StripeIdentity.xcarchive')
+      emerge(file_path: archive_path + 'StripePayments.xcarchive')
+      emerge(file_path: archive_path + 'StripePaymentsUI.xcarchive')
+      emerge(file_path: archive_path + 'StripePaymentSheet.xcarchive')
     end
   end
 

@@ -96,7 +96,7 @@ jobs:
       - run: "bundle install"
       - run:
           name: "Run size report"
-          command: bundle exec ruby Tests/installation_tests/size_test/size_report.rb private $CIRCLE_BRANCH
+          command: "bundle exec fastlane size_report"
 
   framework-tests:
     executor: mac-executor

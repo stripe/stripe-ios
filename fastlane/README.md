@@ -207,10 +207,10 @@ Generate new localized screenshots
 
 
 
-### ios emerge_tools
+### ios size_report
 
 ```sh
-[bundle exec] fastlane ios emerge_tools
+[bundle exec] fastlane ios size_report
 ```
 
 
