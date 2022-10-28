@@ -146,7 +146,7 @@ end
 
 @archive_dir = "#{@project_dir}/build/size_tests"
 FileUtils.rm_rf(@archive_dir)
-Dir.mkdir(@archive_dir)
+`mkdir -p #{@archive_dir}`
 
 def setup_project(branch, directory, sdk)
   Dir.chdir(@project_dir) do
