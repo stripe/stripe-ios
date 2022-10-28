@@ -77,10 +77,10 @@ def File.join_if_safe(arg1, *otherArgs)
 
   # Check for empty or nil strings
   args.each do |arg|
-    raise "Cannot join nil or empty string." if arg.nil? || arg.empty?
+    raise 'Cannot join nil or empty string.' if arg.nil? || arg.empty?
   end
 
-  return File.join(args)
+  File.join(args)
 end
 
 def info(string)
@@ -93,17 +93,14 @@ end
 
 def build(dir)
   Dir.chdir(dir) do
-
     # Xcode's ipatool relies on the system ruby, so break out of Bundler's environment here to avoid
     # "The data couldn’t be read because it isn’t in the correct format" errors.
-
-
 
     Bundler.with_original_env do
       `mkdir -p build`
       # Build an archive with all code-signing disabled
       # (so we can run this in an untrusted CI environment)
-      command_succeeded = system("#{'xcodebuild clean archive ' +
+      command_succeeded = system(('xcodebuild clean archive ' +
         '-quiet ' +
         '-workspace "SPMTest.xcworkspace" ' +
         '-scheme "SPMTest" ' +
@@ -113,26 +110,22 @@ def build(dir)
         'CODE_SIGN_IDENTITY="-" ' +
         'CODE_SIGNING_REQUIRED="NO" ' +
         'CODE_SIGN_ENTITLEMENTS="" ' +
-        'CODE_SIGNING_ALLOWED="NO"'}")
+        'CODE_SIGNING_ALLOWED="NO"').to_s)
 
-      unless command_succeeded
-        raise StandardError.new "Clean failed"
-      end
+      raise StandardError, 'Build failed' unless command_succeeded
 
       # Export a thinned archive for distribution using ad-hoc signing.
       # `ExportOptions.plist` contains a signingCertificate of "-": This isn't
       # documented anywhere, but will cause Xcode to ad-hoc sign the archive.
       # This will create "App Thinning Size Report.txt".
-      command_succeeded = system("#{'xcodebuild -exportArchive ' +
-      '-quiet '+
+      command_succeeded = system(('xcodebuild -exportArchive ' +
+      '-quiet ' +
       '-archivePath build/SPMTest.xcarchive ' +
       '-exportPath build/SPMTestArchived ' +
       '-exportOptionsPlist ExportOptions.plist ' +
-      'CODE_SIGN_IDENTITY="-"'}")
+      'CODE_SIGN_IDENTITY="-"').to_s)
 
-      unless command_succeeded
-        raise StandardError.new "Build failed"
-      end
+      raise StandardError, 'Build failed' unless command_succeeded
     end
 
     # Find the last app size result (which corresponds to the thinned universal app, not an individual device slice).
@@ -145,7 +138,7 @@ end
 
 @script_dir = __dir__
 # Find the base of the repo
-@project_dir = File.expand_path(File.join_if_safe(@script_dir, "/../../../"), Dir.getwd)
+@project_dir = File.expand_path(File.join_if_safe(@script_dir, '/../../../'), Dir.getwd)
 
 @temp_dir = `mktemp -d`.chomp("\n")
 
@@ -160,17 +153,17 @@ def setup_project(branch, directory, sdk)
   Dir.chdir(directory) do
     # We'll want to modify the workspace to point to the checked-out git repo
     File.open('SPMTest.xcworkspace/contents.xcworkspacedata', 'w') do |f|
-      f.write <<-CONTENTS
-<?xml version="1.0" encoding="UTF-8"?>
-<Workspace
-  version = "1.0">
-  <FileRef
-      location = "container:SPMTest.xcodeproj">
-  </FileRef>
-  <FileRef
-      location = "group:#{@project_dir}">
-  </FileRef>
-</Workspace>
+      f.write <<~CONTENTS
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Workspace
+          version = "1.0">
+          <FileRef
+              location = "container:SPMTest.xcodeproj">
+          </FileRef>
+          <FileRef
+              location = "group:#{@project_dir}">
+          </FileRef>
+        </Workspace>
       CONTENTS
     end
 
@@ -198,10 +191,10 @@ def build_from_branch(branch, dir)
   Dir.chdir(@project_dir) do
     `git checkout #{branch}`
   end
-  return build(dir)
+  build(dir)
 end
 
-def check_size(modules, first_branch, second_branch)
+def check_size(modules, first_branch, second_branch, keep_xcarchive)
   # Try to check out the branches - this will fail if there are unstaged changes,
   # so this also helps prevent us from unintentionally messing up any uncommitted work:
   current_branch = nil
@@ -216,7 +209,7 @@ def check_size(modules, first_branch, second_branch)
   # Build without including the SDK and store the result
   setup_project(current_branch, @temp_dir, nil)
   unincluded_compressed_size, unincluded_uncompressed_size = build(@temp_dir)
-  puts "SPMTest #{"without SDK".underline}: Compressed size: #{unincluded_compressed_size}kb, uncompressed size: #{unincluded_uncompressed_size}kb".blue
+  puts "SPMTest #{'without SDK'.underline}: Compressed size: #{unincluded_compressed_size}kb, uncompressed size: #{unincluded_uncompressed_size}kb".blue
 
   sdks_exceeding_max_size = []
   sdks_exceeding_incremental_size = []
@@ -247,6 +240,12 @@ def check_size(modules, first_branch, second_branch)
       puts "Building with #{sdk} on #{first_branch}...".green
       first_compressed_size, first_uncompressed_size = build_from_branch(first_branch, @temp_dir)
 
+      if keep_xcarchive
+        archive_dir = "#{@project_dir}/build/size_tests"
+        `mkdir -p #{archive_dir}`
+        `cp -a "#{@temp_dir}/build/SPMTest.xcarchive" "#{archive_dir}/#{sdk}.xcarchive"`
+      end
+
       first_sdk_compressed = first_compressed_size - unincluded_compressed_size
       first_sdk_uncompressed = first_uncompressed_size - unincluded_uncompressed_size
 
@@ -270,23 +269,21 @@ def check_size(modules, first_branch, second_branch)
         puts "Size of #{sdk.underline} on #{second_branch} is #{format_size(second_sdk_compressed)} when compressed, #{format_size(second_sdk_uncompressed)} when uncompressed".blue
 
         exceeds_max_size = false
-        if not(max_compressed_size.nil?) && second_sdk_compressed > max_compressed_size
+        if !max_compressed_size.nil? && second_sdk_compressed > max_compressed_size
           puts "This is over the #{max_compressed_size}kb compressed threshold, failing build.".red
           exceeds_max_size = true
         end
 
-        if not(max_uncompressed_size.nil?) && second_sdk_uncompressed > max_uncompressed_size
+        if !max_uncompressed_size.nil? && second_sdk_uncompressed > max_uncompressed_size
           puts "This is over the #{max_uncompressed_size}kb uncompressed threshold, failing build.".red
           exceeds_max_size = true
         end
 
-        if exceeds_max_size
-          sdks_exceeding_max_size.append(sdk)
-        end
+        sdks_exceeding_max_size.append(sdk) if exceeds_max_size
 
         puts "#{second_branch} adds #{incremental_diff_uncompressed}kb when compressed, #{incremental_diff_compressed}kb when uncompressed to #{sdk.underline}".blue
         exceeds_max_incremental_size = false
-        if not(max_incremental_uncompressed_size.nil?) && incremental_diff_uncompressed > max_incremental_uncompressed_size
+        if !max_incremental_uncompressed_size.nil? && incremental_diff_uncompressed > max_incremental_uncompressed_size
           puts "This is over the #{max_incremental_uncompressed_size}kb incremental uncompressed threshold.".red
           exceeds_max_incremental_size = true
           sdks_exceeding_incremental_size.append(sdk)
@@ -304,8 +301,8 @@ def check_size(modules, first_branch, second_branch)
           )
         ]
       end
-    rescue
-        puts "#{sdk} could not be built on one of the specified branches".red
+    rescue StandardError
+      puts "#{sdk} could not be built on one of the specified branches".red
     end
   end
 
@@ -318,34 +315,36 @@ def check_size(modules, first_branch, second_branch)
   (0..4).each { |col| size_report.align_column(col, :right) }
   puts size_report
 
-  return sdks_exceeding_max_size, sdks_exceeding_incremental_size
+  [sdks_exceeding_max_size, sdks_exceeding_incremental_size]
 end
 
 if ARGV.empty?
-  puts 'Usage: size_report.sh ref [other_ref]'
+  puts 'Usage: size_report.sh ref [other_ref] [--keep-xcarchive]'
   puts 'Calculates the App Store thinned size of frameworks when packaged with a basic test app'
   puts 'Only frameworks with `size_report` specified in modules.yaml will have a size report'
   puts 'ref: the tag/branch to be calculated (e.g. private)'
   puts 'other_ref (optional): a tag/branch to compare (e.g. 21.1.0)'
+  puts '--keep-xcarchive (optional): keep a copy of the xcarchive for each app in /build/size_tests/'
   exit 1
 end
 
 first_branch = ARGV[0]
 second_branch = ARGV[1]
+keep_xcarchive = ARGV.include? '--keep-xcarchive'
 
-modules = YAML.load_file(File.join_if_safe(@project_dir, "modules.yaml"))['modules'].select { |m| !m['size_report'].nil? }
-sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, first_branch, second_branch)
+modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| !m['size_report'].nil? }
+sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, first_branch, second_branch, keep_xcarchive)
 
 # Clean up temp directory
 FileUtils.rm_rf(@temp_dir)
 
 # If one or more SDKs exceed the incremental size, then warn.
 unless sdks_exceeding_incremental_size.empty?
-  puts "The following SDKs exceed the maximum allowed incremental size: #{sdks_exceeding_incremental_size.join(", ")}".red
+  puts "The following SDKs exceed the maximum allowed incremental size: #{sdks_exceeding_incremental_size.join(', ')}".red
 end
 
 # If one or more SDKs exceed the maximum allowable size, fail.
 unless sdks_exceeding_max_size.empty?
-  puts "The following SDKs exceed the maximum allowed size: #{sdks_exceeding_max_size.join(", ")}".red
+  puts "The following SDKs exceed the maximum allowed size: #{sdks_exceeding_max_size.join(', ')}".red
   exit 1
 end

@@ -43,7 +43,7 @@
 		3117ED9C26C2E9DF00C8E897 /* SPMTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPMTestUITests.swift; sourceTree = "<group>"; };
 		3117ED9E26C2E9DF00C8E897 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		31B4A100271F841C00832DBD /* SPMTest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SPMTest.entitlements; sourceTree = "<group>"; };
-		C176898320616C7E003DE895 /* SPMTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPMTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C176898320616C7E003DE895 /* {{SDK}}Size.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = {{SDK}}Size.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C176898D20616C7E003DE895 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C176898F20616C7E003DE895 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C176899220616C7E003DE895 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -142,7 +142,7 @@
 		};
 		C176898220616C7E003DE895 /* SPMTest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C176899920616C7E003DE895 /* Build configuration list for PBXNativeTarget "SPMTest" */;
+			buildConfigurationList = C176899920616C7E003DE895 /* Build configuration list for PBXNativeTarget "{{SDK}}Size" */;
 			buildPhases = (
 				C176897F20616C7E003DE895 /* Sources */,
 				C176898020616C7E003DE895 /* Frameworks */,
@@ -153,11 +153,11 @@
 			);
 			dependencies = (
 			);
-			name = SPMTest;
+			name = {{SDK}}Size;
 			packageProductDependencies = (
 			);
-			productName = CocoapodsTest;
-			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
+			productName = {{SDK}}Size;
+			productReference = C176898320616C7E003DE895 /* {{SDK}}Size.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -195,7 +195,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C176898220616C7E003DE895 /* SPMTest */,
+				C176898220616C7E003DE895 /* {{SDK}}Size */,
 				3117ED9926C2E9DF00C8E897 /* SPMTestUITests */,
 			);
 		};
@@ -244,7 +244,7 @@
 /* Begin PBXTargetDependency section */
 		3117EDA026C2E9DF00C8E897 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C176898220616C7E003DE895 /* SPMTest */;
+			target = C176898220616C7E003DE895 /* {{SDK}}Size */;
 			targetProxy = 3117ED9F26C2E9DF00C8E897 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -289,7 +289,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SPMTest;
+				TEST_TARGET_NAME = {{SDK}}Size;
 			};
 			name = Debug;
 		};
@@ -311,7 +311,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SPMTest;
+				TEST_TARGET_NAME = {{SDK}}Size;
 			};
 			name = Release;
 		};
@@ -434,7 +434,7 @@
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.{{SDK}}Size;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -453,7 +453,7 @@
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.{{SDK}}Size;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
