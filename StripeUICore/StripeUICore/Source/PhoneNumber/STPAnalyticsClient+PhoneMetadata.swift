@@ -21,7 +21,7 @@ extension STPAnalyticsClient {
     }
 
     func logPhoneMetadataMissingError() {
-        logPhoneMetadataEvent(.phoneMetadataLoadMissingError)
+        logPhoneMetadataEvent(.phoneMetadataLoadNotFoundError)
     }
 
     func logPhoneMetadataLoadingError(_ error: Error) {

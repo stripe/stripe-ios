@@ -45,7 +45,7 @@ private extension PhoneMetadataProvider {
             forResource: "phone_metadata",
             withExtension: "json.lzfse"
         ) else {
-            STPAnalyticsClient.sharedClient.logPhoneMetadataEvent(.phoneMetadataLoadMissingError)
+            STPAnalyticsClient.sharedClient.logPhoneMetadataEvent(.phoneMetadataLoadNotFoundError)
             assertionFailure("phone_metadata.json.lzfse is missing")
             return getFallbackMetadata()
         }

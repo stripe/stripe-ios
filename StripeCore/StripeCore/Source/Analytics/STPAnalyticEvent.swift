@@ -120,7 +120,7 @@ import Foundation
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
     // MARK: - Phone formatting metadata
-    case phoneMetadataLoadMissingError = "phone_metadata.load.missing_error"
+    case phoneMetadataLoadNotFoundError = "phone_metadata.load.not_found_error"
     case phoneMetadataLoadDecodingError = "phone_metadata.load.decoding_error"
     case phoneMetadataLoadDecompressionError = "phone_metadata.load.decompression_error"
     case phoneMetadataLoadUnknownError = "phone_metadata.load.unknown_error"
