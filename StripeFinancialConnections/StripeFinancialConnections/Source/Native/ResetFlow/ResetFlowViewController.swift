@@ -44,6 +44,10 @@ final class ResetFlowViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
         
+        dataSource
+            .analyticsClient
+            .logPaneLoaded(pane: .resetFlow)
+        
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.color = .textDisabled
         activityIndicator.backgroundColor = .customBackgroundColor
