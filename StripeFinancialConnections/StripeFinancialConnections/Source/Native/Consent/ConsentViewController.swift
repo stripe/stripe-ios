@@ -113,24 +113,22 @@ class ConsentViewController: UIViewController {
     // this function will get called when user taps
     // on ANY link returned from backend
     private func didSelectURL(_ url: URL) {
+        if
+            let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
+            let eventName = urlParameters.queryItems?.first(where: { $0.name == "eventName" })?.value
+        {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: eventName,
+                    parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
+                )
+        }
+        
         if url.scheme == "stripe" {
             if url.host == "manual-entry" {
-                dataSource
-                    .analyticsClient
-                    .log(
-                        eventName: "click.manual_entry",
-                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
-                    )
-                
                 delegate?.consentViewControllerDidSelectManuallyVerify(self)
             } else if url.host == "data-access-notice" {
-                dataSource
-                    .analyticsClient
-                    .log(
-                        eventName: "click.data_requested",
-                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
-                    )
-                
                 let dataAccessNoticeViewController = DataAccessNoticeViewController(
                     model: dataSource.consent.dataAccessNotice,
                     didSelectURL: { [weak self] url in
@@ -145,18 +143,6 @@ class ConsentViewController: UIViewController {
                     .present(dataAccessNoticeViewController, animated: false, completion: nil)
             }
         } else {
-            if
-                let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
-                let eventName = urlParameters.queryItems?.first(where: { $0.name == "eventName" })?.value
-            {
-                dataSource
-                    .analyticsClient
-                    .log(
-                        eventName: eventName,
-                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
-                    )
-            }
-            
             SFSafariViewController.present(url: url)
         }
     }
