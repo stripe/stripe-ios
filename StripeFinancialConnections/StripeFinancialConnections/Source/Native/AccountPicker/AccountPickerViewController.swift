@@ -138,7 +138,7 @@ final class AccountPickerViewController: UIViewController {
                             .log(
                                 eventName: "polling.accounts.success",
                                 parameters: [
-                                    "duration": Date().timeIntervalSince(pollingStartDate),
+                                    "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
                                     "authSessionId": self.dataSource.authorizationSession.id,
                                 ]
                             )
