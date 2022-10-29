@@ -20,6 +20,7 @@
 ### PaymentSheet
 * [Fixed] Fixed a validation issue where cards expiring at the end of the current month were incorrectly treated as expired.
 * [Fixed] Fixed a visual bug in iOS 16 where advancing between text fields would momentarily dismiss the keyboard.
+* [Added] Added parameters to customize the primary button and Apple Pay button labels. They can be found under `PaymentSheet.Configuration.primaryButtonLabel` and `PaymentSheet.ApplePayConfiguration.buttonType` respectively.
 
 ## 22.8.4 2022-10-12
 ### PaymentSheet

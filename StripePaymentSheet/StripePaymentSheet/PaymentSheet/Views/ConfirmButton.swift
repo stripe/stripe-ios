@@ -21,6 +21,8 @@ private let checkmarkStrokeDuration = 0.2
 /// For internal SDK use only
 @objc(STP_Internal_ConfirmButton)
 class ConfirmButton: UIView {
+    let applePayButtonType: PKPaymentButtonType
+    
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -77,7 +79,7 @@ class ConfirmButton: UIView {
     }()
     private lazy var applePayButton: PKPaymentButton = {
         let button = PKPaymentButton(
-            paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
+            paymentButtonType: applePayButtonType, paymentButtonStyle: .compatibleAutomatic)
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         button.preservesSuperviewLayoutMargins = false
         return button
@@ -91,12 +93,14 @@ class ConfirmButton: UIView {
         state: Status = .enabled,
         style: Style = .stripe,
         callToAction: CallToActionType,
+        applePayButtonType: PKPaymentButtonType = .plain,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
         didTap: @escaping () -> Void
     ) {
         self.state = state
         self.style = style
         self.callToAction = callToAction
+        self.applePayButtonType = applePayButtonType
         self.appearance = appearance
         self.didTap = didTap
         super.init(frame: .zero)
