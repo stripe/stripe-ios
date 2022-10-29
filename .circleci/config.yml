@@ -96,7 +96,7 @@ jobs:
       - run: "bundle install"
       - run:
           name: "Run size report"
-          command: bundle exec ruby Tests/installation_tests/size_test/size_report.rb private $CIRCLE_BRANCH
+          command: bundle exec ruby Tests/installation_tests/size_test/size_report.rb master $CIRCLE_BRANCH
 
   framework-tests:
     executor: mac-executor
@@ -366,7 +366,7 @@ workflows:
           filters:
             branches:
               only:
-                - private
+                - master
     jobs:
       - e2e-only:
           context:
@@ -378,7 +378,7 @@ workflows:
           filters:
             branches:
               only:
-                - private
+                - master
     jobs:
       - integration-all:
           context:
