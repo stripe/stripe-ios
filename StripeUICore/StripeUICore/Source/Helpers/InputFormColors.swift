@@ -15,9 +15,10 @@ import UIKit
     }
 
     public static var disabledTextColor: UIColor {
-        let light = UIColor(red: 60.0 / 255.0, green: 60.0 / 255.0, blue: 67.0 / 255.0, alpha: 0.6)
-        let dark = UIColor(red: 235.0 / 255.0, green: 235.0 / 255.0, blue: 245.0 / 255.0, alpha: 0.6)
-        return .dynamic(light: light, dark: dark)
+        return .dynamic(
+            light: UIColor(red: 60.0 / 255.0, green: 60.0 / 255.0, blue: 67.0 / 255.0, alpha: 0.6),
+            dark: UIColor(red: 235.0 / 255.0, green: 235.0 / 255.0, blue: 245.0 / 255.0, alpha: 0.6)
+        )
     }
 
     public static var errorColor: UIColor {
@@ -29,14 +30,16 @@ import UIKit
     }
 
     public static var backgroundColor: UIColor {
-        let light = UIColor.systemBackground
-        let dark = UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
-        return .dynamic(light: light, dark: dark)
+        return .dynamic(
+            light: .systemBackground,
+            dark: UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
+        )
     }
 
     public static var disabledBackgroundColor: UIColor {
-        let light = UIColor(red: 248.0 / 255.0, green: 248.0 / 255.0, blue: 248.0 / 255.0, alpha: 1)
-        let dark = UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
-        return .dynamic(light: light, dark: dark)
+        return .dynamic(
+            light: UIColor(red: 248.0 / 255.0, green: 248.0 / 255.0, blue: 248.0 / 255.0, alpha: 1),
+            dark: UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
+        )
     }
 }

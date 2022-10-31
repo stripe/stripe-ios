@@ -10,5 +10,6 @@ import UIKit
 
 // TODO(ramont): Remove.
 
-/// Alias to prevent active feature branches from breaking.
+/// Alias to help migrating active feature branches.
+@available(*, deprecated, renamed: "UIColor")
 @_spi(STP) public typealias CompatibleColor = UIColor
