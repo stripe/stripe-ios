@@ -210,13 +210,15 @@ platform :ios do
                     sha: `git rev-parse HEAD`.to_s,
                     base_sha: `git rev-parse master`.to_s,
                     build_type: 'release' }
-      emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
-      emerge(file_path: archive_path + 'StripeApplePay.xcarchive', **arguments)
-      emerge(file_path: archive_path + 'StripeFinancialConnections.xcarchive', **arguments)
-      emerge(file_path: archive_path + 'StripeIdentity.xcarchive', **arguments)
-      emerge(file_path: archive_path + 'StripePayments.xcarchive', **arguments)
-      emerge(file_path: archive_path + 'StripePaymentsUI.xcarchive', **arguments)
-      emerge(file_path: archive_path + 'StripePaymentSheet.xcarchive', **arguments)
+      unless ENV['EMERGE_API_TOKEN'].nil?
+        emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
+        emerge(file_path: archive_path + 'StripeApplePay.xcarchive', **arguments)
+        emerge(file_path: archive_path + 'StripeFinancialConnections.xcarchive', **arguments)
+        emerge(file_path: archive_path + 'StripeIdentity.xcarchive', **arguments)
+        emerge(file_path: archive_path + 'StripePayments.xcarchive', **arguments)
+        emerge(file_path: archive_path + 'StripePaymentsUI.xcarchive', **arguments)
+        emerge(file_path: archive_path + 'StripePaymentSheet.xcarchive', **arguments)
+      end
     end
   end
 
