@@ -89,7 +89,7 @@ import UIKit
         let contrastRatioToWhite = contrastRatio(to: .white)
         let contrastRatioToBlack = contrastRatio(to: .black)
         
-        let isDarkMode = UITraitCollection.current.userInterfaceStyle == .dark
+        let isDarkMode = UITraitCollection.current.isDarkMode
 
         // Prefer using a white foreground as long as a minimum contrast threshold is met.
         // Factor the container color to compensate for "local adaptation".
