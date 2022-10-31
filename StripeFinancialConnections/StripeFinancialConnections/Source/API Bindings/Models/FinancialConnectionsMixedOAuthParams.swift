@@ -14,4 +14,5 @@ struct FinancialConnectionsMixedOAuthParams: Decodable {
     let status: String?
     let memberGuid: String?
     let error: String?
+    let publicToken: String?
 }
