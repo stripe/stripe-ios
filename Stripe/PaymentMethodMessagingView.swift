@@ -57,6 +57,7 @@ import WebKit
         self.modalURL = URL(string: "https://" + modalURL)
         self.configuration = configuration
         super.init(frame: .zero)
+        directionalLayoutMargins = .init(top: 10, leading: 12, bottom: 10, trailing: 12)
         backgroundColor = CompatibleColor.systemBackground
         label.attributedText = attributedString
         label.textColor = configuration.textColor
