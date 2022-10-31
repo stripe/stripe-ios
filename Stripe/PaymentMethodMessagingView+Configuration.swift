@@ -26,7 +26,7 @@ import UIKit
             countryCode: String = Locale.current.regionCode ?? "",
             font: UIFont = .preferredFont(forTextStyle: .footnote),
             textColor: UIColor = .label,
-            imageColor: (userInterfaceStyleLight: PaymentMethodMessagingView.Configuration.ImageColor, userInterfaceStyleDark: PaymentMethodMessagingView.Configuration.ImageColor) = (userInterfaceStyleLight: .black, userInterfaceStyleDark: .white)
+            imageColor: (userInterfaceStyleLight: PaymentMethodMessagingView.Configuration.ImageColor, userInterfaceStyleDark: PaymentMethodMessagingView.Configuration.ImageColor) = (userInterfaceStyleLight: .dark, userInterfaceStyleDark: .light)
         ) {
             self.apiClient = apiClient
             self.paymentMethods = paymentMethods
@@ -62,14 +62,14 @@ import UIKit
         public var textColor: UIColor = .label
         
         /// The colors of the image
-        public enum ImageColor: String {
-            case white
-            case black
+        public enum ImageColor {
+            case light
+            case dark
             case color
         }
         /// The color of the images displayed in the view as a tuple specifying the color to use in light and dark mode.
-        /// Defaults to `(.black, .white)` i.e. the same colors as the text.
-        public var imageColor: (userInterfaceStyleLight: ImageColor, userInterfaceStyleDark: ImageColor) = (userInterfaceStyleLight: .black, userInterfaceStyleDark: .white)
+        /// Defaults to `(.dark, .light)`.
+        public var imageColor: (userInterfaceStyleLight: ImageColor, userInterfaceStyleDark: ImageColor) = (userInterfaceStyleLight: .dark, userInterfaceStyleDark: .light)
     }
 }
 

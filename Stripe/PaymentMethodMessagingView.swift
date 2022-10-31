@@ -57,7 +57,7 @@ import WebKit
         self.modalURL = URL(string: "https://" + modalURL)
         self.configuration = configuration
         super.init(frame: .zero)
-        directionalLayoutMargins = .init(top: 10, leading: 12, bottom: 10, trailing: 12)
+        directionalLayoutMargins = .init(top: 12, leading: 12, bottom: 12, trailing: 12)
         backgroundColor = CompatibleColor.systemBackground
         label.attributedText = attributedString
         label.textColor = configuration.textColor
@@ -194,6 +194,15 @@ extension PaymentMethodMessagingView {
     }
     
     static func makeMessagingContentEndpointParams(configuration: Configuration) -> [String: Any] {
+        let logoColor: String
+        switch isDarkMode() ? configuration.imageColor.userInterfaceStyleDark : configuration.imageColor.userInterfaceStyleLight {
+        case .light:
+            logoColor = "white"
+        case .dark:
+            logoColor = "black"
+        case .color:
+            logoColor = "color"
+        }
         return [
             "payment_methods": configuration.paymentMethods.map { (paymentMethod) -> String in
                 switch paymentMethod {
@@ -205,7 +214,7 @@ extension PaymentMethodMessagingView {
             "amount": configuration.amount,
             "country": configuration.countryCode,
             "client": "ios",
-            "logo_color": isDarkMode() ? configuration.imageColor.userInterfaceStyleDark : configuration.imageColor.userInterfaceStyleLight,
+            "logo_color": logoColor,
             "locale": Locale.canonicalLanguageIdentifier(from: configuration.locale.identifier)
        ]
     }
