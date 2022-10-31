@@ -120,7 +120,7 @@ class IdentityFlowView: UIView {
     init() {
         super.init(frame: .zero)
 
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = .systemBackground
 
         installViews()
         installConstraints()

@@ -35,7 +35,7 @@ class HeaderIconView: UIView {
         static let cornerRadius: CGFloat = 8
         static let heightConstraint: CGFloat = 32
 
-        static let plusIconTintColor: UIColor = CompatibleColor.label
+        static let plusIconTintColor: UIColor = .label
         static let plusIconLength: CGFloat = 16
 
         static let shadowConfig = ShadowConfiguration(

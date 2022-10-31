@@ -149,7 +149,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
             ),
             viewModel: .init(
                 headerViewModel: .init(
-                    backgroundColor: CompatibleColor.systemBackground,
+                    backgroundColor: .systemBackground,
                     headerType: .plain,
                     titleText: staticContent.title
                 ),

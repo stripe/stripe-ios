@@ -14,7 +14,7 @@ import UIKit
 struct HTMLStyle {
     static let `default` = HTMLStyle(
         bodyFont: UIFont.preferredFont(forTextStyle: .body, weight: .regular),
-        bodyColor: CompatibleColor.label,
+        bodyColor: .label,
         h1Font: UIFont.preferredFont(forTextStyle: .title1),
         h2Font: UIFont.preferredFont(forTextStyle: .title2),
         h3Font: UIFont.preferredFont(forTextStyle: .title3),

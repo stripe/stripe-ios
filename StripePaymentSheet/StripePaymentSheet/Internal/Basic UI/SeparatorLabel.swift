@@ -7,7 +7,6 @@
 //
 
 import UIKit
-@_spi(STP) import StripeUICore
 
 /// A separator with label.
 /// For internal SDK use only
@@ -66,7 +65,7 @@ final class SeparatorLabel: UIView {
 
     private let label: UILabel = {
         let label = UILabel()
-        label.textColor = CompatibleColor.secondaryLabel
+        label.textColor = .secondaryLabel
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
@@ -75,14 +74,14 @@ final class SeparatorLabel: UIView {
 
     private let leftLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = CompatibleColor.opaqueSeparator
+        view.backgroundColor = .opaqueSeparator
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
     private let rightLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = CompatibleColor.opaqueSeparator
+        view.backgroundColor = .opaqueSeparator
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

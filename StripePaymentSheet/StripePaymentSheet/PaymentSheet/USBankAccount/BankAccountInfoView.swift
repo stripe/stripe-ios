@@ -43,13 +43,13 @@ class BankAccountInfoView: UIView {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 2
         imageView.clipsToBounds = true
-        imageView.tintColor = CompatibleColor.systemGray2
+        imageView.tintColor = .systemGray2
         return imageView
     }()
 
     lazy var xIcon: UIImageView = {
         let xIcon = UIImageView(image: Image.icon_x_standalone.makeImage(template: true))
-        xIcon.tintColor = CompatibleColor.systemGray2
+        xIcon.tintColor = .systemGray2
         xIcon.isUserInteractionEnabled = true
         return xIcon
     }()
@@ -139,8 +139,8 @@ class BankAccountInfoView: UIView {
     }
 
     func updateUI() {
-        bankNameLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : CompatibleColor.tertiaryLabel
-        bankAccountNumberLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : CompatibleColor.tertiaryLabel
+        bankNameLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
+        bankAccountNumberLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
         bankIconImageView.alpha = isUserInteractionEnabled ? 1.0 : 0.5
         xIcon.alpha = isUserInteractionEnabled ? 1.0 : 0.5
     }

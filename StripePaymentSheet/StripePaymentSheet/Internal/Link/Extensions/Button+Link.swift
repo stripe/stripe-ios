@@ -57,7 +57,7 @@ extension Button.Configuration {
         configuration.cornerRadius = LinkUI.mediumCornerRadius
 
         // Colors
-        configuration.foregroundColor = CompatibleColor.label
+        configuration.foregroundColor = .label
         configuration.backgroundColor = .clear
         configuration.borderColor = .linkControlBorder
 

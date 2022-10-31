@@ -214,7 +214,7 @@ private extension LinkVerificationView {
         }
 
         NSLayoutConstraint.activate(constraints)
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = .systemBackground
     }
 }
 

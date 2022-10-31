@@ -13,8 +13,6 @@ public extension PaymentSheet {
     
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
-        typealias DefaultColor = CompatibleColor
-
         /// The default appearance for PaymentSheet
         public static let `default` = Appearance()
         
@@ -76,38 +74,38 @@ public extension PaymentSheet {
             public init() {}
             
             /// The primary color used throughout PaymentSheet
-            public var primary: UIColor = UIColor.systemBlue
+            public var primary: UIColor = .systemBlue
             
             /// The color used for the background of PaymentSheet
-            public var background: UIColor = DefaultColor.systemBackground
+            public var background: UIColor = .systemBackground
             
             /// The color used for the background of inputs, tabs, and other components
-            public var componentBackground: UIColor = UIColor.dynamic(light: DefaultColor.systemBackground,
-                                                      dark: DefaultColor.secondarySystemBackground)
+            public var componentBackground: UIColor = UIColor.dynamic(light: .systemBackground,
+                                                      dark: .secondarySystemBackground)
             
             /// The border color used for inputs, tabs, and other components
-            public var componentBorder: UIColor = DefaultColor.systemGray3
+            public var componentBorder: UIColor = .systemGray3
             
             /// The color of the divider lines used inside inputs, tabs, and other components
-            public var componentDivider: UIColor = DefaultColor.systemGray3
+            public var componentDivider: UIColor = .systemGray3
             
             /// The default text color used in PaymentSheet, appearing over the background color
-            public var text: UIColor = DefaultColor.label
+            public var text: UIColor = .label
             
             /// The color used for text of secondary importance. For example, this color is used for the label above input fields
-            public var textSecondary: UIColor = DefaultColor.secondaryLabel
+            public var textSecondary: UIColor = .secondaryLabel
             
             /// The color of text appearing over `componentBackground`
-            public var componentText: UIColor = DefaultColor.label
+            public var componentText: UIColor = .label
             
             /// The color used for input placeholder text
-            public var componentPlaceholderText: UIColor = DefaultColor.secondaryLabel
+            public var componentPlaceholderText: UIColor = .secondaryLabel
             
             /// The color used for icons in PaymentSheet, such as the close or back icons
-            public var icon: UIColor = DefaultColor.secondaryLabel
+            public var icon: UIColor = .secondaryLabel
             
             /// The color used to indicate errors or destructive actions in PaymentSheet
-            public var danger: UIColor = UIColor.systemRed
+            public var danger: UIColor = .systemRed
         }
         
         // MARK: Shadow
@@ -122,7 +120,7 @@ public extension PaymentSheet {
             
             /// Color of the shadow
             /// - Note: The behavior of this property is consistent with `CALayer.shadowColor`
-            public var color: UIColor = UIColor.black
+            public var color: UIColor = .black
             
             /// Opacity or alpha of the shadow
             /// - Note: The behavior of this property is consistent with `CALayer.shadowOpacity`
@@ -176,7 +174,7 @@ public extension PaymentSheet {
             
             /// The border color of the primary button
             /// - Note: The behavior of this property is consistent with the behavior of border color on `CALayer`
-            public var borderColor: UIColor = DefaultColor.quaternaryLabel
+            public var borderColor: UIColor = .quaternaryLabel
             
             /// The border width of the primary button
             /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
