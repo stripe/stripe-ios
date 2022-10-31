@@ -88,7 +88,7 @@ def run_retrying(cmd, max_retries: 10)
       sleep(delay)
       puts 'Retrying...'
     else
-      result
+      return result
     end
   end
 end
