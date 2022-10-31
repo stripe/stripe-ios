@@ -1,4 +1,4 @@
-## X.Y.Z 2022-xx-xx
+## 23.1.0 2022-10-31
 ### CardScan
 * [Added] Added a README.md for the `CardScanSheet` integration.
 
