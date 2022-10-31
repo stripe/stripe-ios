@@ -31,6 +31,10 @@ final class FinancialConnectionsAnalyticsClient {
         )
         
         assert(
+            !parameters.contains(where: { $0.key == "duration" && type(of: $0.value) == TimeInterval.self }),
+            "Duration is expected to be sent as an Int (miliseconds)."
+        )
+        assert(
             !parameters.contains(where: { type(of: $0.value) == FinancialConnectionsSessionManifest.NextPane.self }),
             "Do not pass NextPane enum. Use the raw value."
         )

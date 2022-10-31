@@ -200,7 +200,7 @@ extension InstitutionPickerViewController {
                                 parameters: [
                                     "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                                     "query": searchQuery,
-                                    "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate),
+                                    "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate).milliseconds,
                                     "result_count": institutions.count,
                                 ]
                             )

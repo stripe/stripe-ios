@@ -91,7 +91,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         .log(
                             eventName: "polling.attachPayment.success",
                             parameters: [
-                                "duration": Date().timeIntervalSince(pollingStartDate),
+                                "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
                                 "authSessionId": self.dataSource.authSessionId ?? "unknown",
                             ]
                         )
