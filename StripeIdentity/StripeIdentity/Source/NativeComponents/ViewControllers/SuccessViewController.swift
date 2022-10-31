@@ -40,7 +40,7 @@ final class SuccessViewController: IdentityFlowViewController {
             backButtonTitle: nil,
             viewModel: .init(
                 headerViewModel: .init(
-                    backgroundColor: CompatibleColor.systemBackground,
+                    backgroundColor: .systemBackground,
                     headerType: .banner(iconViewModel: .init(
                         iconType: .plain,
                         iconImage: Image.iconClock.makeImage(template: true),

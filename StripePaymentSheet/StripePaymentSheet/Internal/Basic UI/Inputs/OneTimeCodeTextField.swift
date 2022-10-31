@@ -635,7 +635,7 @@ private extension OneTimeCodeTextField {
             let label = UILabel()
             label.textAlignment = .center
             label.isAccessibilityElement = false
-            label.textColor = CompatibleColor.label
+            label.textColor = .label
             label.font = font
             return label
         }()

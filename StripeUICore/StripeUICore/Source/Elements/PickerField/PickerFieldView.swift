@@ -132,7 +132,7 @@ final class PickerFieldView: UIView {
             if isUserInteractionEnabled {
                 textField.textColor = theme.colors.textFieldText
             } else {
-                textField.textColor = CompatibleColor.tertiaryLabel
+                textField.textColor = .tertiaryLabel
             }
             if frame.size != .zero {
                 textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.

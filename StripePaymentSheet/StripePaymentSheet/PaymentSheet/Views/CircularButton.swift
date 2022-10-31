@@ -36,13 +36,13 @@ class CircularButton: UIControl {
         case remove
     }
 
-    required init(style: Style, iconColor: UIColor = CompatibleColor.secondaryLabel, dangerColor: UIColor = .systemRed) {
+    required init(style: Style, iconColor: UIColor = .secondaryLabel, dangerColor: UIColor = .systemRed) {
         self.style = style
         self.iconColor = iconColor
         super.init(frame: .zero)
 
         backgroundColor = UIColor.dynamic(
-            light: CompatibleColor.systemBackground, dark: CompatibleColor.systemGray2)
+            light: .systemBackground, dark: .systemGray2)
         layer.cornerRadius = radius
         layer.masksToBounds = false
         isAccessibilityElement = true
@@ -50,7 +50,7 @@ class CircularButton: UIControl {
 
         layer.shadowOffset = CGSize(width: 0, height: 1)
         layer.shadowRadius = 1.5
-        layer.shadowColor = CompatibleColor.systemGray2.cgColor
+        layer.shadowColor = UIColor.systemGray2.cgColor
         layer.shadowOpacity = shadowOpacity
         let path = UIBezierPath(
             arcCenter: CGPoint(x: radius, y: radius), radius: radius,
@@ -74,7 +74,7 @@ class CircularButton: UIControl {
             accessibilityIdentifier = "CircularButton.Close"
         case .remove:
             backgroundColor = UIColor.dynamic(
-                light: CompatibleColor.systemBackground,
+                light: .systemBackground,
                 dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
             imageView.image = Image.icon_x.makeImage(template: true)
             imageView.tintColor = dangerColor
@@ -102,9 +102,9 @@ class CircularButton: UIControl {
     func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldEnableUserInteraction:
-            backgroundColor = CompatibleColor.systemGray2
+            backgroundColor = .systemGray2
         case .shouldDisableUserInteraction:
-            backgroundColor = CompatibleColor.systemIndigo
+            backgroundColor = .systemIndigo
         }
     }
 
@@ -118,7 +118,7 @@ class CircularButton: UIControl {
     }
 
     private func updateColor() {
-        imageView.tintColor = isEnabled ? iconColor : CompatibleColor.tertiaryLabel
+        imageView.tintColor = isEnabled ? iconColor : .tertiaryLabel
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -127,7 +127,7 @@ class CircularButton: UIControl {
         if style == .remove {
             if traitCollection.userInterfaceStyle == .dark {
                 layer.borderWidth = 1
-                layer.borderColor = CompatibleColor.systemGray2.withAlphaComponent(0.3).cgColor
+                layer.borderColor = UIColor.systemGray2.withAlphaComponent(0.3).cgColor
             } else {
                 layer.borderWidth = 0
                 layer.borderColor = nil
