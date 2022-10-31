@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>StripeCardScan  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+
+    <a title="StripeCardScan  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          Stripe iOS SDKs 23.1.0
+        </a>
+        
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Stripe iOS SDKs</a>
+      <img class="carat" src="img/carat.png" />
+      <a class="breadcrumb" href="index.html">StripeCardScan</a>
+      <img class="carat" src="img/carat.png" />
+      StripeCardScan  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/CardImageVerificationSheet.html">CardImageVerificationSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/CardScanSheet.html">CardScanSheet</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/CancellationReason.html">CancellationReason</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/CardImageVerificationSheetResult.html">CardImageVerificationSheetResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/CardScanSheetError.html">CardScanSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/CardScanSheetResult.html">CardScanSheetResult</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Structs.html#/s:14StripeCardScan07ScannedB0V">ScannedCard</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            
+            <h1 id='stripe-ios-sdk' class='heading'>Stripe iOS SDK</h1>
+
+<p>This library provides support for the standalone Stripe CardScan product.</p>
+<h1 id='overview' class='heading'>Overview</h1>
+
+<p>This library provides a user interface through which users can scan payment cards and extract information from them. It uses the Stripe Publishable Key to authenticate with Stripe services.</p>
+
+<p>Note that this is a standalone SDK and, while compatible with, does not directly integrate with the <a href="https://stripe.com/docs/api/payment_intents">PaymentIntent</a> API nor with <a href="https://stripe.com/docs/api/errors#errors-payment_intent-next_action">next_action</a>.</p>
+
+<p>This library can be used entirely outside of a Stripe integration and with other payment processing providers.</p>
+<h1 id='requirements' class='heading'>Requirements</h1>
+
+<ul>
+<li>iOS 13.0 or higher</li>
+<li>XCode 13.2.1 or higher</li>
+</ul>
+<h1 id='example' class='heading'>Example</h1>
+
+<p>See the <a href="https://github.com/stripe/stripe-ios/tree/master/Example/CardImageVerification%20Example">CardImageVerification Example</a> directory for an example application that you can try for yourself!</p>
+<h1 id='installation' class='heading'>Installation</h1>
+
+<ul>
+<li>Cocoapod
+
+<ul>
+<li><code>pod install StripeCardScan</code></li>
+</ul></li>
+<li>SPM
+
+<ul>
+<li>In Xcode, select File &gt; Add Packages… and enter <a href="https://github.com/stripe/stripe-ios-spm">https://github.com/stripe/stripe-ios-spm</a> as the repository URL.</li>
+<li>Select the latest version number from our releases page.</li>
+<li>Add the <code>StripeCardScan</code> product to the target of your app.</li>
+</ul></li>
+</ul>
+<h1 id='integration' class='heading'>Integration</h1>
+<h2 id='credit-card-ocr' class='heading'>Credit Card OCR</h2>
+
+<p>Add <code><a href="Classes/CardScanSheet.html">CardScanSheet</a></code> in your view controller where you want to invoke the credit card scanning flow.</p>
+
+<ol>
+<li>Set up camera permissions
+
+<ul>
+<li>The SDK uses the camera, so you&rsquo;ll need to add an description of camera usage to your Info.plist file:
+<img src="https://gblobscdn.gitbook.com/assets%2F-MAfqrnL3d-uke0sAFsI%2Fsync%2F573e3f05043e4d903189b5fb107d4b3565bdb11b.png?alt=media" alt="info.plist camera permissions">
+<img src="https://gblobscdn.gitbook.com/assets%2F-MAfqrnL3d-uke0sAFsI%2Fsync%2F0d7119d3cbe2f519e5e5c04b56fe43539e4435e1.png?alt=media" alt="camera permissions prompt"></li>
+</ul></li>
+</ol>
+<pre class="highlight plaintext"><code>* Alternatively, you can add this permission directly to your Info.plist file:
+```
+&lt;key&gt;NSCameraUsageDescriptionkey&gt;
+&lt;string&gt;We need access to your camera to scan your cardstring&gt;
+```
+</code></pre>
+
+<ol>
+<li>Add <code><a href="Classes/CardScanSheet.html">CardScanSheet</a></code> in your app where you want to invoke the scan flow
+
+<ul>
+<li>Initialize <code><a href="Classes/CardScanSheet.html">CardScanSheet</a></code></li>
+<li>When it’s time to invoke the scan flow, display the sheet with <code>CardScanSheet.present()</code></li>
+<li>When the verification flow is finished, the sheet will be dismissed and the completion block will be called with a <a href="https://stripe.dev/stripe-ios/">Result</a></li>
+</ul></li>
+</ol>
+<h3 id='example-implementation' class='heading'>Example Implementation</h3>
+<pre class="highlight swift"><code>
+<span class="kd">import</span> <span class="kt">UIKit</span>
+<span class="kd">import</span> <span class="kt">StripeCardScan</span>
+
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+
+    <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">cardScanSheetButtonPressed</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">cardScanSheet</span> <span class="o">=</span> <span class="kt">CardScanSheet</span><span class="p">()</span>
+
+        <span class="n">cardScanSheet</span><span class="o">.</span><span class="nf">present</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="n">result</span> <span class="k">in</span>
+            <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">completed</span><span class="p">(</span><span class="k">let</span> <span class="nv">scannedCard</span><span class="p">):</span>
+                <span class="cm">/*
+                 * The user scanned a card. The result of the scan are detailed 
+                 * in the `scannedCard` field of the result.
+                 */</span>
+                <span class="nf">print</span><span class="p">(</span><span class="s">"scan success"</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">canceled</span><span class="p">:</span>
+                <span class="cm">/*
+                * The scan was canceled by the user.
+                */</span>
+                <span class="nf">print</span><span class="p">(</span><span class="s">"scan canceled"</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failed</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                 <span class="cm">/*
+                 * The scan failed. The displayable error is
+                 * included in the `localizedDescription`. 
+                 */</span>
+                 <span class="nf">print</span><span class="p">(</span><span class="s">"scan failed: </span><span class="se">\(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='credit-card-verification' class='heading'>Credit Card Verification</h2>
+
+<p>🚧</p>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-31)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
