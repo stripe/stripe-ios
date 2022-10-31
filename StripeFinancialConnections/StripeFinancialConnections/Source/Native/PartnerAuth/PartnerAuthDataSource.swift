@@ -14,7 +14,7 @@ protocol PartnerAuthDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     func createAuthSession() -> Future<FinancialConnectionsAuthorizationSession>
-    func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Promise<Void>
+    func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Future<FinancialConnectionsAuthorizationSession>
     func cancelPendingAuthSessionIfNeeded()
 }
 
@@ -75,26 +75,25 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         )
     }
     
-    func authorizeAuthSession(_ authSession: FinancialConnectionsAuthorizationSession) -> Promise<Void> {
-        let promise = Promise<Void>()
-        let clientSecret = self.clientSecret
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in // TODO(kgaidis): implement polling instead of a delay
-            guard let self = self else { return }
-            self.apiClient.fetchAuthSessionOAuthResults(
-                clientSecret: clientSecret,
-                authSessionId: authSession.id
-            )
-            .chained(on: DispatchQueue.main, using: { mixedOAuthParameters in
-                return self.apiClient.authorizeAuthSession(
-                    clientSecret: clientSecret,
-                    authSessionId: authSession.id,
-                    publicToken: mixedOAuthParameters.memberGuid
-                )
-            })
-            .observe(on: DispatchQueue.main) { result in
-                promise.fullfill(with: result.map({ _ in () }))
+    func authorizeAuthSession(_ authSession: FinancialConnectionsAuthorizationSession) -> Future<FinancialConnectionsAuthorizationSession> {
+        return apiClient.fetchAuthSessionOAuthResults(
+            clientSecret: clientSecret,
+            authSessionId: authSession.id
+        )
+        .chained(on: DispatchQueue.main, using: { [weak self] mixedOAuthParameters in
+            guard let self = self else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "\(PartnerAuthDataSourceImplementation.self) deallocated."))
             }
-        }
-        return promise
+            return self.apiClient.authorizeAuthSession(
+                clientSecret: self.clientSecret,
+                authSessionId: authSession.id,
+                publicToken: {
+                    if mixedOAuthParameters.memberGuid == nil && mixedOAuthParameters.code == "success" {
+                        return nil // TODO(kgaidis): special case for Test Mode OAuth (remove this!!!)
+                    }
+                    return mixedOAuthParameters.memberGuid ?? mixedOAuthParameters.code
+                }()
+            )
+        })
     }
 }

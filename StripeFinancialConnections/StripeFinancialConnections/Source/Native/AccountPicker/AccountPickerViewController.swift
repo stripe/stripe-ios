@@ -92,7 +92,7 @@ final class AccountPickerViewController: UIViewController {
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = {
-            if dataSource.authorizationSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
+            if dataSource.authorizationSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.isOauth {
                 return .dropdown
             } else {
                 return dataSource.manifest.singleAccount ? .radioButton : .checkbox
