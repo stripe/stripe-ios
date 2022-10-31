@@ -98,6 +98,7 @@ private func CreateContentView(
                     CreateBulletinView(
                         title: bulletItem.title,
                         subtitle: bulletItem.content,
+                        iconUrl: bulletItem.icon.default,
                         didSelectURL: didSelectURL
                     )
                 )
@@ -135,11 +136,21 @@ private func CreateHeaderView(
 private func CreateBulletinView(
     title: String?,
     subtitle: String,
+    iconUrl: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
-    let verticalStackView = UIStackView()
-    verticalStackView.axis = .vertical
-    verticalStackView.spacing = 5
+    let imageView = UIImageView()
+    imageView.contentMode = .scaleAspectFit
+    imageView.setImage(with: iconUrl)
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        imageView.widthAnchor.constraint(equalToConstant: 16),
+        imageView.heightAnchor.constraint(equalToConstant: 16),
+    ])
+    
+    let verticalLabelStackView = UIStackView()
+    verticalLabelStackView.axis = .vertical
+    verticalLabelStackView.spacing = 5
     if let title = title {
         let primaryLabel = ClickableLabel(
             font: .stripeFont(forTextStyle: .detailEmphasized),
@@ -148,29 +159,21 @@ private func CreateBulletinView(
             textColor: .textPrimary
         )
         primaryLabel.setText(title, action: didSelectURL)
-        verticalStackView.addArrangedSubview(primaryLabel)
+        verticalLabelStackView.addArrangedSubview(primaryLabel)
     }
-    
-    let secondaryLabel = ClickableLabel(
+    let subtitleLabel = ClickableLabel(
         font: .stripeFont(forTextStyle: .caption),
         boldFont: .stripeFont(forTextStyle: .captionEmphasized),
         linkFont: .stripeFont(forTextStyle: .captionEmphasized),
         textColor: .textSecondary
     )
-    secondaryLabel.setText(subtitle, action: didSelectURL)
-    verticalStackView.addArrangedSubview(secondaryLabel)
+    subtitleLabel.setText(subtitle, action: didSelectURL)
+    verticalLabelStackView.addArrangedSubview(subtitleLabel)
     
-    let imageView = UIImageView(image: Image.close.makeImage(template: false))
-    imageView.contentMode = .scaleAspectFit
-    imageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        imageView.widthAnchor.constraint(equalToConstant: 16),
-        // skip `imageView.heightAnchor` so the labels naturally expand
-    ])
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
             imageView,
-            verticalStackView,
+            verticalLabelStackView,
         ]
     )
     horizontalStackView.axis = .horizontal
@@ -222,7 +225,7 @@ private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
                 title: "",
                 body: FinancialConnectionsDataAccessNotice.Body(
                     bullets: [
-                        FinancialConnectionsDataAccessNotice.Body.BulletItem(icon: "", title: "...", content: "...")
+                        FinancialConnectionsDataAccessNotice.Body.BulletItem(icon: FinancialConnectionsImage(default: nil), title: "...", content: "...")
                     ]
                 ),
                 learnMore: "...",

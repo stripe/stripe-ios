@@ -31,7 +31,7 @@ struct FinancialConnectionsConsent: Decodable {
         let bullets: [BulletItem]
         
         struct BulletItem: Decodable {
-            let icon: String
+            let icon: FinancialConnectionsImage
             let content: String
         }
     }
@@ -47,7 +47,7 @@ struct FinancialConnectionsDataAccessNotice: Decodable {
         let bullets: [BulletItem]
         
         struct BulletItem: Decodable {
-            let icon: String
+            let icon: FinancialConnectionsImage
             let title: String?
             let content: String
         }

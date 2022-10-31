@@ -30,6 +30,7 @@ class ConsentBodyView: UIView {
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
                     text: bulletItem.content,
+                    iconUrl: bulletItem.icon.default,
                     action: didSelectURL
                 )
             )
@@ -43,13 +44,18 @@ class ConsentBodyView: UIView {
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateLabelView(text: String, action: @escaping (URL) -> Void) -> UIView {
-    let imageView = UIImageView(image: Image.close.makeImage(template: false))
+private func CreateLabelView(
+    text: String,
+    iconUrl: String?,
+    action: @escaping (URL) -> Void
+) -> UIView {
+    let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
+    imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         imageView.widthAnchor.constraint(equalToConstant: 16),
-        // skip `imageView.heightAnchor` so the labels naturally expand
+        imageView.heightAnchor.constraint(equalToConstant: 16),
     ])
     
     let label = ClickableLabel(
@@ -83,15 +89,15 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
         ConsentBodyView(
             bulletItems: [
                 FinancialConnectionsConsent.Body.BulletItem(
-                    icon: "...",
+                    icon: FinancialConnectionsImage(default: nil),
                     content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
                 ),
                 FinancialConnectionsConsent.Body.BulletItem(
-                    icon: "...",
+                    icon: FinancialConnectionsImage(default: nil),
                     content: "Your data is encrypted for your protection."
                 ),
                 FinancialConnectionsConsent.Body.BulletItem(
-                    icon: "...",
+                    icon: FinancialConnectionsImage(default: nil),
                     content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
             ],
