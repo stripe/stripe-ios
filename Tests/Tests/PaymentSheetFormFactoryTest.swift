@@ -124,7 +124,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("mock_payment_method")
         )
         let nameSpec = FormSpec.NameFieldSpec(apiPath: ["v1": "custom_location[name]"], translationId: nil)
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)], nextActionSpec: nil)
+        let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)], selectorIcon: nil, nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
@@ -145,7 +145,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("mock_payment_method")
         )
         let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, translationId: nil)
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)], nextActionSpec: nil)
+        let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)], selectorIcon: nil, nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
@@ -204,7 +204,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("mock_payment_method")
         )
         let emailSpec = FormSpec.BaseFieldSpec(apiPath: ["v1": "custom_location[email]"])
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.email(emailSpec)], nextActionSpec: nil)
+        let spec = FormSpec(type: "mock_pm", async: false, fields: [.email(emailSpec)], selectorIcon: nil, nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
@@ -226,7 +226,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         let emailSpec = FormSpec.BaseFieldSpec(apiPath: nil)
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.email(emailSpec)], nextActionSpec: nil)
+        let spec = FormSpec(type: "mock_pm", async: false, fields: [.email(emailSpec)], selectorIcon: nil, nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
@@ -249,7 +249,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                                  items: [.init(displayText: "d1", apiValue: "123"),
                                                          .init(displayText: "d2", apiValue: "456")],
                                                  apiPath: ["v1": "custom_location[selector]"])
-        let spec = FormSpec(type: "sepa_debit", async: false, fields: [.selector(selectorSpec)], nextActionSpec: nil)
+        let spec = FormSpec(type: "sepa_debit", async: false, fields: [.selector(selectorSpec)], selectorIcon: nil, nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
 
@@ -270,6 +270,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "klarna",
                             async: false,
                             fields: [.klarna_country(.init(apiPath: nil))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("klarna"))
@@ -292,6 +293,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "klarna",
                             async: false,
                             fields: [.klarna_country(.init(apiPath:["v1":"billing_details[address][country]"]))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("klarna"))
@@ -352,6 +354,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "au_becs_debit",
                             async: false,
                             fields: [.au_becs_bsb_number(.init(apiPath: nil))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
@@ -379,6 +382,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "au_becs_debit",
                             async: false,
                             fields: [.au_becs_bsb_number(.init(apiPath: ["v1":"au_becs_debit[bsb_number]"]))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
@@ -406,6 +410,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "au_becs_debit",
                             async: false,
                             fields: [.au_becs_account_number(.init(apiPath: nil))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
@@ -433,6 +438,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "au_becs_debit",
                             async: false,
                             fields: [.au_becs_account_number(.init(apiPath: ["v1":"au_becs_debit[account_number]"]))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
@@ -498,6 +504,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "sofort",
                             async: false,
                             fields: [.country(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sofort"))
@@ -520,6 +527,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "sofort",
                             async: false,
                             fields: [.country(.init(apiPath: ["v1":"sofort[country]"], allowedCountryCodes: ["AT", "BE"]))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sofort"))
@@ -578,6 +586,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "sepa_debit",
                             async: false,
                             fields: [.iban(.init(apiPath: nil))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
@@ -605,6 +614,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let spec = FormSpec(type: "sepa_debit",
                             async: false,
                             fields: [.iban(.init(apiPath: ["v1": "sepa_debit[iban]"]))],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
@@ -674,6 +684,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                 .email(.init(apiPath: nil)),
                                 .unknown("some_unknownField2"),
                             ],
+                            selectorIcon: nil,
                             nextActionSpec: nil)
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("luxe_bucks"))
@@ -735,7 +746,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             addressSpecProvider: addressSpecProvider
         )
         let billingAddressSpec = FormSpec.BillingAddressSpec(allowedCountryCodes: nil)
-        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)], nextActionSpec: nil)
+        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)], selectorIcon: nil, nextActionSpec: nil)
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         guard let addressSectionElement = firstAddressSectionElement(formElement: formElement) else {
@@ -758,7 +769,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             addressSpecProvider: addressSpecProvider
         )
         let billingAddressSpec = FormSpec.BillingAddressSpec(allowedCountryCodes: ["FR"])
-        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)], nextActionSpec: nil)
+        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)], selectorIcon: nil, nextActionSpec: nil)
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         guard let addressSectionElement = firstAddressSectionElement(formElement: formElement) else {

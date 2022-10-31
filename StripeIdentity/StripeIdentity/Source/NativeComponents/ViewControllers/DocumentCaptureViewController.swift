@@ -105,7 +105,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     var flowViewModel: IdentityFlowView.ViewModel {
         return .init(
             headerViewModel: titleText.map { .init(
-                backgroundColor: CompatibleColor.systemBackground,
+                backgroundColor: .systemBackground,
                 headerType: .plain,
                 titleText: $0
             ) },

@@ -57,6 +57,7 @@ extension PaymentSheetViewController {
 
         private let options: WalletOptions
         private let appearance: PaymentSheet.Appearance
+        private let applePayButtonType: PKPaymentButtonType
         private var stackView = UIStackView()
         
         private lazy var payWithLinkButton: PayWithLinkButton = {
@@ -78,9 +79,11 @@ extension PaymentSheetViewController {
         
         init(options: WalletOptions,
              appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+             applePayButtonType: PKPaymentButtonType = .plain,
              delegate: WalletHeaderViewDelegate?) {
             self.options = options
             self.appearance = appearance
+            self.applePayButtonType = applePayButtonType
             self.delegate = delegate
             super.init(frame: .zero)
 
@@ -127,7 +130,7 @@ extension PaymentSheetViewController {
         
         private func buildApplePayButton() -> PKPaymentButton {
             let buttonStyle: PKPaymentButtonStyle = appearance.colors.background.contrastingColor == .black ? .black : .white
-            let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: buttonStyle)
+            let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: buttonStyle)
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
 
             NSLayoutConstraint.activate([

@@ -32,7 +32,7 @@ final class HostViewController : UIViewController {
                                    target: self,
                                    action: #selector(didTapClose))
 
-        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
+        item.tintColor = UIColor.dynamic(light: .systemGray2, dark: .white)
         return item
     }()
 
@@ -72,7 +72,7 @@ final class HostViewController : UIViewController {
         super.viewDidLoad()
 
         view.addSubview(loadingView)
-        view.backgroundColor = CompatibleColor.systemBackground
+        view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         getManifest()

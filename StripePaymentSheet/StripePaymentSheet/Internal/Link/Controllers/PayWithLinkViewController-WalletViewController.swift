@@ -152,20 +152,6 @@ extension PayWithLinkViewController {
             viewModel.delegate = self
         }
 
-        override func present(
-            _ viewControllerToPresent: UIViewController,
-            animated flag: Bool,
-            completion: (() -> Void)? = nil
-        ) {
-            // TODO(ramont): Move to `PayWithLinkViewController.BaseViewController` after #1241 lands.
-            if #available(iOS 13.0, *) {
-                // Any view controller presented by this controller should also be customized.
-                context.configuration.style.configure(viewControllerToPresent)
-            }
-
-            super.present(viewControllerToPresent, animated: flag, completion: completion)
-        }
-
         func setupUI() {
             if viewModel.shouldShowApplePayButton {
                 containerView.addArrangedSubview(separator)

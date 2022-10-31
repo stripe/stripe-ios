@@ -48,8 +48,8 @@ import UIKit
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         font = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 14))
         placeholderLabel.font = font
-        defaultPlaceholderColor = CompatibleColor.secondaryLabel
-        floatingPlaceholderColor = CompatibleColor.secondaryLabel
+        defaultPlaceholderColor = .secondaryLabel
+        floatingPlaceholderColor = .secondaryLabel
         rightView = accessoryImageStackView
         rightViewMode = .always
         errorStateImageView.alpha = 0
@@ -140,8 +140,8 @@ import UIKit
         didSet {
             if isUserInteractionEnabled {
                 updateTextColor()
-                defaultPlaceholderColor = CompatibleColor.secondaryLabel
-                floatingPlaceholderColor = CompatibleColor.secondaryLabel
+                defaultPlaceholderColor = .secondaryLabel
+                floatingPlaceholderColor = .secondaryLabel
             } else {
                 textColor = InputFormColors.disabledTextColor
                 defaultPlaceholderColor = InputFormColors.disabledTextColor

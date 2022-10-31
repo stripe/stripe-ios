@@ -368,7 +368,7 @@ workflows:
           filters:
             branches:
               only:
-                - private
+                - master
     jobs:
       - e2e-only:
           context:
@@ -380,7 +380,7 @@ workflows:
           filters:
             branches:
               only:
-                - private
+                - master
     jobs:
       - integration-all:
           context:

@@ -67,7 +67,7 @@ import UIKit
         }
     }
     
-    public var borderColor: UIColor = CompatibleColor.systemGray3 {
+    public var borderColor: UIColor = .systemGray3 {
         didSet {
             backgroundView.layer.borderColor = borderColor.cgColor
         }

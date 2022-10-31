@@ -109,12 +109,12 @@ class IntentConfirmParams {
         }
     }
 
-    func makeIcon() -> UIImage {
+    func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let linkedBank = linkedBank,
            let bankName = linkedBank.bankName {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
-            return paymentMethodParams.makeIcon()
+            return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)
         }
     }
     

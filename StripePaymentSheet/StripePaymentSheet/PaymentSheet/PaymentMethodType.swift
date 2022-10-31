@@ -35,6 +35,8 @@ extension PaymentSheet {
         case link
         case dynamic(String)
         case UPI
+        static var analyticLogForIcon: Set<PaymentMethodType> = []
+        static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
         public init(from str: String) {
             switch(str) {
@@ -83,19 +85,49 @@ extension PaymentSheet {
             return "Unknown"
         }
 
-        func makeImage(forDarkBackground: Bool = false) -> UIImage {
+        static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
+            analyticLogForIconSemaphore.wait()
+            defer { analyticLogForIconSemaphore.signal() }
+            guard !analyticLogForIcon.contains(paymentMethod) else { return false }
+            analyticLogForIcon.insert(paymentMethod)
+            return true
+        }
+
+        /// makeImage will immediately return an UImage that is either the image or a placeholder.
+        /// If the image is immediately available, the updateHandler will not be called.
+        /// If the image is not immediately available, the updateHandler will be called if we are able
+        /// to download the image.
+        func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+            if case .dynamic(let name) = self,
+               let spec = FormSpecProvider.shared.formSpec(for: name),
+               let selectorIcon = spec.selectorIcon,
+               var imageUrl = URL(string: selectorIcon.lightThemePng) {
+                if forDarkBackground,
+                   let darkImageString = selectorIcon.darkThemePng,
+                   let darkImageUrl = URL(string: darkImageString) {
+                    imageUrl = darkImageUrl
+                }
+                if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
+                    STPAnalyticsClient.sharedClient.logImageSelectorIconDownloadedIfNeeded(paymentMethod: self)
+                }
+                return DownloadManager.sharedManager.downloadImage(url: imageUrl, updateHandler: updateHandler)
+            }
             if let stpPaymentMethodType = stpPaymentMethodType {
+                if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
+                    STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
+                }
                 return stpPaymentMethodType.makeImage(forDarkBackground: forDarkBackground)
             }
-            // TODO: We need a way to model this information in our common model, but can default as a bank now
-            return STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground)
+            if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
+                STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
+            }
+            return DownloadManager.sharedManager.imagePlaceHolder()
         }
 
         var iconRequiresTinting: Bool {
             if let stpPaymentMethodType = stpPaymentMethodType {
                 return stpPaymentMethodType.iconRequiresTinting
             }
-            // TODO: We need a way to model this information in our common model
             return false
         }
 

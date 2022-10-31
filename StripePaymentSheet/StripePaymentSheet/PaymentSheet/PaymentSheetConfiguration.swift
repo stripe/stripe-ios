@@ -101,6 +101,13 @@ extension PaymentSheet {
                 return appearance.primaryButton.backgroundColor
             }
         }
+        
+
+        /// The label to use for the primary button.
+        ///
+        /// If not set, Payment Sheet will display suitable default labels
+        /// for payment and setup intents.
+        public var primaryButtonLabel: String?
 
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
         /// The color styling to use for PaymentSheet UI
@@ -178,6 +185,11 @@ extension PaymentSheet {
         /// See your account's country value here https://dashboard.stripe.com/settings/account
         public let merchantCountryCode: String
         
+        /// Defines the label that will be displayed in the Apple Pay button.
+        /// See <https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/buttons-and-marks/>
+        /// for all available options.
+        public let buttonType: PKPaymentButtonType
+        
         /// An array of payment summary item objects that summarize the amount of the payment. This property is identical to `PKPaymentRequest.paymentSummaryItems`.
         /// If `nil`, we display a single line item with the amount on the PaymentIntent or "Amount pending" for SetupIntents.
         /// If you're using a SetupIntent for a recurring payment, you should set this to display the amount you intend to charge, in accordance with https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/subscriptions-and-donations
@@ -223,9 +235,16 @@ extension PaymentSheet {
         }
         
         /// Initializes a ApplePayConfiguration
-        public init(merchantId: String, merchantCountryCode: String, paymentSummaryItems: [PKPaymentSummaryItem]? = nil, customHandlers: Handlers? = nil) {
+        public init(
+            merchantId: String,
+            merchantCountryCode: String,
+            buttonType: PKPaymentButtonType = .plain,
+            paymentSummaryItems: [PKPaymentSummaryItem]? = nil,
+            customHandlers: Handlers? = nil
+        ) {
             self.merchantId = merchantId
             self.merchantCountryCode = merchantCountryCode
+            self.buttonType = buttonType
             self.paymentSummaryItems = paymentSummaryItems
             self.customHandlers = customHandlers
         }

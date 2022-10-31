@@ -8,19 +8,20 @@
 
 import UIKit
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
 extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
-    func makeIcon(for traitCollection: UITraitCollection? = nil) -> UIImage {
+    func makeIcon(for traitCollection: UITraitCollection? = nil, updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod):
             return paymentMethod.makeIcon()
         case .new(let confirmParams):
-            return confirmParams.makeIcon()
+            return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
         case .link(_):
             return Image.pm_type_link.makeImage()
         }
@@ -30,7 +31,7 @@ extension PaymentOption {
     func makeCarouselImage(for view: UIView) -> UIImage {
         switch self {
         case .applePay:
-            return makeIcon(for: view.traitCollection)
+            return makeIcon(for: view.traitCollection, updateImageHandler: nil)
         case .saved(let paymentMethod):
             return paymentMethod.makeCarouselImage(for: view)
         case .new(let confirmParams):
@@ -73,7 +74,7 @@ extension STPPaymentMethod {
 
 
 extension STPPaymentMethodParams {
-    func makeIcon() -> UIImage {
+    func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
             guard let card = card, let number = card.number else {
@@ -84,7 +85,7 @@ extension STPPaymentMethodParams {
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            return self.paymentSheetPaymentMethodType().makeImage()
+            return self.paymentSheetPaymentMethodType().makeImage(updateHandler: updateHandler)
         }
     }
 
@@ -93,7 +94,7 @@ extension STPPaymentMethodParams {
             let cardBrand = STPCardValidator.brand(forNumber: number)
             return cardBrand.makeCarouselImage()
         }
-        return makeIcon()
+        return makeIcon(updateHandler: nil)
     }
 }
 

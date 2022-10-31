@@ -21,9 +21,9 @@ import UIKit
 
         static let floatingPlaceholderScale: CGFloat = 0.75
 
-        static let defaultPlaceholderColor: UIColor = CompatibleColor.secondaryLabel
+        static let defaultPlaceholderColor: UIColor = .secondaryLabel
 
-        static let floatingPlaceholderColor: UIColor = CompatibleColor.secondaryLabel
+        static let floatingPlaceholderColor: UIColor = .secondaryLabel
     }
 
     let placeholderLabel: UILabel = {

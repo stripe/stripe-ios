@@ -114,7 +114,11 @@ class PaymentSheetViewController: UIViewController {
             walletOptions.insert(.link)
         }
 
-        let header = WalletHeaderView(options: walletOptions, appearance: configuration.appearance, delegate: self)
+        let header = WalletHeaderView(
+            options: walletOptions,
+            appearance: configuration.appearance,
+            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            delegate: self)
         return header
     }()
     private lazy var headerLabel: UILabel = {
@@ -131,6 +135,10 @@ class PaymentSheetViewController: UIViewController {
     }()
     private lazy var buyButton: ConfirmButton = {
         let callToAction: ConfirmButton.CallToActionType = {
+            if let customCtaLabel = configuration.primaryButtonLabel {
+                return .customWithLock(title: customCtaLabel)
+            }
+            
             switch intent {
             case .paymentIntent(let paymentIntent):
                 return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
@@ -141,6 +149,7 @@ class PaymentSheetViewController: UIViewController {
 
         let button = ConfirmButton(
             callToAction: callToAction,
+            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
@@ -335,6 +344,9 @@ class PaymentSheetViewController: UIViewController {
         var showBuyButton: Bool = true
 
         var callToAction = self.intent.callToAction
+        if let customCtaLabel = configuration.primaryButtonLabel {
+            callToAction = .customWithLock(title: customCtaLabel)
+        }
         switch mode {
         case .selectingSaved:
             if case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
