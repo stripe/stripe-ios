@@ -7,15 +7,20 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 final class PlaygroundViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        // create
+        let hostingController = UIHostingController(rootView: PlaygroundMainView())
         
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = .red
-        backgroundView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
-        view.addSubview(backgroundView)
+        // add to subview
+        view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+        
+        // layout
+        hostingController.view.frame = view.bounds
+        hostingController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
 }
