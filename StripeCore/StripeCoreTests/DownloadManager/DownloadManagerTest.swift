@@ -254,8 +254,8 @@ class DownloadManagerTest: APIStubbedTestCase {
     func test_AddUpdateHandlerWithoutLocking_appends() {
         let expect1 = expectation(description: "first")
         let expect2 = expectation(description: "second")
-        let updateHandler1: UpdateImageHandler = { _ in  expect1.fulfill() }
-        let updateHandler2: UpdateImageHandler = { _ in  expect2.fulfill() }
+        let updateHandler1: DownloadManager.UpdateImageHandler = { _ in  expect1.fulfill() }
+        let updateHandler2: DownloadManager.UpdateImageHandler = { _ in  expect2.fulfill() }
 
         rm.addUpdateHandlerWithoutLocking(updateHandler1, forImageName: "imgName1")
         rm.addUpdateHandlerWithoutLocking(updateHandler2, forImageName: "imgName1")

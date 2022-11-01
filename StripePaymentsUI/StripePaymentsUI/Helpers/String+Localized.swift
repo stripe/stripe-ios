@@ -25,6 +25,13 @@ extension String.Localized {
             "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'"
         )
     }
+
+    @_spi(STP) public static var bank_name_account_ending_in_last_4: String {
+        STPLocalizedString(
+            "%1$@ account ending in %2$@",
+            "Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242'"
+        )
+    }
     
     @_spi(STP) public static var apple_pay: String {
         STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")

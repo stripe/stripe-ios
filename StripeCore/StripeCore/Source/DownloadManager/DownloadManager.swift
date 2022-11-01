@@ -7,11 +7,11 @@ import Foundation
 import UIKit
 import CoreGraphics
 
-public typealias UpdateImageHandler = (UIImage) -> Void
-
 /// For internal SDK use only
 @objc(STP_Internal_DownloadManager)
-public class DownloadManager: NSObject, URLSessionDelegate {
+@_spi(STP) public class DownloadManager: NSObject, URLSessionDelegate {
+    public typealias UpdateImageHandler = (UIImage) -> Void
+
     public static let sharedManager = DownloadManager()
 
     let downloadQueue: DispatchQueue

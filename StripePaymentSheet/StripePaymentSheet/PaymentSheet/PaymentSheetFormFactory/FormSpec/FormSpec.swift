@@ -16,6 +16,7 @@ struct FormSpec: Decodable {
     let type: String
     let async: Bool?
     let fields: [FieldSpec]
+    let selectorIcon: DownloadableImageSpec?
     let nextActionSpec: NextActionSpec?
 
     enum FieldSpec: Decodable, Equatable {
@@ -80,6 +81,10 @@ struct FormSpec: Decodable {
                 self = .unknown(field_type)
             }
         }
+    }
+    struct DownloadableImageSpec: Decodable {
+        let lightThemePng: String
+        let darkThemePng: String?
     }
 
     struct NextActionSpec: Decodable {

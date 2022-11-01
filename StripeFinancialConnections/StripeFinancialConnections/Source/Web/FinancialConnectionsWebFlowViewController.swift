@@ -60,7 +60,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
                                    target: self,
                                    action: #selector(didTapClose))
 
-        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
+        item.tintColor = UIColor.dynamic(light: .systemGray2, dark: .white)
         return item
     }()
 

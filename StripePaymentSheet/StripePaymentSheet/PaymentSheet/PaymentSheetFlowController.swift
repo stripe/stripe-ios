@@ -37,7 +37,7 @@ extension PaymentSheet {
             public let label: String
 
             init(paymentOption: PaymentOption) {
-                image = paymentOption.makeIcon()
+                image = paymentOption.makeIcon(updateImageHandler: nil)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
@@ -181,6 +181,11 @@ extension PaymentSheet {
                         savedPaymentMethods: paymentMethods,
                         isLinkEnabled: isLinkEnabled,
                         configuration: configuration)
+
+                    // Synchronously pre-load image into cache
+                    if let paymentOption = manualFlow.paymentOption {
+                        _ = paymentOption.image
+                    }
                     completion(.success(manualFlow))
                 case .failure(let error):
                     completion(.failure(error))

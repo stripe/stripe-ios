@@ -130,10 +130,8 @@ final class PayWithLinkViewController: UINavigationController {
         // Hide the default navigation bar.
         setNavigationBarHidden(true, animated: false)
 
-        if #available(iOS 13.0, *) {
-            // Apply the preferred user interface style.
-            context.configuration.style.configure(self)
-        }
+        // Apply the preferred user interface style.
+        context.configuration.style.configure(self)
 
         updateSupportedPaymentMethods()
         updateUI()

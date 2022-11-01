@@ -1,271 +1,250 @@
 {
   "warnings": [
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
       "line": 82,
       "symbol": "STPAPIClient.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
       "line": 118,
       "symbol": "AnalyticsClientV2Protocol.makeCommonPayload()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
       "line": 147,
       "symbol": "AnalyticsClientV2Protocol.payload(withEventName:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
       "line": 125,
       "symbol": "STPAnalyticsClient",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
       "line": 58,
       "symbol": "StripeJSONEncoder",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 10,
-      "symbol": "UpdateImageHandler",
-      "symbol_kind": "source.lang.swift.decl.typealias",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 15,
-      "symbol": "DownloadManager.sharedManager",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 31,
-      "symbol": "DownloadManager.init(urlSessionConfiguration:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
       "line": 63,
       "symbol": "DownloadManager.downloadImage(url:updateHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
       "line": 202,
       "symbol": "DownloadManager.imagePlaceHolder()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
       "line": 32,
       "symbol": "BundleLocatorProtocol",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Categories/Date+Distance.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Categories/Date+Distance.swift",
       "line": 13,
       "symbol": "Date.compatibleDistance(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Categories/STPPaymentMethod+PaymentSheet.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Categories/STPPaymentMethod+PaymentSheet.swift",
       "line": 28,
       "symbol": "STPPaymentMethod.accessibilityLabel",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Helpers/PaymentSheetLinkAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Helpers/PaymentSheetLinkAccount.swift",
       "line": 352,
       "symbol": "PaymentSheetLinkAccount",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-VerifyAccountViewController.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-VerifyAccountViewController.swift",
       "line": 46,
       "symbol": "PayWithLinkViewController.VerifyAccountViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
-      "line": 376,
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
+      "line": 362,
       "symbol": "PayWithLinkViewController.WalletViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
-      "line": 401,
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
+      "line": 387,
       "symbol": "PayWithLinkViewController.WalletViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
+      "line": 397,
+      "symbol": "PayWithLinkViewController.WalletViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
       "line": 411,
       "symbol": "PayWithLinkViewController.WalletViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
-      "line": 425,
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
+      "line": 502,
       "symbol": "PayWithLinkViewController.WalletViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
-      "line": 516,
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
+      "line": 515,
       "symbol": "PayWithLinkViewController.WalletViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Controllers/PayWithLinkViewController-WalletViewController.swift",
-      "line": 529,
-      "symbol": "PayWithLinkViewController.WalletViewController",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Elements/InlineSignup/LinkInlineSignupElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Elements/InlineSignup/LinkInlineSignupElement.swift",
       "line": 54,
       "symbol": "LinkInlineSignupElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Elements/LinkCardEditElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Elements/LinkCardEditElement.swift",
       "line": 147,
       "symbol": "LinkCardEditElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Elements/LinkEmailElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/Internal/Link/Elements/LinkEmailElement.swift",
       "line": 88,
       "symbol": "LinkEmailElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController.swift",
       "line": 416,
       "symbol": "AddressViewController.gestureRecognizer(_:shouldReceive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/LinkEnabledPaymentMethodElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/LinkEnabledPaymentMethodElement.swift",
       "line": 92,
       "symbol": "LinkEnabledPaymentMethodElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/LinkEnabledPaymentMethodElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/LinkEnabledPaymentMethodElement.swift",
       "line": 100,
       "symbol": "LinkEnabledPaymentMethodElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/PaymentMethodElement/PaymentMethodElementWrapper.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/PaymentMethodElement/PaymentMethodElementWrapper.swift",
       "line": 85,
       "symbol": "PaymentMethodElementWrapper.didUpdate(element:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/PaymentMethodElement/PaymentMethodElementWrapper.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/Elements/PaymentMethodElement/PaymentMethodElementWrapper.swift",
       "line": 89,
       "symbol": "PaymentMethodElementWrapper.continueToNextField(element:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentMethodType.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentMethodType.swift",
       "line": 16,
       "symbol": "PaymentSheet.PaymentMethodType",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetFormFactory/FormSpec/FormSpecPaymentHandler.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetFormFactory/FormSpec/FormSpecPaymentHandler.swift",
       "line": 16,
       "symbol": "PaymentSheetFormSpecPaymentHandler",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/USBankAccount/USBankAccountPaymentMethodElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/USBankAccount/USBankAccountPaymentMethodElement.swift",
       "line": 172,
       "symbol": "USBankAccountPaymentMethodElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/USBankAccount/USBankAccountPaymentMethodElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/USBankAccount/USBankAccountPaymentMethodElement.swift",
       "line": 201,
       "symbol": "USBankAccountPaymentMethodElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/USBankAccount/USBankAccountPaymentMethodElement.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/USBankAccount/USBankAccountPaymentMethodElement.swift",
       "line": 213,
       "symbol": "USBankAccountPaymentMethodElement",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/AutoCompleteViewController.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/AutoCompleteViewController.swift",
       "line": 201,
       "symbol": "AutoCompleteViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/AutoCompleteViewController.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/AutoCompleteViewController.swift",
       "line": 212,
       "symbol": "AutoCompleteViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/AutoCompleteViewController.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/AutoCompleteViewController.swift",
       "line": 231,
       "symbol": "AutoCompleteViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/String+AutoComplete.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePaymentSheet/StripePaymentSheet/PaymentSheet/ViewControllers/AutoComplete/String+AutoComplete.swift",
       "line": 45,
       "symbol": "String.editDistance(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/davidestes/stripe-ios"
+  "source_directory": "/Users/porter/stripe/stripe-ios"
 }

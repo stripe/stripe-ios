@@ -22,6 +22,7 @@ class PaymentSheetTestPlayground: UIViewController {
     // Configuration
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
+    @IBOutlet weak var applePayButtonSelector: UISegmentedControl!
     @IBOutlet weak var allowsDelayedPaymentMethodsSelector: UISegmentedControl!
     @IBOutlet weak var shippingInfoSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
@@ -31,6 +32,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var automaticPaymentMethodsSelector: UISegmentedControl!
     @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
+    @IBOutlet weak var customCTALabelTextField: UITextField!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
@@ -91,6 +93,15 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
+        let buttonType: PKPaymentButtonType = {
+            switch applePayButtonSelector.selectedSegmentIndex {
+            case 0: return .plain
+            case 1: return .buy
+            case 2: return .setUp
+            case 3: return .checkout
+            default: return .plain
+            }
+        }()
 #if compiler(>=5.7)
         if #available(iOS 16.0, *), applePaySelector.selectedSegmentIndex == 2 {
             let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
@@ -119,14 +130,18 @@ class PaymentSheetTestPlayground: UIViewController {
                     completion(result)
                 }
             )
-            return PaymentSheet.ApplePayConfiguration(merchantId: "com.foo.example",
-                                                            merchantCountryCode: "US",
-                                                            customHandlers: customHandlers)
+            return PaymentSheet.ApplePayConfiguration(
+                merchantId: "com.foo.example",
+                merchantCountryCode: "US",
+                buttonType: buttonType,
+                customHandlers: customHandlers)
         }
 #endif
         if applePaySelector.selectedSegmentIndex == 0  {
-            return PaymentSheet.ApplePayConfiguration(merchantId: "com.foo.example",
-                                                            merchantCountryCode: "US")
+            return PaymentSheet.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe",
+                merchantCountryCode: "US",
+                buttonType: buttonType)
         } else {
             return nil
         }
@@ -204,7 +219,10 @@ class PaymentSheetTestPlayground: UIViewController {
                 return self?.addressDetails
             }
         }
-            
+        if !(customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false) {
+            configuration.primaryButtonLabel = customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
         return configuration
     }
     var addressConfiguration: AddressViewController.Configuration {
@@ -485,10 +503,12 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let automaticPaymentMethodsSelectorValue: Int
 
     let applePaySelectorValue: Int
+    let applePayButtonTypeValue: Int
     let allowsDelayedPaymentMethodsSelectorValue: Int
     let defaultBillingAddressSelectorValue: Int
     let shippingInfoSelectorValue: Int
     let linkSelectorValue: Int
+    let customCtaLabel: String?
 
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
         return PaymentSheetPlaygroundSettings(
@@ -498,10 +518,12 @@ struct PaymentSheetPlaygroundSettings: Codable {
             merchantCountryCode: 0,
             automaticPaymentMethodsSelectorValue: 0,
             applePaySelectorValue: 0,
+            applePayButtonTypeValue: 0,
             allowsDelayedPaymentMethodsSelectorValue: 1,
             defaultBillingAddressSelectorValue: 1,
             shippingInfoSelectorValue: 0,
-            linkSelectorValue: 1
+            linkSelectorValue: 1,
+            customCtaLabel: nil
         )
     }
 }
@@ -526,10 +548,12 @@ extension PaymentSheetTestPlayground {
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
             automaticPaymentMethodsSelectorValue: automaticPaymentMethodsSelector.selectedSegmentIndex,
             applePaySelectorValue: applePaySelector.selectedSegmentIndex,
+            applePayButtonTypeValue: applePayButtonSelector.selectedSegmentIndex,
             allowsDelayedPaymentMethodsSelectorValue: allowsDelayedPaymentMethodsSelector.selectedSegmentIndex,
             defaultBillingAddressSelectorValue: defaultBillingAddressSelector.selectedSegmentIndex,
             shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
-            linkSelectorValue: linkSelector.selectedSegmentIndex
+            linkSelectorValue: linkSelector.selectedSegmentIndex,
+            customCtaLabel: customCTALabelTextField.text
         )
         let data = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
@@ -550,6 +574,7 @@ extension PaymentSheetTestPlayground {
     func loadSettingsFrom(settings: PaymentSheetPlaygroundSettings) {
         customerModeSelector.selectedSegmentIndex = settings.customerModeSelectorValue
         applePaySelector.selectedSegmentIndex = settings.applePaySelectorValue
+        applePayButtonSelector.selectedSegmentIndex = settings.applePayButtonTypeValue
         allowsDelayedPaymentMethodsSelector.selectedSegmentIndex = settings.allowsDelayedPaymentMethodsSelectorValue
         shippingInfoSelector.selectedSegmentIndex = settings.shippingInfoSelectorValue
         currencySelector.selectedSegmentIndex = settings.currencySelectorValue
@@ -558,6 +583,7 @@ extension PaymentSheetTestPlayground {
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
+        customCTALabelTextField.text = settings.customCtaLabel
     }
 }
 

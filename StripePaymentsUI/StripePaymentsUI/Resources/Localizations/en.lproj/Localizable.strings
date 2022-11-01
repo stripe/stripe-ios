@@ -1,3 +1,6 @@
+/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
+"%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
+
 /* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
 

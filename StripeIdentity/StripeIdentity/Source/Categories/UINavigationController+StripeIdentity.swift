@@ -26,7 +26,7 @@ extension UINavigationController {
     }
 
     func setNavigationBarBackgroundColor(with backgroundColor: UIColor?) {
-        let bgColor = backgroundColor ?? CompatibleColor.systemBackground
+        let bgColor = backgroundColor ?? .systemBackground
 
         if #available(iOS 13.0, *) {
             navigationBar.standardAppearance.backgroundColor = bgColor

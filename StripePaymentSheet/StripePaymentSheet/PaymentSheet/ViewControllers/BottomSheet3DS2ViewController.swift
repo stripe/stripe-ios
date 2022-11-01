@@ -7,7 +7,6 @@
 //
 
 import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
 
@@ -47,7 +46,7 @@ class BottomSheet3DS2ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = CompatibleColor.systemBackground
+        view.backgroundColor = .systemBackground
         addChild(challengeViewController)
 
         let headerLabel = PaymentSheetUI.makeHeaderLabel(appearance: appearance)

@@ -157,6 +157,8 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
+    fastlane-plugin-emerge (0.5.1)
+      faraday (~> 1.1)
     ffi (1.15.5)
     fourflusher (2.3.1)
     fuzzy_match (2.0.4)
@@ -317,6 +319,7 @@ DEPENDENCIES
   colorize
   dotstrings
   fastlane
+  fastlane-plugin-emerge
   jazzy (= 0.14.1)
   mail
   mime-types

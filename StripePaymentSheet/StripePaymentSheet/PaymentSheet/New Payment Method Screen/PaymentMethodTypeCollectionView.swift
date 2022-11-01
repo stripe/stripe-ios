@@ -154,7 +154,7 @@ extension PaymentMethodTypeCollectionView {
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.75
-            label.textColor = CompatibleColor.label
+            label.textColor = .label
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
@@ -270,17 +270,17 @@ extension PaymentMethodTypeCollectionView {
             label.text = paymentMethodType.displayName
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-            var image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white)
-            
-            // tint icon primary color for a few PMs should be tinted the appearance primary color when selected
-            if paymentMethodType.iconRequiresTinting  {
-                image = image.withRenderingMode(.alwaysTemplate)
-                paymentMethodLogo.tintColor = isSelected ? appearance.colors.primary : appearance.colors.componentBackground.contrastingColor
+            let currPaymentMethodType = self.paymentMethodType
+            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white) { [weak self] image in
+                guard let strongSelf = self,
+                      currPaymentMethodType == strongSelf.paymentMethodType else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    strongSelf.updateImage(image)
+                }
             }
-            
-            paymentMethodLogo.image = image
-            paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
-            setNeedsLayout()
+            updateImage(image)
 
             if isSelected {
                 // Set text color
@@ -300,6 +300,18 @@ extension PaymentMethodTypeCollectionView {
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
             accessibilityIdentifier = PaymentSheet.PaymentMethodType.string(from: paymentMethodType)
+        }
+        private func updateImage(_ imageParam: UIImage) {
+            var image = imageParam
+            // tint icon primary color for a few PMs should be tinted the appearance primary color when selected
+            if paymentMethodType.iconRequiresTinting  {
+                image = image.withRenderingMode(.alwaysTemplate)
+                paymentMethodLogo.tintColor = isSelected ? appearance.colors.primary : appearance.colors.componentBackground.contrastingColor
+            }
+
+            paymentMethodLogo.image = image
+            paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
+            setNeedsLayout()
         }
     }
 }
