@@ -139,7 +139,7 @@ private func CreateBulletinView(
     iconUrl: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
-    let imageView = UIImageView()
+    let imageView = AlwaysTemplateImageView(tintColor: .textSuccess)
     imageView.contentMode = .scaleAspectFit
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
