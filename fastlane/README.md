@@ -207,6 +207,14 @@ Generate new localized screenshots
 
 
 
+### ios size_report
+
+```sh
+[bundle exec] fastlane ios size_report
+```
+
+
+
 ### ios installation_cocoapods_without_frameworks_objc
 
 ```sh
