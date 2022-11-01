@@ -180,7 +180,7 @@ extension PayWithLinkViewController {
                     constant: -LinkUI.contentMargins.trailing)
             ])
 
-            confirmButton.update(state: .disabled)
+            didUpdate(addPaymentMethodVC)
         }
 
         func confirm() {
