@@ -49,7 +49,7 @@ private func CreateLabelView(
     iconUrl: String?,
     action: @escaping (URL) -> Void
 ) -> UIView {
-    let imageView = UIImageView()
+    let imageView = AlwaysTemplateImageView(tintColor: .textPrimary)
     imageView.contentMode = .scaleAspectFit
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +89,7 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
         ConsentBodyView(
             bulletItems: [
                 FinancialConnectionsConsent.Body.BulletItem(
-                    icon: FinancialConnectionsImage(default: nil),
+                    icon: FinancialConnectionsImage(default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"),
                     content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
                 ),
                 FinancialConnectionsConsent.Body.BulletItem(
