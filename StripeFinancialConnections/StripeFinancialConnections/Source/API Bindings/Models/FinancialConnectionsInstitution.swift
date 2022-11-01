@@ -10,15 +10,11 @@ import Foundation
 
 struct FinancialConnectionsInstitution: Decodable, Hashable, Equatable {
     
-    struct Image: Decodable, Equatable, Hashable {
-        let `default`: String?
-    }
-    
     let id: String
     let name: String
     let url: String?
-    let icon: Image?
-    let logo: Image?
+    let icon: FinancialConnectionsImage?
+    let logo: FinancialConnectionsImage?
     
     init(id: String, name: String, url: String?, smallImageUrl: String? = nil) {
         self.id = id
