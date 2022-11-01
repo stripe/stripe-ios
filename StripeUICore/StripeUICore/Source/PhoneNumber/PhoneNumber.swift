@@ -27,7 +27,7 @@ import Foundation
         case e164
         /// Formatted for display as non-international number, e.g. (555) 555-555
         case national
-        /// Formatted for display an an international number with country code, e.g. +1 (555) 555-5555
+        /// Formatted for display as an international number with country code, e.g. +1 (555) 555-5555
         case international
     }
 
