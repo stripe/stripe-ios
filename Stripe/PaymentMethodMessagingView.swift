@@ -21,6 +21,7 @@ import WebKit
  
  - Note: You must initialize this class by calling `PaymentMethodMessagingView.create(configuration:completion:)`
  */
+@objc(STP_Internal_PaymentMethodMessagingView)
 @_spi(STP) public final class PaymentMethodMessagingView: UIView {
     // MARK: Initializers
     
