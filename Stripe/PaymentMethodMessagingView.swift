@@ -58,7 +58,7 @@ import WebKit
         self.configuration = configuration
         super.init(frame: .zero)
         directionalLayoutMargins = .init(top: 12, leading: 12, bottom: 12, trailing: 12)
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = UIColor.systemBackground
         label.attributedText = attributedString
         label.textColor = configuration.textColor
         label.translatesAutoresizingMaskIntoConstraints = false
