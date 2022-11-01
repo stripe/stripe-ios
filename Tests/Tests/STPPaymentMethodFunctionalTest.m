@@ -28,7 +28,7 @@
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     card.number = @"4242424242424242";
     card.expMonth = @(10);
-    card.expYear = @(2022);
+    card.expYear = @(2028);
     card.cvc = @"100";
     
     STPPaymentMethodAddress *billingAddress = [STPPaymentMethodAddress new];
@@ -82,7 +82,7 @@
 #pragma clang diagnostic pop
                                    XCTAssertEqualObjects(paymentMethod.card.country, @"US");
                                    XCTAssertEqual(paymentMethod.card.expMonth, 10);
-                                   XCTAssertEqual(paymentMethod.card.expYear, 2022);
+                                   XCTAssertEqual(paymentMethod.card.expYear, 2028);
                                    XCTAssertEqualObjects(paymentMethod.card.funding, @"credit");
                                    XCTAssertEqualObjects(paymentMethod.card.last4, @"4242");
                                    XCTAssertTrue(paymentMethod.card.threeDSecureUsage.supported);
