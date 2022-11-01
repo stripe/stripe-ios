@@ -76,7 +76,7 @@ extension PhoneNumber {
 
     /// Parses phone numbers in (*globalized*) E.164 format.
     ///
-    /// - Note: Our metadata lacks of national destination code (area code)  ranges, because of this we fallback to
+    /// - Note: Our metadata lacks national destination code (area code) ranges, because of this we fallback to
     ///         the device's locale to disambiguate when a number can possibly belong to multiple regions.
     ///
     /// - Parameters:
