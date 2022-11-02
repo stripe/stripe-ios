@@ -33,10 +33,7 @@ class HostController {
     lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
 
     weak var delegate: HostControllerDelegate?
-    
-    // Temporary way to control which flow to use
-    var useNative = true
-    
+        
     // MARK: - Init
     
     init(api: FinancialConnectionsAPIClient,
@@ -70,7 +67,15 @@ extension HostController: HostViewControllerDelegate {
     }
 
     func hostViewController(_ viewController: HostViewController, didFetch synchronizePayload: FinancialConnectionsSynchronize) {
-        guard useNative else {
+        let flowRouter = FlowRouter(synchronizePayload: synchronizePayload,
+                                    analyticsClient: analyticsClient)
+        defer {
+            // no matter how we exit this function
+            // log exposure to one of the variants if appropriate.
+            flowRouter.logExposureIfNeeded()
+        }
+
+        guard flowRouter.shouldUseNative else {
             continueWithWebFlow(synchronizePayload.manifest)
             return
         }

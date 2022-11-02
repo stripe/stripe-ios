@@ -29,7 +29,7 @@ final class FinancialConnectionsAnalyticsClient {
                 return eventParameter
             }
         )
-        
+
         assert(
             !parameters.contains(where: { $0.key == "duration" && type(of: $0.value) == TimeInterval.self }),
             "Duration is expected to be sent as an Int (miliseconds)."
@@ -38,8 +38,25 @@ final class FinancialConnectionsAnalyticsClient {
             !parameters.contains(where: { type(of: $0.value) == FinancialConnectionsSessionManifest.NextPane.self }),
             "Do not pass NextPane enum. Use the raw value."
         )
-        
+
         analyticsClient.log(eventName: eventName, parameters: parameters)
+    }
+
+    public func logExposure(
+        experimentName: String,
+        assignmentEventId: String,
+        parameters: [String: Any] = [:]
+    ) {
+        var parameters = parameters.merging(
+            additionalParameters,
+            uniquingKeysWith: { eventParameter, _ in
+                // prioritize event `parameters` over `additionalParameters`
+                return eventParameter
+            }
+        )
+        parameters["experiment_retrieved"] = experimentName
+        parameters["arb_id"] = assignmentEventId
+        analyticsClient.log(eventName: "preloaded_experiment_retrieved", parameters: parameters)
     }
 }
 

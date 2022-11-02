@@ -75,4 +75,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let isEndUserFacing: Bool?
     let product: String
     let accountholderToken: String?
+    let features: [String: Bool]?
+    let experimentAssignments: [String: String]?
+    let assignmentEventId: String?
 }
