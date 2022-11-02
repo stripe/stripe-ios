@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -700,6 +700,7 @@
 				E69D63F726855B250090B43D /* Sources */,
 				E69D63F826855B250090B43D /* Frameworks */,
 				E69D63F926855B250090B43D /* Resources */,
+				E2803D9A2912FB2D00143E34 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -868,6 +869,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E2803D9A2912FB2D00143E34 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swift-format > /dev/null; then\n  swift-format lint -r ${PROJECT_DIR}\nelse\n  echo \"warning: swift-format not installed.\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E69D63F726855B250090B43D /* Sources */ = {

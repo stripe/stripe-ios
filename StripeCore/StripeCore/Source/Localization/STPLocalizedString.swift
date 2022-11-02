@@ -7,5 +7,8 @@
 //
 
 @inline(__always) func STPLocalizedString(_ key: String, _ comment: String?) -> String {
-    return STPLocalizationUtils.localizedStripeString(forKey: key, bundleLocator: StripeCoreBundleLocator.self)
+    return STPLocalizationUtils.localizedStripeString(
+        forKey: key,
+        bundleLocator: StripeCoreBundleLocator.self
+    )
 }
