@@ -210,7 +210,7 @@ platform :ios do
                       sha: `git rev-parse HEAD`.to_s,
                       build_type: 'release' }
         unless ENV['CIRCLE_PULL_REQUEST'].nil?
-          arguments[:pr_number] = ENV['CIRCLE_PULL_REQUEST'].partition('/').last.to_s # get the PR number from the PR URL
+          arguments[:pr_number] = ENV['CIRCLE_PULL_REQUEST'].split('/').last.to_s # get the PR number from the PR URL
           arguments[:base_sha] = `git rev-parse master`.to_s
         end
         emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
