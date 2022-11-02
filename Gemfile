@@ -18,5 +18,11 @@ gem "mustache", "~> 1.1.1"
 gem "xcode-install", "~> 2.6"
 gem "plist"
 
+# Gems that we only install locally.
+group :development do
+  gem "lzfse"
+  gem "nokogiri"
+end
+
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')
 eval_gemfile(plugins_path) if File.exist?(plugins_path)
