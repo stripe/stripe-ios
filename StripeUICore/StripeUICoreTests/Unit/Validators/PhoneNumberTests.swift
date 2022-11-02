@@ -173,10 +173,17 @@ class PhoneNumberTests: XCTestCase {
 
     func testFromE164_shouldHandleInvalidInput() {
         XCTAssertNil(PhoneNumber.fromE164(""))
+        XCTAssertNil(PhoneNumber.fromE164("+"))
         XCTAssertNil(PhoneNumber.fromE164("++"))
-        XCTAssertNil(PhoneNumber.fromE164("+13"))
         XCTAssertNil(PhoneNumber.fromE164("1 (555) 555 5555"))
+        XCTAssertNil(PhoneNumber.fromE164("+1 (555) 555 5555"))
         XCTAssertNil(PhoneNumber.fromE164("+155555555555555555")) // too long
+    }
+
+    func testFromE164_shouldParsePartialNumbers() {
+        let phoneNumber = PhoneNumber.fromE164("+44")
+        XCTAssertEqual(phoneNumber?.countryCode, "GB")
+        XCTAssertEqual(phoneNumber?.number, "")
     }
 
     func testFromE164_shouldDisambiguateUsingLocale() {

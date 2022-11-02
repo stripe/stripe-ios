@@ -74,8 +74,10 @@ import Foundation
 
 extension PhoneNumber {
 
-    /// A regular expression for validating E.164 phone numbers numbers.
-    static let e164validationRegex = try! NSRegularExpression(pattern: "^\\+[1-9]\\d{2,16}$")
+    /// A regular expression for validating E.164 phone numbers.
+    ///
+    /// It matches a plus sign followed by up to 17 digits, where the first digit cannot be zero.
+    private static let e164validationRegex = try! NSRegularExpression(pattern: "^\\+[1-9]\\d{0,16}$")
 
     /// Parses phone numbers in (*globalized*) E.164 format.
     ///
