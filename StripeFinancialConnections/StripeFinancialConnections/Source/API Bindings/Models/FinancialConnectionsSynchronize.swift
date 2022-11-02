@@ -28,28 +28,30 @@ struct FinancialConnectionsConsent: Decodable {
     let dataAccessNotice: FinancialConnectionsDataAccessNotice
     
     struct Body: Decodable {
-        let bullets: [BulletItem]
-        
-        struct BulletItem: Decodable {
-            let icon: FinancialConnectionsImage
-            let content: String
-        }
+        let bullets: [FinancialConnectionsBulletPoint]
     }
 }
 
 struct FinancialConnectionsDataAccessNotice: Decodable {
     let title: String
     let body: Body
+    let connectedAccountNotice: String?
     let learnMore: String
     let cta: String
     
     struct Body: Decodable {
-        let bullets: [BulletItem]
-        
-        struct BulletItem: Decodable {
-            let icon: FinancialConnectionsImage
-            let title: String?
-            let content: String
-        }
+        let bullets: [FinancialConnectionsBulletPoint]
+    }
+}
+
+struct FinancialConnectionsBulletPoint: Decodable {
+    let icon: FinancialConnectionsImage?
+    let title: String?
+    let content: String
+    
+    init(icon: FinancialConnectionsImage, title: String? = nil, content: String) {
+        self.icon = icon
+        self.title = title
+        self.content = content
     }
 }

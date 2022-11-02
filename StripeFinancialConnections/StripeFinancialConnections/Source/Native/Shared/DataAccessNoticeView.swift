@@ -30,6 +30,7 @@ final class DataAccessNoticeView: UIView {
                 CreateContentView(
                     headerTitle: model.title,
                     bulletItems: model.body.bullets,
+                    connectedAccountNotice: model.connectedAccountNotice,
                     learnMoreText: model.learnMore,
                     didSelectURL: didSelectURL
                 ),
@@ -80,7 +81,8 @@ final class DataAccessNoticeView: UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateContentView(
     headerTitle: String,
-    bulletItems: [FinancialConnectionsDataAccessNotice.Body.BulletItem],
+    bulletItems: [FinancialConnectionsBulletPoint],
+    connectedAccountNotice: String?,
     learnMoreText: String,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
@@ -98,10 +100,20 @@ private func CreateContentView(
                     CreateBulletinView(
                         title: bulletItem.title,
                         subtitle: bulletItem.content,
-                        iconUrl: bulletItem.icon.default,
+                        iconUrl: bulletItem.icon?.default,
                         didSelectURL: didSelectURL
                     )
                 )
+            }
+            if let connectedAccountNotice = connectedAccountNotice {
+                let connectedAccountNoticeLabel = ClickableLabel(
+                    font: .stripeFont(forTextStyle: .caption),
+                    boldFont: .stripeFont(forTextStyle: .captionEmphasized),
+                    linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+                    textColor: .textSecondary
+                )
+                connectedAccountNoticeLabel.setText(connectedAccountNotice, action: didSelectURL)
+                subviews.append(connectedAccountNoticeLabel)
             }
             subviews.append(
                 CreateLearnMoreLabel(
@@ -225,9 +237,14 @@ private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
                 title: "",
                 body: FinancialConnectionsDataAccessNotice.Body(
                     bullets: [
-                        FinancialConnectionsDataAccessNotice.Body.BulletItem(icon: FinancialConnectionsImage(default: nil), title: "...", content: "...")
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(default: nil),
+                            title: "...",
+                            content: "..."
+                        )
                     ]
                 ),
+                connectedAccountNotice: nil,
                 learnMore: "...",
                 cta: "..."
             ),

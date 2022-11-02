@@ -13,10 +13,10 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class ConsentBodyView: UIView {
     
-    private let bulletItems: [FinancialConnectionsConsent.Body.BulletItem]
+    private let bulletItems: [FinancialConnectionsBulletPoint]
     
     init(
-        bulletItems: [FinancialConnectionsConsent.Body.BulletItem],
+        bulletItems: [FinancialConnectionsBulletPoint],
         didSelectURL: @escaping (URL) -> Void
     ) {
         self.bulletItems = bulletItems
@@ -30,7 +30,7 @@ class ConsentBodyView: UIView {
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
                     text: bulletItem.content,
-                    iconUrl: bulletItem.icon.default,
+                    iconUrl: bulletItem.icon?.default,
                     action: didSelectURL
                 )
             )
@@ -88,15 +88,15 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentBodyView {
         ConsentBodyView(
             bulletItems: [
-                FinancialConnectionsConsent.Body.BulletItem(
+                FinancialConnectionsBulletPoint(
                     icon: FinancialConnectionsImage(default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"),
                     content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
                 ),
-                FinancialConnectionsConsent.Body.BulletItem(
+                FinancialConnectionsBulletPoint(
                     icon: FinancialConnectionsImage(default: nil),
                     content: "Your data is encrypted for your protection."
                 ),
-                FinancialConnectionsConsent.Body.BulletItem(
+                FinancialConnectionsBulletPoint(
                     icon: FinancialConnectionsImage(default: nil),
                     content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
