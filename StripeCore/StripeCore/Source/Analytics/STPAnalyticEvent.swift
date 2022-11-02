@@ -119,6 +119,12 @@ import Foundation
     // MARK: - Link Misc
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
+    // MARK: - Phone formatting metadata
+    case phoneMetadataLoadNotFoundError = "phone_metadata.load.not_found_error"
+    case phoneMetadataLoadDecodingError = "phone_metadata.load.decoding_error"
+    case phoneMetadataLoadDecompressionError = "phone_metadata.load.decompression_error"
+    case phoneMetadataLoadUnknownError = "phone_metadata.load.unknown_error"
+
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
     case luxeClientFilteredPaymentMethods = "luxe_client_filtered_payment_methods"
