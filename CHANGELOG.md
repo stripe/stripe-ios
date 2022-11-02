@@ -1,5 +1,6 @@
 ## X.Y.Z 2022-xx-xx
 ### PaymentSheet
+* [Added] Added `AddressViewController`, a customizable view controller that collects local and international addresses for your customers. See https://stripe.com/docs/elements/address-element?platform=ios.
 * [Fixed] Fixed user facing error messages for card related errors.
 
 ## 23.1.1 2022-11-07
