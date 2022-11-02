@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@, оканч. на %2$@";
+
+"Address line 2 (optional)" = "Адрес (строка 2) (необязательно)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Банковский счет";
+
+"Billing Address" = "Адрес выставления счета";
+
+"Billing address" = "Адрес для выставления счета";
+
+"CVC" = "Код CVV/CVC";
+
+"CVV" = "Код CVV/CVC";
+
+"Card information" = "Данные платежной карты";
+
+"Card number" = "Номер карты";
+
+"Invalid data." = "Недопустимые данные.";
+
+"MM / YY" = "ММ / ГГ";
+
+"MM/YY" = "ММ/ГГ";
+
+"Postal Code" = "Почтовый индекс";
+
+"Shipping Address" = "Адрес доставки";
+
+"State / Province / Region" = "Штат / провинция / регион";
+
+"The BSB you entered is invalid." = "Введенный код BSB неверен.";
+
+"To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
+
+"Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
+
+"Your card number is incomplete." = "Номер карты введен не полностью.";
+
+"Your card number is invalid." = "Номер карты недействителен.";
+
+"Your card's expiration date is incomplete." = "Дата истечения срока действия карты введена не полностью.";
+
+"Your card's expiration date is invalid." = "Дата истечения срока действия карты недействительна.";
+
+"Your card's expiration month is invalid." = "Недопустимый месяц окончания действия карты.";
+
+"Your card's expiration year is invalid." = "Недопустимый год окончания действия карты.";
+
+"Your card's security code is incomplete." = "Код CVV/CVC карты введен не полностью.";
+
+"Your card's security code is invalid." = "Код CVV/CVC карты недействителен.";
+
+"Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
+
+"card number" = "номер карты";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "срок окончания действия";

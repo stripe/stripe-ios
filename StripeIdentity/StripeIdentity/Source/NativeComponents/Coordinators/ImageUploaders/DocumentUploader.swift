@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 12/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -34,9 +35,6 @@ protocol DocumentUploaderProtocol: AnyObject {
     var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? { get }
     var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? { get }
 
-    var isFrontUpdated: Bool { get set }
-    var isBackUpdated: Bool { get set }
-    
     func uploadImages(
         for side: DocumentSide,
         originalImage: CGImage,
@@ -61,11 +59,6 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     let imageUploader: IdentityImageUploader
     
-    /// Whether VerificaionPageData was already updated with front image
-    var isFrontUpdated = false
-    /// Whether VerificaionPageData was already updated with back image
-    var isBackUpdated = false
-
     /// Future that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
     private(set) var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
@@ -159,14 +152,6 @@ final class DocumentUploader: DocumentUploaderProtocol {
         exifMetadata: CameraExifMetadata?,
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
-       
-        switch side {
-        case .front:
-            self.isFrontUpdated = false
-        case .back:
-            self.isBackUpdated = false
-        }
-        
         let uploadFuture = uploadImages(
             originalImage,
             documentScannerOutput: documentScannerOutput,
@@ -231,7 +216,5 @@ final class DocumentUploader: DocumentUploaderProtocol {
     func reset() {
         frontUploadFuture = nil
         backUploadFuture = nil
-        isFrontUpdated = false
-        isBackUpdated = false
     }
 }

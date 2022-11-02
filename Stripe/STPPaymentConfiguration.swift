@@ -1,6 +1,6 @@
 //
 //  STPPaymentConfiguration.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 5/18/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -193,6 +193,8 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
             shippingTypeDescription = "STPShippingTypeShipping"
         case .delivery:
             shippingTypeDescription = "STPShippingTypeDelivery"
+        default:
+            break
         }
 
         let props = [

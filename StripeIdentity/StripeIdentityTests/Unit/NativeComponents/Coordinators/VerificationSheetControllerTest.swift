@@ -3,6 +3,7 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 10/27/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
@@ -11,7 +12,7 @@ import UIKit
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
-@available(iOS 13, *)
+
 final class VerificationSheetControllerTest: XCTestCase {
 
     let mockVerificationSessionId = "vs_123"
@@ -112,7 +113,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        let mockResponse = try VerificationPageDataMock.response200.make()
+        let mockResponse = try VerificationPageDataMock.noErrors.make()
         let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
         mockFlowController.uncollectedFields = [.idDocumentType, .idDocumentFront, .idDocumentBack]
 
@@ -131,7 +132,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             .init(
                 clearData: .init(
                     biometricConsent: false,
-                    face: false,
+                    face: true,
                     idDocumentBack: true,
                     idDocumentFront: true,
                     idDocumentType: true
@@ -142,6 +143,16 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+        
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        // Verify submit request
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
@@ -203,9 +214,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.saveDocumentFrontAndDecideBack(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader,
-            onNeedBack: {},
-            onNotNeedBack: {
-                notNeedbackExp.fulfill()
+            onCompletion: { isBackRequired in
+                if !isBackRequired {
+                    notNeedbackExp.fulfill()
+                }
             }
         )
 
@@ -219,6 +231,15 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        // Verify submit request
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
         
         // Verify completion block is called
         wait(for: [notNeedbackExp], timeout: 1)
@@ -251,10 +272,11 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.saveDocumentFrontAndDecideBack(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader,
-            onNeedBack: {
-                needBackExp.fulfill()
-            },
-            onNotNeedBack: {}
+            onCompletion: { isBackRequired in
+                if isBackRequired {
+                    needBackExp.fulfill()
+                }
+            }
         )
 
         // Mock that document upload succeeded
@@ -285,8 +307,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.saveDocumentFrontAndDecideBack(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader,
-            onNeedBack: {},
-            onNotNeedBack: {}
+            onCompletion: { isBackRequired in }
         )
         // Mock that document upload failed
         mockDocumentUploader.frontUploadPromise.reject(with: mockError)
@@ -335,6 +356,16 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
         
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        // Verify submit request
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
+        
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
 
@@ -382,7 +413,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock time to submit
         mockFlowController.isFinishedCollecting = true
 
-        let mockDataResponse = try VerificationPageDataMock.response200.make()
+        let mockDataResponse = try VerificationPageDataMock.noErrors.make()
         let mockSubmitResponse = try VerificationPageDataMock.submitted.make()
         let mockData = VerificationPageDataUpdateMock.default.collectedData!
 

@@ -6,8 +6,12 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
-@_spi(STP) @testable import StripeApplePay
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeApplePay
 
 class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
     func applePayContext(
@@ -117,5 +121,14 @@ class STPApplePayContextTest: XCTestCase {
         XCTAssertEqual(shippingParams?.address.state, "CA")
         XCTAssertEqual(shippingParams?.address.country, "US")
         XCTAssertEqual(shippingParams?.address.postalCode, "94105")
+    }
+    
+    // Tests stp_tokenParameters in StripeApplePay, not StripePayments
+    func testStpTokenParameters() {
+        let applePay = STPFixtures.applePayPayment()
+        let applePayDict = applePay.stp_tokenParameters(apiClient: .shared)
+        XCTAssertNotNil(applePayDict["pk_token"])
+        XCTAssertEqual((applePayDict["card"] as! NSDictionary)["name"] as! String, "Test Testerson")
+        XCTAssertEqual(applePayDict["pk_token_instrument_name"] as! String, "Master Charge")
     }
 }

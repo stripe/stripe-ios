@@ -74,14 +74,57 @@ modules:
   localization_dir: Stripe
   custom_string_convertible_dir: Stripe
   supports_catalyst: true
-  size_report:
-    max_incremental_uncompressed_size: 100
   docs:
     output: docs/docs
     readme: README.md
     include:
       - StripeCore
       - StripeApplePay
+      - StripePayments
+      - StripePaymentsUI
+  size_report:
+    max_incremental_uncompressed_size: 100
+
+- podspec: StripePayments.podspec
+  scheme: StripePayments
+  localization_dir: StripePayments/StripePayments
+  framework_name: StripePayments
+  supports_catalyst: true
+  custom_string_convertible_dir: StripePayments/StripePayments/Categories
+  docs:
+    output: docs/stripe-payments
+    readme: StripePayments/README.md
+    include:
+      - StripeCore
+  size_report:
+    max_incremental_uncompressed_size: 100
+
+- podspec: StripePaymentsUI.podspec
+  scheme: StripePaymentsUI
+  framework_name: StripePaymentsUI
+  localization_dir: StripePaymentsUI/StripePaymentsUI
+  custom_string_convertible_dir: StripePaymentsUI/StripePaymentsUI/Categories
+  docs:
+    output: docs/stripe-payments-ui
+    readme: StripePaymentsUI/README.md
+    include:
+      - StripeCore
+  supports_catalyst: true
+  size_report:
+    max_incremental_uncompressed_size: 100
+
+- podspec: StripePaymentSheet.podspec
+  scheme: StripePaymentSheet
+  framework_name: StripePaymentSheet
+  localization_dir: StripePaymentSheet/StripePaymentSheet
+  supports_catalyst: true
+  docs:
+    output: docs/stripe-paymentsheet
+    readme: StripePaymentSheet/README.md
+    include:
+      - StripeCore
+  size_report:
+    max_incremental_uncompressed_size: 100
 
 - podspec: StripeCameraCore.podspec
   scheme: StripeCameraCore
@@ -125,6 +168,9 @@ modules:
   scheme: StripeCardScan
   framework_name: StripeCardScan
   supports_catalyst: false
+  docs:
+    output: docs/stripe-cardscan
+    readme: StripeCardScan/README.md
   localization_dir: StripeCardScan/StripeCardScan
 
 - podspec: StripeFinancialConnections.podspec
@@ -155,6 +201,9 @@ pod_push_order:
 - StripeUICore.podspec
 - StripeCameraCore.podspec
 - StripeApplePay.podspec
+- StripePayments.podspec
+- StripePaymentsUI.podspec
+- StripePaymentSheet.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
 - StripeCardScan.podspec

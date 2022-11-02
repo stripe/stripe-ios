@@ -1,30 +1,30 @@
 //
 //  STPAPIClient.swift
-//  StripeExample
+//  StripeCore
 //
 //  Created by Jack Flintermann on 12/18/14.
-//  Copyright (c) 2014 Stripe. All rights reserved.
+//  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
 /// A client for making connections to the Stripe API.
-public class STPAPIClient {
+@objc public class STPAPIClient: NSObject {
     /// The current version of this library.
-    public static let STPSDKVersion = StripeAPIConfiguration.STPSDKVersion
+    @objc public static let STPSDKVersion = StripeAPIConfiguration.STPSDKVersion
 
     /// A shared singleton API client.
     /// By default, the SDK uses this instance to make API requests
     /// eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
-    public static let shared: STPAPIClient = {
+    @objc(sharedClient) public static let shared: STPAPIClient = {
         let client = STPAPIClient()
         return client
     }()
 
     /// The client's publishable key.
     /// The default value is `StripeAPI.defaultPublishableKey`.
-    public var publishableKey: String? {
+    @objc public var publishableKey: String? {
         get {
             if let publishableKey = _publishableKey {
                 return publishableKey
@@ -55,14 +55,14 @@ public class STPAPIClient {
     /// create a Source or Payment Method on a connected account, set this property to the ID of the
     /// account for which this request is being made.
     /// - seealso: https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
-    public var stripeAccount: String?
+    @objc public var stripeAccount: String?
 
     /// Libraries wrapping the Stripe SDK should set this, so that Stripe can contact you about future issues or critical updates.
     /// - seealso: https://stripe.com/docs/building-plugins#setappinfo
-    public var appInfo: STPAppInfo?
+    @objc public var appInfo: STPAppInfo?
 
     /// The API version used to communicate with Stripe.
-    public static let apiVersion = APIVersion
+    @objc public static let apiVersion = APIVersion
 
     // MARK: Internal/private properties
     @_spi(STP) public var apiURL: URL! = URL(string: APIBaseURL)
@@ -79,7 +79,7 @@ public class STPAPIClient {
     }
 
     // MARK: Initializers
-    public init() {
+    override public init() {
         sourcePollers = [:]
         sourcePollersQueue = DispatchQueue(label: "com.stripe.sourcepollers")
     }
@@ -87,6 +87,7 @@ public class STPAPIClient {
     /// Initializes an API client with the given publishable key.
     /// - Parameter publishableKey: The publishable key to use.
     /// - Returns: An instance of STPAPIClient.
+    @objc(initWithPublishableKey:)
     public convenience init(publishableKey: String) {
         self.init()
         self.publishableKey = publishableKey
@@ -433,16 +434,17 @@ extension STPAPIClient {
         request: URLRequest,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        urlSession.stp_performDataTask(with: request, completionHandler: { (data, _, error) in
+        urlSession.stp_performDataTask(with: request, completionHandler: { (data, response, error) in
             DispatchQueue.main.async {
-                completion(STPAPIClient.decodeResponse(data: data, error: error))
+                completion(STPAPIClient.decodeResponse(data: data, error: error, response: response))
             }
         })
     }
 
     @_spi(STP) public static func decodeResponse<T: Decodable>(
         data: Data?,
-        error: Error?
+        error: Error?,
+        response: URLResponse?
     ) -> Result<T, Error> {
         if let error = error {
             return .failure(error)
@@ -454,7 +456,7 @@ extension STPAPIClient {
         do {
             /// HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
             if T.self == EmptyResponse.self,
-               let decodedStripeError = decodeStripeErrorResponse(data: data) {
+               let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
                 return .failure(decodedStripeError)
             }
 
@@ -462,7 +464,7 @@ extension STPAPIClient {
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
-            if let decodedStripeError = decodeStripeErrorResponse(data: data) {
+            if let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
                 return .failure(decodedStripeError)
             } else {
                 // Return decoding error directly
@@ -472,11 +474,12 @@ extension STPAPIClient {
     }
 
     /// Decodes request data to see if it can be parsed as a Stripe error
-    private static func decodeStripeErrorResponse(data: Data) -> StripeError? {
+    private static func decodeStripeErrorResponse(data: Data, response: URLResponse?) -> StripeError? {
         var decodedError: StripeError?
 
         if let decodedErrorResponse: StripeAPIErrorResponse = try? StripeJSONDecoder.decode(jsonData: data),
-           let apiError = decodedErrorResponse.error {
+           var apiError = decodedErrorResponse.error {
+            apiError.statusCode = (response as? HTTPURLResponse)?.statusCode
             decodedError = StripeError.apiError(apiError)
         }
 

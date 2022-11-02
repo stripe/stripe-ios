@@ -1,0 +1,87 @@
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"Alipay" = "Alipay";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS Direct Debit";
+
+/* Payment Method type brand name */
+"Bancontact" = "Bancontact";
+
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Payment Method for credit card */
+"Card" = "Card";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Payment Method type brand name. */
+"EPS" = "EPS";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* Payment Method type brand name */
+"Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Payment method brand name */
+"SEPA Debit" = "SEPA Debit";
+
+/* Payment Method type brand name */
+"Sofort" = "Sofort";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
+
+/* Default missing source type label */
+"Unknown" = "Unknown";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "US Bank Account";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
+
+/* Payment Method type brand name */
+"WeChat Pay" = "WeChat Pay";
+

@@ -3,6 +3,7 @@
 //  StripeCore
 //
 //  Created by David Estes on 10/18/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -65,54 +66,4 @@ extension Dictionary where Value == Any {
             return String(data: data, encoding: .utf8)
         }
     }
-}
-
-extension Dictionary where Key == AnyHashable, Value == Any {
-    @_spi(STP) public func stp_forLUXEJSONPath(_ path: String) -> Any? {
-        let pathComponents = Dictionary.stp_parseLUXEJSONPath(path)
-        var currDict = self
-        for currKey in pathComponents {
-            if let dict = currDict[currKey] as? [AnyHashable: Value] {
-                currDict = dict
-                if currKey == pathComponents.last {
-                    return currDict
-                }
-            } else if let val = currDict[currKey] {
-                return val
-            } else {
-                return nil
-            }
-        }
-        return nil
-    }
-
-    // Splits a string to an array of strings
-    // "key" returns ["key"]
-    // "key[key1]" returns ["key", "key1"]
-    // "key[key1][key2]" returns ["key", "key1", "key2"]
-    static func stp_parseLUXEJSONPath(_ path: String) -> [String] {
-        var currWord = ""
-        let charArray = Array(path)
-        var arrayWords: [String] = []
-        for char in charArray {
-            if char == "[" {
-                if !currWord.isEmpty {
-                    arrayWords.append(currWord)
-                }
-                currWord = ""
-            } else if char == "]" {
-                if !currWord.isEmpty {
-                    arrayWords.append(currWord)
-                }
-                currWord = ""
-            } else {
-                currWord.append(char)
-            }
-        }
-        if !currWord.isEmpty {
-            arrayWords.append(currWord)
-        }
-        return arrayWords
-    }
-
 }

@@ -503,7 +503,7 @@ public extension Button.Configuration {
         return .init(
             foregroundColor: .white,
             backgroundColor: Self.tintColor,
-            disabledBackgroundColor: CompatibleColor.systemGray4,
+            disabledBackgroundColor: .systemGray4,
             colorTransforms: .init(
                 highlightedBackground: .darken(amount: 0.2)
             )
@@ -514,7 +514,7 @@ public extension Button.Configuration {
     static func secondary() -> Self {
         return .init(
             foregroundColor: Self.tintColor,
-            backgroundColor: CompatibleColor.secondarySystemFill,
+            backgroundColor: .secondarySystemFill,
             disabledForegroundColor: .systemGray,
             colorTransforms: .init(
                 highlightedBackground: .darken(amount: 0.2)

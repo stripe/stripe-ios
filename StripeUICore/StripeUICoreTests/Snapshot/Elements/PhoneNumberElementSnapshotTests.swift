@@ -3,9 +3,10 @@
 //  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 6/23/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
@@ -48,8 +49,26 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
         let sut = PhoneNumberElement(
             allowedCountryCodes: ["GB"],
             defaultCountryCode: "GB",
-            defaultPhoneNumber: "442071838750",
+            defaultPhoneNumber: "02071838750",
             locale: Locale(identifier: "en_GB")
+        )
+        verify(sut)
+    }
+
+    func testFilledHU() {
+        let sut = PhoneNumberElement(
+            defaultCountryCode: "HU",
+            defaultPhoneNumber: "12345678",
+            locale: Locale(identifier: "hu_HU")
+        )
+        verify(sut)
+    }
+
+    func testFilledHU_national() {
+        let sut = PhoneNumberElement(
+            defaultCountryCode: "HU",
+            defaultPhoneNumber: "0612345678",
+            locale: Locale(identifier: "hu_HU")
         )
         verify(sut)
     }

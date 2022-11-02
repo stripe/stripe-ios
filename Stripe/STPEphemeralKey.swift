@@ -1,12 +1,13 @@
 //
 //  STPEphemeralKey.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 5/4/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     private(set) var stripeID: String

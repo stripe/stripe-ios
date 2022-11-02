@@ -12,6 +12,7 @@ import StripeIdentity
 import StripeFinancialConnections
 import StripeCardScan
 import StripeApplePay
+import StripePaymentSheet
 
 class ViewController: UIViewController {
 
@@ -24,7 +25,7 @@ class ViewController: UIViewController {
         }
 
         if #available(iOS 12.0, *) {
-            let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: "")
+            let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: "", returnURL: nil)
         }
 
         // Initialize a card field to make sure we can load image resources
@@ -35,6 +36,8 @@ class ViewController: UIViewController {
             cardImageVerificationIntentId: "foo",
             cardImageVerificationIntentSecret: "foo"
         )
+        
+        let _ = PaymentSheet(setupIntentClientSecret: "", configuration: PaymentSheet.Configuration())
         // Do any additional setup after loading the view.
 
     }

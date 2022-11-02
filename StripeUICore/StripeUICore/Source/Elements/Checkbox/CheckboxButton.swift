@@ -1,6 +1,6 @@
 //
 //  CheckboxButton.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Cameron Sabol on 12/11/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.

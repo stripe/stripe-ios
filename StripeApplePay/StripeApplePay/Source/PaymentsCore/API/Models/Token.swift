@@ -1,6 +1,6 @@
 //
 //  Token.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 7/14/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

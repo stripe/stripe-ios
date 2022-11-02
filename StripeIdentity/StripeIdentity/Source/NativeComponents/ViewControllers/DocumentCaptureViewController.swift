@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -104,7 +105,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     var flowViewModel: IdentityFlowView.ViewModel {
         return .init(
             headerViewModel: titleText.map { .init(
-                backgroundColor: CompatibleColor.systemBackground,
+                backgroundColor: .systemBackground,
                 headerType: .plain,
                 titleText: $0
             ) },
@@ -336,15 +337,16 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         sheetController?.saveDocumentFrontAndDecideBack(
             from: analyticsScreenName,
             documentUploader: documentUploader,
-            onNeedBack: { [weak self] in
-                self?.imageScanningSession.startScanning(expectedClassification: DocumentSide.back)
-                self?.updateUI()
-            },
-            onNotNeedBack: { [weak self] in
-                self?.imageScanningSession.setStateScanned(
-                    expectedClassification: .front,
-                    capturedData: frontImage
-                )
+            onCompletion: { [weak self] isBackRequired in
+                if isBackRequired {
+                    self?.imageScanningSession.startScanning(expectedClassification: DocumentSide.back)
+                    self?.updateUI()
+                } else {
+                    self?.imageScanningSession.setStateScanned(
+                        expectedClassification: .front,
+                        capturedData: frontImage
+                    )
+                }
             }
         )
     }
@@ -488,6 +490,7 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
 
     func reset() {
         imageScanningSession.reset(to: .front)
+        clearCollectedFields()
     }
 }
 

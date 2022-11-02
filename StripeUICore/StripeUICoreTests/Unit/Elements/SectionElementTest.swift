@@ -1,6 +1,6 @@
 //
 //  SectionElementTest.swift
-//  StripeiOS
+//  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 6/14/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

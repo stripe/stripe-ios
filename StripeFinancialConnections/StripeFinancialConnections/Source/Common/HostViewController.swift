@@ -32,7 +32,7 @@ final class HostViewController : UIViewController {
                                    target: self,
                                    action: #selector(didTapClose))
 
-        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
+        item.tintColor = UIColor.dynamic(light: .systemGray2, dark: .white)
         return item
     }()
 
@@ -44,16 +44,19 @@ final class HostViewController : UIViewController {
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
+    private let returnURL: String?
 
     private var lastError: Error? = nil
 
     // MARK: - Init
     
     init(clientSecret: String,
+         returnURL: String?,
          apiClient: FinancialConnectionsAPIClient,
          delegate: HostViewControllerDelegate?
     ) {
         self.clientSecret = clientSecret
+        self.returnURL = returnURL
         self.apiClient = apiClient
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
@@ -64,11 +67,12 @@ final class HostViewController : UIViewController {
     }
 
     // MARK: - UIViewController
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.addSubview(loadingView)
-        view.backgroundColor = CompatibleColor.systemBackground
+        view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         getManifest()
@@ -88,7 +92,7 @@ extension HostViewController {
         loadingView.errorView.isHidden = true
         loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         apiClient
-            .generateSessionManifest(clientSecret: clientSecret)
+            .generateSessionManifest(clientSecret: clientSecret, returnURL: returnURL)
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {

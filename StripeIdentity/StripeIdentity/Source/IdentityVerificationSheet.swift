@@ -87,7 +87,8 @@ final public class IdentityVerificationSheet {
        - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
        - configuration: Configuration for the `IdentityVerificationSheet` including your brand logo.
      */
-    @available(iOS 13, *)
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public convenience init(
         verificationSessionId: String,
         ephemeralKeySecret: String,
@@ -231,7 +232,7 @@ final public class IdentityVerificationSheet {
      Modifying this value will use experimental features that are not guaranteed
      to be production-ready or prevent API requests from being decoded.
      */
-    @available(iOS 13, *)
+    
     @_spi(STP) public var verificationPageAPIVersion: Int {
         get {
             return verificationSheetController?.apiClient.apiVersion ?? IdentityAPIClientImpl.productionApiVersion

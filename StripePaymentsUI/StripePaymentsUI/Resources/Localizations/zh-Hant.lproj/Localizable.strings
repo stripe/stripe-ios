@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
+
+"Address line 2 (optional)" = "地址第 2 行（可選）";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "銀行帳戶";
+
+"Billing Address" = "帳單地址";
+
+"Billing address" = "帳單地址";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "金融卡資訊";
+
+"Card number" = "卡號";
+
+"Invalid data." = "數據無效。";
+
+"MM / YY" = "月份/年份";
+
+"MM/YY" = "月份/年份";
+
+"Postal Code" = "郵遞區號";
+
+"Shipping Address" = "送貨地址";
+
+"State / Province / Region" = "州 / 省 / 地區";
+
+"The BSB you entered is invalid." = "您輸入的 BSB 無效。";
+
+"To scan your card, allow camera access in Settings." = "要掃描您的金融卡，在「設定」中啟用網路攝影機。";
+
+"Your ZIP is invalid." = "您的郵遞區號無效。";
+
+"Your card number is incomplete." = "您的卡號不完整。";
+
+"Your card number is invalid." = "您的卡號無效。";
+
+"Your card's expiration date is incomplete." = "您的卡的不完整。";
+
+"Your card's expiration date is invalid." = "您金融卡的有效期無效。";
+
+"Your card's expiration month is invalid." = "您的金融卡的到期月份無效。";
+
+"Your card's expiration year is invalid." = "您的金融卡的到期年份無效。";
+
+"Your card's security code is incomplete." = "您的金融卡的安全碼不完整。";
+
+"Your card's security code is invalid." = "您的金融卡安全碼無效。";
+
+"Your postal code is invalid." = "您的郵遞區號無效。";
+
+"card number" = "卡號";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "到期日";

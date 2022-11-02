@@ -9,7 +9,9 @@ require_relative 'release_common'
 abort("Specify a version number. (e.g. `#{__FILE__} --version 21.0.0`)") if @version.nil?
 
 # Make sure version is a valid version number
-abort('Version number must be in the format `x.x.x`, e.g. `ci_scripts/propose.rb 21.0.0`') unless @version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/)
+unless @version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/)
+  abort('Version number must be in the format `x.x.x`, e.g. `ci_scripts/propose.rb 21.0.0`')
+end
 
 puts "Proposing version: #{@version}".red
 
@@ -69,8 +71,8 @@ def create_pr
 
   unless @is_dry_run
     pr = @github_client.create_pull_request(
-      'stripe-ios/stripe-ios',
-      'private',
+      'stripe/stripe-ios',
+      'master',
       @branchname,
       "Release version #{@version}",
       pr_body
@@ -94,7 +96,7 @@ end
 def propose_release
   unless @is_dry_run
     # Lookup PR
-    all_prs = @github_client.pull_requests('stripe-ios/stripe-ios', :state => 'open')
+    all_prs = @github_client.pull_requests('stripe/stripe-ios', state: 'open')
     pr = all_prs.find { |pr| pr.head.ref == @branchname }
 
     # Get list of new directories and save to a temp file
@@ -103,7 +105,7 @@ def propose_release
     new_dirs = `ci_scripts/check_for_new_directories.sh HEAD #{prev_release_tag}`
     temp_dir = `mktemp -d`.chomp("\n")
     new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
-    File.open(new_dir_file, "w") { |file| file.puts new_dirs }
+    File.open(new_dir_file, 'w') { |file| file.puts new_dirs }
 
     rputs "Complete the pull request checklist at #{pr.html_url}, then run `bundle exec ruby ci_scripts/propose_release.rb`"
     rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"

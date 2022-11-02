@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
     s.name                           = 'StripeFinancialConnections'
-  
+
     # Do not update s.version directly.
     # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-    s.version                        = '22.8.2'
-  
+    s.version                        = '23.1.0'
+
     s.summary                        = 'Securely connect financial accounts to Stripe\'s merchant account.'
     s.license                        = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage                       = 'https://stripe.com/docs/mobile/ios'
@@ -13,11 +13,11 @@ Pod::Spec.new do |s|
     s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
     s.requires_arc                   = true
     s.platform                       = :ios
-    s.ios.deployment_target          = '12.0'
+    s.ios.deployment_target          = '13.0'
     s.swift_version		               = '5.0'
     s.weak_framework = 'SwiftUI'
     s.dependency   'StripeCore', "#{s.version}"
     s.dependency   'StripeUICore', "#{s.version}"
     s.source_files                   = 'StripeFinancialConnections/StripeFinancialConnections/**/*.swift'
-    s.ios.resource_bundle            = { 'StripeFinancialConnections' => 'StripeFinancialConnections/StripeFinancialConnections/Resources/**/*.{lproj,xcassets,png}' }
+    s.ios.resource_bundle            = { 'StripeFinancialConnections' => 'StripeFinancialConnections/StripeFinancialConnections/Resources/**/*.{lproj,png}' }
 end

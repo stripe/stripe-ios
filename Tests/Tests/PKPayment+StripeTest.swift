@@ -1,6 +1,6 @@
 //
 //  PKPayment+StripeTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 7/6/15.
 //  Copyright © 2015 Stripe, Inc. All rights reserved.
@@ -9,8 +9,11 @@
 import PassKit
 import XCTest
 
-@testable import Stripe
-@_spi(STP) import StripeApplePay
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class PKPayment_StripeTest: XCTestCase {
     func testIsSimulated() {
@@ -27,7 +30,7 @@ class PKPayment_StripeTest: XCTestCase {
     }
 
     func testTransactionIdentifier() {
-        let identifier = PKPayment.stp_testTransactionIdentifier()!
+        let identifier = PKPayment.stp_testTransactionIdentifier()
         XCTAssertTrue(identifier.contains("ApplePayStubs~4242424242424242~0~USD~"))
     }
 }

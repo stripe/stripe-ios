@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Jaime Park on 2/1/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -15,17 +16,17 @@ import UIKit
  Here are the two types of icon views:
 
  Brand icon + Stripe icon
- +------------------------+
- | +---+   +---+          |
- | | B | + | S |          |
- | +---+   +---+          |
- +------------------------+
+ +-----------------------+
+ |     +---+   +---+     |
+ |     | B | + | S |     |
+ |     +---+   +---+     |
+ +-----------------------+
 
  A singular icon (i.e. error icon)
  +------------------------+
- | +---+                  |
- | | B |                  |
- | +---+                  |
+ |         +---+          |
+ |         | B |          |
+ |         +---+          |
  +------------------------+
  */
 class HeaderIconView: UIView {
@@ -34,7 +35,7 @@ class HeaderIconView: UIView {
         static let cornerRadius: CGFloat = 8
         static let heightConstraint: CGFloat = 32
 
-        static let plusIconTintColor: UIColor = CompatibleColor.label
+        static let plusIconTintColor: UIColor = .label
         static let plusIconLength: CGFloat = 16
 
         static let shadowConfig = ShadowConfiguration(
@@ -45,7 +46,7 @@ class HeaderIconView: UIView {
         )
 
         static let stackViewPadding: CGFloat = 2
-        static let stackViewSpacing: CGFloat = 16
+        static let stackViewSpacing: CGFloat = 8
     }
 
     struct ViewModel {
@@ -187,10 +188,10 @@ private extension HeaderIconView {
             stripeIconView.widthAnchor.constraint(equalToConstant: Styling.baseIconLength),
 
             // The stack view should have some padding for the shadow to show
-            // and be aligned to the left. No trailing constraint needed.
+            // and be aligned to the center.
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: Styling.stackViewPadding),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Styling.stackViewPadding),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Styling.stackViewPadding),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
 }

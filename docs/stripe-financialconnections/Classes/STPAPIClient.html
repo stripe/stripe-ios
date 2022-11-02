@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 22.8.2
+          Stripe iOS SDKs 23.1.0
         </a>
         
       </p>
@@ -113,14 +113,15 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPAPIClient</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPAPIClient</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                 </div>
               </div>
             <p>A client for making connections to the Stripe API.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L13-L213">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L13-L214">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -132,9 +133,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPAPIClientC13STPSDKVersionSSvpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)STPAPIClient(cpy)STPSDKVersion"></a>
                     <a name="//apple_ref/swift/Variable/STPSDKVersion" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPAPIClientC13STPSDKVersionSSvpZ">STPSDKVersion</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)STPAPIClient(cpy)STPSDKVersion">STPSDKVersion</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -149,12 +150,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">STPSDKVersion</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">STPSDKVersion</span><span class="p">:</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L15">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L15">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -162,9 +164,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPAPIClientC6sharedACvpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)STPAPIClient(cpy)sharedClient"></a>
                     <a name="//apple_ref/swift/Variable/shared" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPAPIClientC6sharedACvpZ">shared</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)STPAPIClient(cpy)sharedClient">shared</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -181,12 +183,13 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span><span class="p">:</span> <span class="kt">STPAPIClient</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(sharedClient)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span><span class="p">:</span> <span class="kt">STPAPIClient</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L20">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L20">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -194,9 +197,9 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPAPIClientC14publishableKeySSSgvp"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)STPAPIClient(py)publishableKey"></a>
                     <a name="//apple_ref/swift/Property/publishableKey" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPAPIClientC14publishableKeySSSgvp">publishableKey</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)STPAPIClient(py)publishableKey">publishableKey</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -205,19 +208,20 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>The client&rsquo;s publishable key.
-The default value is <code><a href="../Classes/StripeAPI.html#/s:10StripeCore0A3APIC21defaultPublishableKeySSSgvpZ">StripeAPI.defaultPublishableKey</a></code>.</p>
+The default value is <code><a href="../Classes/StripeAPI.html#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)defaultPublishableKey">StripeAPI.defaultPublishableKey</a></code>.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L27-L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L27-L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -225,9 +229,9 @@ The default value is <code><a href="../Classes/StripeAPI.html#/s:10StripeCore0A3
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPAPIClientC13stripeAccountSSSgvp"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)STPAPIClient(py)stripeAccount"></a>
                     <a name="//apple_ref/swift/Property/stripeAccount" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPAPIClientC13stripeAccountSSSgvp">stripeAccount</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)STPAPIClient(py)stripeAccount">stripeAccount</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -249,12 +253,13 @@ account for which this request is being made.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">stripeAccount</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">stripeAccount</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L58">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -262,9 +267,9 @@ account for which this request is being made.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPAPIClientC7appInfoAA06STPAppE0CSgvp"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)STPAPIClient(py)appInfo"></a>
                     <a name="//apple_ref/swift/Property/appInfo" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPAPIClientC7appInfoAA06STPAppE0CSgvp">appInfo</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)STPAPIClient(py)appInfo">appInfo</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -284,12 +289,13 @@ account for which this request is being made.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">appInfo</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAppInfo.html">STPAppInfo</a></span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">appInfo</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAppInfo.html">STPAppInfo</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -297,9 +303,9 @@ account for which this request is being made.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPAPIClientC10apiVersionSSvpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)STPAPIClient(cpy)apiVersion"></a>
                     <a name="//apple_ref/swift/Variable/apiVersion" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPAPIClientC10apiVersionSSvpZ">apiVersion</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)STPAPIClient(cpy)apiVersion">apiVersion</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -314,12 +320,13 @@ account for which this request is being made.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">apiVersion</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">apiVersion</span><span class="p">:</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -340,9 +347,9 @@ account for which this request is being made.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPAPIClientC14publishableKeyACSS_tcfc"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)STPAPIClient(im)initWithPublishableKey:"></a>
                     <a name="//apple_ref/swift/Method/init(publishableKey:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPAPIClientC14publishableKeyACSS_tcfc">init(publishableKey:<wbr>)</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)STPAPIClient(im)initWithPublishableKey:">init(publishableKey:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -357,7 +364,8 @@ account for which this request is being made.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(initWithPublishableKey:)</span>
+<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -385,7 +393,7 @@ account for which this request is being made.</p>
                         <p>An instance of STPAPIClient.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L90-L93">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift#L91-L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -398,7 +406,7 @@ account for which this request is being made.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-09-19)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-31)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

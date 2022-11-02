@@ -7,13 +7,14 @@
 //
 
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
-@_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripeUICore
 @_spi(STP) @testable import StripeCore
+@_spi(STP) @testable import StripePaymentSheet
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
@@ -27,22 +28,20 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         return window
     }
     
-    private var configuration: PaymentSheet.Configuration {
-        var configuration = PaymentSheet.Configuration()
-        configuration.merchantDisplayName = "Example, Inc."
-        configuration.applePay = .init(
-            merchantId: "com.foo.example", merchantCountryCode: "US")
-        configuration.allowsDelayedPaymentMethods = true
-        configuration.returnURL = "mockReturnUrl"
-        
-        return configuration
-    }
+    private var configuration = PaymentSheet.Configuration()
 
     // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
     var runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
+        
+        configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = .init(
+            merchantId: "com.foo.example", merchantCountryCode: "US")
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "mockReturnUrl"
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore() // use in-memory cookie store
 //        self.recordMode = true
@@ -55,6 +54,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
+        configuration = PaymentSheet.Configuration()
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
@@ -316,6 +316,43 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     
+    func testPaymentSheetCustomPrimaryButtonLabel() {
+        stubNewCustomerResponse()
+
+        configuration.primaryButtonLabel = "Donate"
+        
+        preparePaymentSheet()
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetCustomApplePayCta() {
+        stubNewCustomerResponse()
+
+        configuration.applePay = .init(
+            merchantId: "com.foo.example",
+            merchantCountryCode: "US",
+            buttonType: .donate)
+        
+        preparePaymentSheet(applePayEnabled: true)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomPrimaryButtonAndApplePayCta() {
+        stubNewCustomerResponse()
+
+        configuration.primaryButtonLabel = "Donate"
+        configuration.applePay = .init(
+            merchantId: "com.foo.example",
+            merchantCountryCode: "US",
+            buttonType: .donate)
+        
+        preparePaymentSheet(applePayEnabled: true)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetCustomCornerRadius() {
         stubReturningCustomerResponse()
 
@@ -595,9 +632,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testPaymentSheet_LPM_upi_only() {
-        PaymentSheet.supportedPaymentMethods += [.UPI] // TODO: (porter) Remove when UPI launches
-        
+    func testPaymentSheet_LPM_upi_only() {        
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
             return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"upi\"",

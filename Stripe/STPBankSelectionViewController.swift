@@ -1,6 +1,6 @@
 //
 //  STPBankSelectionViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by David Estes on 8/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
@@ -9,6 +9,8 @@
 import PassKit
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 
 /// The payment methods supported by STPBankSelectionViewController.
 @objc public enum STPBankSelectionMethod: Int {
@@ -73,18 +75,6 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
     public var apiClient: STPAPIClient = .shared
-    
-    /// The API Client to use to make requests.
-    /// Defaults to `STPAPIClient.shared`
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
     
     private var bankMethod: STPBankSelectionMethod = .unknown
     private var selectedBank: STPFPXBankBrand = .unknown

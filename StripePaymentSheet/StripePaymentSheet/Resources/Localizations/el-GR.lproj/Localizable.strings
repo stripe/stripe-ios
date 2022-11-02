@@ -1,0 +1,161 @@
+"+ Add" = "+ Προσθήκη";
+
+"Add a card" = "Προσθήκη μιας κάρτας";
+
+"Add a payment method" = "Προσθέστε μια μέθοδο πληρωμής";
+
+"Add bank account" = "Προσθήκη τραπεζικού λογαριασμού";
+
+"Add new payment method" = "Προσθέστε νέα μέθοδο πληρωμής";
+
+"Add your payment information" = "Προσθέστε τα στοιχεία πληρωμής σας";
+
+"Are you sure you want to remove this card?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτήν την κάρτα;";
+
+"Are you sure you want to remove this linked account?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτόν τον συνδεδεμένο λογαριασμό;";
+
+"Back" = "Πίσω";
+
+"Bank account" = "Τραπεζικός λογαριασμός";
+
+"Buy now or pay later with Klarna." = "Αγορά τώρα ή πληρωμή αργότερα με Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση αυτούς τους <terms>όρους</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Με την παροχή των στοιχείων πληρωμής σας και επιβεβαιώνοντας αυτήν την πληρωμή, εξουσιοδοτείτε (A) την %@ και την Stripe, τον πάροχο υπηρεσιών πληρωμών μας, να στείλουν οδηγίες στην τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας και (B) την τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας, σύμφωνα με τις οδηγίες αυτές. Στο πλαίσιο των δικαιωμάτων σας, δικαιούστε επιστροφή από την τράπεζά σας με βάση τους όρους και τις προϋποθέσεις που διατυπώνονται στη σύμβαση με την τράπεζά σας. Η αξίωση για επιστροφή πρέπει να υποβληθεί εντός 8 εβδομάδων από την ημερομηνία χρέωσης του λογαριασμού σας. Τα δικαιώματά σας επεξηγούνται σε αναλυτική κατάσταση, την οποία μπορείτε να εξασφαλίσετε από την τράπεζά σας. Συμφωνείτε να λαμβάνετε ειδοποιήσεις για μελλοντικές χρεώσεις έως και 2 ημέρες προτού προκύψουν.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
+
+"Change email" = "Αλλαγή email";
+
+"Choose a payment method" = "Επιλέξτε μέθοδο πληρωμής";
+
+"Close card scanner" = "Κλείσιμο σαρωτή κάρτας";
+
+"Code field" = "Πεδίο κωδικού";
+
+"Code sent" = "Ο κωδικός εστάλη";
+
+"Default" = "Προεπιλογή";
+
+"Double tap to edit" = "Πατήστε δύο φορές για επεξεργασία";
+
+"EPS Bank" = "Τράπεζα με EPS";
+
+"Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Εισαγάγετε τον κωδικό που εστάλη στο %@ για να χρησιμοποιήσετε το Link ως προεπιλεγμένη μέθοδο πληρωμής.";
+
+"Enter your verification code" = "Εισαγάγετε τον κωδικό επαλήθευσης";
+
+"For security, please re-enter your card’s security code." = "Για λόγους ασφάλειας, εισαγάγετε πάλι τον κωδικό ασφαλείας της κάρτας σας.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Σύνδεση στο Link";
+
+"Log out of Link" = "Αποσύνδεση από το Link";
+
+"Not %@?" = "Δεν είναι το %@;";
+
+"Or" = "Ή";
+
+"Or pay using" = "Ή πληρωμή χρησιμοποιώντας";
+
+"Or pay with a card" = "Ή πληρωμή με κάρτα";
+
+"Pay %@" = "Πληρωμή %@";
+
+"Pay another way" = "Πληρωμή με άλλον τρόπο";
+
+"Pay faster at %@ and thousands of merchants." = "Ταχύτερες πληρωμές στην %@ και σε χιλιάδες εμπόρους.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Πληρώστε σε <num_installments/> άτοκες δόσεις των <installment_price/> με <img/>";
+
+"Pay later with Klarna." = "Πληρωμή αργότερα με Klarna.";
+
+"Pay over time with %@" = "Πληρωμή σταδιακά με %@";
+
+"Pay using" = "Πληρωμή μέσω";
+
+"Pay with %@" = "Πληρωμή με %@";
+
+"Pay with your bank account in just a few steps." = "Πληρώστε με τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
+
+"Payment" = "Πληρωμή";
+
+"Payment methods" = "Μέθοδοι πληρωμής";
+
+"Point the camera at your card." = "Στρέψτε την κάμερα στην κάρτα σας.";
+
+"Processing..." = "Επεξεργασία…";
+
+"Przelewy24 Bank" = "Τράπεζα Przelewy24";
+
+"Remove %1$@ ending in %2$@" = "Αφαίρεση %1$@ που λήγει σε %2$@";
+
+"Remove Card" = "Αφαίρεση κάρτας";
+
+"Remove card" = "Αφαίρεση κάρτας";
+
+"Remove linked account" = "Αφαίρεση συνδεδεμένου λογαριασμού";
+
+"Resend code" = "Επανάληψη αποστολής κωδικού";
+
+"Save address" = "Αποθήκευση διεύθυνσης";
+
+"Save for future payments" = "Αποθήκευση για μελλοντικές πληρωμές";
+
+"Save my info for secure 1-click checkout" = "Αποθήκευση των στοιχείων μου για ασφαλή ολοκλήρωση αγοράς με 1 κλικ";
+
+"Save this account for future %@ payments" = "Αποθηκεύστε αυτόν τον λογαριασμό για μελλοντικές %@ πληρωμές";
+
+"Save this card for future %@ payments" = "Αποθηκεύστε αυτή την κάρτα για μελλοντικές %@ πληρωμές";
+
+"Secure 1⁠-⁠click checkout" = "Ασφαλής ολοκλήρωση αγοράς με 1 κλικ";
+
+"Select your payment method" = "Επιλέξτε τη μέθοδο πληρωμής σας";
+
+"Set as default" = "Ορισμός ως προεπιλογή";
+
+"Set as default payment method" = "Ορισμός ως προεπιλεγμένη μέθοδος πληρωμής";
+
+"Set up" = "Διαμόρφωση";
+
+"Shipping to %@ is not supported." = "Η αποστολή στη χώρα %@ δεν υποστηρίζεται.";
+
+"Show menu" = "Εμφάνιση μενού";
+
+"Sign in to your Link account" = "Σύνδεση στον λογαριασμό σας Link";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Η Stripe θα καταθέσει 0,01 $ στον λογαριασμό σας σε 1-2 εργάσιμες ημέρες. Στη συνέχεια, θα λάβετε email με οδηγίες για να ολοκληρώσετε την πληρωμή στην %@.";
+
+"Tap to close" = "Πατήστε για κλείσιμο";
+
+"Tap to expand" = "Πατήστε για ανάπτυξη";
+
+"The IBAN you entered is incomplete." = "Ο κωδικός IBAN που εισαγάγατε είναι ελλιπής.";
+
+"The provided verification code has expired." = "Ο κωδικός επαλήθευσης που παρασχέθηκε έχει λήξει.";
+
+"The provided verification code is incorrect." = "Ο κωδικός επαλήθευσης που παρασχέθηκε είναι λανθασμένος.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Αυτή η κάρτα έχει λήξει. Ενημερώστε τα στοιχεία της κάρτας σας ή επιλέξτε διαφορετική μέθοδο πληρωμής.";
+
+"This is your default" = "Αυτή είναι η προεπιλογή σας";
+
+"Too many attempts. Please try again in a few minutes." = "Πραγματοποιήθηκαν πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.";
+
+"Unavailable for this purchase" = "Δεν είναι διαθέσιμο για αυτήν την αγορά";
+
+"Update card" = "Ενημέρωση κάρτας";
+
+"Use your saved info to check out faster" = "Χρησιμοποιήστε τα αποθηκευμένα στοιχεία σας για τη συντομότερη ολοκλήρωση της αγοράς";
+
+"Your IBAN should start with a two-letter country code." = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
+
+"iDEAL Bank" = "iDEAL Bank";

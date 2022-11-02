@@ -1,6 +1,6 @@
 //
 //  StripeErrorTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 4/14/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -8,8 +8,20 @@
 
 import XCTest
 import Foundation
-@testable import Stripe
-@_spi(STP) @testable import StripeCore
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
 
 class StripeErrorTest: XCTestCase {
     func testEmptyResponse() {

@@ -1,6 +1,6 @@
 //
 //  STPSourceCardDetailsTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Joey Dong on 6/21/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPSourceCardDetailsTest: XCTestCase {
     // MARK: - STPSourceCard3DSecureStatus Tests

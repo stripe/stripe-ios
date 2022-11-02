@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/11/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -89,7 +90,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             )
         ]
 
-        if documentType.hasBack && documentUploader.isFrontUpdated {
+        if documentType.hasBack && sheetController?.collectedData.idDocumentFront != nil {
             items.append(
                 .init(
                     text: listItemText(for: .back),
@@ -108,9 +109,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     }
     
     var buttonState: IdentityFlowView.ViewModel.Button.State {
-        if(documentUploader.isFrontUpdated && documentUploader.isBackUpdated) {
-            return .enabled
-        }
         switch (isSubmitting, continueButtonEnabled) {
         case (true, _):
             return .loading
@@ -158,7 +156,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             ),
             viewModel: .init(
                 headerViewModel: .init(
-                    backgroundColor: CompatibleColor.systemBackground,
+                    backgroundColor: .systemBackground,
                     headerType: .plain,
                     titleText: STPLocalizedString(
                         "File upload",
@@ -204,7 +202,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         case .inProgress:
             return .activityIndicator
         case .complete:
-            if side == .front && !documentUploader.isFrontUpdated {
+            if side == .front && sheetController?.collectedData.idDocumentFront == nil {
                 return .activityIndicator
             } else {
                 return .icon(Styling.uploadCompleteIcon)
@@ -549,13 +547,11 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
         sheetController?.saveDocumentFrontAndDecideBack(
             from: analyticsScreenName,
             documentUploader: documentUploader,
-            onNeedBack: {
-                DispatchQueue.main.async { [weak self] in
+            onCompletion: { [weak self] isBackRequired in
+                guard isBackRequired else { return }
+                DispatchQueue.main.async {
                     self?.updateUI()
                 }
-            },
-            onNotNeedBack: {
-                // no-op
             }
         )
     }
@@ -586,5 +582,6 @@ extension DocumentFileUploadViewController: IdentityDataCollecting {
 
     func reset() {
         documentUploader.reset()
+        clearCollectedFields()
     }
 }

@@ -3,6 +3,7 @@
 //  StripeApplePay
 //
 //  Created by David Estes on 1/24/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -22,34 +23,8 @@ import Foundation
         var params = additionalParams
 
         params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
-        params["ocr_type"] = STPAnalyticsClient.ocrTypeString()
-        params["pay_var"] = STPAnalyticsClient.paymentsSDKVariant
+        params["ocr_type"] = PaymentsSDKVariant.ocrTypeString
+        params["pay_var"] = PaymentsSDKVariant.variant
         return params
     }
-}
-
-extension STPAnalyticsClient {
-    @_spi(STP) public class func ocrTypeString() -> String {
-        if #available(iOS 13.0, macCatalyst 14.0, *) {
-            // "STPCardScanner" is STPCardScanner.stp_analyticsIdentifier, but STPCardScanner only exists in Stripe.framework.
-            if STPAnalyticsClient.sharedClient.productUsage.contains(
-                "STPCardScanner")
-            {
-                return "stripe"
-            }
-        }
-        return "none"
-    }
-    
-    @_spi(STP) public static let paymentsSDKVariant: String = {
-        if NSClassFromString("STPPaymentContext") != nil {
-            // This is the full legacy Payments SDK, including Basic Integration.
-            return "legacy"
-        }
-        
-        // TODO (MOBILESDK-593): Add a value for the PaymentSheet-only SDK.
-        
-        // This is the Apple Pay-only SDK.
-        return "applepay"
-    }()
 }

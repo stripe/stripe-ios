@@ -1,41 +1,40 @@
 //
 //  STPError.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Saikat Chakrabarti on 11/4/12.
-//
+//  Copyright © 2012 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 
-// These must line up with the codes in _stpobjc_STPError.swift.
 /// Possible error code values for NSErrors with the `StripeDomain` domain
-public enum STPErrorCode: Int {
+@objc public enum STPErrorCode: Int {    
     /// Trouble connecting to Stripe.
-    case connectionError = 40
+    @objc(STPConnectionError) case connectionError = 40
     /// Your request had invalid parameters.
-    case invalidRequestError = 50
+    @objc(STPInvalidRequestError) case invalidRequestError = 50
     /// No valid publishable API key provided.
-    case authenticationError = 51
+    @objc(STPAuthenticationError) case authenticationError = 51
     /// General-purpose API error.
-    case apiError = 60
+    @objc(STPAPIError) case apiError = 60
     /// Something was wrong with the given card details.
-    case cardError = 70
+    @objc(STPCardError) case cardError = 70
     /// The operation was cancelled.
-    case cancellationError = 80
+    @objc(STPCancellationError) case cancellationError = 80
     /// The ephemeral key could not be decoded. Make sure your backend is sending
     /// the unmodified JSON of the ephemeral key to your app.
     /// https://stripe.com/docs/mobile/ios/basic#prepare-your-api
-    case ephemeralKeyDecodingError = 1000
+    @objc(STPEphemeralKeyDecodingError) case ephemeralKeyDecodingError = 1000
 }
 
 // MARK: - STPError
 
 /// Top-level class for Stripe error constants.
-public class STPError {
+@objc public class STPError: NSObject {
     // MARK: userInfo keys
     /// All Stripe iOS errors will be under this domain.
-    public static let stripeDomain = "com.stripe.lib"
+    @objc public static let stripeDomain = "com.stripe.lib"
 
     /// The error domain for errors in `STPPaymentHandler`.
     @objc public static let STPPaymentHandlerErrorDomain = "STPPaymentHandlerErrorDomain"
@@ -43,25 +42,25 @@ public class STPError {
     /// A human-readable message providing more details about the error.
     /// For card errors, these messages can be shown to your users.
     /// - seealso: https://stripe.com/docs/api/errors#errors-message
-    public static let errorMessageKey = "com.stripe.lib:ErrorMessageKey"
+    @objc public static let errorMessageKey = "com.stripe.lib:ErrorMessageKey"
     /// An SDK-supplied "hint" that is intended to help you, the developer, fix the error
-    public static let hintKey = "com.stripe.lib:hintKey"
+    @objc public static let hintKey = "com.stripe.lib:hintKey"
     /// What went wrong with your STPCard (e.g., STPInvalidCVC. See below for full list).
-    public static let cardErrorCodeKey = "com.stripe.lib:CardErrorCodeKey"
+    @objc public static let cardErrorCodeKey = "com.stripe.lib:CardErrorCodeKey"
     /// Which parameter on the STPCard had an error (e.g., "cvc"). Useful for marking up the
     /// right UI element.
-    public static let errorParameterKey = "com.stripe.lib:ErrorParameterKey"
+    @objc public static let errorParameterKey = "com.stripe.lib:ErrorParameterKey"
     /// The error code returned by the Stripe API.
     /// - seealso: https://stripe.com/docs/api#errors-code
     /// - seealso: https://stripe.com/docs/error-codes
-    public static let stripeErrorCodeKey = "com.stripe.lib:StripeErrorCodeKey"
+    @objc public static let stripeErrorCodeKey = "com.stripe.lib:StripeErrorCodeKey"
     /// The error type returned by the Stripe API.
     /// - seealso: https://stripe.com/docs/api#errors-type
-    public static let stripeErrorTypeKey = "com.stripe.lib:StripeErrorTypeKey"
+    @objc public static let stripeErrorTypeKey = "com.stripe.lib:StripeErrorTypeKey"
     /// If the value of `userInfo[stripeErrorCodeKey]` is `STPError.cardDeclined`,
     /// the value for this key contains the decline code.
     /// - seealso: https://stripe.com/docs/declines/codes
-    public static let stripeDeclineCodeKey = "com.stripe.lib:DeclineCodeKey"
+    @objc public static let stripeDeclineCodeKey = "com.stripe.lib:DeclineCodeKey"
 }
 
 extension NSError {
@@ -166,7 +165,7 @@ extension NSError {
                 code = STPErrorCode.apiError.rawValue
             }
 
-            if let stripeErrorCode = stripeErrorCode {
+            if let stripeErrorCode = stripeErrorCode, !stripeErrorCode.isEmpty {
                 if let cardErrorCode = Utils.cardErrorCode(fromAPIErrorCode: stripeErrorCode) {
                     if cardErrorCode == STPCardErrorCode.cardDeclined,
                        let decline_code = declineCode {
@@ -220,7 +219,7 @@ extension NSError {
     /// - Parameter jsonDictionary: The root dictionary from the JSON response.
     /// - Returns: An NSError object with the error information from the JSON response,
     /// or nil if there was no error information included in the JSON dictionary.
-    public static func stp_error(fromStripeResponse jsonDictionary: [AnyHashable: Any]?)
+    @objc(stp_errorFromStripeResponse:) public static func stp_error(fromStripeResponse jsonDictionary: [AnyHashable: Any]?)
         -> NSError?
     {
         stp_error(fromStripeResponse: jsonDictionary, httpResponse: nil)

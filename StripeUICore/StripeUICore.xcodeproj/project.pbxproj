@@ -14,7 +14,6 @@
 		367199DC280756C800773613 /* UIStackView+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367199DB280756C700773613 /* UIStackView+StripeUICore.swift */; };
 		36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894726FBAEB600A57EF4 /* StackViewWithSeparator.swift */; };
 		36E1894A26FBAFC700A57EF4 /* InputFormColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894926FBAFC700A57EF4 /* InputFormColors.swift */; };
-		36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */; };
 		36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */; };
 		61078DA628C28D2D007C7001 /* TextOrDropdownElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61078DA528C28D2D007C7001 /* TextOrDropdownElement.swift */; };
 		6138B89C28CAA6ED0096E7FC /* STPVPANumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6138B89B28CAA6ED0096E7FC /* STPVPANumberValidator.swift */; };
@@ -39,13 +38,23 @@
 		B6DA050D28650BF7003696BB /* PhoneNumberElementSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA050C28650BF7003696BB /* PhoneNumberElementSnapshotTests.swift */; };
 		B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
+		D01078A128AFE42F0054FF80 /* PhoneMetadataProvider-Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01078A028AFE42E0054FF80 /* PhoneMetadataProvider-Format.swift */; };
+		D046E2D9290A06EE0049BE9C /* CompatibleColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D046E2D8290A06EE0049BE9C /* CompatibleColor.swift */; };
 		D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */; };
 		D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06072CF275AEB01002391BA /* ActivityIndicator.swift */; };
 		D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */; };
 		D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */; };
+		D09FD47928A434C20085B4AA /* Data+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD47828A434C20085B4AA /* Data+StripeUICore.swift */; };
+		D09FD47C28A435B50085B4AA /* PhoneMetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */; };
+		D09FD47D28A43D9D0085B4AA /* phone_metadata.json.lzfse in Resources */ = {isa = PBXBuildFile; fileRef = D09FD47728A434AB0085B4AA /* phone_metadata.json.lzfse */; };
+		D09FD47F28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD47E28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift */; };
+		D09FD48128A45BFC0085B4AA /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD48028A45BFC0085B4AA /* PhoneNumber.swift */; };
 		D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */; };
+		D0C7597D28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C7597C28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift */; };
 		D0CF912A273B104A00EE2E60 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9129273B104A00EE2E60 /* Button.swift */; };
 		D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */; };
+		E25440E528F9C87500C6F5D3 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = E25440E428F9C87500C6F5D3 /* iOSSnapshotTestCase */; };
+		E25440E728F9C87500C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = E25440E428F9C87500C6F5D3 /* iOSSnapshotTestCase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */; };
 		E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */; };
 		E606937327041A4400742859 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937227041A4400742859 /* TextFieldFormatter.swift */; };
@@ -77,7 +86,6 @@
 		E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */; };
 		E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */; };
 		E6752D8226F417780062B821 /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */; };
-		E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */; };
 		E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8726F420F70062B821 /* DropdownFieldElement.swift */; };
 		E6752D9C26F420F70062B821 /* PickerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8826F420F70062B821 /* PickerTextField.swift */; };
 		E6752D9E26F420F70062B821 /* FormElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8B26F420F70062B821 /* FormElement.swift */; };
@@ -102,7 +110,6 @@
 		E67C92F5270259FA00F8A039 /* IDNumberTextFieldConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67C92F4270259FA00F8A039 /* IDNumberTextFieldConfiguration.swift */; };
 		E6AFFAA026E93FB50067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFA9626E93FB50067462F /* StripeUICore.framework */; };
 		E6AFFAA726E93FB50067462F /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AFFA9926E93FB50067462F /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E6AFFACB26E967AE0067462F /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAC926E967180067462F /* FBSnapshotTestCase.xcframework */; };
 		E6AFFAED26E96FEC0067462F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAEC26E96FEC0067462F /* StripeCore.framework */; };
 		E6AFFB2426E9771D0067462F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6AFFB0A26E9771D0067462F /* Localizable.strings */; };
 		E6AFFB2726E9775B0067462F /* StripeUICoreBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AFFB2626E9775B0067462F /* StripeUICoreBundleLocator.swift */; };
@@ -125,6 +132,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E25440E628F9C87500C6F5D3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E25440E728F9C87500C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		36397F612714FDEF0059DED7 /* PhoneNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTests.swift; sourceTree = "<group>"; };
 		363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
@@ -133,7 +154,6 @@
 		367199DB280756C700773613 /* UIStackView+StripeUICore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+StripeUICore.swift"; sourceTree = "<group>"; };
 		36E1894726FBAEB600A57EF4 /* StackViewWithSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewWithSeparator.swift; sourceTree = "<group>"; };
 		36E1894926FBAFC700A57EF4 /* InputFormColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFormColors.swift; sourceTree = "<group>"; };
-		36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CountryEmoji.swift"; sourceTree = "<group>"; };
 		61078DA528C28D2D007C7001 /* TextOrDropdownElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOrDropdownElement.swift; sourceTree = "<group>"; };
 		6138B89B28CAA6ED0096E7FC /* STPVPANumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPVPANumberValidator.swift; sourceTree = "<group>"; };
@@ -158,11 +178,19 @@
 		B6DA050C28650BF7003696BB /* PhoneNumberElementSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementSnapshotTests.swift; sourceTree = "<group>"; };
 		B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form_error_icon@3x.png"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
+		D01078A028AFE42E0054FF80 /* PhoneMetadataProvider-Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneMetadataProvider-Format.swift"; sourceTree = "<group>"; };
+		D046E2D8290A06EE0049BE9C /* CompatibleColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompatibleColor.swift; sourceTree = "<group>"; };
 		D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
 		D06072CF275AEB01002391BA /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICore.swift"; sourceTree = "<group>"; };
 		D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+StripeUICore.swift"; sourceTree = "<group>"; };
+		D09FD47728A434AB0085B4AA /* phone_metadata.json.lzfse */ = {isa = PBXFileReference; lastKnownFileType = file; path = phone_metadata.json.lzfse; sourceTree = "<group>"; };
+		D09FD47828A434C20085B4AA /* Data+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+StripeUICore.swift"; sourceTree = "<group>"; };
+		D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneMetadataProvider.swift; sourceTree = "<group>"; };
+		D09FD47E28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneMetadataProvider-Metadata.swift"; sourceTree = "<group>"; };
+		D09FD48028A45BFC0085B4AA /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
+		D0C7597C28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+PhoneMetadata.swift"; sourceTree = "<group>"; };
 		D0CF9129273B104A00EE2E60 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
@@ -196,7 +224,6 @@
 		E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDirectionalEdgeInsets+StripeUICore.swift"; sourceTree = "<group>"; };
 		E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISpringTimingParameters+StripeUICore.swift"; sourceTree = "<group>"; };
 		E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightContainerView.swift; sourceTree = "<group>"; };
-		E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackwardsCompatibleColors.swift; sourceTree = "<group>"; };
 		E6752D8726F420F70062B821 /* DropdownFieldElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownFieldElement.swift; sourceTree = "<group>"; };
 		E6752D8826F420F70062B821 /* PickerTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerTextField.swift; sourceTree = "<group>"; };
 		E6752D8B26F420F70062B821 /* FormElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormElement.swift; sourceTree = "<group>"; };
@@ -234,7 +261,6 @@
 		E6AFFAB826E94AC20067462F /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		E6AFFAB926E94AC20067462F /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		E6AFFABA26E94AC20067462F /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
-		E6AFFAC926E967180067462F /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		E6AFFAEC26E96FEC0067462F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AFFB0B26E9771D0067462F /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E6AFFB0C26E9771D0067462F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -286,7 +312,7 @@
 			files = (
 				E61ADAA8270B946E004ED998 /* StripeCoreTestUtils.framework in Frameworks */,
 				E6AFFAA026E93FB50067462F /* StripeUICore.framework in Frameworks */,
-				E6AFFACB26E967AE0067462F /* FBSnapshotTestCase.xcframework in Frameworks */,
+				E25440E528F9C87500C6F5D3 /* iOSSnapshotTestCase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +350,18 @@
 				D06072CF275AEB01002391BA /* ActivityIndicator.swift */,
 			);
 			path = Controls;
+			sourceTree = "<group>";
+		};
+		D09FD47A28A435450085B4AA /* PhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				D09FD48028A45BFC0085B4AA /* PhoneNumber.swift */,
+				D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */,
+				D09FD47E28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift */,
+				D01078A028AFE42E0054FF80 /* PhoneMetadataProvider-Format.swift */,
+				D0C7597C28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift */,
+			);
+			path = PhoneNumber;
 			sourceTree = "<group>";
 		};
 		D0CF9131273B363E00EE2E60 /* Unit */ = {
@@ -397,6 +435,7 @@
 			children = (
 				6B5ABA2427C982BC003D5D2A /* au_becs_bsb.json */,
 				E61ADAC7270E6070004ED998 /* localized_address_data.json */,
+				D09FD47728A434AB0085B4AA /* phone_metadata.json.lzfse */,
 			);
 			path = JSON;
 			sourceTree = "<group>";
@@ -425,6 +464,7 @@
 			isa = PBXGroup;
 			children = (
 				61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */,
+				D09FD47828A434C20085B4AA /* Data+StripeUICore.swift */,
 				363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */,
 				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
@@ -520,7 +560,6 @@
 			children = (
 				E6752DAF26F421350062B821 /* STPEmailAddressValidator.swift */,
 				6138B89B28CAA6ED0096E7FC /* STPVPANumberValidator.swift */,
-				36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */,
 				6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */,
 			);
 			path = Validators;
@@ -624,6 +663,7 @@
 				E6752DAC26F421200062B821 /* Events.swift */,
 				E6AFFB2526E977410067462F /* Helpers */,
 				E665080926EC378E0032DE21 /* Image.swift */,
+				D09FD47A28A435450085B4AA /* PhoneNumber */,
 				E6752DAE26F421350062B821 /* Validators */,
 				E6752D8326F417860062B821 /* Views */,
 			);
@@ -635,7 +675,6 @@
 			children = (
 				E61ADAA7270B946E004ED998 /* StripeCoreTestUtils.framework */,
 				E6AFFAEC26E96FEC0067462F /* StripeCore.framework */,
-				E6AFFAC926E967180067462F /* FBSnapshotTestCase.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -661,7 +700,6 @@
 		E6AFFB2526E977410067462F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */,
 				E665080726EC33260032DE21 /* ImageMaker.swift */,
 				36E1894926FBAFC700A57EF4 /* InputFormColors.swift */,
 				36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */,
@@ -671,6 +709,7 @@
 				E6752D6D26F4033B0062B821 /* String+Localized.swift */,
 				36506AAC27A8AE95000B56CF /* String+RegionCodeProvider.swift */,
 				E6AFFB2626E9775B0067462F /* StripeUICoreBundleLocator.swift */,
+				D046E2D8290A06EE0049BE9C /* CompatibleColor.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -703,6 +742,8 @@
 			dependencies = (
 			);
 			name = StripeUICore;
+			packageProductDependencies = (
+			);
 			productName = StripeUICore;
 			productReference = E6AFFA9626E93FB50067462F /* StripeUICore.framework */;
 			productType = "com.apple.product-type.framework";
@@ -714,6 +755,7 @@
 				E6AFFA9B26E93FB50067462F /* Sources */,
 				E6AFFA9C26E93FB50067462F /* Frameworks */,
 				E6AFFA9D26E93FB50067462F /* Resources */,
+				E25440E628F9C87500C6F5D3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -721,6 +763,9 @@
 				E6AFFAA226E93FB50067462F /* PBXTargetDependency */,
 			);
 			name = StripeUICoreTests;
+			packageProductDependencies = (
+				E25440E428F9C87500C6F5D3 /* iOSSnapshotTestCase */,
+			);
 			productName = StripeUICoreTests;
 			productReference = E6AFFA9F26E93FB50067462F /* StripeUICoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -732,7 +777,8 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1400;
+				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					E6AFFA9526E93FB50067462F = {
 						CreatedOnToolsVersion = 12.5;
@@ -776,6 +822,9 @@
 				"pt-PT",
 			);
 			mainGroup = E6AFFA8C26E93FB50067462F;
+			packageReferences = (
+				E25440E128F9C86A00C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+			);
 			productRefGroup = E6AFFA9726E93FB50067462F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -796,6 +845,7 @@
 				E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */,
 				614E0763284FDCE100FB70F4 /* icon_clear@3x.png in Resources */,
 				B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */,
+				D09FD47D28A43D9D0085B4AA /* phone_metadata.json.lzfse in Resources */,
 				E61ADAC8270E6070004ED998 /* localized_address_data.json in Resources */,
 				6B5ABA2527C982BC003D5D2A /* au_becs_bsb.json in Resources */,
 			);
@@ -839,14 +889,16 @@
 				6B573C9927C5C0ED0082C0B3 /* BSBNumber.swift in Sources */,
 				D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */,
 				E6752DA126F420F70062B821 /* SectionContainerView.swift in Sources */,
-				36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */,
+				D046E2D9290A06EE0049BE9C /* CompatibleColor.swift in Sources */,
 				6B573C9727C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift in Sources */,
 				B60CF9A227E52BC900A21C9B /* SectionElement+MultiElementRow.swift in Sources */,
 				E6752DAA26F420F70062B821 /* FloatingPlaceholderTextFieldView.swift in Sources */,
 				E61ADA872707CED8004ED998 /* PickerFieldView.swift in Sources */,
+				D0C7597D28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift in Sources */,
 				E6752DA026F420F70062B821 /* SectionView.swift in Sources */,
 				B6DA0506285D0360003696BB /* TextFieldElement+Factory.swift in Sources */,
 				D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */,
+				D09FD47F28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift in Sources */,
 				E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */,
 				36E1894A26FBAFC700A57EF4 /* InputFormColors.swift in Sources */,
 				B67BC10628526385003EEFF0 /* AddressSpec+ElementFactory.swift in Sources */,
@@ -854,9 +906,11 @@
 				E6752D9F26F420F70062B821 /* FormView.swift in Sources */,
 				E6752DA626F420F70062B821 /* TextFieldView.swift in Sources */,
 				E66DA0D22818C4720099213C /* CheckboxButton.swift in Sources */,
+				D01078A128AFE42F0054FF80 /* PhoneMetadataProvider-Format.swift in Sources */,
 				E67C92F5270259FA00F8A039 /* IDNumberTextFieldConfiguration.swift in Sources */,
 				E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */,
 				36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */,
+				D09FD48128A45BFC0085B4AA /* PhoneNumber.swift in Sources */,
 				36506AAD27A8AE95000B56CF /* String+RegionCodeProvider.swift in Sources */,
 				6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */,
 				E66DA0D32818C4720099213C /* CheckboxElement.swift in Sources */,
@@ -864,16 +918,17 @@
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
 				E6B0DDD22714C49400CE86DC /* UIKeyboardType+StripeUICore.swift in Sources */,
+				D09FD47C28A435B50085B4AA /* PhoneMetadataProvider.swift in Sources */,
 				E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */,
 				E61ADA8C2707DBBD004ED998 /* DateFieldElement.swift in Sources */,
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
+				D09FD47928A434C20085B4AA /* Data+StripeUICore.swift in Sources */,
 				E659A09F282C50EB00DF8C0C /* LinkOpeningTextView.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
 				B6DA050928627B29003696BB /* PhoneNumberElement.swift in Sources */,
 				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,
 				36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */,
 				E61ADAC4270E4916004ED998 /* AddressSpec.swift in Sources */,
-				E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */,
 				36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */,
 				B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */,
 				E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */,
@@ -900,9 +955,7 @@
 				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
 				E61ADA9227080C3F004ED998 /* DateFieldElementSnapshotTest.swift in Sources */,
 				6BBCC33027C8713E00DCCE7F /* BSBNumberProviderTest.swift in Sources */,
-				E606937C27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift in Sources */,
 				6B573C9D27C851950082C0B3 /* BSBNumberTests.swift in Sources */,
-				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
 				E6B0DDCC2711240100CE86DC /* DateFieldElementTest.swift in Sources */,
 				E6752DB826F422900062B821 /* SectionElementTest.swift in Sources */,
 				B63C7E6D289333E6003BC68A /* AddressSectionElementSnapshotTest.swift in Sources */,
@@ -1111,6 +1164,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E25440E128F9C86A00C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E25440E428F9C87500C6F5D3 /* iOSSnapshotTestCase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E25440E128F9C86A00C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
+			productName = iOSSnapshotTestCase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E6AFFA8D26E93FB50067462F /* Project object */;
 }

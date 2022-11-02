@@ -1,6 +1,6 @@
 //
 //  UIView+Stripe_FirstResponder.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 4/15/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

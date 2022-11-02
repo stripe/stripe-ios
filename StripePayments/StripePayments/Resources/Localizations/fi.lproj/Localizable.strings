@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "AU BECS -suoraveloitus";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Pankki";
+
+"Boleto" = "Boleto";
+
+"Card" = "Kortti";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Linkki";
+
+"NetBanking" = "NetBanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "SEPA Debit";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "Maksutapasi todennus aikakatkaistiin – yritä uudelleen.";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "Yhdysvaltalainen pankkitili";
+
+"Unknown" = "Tuntematon";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Emme pystyneet todentamaan maksutapaasi. Valitse toinen maksutapa ja yritä uudelleen.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>StripeAPI Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/StripeAPI" class="dashAnchor"></a>
+
+    <a title="StripeAPI Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../index.html">
+          Stripe iOS SDKs 23.1.0
+        </a>
+        
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../index.html">Stripe iOS SDKs</a>
+      <img class="carat" src="../img/carat.png" />
+      <a class="breadcrumb" href="../index.html">StripePaymentsUI</a>
+      <img class="carat" src="../img/carat.png" />
+      StripeAPI Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAUBECSDebitFormView.html">STPAUBECSDebitFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardFormView.html">STPCardFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardFormView/Representable.html">– Representable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPError.html">STPError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePaymentsUI@objc(cs)STPFormView">STPFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMultiFormTextField.html">STPMultiFormTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField/Representable.html">– Representable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StripeAPI.html">StripeAPI</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardErrorCode.html">STPCardErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardFormViewStyle.html">STPCardFormViewStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPErrorCode.html">STPErrorCode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSError.html">NSError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAUBECSDebitFormViewDelegate.html">STPAUBECSDebitFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPCardFormViewDelegate.html">STPCardFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPFormTextFieldContainer.html">STPFormTextFieldContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>StripeAPI</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">StripeAPI</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>A top-level class that imports the rest of the Stripe SDK.</p>
+
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L13-L161">Show on GitHub</a>
+              </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)defaultPublishableKey"></a>
+                    <a name="//apple_ref/swift/Variable/defaultPublishableKey" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)defaultPublishableKey">defaultPublishableKey</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set this to your Stripe publishable API key, obtained from <a href="https://dashboard.stripe.com/apikeys">https://dashboard.stripe.com/apikeys</a>.
+Set this as early as possible in your application&rsquo;s lifecycle, preferably in your AppDelegate or SceneDelegate.
+New instances of STPAPIClient will be initialized with this value.
+@warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">defaultPublishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L18">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(im)setDefaultPublishableKey:"></a>
+                    <a name="//apple_ref/swift/Method/setDefaultPublishableKey(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(im)setDefaultPublishableKey:">setDefaultPublishableKey(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set this to your Stripe publishable API key, obtained from <a href="https://dashboard.stripe.com/apikeys">https://dashboard.stripe.com/apikeys</a>.
+Set this as early as possible in your application&rsquo;s lifecycle, preferably in your AppDelegate or SceneDelegate.
+New instances of STPAPIClient will be initialized with this value.
+@warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDefaultPublishableKey</span><span class="p">(</span><span class="n">_</span> <span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L24-L26">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)advancedFraudSignalsEnabled"></a>
+                    <a name="//apple_ref/swift/Variable/advancedFraudSignalsEnabled" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)advancedFraudSignalsEnabled">advancedFraudSignalsEnabled</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
+If YES, additional device signals will be sent to Stripe.
+For more details on the information we collect, visit <a href="https://stripe.com/docs/disputes/prevention/advanced-fraud-detection">https://stripe.com/docs/disputes/prevention/advanced-fraud-detection</a>
+Disabling this setting will reduce Stripe&rsquo;s ability to protect your business from fraudulent payments.
+The default value is YES.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">advancedFraudSignalsEnabled</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L33">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)maxRetries"></a>
+                    <a name="//apple_ref/swift/Variable/maxRetries" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)maxRetries">maxRetries</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If the SDK receives a &ldquo;Too Many Requests&rdquo; (429) status code from Stripe,
+it will automatically retry the request.
+The default value is 3.
+See <a href="https://stripe.com/docs/rate-limits">https://stripe.com/docs/rate-limits</a> for more information.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">maxRetries</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L39">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Apple%20Pay"></a>
+                <a name="//apple_ref/swift/Section/Apple Pay" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Apple%20Pay"></a>
+                  <h3 class="section-name"><span>Apple Pay</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)jcbPaymentNetworkSupported"></a>
+                    <a name="//apple_ref/swift/Variable/jcbPaymentNetworkSupported" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)jcbPaymentNetworkSupported">jcbPaymentNetworkSupported</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Japanese users can enable JCB for Apple Pay by setting this to <code>YES</code>, after they have been approved by JCB.
+The default value is NO.
+@note JCB is only supported on iOS 10.1+</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">jcbPaymentNetworkSupported</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L46-L64">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)additionalEnabledApplePayNetworks"></a>
+                    <a name="//apple_ref/swift/Variable/additionalEnabledApplePayNetworks" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)additionalEnabledApplePayNetworks">additionalEnabledApplePayNetworks</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
+Set this property to enable other card networks in addition to these.
+For example, <code>additionalEnabledApplePayNetworks = [.JCB]</code> enables JCB (note this requires onboarding from JCB and Stripe).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">additionalEnabledApplePayNetworks</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentNetwork</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L68">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)canSubmitPaymentRequest:"></a>
+                    <a name="//apple_ref/swift/Method/canSubmitPaymentRequest(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)canSubmitPaymentRequest:">canSubmitPaymentRequest(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Whether or not this device is capable of using Apple Pay. This checks both
+whether the device supports Apple Pay, as well as whether or not they have
+stored Apple Pay cards on their device.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">canSubmitPaymentRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">PKPaymentRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>paymentRequest</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The return value of this method depends on the
+<code>supportedNetworks</code> property of this payment request, which by default should be
+<code>[.amex, .masterCard, .visa, .discover]</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>whether or not the user is currently able to pay with Apple Pay.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L77-L86">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)deviceSupportsApplePay"></a>
+                    <a name="//apple_ref/swift/Method/deviceSupportsApplePay()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)deviceSupportsApplePay">deviceSupportsApplePay()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Whether or not this can make Apple Pay payments via a card network supported
+by Stripe.
+The Stripe supported Apple Pay card networks are:
+American Express, Visa, Mastercard, Discover, Maestro.
+Japanese users can enable JCB by setting <code>JCBPaymentNetworkSupported</code> to YES,
+after they have been approved by JCB.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">deviceSupportsApplePay</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YES if the device is currently able to make Apple Pay payments via one
+of the supported networks. NO if the user does not have a saved card of a
+supported type, or other restrictions prevent payment (such as parental controls).</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L108-L111">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)paymentRequestWithMerchantIdentifier:country:currency:"></a>
+                    <a name="//apple_ref/swift/Method/paymentRequest(withMerchantIdentifier:country:currency:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)paymentRequestWithMerchantIdentifier:country:currency:">paymentRequest(withMerchantIdentifier:<wbr>country:<wbr>currency:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A convenience method to build a <code>PKPaymentRequest</code> with sane default values.
+You will still need to configure the <code>paymentSummaryItems</code> property to indicate
+what the user is purchasing, as well as the optional <code>requiredShippingContactFields</code>,
+<code>requiredBillingContactFields</code>, and <code>shippingMethods</code> properties to indicate
+what additional contact information your application requires.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(paymentRequestWithMerchantIdentifier:country:currency:)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span>
+    <span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">country</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">currency</span> <span class="nv">currencyCode</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PKPaymentRequest</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>merchantIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Your Apple Merchant ID.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>countryCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The two-letter code for the country where the payment
+will be processed. This should be the country of your Stripe account.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currencyCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The three-letter code for the currency used by this
+payment request. Apple Pay interprets the amounts provided by the summary items
+attached to this request as amounts in this currency.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code>PKPaymentRequest</code> with proper default values.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L127-L140">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/URL%20callbacks"></a>
+                <a name="//apple_ref/swift/Section/URL callbacks" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/URL%20callbacks"></a>
+                  <h3 class="section-name"><span>URL callbacks</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)handleStripeURLCallbackWithURL:"></a>
+                    <a name="//apple_ref/swift/Method/handleURLCallback(with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)handleStripeURLCallbackWithURL:">handleURLCallback(with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Call this method in your app delegate whenever you receive an URL in your
+app delegate for a Stripe callback.
+For convenience, you can pass all URL&rsquo;s you receive in your app delegate
+to this method first, and check the return value
+to easily determine whether it is a callback URL that Stripe will handle
+or if your app should process it normally.
+If you are using a universal link URL, you will receive the callback in <code>application:continueUserActivity:restorationHandler:</code>
+To learn more about universal links, see <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/AppSearch/UniversalLinks.html">https://developer.apple.com/library/content/documentation/General/Conceptual/AppSearch/UniversalLinks.html</a>
+If you are using a native scheme URL, you will receive the callback in <code>application:openURL:options:</code>
+To learn more about native url schemes, see <a href="https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10">https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@objc(handleStripeURLCallbackWithURL:)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">handleURLCallback</span><span class="p">(</span>
+    <span class="n">with</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL that you received in your app delegate</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YES if the URL is expected and will be handled by Stripe. NO otherwise.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L156-L160">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-31)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

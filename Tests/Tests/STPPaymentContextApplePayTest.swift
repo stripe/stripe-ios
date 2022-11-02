@@ -1,12 +1,16 @@
 //
 //  STPPaymentContextApplePayTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 8/1/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 /// These tests cover STPPaymentContext's Apple Pay specific behavior:
 /// - building a PKPaymentRequest

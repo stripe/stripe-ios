@@ -1,6 +1,6 @@
 //
 //  STPCardValidatorTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 7/24/15.
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
@@ -9,7 +9,11 @@
 import UIKit
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPCardValidatorTest: XCTestCase {
     static let cardData: [(STPCardBrand, String, STPCardValidationState)] = {

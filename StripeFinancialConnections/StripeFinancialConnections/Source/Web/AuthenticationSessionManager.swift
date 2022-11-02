@@ -14,7 +14,10 @@ final class AuthenticationSessionManager: NSObject {
     // MARK: - Types
 
     enum Result {
-        case success, webCancelled, nativeCancelled
+        case success
+        case webCancelled
+        case nativeCancelled
+        case redirect(url: URL)
     }
 
     // MARK: - Properties
@@ -32,12 +35,15 @@ final class AuthenticationSessionManager: NSObject {
 
     // MARK: - Public
 
-    func start() -> Promise<AuthenticationSessionManager.Result> {
+    func start(additionalQueryParameters: String? = nil) -> Promise<AuthenticationSessionManager.Result> {
         let promise = Promise<AuthenticationSessionManager.Result>()
-        guard let url = URL(string: manifest.hostedAuthUrl) else {
+        let urlString = manifest.hostedAuthUrl + (additionalQueryParameters ?? "")
+
+        guard let url = URL(string: urlString) else {
             promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Malformed hosted auth URL"))
             return promise
         }
+
         let authSession = ASWebAuthenticationSession(
             url: url,
             callbackURLScheme: URL(string: manifest.successUrl)?.scheme,
@@ -66,6 +72,8 @@ final class AuthenticationSessionManager: NSObject {
                     promise.resolve(with: .success)
                 } else if returnUrlString == self.manifest.cancelUrl {
                     promise.resolve(with: .webCancelled)
+                } else if returnUrlString.starts(with: Constants.nativeRedirectPrefix), let targetURL = URL(string: returnUrlString.dropPrefix(Constants.nativeRedirectPrefix)) {
+                    promise.resolve(with: .redirect(url: targetURL))
                 } else {
                     promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Nil return URL"))
                 }
@@ -94,6 +102,7 @@ final class AuthenticationSessionManager: NSObject {
         if #available(iOS 13, *) {
             UIView.setAnimationsEnabled(false)
         }
+
         if !authSession.start() {
             if #available(iOS 13, *) {
                 UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
@@ -115,10 +124,19 @@ final class AuthenticationSessionManager: NSObject {
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 /// :nodoc:
-@available(iOS 13, *)
+
 extension AuthenticationSessionManager: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.window ?? ASPresentationAnchor()
+    }
+}
+
+// MARK: - Constants
+
+/// :nodoc:
+extension AuthenticationSessionManager {
+    private enum Constants {
+        static let nativeRedirectPrefix = "stripe-auth://native-redirect/"
     }
 }

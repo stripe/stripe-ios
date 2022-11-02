@@ -2,6 +2,8 @@
 //  StripeJSONDecoder.swift
 //  StripeCore
 //
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//
 //  This is a bridge between NSJSONSerialization and Decoder, including some Stripe-specific behavior.
 //
 

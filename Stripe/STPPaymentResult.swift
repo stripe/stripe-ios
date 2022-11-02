@@ -1,6 +1,6 @@
 //
 //  STPPaymentResult.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 1/15/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

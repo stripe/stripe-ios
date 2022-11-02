@@ -1,0 +1,57 @@
+"AU BECS Direct Debit" = "Австралийская система прямого списания средств BECS";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bancontact" = "Bancontact";
+
+"Bank" = "Банк";
+
+"Boleto" = "Boleto";
+
+"Card" = "Карта";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Link" = "Link";
+
+"NetBanking" = "NetBanking";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "Списание средств SEPA";
+
+"Sofort" = "Sofort";
+
+"Timed out authenticating your payment method -- try again" = "Лимит времени для аутентификации метода оплаты истек. Попробуйте еще раз";
+
+"UPI" = "UPI";
+
+"US Bank Account" = "Банковский счет в США";
+
+"Unknown" = "Неизвестно";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не удалось верифицировать метод оплаты. Выберите другой метод оплаты и повторите попытку.";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

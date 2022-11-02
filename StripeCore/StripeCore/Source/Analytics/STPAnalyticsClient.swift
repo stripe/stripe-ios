@@ -29,13 +29,16 @@ import UIKit
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
 
+        // Before SDK 23.0.0, this returned "card" for some Apple Pay payments.
+        if parameterKeys.contains("pk_token") {
+            return "apple_pay"
+        }
         // these are currently mutually exclusive, so we can just run through and find the first match
         let tokenTypes = ["account", "bank_account", "card", "pii", "cvc_update"]
         if let type = tokenTypes.first(where: { parameterKeys.contains($0) }) {
             return type
-        } else {
-            return parameterKeys.contains("pk_token") ? "apple_pay" : nil
         }
+        return nil
     }
 
     public func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type) {

@@ -3,11 +3,16 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 10/28/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+
+protocol IdentityFlowViewDelegate: AnyObject {
+    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView)
+}
 
 /**
  Container view with a scroll view used in `IdentityFlowViewController`
@@ -73,6 +78,8 @@ class IdentityFlowView: UIView {
         let headerViewModel: HeaderView.ViewModel?
         let contentViewModel: Content
         let buttons: [Button]
+        var scrollViewDelegate: UIScrollViewDelegate? = nil
+        var flowViewDelegate: IdentityFlowViewDelegate? = nil
     }
 
     private let headerView = HeaderView()
@@ -100,6 +107,8 @@ class IdentityFlowView: UIView {
     private let buttonBackgroundBlurView = UIVisualEffectView(effect: UIBlurEffect(
         style: Style.buttonBackgroundBlurStyle
     ))
+    
+    private var flowViewDelegate: IdentityFlowViewDelegate? = nil
 
     // MARK: Configured properties
     private var contentViewModel: ContentViewModel?
@@ -111,7 +120,7 @@ class IdentityFlowView: UIView {
     init() {
         super.init(frame: .zero)
 
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = .systemBackground
 
         installViews()
         installConstraints()
@@ -132,6 +141,10 @@ class IdentityFlowView: UIView {
         configureHeaderView(with: viewModel.headerViewModel)
         configureContentView(with: viewModel.contentViewModel)
         configureButtons(with: viewModel.buttons)
+        flowViewDelegate = viewModel.flowViewDelegate
+        if let scrollViewDelegate = viewModel.scrollViewDelegate {
+            scrollView.delegate = scrollViewDelegate
+        }
     }
 
     func adjustScrollViewForKeyboard(_ windowEndFrame: CGRect, isKeyboardHidden: Bool) {
@@ -140,7 +153,8 @@ class IdentityFlowView: UIView {
         // Adjust bottom inset to make space for keyboard
         let bottomInset = isKeyboardHidden ? 0 : (endFrame.height - frame.height + scrollView.frame.maxY)
         scrollView.contentInset.bottom = bottomInset
-        scrollView.scrollIndicatorInsets.bottom = bottomInset
+        scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
+        scrollView.horizontalScrollIndicatorInsets.bottom = bottomInset
     }
 
     override func layoutSubviews() {
@@ -152,6 +166,11 @@ class IdentityFlowView: UIView {
         let bottomInset = buttonBackgroundBlurView.frame.height + Style.buttonSpacing
         scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.contentInset.bottom = bottomInset
+        
+        
+        if scrollView.contentSize.height > 0 {
+            flowViewDelegate?.scrollViewFullyLaiedOut(scrollView)
+        }
     }
 }
 

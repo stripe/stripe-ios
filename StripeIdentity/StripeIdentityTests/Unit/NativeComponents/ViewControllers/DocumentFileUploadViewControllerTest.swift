@@ -3,6 +3,7 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 1/18/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -40,7 +41,9 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
     
     func testDrivingLicenseBack() {
-        mockDocumentUploader.isFrontUpdated = true
+        // Mock front collected
+        mockSheetController.collectedData.merge(VerificationPageDataUpdateMock.frontOnly.collectedData!)
+        
         let vc = makeViewController(documentType: .drivingLicense)
         // Allows front and back
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
@@ -64,7 +67,9 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
     
     func testIdCardBack() {
-        mockDocumentUploader.isFrontUpdated = true
+        // Mock front collected
+        mockSheetController.collectedData.merge(VerificationPageDataUpdateMock.frontOnly.collectedData!)
+
         let vc = makeViewController(documentType: .idCard)
         // Allows front and back
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)

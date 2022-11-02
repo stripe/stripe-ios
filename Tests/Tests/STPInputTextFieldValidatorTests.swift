@@ -1,5 +1,5 @@
 //
-//  STPInputTextFieldValidator.swift
+//  STPInputTextFieldValidatorTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/28/20.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPInputTextFieldValidatorTests: XCTestCase {
 

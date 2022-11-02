@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>STPPaymentCardTextFieldDelegate Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Protocol/STPPaymentCardTextFieldDelegate" class="dashAnchor"></a>
+
+    <a title="STPPaymentCardTextFieldDelegate Protocol Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../index.html">
+          Stripe iOS SDKs 23.1.0
+        </a>
+        
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../index.html">Stripe iOS SDKs</a>
+      <img class="carat" src="../img/carat.png" />
+      <a class="breadcrumb" href="../index.html">StripePaymentsUI</a>
+      <img class="carat" src="../img/carat.png" />
+      STPPaymentCardTextFieldDelegate Protocol Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAUBECSDebitFormView.html">STPAUBECSDebitFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardFormView.html">STPCardFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardFormView/Representable.html">– Representable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPError.html">STPError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePaymentsUI@objc(cs)STPFormView">STPFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMultiFormTextField.html">STPMultiFormTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField/Representable.html">– Representable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StripeAPI.html">StripeAPI</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardErrorCode.html">STPCardErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardFormViewStyle.html">STPCardFormViewStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPErrorCode.html">STPErrorCode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSError.html">NSError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAUBECSDebitFormViewDelegate.html">STPAUBECSDebitFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPCardFormViewDelegate.html">STPCardFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPFormTextFieldContainer.html">STPFormTextFieldContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>STPPaymentCardTextFieldDelegate</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">STPPaymentCardTextFieldDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
+
+                </div>
+              </div>
+            <p>This protocol allows a delegate to be notified when a payment text field&rsquo;s
+contents change, which can in turn be used to take further actions depending
+on the validity of its contents.</p>
+
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2119-L2168">Show on GitHub</a>
+              </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidChange:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidChange(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidChange:">paymentCardTextFieldDidChange(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when either the card number, expiration, or CVC changes. At this point,
+one can call <code>isValid</code> on the text field to determine, for example,
+whether or not to enable a button to submit the form. Example:</p>
+
+<ul>
+<li>(void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
+self.paymentButton.enabled = textField.isValid;
+}</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidChange</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>textField</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the text field that has changed</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2127">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditing:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidBeginEditing(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditing:">paymentCardTextFieldDidBeginEditing(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing begins in the text field as a whole.
+After receiving this callback, you will always also receive a callback for which
+specific subfield of the view began editing.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2131">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldWillEndEditingForReturn:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldWillEndEditing(forReturn:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldWillEndEditingForReturn:">paymentCardTextFieldWillEndEditing(forReturn:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Notification that the user pressed the <code>return</code> key after completely filling
+out the STPPaymentCardTextField with data that passes validation.
+The Stripe SDK is going to <code>resignFirstResponder</code> on the <code><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></code>
+to dismiss the keyboard after this delegate method returns, however if your app wants
+to do something more (ex: move first responder to another field), this is a good
+opportunity to do that.
+This is delivered <em>before</em> the corresponding <code>paymentCardTextFieldDidEndEditing:</code></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldWillEndEditing</span><span class="p">(</span>
+    <span class="n">forReturn</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>textField</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The STPPaymentCardTextField that was being edited when the user pressed return</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2140">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditing:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidEndEditing(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditing:">paymentCardTextFieldDidEndEditing(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing ends in the text field as a whole.
+This callback is always preceded by an callback for which
+specific subfield of the view ended its editing.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2145">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingNumber:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidBeginEditingNumber(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingNumber:">paymentCardTextFieldDidBeginEditingNumber(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing begins in the payment card field&rsquo;s number field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingNumber</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2147">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingNumber:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidEndEditingNumber(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingNumber:">paymentCardTextFieldDidEndEditingNumber(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing ends in the payment card field&rsquo;s number field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingNumber</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2150">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingCVC:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidBeginEditingCVC(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingCVC:">paymentCardTextFieldDidBeginEditingCVC(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing begins in the payment card field&rsquo;s CVC field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingCVC</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2153">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingCVC:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidEndEditingCVC(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingCVC:">paymentCardTextFieldDidEndEditingCVC(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing ends in the payment card field&rsquo;s CVC field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingCVC</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2155">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingExpiration:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidBeginEditingExpiration(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingExpiration:">paymentCardTextFieldDidBeginEditingExpiration(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing begins in the payment card field&rsquo;s expiration field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingExpiration</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2157">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingExpiration:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidEndEditingExpiration(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingExpiration:">paymentCardTextFieldDidEndEditingExpiration(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing ends in the payment card field&rsquo;s expiration field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingExpiration</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2160">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingPostalCode:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidBeginEditingPostalCode(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingPostalCode:">paymentCardTextFieldDidBeginEditingPostalCode(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing begins in the payment card field&rsquo;s ZIP/postal code field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingPostalCode</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2163">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingPostalCode:"></a>
+                    <a name="//apple_ref/swift/Method/paymentCardTextFieldDidEndEditingPostalCode(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingPostalCode:">paymentCardTextFieldDidEndEditingPostalCode(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing ends in the payment card field&rsquo;s ZIP/postal code field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingPostalCode</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L2166">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-31)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

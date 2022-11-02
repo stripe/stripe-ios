@@ -3,6 +3,7 @@
 //  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/21/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -31,6 +32,14 @@ import UIKit
         return PhoneNumber(number: textFieldElement.text, countryCode: countryDropdownElement.selectedItem.rawData)
     }
     
+    public var hasBeenModified: Bool {
+        return defaultPhoneNumber?.number != phoneNumber?.number ||
+        defaultPhoneNumber?.countryCode != phoneNumber?.countryCode
+    }
+    
+    // MARK: - Private properties
+    private var defaultPhoneNumber: PhoneNumber?
+    
     // MARK: - Initializer
     /**
      Creates an address section with a country dropdown populated from the given list of countryCodes.
@@ -53,7 +62,7 @@ import UIKit
         theme: ElementsUITheme = .default
     ) {
         let defaults = Self.deriveDefaults(countryCode: defaultCountryCode, phoneNumber: defaultPhoneNumber)
-        let allowedCountryCodes = allowedCountryCodes ?? PhoneNumber.Metadata.allMetadata.map { $0.regionCode }
+        let allowedCountryCodes = allowedCountryCodes ?? PhoneMetadataProvider.shared.metadata.map { $0.region }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(
             countryCodes: allowedCountryCodes,
             defaultCountry: defaults.countryCode,
@@ -68,6 +77,7 @@ import UIKit
                 return countryDropdownElement.selectedItem.rawData
             }
         ).makeElement(theme: theme)
+        self.defaultPhoneNumber = phoneNumber
         self.countryDropdownElement.delegate = self
         self.textFieldElement.delegate = self
     }
@@ -84,7 +94,7 @@ import UIKit
             // Note: We only validate against the currently selected country code, as an autofilled number _without_ a country code can trigger false positives, e.g. "2481234567" could be either "(248) 123-4567" (a phone number from Michigan, USA with no country code) or "+248 1 234 567" (a phone number from Seychelles with a country code). We can assume that generally, a user's autofilled phone number will match their phone's region setting.
             // Autofilled numbers can include the + prefix indicating a country code, but we can't tell if they do here, as by the time we get here the input has already been sanitized and the "+" has been removed.
             let countryCode = countryDropdownElement.selectedItem.rawData
-            if let prefix = PhoneNumber.Metadata.metadata(for: countryCode)?.prefix.dropFirst(), textFieldElement.text.hasPrefix(prefix) {
+            if let prefix = PhoneMetadataProvider.shared.metadata(for: countryCode)?.code.dropFirst(), textFieldElement.text.hasPrefix(prefix) {
                 let unprefixedNumber = String(textFieldElement.text.dropFirst(prefix.count))
                 // Double check that we actually have a valid phone number without the prefix.
                 if let phoneNumber = PhoneNumber(number: unprefixedNumber, countryCode: countryCode), phoneNumber.isComplete {
@@ -107,6 +117,14 @@ import UIKit
             return (countryCode, phoneNumber)
         }
     }
+    
+    func selectCountry(index: Int, shouldUpdateDefaultNumber: Bool = false) {
+        countryDropdownElement.select(index: index)
+        
+        if shouldUpdateDefaultNumber {
+            self.defaultPhoneNumber = phoneNumber
+        }
+    }
 }
 
 // MARK: - DropdownFieldElement helper
@@ -121,7 +139,7 @@ extension DropdownFieldElement {
         let countryDisplayStrings: [DropdownFieldElement.DropdownItem] = countryCodes.map {
             let flagEmoji = String.countryFlagEmoji(for: $0) ?? ""              // 🇺🇸
             let name = locale.localizedString(forRegionCode: $0) ?? $0          // United States
-            let prefix = PhoneNumber.Metadata.metadata(for: $0)?.prefix ?? ""   // +1
+            let prefix = PhoneMetadataProvider.shared.metadata(for: $0)?.code ?? ""   // +1
             return .init(
                 pickerDisplayName: "\(flagEmoji) \(name) \(prefix)",            // 🇺🇸 United States +1
                 labelDisplayName: "\(flagEmoji) \(prefix)",

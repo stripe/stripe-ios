@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/16/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -26,7 +27,6 @@ final class SuccessViewController: IdentityFlowViewController {
             // body text will be empty but user will still see success title and
             // button.
             try htmlView.configure(with: .init(
-                iconText: [],
                 bodyHtmlString: successContent.body,
                 didOpenURL: { [weak self] url in
                     self?.openInSafariViewController(url: url)
@@ -40,7 +40,7 @@ final class SuccessViewController: IdentityFlowViewController {
             backButtonTitle: nil,
             viewModel: .init(
                 headerViewModel: .init(
-                    backgroundColor: IdentityUI.containerColor,
+                    backgroundColor: .systemBackground,
                     headerType: .banner(iconViewModel: .init(
                         iconType: .plain,
                         iconImage: Image.iconClock.makeImage(template: true),

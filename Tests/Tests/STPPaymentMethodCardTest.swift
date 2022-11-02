@@ -6,7 +6,11 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 import StripeCoreTestUtils
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 private let kCardPaymentIntentClientSecret =
     "pi_1H5J4RFY0qyl6XeWFTpgue7g_secret_1SS59M0x65qWMaX2wEB03iwVE"

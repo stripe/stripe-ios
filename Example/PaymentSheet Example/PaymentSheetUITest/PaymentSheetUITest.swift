@@ -48,6 +48,7 @@ class PaymentSheetUITest: XCTestCase {
         buyButton.tap()
         
         let numberField = app.textFields["Card number"]
+        XCTAssertTrue(numberField.waitForExistence(timeout: 60.0))
         numberField.tap()
         numberField.typeText("378282246310005")
         
@@ -477,10 +478,10 @@ class PaymentSheetUITest: XCTestCase {
         upi.tap()
 
         XCTAssertFalse(payButton.isEnabled)
-        let vpa = app.textFields["VPA number"]
-        vpa.tap()
-        vpa.typeText("payment.success@stripeupi")
-        vpa.typeText(XCUIKeyboardKey.return.rawValue)
+        let upi_id = app.textFields["UPI ID"]
+        upi_id.tap()
+        upi_id.typeText("payment.success@stripeupi")
+        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
 
         payButton.tap()
     }
@@ -502,10 +503,10 @@ class PaymentSheetUITest: XCTestCase {
         upi.tap()
 
         XCTAssertFalse(payButton.isEnabled)
-        let vpa = app.textFields["VPA number"]
-        vpa.tap()
-        vpa.typeText("payment.success")
-        vpa.typeText(XCUIKeyboardKey.return.rawValue)
+        let upi_id = app.textFields["UPI ID"]
+        upi_id.tap()
+        upi_id.typeText("payment.success")
+        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
 
         XCTAssertFalse(payButton.isEnabled)
     }

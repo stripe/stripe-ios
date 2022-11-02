@@ -119,10 +119,20 @@ import Foundation
     // MARK: - Link Misc
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
+    // MARK: - Phone formatting metadata
+    case phoneMetadataLoadNotFoundError = "phone_metadata.load.not_found_error"
+    case phoneMetadataLoadDecodingError = "phone_metadata.load.decoding_error"
+    case phoneMetadataLoadDecompressionError = "phone_metadata.load.decompression_error"
+    case phoneMetadataLoadUnknownError = "phone_metadata.load.unknown_error"
+
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
     case luxeClientFilteredPaymentMethods = "luxe_client_filtered_payment_methods"
     case luxeClientFilteredPaymentMethodsNone = "luxe_client_filtered_payment_methods_none"
+
+    case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
+    case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
+    case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
     // MARK: Address Element
     case addressShow = "mc_address_show"

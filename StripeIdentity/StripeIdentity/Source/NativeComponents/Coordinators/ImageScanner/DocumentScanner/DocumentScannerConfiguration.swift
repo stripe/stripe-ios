@@ -3,12 +3,13 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 3/1/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import Vision
 
-@available(iOS 13, *)
+
 extension DocumentScanner {
     struct Configuration {
         // MARK: ID Detector

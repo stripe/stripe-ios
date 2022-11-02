@@ -1,0 +1,99 @@
+/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
+"%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
+
+/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
+"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Address line 2 (optional)";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bank Account";
+
+/* Title for billing address entry section */
+"Billing Address" = "Billing Address";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Billing address";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Card details entry form header title */
+"Card information" = "Card information";
+
+/* accessibility label for text field */
+"card number" = "card number";
+
+/* Label for card number entry text field */
+"Card number" = "Card number";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "expiration date";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Invalid data.";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / YY";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "MM/YY";
+
+/* Postal code placeholder */
+"Postal Code" = "Postal Code";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Shipping Address";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "State / Province / Region";
+
+/* Error string displayed to user when they enter in an invalid BSB number. */
+"The BSB you entered is invalid." = "The BSB you entered is invalid.";
+
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Your card number is incomplete.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Your card number is invalid.";
+
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Your card's security code is incomplete.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Your card's security code is invalid.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Your postal code is invalid.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Your ZIP is invalid.";
+

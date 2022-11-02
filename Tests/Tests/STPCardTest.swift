@@ -1,14 +1,18 @@
 //
 //  STPCardTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Saikat Chakrabarti on 11/5/12.
-//
+//  Copyright © 2012 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPCardTest: XCTestCase {
     // MARK: - STPCardBrand Tests

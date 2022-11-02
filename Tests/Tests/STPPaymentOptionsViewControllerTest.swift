@@ -1,6 +1,6 @@
 //
 //  STPPaymentOptionsViewControllerTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 10/10/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import OCMock
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 @available(iOS 13.0, *)
 class STPPaymentOptionsViewControllerTest: XCTestCase {

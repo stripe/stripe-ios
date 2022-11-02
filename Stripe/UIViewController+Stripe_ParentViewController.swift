@@ -1,6 +1,6 @@
 //
 //  UIViewController+Stripe_ParentViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 1/12/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

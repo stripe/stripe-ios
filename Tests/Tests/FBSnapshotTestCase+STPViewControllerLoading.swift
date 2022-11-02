@@ -6,7 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
 extension FBSnapshotTestCase {
     /// Embeds the given controller in a navigation controller, prepares it for

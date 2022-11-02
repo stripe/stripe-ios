@@ -1,15 +1,18 @@
 //
 //  STPPaymentOptionsViewControllerLocalizationTests.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 10/17/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class MockSTPPaymentOptionsViewControllerDelegate: NSObject, STPPaymentOptionsViewControllerDelegate
 {

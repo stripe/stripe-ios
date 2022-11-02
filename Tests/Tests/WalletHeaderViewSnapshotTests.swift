@@ -7,10 +7,12 @@
 //
 
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 
 @testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
 
 class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
 
@@ -22,6 +24,15 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     func testApplePayButton() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: .applePay,
+            delegate: nil
+        )
+        verify(headerView)
+    }
+
+    func testApplePayButtonWithCustomCta() {
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: .applePay,
+            applePayButtonType: .buy,
             delegate: nil
         )
         verify(headerView)
@@ -64,9 +75,51 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         verify(headerView, identifier: "Dark")
     }
 
+    // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
+    @available(iOS 13.0, *)
+    func testAdaptiveElementsWithCustomApplePayCta() {
+        var darkMode = false
+        
+        var appearance = PaymentSheet.Appearance()
+        appearance.colors.background = UIColor.init(dynamicProvider: { _ in
+            if darkMode {
+                return .black
+            }
+            
+            return .white
+        })
+
+        appearance.cornerRadius = 0
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: .applePay,
+            appearance: appearance,
+            applePayButtonType: .buy,
+            delegate: nil
+        )
+        
+        verify(headerView, identifier: "Light")
+        
+        darkMode = true
+        headerView.traitCollectionDidChange(nil)
+        
+        verify(headerView, identifier: "Dark")
+    }
+
     func testAllButtons() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: [.applePay, .link],
+            delegate: nil
+        )
+        verify(headerView)
+
+        headerView.showsCardPaymentMessage = true
+        verify(headerView, identifier: "Card only")
+    }
+
+    func testAllButtonsWithCustomApplePayCta() {
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: [.applePay, .link],
+            applePayButtonType: .buy,
             delegate: nil
         )
         verify(headerView)

@@ -1,12 +1,16 @@
 //
 //  STPEphemeralKeyTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 5/17/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class STPEphemeralKeyTest: XCTestCase {
     func testDecoding() {

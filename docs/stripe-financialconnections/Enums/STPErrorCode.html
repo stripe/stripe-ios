@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 22.8.2
+          Stripe iOS SDKs 23.1.0
         </a>
         
       </p>
@@ -113,14 +113,15 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">STPErrorCode</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">STPErrorCode</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
 
                 </div>
               </div>
             <p>Possible error code values for NSErrors with the <code>StripeDomain</code> domain</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L13-L30">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L12-L29">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -132,9 +133,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPErrorCodeO15connectionErroryA2CmF"></a>
+                    <a name="/c:@M@StripeCore@E@STPErrorCode@STPConnectionError"></a>
                     <a name="//apple_ref/swift/Element/connectionError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPErrorCodeO15connectionErroryA2CmF">connectionError</a>
+                    <a class="token" href="#/c:@M@StripeCore@E@STPErrorCode@STPConnectionError">connectionError</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -149,12 +150,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">connectionError</span> <span class="o">=</span> <span class="mi">40</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(STPConnectionError)</span>
+<span class="k">case</span> <span class="n">connectionError</span> <span class="o">=</span> <span class="mi">40</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L15">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L14">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -162,9 +164,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPErrorCodeO19invalidRequestErroryA2CmF"></a>
+                    <a name="/c:@M@StripeCore@E@STPErrorCode@STPInvalidRequestError"></a>
                     <a name="//apple_ref/swift/Element/invalidRequestError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPErrorCodeO19invalidRequestErroryA2CmF">invalidRequestError</a>
+                    <a class="token" href="#/c:@M@StripeCore@E@STPErrorCode@STPInvalidRequestError">invalidRequestError</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -179,12 +181,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">invalidRequestError</span> <span class="o">=</span> <span class="mi">50</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(STPInvalidRequestError)</span>
+<span class="k">case</span> <span class="n">invalidRequestError</span> <span class="o">=</span> <span class="mi">50</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L17">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L16">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -192,9 +195,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPErrorCodeO19authenticationErroryA2CmF"></a>
+                    <a name="/c:@M@StripeCore@E@STPErrorCode@STPAuthenticationError"></a>
                     <a name="//apple_ref/swift/Element/authenticationError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPErrorCodeO19authenticationErroryA2CmF">authenticationError</a>
+                    <a class="token" href="#/c:@M@StripeCore@E@STPErrorCode@STPAuthenticationError">authenticationError</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -209,12 +212,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">authenticationError</span> <span class="o">=</span> <span class="mi">51</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(STPAuthenticationError)</span>
+<span class="k">case</span> <span class="n">authenticationError</span> <span class="o">=</span> <span class="mi">51</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L19">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L18">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -222,9 +226,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPErrorCodeO8apiErroryA2CmF"></a>
+                    <a name="/c:@M@StripeCore@E@STPErrorCode@STPAPIError"></a>
                     <a name="//apple_ref/swift/Element/apiError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPErrorCodeO8apiErroryA2CmF">apiError</a>
+                    <a class="token" href="#/c:@M@StripeCore@E@STPErrorCode@STPAPIError">apiError</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -239,12 +243,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">apiError</span> <span class="o">=</span> <span class="mi">60</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(STPAPIError)</span>
+<span class="k">case</span> <span class="n">apiError</span> <span class="o">=</span> <span class="mi">60</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L21">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L20">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -252,9 +257,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPErrorCodeO9cardErroryA2CmF"></a>
+                    <a name="/c:@M@StripeCore@E@STPErrorCode@STPCardError"></a>
                     <a name="//apple_ref/swift/Element/cardError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPErrorCodeO9cardErroryA2CmF">cardError</a>
+                    <a class="token" href="#/c:@M@StripeCore@E@STPErrorCode@STPCardError">cardError</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -269,12 +274,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">cardError</span> <span class="o">=</span> <span class="mi">70</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(STPCardError)</span>
+<span class="k">case</span> <span class="n">cardError</span> <span class="o">=</span> <span class="mi">70</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L23">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L22">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -282,9 +288,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPErrorCodeO17cancellationErroryA2CmF"></a>
+                    <a name="/c:@M@StripeCore@E@STPErrorCode@STPCancellationError"></a>
                     <a name="//apple_ref/swift/Element/cancellationError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPErrorCodeO17cancellationErroryA2CmF">cancellationError</a>
+                    <a class="token" href="#/c:@M@StripeCore@E@STPErrorCode@STPCancellationError">cancellationError</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -299,12 +305,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">cancellationError</span> <span class="o">=</span> <span class="mi">80</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(STPCancellationError)</span>
+<span class="k">case</span> <span class="n">cancellationError</span> <span class="o">=</span> <span class="mi">80</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L25">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L24">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -312,9 +319,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore12STPErrorCodeO25ephemeralKeyDecodingErroryA2CmF"></a>
+                    <a name="/c:@M@StripeCore@E@STPErrorCode@STPEphemeralKeyDecodingError"></a>
                     <a name="//apple_ref/swift/Element/ephemeralKeyDecodingError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore12STPErrorCodeO25ephemeralKeyDecodingErroryA2CmF">ephemeralKeyDecodingError</a>
+                    <a class="token" href="#/c:@M@StripeCore@E@STPErrorCode@STPEphemeralKeyDecodingError">ephemeralKeyDecodingError</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -331,12 +338,13 @@ the unmodified JSON of the ephemeral key to your app.
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">ephemeralKeyDecodingError</span> <span class="o">=</span> <span class="mi">1000</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(STPEphemeralKeyDecodingError)</span>
+<span class="k">case</span> <span class="n">ephemeralKeyDecodingError</span> <span class="o">=</span> <span class="mi">1000</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/StripeCore/StripeCore/Source/Helpers/STPError.swift#L29">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L28">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -349,7 +357,7 @@ the unmodified JSON of the ephemeral key to your app.
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-09-19)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-31)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

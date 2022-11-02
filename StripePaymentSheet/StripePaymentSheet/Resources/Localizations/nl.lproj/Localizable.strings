@@ -1,0 +1,161 @@
+"+ Add" = "+ Toevoegen";
+
+"Add a card" = "Een kaart toevoegen";
+
+"Add a payment method" = "Een betaalmethode toevoegen";
+
+"Add bank account" = "Bankrekening toevoegen";
+
+"Add new payment method" = "Nieuwe betaalmethode toevoegen";
+
+"Add your payment information" = "Je betaalgegevens toevoegen";
+
+"Are you sure you want to remove this card?" = "Weet je zeker dat je deze betaalkaart wilt verwijderen?";
+
+"Are you sure you want to remove this linked account?" = "Weet je zeker dat je dit gekoppelde account wilt verwijderen?";
+
+"Back" = "Terug";
+
+"Bank account" = "Bankrekening";
+
+"Buy now or pay later with Klarna." = "Koop nu of betaal later met Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Als je doorgaat, stem je in dat betalingen worden geautoriseerd in overeenstemming met deze <terms>voorwaarden</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Door je betaalgegevens op te geven en deze betaling te bevestigen geef je toestemming aan (A) %@ en Stripe, onze betaaldienstverlener, een opdracht te sturen aan je bank om je rekening te debiteren en aan (B) je bank om je rekening te debiteren conform deze opdracht. Je hebt het recht op terugbetaling door je bank conform de met je bank overeengekomen voorwaarden. Een verzoek tot terugbetaling moet worden ingediend binnen 8 weken vanaf de datum waarop je rekening is gedebiteerd. Je rechten worden uitgelegd in een verklaring die je kunt opvragen bij je bank. Je stemt ermee in dat je minstens 2 dagen voor de uitvoering van toekomstige debiteringen hierover op de hoogte wordt gesteld.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
+
+"Change email" = "E-mailadres wijzigen";
+
+"Choose a payment method" = "Een betaalmethode kiezen";
+
+"Close card scanner" = "Kaartscanner afsluiten";
+
+"Code field" = "Codeveld";
+
+"Code sent" = "Code verstuurd";
+
+"Default" = "Standaard";
+
+"Double tap to edit" = "Dubbeltikken om te bewerken";
+
+"EPS Bank" = "EPS Bank";
+
+"Enter address manually" = "Adres handmatig invoeren";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Voer de code in die is verstuurd naar %@ om standaard met Link te betalen.";
+
+"Enter your verification code" = "Voer je verificatiecode in.";
+
+"For security, please re-enter your card’s security code." = "Voer uit veiligheidsoverwegingen de beveiligingscode van je betaalkaart opnieuw in.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Aanmelden bij Link";
+
+"Log out of Link" = "Afmelden bij Link";
+
+"Not %@?" = "Niet %@?";
+
+"Or" = "Of";
+
+"Or pay using" = "Of betalen met";
+
+"Or pay with a card" = "Of met een kaart betalen";
+
+"Pay %@" = "%@ betalen";
+
+"Pay another way" = "Betalen op een andere manier";
+
+"Pay faster at %@ and thousands of merchants." = "Reken sneller af bij %@ en duizenden andere handelaren.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betaal in <num_installments/> rentevrije termijnen van <installment_price/> met <img/>";
+
+"Pay later with Klarna." = "Betaal later met Klarna.";
+
+"Pay over time with %@" = "Betalen in termijnen met %@";
+
+"Pay using" = "Betalen met";
+
+"Pay with %@" = "Betalen met %@";
+
+"Pay with your bank account in just a few steps." = "Betaal in een paar stappen met je bankrekening.";
+
+"Payment" = "Betaling";
+
+"Payment methods" = "Betaalmethoden";
+
+"Point the camera at your card." = "Richt de camera op de kaart.";
+
+"Processing..." = "Verwerken...";
+
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
+"Remove %1$@ ending in %2$@" = "%1$@ eindigend op %2$@ verwijderen";
+
+"Remove Card" = "Kaart verwijderen";
+
+"Remove card" = "Betaalkaart verwijderen";
+
+"Remove linked account" = "Gekoppeld account verwijderen";
+
+"Resend code" = "Code opnieuw versturen";
+
+"Save address" = "Adres opslaan";
+
+"Save for future payments" = "Opslaan voor toekomstige betalingen";
+
+"Save my info for secure 1-click checkout" = "Bewaar mijn gegevens om veilig in één klik te kunnen afrekenen";
+
+"Save this account for future %@ payments" = "Dit account opslaan voor toekomstige betalingen bij %@";
+
+"Save this card for future %@ payments" = "Deze kaart opslaan voor toekomstige aankopen bij %@";
+
+"Secure 1⁠-⁠click checkout" = "Veilig afrekenen in één klik";
+
+"Select your payment method" = "Betaalmethode selecteren";
+
+"Set as default" = "Instellen als standaard";
+
+"Set as default payment method" = "Instellen als standaardbetaalmethode";
+
+"Set up" = "Instellen";
+
+"Shipping to %@ is not supported." = "Verzending naar %@ wordt niet ondersteund.";
+
+"Show menu" = "Menu weergeven";
+
+"Sign in to your Link account" = "Aanmelden bij je Link-account";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Binnen 1-2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies over hoe je de betaling aan %@ kunt voltooien.";
+
+"Tap to close" = "Tikken om te sluiten";
+
+"Tap to expand" = "Tikken om uit te vouwen";
+
+"The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
+
+"The provided verification code has expired." = "De opgegeven verificatiecode is verlopen.";
+
+"The provided verification code is incorrect." = "De opgegeven verificatiecode is onjuist.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Deze betaalkaart is verlopen. Werk de kaartgegevens bij of kies een andere betaalmethode.";
+
+"This is your default" = "Dit is je standaard";
+
+"Too many attempts. Please try again in a few minutes." = "Te veel pogingen. Probeer het over een paar minuten opnieuw.";
+
+"Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";
+
+"Update card" = "Betaalkaart bijwerken";
+
+"Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
+
+"Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
+
+"iDEAL Bank" = "iDEAL-bank";

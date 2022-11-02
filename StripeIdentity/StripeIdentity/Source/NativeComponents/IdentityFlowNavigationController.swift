@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/17/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -60,11 +61,27 @@ final class IdentityFlowNavigationController: UINavigationController {
             identityDelegate?.identityFlowNavigationControllerDidDismiss(self)
         }
     }
+
+    @discardableResult
+    override func popViewController(animated: Bool) -> UIViewController? {
+        // Reset the top and previous item from the stack, ensure the stack is correctly cleaned up.
+        // E.g:
+        //  Stack before clicking back: [consent, docType, docCapture, selfie]
+        //  Stack after clicking back: [consent, docType, docCapture]
+        //  We'll need to clean up both docCapture and selfie instead of just docCapture.
+        (self.topViewController as? IdentityDataCollecting)?.reset()
+        (self.previousViewController as? IdentityDataCollecting)?.reset()
+        return super.popViewController(animated: animated)
+    }
 }
 
 // MARK: - IdentityFlowNavigationController Helpers
 
 private extension IdentityFlowNavigationController {
+    var previousViewController: UIViewController? {
+        viewControllers.dropLast().last
+    }
+    
     func configureAndPresentWarningAlert(with viewModel: WarningAlertViewModel) {
         let alertController = UIAlertController(
             title: viewModel.titleText,

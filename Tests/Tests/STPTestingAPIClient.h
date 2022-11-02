@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@import StripeCore;
 @class STPEphemeralKey;
 
 NS_ASSUME_NONNULL_BEGIN

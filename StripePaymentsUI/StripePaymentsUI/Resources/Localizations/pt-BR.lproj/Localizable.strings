@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ com final %2$@";
+
+"Address line 2 (optional)" = "Endereço – Linha 2 (opcional)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Conta bancária";
+
+"Billing Address" = "Endereço de cobrança";
+
+"Billing address" = "Endereço de cobrança";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Dados do cartão";
+
+"Card number" = "Número do cartão";
+
+"Invalid data." = "Dados inválidos.";
+
+"MM / YY" = "MM / AA";
+
+"MM/YY" = "MM/AA";
+
+"Postal Code" = "Código postal";
+
+"Shipping Address" = "Endereço de envio";
+
+"State / Province / Region" = "Estado/Província/Região";
+
+"The BSB you entered is invalid." = "O BSB inserido é inválido.";
+
+"To scan your card, allow camera access in Settings." = "Para escanear seu cartão, autorize o acesso à câmera nos Ajustes.";
+
+"Your ZIP is invalid." = "Código postal inválido.";
+
+"Your card number is incomplete." = "Número do cartão incompleto.";
+
+"Your card number is invalid." = "Número do cartão inválido.";
+
+"Your card's expiration date is incomplete." = "Data de validade incompleta.";
+
+"Your card's expiration date is invalid." = "Data de validade inválida.";
+
+"Your card's expiration month is invalid." = "O mês de validade do cartão é inválido.";
+
+"Your card's expiration year is invalid." = "Ano de validade inválido.";
+
+"Your card's security code is incomplete." = "Código de segurança incompleto.";
+
+"Your card's security code is invalid." = "Código de segurança inválido.";
+
+"Your postal code is invalid." = "Código postal inválido.";
+
+"card number" = "número do cartão";
+
+"example@example.com" = "exemplo@exemplo.com";
+
+"expiration date" = "data de expiração";

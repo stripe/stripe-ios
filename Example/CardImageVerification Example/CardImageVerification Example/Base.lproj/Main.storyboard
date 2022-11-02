@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sm0-QJ-Y2F">
-                                <rect key="frame" x="41.5" y="412" width="331" height="82"/>
+                                <rect key="frame" x="41.5" y="414.5" width="331" height="81"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4z6-D1-7ln">
-                                        <rect key="frame" x="47.5" y="0.0" width="236" height="35"/>
+                                        <rect key="frame" x="32.5" y="0.0" width="266" height="39"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                         <state key="normal" title="CardImageVerificationSheet"/>
                                         <connections>
@@ -29,7 +29,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rmF-NZ-t1G">
-                                        <rect key="frame" x="99.5" y="47" width="132" height="35"/>
+                                        <rect key="frame" x="90.5" y="42" width="150" height="39"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                         <state key="normal" title="CardScanSheet"/>
                                         <connections>
@@ -58,11 +58,11 @@
             <objects>
                 <viewController id="xMI-iW-mMU" customClass="VerificationExplanationViewController" customModule="CardImageVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oCD-fe-GwD">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="838"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AjC-jo-muy">
-                                <rect key="frame" x="16" y="72" width="382" height="770"/>
+                                <rect key="frame" x="16" y="72" width="382" height="766"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify your card information with a quick scan" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvJ-TE-xAi">
                                         <rect key="frame" x="0.0" y="0.0" width="382" height="60"/>
@@ -97,6 +97,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhh-9W-zY5">
                                                 <rect key="frame" x="0.0" y="0.0" width="382" height="50"/>
                                                 <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Explaination Continue Button"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <state key="normal" title="Continue">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -123,7 +124,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" verticalHuggingPriority="240" translatesAutoresizingMaskIntoConstraints="NO" id="ZGe-U4-kdc">
-                                        <rect key="frame" x="0.0" y="507" width="382" height="263"/>
+                                        <rect key="frame" x="0.0" y="507" width="382" height="259"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -165,11 +166,11 @@
             <objects>
                 <viewController id="d2S-hE-dcC" customClass="VerificationCardInputViewController" customModule="CardImageVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Z7L-3j-aee">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="838"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="K7D-hk-2hS">
-                                <rect key="frame" x="16" y="72" width="382" height="770"/>
+                                <rect key="frame" x="16" y="72" width="382" height="766"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CardImageVerification Sheet Example" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ual-Yp-Ouu">
                                         <rect key="frame" x="0.0" y="0.0" width="382" height="60"/>
@@ -231,6 +232,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kbj-pi-D0Z">
                                         <rect key="frame" x="0.0" y="346" width="382" height="50"/>
                                         <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="Card Input Continue Button"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="IFt-ow-oqv"/>
                                         </constraints>
@@ -249,7 +251,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" verticalHuggingPriority="240" translatesAutoresizingMaskIntoConstraints="NO" id="ySf-eL-to6">
-                                        <rect key="frame" x="0.0" y="410" width="382" height="360"/>
+                                        <rect key="frame" x="0.0" y="410" width="382" height="356"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>

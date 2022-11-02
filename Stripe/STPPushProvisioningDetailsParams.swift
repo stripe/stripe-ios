@@ -1,6 +1,6 @@
 //
 //  STPPushProvisioningDetailsParams.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 9/26/18.
 //  Copyright © 2018 Stripe, Inc. All rights reserved.

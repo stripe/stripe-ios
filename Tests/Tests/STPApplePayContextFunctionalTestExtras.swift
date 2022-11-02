@@ -8,14 +8,19 @@
 
 import Foundation
 
-@testable import Stripe
-@testable import StripeCore
-@testable import StripeApplePay
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeApplePay
+
 import OHHTTPStubs
+import OHHTTPStubsSwift
 
 @available(iOS 13.0, *)
-class STPApplePayContextFunctionalTestAPIClient: _stpobjc_STPAPIClient {
-    @objc var applePayContext: _stpobjc_APContext
+class STPApplePayContextFunctionalTestAPIClient: STPAPIClient {
+    @objc var applePayContext: STPApplePayContext?
     @objc var shouldSimulateCancelAfterConfirmBegins: Bool = false
     
     @objc func setupStubs() {
@@ -25,7 +30,7 @@ class STPApplePayContextFunctionalTestAPIClient: _stpobjc_STPAPIClient {
                urlString.contains("_intents/"),
                urlString.hasSuffix("/confirm") {
                 if self.shouldSimulateCancelAfterConfirmBegins {
-                    self.applePayContext._applePayContext.paymentAuthorizationControllerDidFinish(self.applePayContext._applePayContext.authorizationController!)
+                    self.applePayContext!.paymentAuthorizationControllerDidFinish(self.applePayContext!.authorizationController!)
                 }
             }
             // Let everything pass through to the underlying API

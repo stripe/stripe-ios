@@ -7,9 +7,13 @@
 //
 
 import UIKit
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 class LinkBadgeViewSnapshotTest: FBSnapshotTestCase {
 

@@ -1,339 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
-
 "%@ - Offline" = "%@ — Offline";
 
-"+ Add" = "+ Add";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "AU BECS Direct Debit";
 
 "Add New Card…" = "Add New Card…";
 
 "Add a Card" = "Add a Card";
 
-"Add a card" = "Add a card";
-
-"Add a payment method" = "Add a payment method";
-
-"Add bank account" = "Add bank account";
-
-"Add new payment method" = "Add new payment method";
-
-"Add your payment information" = "Add your payment information";
-
-"Address line 2 (optional)" = "Address line 2 (optional)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Apt.";
 
-"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
-
-"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Back";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Bank";
-
-"Bank Account" = "Bank Account";
-
-"Bank account" = "Bank account";
-
-"Billing Address" = "Billing Address";
-
-"Billing address" = "Billing address";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorise payments pursuant to these <terms>terms</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Card";
-
-"Card information" = "Card information";
-
-"Card number" = "Card number";
-
-"Change email" = "Change email";
-
-"Choose a payment method" = "Choose a payment method";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Close card scanner";
-
-"Code field" = "Code field";
-
-"Code sent" = "Code sent";
-
 "Contact" = "Contact";
-
-"Default" = "Default";
 
 "Delivery" = "Delivery";
 
 "Delivery Address" = "Delivery Address";
 
-"Double tap to edit" = "Double tap to edit";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS Bank";
-
-"Edit" = "Edit";
-
-"Enter address manually" = "Enter address manually";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
-
-"Enter your verification code" = "Enter your verification code";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
-
 "Free" = "Free";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Invalid Shipping Address";
 
-"Invalid data." = "Invalid data.";
-
-"Join Link" = "Join Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Loading…";
-
-"Log out of Link" = "Log out of Link";
-
-"MM / YY" = "MM / YY";
-
-"MM/YY" = "MM/YY";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Next";
-
-"Not %@?" = "Not %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
-"Or" = "Or";
-
-"Or pay using" = "Or pay using";
-
-"Or pay with a card" = "Or pay with a card";
-
-"P24" = "P24";
-
-"Pay %@" = "Pay %@";
-
-"Pay another way" = "Pay another way";
-
-"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
-
-"Pay later with Klarna." = "Pay later with Klarna.";
-
-"Pay over time with %@" = "Pay over time with %@";
-
-"Pay using" = "Pay using";
-
-"Pay with %@" = "Pay with %@";
-
-"Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Payment";
-
 "Payment Method" = "Payment Method";
-
-"Payment methods" = "Payment methods";
-
-"Point the camera at your card." = "Point the camera at your card.";
-
-"Postal Code" = "Postcode";
-
-"Processing..." = "Processing…";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 Bank";
-
-"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
-
-"Remove Card" = "Remove Card";
-
-"Remove card" = "Remove card";
-
-"Remove linked account" = "Remove linked account";
-
-"Resend code" = "Resend code";
-
-"SEPA Debit" = "SEPA Debit";
-
-"SEPA Direct Debit" = "SEPA Direct Debit";
-
-"Save address" = "Save address";
-
-"Save for future payments" = "Save for future payments";
-
-"Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
-
-"Save this account for future %@ payments" = "Save this account for future %@ payments";
-
-"Save this card for future %@ payments" = "Save this card for future %@ payments";
-
-"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
-
-"Select your payment method" = "Select your payment method";
-
-"Set as default" = "Set as default";
-
-"Set as default payment method" = "Set as default payment method";
-
-"Set up" = "Set up";
 
 "Shipping" = "Shipping";
 
-"Shipping Address" = "Shipping Address";
-
 "Shipping Method" = "Shipping Method";
-
-"Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
-
-"Show menu" = "Show menu";
-
-"Sign in to your Link account" = "Sign in to your Link account";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
-
-"State / Province / Region" = "County / Region";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
-
-"Tap to close" = "Tap to close";
-
-"Tap to expand" = "Tap to expand";
-
-"The BSB you entered is invalid." = "The BSB you entered is invalid.";
-
-"The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid; \"%@\" is not a supported country code.";
-
-"The provided verification code has expired." = "The provided verification code has expired.";
-
-"The provided verification code is incorrect." = "The provided verification code is incorrect.";
-
-"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
-
-"This is your default" = "This is your default";
-
-"Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method - please try again";
-
-"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
-
-"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "US Bank Account";
-
-"Unavailable for this purchase" = "Unavailable for this purchase";
-
-"Unknown" = "Unknown";
-
-"Update card" = "Update card";
 
 "Use Billing" = "Use Billing";
 
 "Use Delivery" = "Use Delivery";
 
 "Use Shipping" = "Use Shipping";
-
-"Use your saved info to check out faster" = "Use your saved info to check out faster";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
-
-"Your ZIP is invalid." = "Your ZIP is invalid.";
-
-"Your card number is incomplete." = "Your card number is incomplete.";
-
-"Your card number is invalid." = "Your card number is invalid.";
-
-"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
-
-"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
-
-"Your card's expiration month is invalid." = "Your card expiry month is invalid.";
-
-"Your card's expiration year is invalid." = "Your card's expiry year is invalid.";
-
-"Your card's security code is incomplete." = "Your card's security code is incomplete.";
-
-"Your card's security code is invalid." = "Your card's security code is invalid.";
-
-"Your postal code is invalid." = "Your postcode is invalid.";
-
-"ZIP Code" = "ZIP Code";
-
-"card number" = "card number";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "expiry date";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL Bank";

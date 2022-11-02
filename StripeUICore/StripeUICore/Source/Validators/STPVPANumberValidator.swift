@@ -3,6 +3,7 @@
 //  StripeUICore
 //
 //  Created by Nick Porter on 9/8/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -16,7 +17,7 @@ import Foundation
     }
 
     public class func stringIsValidVPANumber(_ string: String?) -> Bool {
-        if string == nil {
+        if string == nil || (string?.count ?? 0) > 30 {
             return false
         }
         // regex from https://stackoverflow.com/questions/55143204/how-to-validate-a-upi-id-using-regex

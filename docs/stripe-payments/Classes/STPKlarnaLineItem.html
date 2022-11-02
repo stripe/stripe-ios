@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>STPKlarnaLineItem Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/STPKlarnaLineItem" class="dashAnchor"></a>
+
+    <a title="STPKlarnaLineItem Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../index.html">
+          Stripe iOS SDKs 23.1.0
+        </a>
+        
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../index.html">Stripe iOS SDKs</a>
+      <img class="carat" src="../img/carat.png" />
+      <a class="breadcrumb" href="../index.html">StripePayments</a>
+      <img class="carat" src="../img/carat.png" />
+      STPKlarnaLineItem Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAddress.html">STPAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPBankAccount.html">STPBankAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPBankAccountCollector.html">STPBankAccountCollector</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPBankAccountParams.html">STPBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCard.html">STPCard</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardBrandUtilities.html">STPCardBrandUtilities</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardParams.html">STPCardParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmUSBankAccountOptions.html">STPConfirmUSBankAccountOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmWeChatPayOptions.html">STPConfirmWeChatPayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConnectAccountCompanyParams.html">STPConnectAccountCompanyParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConnectAccountIndividualParams.html">STPConnectAccountIndividualParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConnectAccountIndividualVerification.html">STPConnectAccountIndividualVerification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConnectAccountParams.html">STPConnectAccountParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConnectAccountVerificationDocument.html">STPConnectAccountVerificationDocument</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPContactField.html">STPContactField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCustomer.html">STPCustomer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPDateOfBirth.html">STPDateOfBirth</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPError.html">STPError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPFPXBank.html">STPFPXBank</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPFile.html">STPFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentAction.html">STPIntentAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionAlipayHandleRedirect.html">STPIntentActionAlipayHandleRedirect</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionBoletoDisplayDetails.html">STPIntentActionBoletoDisplayDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionOXXODisplayDetails.html">STPIntentActionOXXODisplayDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionVerifyWithMicrodeposits.html">STPIntentActionVerifyWithMicrodeposits</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionWechatPayRedirectToApp.html">STPIntentActionWechatPayRedirectToApp</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMandateDataParams.html">STPMandateDataParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMandateOnlineParams.html">STPMandateOnlineParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePayments@objc(cs)STPPaymentIntentAction">STPPaymentIntentAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetails.html">STPPaymentIntentShippingDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetailsAddress.html">STPPaymentIntentShippingDetailsAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetailsAddressParams.html">STPPaymentIntentShippingDetailsAddressParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetailsParams.html">STPPaymentIntentShippingDetailsParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAUBECSDebit.html">STPPaymentMethodAUBECSDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAUBECSDebitParams.html">STPPaymentMethodAUBECSDebitParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePayments@objc(cs)STPPaymentMethodAffirm">STPPaymentMethodAffirm</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAffirmParams.html">STPPaymentMethodAffirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAfterpayClearpay.html">STPPaymentMethodAfterpayClearpay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAfterpayClearpayParams.html">STPPaymentMethodAfterpayClearpayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePayments@objc(cs)STPPaymentMethodAlipay">STPPaymentMethodAlipay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePayments@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBancontact.html">STPPaymentMethodBancontact</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBancontactParams.html">STPPaymentMethodBancontactParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBoleto.html">STPPaymentMethodBoleto</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBoletoParams.html">STPPaymentMethodBoletoParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCard.html">STPPaymentMethodCard</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardChecks.html">STPPaymentMethodCardChecks</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardNetworks.html">STPPaymentMethodCardNetworks</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardPresent.html">STPPaymentMethodCardPresent</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardWallet.html">STPPaymentMethodCardWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardWalletMasterpass.html">STPPaymentMethodCardWalletMasterpass</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardWalletVisaCheckout.html">STPPaymentMethodCardWalletVisaCheckout</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodEPS.html">STPPaymentMethodEPS</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodEPSParams.html">STPPaymentMethodEPSParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodFPX.html">STPPaymentMethodFPX</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodGiropay.html">STPPaymentMethodGiropay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodGiropayParams.html">STPPaymentMethodGiropayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodGrabPay.html">STPPaymentMethodGrabPay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodGrabPayParams.html">STPPaymentMethodGrabPayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePayments@objc(cs)STPPaymentMethodKlarna">STPPaymentMethodKlarna</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodKlarnaParams.html">STPPaymentMethodKlarnaParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodLink.html">STPPaymentMethodLink</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodLinkParams.html">STPPaymentMethodLinkParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodNetBanking.html">STPPaymentMethodNetBanking</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodNetBankingParams.html">STPPaymentMethodNetBankingParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodOXXO.html">STPPaymentMethodOXXO</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodOXXOParams.html">STPPaymentMethodOXXOParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodPrzelewy24.html">STPPaymentMethodPrzelewy24</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodPrzelewy24Params.html">STPPaymentMethodPrzelewy24Params</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSEPADebit.html">STPPaymentMethodSEPADebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSofort.html">STPPaymentMethodSofort</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodThreeDSecureUsage.html">STPPaymentMethodThreeDSecureUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUPI.html">STPPaymentMethodUPI</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUSBankAccount.html">STPPaymentMethodUSBankAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUSBankAccountNetworks.html">STPPaymentMethodUSBankAccountNetworks</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUSBankAccountParams.html">STPPaymentMethodUSBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodiDEAL.html">STPPaymentMethodiDEAL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodiDEALParams.html">STPPaymentMethodiDEALParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPRadarSession.html">STPRadarSession</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPRedirectContext.html">STPRedirectContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntent.html">STPSetupIntent</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSource.html">STPSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceParams.html">STPSourceParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceReceiver.html">STPSourceReceiver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceRedirect.html">STPSourceRedirect</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceSEPADebitDetails.html">STPSourceSEPADebitDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceVerification.html">STPSourceVerification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceWeChatPayDetails.html">STPSourceWeChatPayDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSButtonCustomization.html">STPThreeDSButtonCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSCustomizationSettings.html">STPThreeDSCustomizationSettings</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSFooterCustomization.html">STPThreeDSFooterCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSLabelCustomization.html">STPThreeDSLabelCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSNavigationBarCustomization.html">STPThreeDSNavigationBarCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSSelectionCustomization.html">STPThreeDSSelectionCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSTextFieldCustomization.html">STPThreeDSTextFieldCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSUICustomization.html">STPThreeDSUICustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPToken.html">STPToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StripeAPI.html">StripeAPI</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPBankAccountStatus.html">STPBankAccountStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardBrand.html">STPCardBrand</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardErrorCode.html">STPCardErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardFundingType.html">STPCardFundingType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardValidationState.html">STPCardValidationState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCollectBankAccountError.html">STPCollectBankAccountError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPConnectAccountBusinessType.html">STPConnectAccountBusinessType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPErrorCode.html">STPErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPFPXBankBrand.html">STPFPXBankBrand</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPFilePurpose.html">STPFilePurpose</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentHandlerActionStatus.html">STPPaymentHandlerActionStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentHandlerErrorCode.html">STPPaymentHandlerErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentActionType.html">STPPaymentIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentCaptureMethod.html">STPPaymentIntentCaptureMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSourceActionType.html">STPPaymentIntentSourceActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodCardCheckResult.html">STPPaymentMethodCardCheckResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodCardWalletType.html">STPPaymentMethodCardWalletType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodType.html">STPPaymentMethodType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodUSBankAccountHolderType.html">STPPaymentMethodUSBankAccountHolderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodUSBankAccountType.html">STPPaymentMethodUSBankAccountType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentStatus.html">STPPaymentStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPinStatus.html">STPPinStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPRedirectContextError.html">STPRedirectContextError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentUsage.html">STPSetupIntentUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSourceCard3DSecureStatus.html">STPSourceCard3DSecureStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSourceFlow.html">STPSourceFlow</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSourceRedirectStatus.html">STPSourceRedirectStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSourceStatus.html">STPSourceStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSourceType.html">STPSourceType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSourceUsage.html">STPSourceUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSourceVerificationStatus.html">STPSourceVerificationStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPThreeDSButtonTitleStyle.html">STPThreeDSButtonTitleStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPThreeDSCustomizationButtonType.html">STPThreeDSCustomizationButtonType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPTokenType.html">STPTokenType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSError.html">NSError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/View.html">View</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAPIResponseDecodable.html">STPAPIResponseDecodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPFormEncodable.html">STPFormEncodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments22STPBooleanSuccessBlocka">STPBooleanSuccessBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments26STPCustomerCompletionBlocka">STPCustomerCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments13STPErrorBlocka">STPErrorBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments22STPFileCompletionBlocka">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments30STPJSONResponseCompletionBlocka">STPJSONResponseCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments51STPPaymentHandlerActionPaymentIntentCompletionBlocka">STPPaymentHandlerActionPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments49STPPaymentHandlerActionSetupIntentCompletionBlocka">STPPaymentHandlerActionSetupIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments31STPPaymentIntentCompletionBlocka">STPPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments31STPPaymentMethodCompletionBlocka">STPPaymentMethodCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments32STPPaymentMethodsCompletionBlocka">STPPaymentMethodsCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments21STPPaymentStatusBlocka">STPPaymentStatusBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments21STPPinCompletionBlocka">STPPinCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments30STPRadarSessionCompletionBlocka">STPRadarSessionCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments33STPRedirectContextCompletionBlocka">STPRedirectContextCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments46STPRedirectContextPaymentIntentCompletionBlocka">STPRedirectContextPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments39STPRedirectContextSourceCompletionBlocka">STPRedirectContextSourceCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments29STPSetupIntentCompletionBlocka">STPSetupIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments24STPSourceCompletionBlocka">STPSourceCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments32STPSourceProtocolCompletionBlocka">STPSourceProtocolCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments23STPTokenCompletionBlocka">STPTokenCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:14StripePayments12STPVoidBlocka">STPVoidBlock</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>STPKlarnaLineItem</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPKlarnaLineItem</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>An object representing a line item in a Klarna source.</p>
+<div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <a href="https://stripe.com/docs/sources/klarna#create-source">https://stripe.com/docs/sources/klarna#create-source</a>
+
+</div>
+
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePayments/StripePayments/API Bindings/Models/Sources/Types/STPKlarnaLineItem.swift#L23-L52">Show on GitHub</a>
+              </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)itemType"></a>
+                    <a name="//apple_ref/swift/Property/itemType" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)itemType">itemType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The line item&rsquo;s type. One of <code>sku</code> (for a product), <code>tax</code> (for taxes), or <code>shipping</code> (for shipping costs).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">itemType</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePayments/StripePayments/API Bindings/Models/Sources/Types/STPKlarnaLineItem.swift#L25">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)itemDescription"></a>
+                    <a name="//apple_ref/swift/Property/itemDescription" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)itemDescription">itemDescription</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The human-readable description for the line item.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">itemDescription</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePayments/StripePayments/API Bindings/Models/Sources/Types/STPKlarnaLineItem.swift#L27">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)quantity"></a>
+                    <a name="//apple_ref/swift/Property/quantity" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)quantity">quantity</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The quantity to display for this line item.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">quantity</span><span class="p">:</span> <span class="kt">NSNumber</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePayments/StripePayments/API Bindings/Models/Sources/Types/STPKlarnaLineItem.swift#L29">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)totalAmount"></a>
+                    <a name="//apple_ref/swift/Property/totalAmount" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(py)totalAmount">totalAmount</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The total price of this line item.
+Note: This is the total price after multiplying by the quantity, not
+the price of an individual item. It is denominated in the currency
+of the STPSourceParams which contains it.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">totalAmount</span><span class="p">:</span> <span class="kt">NSNumber</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePayments/StripePayments/API Bindings/Models/Sources/Types/STPKlarnaLineItem.swift#L34">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(im)initWithItemType:itemDescription:quantity:totalAmount:"></a>
+                    <a name="//apple_ref/swift/Method/init(itemType:itemDescription:quantity:totalAmount:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePayments@objc(cs)STPKlarnaLineItem(im)initWithItemType:itemDescription:quantity:totalAmount:">init(itemType:<wbr>itemDescription:<wbr>quantity:<wbr>totalAmount:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initialize this <code>STPKlarnaLineItem</code> with a set of parameters.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">itemType</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a></span><span class="p">,</span> <span class="nv">itemDescription</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">quantity</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">,</span>
+    <span class="nv">totalAmount</span><span class="p">:</span> <span class="kt">NSNumber</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>itemType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The line item&rsquo;s type.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>itemDescription</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The human-readable description for the line item.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>quantity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The quantity to display for this line item.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>totalAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total price of this line item.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.0/StripePayments/StripePayments/API Bindings/Models/Sources/Types/STPKlarnaLineItem.swift#L43-L51">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-31)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

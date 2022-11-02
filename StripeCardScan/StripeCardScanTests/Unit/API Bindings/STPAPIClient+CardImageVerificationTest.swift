@@ -9,6 +9,7 @@
 @testable @_spi(STP) import StripeCore
 import StripeCoreTestUtils
 import OHHTTPStubs
+import OHHTTPStubsSwift
 import XCTest
 
 class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {

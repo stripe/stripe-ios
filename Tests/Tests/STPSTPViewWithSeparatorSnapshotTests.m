@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-#import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import "STPTestUtils.h"
 
+@import iOSSnapshotTestCaseCore;
 
 @interface STPSTPViewWithSeparatorSnapshotTests : FBSnapshotTestCase
 

@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ končící za %2$@";
-
 "%@ - Offline" = "%@ - Offline";
 
-"+ Add" = "+ Přidat";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "Přímé inkasa AU BECS";
 
 "Add New Card…" = "Přidat novou kartu";
 
 "Add a Card" = "Přidat kartu";
 
-"Add a card" = "Přidat kartu";
-
-"Add a payment method" = "Přidat způsob platby";
-
-"Add bank account" = "Přidat bankovní účet";
-
-"Add new payment method" = "Nová platební metoda";
-
-"Add your payment information" = "Přidejte své platební údaje";
-
-"Address line 2 (optional)" = "2. řádek adresy (volitelně)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Byt";
 
-"Are you sure you want to remove this card?" = "Opravdu chcete tuto kartu odebrat?";
-
-"Are you sure you want to remove this linked account?" = "Opravdu chcete tento propojený účet odebrat?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Zpět";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Banka";
-
-"Bank Account" = "Bankovní účet";
-
-"Bank account" = "Bankovní účet";
-
-"Billing Address" = "Fakturační adresa";
-
-"Billing address" = "Fakturační adresa";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Kupte nyní nebo zaplaťte později pomocí Klarna";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Pokračováním souhlasíte s autorizací plateb v souladu s těmito <terms>podmínkami</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se ke službám Link vyjadřujete zároveň svůj souhlas s <terms>Podmínkami</terms> a <privacy>Zásadami ochrany osobních údajů</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Souhlasíte s touto žádostí o přímé inkaso a <terms>smlouvou o službách žádosti o přímé inkaso</terms>a udělujete společnosti Stripe Payments Australia Pty Ltd ACN 160 180 343 identifikační číslo uživatele přímého inkasa 507156 ( „Stripe“) připsat k tíží na váš účet prostřednictvím elektronického systému hromadného zúčtování (BECS) jménem společnosti %@ („Obchodník“) jakoukoli částku, kterou vám Obchodník sdělí. Potvrzujete, že jste vlastníkem účtu nebo osobou s podpisovými právy k výše uvedenému účtu.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Tím, že zadáte informace o platbě a potvrdíte tuto platbu, udělujete společnosti (A) %@ a Stripe, našemu poskytovateli platebních služeb, oprávnění zaslat do vaší banky pokyny k zatížení vašeho účtu a (B) vaší bance zatížit váš účet na základě těchto pokynů. V rámci svých práv máte nárok na refundaci od banky na základě smluvních podmínek vaší smlouvy s bankou. Refundaci je nutné nárokovat během 8 týdnů od data, kdy byl váš účet zatížen. Vaše práva jsou vysvětlena v prohlášení, které můžete získat od banky.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankovního účtu pro společnost %@ souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Karta";
-
-"Card information" = "Informace o kartě";
-
-"Card number" = "Číslo karty";
-
-"Change email" = "Změnit e-mail";
-
-"Choose a payment method" = "Zvolte platební metodu";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Zavřít skener karty";
-
-"Code field" = "Pole pro kód";
-
-"Code sent" = "Kód odeslán";
-
 "Contact" = "Kontakt";
-
-"Default" = "Výchozí";
 
 "Delivery" = "Dodávka";
 
 "Delivery Address" = "Dodací adresa";
 
-"Double tap to edit" = "Dvakrát klepněte pro úpravu";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "Banka EPS";
-
-"Edit" = "Upravit";
-
-"Enter address manually" = "Zadejte adresu ručně";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Zadejte kód zaslaný na %@, abyste mohli používat Link k výchozí platbě.";
-
-"Enter your verification code" = "Zadejte svůj ověřovací kód";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Z bezpečnostních důvodů zadejte znovu bezpečnostní kód své karty.";
-
 "Free" = "Zdarma";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Neplatná dodací adresa";
 
-"Invalid data." = "Neplatná data.";
-
-"Join Link" = "Připojit se k Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Načítání...";
-
-"Log out of Link" = "Odhlásit ze služby Link";
-
-"MM / YY" = "MM / RR";
-
-"MM/YY" = "MM/RR";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Další";
-
-"Not %@?" = "Ne %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Online bankovnictví (FPX)";
 
-"Or" = "Nebo";
-
-"Or pay using" = "Nebo zaplatit pomocí";
-
-"Or pay with a card" = "Nebo zaplatit kartou";
-
-"P24" = "P24";
-
-"Pay %@" = "Zaplatit %@";
-
-"Pay another way" = "Zaplatit jiným způsobem";
-
-"Pay faster at %@ and thousands of merchants." = "Plaťe rychleji u %@ a tisíců obchodníků.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Platbu proveďte v <num_installments/> bezúročných splátkách, každou ve výši <installment_price/>, splácených přes <img/>";
-
-"Pay later with Klarna." = "Zaplaťte později pomocí Klarna.";
-
-"Pay over time with %@" = "Platit průběžně pomocí %@";
-
-"Pay using" = "Zaplatit pomocí";
-
-"Pay with %@" = "Zaplatit metodou %@";
-
-"Pay with your bank account in just a few steps." = "Zaplaťte pomocí bankovního účtu v několika málo krocích.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Platba";
-
 "Payment Method" = "Způsob platby";
-
-"Payment methods" = "Způsoby platby";
-
-"Point the camera at your card." = "Namiřte fotoaparát na kartu.";
-
-"Postal Code" = "Poštovní směrovací číslo";
-
-"Processing..." = "Zpracování...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Banka Przelewy24";
-
-"Remove %1$@ ending in %2$@" = "Odebrat %1$@ končící %2$@";
-
-"Remove Card" = "Odebrat kartu";
-
-"Remove card" = "Odebrat kartu";
-
-"Remove linked account" = "Odebrat propojený účet";
-
-"Resend code" = "Znovu zaslat kód";
-
-"SEPA Debit" = "Debet SEPA";
-
-"SEPA Direct Debit" = "Inkaso SEPA";
-
-"Save for future payments" = "Uložit pro budoucí platby";
-
-"Save my info for secure 1-click checkout" = "Uložit moje údaje pro bezpečné odbavení 1 kliknutím";
-
-"Save this account for future %@ payments" = "Uložit tento účet pro budoucí platby %@";
-
-"Save this card for future %@ payments" = "Uložit tuto kartu pro budoucí platby %@";
-
-"Secure 1⁠-⁠click checkout" = "Bezpečné odbavení 1 kliknutím";
-
-"Select your payment method" = "Vyberte svou platební metodu";
-
-"Set as default" = "Nastavit jako výchozí";
-
-"Set as default payment method" = "Nastavit jako výchozí způsob platby";
-
-"Set up" = "Nastavit";
 
 "Shipping" = "Doprava";
 
-"Shipping Address" = "Dodací adresa";
-
 "Shipping Method" = "Způsob dopravy";
-
-"Show menu" = "Zobrazit nabídku";
-
-"Sign in to your Link account" = "Přihlaste se ke svému účtu Link";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Při propojování účtu se něco pokazilo.\nZkuste to prosím znovu.";
-
-"State / Province / Region" = "Stát / provincie / region";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V průběhu 1 až 2 pracovních dnů vloží Stripe na váš účet vklad ve výšce 0,01 USD. Potom dostanete e-mail s instrukcemi k dokončení platby společnosti %@.";
-
-"Tap to close" = "Klepnutím zavřete";
-
-"Tap to expand" = "Klepnutím rozbalte";
-
-"The BSB you entered is invalid." = "Zadaný BSB je neplatný.";
-
-"The IBAN you entered is incomplete." = "Číslo IBAN, které jste zadali, je neúplné.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadané číslo IBAN je neplatné, \"%@\" není podporovaný kód země.";
-
-"The provided verification code has expired." = "Platnost zadaného ověřovacího kódu vypršela.";
-
-"The provided verification code is incorrect." = "Zadaný ověřovací kód není správný.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Platnost této karty vypršela. Aktualizujte údaje o kartě nebo zvolte jiný způsob platby.";
-
-"This is your default" = "Toto je výchozí nastavení";
-
-"Timed out authenticating your payment method -- try again" = "Časový limit ověření Vašeho způsobu platby uplynul -- zkuste to znovu";
-
-"To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
-
-"Too many attempts. Please try again in a few minutes." = "Příliš mnoho pokusů. Zkuste to prosím za pár minut znovu.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Bankovní účet v USA";
-
-"Unavailable for this purchase" = "Není k dispozici pro tento nákup";
-
-"Unknown" = "Neznámé";
-
-"Update card" = "Aktualizovat kartu";
 
 "Use Billing" = "Použít fakturaci";
 
 "Use Delivery" = "Použít dodání";
 
 "Use Shipping" = "Použít dopravu";
-
-"Use your saved info to check out faster" = "Použijte uložené informace k rychlejšímu odbavení";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nemůžeme ověřit Váš způsob platby. Vyberte si jiný způsob platby a zkuste to znovu.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Číslo IBAN by mělo začínat dvěma písmeny kódu země.";
-
-"Your ZIP is invalid." = "PSČ je neplatné.";
-
-"Your card number is incomplete." = "Číslo karty je neúplné.";
-
-"Your card number is invalid." = "Číslo karty je neplatné.";
-
-"Your card's expiration date is incomplete." = "Datum konce platnosti vaší karty je neúplné.";
-
-"Your card's expiration date is invalid." = "Datum konce platnosti karty je neplatné.";
-
-"Your card's expiration month is invalid." = "Rok konce platnosti vaší karty je neplatný.";
-
-"Your card's expiration year is invalid." = "Rok konce platnosti vaší karty je neplatný.";
-
-"Your card's security code is incomplete." = "Bezpečnostní kód karty je neúplný.";
-
-"Your card's security code is invalid." = "Bezpečnostní kód vaší karty je neplatný.";
-
-"Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
-
-"ZIP Code" = "PSČ";
-
-"card number" = "číslo karty";
-
-"example@example.com" = "příklad@příklad.com";
-
-"expiration date" = "datum konce platnosti";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "Banka iDEAL";

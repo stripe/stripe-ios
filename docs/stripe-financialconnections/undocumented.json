@@ -1,299 +1,320 @@
 {
   "warnings": [
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
       "line": 82,
       "symbol": "STPAPIClient.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 117,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 118,
       "symbol": "AnalyticsClientV2Protocol.makeCommonPayload()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 146,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 147,
       "symbol": "AnalyticsClientV2Protocol.payload(withEventName:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
-      "line": 122,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
+      "line": 125,
       "symbol": "STPAnalyticsClient",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
-      "line": 56,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
+      "line": 58,
       "symbol": "StripeJSONEncoder",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 63,
+      "symbol": "DownloadManager.downloadImage(url:updateHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 202,
+      "symbol": "DownloadManager.imagePlaceHolder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
       "line": 32,
       "symbol": "BundleLocatorProtocol",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/BankAccountToken.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/BankAccountToken.swift",
       "line": 13,
       "symbol": "StripeAPI.BankAccountToken",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 19,
       "symbol": "StripeAPI.FinancialConnectionsAccount.BalanceRefresh",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 31,
       "symbol": "StripeAPI.FinancialConnectionsAccount.CashBalance",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 36,
       "symbol": "StripeAPI.FinancialConnectionsAccount.CreditBalance",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 41,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Balance",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 56,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Owner",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 73,
       "symbol": "StripeAPI.FinancialConnectionsAccount.OwnerList",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 84,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Ownership",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 92,
       "symbol": "StripeAPI.FinancialConnectionsAccount.OwnershipRefresh",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 105,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Category",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 113,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Permissions",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 122,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Status",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 129,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Subcategory",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 139,
       "symbol": "StripeAPI.FinancialConnectionsAccount.SupportedPaymentMethodTypes",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 147,
       "symbol": "StripeAPI.FinancialConnectionsAccount.balance",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 148,
       "symbol": "StripeAPI.FinancialConnectionsAccount.balanceRefresh",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 149,
       "symbol": "StripeAPI.FinancialConnectionsAccount.ownership",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 152,
       "symbol": "StripeAPI.FinancialConnectionsAccount.displayName",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 153,
       "symbol": "StripeAPI.FinancialConnectionsAccount.institutionName",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 154,
       "symbol": "StripeAPI.FinancialConnectionsAccount.last4",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 155,
       "symbol": "StripeAPI.FinancialConnectionsAccount.category",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 156,
       "symbol": "StripeAPI.FinancialConnectionsAccount.created",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 157,
       "symbol": "StripeAPI.FinancialConnectionsAccount.id",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 158,
       "symbol": "StripeAPI.FinancialConnectionsAccount.livemode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 159,
       "symbol": "StripeAPI.FinancialConnectionsAccount.permissions",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 160,
       "symbol": "StripeAPI.FinancialConnectionsAccount.status",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 161,
       "symbol": "StripeAPI.FinancialConnectionsAccount.subcategory",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 23,
       "symbol": "StripeAPI.FinancialConnectionsSession.AccountList.data",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 71,
       "symbol": "StripeAPI.FinancialConnectionsSession.clientSecret",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 72,
       "symbol": "StripeAPI.FinancialConnectionsSession.id",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 73,
       "symbol": "StripeAPI.FinancialConnectionsSession.accounts",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 74,
       "symbol": "StripeAPI.FinancialConnectionsSession.livemode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
-      "line": 42,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
+      "line": 48,
       "symbol": "HostController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
-      "line": 66,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
+      "line": 73,
       "symbol": "HostController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
-      "line": 29,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
+      "line": 30,
       "symbol": "FinancialConnectionsSheet.TokenResult",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-private/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
-      "line": 80,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
+      "line": 93,
       "symbol": "FinancialConnectionsSheet.presentForToken(from:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Web/FinancialConnectionsWebFlowViewController.swift",
+      "line": 209,
+      "symbol": "FinancialConnectionsWebFlowViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/ramont/stripe/stripe-ios-private"
+  "source_directory": "/Users/porter/stripe/stripe-ios"
 }

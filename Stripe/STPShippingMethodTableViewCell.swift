@@ -1,6 +1,6 @@
 //
 //  STPShippingMethodTableViewCell.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 8/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -8,6 +8,7 @@
 
 import PassKit
 import UIKit
+@_spi(STP) import StripePayments
 
 class STPShippingMethodTableViewCell: UITableViewCell {
     private var _theme: STPTheme?
@@ -60,7 +61,7 @@ class STPShippingMethodTableViewCell: UITableViewCell {
         self.subtitleLabel = subtitleLabel
         let amountLabel = UILabel()
         self.amountLabel = amountLabel
-        let checkmarkIcon = UIImageView(image: STPImageLibrary.checkmarkIcon())
+        let checkmarkIcon = UIImageView(image: STPLegacyImageLibrary.checkmarkIcon())
         self.checkmarkIcon = checkmarkIcon
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
