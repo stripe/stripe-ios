@@ -76,8 +76,15 @@ extension PhoneNumber {
 
     /// A regular expression for validating E.164 phone numbers.
     ///
-    /// It matches a plus sign followed by up to 17 digits, where the first digit cannot be zero.
-    private static let e164validationRegex = try! NSRegularExpression(pattern: "^\\+[1-9]\\d{0,16}$")
+    /// Matches a plus sign followed by up to 17 digits, where the first digit cannot be zero.
+    private static let e164ValidationRegex: NSRegularExpression? = {
+        do {
+            return try NSRegularExpression(pattern: "^\\+[1-9]\\d{0,16}$")
+        } catch {
+            assertionFailure(error.localizedDescription)
+            return nil
+        }
+    }()
 
     /// Parses phone numbers in (*globalized*) E.164 format.
     ///
@@ -89,7 +96,7 @@ extension PhoneNumber {
     ///   - locale: User's locale.
     /// - Returns: `PhoneNumber`, or `nil` if the number is not parsable.
     public static func fromE164(_ number: String, locale: Locale = .current) -> PhoneNumber? {
-        guard e164validationRegex.numberOfMatches(in: number, range: NSRange(location: 0, length: number.count)) == 1 else {
+        guard e164ValidationRegex?.numberOfMatches(in: number, range: NSRange(location: 0, length: number.count)) == 1 else {
             return nil
         }
 
