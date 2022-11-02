@@ -51,7 +51,7 @@ final class OneTimeCodeTextField: UIControl {
 
     var textContentType: UITextContentType? = .oneTimeCode
 
-    var inputDelegate: UITextInputDelegate?
+    weak var inputDelegate: UITextInputDelegate?
 
     lazy var tokenizer: UITextInputTokenizer = UITextInputStringTokenizer(textInput: self)
 
