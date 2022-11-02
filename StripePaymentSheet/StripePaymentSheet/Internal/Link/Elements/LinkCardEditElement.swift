@@ -36,7 +36,7 @@ final class LinkCardEditElement: Element {
         return formElement.view
     }
 
-    var delegate: ElementDelegate?
+    weak var delegate: ElementDelegate?
 
     var validationState: ElementValidationState {
         return formElement.validationState
