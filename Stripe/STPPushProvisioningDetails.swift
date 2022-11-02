@@ -34,7 +34,7 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
     // MARK: - STPAPIResponseDecodable
     class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard
-            let dict = response.stp_dictionaryByRemovingNulls()
+            let dict = response?.stp_dictionaryByRemovingNulls()
         else {
             return nil
         }

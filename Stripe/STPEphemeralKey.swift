@@ -51,7 +51,7 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
         var customerID: String?
         var issuingCardID: String?
         for obj in associatedObjects {
-            if let obj = obj as? NSDictionary {
+            if let obj = obj as? [AnyHashable: Any] {
                 let type = obj.stp_string(forKey: "type")
                 if type == "customer" {
                     customerID = obj.stp_string(forKey: "id")
