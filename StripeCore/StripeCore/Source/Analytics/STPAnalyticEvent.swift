@@ -134,7 +134,12 @@ import Foundation
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
-    // MARK: Address Element
+    // MARK: - Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
+    
+    // MARK: - PaymentMethodMessagingView
+    case paymentMethodMessagingViewLoadSucceeded = "pmmv_load_succeeded"
+    case paymentMethodMessagingViewLoadFailed = "pmmv_load_failed"
+    case paymentMethodMessagingViewTapped = "pmmv_tapped"
 }
