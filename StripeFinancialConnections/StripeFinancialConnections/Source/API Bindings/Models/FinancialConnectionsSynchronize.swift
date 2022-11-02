@@ -45,7 +45,7 @@ struct FinancialConnectionsDataAccessNotice: Decodable {
 }
 
 struct FinancialConnectionsBulletPoint: Decodable {
-    let icon: FinancialConnectionsImage
+    let icon: FinancialConnectionsImage?
     let title: String?
     let content: String
     

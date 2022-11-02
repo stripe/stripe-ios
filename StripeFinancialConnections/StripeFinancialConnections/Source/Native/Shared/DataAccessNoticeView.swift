@@ -100,7 +100,7 @@ private func CreateContentView(
                     CreateBulletinView(
                         title: bulletItem.title,
                         subtitle: bulletItem.content,
-                        iconUrl: bulletItem.icon.default,
+                        iconUrl: bulletItem.icon?.default,
                         didSelectURL: didSelectURL
                     )
                 )

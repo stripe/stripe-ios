@@ -30,7 +30,7 @@ class ConsentBodyView: UIView {
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
                     text: bulletItem.content,
-                    iconUrl: bulletItem.icon.default,
+                    iconUrl: bulletItem.icon?.default,
                     action: didSelectURL
                 )
             )
