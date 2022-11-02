@@ -19,9 +19,9 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
     enum Demo: Int {
         static var count: Int {
             if #available(iOS 13.0.0, *) {
-                return 9 + 1
+                return 10 + 1
             } else {
-                return 9
+                return 10
             }
         }
         
@@ -36,6 +36,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         case ChangeTheme
         // SwiftUI Values
         case SwiftUICardFormViewController
+        case PaymentMethodMessagingView
 
         var title: String {
             switch self {
@@ -49,6 +50,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPCardFormViewController: return "Card Form"
             case .ChangeTheme: return "Change Theme"
             case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
+            case .PaymentMethodMessagingView: return "Payment Method Messaging View"
             }
         }
 
@@ -64,6 +66,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPCardFormViewController: return "STPCardFormViewController"
             case .ChangeTheme: return ""
             case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
+            case .PaymentMethodMessagingView: return "PaymentMethodMessagingView"
             }
         }
     }
@@ -199,6 +202,10 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                 // Fallback on earlier versions
                 assertionFailure()
             }
+        case .PaymentMethodMessagingView:
+            let vc = PaymentMethodMessagingViewController()
+            let navigationController = UINavigationController(rootViewController: vc)
+            present(navigationController, animated: true, completion: nil)
         }
     }
 
