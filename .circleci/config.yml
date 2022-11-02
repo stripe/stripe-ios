@@ -325,6 +325,7 @@ jobs:
       - macos/switch-ruby:
           version: "system" # Xcode's ipatool depends on a specific version of ruby, without this App Store archiving will fail
       - run: "sudo gem install bundler"
+      - run: "bundle config set without 'development'"
       - run: "bundle install"
       - run:
           name: "Submit app to Data Theorem for SAST"
