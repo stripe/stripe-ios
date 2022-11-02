@@ -74,6 +74,9 @@ import Foundation
 
 extension PhoneNumber {
 
+    /// A regular expression for validating E.164 phone numbers numbers.
+    static let e164validationRegex = try! NSRegularExpression(pattern: "^\\+[1-9]\\d{2,16}$")
+
     /// Parses phone numbers in (*globalized*) E.164 format.
     ///
     /// - Note: Our metadata lacks national destination code (area code) ranges, because of this we fallback to
@@ -84,20 +87,11 @@ extension PhoneNumber {
     ///   - locale: User's locale.
     /// - Returns: `PhoneNumber`, or `nil` if the number is not parsable.
     public static func fromE164(_ number: String, locale: Locale = .current) -> PhoneNumber? {
-        let characters: [Character] = .init(number)
-
-        // Matching regex: ^\+[1-9]\d{2,14}$
-        guard
-            characters.count > 4,
-            characters.count <= Constants.e164MaxDigits + 1,
-            characters[0] == "+",
-            characters[1] != "0",
-            characters[1...].allSatisfy({
-                $0.unicodeScalars.allSatisfy(CharacterSet.stp_asciiDigit.contains(_:))
-            })
-        else {
+        guard e164validationRegex.numberOfMatches(in: number, range: NSRange(location: 0, length: number.count)) == 1 else {
             return nil
         }
+
+        let characters: [Character] = .init(number)
 
         let makePhoneNumber: (Metadata) -> PhoneNumber = { metadata in
             return PhoneNumber(
