@@ -172,7 +172,7 @@ public class STPPaymentIntent: NSObject {
             "shipping = \(String(describing: shipping))",
             "sourceId = \(String(describing: sourceId))",
             "status = \(String(describing: allResponseFields["status"] as? String))",
-            "unactivatedPaymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "unactivated_payment_method_types") ?? [])",
+            "unactivatedPaymentMethodTypes = \(allResponseFields.stp_array(forKey: "unactivated_payment_method_types") ?? [])",
         ]
 
         return "<\(props.joined(separator: "; "))>"

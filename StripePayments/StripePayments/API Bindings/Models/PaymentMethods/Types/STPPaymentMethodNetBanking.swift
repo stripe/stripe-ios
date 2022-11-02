@@ -38,8 +38,7 @@ public class STPPaymentMethodNetBanking: NSObject, STPAPIResponseDecodable {
     }
 
     required init?(dictionary dict: [AnyHashable: Any]) {
-        let nsDict = dict as NSDictionary
-        guard let bank = nsDict.stp_string(forKey: "bank") else {
+        guard let bank = dict.stp_string(forKey: "bank") else {
             return nil
         }
 

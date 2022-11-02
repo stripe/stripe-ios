@@ -123,10 +123,10 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethod = \(String(describing: paymentMethod))",
             "paymentMethodOptions = \(String(describing: paymentMethodOptions))",
-            "paymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "payment_method_types") ?? [])",
-            "status = \((allResponseFields as NSDictionary).stp_string(forKey: "status") ?? "")",
-            "usage = \((allResponseFields as NSDictionary).stp_string(forKey: "usage") ?? "")",
-            "unactivatedPaymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "unactivated_payment_method_types") ?? [])",
+            "paymentMethodTypes = \(allResponseFields.stp_array(forKey: "payment_method_types") ?? [])",
+            "status = \(allResponseFields.stp_string(forKey: "status") ?? "")",
+            "usage = \(allResponseFields.stp_string(forKey: "usage") ?? "")",
+            "unactivatedPaymentMethodTypes = \(allResponseFields.stp_array(forKey: "unactivated_payment_method_types") ?? [])",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -194,7 +194,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         // required fields
         guard

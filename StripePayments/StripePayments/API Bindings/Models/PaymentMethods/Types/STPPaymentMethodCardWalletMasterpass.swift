@@ -47,7 +47,7 @@ public class STPPaymentMethodCardWalletMasterpass: NSObject, STPAPIResponseDecod
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let masterpass = self.init()
         masterpass.allResponseFields = response

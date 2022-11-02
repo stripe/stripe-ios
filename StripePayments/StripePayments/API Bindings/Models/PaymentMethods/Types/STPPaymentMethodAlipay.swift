@@ -27,7 +27,7 @@ public class STPPaymentMethodAlipay: NSObject, STPAPIResponseDecodable {
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let dict = (response as NSDictionary?)?.stp_dictionaryByRemovingNulls() else {
+        guard let dict = response?.stp_dictionaryByRemovingNulls() else {
             return nil
         }
         return self.init(dictionary: dict)

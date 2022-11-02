@@ -269,7 +269,7 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         // required fields
         let stripeId = dict.stp_string(forKey: "id")
@@ -304,7 +304,7 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
                 fromAPIResponse: rawVerification)
         }
         source.details = dict.stp_dictionary(forKey: rawType ?? "")
-        source.allResponseFields = dict as! [AnyHashable: Any]
+        source.allResponseFields = dict
 
         if source.type == .card {
             if let details1 = source.details {

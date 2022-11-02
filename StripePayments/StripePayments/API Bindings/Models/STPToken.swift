@@ -105,7 +105,7 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else { return nil }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         guard let stripeId = dict.stp_string(forKey: "id"),
             let created = dict.stp_date(forKey: "created"),
             let rawType = dict.stp_string(forKey: "type"),
@@ -126,7 +126,7 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         let rawBankAccount = dict.stp_dictionary(forKey: "bank_account")
         token.bankAccount = STPBankAccount.decodedObject(fromAPIResponse: rawBankAccount)
 
-        token.allResponseFields = dict as! [AnyHashable: Any]
+        token.allResponseFields = dict
 
         return token as? Self
     }

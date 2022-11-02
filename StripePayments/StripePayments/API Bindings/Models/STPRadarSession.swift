@@ -25,7 +25,7 @@ public final class STPRadarSession: NSObject, STPAPIResponseDecodable {
 
     public static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> STPRadarSession? {
         guard let response = response else { return nil }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         guard let id = dict.stp_string(forKey: "id") else {
             return nil
         }

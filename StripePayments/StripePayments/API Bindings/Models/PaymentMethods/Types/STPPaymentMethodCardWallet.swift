@@ -84,7 +84,7 @@ public class STPPaymentMethodCardWallet: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         let wallet = self.init()
         wallet.allResponseFields = response
         wallet.type = self.type(from: dict.stp_string(forKey: "type") ?? "")

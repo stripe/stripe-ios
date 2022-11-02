@@ -90,7 +90,7 @@ public class STPSourceRedirect: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         // required fields
         guard let returnURL = dict.stp_url(forKey: "return_url"),

@@ -22,7 +22,7 @@ import Foundation
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         // Required fields
         guard let data = dict.stp_array(forKey: "data") as? [[AnyHashable: Any]] else {
             return nil

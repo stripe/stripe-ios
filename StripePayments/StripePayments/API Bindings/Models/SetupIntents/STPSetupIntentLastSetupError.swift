@@ -110,7 +110,7 @@ public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         let lastError = self.init()
         lastError.code = dict.stp_string(forKey: "code")
         lastError.declineCode = dict.stp_string(forKey: "decline_code")

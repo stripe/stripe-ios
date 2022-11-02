@@ -60,7 +60,7 @@ public class STPSourceSEPADebitDetails: NSObject, STPAPIResponseDecodable {
     required init(dictionary dict: [AnyHashable: Any]) {
         super.init()
         allResponseFields = dict
-        let dict = (dict as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = dict.stp_dictionaryByRemovingNulls()
         last4 = dict.stp_string(forKey: "last4")
         bankCode = dict.stp_string(forKey: "bank_code")
         country = dict.stp_string(forKey: "country")

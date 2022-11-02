@@ -48,10 +48,10 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
     }
 
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let dict = response, let nsDict = response as NSDictionary?,
-            let expiresAfter = nsDict.stp_date(forKey: "expires_after"),
-            let hostedVoucherURL = nsDict.stp_url(forKey: "hosted_voucher_url"),
-            let number = nsDict.stp_string(forKey: "number")
+        guard let dict = response,
+            let expiresAfter = dict.stp_date(forKey: "expires_after"),
+            let hostedVoucherURL = dict.stp_url(forKey: "hosted_voucher_url"),
+            let number = dict.stp_string(forKey: "number")
         else {
             return nil
         }
