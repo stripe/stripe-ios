@@ -108,6 +108,15 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
+    
+    func recordAuthSessionEvent(
+        clientSecret: String,
+        authSessionId: String,
+        eventNamespace: String,
+        eventName: String
+    ) -> Future<EmptyResponse> {
+        return Promise<EmptyResponse>()
+    }
 }
 
 class SessionFetcherTests: XCTestCase {
