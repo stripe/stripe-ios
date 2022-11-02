@@ -106,12 +106,12 @@ class PaymentSheet_PaymentMethodAvailabilityTest: XCTestCase {
     // MARK: - Afterpay
 
     /// Returns false, Afterpay in `supportedPaymentMethods` but shipping requirement not is met
-    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingSihpping() {
+    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingShipping() {
         XCTAssertFalse(PaymentSheet.supportsAdding(
             paymentMethod: .afterpayClearpay,
             configuration: makeConfiguration(hasReturnURL: true),
             intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
-            supportedPaymentMethods: [.iDEAL])
+            supportedPaymentMethods: [.afterpayClearpay])
         )
     }
 
@@ -121,17 +121,27 @@ class PaymentSheet_PaymentMethodAvailabilityTest: XCTestCase {
             paymentMethod: .afterpayClearpay,
             configuration: makeConfiguration(hasReturnURL: false),
             intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
-            supportedPaymentMethods: [.iDEAL])
+            supportedPaymentMethods: [.afterpayClearpay])
         )
     }
 
-    /// Returns true, Afterpay in `supportedPaymentMethods` and both URL ands shipping requirements are met
+    /// Returns true, Afterpay in `supportedPaymentMethods` and both URL and shipping requirements are met
     func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_bothMet() {
-        XCTAssertFalse(PaymentSheet.supportsAdding(
+        // Afterpay should be supported if PI has shipping...
+        XCTAssertTrue(PaymentSheet.supportsAdding(
             paymentMethod: .afterpayClearpay,
             configuration: makeConfiguration(hasReturnURL: true),
             intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: true)),
-            supportedPaymentMethods: [.iDEAL])
+            supportedPaymentMethods: [.afterpayClearpay])
+        )
+        // ...and also if configuration.allowsPaymentMethodsThatRequireShipping is true
+        var config = makeConfiguration(hasReturnURL: true)
+        config.allowsPaymentMethodsRequiringShippingAddress = true
+        XCTAssertTrue(PaymentSheet.supportsAdding(
+            paymentMethod: .afterpayClearpay,
+            configuration: config,
+            intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
+            supportedPaymentMethods: [.afterpayClearpay])
         )
     }
     
