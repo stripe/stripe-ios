@@ -16,6 +16,7 @@ protocol PartnerAuthDataSource: AnyObject {
     func createAuthSession() -> Future<FinancialConnectionsAuthorizationSession>
     func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Future<FinancialConnectionsAuthorizationSession>
     func cancelPendingAuthSessionIfNeeded()
+    func recordAuthSessionEvent(eventName: String, authSessionId: String)
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
@@ -91,4 +92,33 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             )
         })
     }
+    
+    func recordAuthSessionEvent(
+        eventName: String,
+        authSessionId: String
+    ) {
+        guard ShouldRecordAuthSessionEvent() else {
+            // on Stripe SDK Core analytics client we don't send events
+            // for simulator or tests, so don't send these either...
+            return
+        }
+        
+        apiClient.recordAuthSessionEvent(
+            clientSecret: clientSecret,
+            authSessionId: authSessionId,
+            eventNamespace: "partner-auth-lifecycle",
+            eventName: eventName
+        )
+        .observe { _ in
+            // we don't do anything with the event response
+        }
+    }
+}
+
+private func ShouldRecordAuthSessionEvent() -> Bool {
+#if targetEnvironment(simulator)
+return false
+#else
+return NSClassFromString("XCTest") == nil
+#endif
 }

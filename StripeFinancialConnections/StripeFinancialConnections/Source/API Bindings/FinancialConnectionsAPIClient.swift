@@ -348,6 +348,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                     "event_namespace": eventNamespace,
                     "event_name": eventName,
                     "client_timestamp": clientTimestamp,
+                    // TODO(kgaidis): when we send failure events, correct this to send error details
+                    "raw_event_details": "{}",
                 ]
             ]
         ]
