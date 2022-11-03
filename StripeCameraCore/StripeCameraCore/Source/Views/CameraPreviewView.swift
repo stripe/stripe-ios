@@ -14,11 +14,11 @@ import UIKit
         return layer as! AVCaptureVideoPreviewLayer
     }
 
-    // Camera session that configures the video feed for this view.
-    //
-    // - Note:
-    // A session can only be used on one `PreviewView` at a time. Setting the same
-    // session on a different `PreviewView` will remove it from the previous one.
+    /// Camera session that configures the video feed for this view.
+    ///
+    /// - Note:
+    /// A session can only be used on one `PreviewView` at a time. Setting the same
+    /// session on a different `PreviewView` will remove it from the previous one.
     public weak var session: CameraSessionProtocol? {
         didSet {
             guard oldValue !== session else {
@@ -51,12 +51,12 @@ import UIKit
 
     // MARK: Internal
 
-    // Sets the video capture session in thread-safe way that doesn't block main
-    // thread when configuring the session.
-    //
-    // - Parameters:
-    //   - captureSession: The capture session to set on this view
-    //   - cameraSessionQueue: The CameraSession's queue to configure the session
+    /// Sets the video capture session in thread-safe way that doesn't block main
+    /// thread when configuring the session.
+    ///
+    /// - Parameters:
+    ///   - captureSession: The capture session to set on this view
+    ///   - cameraSessionQueue: The CameraSession's queue to configure the session
     func setCaptureSession(
         _ captureSession: AVCaptureSession?,
         on cameraSessionQueue: DispatchQueue
