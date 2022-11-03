@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 @testable import StripeIdentity
 
 final class MLDetectorMetricsTrackerMock: MLDetectorMetricsTrackerProtocol {
@@ -24,13 +25,14 @@ final class MLDetectorMetricsTrackerMock: MLDetectorMetricsTrackerProtocol {
         self.mockNumFrames = mockNumFrames
     }
 
-    func trackScan(inferenceStart: Date, inferenceEnd: Date, postProcessEnd: Date) { }
+    func trackScan(inferenceStart: Date, inferenceEnd: Date, postProcessEnd: Date) {}
 
-    func reset() { }
+    func reset() {}
 
     func getPerformanceMetrics(
         completeOn queue: DispatchQueue,
-        completion: @escaping (_ averageMetrics: MLDetectorMetricsTracker.Metrics, _ numFrames: Int) -> Void
+        completion: @escaping (_ averageMetrics: MLDetectorMetricsTracker.Metrics, _ numFrames: Int)
+            -> Void
     ) {
         completion(mockAverageMetrics, mockNumFrames)
     }

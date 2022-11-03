@@ -9,9 +9,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/**
- Errors specific to the `IdentityVerificationSheet`.
- */
+/// Errors specific to the `IdentityVerificationSheet`.
 public enum IdentityVerificationSheetError: Error {
     /// The provided client secret is invalid.
     case invalidClientSecret
@@ -31,7 +29,7 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
         switch self {
         case .invalidClientSecret:
             return "Invalid client secret"
-        case .unknown(debugDescription: let debugDescription):
+        case .unknown(let debugDescription):
             return debugDescription
         }
     }
@@ -39,7 +37,7 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
 
 /// :nodoc:
 @_spi(STP) extension IdentityVerificationSheetError: AnalyticLoggableError {
-    
+
     /// The error code
     public var errorCode: Int {
         switch self {
@@ -49,13 +47,13 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
             return 1
         }
     }
-    
+
     /// Serializes this error
     /// - Returns: an error with a domain and code
-    public func analyticLoggableSerializeForLogging() -> [String : Any] {
+    public func analyticLoggableSerializeForLogging() -> [String: Any] {
         return [
             "domain": (self as NSError).domain,
-            "code": errorCode
+            "code": errorCode,
         ]
     }
 }

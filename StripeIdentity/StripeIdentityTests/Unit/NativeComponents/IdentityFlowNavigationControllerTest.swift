@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import StripeIdentity
 
 final class IdentityFlowNavigationControllerTest: XCTestCase {
@@ -31,7 +32,9 @@ final class IdentityFlowNavigationControllerTest: XCTestCase {
 private final class MockDelegate: IdentityFlowNavigationControllerDelegate {
     private(set) var didCallDismiss = false
 
-    func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
+    func identityFlowNavigationControllerDidDismiss(
+        _ navigationController: IdentityFlowNavigationController
+    ) {
         didCallDismiss = true
     }
 }

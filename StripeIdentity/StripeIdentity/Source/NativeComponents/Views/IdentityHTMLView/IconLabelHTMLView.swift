@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class IconLabelHTMLView: UIView {
     typealias Styling = HTMLViewWithIconLabels.Styling
@@ -59,7 +59,9 @@ final class IconLabelHTMLView: UIView {
         adjustIconTopConstraint()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -80,13 +82,13 @@ final class IconLabelHTMLView: UIView {
     }
 }
 
-private extension IconLabelHTMLView {
-    func installViews() {
+extension IconLabelHTMLView {
+    fileprivate func installViews() {
         addSubview(iconView)
         addSubview(textView)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         iconView.translatesAutoresizingMaskIntoConstraints = false
         textView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -105,14 +107,17 @@ private extension IconLabelHTMLView {
             iconView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor),
             iconView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
             iconView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            iconView.trailingAnchor.constraint(equalTo: textView.leadingAnchor, constant: -Styling.iconTextSpacing),
+            iconView.trailingAnchor.constraint(
+                equalTo: textView.leadingAnchor,
+                constant: -Styling.iconTextSpacing
+            ),
             textView.topAnchor.constraint(equalTo: topAnchor),
             textView.trailingAnchor.constraint(equalTo: trailingAnchor),
             textView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 
-    func adjustIconTopConstraint() {
+    fileprivate func adjustIconTopConstraint() {
         // Align the center of the icon with the center of the first line of text
         iconCenterYConstraint.constant = Styling.iconLabelFont.lineHeight / 2
     }

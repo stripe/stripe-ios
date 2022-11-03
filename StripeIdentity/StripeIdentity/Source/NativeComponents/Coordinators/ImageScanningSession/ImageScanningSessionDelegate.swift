@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import AVKit
+import Foundation
 @_spi(STP) import StripeCameraCore
 
 @available(iOSApplicationExtension, unavailable)
@@ -81,60 +81,72 @@ extension ImageScanningSession {
     struct AnyDelegate {
         typealias ScanningSession = ImageScanningSession
 
-        private let cameraDidError: (
-            _ scanningSession: ScanningSession,
-            _ cameraError: Error
-        ) -> Void
+        private let cameraDidError:
+            (
+                _ scanningSession: ScanningSession,
+                _ cameraError: Error
+            ) -> Void
 
-        private let didRequestCameraAccess: (
-            _ scanningSession: ScanningSession,
-            _ isGranted: Bool?
-        ) -> Void
+        private let didRequestCameraAccess:
+            (
+                _ scanningSession: ScanningSession,
+                _ isGranted: Bool?
+            ) -> Void
 
-        private let shouldScanCameraOutput: (
-            _ scanningSession: ScanningSession
-        ) -> Bool?
+        private let shouldScanCameraOutput:
+            (
+                _ scanningSession: ScanningSession
+            ) -> Bool?
 
-        private let didUpdate: (
-            _ scanningSession: ScanningSession
-        ) -> Void
+        private let didUpdate:
+            (
+                _ scanningSession: ScanningSession
+            ) -> Void
 
-        private let didReset: (
-            _ scanningSession: ScanningSession
-        ) -> Void
+        private let didReset:
+            (
+                _ scanningSession: ScanningSession
+            ) -> Void
 
-        private let didTimeout: (
-            _ scanningSession: ScanningSession,
-            _ classification: ExpectedClassificationType
-        ) -> Void
+        private let didTimeout:
+            (
+                _ scanningSession: ScanningSession,
+                _ classification: ExpectedClassificationType
+            ) -> Void
 
-        private let willStartScanning: (
-            _ scanningSession: ScanningSession,
-            _ classification: ExpectedClassificationType
-        ) -> Void
+        private let willStartScanning:
+            (
+                _ scanningSession: ScanningSession,
+                _ classification: ExpectedClassificationType
+            ) -> Void
 
-        private let willStopScanning: (
-            _ scanningSession: ScanningSession
-        ) -> Void
+        private let willStopScanning:
+            (
+                _ scanningSession: ScanningSession
+            ) -> Void
 
-        private let didStopScanning: (
-            _ scanningSession: ScanningSession
-        ) -> Void
+        private let didStopScanning:
+            (
+                _ scanningSession: ScanningSession
+            ) -> Void
 
-        private let didScanImage: (
-            _ scanningSession: ScanningSession,
-            _ image: CGImage,
-            _ scannerOutput: ScannerOutput,
-            _ exifMetadata: CameraExifMetadata?,
-            _ expectedClassification: ExpectedClassificationType
-        ) -> Void
+        private let didScanImage:
+            (
+                _ scanningSession: ScanningSession,
+                _ image: CGImage,
+                _ scannerOutput: ScannerOutput,
+                _ exifMetadata: CameraExifMetadata?,
+                _ expectedClassification: ExpectedClassificationType
+            ) -> Void
 
         init<Delegate: ImageScanningSessionDelegate>(
             _ delegate: Delegate
-        ) where Delegate.ExpectedClassificationType == ExpectedClassificationType,
-                Delegate.ScanningStateType == ScanningStateType,
-                Delegate.CapturedDataType == CapturedDataType,
-                Delegate.ScannerOutput == ScannerOutput
+        )
+        where
+            Delegate.ExpectedClassificationType == ExpectedClassificationType,
+            Delegate.ScanningStateType == ScanningStateType,
+            Delegate.CapturedDataType == CapturedDataType,
+            Delegate.ScannerOutput == ScannerOutput
         {
             // NOTE: All closures must keep a weak reference to delegate
 
@@ -159,11 +171,17 @@ extension ImageScanningSession {
             }
 
             didTimeout = { [weak delegate] scanningSession, classification in
-                delegate?.imageScanningSession(scanningSession, didTimeoutForClassification: classification)
+                delegate?.imageScanningSession(
+                    scanningSession,
+                    didTimeoutForClassification: classification
+                )
             }
 
             willStartScanning = { [weak delegate] scanningSession, classification in
-                delegate?.imageScanningSession(scanningSession, willStartScanningForClassification: classification)
+                delegate?.imageScanningSession(
+                    scanningSession,
+                    willStartScanningForClassification: classification
+                )
             }
 
             willStopScanning = { [weak delegate] scanningSession in
@@ -174,7 +192,13 @@ extension ImageScanningSession {
                 delegate?.imageScanningSessionDidStopScanning(scanningSession)
             }
 
-            didScanImage = { [weak delegate] scanningSession, image, scannerOutput, exifMetadata, expectedClassification in
+            didScanImage = {
+                [weak delegate]
+                scanningSession,
+                image,
+                scannerOutput,
+                exifMetadata,
+                expectedClassification in
 
                 delegate?.imageScanningSessionDidScanImage(
                     scanningSession,
@@ -200,7 +224,8 @@ extension ImageScanningSession {
             didRequestCameraAccess(scanningSession, isGranted)
         }
 
-        func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool? {
+        func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool?
+        {
             return shouldScanCameraOutput(scanningSession)
         }
 
@@ -218,7 +243,7 @@ extension ImageScanningSession {
         ) {
             didTimeout(scanningSession, classification)
         }
-        
+
         func imageScanningSession(
             _ scanningSession: ScanningSession,
             willStartScanningForClassification classification: ExpectedClassificationType

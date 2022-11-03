@@ -6,11 +6,14 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import CoreMedia
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCoreTestUtils
+import XCTest
+
+// swift-format-ignore
+@testable @_spi(STP) import StripeCameraCore
+// swift-format-ignore
+@testable @_spi(STP) import StripeCore
 @testable import StripeIdentity
 
 final class DocumentUploaderTest: XCTestCase {
@@ -51,7 +54,7 @@ final class DocumentUploaderTest: XCTestCase {
                 .idCardFront: 0.9,
                 .idCardBack: 0.8,
                 .passport: 0.7,
-                .invalid: 0.6
+                .invalid: 0.6,
             ]
         ),
         barcode: .init(
@@ -132,7 +135,9 @@ final class DocumentUploaderTest: XCTestCase {
         wait(for: uploadRequestExpectations, timeout: 1)
 
         // Sort requests by fileName since order of requests isn't determinate
-        let uploadRequests = mockAPIClient.imageUpload.requestHistory.sorted(by: { $0.fileName < $1.fileName })
+        let uploadRequests = mockAPIClient.imageUpload.requestHistory.sorted(by: {
+            $0.fileName < $1.fileName
+        })
         let highResRequest = uploadRequests[0]
         let lowResRequest = uploadRequests[1]
 
@@ -143,16 +148,29 @@ final class DocumentUploaderTest: XCTestCase {
 
         // Verify high res image was cropped & low res wasn't based on which is
         // in portrait mode
-        XCTAssertLessThan(highResRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(highResRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
+        XCTAssertLessThan(
+            highResRequest.image.size.height,
+            CGFloat(mockConfig.highResImageMaxDimension)
+        )
+        XCTAssertEqual(
+            highResRequest.image.size.width,
+            CGFloat(mockConfig.highResImageMaxDimension)
+        )
         XCTAssertEqual(lowResRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension))
-        XCTAssertLessThan(lowResRequest.image.size.width, CGFloat(mockConfig.lowResImageMaxDimension))
+        XCTAssertLessThan(
+            lowResRequest.image.size.width,
+            CGFloat(mockConfig.lowResImageMaxDimension)
+        )
 
         // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success((
-            file: DocumentUploaderTest.mockStripeFile,
-            metrics: DocumentUploaderTest.mockUploadMetrics
-        )))
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: DocumentUploaderTest.mockStripeFile,
+                    metrics: DocumentUploaderTest.mockUploadMetrics
+                )
+            )
+        )
         wait(for: [uploadResponseExp], timeout: 1)
     }
 
@@ -193,14 +211,24 @@ final class DocumentUploaderTest: XCTestCase {
             return XCTFail("Expected an upload request")
         }
         XCTAssertEqual(uploadRequest.fileName, prefix)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
+        XCTAssertEqual(
+            uploadRequest.image.size.height,
+            CGFloat(mockConfig.highResImageMaxDimension)
+        )
+        XCTAssertLessThan(
+            uploadRequest.image.size.width,
+            CGFloat(mockConfig.highResImageMaxDimension)
+        )
 
         // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success((
-            file: DocumentUploaderTest.mockStripeFile,
-            metrics: DocumentUploaderTest.mockUploadMetrics
-        )))
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: DocumentUploaderTest.mockStripeFile,
+                    metrics: DocumentUploaderTest.mockUploadMetrics
+                )
+            )
+        )
         wait(for: [uploadResponseExp], timeout: 1)
     }
 
@@ -238,19 +266,21 @@ final class DocumentUploaderTest: XCTestCase {
 
     // Test that both images for the front side of the doc are uploaded
     func testUploadImagesForFrontSide() {
-        verifyUploadSide(.front,
-                         getThisSideUploadFuture: { uploader.frontUploadFuture },
-                         getOtherSideUploadFuture: { uploader.backUploadFuture },
-                         getThisSideUploadStatus: { uploader.frontUploadStatus }
+        verifyUploadSide(
+            .front,
+            getThisSideUploadFuture: { uploader.frontUploadFuture },
+            getOtherSideUploadFuture: { uploader.backUploadFuture },
+            getThisSideUploadStatus: { uploader.frontUploadStatus }
         )
     }
 
     // Test that both images for the back side of the doc are uploaded
     func testUploadImagesForBackSide() {
-        verifyUploadSide(.back,
-                         getThisSideUploadFuture: { uploader.backUploadFuture },
-                         getOtherSideUploadFuture: { uploader.frontUploadFuture },
-                         getThisSideUploadStatus: { uploader.backUploadStatus }
+        verifyUploadSide(
+            .back,
+            getThisSideUploadFuture: { uploader.backUploadFuture },
+            getOtherSideUploadFuture: { uploader.frontUploadFuture },
+            getThisSideUploadStatus: { uploader.backUploadStatus }
         )
     }
 
@@ -297,8 +327,8 @@ final class DocumentUploaderTest: XCTestCase {
     }
 }
 
-private extension DocumentUploaderTest {
-    func uploadMockFrontAndBack() -> [XCTestExpectation] {
+extension DocumentUploaderTest {
+    fileprivate func uploadMockFrontAndBack() -> [XCTestExpectation] {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
 
         uploader.uploadImages(
@@ -319,7 +349,7 @@ private extension DocumentUploaderTest {
         return uploadRequestExpectations
     }
 
-    static func verifyFileData(
+    fileprivate static func verifyFileData(
         _ data: StripeAPI.VerificationPageDataDocumentFileData,
         expectedHighResImage: String,
         expectedLowResImage: String?,
@@ -329,23 +359,53 @@ private extension DocumentUploaderTest {
     ) {
         XCTAssertEqual(data.backScore?.value, 0.8, "backScore", file: file, line: line)
         XCTAssertEqual(data.brightnessValue?.value, 0.5, "brightnessValue", file: file, line: line)
-        XCTAssertEqual(data.cameraLensModel, "mock_model", "cameraLensModel", file: file, line: line)
+        XCTAssertEqual(
+            data.cameraLensModel,
+            "mock_model",
+            "cameraLensModel",
+            file: file,
+            line: line
+        )
         XCTAssertEqual(data.exposureDuration, 250, "exposureDuration", file: file, line: line)
         XCTAssertEqual(data.exposureIso?.value, 0.4, "exposureIso", file: file, line: line)
         XCTAssertEqual(data.focalLength?.value, 33, "focalLength", file: file, line: line)
         XCTAssertEqual(data.frontCardScore?.value, 0.9, "frontCardScore", file: file, line: line)
-        XCTAssertEqual(data.highResImage, expectedHighResImage, "highResImage", file: file, line: line)
+        XCTAssertEqual(
+            data.highResImage,
+            expectedHighResImage,
+            "highResImage",
+            file: file,
+            line: line
+        )
         XCTAssertEqual(data.invalidScore?.value, 0.6, "invalidScore", file: file, line: line)
         XCTAssertEqual(data.iosBarcodeDecoded, true, "iosBarcodeDecoded", file: file, line: line)
-        XCTAssertEqual(data.iosBarcodeSymbology, "pdf417", "iosBarcodeSymbology", file: file, line: line)
-        XCTAssertEqual(data.iosTimeToFindBarcode, 1000, "iosTimeToFindBarcode", file: file, line: line)
+        XCTAssertEqual(
+            data.iosBarcodeSymbology,
+            "pdf417",
+            "iosBarcodeSymbology",
+            file: file,
+            line: line
+        )
+        XCTAssertEqual(
+            data.iosTimeToFindBarcode,
+            1000,
+            "iosTimeToFindBarcode",
+            file: file,
+            line: line
+        )
         XCTAssertEqual(data.isVirtualCamera, true, "isVirtualCamera", file: file, line: line)
         XCTAssertEqual(data.lowResImage, expectedLowResImage, "lowResImage", file: file, line: line)
         XCTAssertEqual(data.passportScore?.value, 0.7, "passportScore", file: file, line: line)
-        XCTAssertEqual(data.uploadMethod, expectedUploadMethod, "uploadMethod", file: file, line: line)
+        XCTAssertEqual(
+            data.uploadMethod,
+            expectedUploadMethod,
+            "uploadMethod",
+            file: file,
+            line: line
+        )
     }
 
-    func verifyUploadSide(
+    fileprivate func verifyUploadSide(
         _ side: DocumentSide,
         getThisSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,
         getOtherSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,
@@ -381,7 +441,9 @@ private extension DocumentUploaderTest {
         XCTAssertEqual(delegateCallCount, 1)
 
         // Sort requests by fileName since order of requests isn't determinate
-        let uploadRequests = mockAPIClient.imageUpload.requestHistory.sorted(by: { $0.fileName < $1.fileName })
+        let uploadRequests = mockAPIClient.imageUpload.requestHistory.sorted(by: {
+            $0.fileName < $1.fileName
+        })
         let highResRequest = uploadRequests[0]
         let lowResRequest = uploadRequests[1]
 
@@ -413,10 +475,14 @@ private extension DocumentUploaderTest {
                 expectedUploadMethod: .autoCapture
             )
         }
-        mockAPIClient.imageUpload.respondToRequests(with: .success((
-            file: DocumentUploaderTest.mockStripeFile,
-            metrics: DocumentUploaderTest.mockUploadMetrics
-        )))
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: DocumentUploaderTest.mockStripeFile,
+                    metrics: DocumentUploaderTest.mockUploadMetrics
+                )
+            )
+        )
         wait(for: [uploadResponseExp], timeout: 1)
 
         XCTAssertEqual(getThisSideUploadStatus(), .complete)
@@ -426,9 +492,9 @@ private extension DocumentUploaderTest {
 
 private class MockDocumentUploaderDelegate: DocumentUploaderDelegate {
     func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol) {}
-    
+
     func documentUploaderDidUploadBack(_ documentUploader: DocumentUploaderProtocol) {}
-    
+
     var callback: () -> Void = {}
 
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader) {
@@ -437,11 +503,14 @@ private class MockDocumentUploaderDelegate: DocumentUploaderDelegate {
 }
 
 extension DocumentUploader.UploadStatus: Equatable {
-    public static func == (lhs: DocumentUploader.UploadStatus, rhs: DocumentUploader.UploadStatus) -> Bool {
+    public static func == (
+        lhs: DocumentUploader.UploadStatus,
+        rhs: DocumentUploader.UploadStatus
+    ) -> Bool {
         switch (lhs, rhs) {
         case (.notStarted, .notStarted),
-             (.inProgress, .inProgress),
-             (.complete, .complete):
+            (.inProgress, .inProgress),
+            (.complete, .complete):
             return true
         case (.error(let leftError), .error(let rightError)):
             return (leftError as NSError).isEqual(rightError as NSError)

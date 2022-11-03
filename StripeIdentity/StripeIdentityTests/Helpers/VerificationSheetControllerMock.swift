@@ -7,15 +7,16 @@
 //
 
 import Foundation
-import XCTest
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
+import UIKit
+import XCTest
+
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
-    
+
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     var collectedData: StripeAPI.VerificationPageCollectedData
@@ -23,15 +24,18 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     let analyticsClient: IdentityAnalyticsClient
 
     var delegate: VerificationSheetControllerDelegate?
-    
+
     var needBack: Bool = true
 
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
-    private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
-    private(set) var frontUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
-    private(set) var backUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    private(set) var uploadedDocumentsResult:
+        Result<DocumentUploaderProtocol.CombinedFileData, Error>?
+    private(set) var frontUploadedDocumentsResult:
+        Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    private(set) var backUploadedDocumentsResult:
+        Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     private(set) var uploadedSelfieResult: Result<SelfieUploader.FileData, Error>?
 
     private(set) var didCheckSubmitAndTransition = false
@@ -39,10 +43,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didSaveDocumentBackAndTransition = false
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
-        flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowControllerMock(),
+        flowController: VerificationSheetFlowControllerProtocol =
+            VerificationSheetFlowControllerMock(),
         collectedData: StripeAPI.VerificationPageCollectedData = .init(),
         mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock(),
-        analyticsClient: IdentityAnalyticsClient = .init(verificationSessionId: "", analyticsClient: MockAnalyticsClientV2())
+        analyticsClient: IdentityAnalyticsClient = .init(
+            verificationSessionId: "",
+            analyticsClient: MockAnalyticsClientV2()
+        )
     ) {
         self.apiClient = apiClient
         self.flowController = flowController
@@ -70,11 +78,12 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     ) {
         didCheckSubmitAndTransition = true
     }
-    
+
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
-        onCompletion: @escaping (_ isBackRequired: Bool) -> Void) {
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void
+    ) {
         didSaveDocumentFrontAndDecideBack = true
         documentUploader.frontUploadFuture?.observe { [self] result in
             self.frontUploadedDocumentsResult = result
@@ -83,14 +92,15 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
             } else {
                 onCompletion(false)
             }
-            
+
         }
     }
-    
+
     func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
-        completion: @escaping () -> Void) {
+        completion: @escaping () -> Void
+    ) {
         didSaveDocumentBackAndTransition = true
         documentUploader.backUploadFuture?.observe { [weak self] result in
             self?.backUploadedDocumentsResult = result

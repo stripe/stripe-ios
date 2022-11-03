@@ -34,18 +34,18 @@ extension VerificationSheetFlowControllerError: LocalizedError {
 }
 
 extension VerificationSheetFlowControllerError: AnalyticLoggableError {
-    func analyticLoggableSerializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any]
         switch self {
         case .missingRequiredInput(let fields):
             payload = [
                 "type": "missing_required_input",
-                "fields": fields.map { $0.rawValue }.sorted()
+                "fields": fields.map { $0.rawValue }.sorted(),
             ]
         case .noScreenForRequirements(let fields):
             payload = [
                 "type": "no_screen_for_requirements",
-                "fields": fields.map { $0.rawValue }.sorted()
+                "fields": fields.map { $0.rawValue }.sorted(),
             ]
         case .missingSelfieConfig:
             payload = [
@@ -54,7 +54,7 @@ extension VerificationSheetFlowControllerError: AnalyticLoggableError {
         case .malformedURL(let value):
             payload = [
                 "type": "malformed_url",
-                "value": value
+                "value": value,
             ]
         case .unknown(let error):
             return error.serializeForLogging()

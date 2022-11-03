@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// The shadowed rounded image view.
 /// Can't set a corner radius and shadow to a single view since `maskToBound` value will conflict.
@@ -36,12 +36,16 @@ class ShadowedCorneredImageView: UIView {
         addAndPinSubview(imageView)
     }
 
-    convenience init(with viewModel: ViewModel) {
+    convenience init(
+        with viewModel: ViewModel
+    ) {
         self.init()
         configure(viewModel: viewModel)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -69,7 +73,8 @@ class ShadowedCorneredImageView: UIView {
     private func updateShadowPath() {
         // Set the view's shadow layer + set the shadow configuration
         // Set the shadow layer to be the same path as the image
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: imageView.layer.cornerRadius).cgPath
+        layer.shadowPath =
+            UIBezierPath(roundedRect: bounds, cornerRadius: imageView.layer.cornerRadius).cgPath
 
     }
 }

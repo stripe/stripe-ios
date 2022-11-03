@@ -6,21 +6,17 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
 import CoreML
+import Foundation
 @_spi(STP) import StripeCameraCore
 import Vision
 
-/**
- Represents the output from the IDDetector ML model.
- */
+/// Represents the output from the IDDetector ML model.
 struct IDDetectorOutput: Equatable {
-    /**
-     Classifications returned by the IDDetector ML model.
-     The raw value of each classification corresponds to the index in the "scores"
-     multi-array of the model's output containing the classification's score.
-     */
+    /// Classifications returned by the IDDetector ML model.
+    /// The raw value of each classification corresponds to the index in the "scores"
+    /// multi-array of the model's output containing the classification's score.
     enum Classification: Int {
         case passport = 0
         case idCardFront = 1
@@ -38,11 +34,9 @@ struct IDDetectorOutput: Equatable {
     let allClassificationScores: [Classification: Float]
 }
 
-/**
- Represents a single prediction from the IDDetector ML model.
- The IDDetector outputs a large set of predictions that are then reduced into an
- IDDetectorOutput using the Non-Maximum Suppression algorithm.
- */
+/// Represents a single prediction from the IDDetector ML model.
+/// The IDDetector outputs a large set of predictions that are then reduced into an
+/// IDDetectorOutput using the Non-Maximum Suppression algorithm.
 struct IDDetectorPrediction: MLBoundingBox {
     let classification: IDDetectorOutput.Classification
     let score: Float
@@ -57,7 +51,6 @@ struct IDDetectorPrediction: MLBoundingBox {
 
 // MARK: - MultiArray
 
-
 extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
 
     /// Expected feature names from the ML model output
@@ -71,13 +64,20 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
         observations: [VNObservation],
         originalImageSize: CGSize
     ) throws {
-        let featureValueObservations = observations.compactMap { $0 as? VNCoreMLFeatureValueObservation }
+        let featureValueObservations = observations.compactMap {
+            $0 as? VNCoreMLFeatureValueObservation
+        }
 
-        guard let scoresObservation = featureValueObservations.first(where: { $0.featureName == FeatureNames.scores.rawValue }),
-              let boxesObservation = featureValueObservations.first(where: { $0.featureName == FeatureNames.boxes.rawValue }),
-              let scoresMultiArray = scoresObservation.featureValue.multiArrayValue,
-              let boxesMultiArray = boxesObservation.featureValue.multiArrayValue,
-              IDDetectorOutput.isValidShape(boxes: boxesMultiArray, scores: scoresMultiArray)
+        guard
+            let scoresObservation = featureValueObservations.first(where: {
+                $0.featureName == FeatureNames.scores.rawValue
+            }),
+            let boxesObservation = featureValueObservations.first(where: {
+                $0.featureName == FeatureNames.boxes.rawValue
+            }),
+            let scoresMultiArray = scoresObservation.featureValue.multiArrayValue,
+            let boxesMultiArray = boxesObservation.featureValue.multiArrayValue,
+            IDDetectorOutput.isValidShape(boxes: boxesMultiArray, scores: scoresMultiArray)
         else {
             throw MLModelUnexpectedOutputError(observations: featureValueObservations)
         }
@@ -90,37 +90,31 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
         )
     }
 
-    /**
-     Initializes `IDDetectorOutput` from multi arrays of boxes and scores using
-     the non-maximum-suppression algorithm to determine the best score and
-     bounding box for each classification.
-     - Parameters:
-       - boxes: The multi array of the "boxes" with a shape of
-                1 x numPredictions x 4 where `boxes[0][n]` returns an array of
-                `[minX, minY, maxX, maxY]`
-       - scores: The multi array of the "scores" with a shape of
-                 1 x numPredictions x numClassifications
-
-     - Returns: `nil` if there are no valid predictions for any classification.
-     */
+    /// Initializes `IDDetectorOutput` from multi arrays of boxes and scores using
+    /// the non-maximum-suppression algorithm to determine the best score and
+    /// bounding box for each classification.
+    /// - Parameters:
+    ///   - boxes: The multi array of the "boxes" with a shape of
+    ///            1 x numPredictions x 4 where `boxes[0][n]` returns an array of
+    ///            `[minX, minY, maxX, maxY]`
+    ///   - scores: The multi array of the "scores" with a shape of
+    ///             1 x numPredictions x numClassifications
+    ///
+    /// - Returns: `nil` if there are no valid predictions for any classification.
     init?(
         boxes: MLMultiArray,
         scores: MLMultiArray,
         originalImageSize: CGSize,
         configuration: IDDetector.Configuration
     ) {
-        /*
-         NOTE: The number of classifications in `scores` may differ from
-         `IDDetectorOutput.Classification` if the model has been updated
-         with additional classifications.
-         */
+        // NOTE: The number of classifications in `scores` may differ from
+        // `IDDetectorOutput.Classification` if the model has been updated
+        // with additional classifications.
         let numClasses = scores.shape[2].intValue
         let numPredictions = scores.shape[1].intValue
 
-        /*
-         Aggregate all of the predictions across all the classifications into
-         one array of bounding boxes.
-         */
+        // Aggregate all of the predictions across all the classifications into
+        // one array of bounding boxes.
         var predictions: [IDDetectorPrediction] = []
         predictions.reserveCapacity(numClasses * numPredictions)
 
@@ -169,14 +163,12 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
         )
     }
 
-    /**
-     Initializes `IDDetectorOutput` from a list of predictions.
-
-     - Parameters:
-       - sortedPredictions: A list of predictions sorted by score from
-                            high to low. There should be, at most, 1 prediction
-                            per classification.
-     */
+    /// Initializes `IDDetectorOutput` from a list of predictions.
+    ///
+    /// - Parameters:
+    ///   - sortedPredictions: A list of predictions sorted by score from
+    ///                        high to low. There should be, at most, 1 prediction
+    ///                        per classification.
     init?(
         sortedPredictions: [IDDetectorPrediction],
         originalImageSize: CGSize
@@ -189,13 +181,11 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
             allClassificationScores[prediction.classification] = prediction.score
         }
 
-        /*
-         Because the IDDetector model is only scanning the center-cropped
-         square region of the original image, the bounding box returned by
-         the model is going to be relative to the center-cropped square.
-         We need to convert the bounding box into coordinates relative to
-         the original image size.
-         */
+        // Because the IDDetector model is only scanning the center-cropped
+        // square region of the original image, the bounding box returned by
+        // the model is going to be relative to the center-cropped square.
+        // We need to convert the bounding box into coordinates relative to
+        // the original image size.
         self.init(
             classification: bestPrediction.classification,
             documentBounds: bestPrediction.rect.convertFromNormalizedCenterCropSquare(
@@ -205,29 +195,23 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
         )
     }
 
-    /**
-     Determines if the multi-arrays output by the IDDetector's ML model have a
-     valid shape that can be parsed into a list of predictions.
-
-     - Parameters:
-       - boxes: The multi array of the "boxes" with a shape of
-                1 x numPredictions x 4 where `boxes[0][n]` returns an array of
-                `[minX, minY, maxX, maxY]`
-       - scores: The multi array of the "scores" with a shape of
-                 1 x numPredictions x numClassifications
-
-     - Returns: True if the multi-arrays have a valid shape that can be parsed into predictions.
-     */
+    /// Determines if the multi-arrays output by the IDDetector's ML model have a
+    /// valid shape that can be parsed into a list of predictions.
+    ///
+    /// - Parameters:
+    ///   - boxes: The multi array of the "boxes" with a shape of
+    ///            1 x numPredictions x 4 where `boxes[0][n]` returns an array of
+    ///            `[minX, minY, maxX, maxY]`
+    ///   - scores: The multi array of the "scores" with a shape of
+    ///             1 x numPredictions x numClassifications
+    ///
+    /// - Returns: True if the multi-arrays have a valid shape that can be parsed into predictions.
     static func isValidShape(
         boxes: MLMultiArray,
         scores: MLMultiArray
     ) -> Bool {
-        return boxes.shape.count == 3 &&
-        boxes.shape[0] == 1 &&
-        boxes.shape[2] == 4 &&
-        scores.shape.count == 3 &&
-        scores.shape[0] == 1 &&
-        scores.shape[2].intValue > 0 &&
-        boxes.shape[1] == scores.shape[1]
+        return boxes.shape.count == 3 && boxes.shape[0] == 1 && boxes.shape[2] == 4
+            && scores.shape.count == 3 && scores.shape[0] == 1 && scores.shape[2].intValue > 0
+            && boxes.shape[1] == scores.shape[1]
     }
 }

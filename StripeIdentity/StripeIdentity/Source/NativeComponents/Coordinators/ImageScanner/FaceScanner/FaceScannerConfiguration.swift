@@ -6,9 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
-
+import Foundation
 
 extension FaceScanner {
     struct Configuration: Equatable {

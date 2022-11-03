@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension UINavigationController {
     func configureBorderlessNavigationBar() {
@@ -38,8 +38,8 @@ extension UINavigationController {
 }
 
 @available(iOS 13.0, *)
-private extension UINavigationBarAppearance {
-    func copyButtonAppearance(from other: UINavigationBarAppearance) {
+extension UINavigationBarAppearance {
+    fileprivate func copyButtonAppearance(from other: UINavigationBarAppearance) {
         // Button appearances will be undefined if using the default configuration.
         // Copying the default undefined configuration will result in an
         // NSInternalInconsistencyException. We can check for undefined by
@@ -64,6 +64,9 @@ private extension UINavigationBarAppearance {
             backButtonAppearance.configureWithDefault(for: .plain)
         }
 
-        setBackIndicatorImage(other.backIndicatorImage, transitionMaskImage: other.backIndicatorTransitionMaskImage)
+        setBackIndicatorImage(
+            other.backIndicatorImage,
+            transitionMaskImage: other.backIndicatorTransitionMaskImage
+        )
     }
 }

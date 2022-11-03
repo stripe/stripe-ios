@@ -9,11 +9,10 @@
 import Foundation
 import Vision
 
-
 extension DocumentScanner {
     struct Configuration {
         // MARK: ID Detector
-        
+
         /// Score threshold for IDDetector
         let idDetectorMinScore: Float
         /// IOU threshold used for NMS for IDDetector
