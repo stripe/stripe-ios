@@ -79,6 +79,11 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func createdAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+        dataSource.recordAuthSessionEvent(
+            eventName: "launched",
+            authSessionId: authorizationSession.id
+        )
+        
         if authorizationSession.isOauth {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
@@ -90,6 +95,11 @@ final class PartnerAuthViewController: UIViewController {
                 }
             )
             view.addAndPinSubview(prepaneView)
+            
+            dataSource.recordAuthSessionEvent(
+                eventName: "loaded",
+                authSessionId: authorizationSession.id
+            )
         } else {
             // a legacy (non-oauth) institution will have a blank background
             // during presenting + dismissing of the Web View, so
@@ -194,6 +204,8 @@ final class PartnerAuthViewController: UIViewController {
         let webAuthenticationSession = ASWebAuthenticationSession(
             url: url,
             callbackURLScheme: "stripe",
+            // note that `error` is NOT related to our backend
+            // sending errors, it's only related to `ASWebAuthenticationSession`
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
                 
@@ -227,6 +239,24 @@ final class PartnerAuthViewController: UIViewController {
                         // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
                         self.navigateBack()
                     }
+                    
+                    // `error` is NOT null when user closes the browser
+                    // by pressing 'Cancel' button
+                    if error != nil {
+                        if authorizationSession.isOauth {
+                            // on "manual cancels" (for OAuth) we log retry event:
+                            self.dataSource.recordAuthSessionEvent(
+                                eventName: "retry",
+                                authSessionId: authorizationSession.id
+                            )
+                        } else {
+                            // on "manual cancels" (for Legacy) we log cancel event:
+                            self.dataSource.recordAuthSessionEvent(
+                                eventName: "cancel",
+                                authSessionId: authorizationSession.id
+                            )
+                        }
+                    }
                 }
                 
                 self.webAuthenticationSession = nil
@@ -255,6 +285,14 @@ final class PartnerAuthViewController: UIViewController {
             // is potentially better than forcing user to close the whole
             // auth session
             navigateBack()
+        } else {
+            // we successfully launched the secure web browser
+            if authorizationSession.isOauth {
+                dataSource.recordAuthSessionEvent(
+                    eventName: "oauth-launched",
+                    authSessionId: authorizationSession.id
+                )
+            }
         }
     }
     

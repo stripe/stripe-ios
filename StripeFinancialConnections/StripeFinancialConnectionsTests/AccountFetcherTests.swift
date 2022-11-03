@@ -129,7 +129,16 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
-
+    
+    func recordAuthSessionEvent(
+        clientSecret: String,
+        authSessionId: String,
+        eventNamespace: String,
+        eventName: String
+    ) -> Future<EmptyResponse> {
+        return Promise<EmptyResponse>()
+    }
+    
     // MARK: - Helpers
 
     private func subarray(start: Int) -> [StripeAPI.FinancialConnectionsAccount] {

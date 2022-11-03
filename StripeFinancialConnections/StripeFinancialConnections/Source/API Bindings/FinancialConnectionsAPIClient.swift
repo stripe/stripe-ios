@@ -58,6 +58,13 @@ protocol FinancialConnectionsAPIClient {
         linkedAccountId: String,
         consumerSessionClientSecret: String?
     ) -> Future<FinancialConnectionsPaymentAccountResource>
+    
+    func recordAuthSessionEvent(
+        clientSecret: String,
+        authSessionId: String,
+        eventNamespace: String,
+        eventName: String
+    ) -> Future<EmptyResponse>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -324,6 +331,34 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
         return pollingHelper.startPollingApiCall()
     }
+    
+    func recordAuthSessionEvent(
+        clientSecret: String,
+        authSessionId: String,
+        eventNamespace: String,
+        eventName: String
+    ) -> Future<EmptyResponse> {
+        let clientTimestamp = Date().timeIntervalSince1970.milliseconds
+        var body: [String:Any] = [
+            "id": authSessionId,
+            "client_secret": clientSecret,
+            "client_timestamp": clientTimestamp,
+            "frontend_events": [
+                [
+                    "event_namespace": eventNamespace,
+                    "event_name": eventName,
+                    "client_timestamp": clientTimestamp,
+                    // TODO(kgaidis): when we send failure events, correct this to send error details
+                    "raw_event_details": "{}",
+                ]
+            ]
+        ]
+        body["key"] = publishableKey
+        return self.post(
+            resource: APIEndpointAuthorizationSessionsEvents,
+            parameters: body
+        )
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -341,3 +376,4 @@ private let APIEndpointAuthorizationSessionsOAuthResults = "connections/auth_ses
 private let APIEndpointAuthorizationSessionsAuthorized = "connections/auth_sessions/authorized"
 private let APIEndpointAuthorizationSessionsAccounts = "connections/auth_sessions/accounts"
 private let APIEndpointAuthorizationSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
+private let APIEndpointAuthorizationSessionsEvents = "connections/auth_sessions/events"
