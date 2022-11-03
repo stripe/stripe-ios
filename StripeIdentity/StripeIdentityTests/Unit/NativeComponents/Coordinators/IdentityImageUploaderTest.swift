@@ -12,6 +12,7 @@ import XCTest
 
 // swift-format-ignore
 @testable @_spi(STP) import StripeCore
+
 @testable import StripeIdentity
 
 final class IdentityImageUploaderTest: XCTestCase {
