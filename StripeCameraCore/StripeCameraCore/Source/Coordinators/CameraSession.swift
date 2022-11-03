@@ -70,34 +70,26 @@ import AVKit
         public let initialCameraPosition: CameraPosition
         /// The initial video orientation of the camera session
         public let initialOrientation: AVCaptureVideoOrientation
-        /**
-         The capture device’s focus mode.
-         - Seealso: https://developer.apple.com/documentation/avfoundation/avcapturedevice/focusmode
-         */
+        // The capture device’s focus mode.
+        // - Seealso: https://developer.apple.com/documentation/avfoundation/avcapturedevice/focusmode
         public let focusMode: AVCaptureDevice.FocusMode?
-        /**
-         The point of interest for focusing.
-         - Seealso:
-         https://developer.apple.com/documentation/avfoundation/avcapturedevice/focuspointofinterest
-         */
+        // The point of interest for focusing.
+        // - Seealso:
+        // https://developer.apple.com/documentation/avfoundation/avcapturedevice/focuspointofinterest
         public let focusPointOfInterest: CGPoint?
         /// A preset value of the quality of the capture session
         public let sessionPreset: AVCaptureSession.Preset
-        /**
-         Video settings for the video output
-         - Seealso: https://developer.apple.com/documentation/avfoundation/avcapturephotosettings/video_settings
-         */
+        // Video settings for the video output
+        // - Seealso: https://developer.apple.com/documentation/avfoundation/avcapturephotosettings/video_settings
         public let outputSettings: [String: Any]
 
-        /**
-         - Parameters:
-           - initialCameraPosition: The initial position of camera: front or back
-           - initialOrientation: The initial video orientation of the camera session
-           - focusMode: The focus mode of the camera session
-           - focusPointOfInterest: The point of interest for focusing
-           - sessionPreset: A preset value of the quality of the capture session
-           - outputSettings: Video settings for the video output
-         */
+        // - Parameters:
+        //   - initialCameraPosition: The initial position of camera: front or back
+        //   - initialOrientation: The initial video orientation of the camera session
+        //   - focusMode: The focus mode of the camera session
+        //   - focusPointOfInterest: The point of interest for focusing
+        //   - sessionPreset: A preset value of the quality of the capture session
+        //   - outputSettings: Video settings for the video output
         public init(
             initialCameraPosition: CameraPosition,
             initialOrientation: AVCaptureVideoOrientation,
@@ -159,18 +151,16 @@ import AVKit
         // This is needed to expose init publicly
     }
 
-    /**
-     Configures the camera session with the initial inputs and outputs.
-
-     If the camera session has been configured already, then the configuration
-     is ignored and the previous setup result is passed to the completion block.
-
-     - Parameters:
-       - configuration: Configuration settings for the session
-       - delegate:
-       - queue: DispatchQueue the completion block should be called on
-       - completion: A block executed when the session is done being configured
-     */
+    // Configures the camera session with the initial inputs and outputs.
+    //
+    // If the camera session has been configured already, then the configuration
+    // is ignored and the previous setup result is passed to the completion block.
+    //
+    // - Parameters:
+    //   - configuration: Configuration settings for the session
+    //   - delegate:
+    //   - queue: DispatchQueue the completion block should be called on
+    //   - completion: A block executed when the session is done being configured
     public func configureSession(
         configuration: Configuration,
         delegate: AVCaptureVideoDataOutputSampleBufferDelegate,
@@ -190,7 +180,8 @@ import AVKit
             self.session.sessionPreset = configuration.sessionPreset
             self.session.commitConfiguration()
 
-            self.configureSessionInput(with: configuration.initialCameraPosition).chained { [weak self] _ -> Future<Void> in
+            self.configureSessionInput(with: configuration.initialCameraPosition).chained {
+                [weak self] _ -> Future<Void> in
                 guard let self = self else {
                     // If self has been deallocated before configuring output, return failure
                     let promise = Promise<Void>()
@@ -230,13 +221,11 @@ import AVKit
         }
     }
 
-    /**
-     Attempts to change the video orientation of both the session output
-     and the preview view layer.
-
-     - Parameters:
-       - orientation: The desired video orientation
-     */
+    // Attempts to change the video orientation of both the session output
+    // and the preview view layer.
+    //
+    // - Parameters:
+    //   - orientation: The desired video orientation
     public func setVideoOrientation(
         orientation: AVCaptureVideoOrientation
     ) {
@@ -248,13 +237,11 @@ import AVKit
         }
     }
 
-    /**
-     Returns the properties from the camera device.
-
-     - Note: This method can only be called on the camera session thread,
-       meaning it's only meant to be called from the output delegate's
-       `captureOutput` method.
-     */
+    // Returns the properties from the camera device.
+    //
+    // - Note: This method can only be called on the camera session thread,
+    //   meaning it's only meant to be called from the output delegate's
+    //   `captureOutput` method.
     public func getCameraProperties() -> CameraSession.DeviceProperties? {
         dispatchPrecondition(condition: .onQueue(sessionQueue))
 
@@ -277,13 +264,11 @@ import AVKit
         )
     }
 
-    /**
-     Attempts to switch camera input to a new camera position.
-     - Parameters:
-       - position: The camera position to toggle to
-       - queue: DispatchQueue the completion block should be called on
-       - completion: A block executed when the camera has finished toggling
-     */
+    // Attempts to switch camera input to a new camera position.
+    // - Parameters:
+    //   - position: The camera position to toggle to
+    //   - queue: DispatchQueue the completion block should be called on
+    //   - completion: A block executed when the camera has finished toggling
     public func toggleCamera(
         to position: CameraPosition,
         completeOn queue: DispatchQueue,
@@ -299,14 +284,12 @@ import AVKit
         self.torchDevice?.toggle()
     }
 
-    /**
-     Starts the camera session, calling a completion block when the session has
-     been started.
-
-     - Parameters:
-       - queue: The queue to call the completion block on
-       - completion: A block executed when the session has been started
-     */
+    // Starts the camera session, calling a completion block when the session has
+    // been started.
+    //
+    // - Parameters:
+    //   - queue: The queue to call the completion block on
+    //   - completion: A block executed when the session has been started
     public func startSession(
         completeOn queue: DispatchQueue,
         completion: @escaping () -> Void
@@ -319,8 +302,9 @@ import AVKit
             }
 
             guard let self = self,
-                  case .success = self.setupResult else {
-                      return
+                case .success = self.setupResult
+            else {
+                return
             }
 
             self.session.startRunning()
@@ -340,8 +324,9 @@ import AVKit
             }
 
             guard let self = self,
-                  case .success = self.setupResult else {
-                      return
+                case .success = self.setupResult
+            else {
+                return
             }
 
             self.session.stopRunning()
@@ -351,8 +336,8 @@ import AVKit
 
 // MARK: - Private
 
-private extension CameraSession {
-    func configureSessionInput(
+extension CameraSession {
+    fileprivate func configureSessionInput(
         with position: CameraPosition
     ) -> Future<Void> {
         let promise = Promise<Void>()
@@ -393,7 +378,7 @@ private extension CameraSession {
         return promise
     }
 
-    func configureSessionOutput(
+    fileprivate func configureSessionOutput(
         with videoSettings: [String: Any],
         orientation: AVCaptureVideoOrientation,
         focusMode: AVCaptureDevice.FocusMode?,
@@ -446,7 +431,7 @@ private extension CameraSession {
         return promise
     }
 
-    func captureDeviceInput(position: CameraPosition) throws -> AVCaptureDeviceInput {
+    fileprivate func captureDeviceInput(position: CameraPosition) throws -> AVCaptureDeviceInput {
         let captureDevices = AVCaptureDevice.DiscoverySession(
             deviceTypes: position.captureDeviceTypes,
             mediaType: .video,
@@ -460,7 +445,7 @@ private extension CameraSession {
         return try AVCaptureDeviceInput(device: captureDevice)
     }
 
-    func setFocusOnCurrentQueue(
+    fileprivate func setFocusOnCurrentQueue(
         focusMode: AVCaptureDevice.FocusMode,
         focusPointOfInterest: CGPoint?
     ) throws {
@@ -476,7 +461,8 @@ private extension CameraSession {
         }
 
         if let focusPointOfInterest = focusPointOfInterest,
-           device.isFocusPointOfInterestSupported {
+            device.isFocusPointOfInterestSupported
+        {
             device.focusPointOfInterest = focusPointOfInterest
         }
 
@@ -487,10 +473,8 @@ private extension CameraSession {
 // MARK: - CameraPosition
 
 extension CameraSession.CameraPosition {
-    /**
-     Returns a list of camera devices, ordered by preferred device, for this
-     camera position.
-     */
+    // Returns a list of camera devices, ordered by preferred device, for this
+    // camera position.
     var captureDeviceTypes: [AVCaptureDevice.DeviceType] {
         switch self {
         case .front:
@@ -518,8 +502,8 @@ extension CameraSession.CameraPosition {
 // MARK: - Result
 
 /// Helper to convert a Result into SetupResult
-private extension Result where Success == Void, Failure == Error {
-    var setupResult: CameraSession.SetupResult {
+extension Result where Success == Void, Failure == Error {
+    fileprivate var setupResult: CameraSession.SetupResult {
         switch self {
         case .success:
             return .success

@@ -5,9 +5,9 @@
 //  Created by Mel Ludowise on 1/21/22.
 //
 
-import Foundation
 import AVKit
-@_spi(STP) @testable import StripeCameraCore
+import Foundation
+@_spi(STP)@testable import StripeCameraCore
 import XCTest
 
 @_spi(STP) public final class MockTestCameraSession: CameraSessionProtocol {
@@ -41,7 +41,9 @@ import XCTest
     // MARK: configureSession
 
     private var configureCompletion: ((CameraSession.SetupResult) -> Void)?
-    public private(set) var configureSessionCompletionExp = XCTestExpectation(description: "configureSession completion block called")
+    public private(set) var configureSessionCompletionExp = XCTestExpectation(
+        description: "configureSession completion block called"
+    )
 
     public private(set) var sessionPreset: AVCaptureSession.Preset?
     public private(set) var outputSettings: [String: Any]?
@@ -112,11 +114,12 @@ import XCTest
         return mockDeviceProperties
     }
 
-
     // MARK: startSession
 
     private var startSessionCompletion: (() -> Void)?
-    public private(set) var startSessionCompletionExp = XCTestExpectation(description: "startSession completion block called")
+    public private(set) var startSessionCompletionExp = XCTestExpectation(
+        description: "startSession completion block called"
+    )
 
     public func startSession(
         completeOn queue: DispatchQueue,
@@ -137,7 +140,9 @@ import XCTest
     // MARK: stopSession
 
     private var stopSessionCompletion: (() -> Void)?
-    public private(set) var stopSessionCompletionExp = XCTestExpectation(description: "stopSession completion block called")
+    public private(set) var stopSessionCompletionExp = XCTestExpectation(
+        description: "stopSession completion block called"
+    )
 
     public func stopSession(
         completeOn queue: DispatchQueue,
