@@ -66,7 +66,15 @@ extension HostController: HostViewControllerDelegate {
         delegate?.hostController(self, viewController: viewController, didFinish: .failed(error: error))
     }
 
-    func hostViewController(_ viewController: HostViewController, didFetch synchronizePayload: FinancialConnectionsSynchronize) {
+    func hostViewController(
+        _ viewController: HostViewController,
+        didFetch synchronizePayload: FinancialConnectionsSynchronize
+    ) {
+        guard let consentPaneModel = synchronizePayload.text?.consentPane else {
+            continueWithWebFlow(synchronizePayload.manifest)
+            return
+        }
+        
         let flowRouter = FlowRouter(synchronizePayload: synchronizePayload,
                                     analyticsClient: analyticsClient)
         defer {
@@ -83,7 +91,8 @@ extension HostController: HostViewControllerDelegate {
         navigationController.configureAppearanceForNative()
 
         let dataManager = AuthFlowAPIDataManager(
-            synchronizePayload: synchronizePayload,
+            manifest: synchronizePayload.manifest,
+            consentPaneModel: consentPaneModel,
             apiClient: api,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient

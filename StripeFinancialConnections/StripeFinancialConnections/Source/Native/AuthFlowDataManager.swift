@@ -10,7 +10,7 @@ import Foundation
 
 protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
-    var consent: FinancialConnectionsConsent { get }
+    var consentPaneModel: FinancialConnectionsConsent { get }
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
@@ -33,7 +33,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
             didUpdateManifest()
         }
     }
-    let consent: FinancialConnectionsConsent
+    let consentPaneModel: FinancialConnectionsConsent
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -46,13 +46,14 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     var accountNumberLast4: String?
 
     init(
-        synchronizePayload: FinancialConnectionsSynchronize,
+        manifest: FinancialConnectionsSessionManifest,
+        consentPaneModel: FinancialConnectionsConsent,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
-        self.manifest = synchronizePayload.manifest
-        self.consent = synchronizePayload.text.consentPane
+        self.manifest = manifest
+        self.consentPaneModel = consentPaneModel
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient

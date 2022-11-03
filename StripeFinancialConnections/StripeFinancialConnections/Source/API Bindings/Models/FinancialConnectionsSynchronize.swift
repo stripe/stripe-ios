@@ -10,10 +10,10 @@ import Foundation
 struct FinancialConnectionsSynchronize: Decodable {
     
     let manifest: FinancialConnectionsSessionManifest
-    let text: Text
+    let text: Text?
     
     struct Text: Decodable {
-        let consentPane: FinancialConnectionsConsent
+        let consentPane: FinancialConnectionsConsent?
     }
 }
 
