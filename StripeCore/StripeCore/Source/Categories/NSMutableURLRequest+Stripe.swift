@@ -23,15 +23,21 @@ extension URLRequest {
         let formData = URLEncoder.queryString(from: formPayload).data(using: .utf8)
         httpBody = formData
         setValue(
-            String(format: "%lu", UInt(formData?.count ?? 0)), forHTTPHeaderField: "Content-Length")
+            String(format: "%lu", UInt(formData?.count ?? 0)),
+            forHTTPHeaderField: "Content-Length"
+        )
         setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
     }
 
     @_spi(STP) public mutating func stp_setMultipartForm(_ data: Data?, boundary: String?) {
         httpBody = data
         setValue(
-            String(format: "%lu", UInt(data?.count ?? 0)), forHTTPHeaderField: "Content-Length")
+            String(format: "%lu", UInt(data?.count ?? 0)),
+            forHTTPHeaderField: "Content-Length"
+        )
         setValue(
-            "multipart/form-data; boundary=\(boundary ?? "")", forHTTPHeaderField: "Content-Type")
+            "multipart/form-data; boundary=\(boundary ?? "")",
+            forHTTPHeaderField: "Content-Type"
+        )
     }
 }
