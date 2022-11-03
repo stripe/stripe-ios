@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import XCTest
 @_spi(STP) import StripeUICore
+import XCTest
 
 class STPVPANumberValidatorTest: XCTestCase {
     func testValidVPAs() {
@@ -25,7 +25,11 @@ class STPVPANumberValidatorTest: XCTestCase {
         XCTAssertFalse(STPVPANumberValidator.stringIsValidVPANumber("test@stripe.com"))
         XCTAssertFalse(STPVPANumberValidator.stringIsValidVPANumber("stripe"))
         XCTAssertFalse(STPVPANumberValidator.stringIsValidVPANumber("stripe@gmail.com"))
-        XCTAssertFalse(STPVPANumberValidator.stringIsValidVPANumber("this-vpa-id-is-too-long-30-chars"))
-        XCTAssertFalse(STPVPANumberValidator.stringIsValidVPANumber("test31c_1234@numberofcharacters"))
+        XCTAssertFalse(
+            STPVPANumberValidator.stringIsValidVPANumber("this-vpa-id-is-too-long-30-chars")
+        )
+        XCTAssertFalse(
+            STPVPANumberValidator.stringIsValidVPANumber("test31c_1234@numberofcharacters")
+        )
     }
 }

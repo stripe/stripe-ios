@@ -6,17 +6,17 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(STP)@testable import StripeUICore
+import iOSSnapshotTestCase
 
 class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
-    
+
     func testEmptyUS() {
         let sut = PhoneNumberElement(
             allowedCountryCodes: ["US"],

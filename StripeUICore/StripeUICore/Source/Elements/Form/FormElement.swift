@@ -9,11 +9,9 @@
 import Foundation
 import UIKit
 
-/**
- The top-most, parent Element Element container.
- Displays its views in a vertical stack.
- Coordinates focus between its child Elements.
- */
+/// The top-most, parent Element Element container.
+/// Displays its views in a vertical stack.
+/// Coordinates focus between its child Elements.
 @_spi(STP) public class FormElement: ContainerElement {
     weak public var delegate: ElementDelegate?
     lazy var formView: FormView = {
@@ -23,7 +21,7 @@ import UIKit
     public let elements: [Element]
     public let style: Style
     public let theme: ElementsUITheme
-    
+
     // MARK: - Style
     public enum Style {
         /// Default element styling in stack view
@@ -37,7 +35,11 @@ import UIKit
         let elements: [UIView]
         let bordered: Bool
         let theme: ElementsUITheme
-        public init(elements: [UIView], bordered: Bool, theme: ElementsUITheme = .default) {
+        public init(
+            elements: [UIView],
+            bordered: Bool,
+            theme: ElementsUITheme = .default
+        ) {
             self.elements = elements
             self.bordered = bordered
             self.theme = theme
@@ -45,16 +47,27 @@ import UIKit
     }
 
     var viewModel: ViewModel {
-        return ViewModel(elements: elements.map({ $0.view }), bordered: style == .bordered, theme: theme)
+        return ViewModel(
+            elements: elements.map({ $0.view }),
+            bordered: style == .bordered,
+            theme: theme
+        )
     }
-    
+
     // MARK: - Initializer
-  
-    public convenience init(elements: [Element?], theme: ElementsUITheme = .default) {
+
+    public convenience init(
+        elements: [Element?],
+        theme: ElementsUITheme = .default
+    ) {
         self.init(elements: elements, style: .plain, theme: theme)
     }
 
-    public init(elements: [Element?], style: Style, theme: ElementsUITheme = .default) {
+    public init(
+        elements: [Element?],
+        style: Style,
+        theme: ElementsUITheme = .default
+    ) {
         self.elements = elements.compactMap { $0 }
         self.style = style
         self.theme = theme

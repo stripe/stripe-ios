@@ -7,16 +7,14 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
-/**
- A generic text field whose logic is extracted into `TextFieldElementConfiguration`.
- 
- - Seealso: `TextFieldElementConfiguration`
- */
+/// A generic text field whose logic is extracted into `TextFieldElementConfiguration`.
+///
+/// - Seealso: `TextFieldElementConfiguration`
 @_spi(STP) public final class TextFieldElement {
-    
+
     // MARK: - Properties
     weak public var delegate: ElementDelegate?
     lazy var textFieldView: TextFieldView = {
@@ -38,27 +36,31 @@ import UIKit
             isUserEditing: isEditing
         )
     }
-    
+
     private let theme: ElementsUITheme
-    
+
     public var inputAccessoryView: UIView? {
         set {
             textFieldView.textField.inputAccessoryView = newValue
         }
-        
+
         get {
             return textFieldView.textField.inputAccessoryView
         }
     }
-    
+
     // MARK: - ViewModel
     public struct KeyboardProperties {
-        public init(type: UIKeyboardType, textContentType: UITextContentType?, autocapitalization: UITextAutocapitalizationType) {
+        public init(
+            type: UIKeyboardType,
+            textContentType: UITextContentType?,
+            autocapitalization: UITextAutocapitalizationType
+        ) {
             self.type = type
             self.textContentType = textContentType
             self.autocapitalization = autocapitalization
         }
-        
+
         let type: UIKeyboardType
         let textContentType: UITextContentType?
         let autocapitalization: UITextAutocapitalizationType
@@ -74,7 +76,7 @@ import UIKit
         let shouldShowClearButton: Bool
         let theme: ElementsUITheme
     }
-    
+
     var viewModel: ViewModel {
         let placeholder: String = {
             if !configuration.isOptional {
@@ -89,7 +91,10 @@ import UIKit
             accessibilityLabel: configuration.accessibilityLabel,
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
-            validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
+            validationState: configuration.validate(
+                text: text,
+                isOptional: configuration.isOptional
+            ),
             logo: configuration.logo(for: text),
             shouldShowClearButton: configuration.shouldShowClearButton,
             theme: theme
@@ -97,16 +102,19 @@ import UIKit
     }
 
     // MARK: - Initializer
-    
-    public required init(configuration: TextFieldElementConfiguration, theme: ElementsUITheme = .default) {
+
+    public required init(
+        configuration: TextFieldElementConfiguration,
+        theme: ElementsUITheme = .default
+    ) {
         self.configuration = configuration
         self.theme = theme
     }
-    
+
     /// Call this to manually set the text of the text field.
     public func setText(_ text: String) {
         self.text = sanitize(text: text)
-        
+
         // Since we're setting the text manually, disable any previous autofill
         didReceiveAutofill = false
 
@@ -116,9 +124,11 @@ import UIKit
     }
 
     // MARK: - Helpers
-    
+
     func sanitize(text: String) -> String {
-        let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+        let sanitizedText = text.stp_stringByRemovingCharacters(
+            from: configuration.disallowedCharacters
+        )
         return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
     }
 }
@@ -129,12 +139,12 @@ extension TextFieldElement: Element {
     public var view: UIView {
         return textFieldView
     }
-    
+
     @discardableResult
     public func beginEditing() -> Bool {
         return textFieldView.textField.becomeFirstResponder()
     }
-    
+
     @discardableResult
     public func endEditing(_ force: Bool = false, continueToNextField: Bool = true) -> Bool {
         let didResign = textFieldView.endEditing(force)
@@ -166,12 +176,12 @@ extension TextFieldElement: TextFieldViewDelegate {
         }
         isEditing = view.isEditing
         didReceiveAutofill = view.didReceiveAutofill
-        
+
         // Glue: Update the view and our delegate
         view.updateUI(with: viewModel)
         delegate?.didUpdate(element: self)
     }
-    
+
     func textFieldViewContinueToNextField(view: TextFieldView) {
         isEditing = view.isEditing
         delegate?.continueToNextField(element: self)

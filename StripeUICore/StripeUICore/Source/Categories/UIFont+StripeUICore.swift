@@ -8,9 +8,9 @@
 
 import UIKit
 
-@_spi(STP) public extension UIFont {
+@_spi(STP) extension UIFont {
 
-    func scaled(
+    public func scaled(
         withTextStyle textStyle: UIFont.TextStyle,
         maximumPointSize: CGFloat? = nil,
         compatibleWith traitCollection: UITraitCollection? = nil

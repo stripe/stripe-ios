@@ -10,14 +10,14 @@ import UIKit
 
 // MARK: - Animation utilities
 
-@_spi(STP) public extension UIStackView {
+@_spi(STP) extension UIStackView {
 
     /// Hides an arranged subview with optional animation.
     ///
     /// - Parameters:
     ///   - index: The index of the arranged subview to hide.
     ///   - animated: Whether or not to animate the transition.
-    func showArrangedSubview(at index: Int, animated: Bool) {
+    public func showArrangedSubview(at index: Int, animated: Bool) {
         let view = arrangedSubviews[index]
         toggleArrangedSubview(view, shouldShow: true, animated: animated)
     }
@@ -27,7 +27,7 @@ import UIKit
     /// - Parameters:
     ///   - index: The index of the arranged subview to hide.
     ///   - animated: Whether or not to animate the transition.
-    func hideArrangedSubview(at index: Int, animated: Bool) {
+    public func hideArrangedSubview(at index: Int, animated: Bool) {
         let view = arrangedSubviews[index]
         toggleArrangedSubview(view, shouldShow: false, animated: animated)
     }
@@ -38,7 +38,7 @@ import UIKit
     ///   - view: Arranged subview to update.
     ///   - shouldShow: Whether or not to show the view.
     ///   - animated: Whether or not to animate the transition.
-    func toggleArrangedSubview(_ view: UIView, shouldShow: Bool, animated: Bool) {
+    public func toggleArrangedSubview(_ view: UIView, shouldShow: Bool, animated: Bool) {
         toggleArrangedSubviews([view], shouldShow: shouldShow, animated: animated)
     }
 
@@ -48,7 +48,11 @@ import UIKit
     ///   - index: The index of the arranged subview to be removed.
     ///   - animated: Whether or not to animate the removal.
     ///   - completion: A block to be called after removing the view.
-    func removeArrangedSubview(at index: Int, animated: Bool, completion: (() -> Void)? = nil) {
+    public func removeArrangedSubview(
+        at index: Int,
+        animated: Bool,
+        completion: (() -> Void)? = nil
+    ) {
         removeArrangedSubview(arrangedSubviews[index], animated: animated, completion: completion)
     }
 
@@ -58,7 +62,11 @@ import UIKit
     ///   - view: The view to be removed from the array of views arranged by the stack.
     ///   - animated: Whether or not to animate the removal.
     ///   - completion: A block to be called after removing the view.
-    func removeArrangedSubview(_ view: UIView, animated: Bool, completion: (() -> Void)? = nil) {
+    public func removeArrangedSubview(
+        _ view: UIView,
+        animated: Bool,
+        completion: (() -> Void)? = nil
+    ) {
         toggleArrangedSubviews([view], shouldShow: false, animated: animated) { _ in
             view.removeFromSuperview()
             view.isHidden = false
@@ -79,7 +87,7 @@ import UIKit
     ///   - shouldShow: Whether or not it should show the views.
     ///   - animated: Whether or not to animate the transition.
     ///   - completion: A block to be called when the animation finishes.
-    func toggleArrangedSubviews(
+    public func toggleArrangedSubviews(
         _ views: [UIView],
         shouldShow: Bool,
         animated: Bool,

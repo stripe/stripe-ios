@@ -6,13 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP)@testable import StripeUICore
 import XCTest
-@_spi(STP) @testable import StripeUICore
 
 final class DateFieldElementTest: XCTestCase {
     // Mock dates
-    let oct1_2021 = Date(timeIntervalSince1970: 1633046400)
-    let oct3_2021 = Date(timeIntervalSince1970: 1633219200)
+    let oct1_2021 = Date(timeIntervalSince1970: 1_633_046_400)
+    let oct3_2021 = Date(timeIntervalSince1970: 1_633_219_200)
 
     func testNoDefault() {
         let element = DateFieldElement(label: "")

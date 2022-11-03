@@ -32,14 +32,24 @@ import UIKit
     public static var backgroundColor: UIColor {
         return .dynamic(
             light: .systemBackground,
-            dark: UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
+            dark: UIColor(
+                red: 116.0 / 255.0,
+                green: 116.0 / 255.0,
+                blue: 128.0 / 255.0,
+                alpha: 0.18
+            )
         )
     }
 
     public static var disabledBackgroundColor: UIColor {
         return .dynamic(
             light: UIColor(red: 248.0 / 255.0, green: 248.0 / 255.0, blue: 248.0 / 255.0, alpha: 1),
-            dark: UIColor(red: 116.0 / 255.0, green: 116.0 / 255.0, blue: 128.0 / 255.0, alpha: 0.18)
+            dark: UIColor(
+                red: 116.0 / 255.0,
+                green: 116.0 / 255.0,
+                blue: 128.0 / 255.0,
+                alpha: 0.18
+            )
         )
     }
 }

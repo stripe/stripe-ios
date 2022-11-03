@@ -8,14 +8,14 @@
 
 import UIKit
 
-@_spi(STP) public extension UIColor {
+@_spi(STP) extension UIColor {
 
     /// Increases the brightness of the color by the given `amount`.
     ///
     /// The brightness of the resulting color will be clamped to a max value of`1.0`.
     /// - Parameter amount: Adjustment amount (range: 0.0 - 1.0.)
     /// - Returns: Adjusted color.
-    func lighten(by amount: CGFloat) -> UIColor {
+    public func lighten(by amount: CGFloat) -> UIColor {
         return byModifyingBrightness { min($0 + amount, 1) }
     }
 
@@ -24,11 +24,11 @@ import UIKit
     /// The brightness of the resulting color will be clamped to a min value of`0.0`.
     /// - Parameter amount: Adjustment amount (range: 0.0 - 1.0.)
     /// - Returns: Adjusted color.
-    func darken(by amount: CGFloat) -> UIColor {
+    public func darken(by amount: CGFloat) -> UIColor {
         return byModifyingBrightness { max($0 - amount, 0) }
     }
 
-    static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
+    public static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
         return UIColor(dynamicProvider: { (traitCollection) in
             switch traitCollection.userInterfaceStyle {
             case .light, .unspecified:
@@ -40,7 +40,7 @@ import UIKit
             }
         })
     }
-    
+
     /// The relative luminance of the color.
     ///
     /// # Reference
@@ -48,7 +48,7 @@ import UIKit
     /// * [Relative Luminance](https://en.wikipedia.org/wiki/Relative_luminance)
     /// * [WCAG 2.2 specification](https://www.w3.org/TR/WCAG21/#dfn-relative-luminance)
     ///
-    var luminance: CGFloat {
+    public var luminance: CGFloat {
         var sr: CGFloat = 0
         var sg: CGFloat = 0
         var sb: CGFloat = 0
@@ -77,18 +77,18 @@ import UIKit
     ///
     /// - Parameter other: Color to calculate the contrast against.
     /// - Returns: Contrast ratio.
-    func contrastRatio(to other: UIColor) -> CGFloat {
+    public func contrastRatio(to other: UIColor) -> CGFloat {
         let luminanceA = self.luminance
         let luminanceB = other.luminance
         return (max(luminanceA, luminanceB) + 0.05) / (min(luminanceA, luminanceB) + 0.05)
     }
-    
+
     /// Returns a contrasting color to this color
     /// - Returns: Either white or black color depending on which will contrast best with this color
-    var contrastingColor: UIColor {
+    public var contrastingColor: UIColor {
         let contrastRatioToWhite = contrastRatio(to: .white)
         let contrastRatioToBlack = contrastRatio(to: .black)
-        
+
         let isDarkMode = UITraitCollection.current.isDarkMode
 
         // Prefer using a white foreground as long as a minimum contrast threshold is met.
@@ -98,18 +98,18 @@ import UIKit
         if contrastRatioToWhite > threshold {
             return .white
         }
-        
+
         // Pick the foreground color that offers the best contrast ratio
         return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
     }
-    
+
     /// Returns this color in a "disabled" state by reducing the alpha by 40%
-    var disabledColor: UIColor {
+    public var disabledColor: UIColor {
         return self.withAlphaComponent(0.6)
     }
-    
+
     /// The rgba space of the color
-    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+    public var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
@@ -123,13 +123,13 @@ import UIKit
 
 // MARK: - Helpers
 
-private extension UIColor {
+extension UIColor {
 
     /// Transforms the brightness and returns the resulting color.
     ///
     /// - Parameter transform: A block for transforming the brightness.
     /// - Returns: Updated color.
-    func byModifyingBrightness(_ transform: @escaping (CGFloat) -> CGFloat) -> UIColor {
+    fileprivate func byModifyingBrightness(_ transform: @escaping (CGFloat) -> CGFloat) -> UIColor {
         // Similar to `UIColor.withAlphaComponent()`, the returned color must be dynamic. This ensures
         // that the color automatically adapts between light and dark mode.
         return UIColor(dynamicProvider: { _ in

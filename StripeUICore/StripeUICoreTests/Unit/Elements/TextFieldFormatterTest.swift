@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP)@testable import StripeUICore
 import XCTest
-@_spi(STP) @testable import StripeUICore
 
 final class TextFieldFormatterTest: XCTestCase {
     // TODO: Test that we don't get lagging characters (e.g. `###-##-` should always drop the last `-` when formatted
@@ -59,12 +59,19 @@ final class TextFieldFormatterTest: XCTestCase {
 
 // MARK: - Helpers
 
-private extension TextFieldFormatterTest {
-    func verifyFormat(format: String,
-                      input: String,
-                      expectedOutput: String,
-                      file: StaticString = #filePath,
-                      line: UInt = #line) {
-        XCTAssertEqual(TextFieldFormatter(format: format)?.applyFormat(to: input), expectedOutput, file: file, line: line)
+extension TextFieldFormatterTest {
+    fileprivate func verifyFormat(
+        format: String,
+        input: String,
+        expectedOutput: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(
+            TextFieldFormatter(format: format)?.applyFormat(to: input),
+            expectedOutput,
+            file: file,
+            line: line
+        )
     }
 }

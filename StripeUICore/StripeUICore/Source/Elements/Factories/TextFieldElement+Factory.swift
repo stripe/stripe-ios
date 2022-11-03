@@ -7,13 +7,13 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
-@_spi(STP) public extension TextFieldElement {
-    
+@_spi(STP) extension TextFieldElement {
+
     // MARK: - Name
-    struct NameConfiguration: TextFieldElementConfiguration {
+    public struct NameConfiguration: TextFieldElementConfiguration {
         @frozen public enum NameType {
             case given, family, full, onAccount
         }
@@ -34,7 +34,12 @@ import UIKit
         }
 
         /// - Parameter label: If `nil`, defaults to a string on the `type` e.g. "Name"
-        public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false) {
+        public init(
+            type: NameType = .full,
+            defaultValue: String?,
+            label: String? = nil,
+            isOptional: Bool = false
+        ) {
             self.type = type
             self.defaultValue = defaultValue
             if let label = label {
@@ -46,9 +51,13 @@ import UIKit
         }
 
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-            return .init(type: .namePhonePad, textContentType: textContentType, autocapitalization: .words)
+            return .init(
+                type: .namePhonePad,
+                textContentType: textContentType,
+                autocapitalization: .words
+            )
         }
-        
+
         private static func label(for type: NameType) -> String {
             switch type {
             case .given:
@@ -62,14 +71,21 @@ import UIKit
             }
         }
     }
-    
-    static func makeName(label: String? = nil, defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue, label: label), theme: theme)
+
+    public static func makeName(
+        label: String? = nil,
+        defaultValue: String?,
+        theme: ElementsUITheme = .default
+    ) -> TextFieldElement {
+        return TextFieldElement(
+            configuration: NameConfiguration(type: .full, defaultValue: defaultValue, label: label),
+            theme: theme
+        )
     }
 
     // MARK: - Email
-    
-    struct EmailConfiguration: TextFieldElementConfiguration {
+
+    public struct EmailConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.email
         public let defaultValue: String?
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
@@ -89,80 +105,107 @@ import UIKit
         }
 
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-            return .init(type: .emailAddress, textContentType: .emailAddress, autocapitalization: .none)
+            return .init(
+                type: .emailAddress,
+                textContentType: .emailAddress,
+                autocapitalization: .none
+            )
         }
     }
-    
-    static func makeEmail(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue), theme: theme)
+
+    public static func makeEmail(
+        defaultValue: String?,
+        theme: ElementsUITheme = .default
+    ) -> TextFieldElement {
+        return TextFieldElement(
+            configuration: EmailConfiguration(defaultValue: defaultValue),
+            theme: theme
+        )
     }
-    
+
     // MARK: VPA
-    
-    struct VPAConfiguration: TextFieldElementConfiguration {
+
+    public struct VPAConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.upi_id
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
             localizedDescription: .Localized.invalid_upi_id
         )
-        
+
         public func validate(text: String, isOptional: Bool) -> ValidationState {
             guard !text.isEmpty else {
                 return isOptional ? .valid : .invalid(Error.empty)
             }
-            
-            return STPVPANumberValidator.stringIsValidVPANumber(text) ? .valid : .invalid(invalidError)
+
+            return STPVPANumberValidator.stringIsValidVPANumber(text)
+                ? .valid : .invalid(invalidError)
         }
 
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-            return .init(type: .emailAddress, textContentType: .emailAddress, autocapitalization: .none)
+            return .init(
+                type: .emailAddress,
+                textContentType: .emailAddress,
+                autocapitalization: .none
+            )
         }
-        
+
     }
-    
-    static func makeVPA(theme: ElementsUITheme = .default) -> TextFieldElement {
+
+    public static func makeVPA(theme: ElementsUITheme = .default) -> TextFieldElement {
         return TextFieldElement(configuration: VPAConfiguration(), theme: theme)
     }
-    
+
     // MARK: - Phone number
-    struct PhoneNumberConfiguration: TextFieldElementConfiguration {
-        static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
-        static let invalidError = Error.invalid(localizedDescription: .Localized.invalid_phone_number)
+    public struct PhoneNumberConfiguration: TextFieldElementConfiguration {
+        static let incompleteError = Error.incomplete(
+            localizedDescription: .Localized.incomplete_phone_number
+        )
+        static let invalidError = Error.invalid(
+            localizedDescription: .Localized.invalid_phone_number
+        )
         public let label: String = .Localized.phone
         /// - Note: Country code helps us format the phone number
         public let countryCodeProvider: () -> String
         public let defaultValue: String?
         public let isOptional: Bool
-        
-        public init(defaultValue: String? = nil, isOptional: Bool = false, countryCodeProvider: @escaping () -> String) {
+
+        public init(
+            defaultValue: String? = nil,
+            isOptional: Bool = false,
+            countryCodeProvider: @escaping () -> String
+        ) {
             self.countryCodeProvider = countryCodeProvider
             self.defaultValue = defaultValue
             self.isOptional = isOptional
         }
-        
+
         public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
             if text.isEmpty {
                 return isOptional ? .valid : .invalid(Error.empty)
             }
-            
+
             if let phoneNumber = PhoneNumber(number: text, countryCode: countryCodeProvider()) {
-                return phoneNumber.isComplete ? .valid :
-                    .invalid(PhoneNumberConfiguration.incompleteError)
+                return phoneNumber.isComplete
+                    ? .valid : .invalid(PhoneNumberConfiguration.incompleteError)
             } else {
                 // Assume user has entered a format or for a region the SDK doesn't know about.
                 // Return valid as long as it's non-empty and let the server decide.
                 return .valid
             }
         }
-        
+
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-            return .init(type: .phonePad, textContentType: .telephoneNumber, autocapitalization: .none)
+            return .init(
+                type: .phonePad,
+                textContentType: .telephoneNumber,
+                autocapitalization: .none
+            )
         }
-        
+
         public var disallowedCharacters: CharacterSet {
             return .stp_asciiDigit.inverted
         }
-        
+
         public func makeDisplayText(for text: String) -> NSAttributedString {
             if let phoneNumber = PhoneNumber(number: text, countryCode: countryCodeProvider()) {
                 return NSAttributedString(string: phoneNumber.string(as: .national))

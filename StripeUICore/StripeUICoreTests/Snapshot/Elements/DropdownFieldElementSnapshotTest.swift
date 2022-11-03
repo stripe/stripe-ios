@@ -6,16 +6,23 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(STP)@testable import StripeUICore
+import iOSSnapshotTestCase
 
 final class DropdownFieldElementSnapshotTest: FBSnapshotTestCase {
-    let items = ["A", "B", "C", "D"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0, rawData: $0) }
+    let items = ["A", "B", "C", "D"].map {
+        DropdownFieldElement.DropdownItem(
+            pickerDisplayName: $0,
+            labelDisplayName: $0,
+            accessibilityLabel: $0,
+            rawData: $0
+        )
+    }
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testDefault0() {
@@ -37,13 +44,17 @@ final class DropdownFieldElementSnapshotTest: FBSnapshotTestCase {
             defaultIndex: 0
         )
         // Emulate a user changing the picker
-        dropdownFieldElement.pickerView(dropdownFieldElement.pickerView, didSelectRow: 3, inComponent: 0)
+        dropdownFieldElement.pickerView(
+            dropdownFieldElement.pickerView,
+            didSelectRow: 3,
+            inComponent: 0
+        )
         verify(dropdownFieldElement)
     }
 }
 
-private extension DropdownFieldElementSnapshotTest {
-    func makeDropdownFieldElement(
+extension DropdownFieldElementSnapshotTest {
+    fileprivate func makeDropdownFieldElement(
         defaultIndex: Int
     ) -> DropdownFieldElement {
         return DropdownFieldElement(
@@ -53,9 +64,11 @@ private extension DropdownFieldElementSnapshotTest {
         )
     }
 
-    func verify(_ dropdownFieldElement: DropdownFieldElement,
-                file: StaticString = #filePath,
-                line: UInt = #line) {
+    fileprivate func verify(
+        _ dropdownFieldElement: DropdownFieldElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         let view = dropdownFieldElement.view
         view.autosizeHeight(width: 200)
         STPSnapshotVerifyView(view, file: file, line: line)

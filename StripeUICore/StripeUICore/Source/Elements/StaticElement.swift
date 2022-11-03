@@ -8,9 +8,7 @@
 
 import UIKit
 
-/**
- A inert wrapper around a view.
- */
+/// A inert wrapper around a view.
 @_spi(STP) public class StaticElement: Element {
     weak public var delegate: ElementDelegate?
     public let view: UIView
@@ -19,8 +17,10 @@ import UIKit
             view.isHidden = isHidden
         }
     }
-    
-    public init(view: UIView) {
+
+    public init(
+        view: UIView
+    ) {
         self.view = view
     }
 }

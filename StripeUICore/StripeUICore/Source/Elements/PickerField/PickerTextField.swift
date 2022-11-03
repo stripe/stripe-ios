@@ -10,26 +10,24 @@ import UIKit
 
 // MARK: - PickerTextField
 
-/**
- A subclass of `UITextField` that disables manual text entry.
- 
- For internal SDK use only
- */
+/// A subclass of `UITextField` that disables manual text entry.
+///
+/// For internal SDK use only
 @objc(STP_Internal_PickerTextField)
 class PickerTextField: UITextField {
-    
+
     // MARK: Overrides
-    
+
     override func caretRect(for position: UITextPosition) -> CGRect {
         // Disallow selection
         return .zero
     }
-    
+
     override func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
         // Disallow selection
         return []
     }
-    
+
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if action == #selector(UIResponderStandardEditActions.paste(_:)) {
             return false

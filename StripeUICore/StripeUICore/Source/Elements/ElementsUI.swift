@@ -7,17 +7,26 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public enum ElementsUI {
-    
+
     /// The distances between an Element's content and its containing view
-    public static let contentViewInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
+    public static let contentViewInsets: NSDirectionalEdgeInsets = .insets(
+        top: 4,
+        leading: 11,
+        bottom: 4,
+        trailing: 11
+    )
     public static let fieldBorderColor: UIColor = .systemGray3
     public static let fieldBorderWidth: CGFloat = 1
-    public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
-    public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 13, weight: .semibold))
+    public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(
+        for: .systemFont(ofSize: 14)
+    )
+    public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(
+        for: .systemFont(ofSize: 13, weight: .semibold)
+    )
     /// The spacing between elements of a SectionElement
     public static let sectionSpacing: CGFloat = 4
     /// The spacing between elements of a FormElement
@@ -62,10 +71,10 @@ import UIKit
 
     /// The default appearance used for Elements
     public static let `default` = ElementsUITheme()
-    
+
     public var fonts = Font()
     public var colors = Color()
-    
+
     public var borderWidth = ElementsUI.fieldBorderWidth
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
@@ -74,13 +83,24 @@ import UIKit
         public init() {}
 
         public var subheadline = ElementsUI.textFieldFont
-        public var subheadlineBold = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14, weight: .bold))
+        public var subheadlineBold = UIFontMetrics(forTextStyle: .body).scaledFont(
+            for: .systemFont(ofSize: 14, weight: .bold)
+        )
         public var sectionHeader = ElementsUI.sectionTitleFont
         public var caption = UIFont.systemFont(ofSize: 12, weight: .regular).scaled(
-                                            withTextStyle: .caption1,
-                                            maximumPointSize: 20)
-        public var footnote = UIFont.preferredFont(forTextStyle: .footnote, weight: .regular, maximumPointSize: 20)
-        public var footnoteEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
+            withTextStyle: .caption1,
+            maximumPointSize: 20
+        )
+        public var footnote = UIFont.preferredFont(
+            forTextStyle: .footnote,
+            weight: .regular,
+            maximumPointSize: 20
+        )
+        public var footnoteEmphasis = UIFont.preferredFont(
+            forTextStyle: .footnote,
+            weight: .medium,
+            maximumPointSize: 20
+        )
     }
 
     public struct Color {
@@ -105,9 +125,14 @@ import UIKit
         public var offset = CGSize(width: 0, height: 2)
         public var radius = CGFloat(4)
 
-        init () {}
+        init() {}
 
-        public init(color: UIColor, opacity: CGFloat, offset: CGSize, radius: CGFloat) {
+        public init(
+            color: UIColor,
+            opacity: CGFloat,
+            offset: CGSize,
+            radius: CGFloat
+        ) {
             self.color = color
             self.opacity = opacity
             self.offset = offset

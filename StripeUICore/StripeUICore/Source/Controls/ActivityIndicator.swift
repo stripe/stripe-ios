@@ -14,8 +14,8 @@ import UIKit
 @_spi(STP) public final class ActivityIndicator: UIView {
 
     #if DEBUG
-    /// Disables animation. This should be only be modified for snapshot tests.
-    public static var isAnimationEnabled = true
+        /// Disables animation. This should be only be modified for snapshot tests.
+        public static var isAnimationEnabled = true
     #endif
 
     struct Constants {
@@ -108,7 +108,9 @@ import UIKit
 
     /// Creates a new activity indicator.
     /// - Parameter size: Size of the activity indicator.
-    public init(size: Size) {
+    public init(
+        size: Size
+    ) {
         self.size = size
         super.init(frame: .zero)
         layer.addSublayer(contentLayer)
@@ -131,7 +133,9 @@ import UIKit
         NotificationCenter.default.removeObserver(self)
     }
 
-    public required init?(coder: NSCoder) {
+    public required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -177,16 +181,16 @@ import UIKit
 
 // MARK: - Methods
 
-public extension ActivityIndicator {
+extension ActivityIndicator {
 
-    func startAnimating() {
+    public func startAnimating() {
         defer {
             isAnimating = true
             updateVisibility()
         }
 
         #if DEBUG
-        guard ActivityIndicator.isAnimationEnabled else { return }
+            guard ActivityIndicator.isAnimationEnabled else { return }
         #endif
 
         let rotatingAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
@@ -197,7 +201,7 @@ public extension ActivityIndicator {
         contentLayer.add(rotatingAnimation, forKey: Constants.animationKey)
     }
 
-    func stopAnimating() {
+    public func stopAnimating() {
         contentLayer.removeAnimation(forKey: Constants.animationKey)
 
         isAnimating = false
@@ -207,25 +211,25 @@ public extension ActivityIndicator {
 
 // MARK: - Private methods
 
-private extension ActivityIndicator {
+extension ActivityIndicator {
 
-    func updatecolor() {
+    fileprivate func updatecolor() {
         // Tint color gradient from 0% to 100% alpha
         cometLayer.colors = [
             tintColor.withAlphaComponent(0).cgColor,
-            tintColor.cgColor
+            tintColor.cgColor,
         ]
     }
 
     @objc
-    func applicationWillEnterForeground(_ notification: Notification) {
+    fileprivate func applicationWillEnterForeground(_ notification: Notification) {
         if isAnimating {
             // Resume animations
             startAnimating()
         }
     }
 
-    func updateVisibility() {
+    fileprivate func updateVisibility() {
         if hidesWhenStopped {
             isHidden = !isAnimating
         }
@@ -242,7 +246,8 @@ private extension ActivityIndicator {
     ///   - startAngle: Start angle.
     ///   - endAngle: End angle.
     /// - Returns: Arc path.
-    func makeArcPath(radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat) -> CGPath {
+    fileprivate func makeArcPath(radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat) -> CGPath
+    {
         let path = CGMutablePath()
 
         let center = CGPoint(

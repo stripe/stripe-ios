@@ -23,7 +23,7 @@ import UIKit
     let label: String
     let isSelectedByDefault: Bool
     let theme: ElementsUITheme
-    var didToggle: (Bool) -> ()
+    var didToggle: (Bool) -> Void
     var isSelected: Bool {
         get {
             return checkboxButton.isSelected
@@ -32,22 +32,22 @@ import UIKit
             checkboxButton.isSelected = newValue
         }
     }
-    
+
     @objc func didToggleCheckbox() {
         didToggle(checkboxButton.isSelected)
         delegate?.didUpdate(element: self)
     }
-    
+
     public init(
         theme: ElementsUITheme,
         label: String,
         isSelectedByDefault: Bool,
-        didToggle: ((Bool) -> ())? = nil
+        didToggle: ((Bool) -> Void)? = nil
     ) {
         self.label = label
         self.isSelectedByDefault = isSelectedByDefault
         self.theme = theme
-        self.didToggle = didToggle ?? {_ in}
+        self.didToggle = didToggle ?? { _ in }
     }
 }
 

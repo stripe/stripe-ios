@@ -8,9 +8,9 @@
 
 import UIKit
 
-@_spi(STP) public extension UITraitCollection {
+@_spi(STP) extension UITraitCollection {
 
-    var isDarkMode: Bool {
+    public var isDarkMode: Bool {
         return userInterfaceStyle == .dark
     }
 

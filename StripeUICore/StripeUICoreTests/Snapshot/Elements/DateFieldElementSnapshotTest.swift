@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(STP)@testable import StripeUICore
+import iOSSnapshotTestCase
 
 final class DateFieldElementSnapshotTest: FBSnapshotTestCase {
 
@@ -17,12 +17,12 @@ final class DateFieldElementSnapshotTest: FBSnapshotTestCase {
     let timeZone_GMT = TimeZone(secondsFromGMT: 0)!
 
     // Mock dates
-    let oct1_2021 = Date(timeIntervalSince1970: 1633046400)
-    let oct3_2021 = Date(timeIntervalSince1970: 1633219200)
+    let oct1_2021 = Date(timeIntervalSince1970: 1_633_046_400)
+    let oct3_2021 = Date(timeIntervalSince1970: 1_633_219_200)
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testNoDefaultUnfocused() {
@@ -62,8 +62,8 @@ final class DateFieldElementSnapshotTest: FBSnapshotTestCase {
 
 // MARK: - Helpers
 
-private extension DateFieldElementSnapshotTest {
-    func makeDateFieldElement(
+extension DateFieldElementSnapshotTest {
+    fileprivate func makeDateFieldElement(
         defaultDate: Date? = nil,
         maximumDate: Date? = nil
     ) -> DateFieldElement {
@@ -76,9 +76,11 @@ private extension DateFieldElementSnapshotTest {
         )
     }
 
-    func verify(_ dateFieldElement: DateFieldElement,
-                file: StaticString = #filePath,
-                line: UInt = #line) {
+    fileprivate func verify(
+        _ dateFieldElement: DateFieldElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         let view = dateFieldElement.view
         view.autosizeHeight(width: 200)
         STPSnapshotVerifyView(view, file: file, line: line)

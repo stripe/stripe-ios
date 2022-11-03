@@ -22,12 +22,13 @@ import Foundation
     let type: IDNumberType?
     public let label: String
 
-    /**
-     - Parameters:
-       - type: The type of ID number that should be validated in this input field. If the ID type is unknown, passing `nil` will produce a configuration with no restrictions on the input.
-       - label: The label of the field
-     */
-    public init(type: IDNumberType?, label: String) {
+    /// - Parameters:
+    ///   - type: The type of ID number that should be validated in this input field. If the ID type is unknown, passing `nil` will produce a configuration with no restrictions on the input.
+    ///   - label: The label of the field
+    public init(
+        type: IDNumberType?,
+        label: String
+    ) {
         self.type = type
         self.label = label
     }
@@ -35,8 +36,8 @@ import Foundation
     public var disallowedCharacters: CharacterSet {
         switch type {
         case .BR_CPF,
-             .BR_CPF_CNPJ,
-             .US_SSN_LAST4:
+            .BR_CPF_CNPJ,
+            .US_SSN_LAST4:
             return CharacterSet.stp_asciiDigit.inverted
         case .none:
             return .newlines
@@ -56,21 +57,19 @@ import Foundation
         }
     }
 
-    /**
-     - Parameters:
-     - text: The text that will be formatted with this formatter
-
-     - Returns: The format consisting of a string using pound signs `#` for numeric placeholders,  and `*` for  letters.
-     */
-   func format(text: String) -> String? {
+    /// - Parameters:
+    /// - text: The text that will be formatted with this formatter
+    ///
+    /// - Returns: The format consisting of a string using pound signs `#` for numeric placeholders,  and `*` for  letters.
+    func format(text: String) -> String? {
         switch type {
         case .BR_CPF,
-             .BR_CPF_CNPJ where text.count <= 11:
+            .BR_CPF_CNPJ where text.count <= 11:
             return "###.###.###-##"
         case .BR_CPF_CNPJ:
             return "###.###.###/###-##"
         case .US_SSN_LAST4,
-             .none:
+            .none:
             return nil
         }
     }
@@ -83,23 +82,26 @@ import Foundation
         switch type {
         // CPF is 11 digits but CNPJ is 14 (maxLength), so we will allow 11 here
         case .BR_CPF_CNPJ where text.count == 11,
-             .none:
+            .none:
             return .valid
         default:
-            return maxLength(for: text) == text.count ? .valid : .invalid(
-                TextFieldElement.Error.incomplete(
-                    localizedDescription: STPLocalizedString(
-                        "The ID number you entered is incomplete.",
-                        "An error message."
+            return maxLength(for: text) == text.count
+                ? .valid
+                : .invalid(
+                    TextFieldElement.Error.incomplete(
+                        localizedDescription: STPLocalizedString(
+                            "The ID number you entered is incomplete.",
+                            "An error message."
+                        )
                     )
                 )
-            )
         }
     }
 
     public func makeDisplayText(for text: String) -> NSAttributedString {
         guard let format = format(text: text),
-              let formatter = TextFieldFormatter(format: format) else {
+            let formatter = TextFieldFormatter(format: format)
+        else {
             return NSAttributedString(string: text)
         }
 
@@ -113,8 +115,8 @@ import Foundation
     public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
         switch type {
         case .BR_CPF,
-             .BR_CPF_CNPJ,
-             .US_SSN_LAST4:
+            .BR_CPF_CNPJ,
+            .US_SSN_LAST4:
             return .init(
                 type: .asciiCapableNumberPad,
                 textContentType: nil,

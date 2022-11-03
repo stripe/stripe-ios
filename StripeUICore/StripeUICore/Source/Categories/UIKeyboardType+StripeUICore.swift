@@ -13,18 +13,18 @@ extension UIKeyboardType {
     var hasReturnKey: Bool {
         switch self {
         case .default,
-             .asciiCapable,
-             .numbersAndPunctuation,
-             .URL,
-             .namePhonePad,
-             .emailAddress,
-             .webSearch:
+            .asciiCapable,
+            .numbersAndPunctuation,
+            .URL,
+            .namePhonePad,
+            .emailAddress,
+            .webSearch:
             return true
         case .numberPad,
-             .phonePad,
-             .decimalPad,
-             .twitter,
-             .asciiCapableNumberPad:
+            .phonePad,
+            .decimalPad,
+            .twitter,
+            .asciiCapableNumberPad:
             return false
         @unknown default:
             return true

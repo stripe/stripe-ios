@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
 
 @_spi(STP) public struct PhoneNumber {
@@ -48,13 +47,15 @@ import Foundation
     /// Whether this represents a complete phone number
     public var isComplete: Bool {
         let normalizedNumber = metadata.removeTrunkPrefixIfNeeded(number)
-        return (
-            metadata.lengths.contains(normalizedNumber.count) ||
-            normalizedNumber.count > metadata.maxLength
-        )
+        return
+            (metadata.lengths.contains(normalizedNumber.count)
+            || normalizedNumber.count > metadata.maxLength)
     }
 
-    public init?(number: String, countryCode: String) {
+    public init?(
+        number: String,
+        countryCode: String
+    ) {
         guard let metadata = PhoneMetadataProvider.shared.metadata(for: countryCode) else {
             return nil
         }
@@ -63,7 +64,10 @@ import Foundation
         self.metadata = metadata
     }
 
-    init(number: String, metadata: Metadata) {
+    init(
+        number: String,
+        metadata: Metadata
+    ) {
         self.number = number
         self.metadata = metadata
     }
@@ -150,7 +154,8 @@ extension PhoneNumber {
             return metadata.code + result
         case .national:
             guard let pattern = metadata.bestFormat(for: number),
-                  let formatter = TextFieldFormatter(format: pattern) else {
+                let formatter = TextFieldFormatter(format: pattern)
+            else {
                 return number
             }
 
@@ -167,9 +172,6 @@ extension PhoneNumber {
 
 extension PhoneNumber: Equatable {
     public static func == (lhs: PhoneNumber, rhs: PhoneNumber) -> Bool {
-        return (
-            lhs.number == rhs.number &&
-            lhs.metadata.region == rhs.metadata.region
-        )
+        return (lhs.number == rhs.number && lhs.metadata.region == rhs.metadata.region)
     }
 }

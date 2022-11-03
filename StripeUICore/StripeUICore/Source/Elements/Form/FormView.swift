@@ -9,15 +9,15 @@
 import Foundation
 import UIKit
 
-/**
- A simple container view that displays its subviews in a vertical stack.
- 
- For internal SDK use only
- */
+/// A simple container view that displays its subviews in a vertical stack.
+///
+/// For internal SDK use only
 @objc(STP_Internal_FormView)
 @_spi(STP) public class FormView: UIView {
     private let stackView: UIStackView
-    public init(viewModel: FormElement.ViewModel) {
+    public init(
+        viewModel: FormElement.ViewModel
+    ) {
         if viewModel.bordered {
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)
             self.stackView = stack
@@ -41,7 +41,9 @@ import UIKit
         addAndPinSubview(self.stackView)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 

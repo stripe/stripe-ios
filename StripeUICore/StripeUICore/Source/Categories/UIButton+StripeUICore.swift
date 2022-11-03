@@ -8,13 +8,13 @@
 
 import UIKit
 
-@_spi(STP) public extension UIButton {
-
-    class var doneButtonTitle: String {
+// swift-format-ignore: DontRepeatTypeInStaticProperties
+@_spi(STP) extension UIButton {
+    public class var doneButtonTitle: String {
         return STPLocalizedString("Done", "Done button title")
     }
-    
-    class var editButtonTitle: String {
+
+    public class var editButtonTitle: String {
         return STPLocalizedString("Edit", "Button title to enter editing mode")
     }
 

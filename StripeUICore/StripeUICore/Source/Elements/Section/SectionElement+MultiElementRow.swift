@@ -9,17 +9,23 @@
 import Foundation
 import UIKit
 
-public extension SectionElement {
+extension SectionElement {
     /// A simple container element that displays its child elements in a horizontal stackview
-    @_spi(STP) final class MultiElementRow: ContainerElement {
+    @_spi(STP) public final class MultiElementRow: ContainerElement {
         weak public var delegate: ElementDelegate?
         public lazy var view: UIView = {
-            return SectionContainerView.MultiElementRowView(views: elements.map { $0.view }, theme: theme)
+            return SectionContainerView.MultiElementRowView(
+                views: elements.map { $0.view },
+                theme: theme
+            )
         }()
         public let elements: [Element]
         public let theme: ElementsUITheme
-        
-        public init(_ elements: [Element], theme: ElementsUITheme = .default) {
+
+        public init(
+            _ elements: [Element],
+            theme: ElementsUITheme = .default
+        ) {
             self.elements = elements
             self.theme = theme
             defer {

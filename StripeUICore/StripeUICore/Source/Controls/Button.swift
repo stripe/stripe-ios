@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// The custom button used throughout the Stripe SDK.
 /// For internal SDK use only
@@ -80,7 +80,12 @@ import UIKit
         /// Attributes to automatically apply to the title.
         public var titleAttributes: [NSAttributedString.Key: Any]?
 
-        public var insets: NSDirectionalEdgeInsets = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
+        public var insets: NSDirectionalEdgeInsets = .init(
+            top: 10,
+            leading: 10,
+            bottom: 10,
+            trailing: 10
+        )
     }
 
     public struct ColorTransformConfiguration {
@@ -129,11 +134,8 @@ import UIKit
             )
         }
 
-        let height = (
-            directionalLayoutMargins.top +
-            contentHeight +
-            directionalLayoutMargins.bottom
-        )
+        let height =
+            (directionalLayoutMargins.top + contentHeight + directionalLayoutMargins.bottom)
 
         return CGSize(
             width: UIView.noIntrinsicMetric,
@@ -242,14 +244,18 @@ import UIKit
 
     /// Creates a button with the default configuration and the given title.
     /// - Parameter title: Button title.
-    public convenience init(title: String) {
+    public convenience init(
+        title: String
+    ) {
         self.init(configuration: .primary(), title: title)
     }
 
     /// Creates a button with the specified configuration.
     /// - Parameters:
     ///   - configuration: Button configuration.
-    public convenience init(configuration: Configuration) {
+    public convenience init(
+        configuration: Configuration
+    ) {
         self.init(configuration: configuration, title: nil)
     }
 
@@ -257,7 +263,10 @@ import UIKit
     /// - Parameters
     ///   - configuration: Button configuration.
     ///   - title: Button title.
-    public init(configuration: Configuration, title: String?) {
+    public init(
+        configuration: Configuration,
+        title: String?
+    ) {
         self.configuration = configuration
         self.title = title
         super.init(frame: .zero)
@@ -270,7 +279,9 @@ import UIKit
         updateAccessibilityContent()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -286,7 +297,7 @@ import UIKit
 
             // Center activity indicator
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 
@@ -306,9 +317,9 @@ import UIKit
     }
 }
 
-public extension Button {
+extension Button {
 
-    override func updateConstraints() {
+    public override func updateConstraints() {
         if !dynamicConstraints.isEmpty {
             NSLayoutConstraint.deactivate(dynamicConstraints)
             dynamicConstraints.removeAll()
@@ -330,23 +341,31 @@ public extension Button {
                         lessThanOrEqualTo: titleLabel.leadingAnchor,
                         constant: Constants.minItemSpacing
                     ),
-                    titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor)
+                    titleLabel.trailingAnchor.constraint(
+                        lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor
+                    ),
                 ])
             case .trailing:
                 dynamicConstraints.append(contentsOf: [
-                    titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor),
+                    titleLabel.leadingAnchor.constraint(
+                        greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor
+                    ),
                     titleLabel.trailingAnchor.constraint(
                         lessThanOrEqualTo: iconView.leadingAnchor,
                         constant: Constants.minItemSpacing
                     ),
-                    iconView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+                    iconView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
                 ])
             }
         } else {
             // Pin the leading and trailing edges of the label to the edges of the button.
             dynamicConstraints.append(contentsOf: [
-                titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor),
-                titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor)
+                titleLabel.leadingAnchor.constraint(
+                    greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor
+                ),
+                titleLabel.trailingAnchor.constraint(
+                    lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor
+                ),
             ])
         }
 
@@ -359,9 +378,9 @@ public extension Button {
 
 }
 
-private extension Button {
+extension Button {
 
-    func configurationDidChange(_ previousConfiguration: Configuration?) {
+    fileprivate func configurationDidChange(_ previousConfiguration: Configuration?) {
         titleLabel.font = configuration.font
         layer.cornerRadius = configuration.cornerRadius
         layer.borderWidth = configuration.borderWidth
@@ -375,7 +394,7 @@ private extension Button {
         }
     }
 
-    func updateColors() {
+    fileprivate func updateColors() {
         let color = foregroundColor(for: state)
 
         titleLabel.textColor = color
@@ -386,16 +405,17 @@ private extension Button {
         layer.borderColor = borderColor(for: state)?.cgColor
     }
 
-    func updateTitle() {
+    fileprivate func updateTitle() {
         if let title = title,
-           let attributes = configuration.titleAttributes {
+            let attributes = configuration.titleAttributes
+        {
             titleLabel.attributedText = NSAttributedString(string: title, attributes: attributes)
         } else {
             titleLabel.text = title
         }
     }
 
-    func foregroundColor(for state: State) -> UIColor? {
+    fileprivate func foregroundColor(for state: State) -> UIColor? {
         switch state {
         case .disabled:
             return resolveColor(
@@ -413,7 +433,7 @@ private extension Button {
         }
     }
 
-    func backgroundColor(for state: State) -> UIColor? {
+    fileprivate func backgroundColor(for state: State) -> UIColor? {
         switch state {
         case .disabled:
             return resolveColor(
@@ -431,7 +451,7 @@ private extension Button {
         }
     }
 
-    func borderColor(for state: State) -> UIColor? {
+    fileprivate func borderColor(for state: State) -> UIColor? {
         switch state {
         case .disabled:
             return resolveColor(
@@ -459,7 +479,7 @@ private extension Button {
     ///   - preferredColor: Preferred color.
     ///   - transform: Optional color transform to apply to `baseColor`.
     /// - Returns: Color to use.
-    func resolveColor(
+    fileprivate func resolveColor(
         baseColor: UIColor?,
         preferredColor: UIColor? = nil,
         transform: ColorTransform? = nil
@@ -486,7 +506,7 @@ private extension Button {
         }
     }
 
-    func updateAccessibilityContent() {
+    fileprivate func updateAccessibilityContent() {
         accessibilityLabel = title
 
         if isEnabled {
@@ -497,9 +517,9 @@ private extension Button {
     }
 }
 
-public extension Button.Configuration {
+extension Button.Configuration {
     /// The default button configuration.
-    static func primary() -> Self {
+    public static func primary() -> Self {
         return .init(
             foregroundColor: .white,
             backgroundColor: Self.tintColor,
@@ -511,7 +531,7 @@ public extension Button.Configuration {
     }
 
     /// A less prominent button.
-    static func secondary() -> Self {
+    public static func secondary() -> Self {
         return .init(
             foregroundColor: Self.tintColor,
             backgroundColor: .secondarySystemFill,
@@ -523,7 +543,7 @@ public extension Button.Configuration {
     }
 
     /// A plain button.
-    static func plain() -> Self {
+    public static func plain() -> Self {
         return .init(
             font: .preferredFont(forTextStyle: .body, weight: .regular),
             foregroundColor: Self.tintColor,
@@ -548,10 +568,9 @@ public extension Button.Configuration {
 extension Button.Configuration {
 
     func shouldInvalidateIntrinsicContentSize(_ previousConfiguration: Self?) -> Bool {
-        return (
-            self.font != previousConfiguration?.font ||
-            self.insets != previousConfiguration?.insets
-        )
+        return
+            (self.font != previousConfiguration?.font
+            || self.insets != previousConfiguration?.insets)
     }
 
 }

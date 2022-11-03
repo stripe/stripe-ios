@@ -7,48 +7,54 @@
 //
 
 import Foundation
-import UIKit
-
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public protocol ImageMaker {
     associatedtype BundleLocator: BundleLocatorProtocol
 }
 
-@_spi(STP) public extension ImageMaker {
+@_spi(STP) extension ImageMaker {
     private static func imageNamed(
-      _ imageName: String,
-      templateIfAvailable: Bool
+        _ imageName: String,
+        templateIfAvailable: Bool
     ) -> UIImage? {
 
-      var image = UIImage(
-        named: imageName, in: BundleLocator.resourcesBundle, compatibleWith: nil)
+        var image = UIImage(
+            named: imageName,
+            in: BundleLocator.resourcesBundle,
+            compatibleWith: nil
+        )
 
-      if image == nil {
-        image = UIImage(named: imageName)
-      }
+        if image == nil {
+            image = UIImage(named: imageName)
+        }
 
-      if templateIfAvailable {
-        image = image?.withRenderingMode(.alwaysTemplate)
-      }
+        if templateIfAvailable {
+            image = image?.withRenderingMode(.alwaysTemplate)
+        }
 
-      return image
+        return image
     }
 
-    static func safeImageNamed(
+    public static func safeImageNamed(
         _ imageName: String,
         templateIfAvailable: Bool = false,
         darkMode: Bool? = nil
     ) -> UIImage {
 
         let darkMode: Bool = darkMode ?? isDarkMode()
-        
+
         let image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
         assert(image.size != .zero, "Failed to find an image named \(imageName)")
         // Vend a dark variant if available
         // Workaround until we can use image assets
         if darkMode,
-           let darkImage = imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
+            let darkImage = imageNamed(
+                imageName + "_dark",
+                templateIfAvailable: templateIfAvailable
+            )
+        {
             return darkImage
         } else {
             return image
@@ -56,8 +62,8 @@ import UIKit
     }
 }
 
-@_spi(STP) public extension ImageMaker where Self: RawRepresentable, RawValue == String {
-    func makeImage(template: Bool = false, darkMode: Bool? = nil) -> UIImage {
+@_spi(STP) extension ImageMaker where Self: RawRepresentable, RawValue == String {
+    public func makeImage(template: Bool = false, darkMode: Bool? = nil) -> UIImage {
         return Self.safeImageNamed(
             self.rawValue,
             templateIfAvailable: template,

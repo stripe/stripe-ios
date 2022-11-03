@@ -7,12 +7,10 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
-/**
- A textfield whose input view is a `UIDatePicker`
- */
+/// A textfield whose input view is a `UIDatePicker`
 @_spi(STP) public class DateFieldElement {
     public typealias DidUpdateSelectedDate = (Date) -> Void
 
@@ -54,21 +52,19 @@ import UIKit
     private let label: String
     private let theme: ElementsUITheme
 
-    /**
-     - Parameters:
-       - label: The label of this picker
-       - defaultDate: If this field should be prefilled before the user interacts with it, then provide a default date to display initially.
-       - minimumDate: The minimum date that can be selected
-       - maximumDate: The maximum date that can be selected
-       - locale: The locale to use to format the date into display text and configure the date picker
-       - timeZone: The timeZone to use to format the date into display text and configure the date picker
-       - didUpdate: Called when the user has selected a new date.
-       - theme: Theme for the element
-
-     - Note:
-       - If a minimum or maximum date is provided and `defaultDate` is outside of of that range, then the given default is ignored.
-       - `didUpdate` is not called if the user does not change their input before hitting "Done"
-     */
+    /// - Parameters:
+    ///   - label: The label of this picker
+    ///   - defaultDate: If this field should be prefilled before the user interacts with it, then provide a default date to display initially.
+    ///   - minimumDate: The minimum date that can be selected
+    ///   - maximumDate: The maximum date that can be selected
+    ///   - locale: The locale to use to format the date into display text and configure the date picker
+    ///   - timeZone: The timeZone to use to format the date into display text and configure the date picker
+    ///   - didUpdate: Called when the user has selected a new date.
+    ///   - theme: Theme for the element
+    ///
+    /// - Note:
+    ///   - If a minimum or maximum date is provided and `defaultDate` is outside of of that range, then the given default is ignored.
+    ///   - `didUpdate` is not called if the user does not change their input before hitting "Done"
     public init(
         label: String,
         defaultDate: Date? = nil,
@@ -88,7 +84,11 @@ import UIKit
         datePickerView.timeZone = timeZone
         datePickerView.minimumDate = minimumDate
         datePickerView.maximumDate = maximumDate
-        if let defaultDate = DateFieldElement.dateWithinBounds(defaultDate, min: minimumDate, max: maximumDate) {
+        if let defaultDate = DateFieldElement.dateWithinBounds(
+            defaultDate,
+            min: minimumDate,
+            max: maximumDate
+        ) {
             datePickerView.date = defaultDate
             selectedDate = defaultDate
             updateDisplayText()
@@ -115,7 +115,7 @@ extension DateFieldElement: Element {
     public var view: UIView {
         return pickerFieldView
     }
-    
+
     public func beginEditing() -> Bool {
         return pickerFieldView.becomeFirstResponder()
     }
@@ -130,7 +130,8 @@ extension DateFieldElement: PickerFieldViewDelegate {
 
     func didFinish(_ pickerFieldView: PickerFieldView) {
         if previouslySelectedDate != selectedDate,
-           let selectedDate = selectedDate {
+            let selectedDate = selectedDate
+        {
             didUpdate?(selectedDate)
             previouslySelectedDate = selectedDate
         }
@@ -140,9 +141,9 @@ extension DateFieldElement: PickerFieldViewDelegate {
 
 // MARK: - Private Helpers
 
-private extension DateFieldElement {
+extension DateFieldElement {
     /// Returns the date if it is within the min & max bounds, when applicable. Otherwise returns nil
-    static func dateWithinBounds(
+    fileprivate static func dateWithinBounds(
         _ date: Date?,
         min: Date?,
         max: Date?
@@ -152,12 +153,14 @@ private extension DateFieldElement {
         }
 
         if let min = min,
-           date < min {
+            date < min
+        {
             return nil
         }
 
         if let max = max,
-           date > max {
+            date > max
+        {
             return nil
         }
 

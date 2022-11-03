@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
 
 final class PhoneMetadataProvider {
@@ -36,15 +35,17 @@ final class PhoneMetadataProvider {
 
 // MARK: - Loading
 
-private extension PhoneMetadataProvider {
+extension PhoneMetadataProvider {
 
-    static func loadMetadata() -> [Metadata] {
+    fileprivate static func loadMetadata() -> [Metadata] {
         let resourcesBundle = StripeUICoreBundleLocator.resourcesBundle
 
-        guard let url = resourcesBundle.url(
-            forResource: "phone_metadata",
-            withExtension: "json.lzfse"
-        ) else {
+        guard
+            let url = resourcesBundle.url(
+                forResource: "phone_metadata",
+                withExtension: "json.lzfse"
+            )
+        else {
             STPAnalyticsClient.sharedClient.logPhoneMetadataEvent(.phoneMetadataLoadNotFoundError)
             assertionFailure("phone_metadata.json.lzfse is missing")
             return getFallbackMetadata()
@@ -63,7 +64,7 @@ private extension PhoneMetadataProvider {
         }
     }
 
-    static func getFallbackMetadata() -> [Metadata] {
+    fileprivate static func getFallbackMetadata() -> [Metadata] {
         // TODO(ramont): Remove after determining success rate.
         let data: [(String, String, String?)] = [
             ("US", "1", "1"),
@@ -296,7 +297,7 @@ private extension PhoneMetadataProvider {
             ("AZ", "994", "0"),
             ("GE", "995", "0"),
             ("KG", "996", "0"),
-            ("UZ", "998", "8")
+            ("UZ", "998", "8"),
         ]
 
         return data.map { (region, code, trunkPrefix) in

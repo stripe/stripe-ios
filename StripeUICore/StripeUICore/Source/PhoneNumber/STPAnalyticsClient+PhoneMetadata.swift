@@ -6,14 +6,13 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
 
 extension STPAnalyticsClient {
 
     struct PhoneMetadataAnalytic: Analytic {
         let event: STPAnalyticEvent
-        let params: [String : Any]
+        let params: [String: Any]
     }
 
     func logPhoneMetadataEvent(_ event: STPAnalyticEvent) {

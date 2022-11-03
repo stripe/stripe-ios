@@ -9,14 +9,14 @@ import Foundation
 import QuartzCore
 import UIKit
 
-@_spi(STP) public extension CALayer {
+@_spi(STP) extension CALayer {
 
-    func applyShadow(shadow: ElementsUITheme.Shadow?) {
+    public func applyShadow(shadow: ElementsUITheme.Shadow?) {
         guard let shadow = shadow else {
             shadowOpacity = 0
             return
         }
-        
+
         shadowColor = shadow.color.cgColor
         shadowOpacity = Float(shadow.opacity)
         shadowOffset = shadow.offset

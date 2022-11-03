@@ -7,129 +7,107 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
-/**
- Contains the business logic for a TextField.
- 
- - Seealso: `TextFieldElement+Factory.swift`
- */
+/// Contains the business logic for a TextField.
+///
+/// - Seealso: `TextFieldElement+Factory.swift`
 @_spi(STP) public protocol TextFieldElementConfiguration {
     var label: String { get }
-    
-    /**
-     Defaults to `label`
-     */
+
+    /// Defaults to `label`
     var accessibilityLabel: String { get }
     var shouldShowClearButton: Bool { get }
     var disallowedCharacters: CharacterSet { get }
-    /**
-     If `true`, adds " (optional)" to the field's label . Defaults to `false`.
-     - Note: This value is passed to the `validate(text:isOptional:)` method.
-     */
+    /// If `true`, adds " (optional)" to the field's label . Defaults to `false`.
+    /// - Note: This value is passed to the `validate(text:isOptional:)` method.
     var isOptional: Bool { get }
-    
-    /**
-      - Note: The text field gets a sanitized version of this (i.e. after stripping disallowed characters, applying max length, etc.)
-     */
+
+    ///  - Note: The text field gets a sanitized version of this (i.e. after stripping disallowed characters, applying max length, etc.)
     var defaultValue: String? { get }
-    
-    /**
-     Validate the text.
-     
-     - Parameter isOptional: Whether or not the text field's value is optional.
-     */
+
+    /// Validate the text.
+    ///
+    /// - Parameter isOptional: Whether or not the text field's value is optional.
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState
 
-    /**
-     A string to display under the field
-     */
+    /// A string to display under the field
     func subLabel(text: String) -> String?
 
-    /**
-     - Parameter text: The user's sanitized input (i.e., removing `disallowedCharacters` and clipping to `maxLength(for:)`)
-     - Returns: A string as it should be displayed to the user. e.g., Apply kerning between every 4th and 5th number for PANs.
-     */
+    /// - Parameter text: The user's sanitized input (i.e., removing `disallowedCharacters` and clipping to `maxLength(for:)`)
+    /// - Returns: A string as it should be displayed to the user. e.g., Apply kerning between every 4th and 5th number for PANs.
     func makeDisplayText(for text: String) -> NSAttributedString
-    
-    /**
-     - Returns: An assortment of properties to apply to the keyboard for the text field.
-     */
+
+    /// - Returns: An assortment of properties to apply to the keyboard for the text field.
     func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties
-    
-    /**
-     The maximum length of text allowed in the text field.
-     - Note: Text beyond this length is removed before its displayed in the UI or passed to other `TextFieldElementConfiguration` methods.
-     - Note: Return `Int.max` to indicate there is no maximum
-     */
+
+    /// The maximum length of text allowed in the text field.
+    /// - Note: Text beyond this length is removed before its displayed in the UI or passed to other `TextFieldElementConfiguration` methods.
+    /// - Note: Return `Int.max` to indicate there is no maximum
     func maxLength(for text: String) -> Int
-    
-    /**
-     An image displayed right-justified in the text field. This could be the logo of a network, a bank, etc.
-     - Returns: a tuple containing both light and dark mode versions of the logo.
-     - Note: The light mode image will be shown on light backgrounds while the dark mode image will be displayed on dark backgrounds.
-     */
+
+    /// An image displayed right-justified in the text field. This could be the logo of a network, a bank, etc.
+    /// - Returns: a tuple containing both light and dark mode versions of the logo.
+    /// - Note: The light mode image will be shown on light backgrounds while the dark mode image will be displayed on dark backgrounds.
     func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)?
-    
-    /**
-     Convenience method that creates a TextFieldElement using this Configuration
-    */
+
+    /// Convenience method that creates a TextFieldElement using this Configuration
     func makeElement(theme: ElementsUITheme) -> TextFieldElement
 }
 
 // MARK: - Default implementation
 
-public extension TextFieldElementConfiguration {
-    var accessibilityLabel: String {
+extension TextFieldElementConfiguration {
+    public var accessibilityLabel: String {
         return label
     }
-    
-    var disallowedCharacters: CharacterSet {
+
+    public var disallowedCharacters: CharacterSet {
         return .newlines
     }
-    
-    var isOptional: Bool {
+
+    public var isOptional: Bool {
         return false
     }
-    
-    var defaultValue: String? {
+
+    public var defaultValue: String? {
         return nil
     }
 
     // Hide clear button by default
-    var shouldShowClearButton: Bool {
+    public var shouldShowClearButton: Bool {
         return false
     }
-    
-    func makeDisplayText(for text: String) -> NSAttributedString {
+
+    public func makeDisplayText(for text: String) -> NSAttributedString {
         return NSAttributedString(string: text)
     }
-    
-    func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+
+    public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
         return .init(type: .default, textContentType: nil, autocapitalization: .words)
     }
-    
-    func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
+
+    public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
         if text.stp_stringByRemovingCharacters(from: .whitespacesAndNewlines).isEmpty {
             return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
         }
         return .valid
     }
 
-    func subLabel(text: String) -> String? {
+    public func subLabel(text: String) -> String? {
         return nil
     }
-    
-    func maxLength(for text: String) -> Int {
+
+    public func maxLength(for text: String) -> Int {
         return .max
     }
-    
-    func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
+
+    public func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
         return nil
     }
-    
-    func makeElement(theme: ElementsUITheme) -> TextFieldElement {
+
+    public func makeElement(theme: ElementsUITheme) -> TextFieldElement {
         return TextFieldElement(configuration: self, theme: theme)
     }
 }

@@ -9,12 +9,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/**
- This represents the format of each country's dictionary in `localized_address_data.json`
- */
+/// This represents the format of each country's dictionary in `localized_address_data.json`
 struct AddressSpec: Decodable {
     enum StateNameType: String, Codable {
-        case area, county, department, do_si, emirate, island, oblast, parish, prefecture, state, province
+        case area, county, department, do_si, emirate, island, oblast, parish, prefecture, state,
+            province
         var localizedLabel: String {
             switch self {
             case .area: return String.Localized.area
@@ -30,8 +29,10 @@ struct AddressSpec: Decodable {
             case .province: return String.Localized.province
             }
         }
-        
-        init(from decoder: Decoder) throws {
+
+        init(
+            from decoder: Decoder
+        ) throws {
             let state_name_type = try decoder.singleValueContainer().decode(String.self)
             self = StateNameType(rawValue: state_name_type) ?? .prefecture
         }
@@ -46,8 +47,10 @@ struct AddressSpec: Decodable {
             case .postal_code: return String.Localized.postal_code
             }
         }
-        
-        init(from decoder: Decoder) throws {
+
+        init(
+            from decoder: Decoder
+        ) throws {
             let zip_name_type = try decoder.singleValueContainer().decode(String.self)
             self = ZipNameType(rawValue: zip_name_type) ?? .postal_code
         }
@@ -63,7 +66,9 @@ struct AddressSpec: Decodable {
             case .city: return String.Localized.city
             }
         }
-        init(from decoder: Decoder) throws {
+        init(
+            from decoder: Decoder
+        ) throws {
             let locality_name_type = try decoder.singleValueContainer().decode(String.self)
             self = LocalityNameType(rawValue: locality_name_type) ?? .suburb_or_city
         }
@@ -76,7 +81,7 @@ struct AddressSpec: Decodable {
         case state = "S"
         case postal = "Z"
     }
-    
+
     /// The order to display the fields.
     let fieldOrdering: [FieldType]
     let requiredFields: [FieldType]
@@ -84,25 +89,27 @@ struct AddressSpec: Decodable {
     let stateNameType: StateNameType
     let zip: String?
     let zipNameType: ZipNameType
-    let subKeys: [String]? // e.g. state abbreviations - "CA"
-    let subLabels: [String]? // e.g. state display names - "California"
-    
+    let subKeys: [String]?  // e.g. state abbreviations - "CA"
+    let subLabels: [String]?  // e.g. state display names - "California"
+
     enum CodingKeys: String, CodingKey {
         case format = "fmt"
         case require = "require"
-        case localityNameType = "locality_name_type" // e.g. City
+        case localityNameType = "locality_name_type"  // e.g. City
         case stateNameType = "state_name_type"
         case zip = "zip"
         case zipNameType = "zip_name_type"
         case subKeys = "sub_keys"
         case subLabels = "sub_labels"
     }
-    
+
     static var `default`: AddressSpec {
         return AddressSpec()
     }
-    
-    init(from decoder: Decoder) throws {
+
+    init(
+        from decoder: Decoder
+    ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.init(
             format: try? container.decode(String.self, forKey: .format),
@@ -115,7 +122,7 @@ struct AddressSpec: Decodable {
             subLabels: try? container.decode([String].self, forKey: .subLabels)
         )
     }
-    
+
     init(
         format: String? = nil,
         require: String? = nil,
@@ -127,7 +134,7 @@ struct AddressSpec: Decodable {
         subLabels: [String]? = nil
     ) {
         var fieldOrdering: [FieldType] = (format ?? "NACSZ").compactMap {
-           FieldType(rawValue: String($0))
+            FieldType(rawValue: String($0))
         }
         // We always collect line1 and line2 ("A"), so prepend if it's missing
         if !fieldOrdering.contains(FieldType.line) {

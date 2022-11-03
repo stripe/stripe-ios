@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP)@testable import StripeUICore
 import XCTest
-@_spi(STP) @testable import StripeUICore
 
 final class UIColorStripeUICoreTests: XCTestCase {
 
@@ -44,7 +44,7 @@ final class UIColorStripeUICoreTests: XCTestCase {
             UIColor(hue: 0, saturation: 0.5, brightness: 0.3, alpha: 1).cgColor
         )
     }
-    
+
     func testLuminance() {
         // Well-known color-luminance values
         let testCases: [(UIColor, CGFloat)] = [
@@ -57,7 +57,7 @@ final class UIColorStripeUICoreTests: XCTestCase {
             // Colors (Extract Rec. 709 coefficients)
             (UIColor(red: 1, green: 0, blue: 0, alpha: 1), 0.2126),
             (UIColor(red: 0, green: 1, blue: 0, alpha: 1), 0.7152),
-            (UIColor(red: 0, green: 0, blue: 1, alpha: 1), 0.0722)
+            (UIColor(red: 0, green: 0, blue: 1, alpha: 1), 0.0722),
         ]
 
         for (color, expectedLuminance) in testCases {

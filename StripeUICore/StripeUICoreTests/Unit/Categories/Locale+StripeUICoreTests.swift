@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP)@testable import StripeUICore
 import XCTest
-@_spi(STP) @testable import StripeUICore
 
 final class LocaleStripeUICoreTests: XCTestCase {
     // English, United States
@@ -17,11 +17,11 @@ final class LocaleStripeUICoreTests: XCTestCase {
     let localeES_SV = Locale(identifier: "es_SV")
 
     let regions = [
-        "IT", // Italy         (Italia)
-        "CA", // Canada        (Canadá)
-        "US", // United States (Estados Unidos)
-        "DZ", // Algeria       (Argelia)
-        "SV", // El Salvador   (El Salvador)
+        "IT",  // Italy         (Italia)
+        "CA",  // Canada        (Canadá)
+        "US",  // United States (Estados Unidos)
+        "DZ",  // Algeria       (Argelia)
+        "SV",  // El Salvador   (El Salvador)
     ]
 
     // Sort countries by English localization

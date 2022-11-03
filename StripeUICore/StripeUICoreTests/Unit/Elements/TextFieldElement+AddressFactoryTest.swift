@@ -6,44 +6,44 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
-@_spi(STP) @testable import StripeUICore
 @_spi(STP) import StripeCore
+@_spi(STP)@testable import StripeUICore
+import XCTest
 
 typealias ValidationState = TextFieldElement.ValidationState
 
 class TextFieldElementAddressFactoryTest: XCTestCase {
     // MARK: - Name
-    
+
     func testNameConfigurationValidation() {
         let name = TextFieldElement.NameConfiguration(type: .full, defaultValue: nil)
-        
+
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
             "": .invalid(TextFieldElement.Error.empty),
             "0": .valid,
             "A": .valid,
-            "; foo": .valid
+            "; foo": .valid,
         ]
         requiredTestcases.forEach { testcase, expected in
             name.test(text: testcase, isOptional: false, matches: expected)
         }
-        
+
         // MARK: Optional
         // Overwrite the required test cases with the ones whose expected value differs when the field is optional
         let optionalTestcases: [String: ValidationState] = requiredTestcases.merging([
-            "": .valid,
+            "": .valid
         ]) { _, new in new }
         for (testcase, expected) in optionalTestcases {
             name.test(text: testcase, isOptional: true, matches: expected)
         }
     }
-    
+
     // MARK: - Email
 
     func testEmailConfigurationValidation() {
         let email = TextFieldElement.EmailConfiguration(defaultValue: nil)
-        
+
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
             "": .invalid(TextFieldElement.Error.empty),
@@ -59,34 +59,52 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         // MARK: Optional
         // Overwrite the required test cases with the ones whose expected value differs when the field is optional
         let optionalTestcases: [String: ValidationState] = requiredTestcases.merging([
-            "": .valid,
+            "": .valid
         ]) { _, new in new }
         for (testcase, expected) in optionalTestcases {
             email.test(text: testcase, isOptional: true, matches: expected)
         }
     }
-    
+
     // MARK: - Postal Code
-   
+
     func testPostalCodeConfigurationValidation() {
-        let US_config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "US", label: "ZIP", defaultValue: nil, isOptional: false)
+        let US_config = TextFieldElement.Address.PostalCodeConfiguration(
+            countryCode: "US",
+            label: "ZIP",
+            defaultValue: nil,
+            isOptional: false
+        )
         XCTAssertEqual(US_config.keyboardProperties(for: "").type, .numberPad)
-        US_config.test(text: "9411", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete)))
+        US_config.test(
+            text: "9411",
+            isOptional: false,
+            matches: .invalid(
+                TextFieldElement.Error.incomplete(
+                    localizedDescription: String.Localized.your_zip_is_incomplete
+                )
+            )
+        )
         US_config.test(text: "94115", isOptional: false, matches: .valid)
-        
+
         // PostalCodeConfiguration only special cases US, so we can test any other country for full code coverage
-        let UK_config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "UK", label: "Postal", defaultValue: nil, isOptional: false)
+        let UK_config = TextFieldElement.Address.PostalCodeConfiguration(
+            countryCode: "UK",
+            label: "Postal",
+            defaultValue: nil,
+            isOptional: false
+        )
         XCTAssertEqual(UK_config.keyboardProperties(for: "").type, .default)
         UK_config.test(text: "SW1A 1AA", isOptional: false, matches: .valid)
     }
-    
+
     // MARK: - Phone Number
     func testPhoneNumberConfigurationValidation() {
         // US formatting
         let usConfiguration = TextFieldElement.PhoneNumberConfiguration {
             return "US"
         }
-        
+
         // valid numbers
         for number in [
             "555-555-5555",
@@ -95,15 +113,17 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         ] {
             usConfiguration.test(text: number, isOptional: false, matches: .valid)
         }
-        
+
         // incomplete
         for number in [
             "555-555-555",
-            "555-555-A555", // the formatter should remove the A here
+            "555-555-A555",  // the formatter should remove the A here
         ] {
-            usConfiguration.test(text: number,
-                                 isOptional: false,
-                                 matches: .invalid(TextFieldElement.PhoneNumberConfiguration.incompleteError))
+            usConfiguration.test(
+                text: number,
+                isOptional: false,
+                matches: .invalid(TextFieldElement.PhoneNumberConfiguration.incompleteError)
+            )
         }
     }
 }
@@ -113,18 +133,33 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
 // TODO(mludowise): These should get migrated to a shared StripeUICoreTestUtils target
 
 extension TextFieldElementConfiguration {
-    func test(text: String, isOptional: Bool, matches expected: ValidationState, file: StaticString = #filePath, line: UInt = #line) {
+    func test(
+        text: String,
+        isOptional: Bool,
+        matches expected: ValidationState,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         let actual = validate(text: text, isOptional: isOptional)
-        XCTAssertEqual(actual, expected, "\(text), \(isOptional): Expected \(expected) but got \(actual)", file: file, line: line)
+        XCTAssertEqual(
+            actual,
+            expected,
+            "\(text), \(isOptional): Expected \(expected) but got \(actual)",
+            file: file,
+            line: line
+        )
     }
 }
 
 extension TextFieldElement.ValidationState: Equatable {
-    public static func == (lhs: TextFieldElement.ValidationState, rhs: TextFieldElement.ValidationState) -> Bool {
+    public static func == (
+        lhs: TextFieldElement.ValidationState,
+        rhs: TextFieldElement.ValidationState
+    ) -> Bool {
         switch (lhs, rhs) {
         case (.valid, .valid):
             return true
-        case let (.invalid(lhsError), .invalid(rhsError)):
+        case (.invalid(let lhsError), .invalid(let rhsError)):
             return lhsError == rhsError
         default:
             return false

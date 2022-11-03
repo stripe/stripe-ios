@@ -70,7 +70,10 @@ extension PhoneMetadataProvider {
                 return nil
             }
 
-            let targetMatcherIndex = max(normalizedNumber.count - Constants.minimumFormattingLength, 0)
+            let targetMatcherIndex = max(
+                normalizedNumber.count - Constants.minimumFormattingLength,
+                0
+            )
             let extent = NSRange(location: 0, length: normalizedNumber.count)
 
             let candidates = formats.filter { format in
@@ -82,7 +85,8 @@ extension PhoneMetadataProvider {
                 let matcherIndex = min(targetMatcherIndex, format.matcherRegexes.count - 1)
 
                 guard let regex = format.matcherRegexes[matcherIndex],
-                      let match = regex.firstMatch(in: normalizedNumber, range: extent) else {
+                    let match = regex.firstMatch(in: normalizedNumber, range: extent)
+                else {
                     return false
                 }
 
@@ -92,7 +96,8 @@ extension PhoneMetadataProvider {
                 return match.range.location == 0
             }
 
-            let bestFormat = candidates.count == 1
+            let bestFormat =
+                candidates.count == 1
                 ? candidates.first
                 : candidates.first(where: { normalizedNumber.count <= $0.digits })
 

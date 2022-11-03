@@ -9,19 +9,17 @@
 import Foundation
 import UIKit
 
-/**
- A rounded, lightly shadowed container view with a thin border.
- You can put views like TextFieldView inside it.
- 
- - Note: This class sets the borderWidth, color, cornerRadius, etc. of its subviews.
- 
- For internal SDK use only
- */
+/// A rounded, lightly shadowed container view with a thin border.
+/// You can put views like TextFieldView inside it.
+///
+/// - Note: This class sets the borderWidth, color, cornerRadius, etc. of its subviews.
+///
+/// For internal SDK use only
 @objc(STP_Internal_SectionContainerView)
 class SectionContainerView: UIView {
 
     // MARK: - Views
-    
+
     lazy var bottomPinningContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
         view.directionalLayoutMargins = .zero
@@ -34,20 +32,24 @@ class SectionContainerView: UIView {
         let view = buildStackView(views: views, theme: theme)
         return view
     }()
-    
+
     private(set) var views: [UIView]
     private let theme: ElementsUITheme
 
     // MARK: - Initializers
 
-    convenience init(view: UIView, theme: ElementsUITheme = .default) {
+    convenience init(
+        view: UIView,
+        theme: ElementsUITheme = .default
+    ) {
         self.init(views: [view], theme: theme)
     }
-    
-    /**
-     - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
-     */
-    init(views: [UIView], theme: ElementsUITheme = .default) {
+
+    /// - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
+    init(
+        views: [UIView],
+        theme: ElementsUITheme = .default
+    ) {
         self.views = views
         self.theme = theme
         super.init(frame: .zero)
@@ -55,18 +57,20 @@ class SectionContainerView: UIView {
         updateUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Overrides
-    
+
     override var isUserInteractionEnabled: Bool {
         didSet {
             updateUI()
         }
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         // Set up each subviews border corners
@@ -87,14 +91,18 @@ class SectionContainerView: UIView {
             multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMinYCorner])
             multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMinYCorner])
         } else {
-            visibleRows.first?.layer.maskedCorners.insert([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+            visibleRows.first?.layer.maskedCorners.insert([
+                .layerMinXMinYCorner, .layerMaxXMinYCorner,
+            ])
         }
         // 3. Round the bottom-most view's bottom corners
         if let multiElementRowView = visibleRows.last as? MultiElementRowView {
             multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMaxYCorner])
             multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner])
         } else {
-            visibleRows.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner, .layerMinXMaxYCorner])
+            visibleRows.last?.layer.maskedCorners.insert([
+                .layerMaxXMaxYCorner, .layerMinXMaxYCorner,
+            ])
         }
 
         // Improve shadow performance
@@ -115,18 +123,18 @@ class SectionContainerView: UIView {
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
         layer.cornerRadius = theme.cornerRadius
-        
+
         if isUserInteractionEnabled || isDarkMode() {
             backgroundColor = theme.colors.background
         } else {
             backgroundColor = .tertiarySystemGroupedBackground
         }
-        
+
         guard let newViews = newViews, views != newViews else {
             return
         }
         // Add new views in a new stack view
-        let dummyFirstView: UIView? // A hack to preserve the first view during the transition
+        let dummyFirstView: UIView?  // A hack to preserve the first view during the transition
         let newStackViews: [UIView]
         if let first = newViews.first, first == views.first {
             // Hack: Give the new stack view a dummy view with the same height as the current stack view's first view
@@ -138,7 +146,7 @@ class SectionContainerView: UIView {
             dummyFirstView = nil
             newStackViews = newViews
         }
-        
+
         let oldStackHeight = self.stackView.frame.size.height
         let newStack = buildStackView(views: newStackViews, theme: theme)
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
@@ -147,12 +155,12 @@ class SectionContainerView: UIView {
         let transition = {
             // Hack: Swap the dummy first view and real first view
             if let dummyFirstView = dummyFirstView,
-               let firstView = self.views.first
+                let firstView = self.views.first
             {
                 self.stackView.insertArrangedSubview(dummyFirstView, at: 0)
                 newStack.insertArrangedSubview(firstView, at: 0)
             }
-            
+
             // Fade old out
             self.stackView.arrangedSubviews.forEach { $0.alpha = 0 }
             self.stackView.alpha = 0.0
@@ -194,8 +202,11 @@ extension SectionContainerView: EventHandler {
 extension SectionContainerView {
     class MultiElementRowView: UIView {
         let views: [UIView]
-        
-        init(views: [UIView], theme: ElementsUITheme = .default) {
+
+        init(
+            views: [UIView],
+            theme: ElementsUITheme = .default
+        ) {
             self.views = views
             super.init(frame: .zero)
             let stackView = buildStackView(views: views, theme: theme)
@@ -210,7 +221,10 @@ extension SectionContainerView {
 
 // MARK: - StackViewWithSeparator
 
-private func buildStackView(views: [UIView], theme: ElementsUITheme = .default) -> StackViewWithSeparator {
+private func buildStackView(
+    views: [UIView],
+    theme: ElementsUITheme = .default
+) -> StackViewWithSeparator {
     let stackView = StackViewWithSeparator(arrangedSubviews: views)
     stackView.axis = .vertical
     stackView.spacing = theme.borderWidth
@@ -219,6 +233,6 @@ private func buildStackView(views: [UIView], theme: ElementsUITheme = .default) 
     stackView.borderCornerRadius = theme.cornerRadius
     stackView.customBackgroundColor = theme.colors.background
     stackView.drawBorder = true
-    stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
+    stackView.hideShadow = true  // Shadow is handled by `SectionContainerView`
     return stackView
 }

@@ -17,14 +17,14 @@ import Foundation
     // Icons/symbols
     case icon_chevron_down = "icon_chevron_down"
     case icon_clear = "icon_clear"
-    
+
     // Brand Icons
     case brand_stripe = "brand_stripe"
     case icon_error = "form_error_icon"
 }
 
-@_spi(STP) public extension Image {
-    static func brandImage(named name: String) -> Image? {
+@_spi(STP) extension Image {
+    public static func brandImage(named name: String) -> Image? {
         return Image(rawValue: "brand_\(name)")
     }
 }

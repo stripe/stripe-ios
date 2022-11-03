@@ -8,13 +8,13 @@
 
 import UIKit
 
-@_spi(STP) public extension UIBarButtonItem {
+@_spi(STP) extension UIBarButtonItem {
 
     /// Creates a new flexible width space item.
     ///
     /// Backport for iOS < 14.0
     /// - Returns: A flexible-width space UIBarButtonItem.
-    class func flexibleSpace() -> Self {
+    public class func flexibleSpace() -> Self {
         return .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     }
 

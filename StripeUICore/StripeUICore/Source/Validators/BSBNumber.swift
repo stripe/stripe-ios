@@ -6,13 +6,14 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
 
 @_spi(STP) public struct BSBNumber {
     private let number: String
     private let pattern: String
-    public init(number: String) {
+    public init(
+        number: String
+    ) {
         self.number = number
         self.pattern = "###-###"
     }
@@ -20,7 +21,7 @@ import Foundation
     public var isComplete: Bool {
         return formattedNumber().count >= pattern.count
     }
-    
+
     public func formattedNumber() -> String {
         guard let formatter = TextFieldFormatter(format: pattern) else {
             return number
@@ -30,7 +31,7 @@ import Foundation
         let result = formatter.applyFormat(
             to: number.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted),
             shouldAppendRemaining: true
-        )        
+        )
         guard result.count > 0 else {
             return ""
         }
@@ -38,6 +39,6 @@ import Foundation
     }
 
     public func bsbNumberText() -> String {
-        return number.filter {$0 != "-"}
+        return number.filter { $0 != "-" }
     }
 }

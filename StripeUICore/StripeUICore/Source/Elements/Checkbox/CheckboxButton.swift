@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public protocol CheckboxButtonDelegate: AnyObject {
     /// Return `true` to open the URL in the device's default browser.
@@ -94,7 +94,7 @@ import UIKit
             textView.isUserInteractionEnabled = isEnabled
         }
     }
-    
+
     public private(set) var hasReceivedTap: Bool = false
 
     public override var isHidden: Bool {
@@ -113,7 +113,10 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(description: String? = nil, theme: ElementsUITheme = .default) {
+    public init(
+        description: String? = nil,
+        theme: ElementsUITheme = .default
+    ) {
         self.theme = theme
         super.init(frame: .zero)
 
@@ -126,21 +129,33 @@ import UIKit
         setupUI()
 
         let didTapGestureRecognizer = UITapGestureRecognizer(
-            target: self, action: #selector(didTap))
+            target: self,
+            action: #selector(didTap)
+        )
         addGestureRecognizer(didTapGestureRecognizer)
     }
 
-    public convenience init(text: String, description: String? = nil, theme: ElementsUITheme = .default) {
+    public convenience init(
+        text: String,
+        description: String? = nil,
+        theme: ElementsUITheme = .default
+    ) {
         self.init(description: description, theme: theme)
         setText(text)
     }
 
-    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsUITheme = .default) {
+    public convenience init(
+        attributedText: NSAttributedString,
+        description: String? = nil,
+        theme: ElementsUITheme = .default
+    ) {
         self.init(description: description, theme: theme)
         setAttributedText(attributedText)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -186,7 +201,7 @@ import UIKit
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: checkbox.trailingAnchor, constant: 6),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            minimizeHeight
+            minimizeHeight,
         ])
     }
 
@@ -200,7 +215,7 @@ import UIKit
     private func updateLabels() {
         let hasDescription = descriptionLabel.text != nil
 
-        let textFont =  hasDescription ? emphasisFont : font
+        let textFont = hasDescription ? emphasisFont : font
         textView.font = textFont
         textView.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
 
@@ -222,7 +237,8 @@ import UIKit
 
         // If the text contains a link, allow links to be opened with the text
         // view's link rotor
-        let linkRotors = textView.accessibilityCustomRotors?.filter({ $0.systemRotorType == .link }) ?? []
+        let linkRotors =
+            textView.accessibilityCustomRotors?.filter({ $0.systemRotorType == .link }) ?? []
         accessibilityCustomRotors = linkRotors
 
         // iOS 13 automatically includes a hint if there is a link rotor, but
@@ -239,7 +255,11 @@ import UIKit
 
 // MARK: - UITextViewDelegate
 extension CheckboxButton: UITextViewDelegate {
-    public func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
+    public func textView(
+        _ textView: UITextView,
+        shouldInteractWith url: URL,
+        in characterRange: NSRange
+    ) -> Bool {
         return delegate?.checkboxButton(self, shouldOpen: url) ?? true
     }
 }
@@ -253,12 +273,12 @@ class CheckBox: UIView {
             setNeedsDisplay()
         }
     }
-    
+
     private var fillColor: UIColor {
         if isSelected {
             return theme.colors.primary
         }
-        
+
         return theme.colors.background
     }
 
@@ -273,7 +293,9 @@ class CheckBox: UIView {
         return CGSize(width: 20, height: 20)
     }
 
-    init(theme: ElementsUITheme = .default) {
+    init(
+        theme: ElementsUITheme = .default
+    ) {
         self.theme = theme
         super.init(frame: .zero)
 
@@ -285,19 +307,23 @@ class CheckBox: UIView {
         setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
     }
-    
-    required init?(coder: NSCoder) {
+
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func draw(_ rect: CGRect) {
         let rect = rect.inset(by: superview!.alignmentRectInsets)
         let borderRectWidth = min(16, rect.width - 2)
         let borderRectHeight = min(16, rect.height - 2)
         let borderRect = CGRect(
             x: max(0, rect.midX - 0.5 * borderRectWidth),
-            y: max(0, rect.midY - 0.5 * borderRectHeight), width: borderRectWidth,
-            height: borderRectHeight)
+            y: max(0, rect.midY - 0.5 * borderRectHeight),
+            width: borderRectWidth,
+            height: borderRectHeight
+        )
 
         let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: 3)
         borderPath.lineWidth = 1
@@ -314,7 +340,8 @@ class CheckBox: UIView {
             let checkmarkPath = UIBezierPath()
             checkmarkPath.move(to: CGPoint(x: borderRect.minX + 3.5, y: borderRect.minY + 9))
             checkmarkPath.addLine(
-                to: CGPoint(x: borderRect.minX + 3.5 + 4, y: borderRect.minY + 8 + 4))
+                to: CGPoint(x: borderRect.minX + 3.5 + 4, y: borderRect.minY + 8 + 4)
+            )
             checkmarkPath.addLine(to: CGPoint(x: borderRect.maxX - 3, y: borderRect.minY + 4))
 
             checkmarkPath.lineCapStyle = .square

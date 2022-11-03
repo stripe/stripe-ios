@@ -9,10 +9,8 @@
 import Foundation
 import UIKit
 
-/**
- A simple container element with an optional title and an error, and draws a border around its elements.
- Chooses which of its sub-elements' errors to display.
- */
+/// A simple container element with an optional title and an error, and draws a border around its elements.
+/// Chooses which of its sub-elements' errors to display.
 @_spi(STP) public final class SectionElement: ContainerElement {
     weak public var delegate: ElementDelegate?
     lazy var sectionView: SectionView = {
@@ -23,7 +21,8 @@ import UIKit
     var errorText: String? {
         // Find the first element that's 1. invalid and 2. has a displayable error
         for element in elements {
-            if case let .invalid(error, shouldDisplay) = element.validationState, shouldDisplay {
+            if case .invalid(let error, let shouldDisplay) = element.validationState, shouldDisplay
+            {
                 return error.localizedDescription
             }
         }
@@ -54,12 +53,11 @@ import UIKit
     var subLabel: String? {
         elements.compactMap({ $0.subLabelText }).first
     }
-    
+
     let theme: ElementsUITheme
 
-
     // MARK: - ViewModel
-    
+
     struct ViewModel {
         let views: [UIView]
         let title: String?
@@ -69,8 +67,12 @@ import UIKit
     }
 
     // MARK: - Initializers
-    
-    public init(title: String? = nil, elements: [Element], theme: ElementsUITheme = .default) {
+
+    public init(
+        title: String? = nil,
+        elements: [Element],
+        theme: ElementsUITheme = .default
+    ) {
         self.title = title
         self.elements = elements
         self.theme = theme
@@ -80,8 +82,11 @@ import UIKit
             }
         }
     }
-    
-    public convenience init(_ element: Element, theme: ElementsUITheme = .default) {
+
+    public convenience init(
+        _ element: Element,
+        theme: ElementsUITheme = .default
+    ) {
         self.init(title: nil, elements: [element], theme: theme)
     }
 }

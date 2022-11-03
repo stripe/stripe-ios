@@ -6,12 +6,19 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP)@testable import StripeUICore
 import XCTest
-@_spi(STP) @testable import StripeUICore
 
 final class DropdownFieldElementTest: XCTestCase {
 
-    let items = ["A", "B", "C", "D"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0, rawData: $0) }
+    let items = ["A", "B", "C", "D"].map {
+        DropdownFieldElement.DropdownItem(
+            pickerDisplayName: $0,
+            labelDisplayName: $0,
+            accessibilityLabel: $0,
+            rawData: $0
+        )
+    }
 
     func testNoDefault() {
         let element = DropdownFieldElement(items: items, label: "")
@@ -47,7 +54,12 @@ final class DropdownFieldElementTest: XCTestCase {
         // Ensure `didUpdate` is not called if the selection doesn't change
 
         var index: Int?
-        let element = DropdownFieldElement(items: items, defaultIndex: 0, label: "", didUpdate: { index = $0 })
+        let element = DropdownFieldElement(
+            items: items,
+            defaultIndex: 0,
+            label: "",
+            didUpdate: { index = $0 }
+        )
         XCTAssertNil(index)
 
         // Emulate a user changing the picker

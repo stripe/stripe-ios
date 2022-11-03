@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP)@testable import StripeUICore
 import XCTest
-@_spi(STP) @testable import StripeUICore
 
 final class IDNumberTextFieldConfigurationTest: XCTestCase {
 
@@ -41,7 +41,9 @@ final class IDNumberTextFieldConfigurationTest: XCTestCase {
         verifyValid(config.validate(text: "a", isOptional: false))
         verifyValid(config.validate(text: "1", isOptional: false))
         verifyValid(config.validate(text: "/;'", isOptional: false))
-        verifyValid(config.validate(text: "asdfghjklqwertyuiopzxcvbnm1234567890", isOptional: false))
+        verifyValid(
+            config.validate(text: "asdfghjklqwertyuiopzxcvbnm1234567890", isOptional: false)
+        )
         // Empty string is okay if optional
         verifyValid(config.validate(text: "", isOptional: true))
     }
@@ -59,45 +61,64 @@ final class IDNumberTextFieldConfigurationTest: XCTestCase {
         // Format as CNPJ if > 11 characters
         XCTAssertEqual(config.makeDisplayText(for: "123456789012").string, "123.456.789/012")
         XCTAssertEqual(config.makeDisplayText(for: "12345678901234").string, "123.456.789/012-34")
-        XCTAssertEqual(config.makeDisplayText(for: "12345678901234567").string, "123.456.789/012-34")
+        XCTAssertEqual(
+            config.makeDisplayText(for: "12345678901234567").string,
+            "123.456.789/012-34"
+        )
     }
 }
 
-private extension IDNumberTextFieldConfigurationTest {
-    func verifyValid(_ validationState: TextFieldElement.ValidationState,
-                     file: StaticString = #filePath,
-                     line: UInt = #line) {
+extension IDNumberTextFieldConfigurationTest {
+    fileprivate func verifyValid(
+        _ validationState: TextFieldElement.ValidationState,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         XCTAssertEqual(validationState, .valid, file: file, line: line)
     }
 
-    func getTextFieldError(_ validationState: TextFieldElement.ValidationState,
-                           file: StaticString = #filePath,
-                           line: UInt = #line) -> TextFieldElement.Error? {
-        guard case let .invalid(error) = validationState else {
+    fileprivate func getTextFieldError(
+        _ validationState: TextFieldElement.ValidationState,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> TextFieldElement.Error? {
+        guard case .invalid(let error) = validationState else {
             XCTFail("Expected `.invalid` but was `.valid`", file: file, line: line)
             return nil
         }
         guard let textFieldError = error as? TextFieldElement.Error else {
-            XCTFail("Expected `TextFieldElement.Error` but was `\(type(of: error))`", file: file, line: line)
+            XCTFail(
+                "Expected `TextFieldElement.Error` but was `\(type(of: error))`",
+                file: file,
+                line: line
+            )
             return nil
         }
         return textFieldError
     }
 
-    func verifyInvalidIncomplete(_ validationState: TextFieldElement.ValidationState,
-                                 file: StaticString = #filePath,
-                                 line: UInt = #line) {
+    fileprivate func verifyInvalidIncomplete(
+        _ validationState: TextFieldElement.ValidationState,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         guard let textFieldError = getTextFieldError(validationState, file: file, line: line) else {
             return
         }
         guard case .incomplete = textFieldError else {
-            return XCTFail("Expected `.incomplete` but was `\(textFieldError)`", file: file, line: line)
+            return XCTFail(
+                "Expected `.incomplete` but was `\(textFieldError)`",
+                file: file,
+                line: line
+            )
         }
     }
 
-    func verifyInvalidEmpty(_ validationState: TextFieldElement.ValidationState,
-                            file: StaticString = #filePath,
-                            line: UInt = #line) {
+    fileprivate func verifyInvalidEmpty(
+        _ validationState: TextFieldElement.ValidationState,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         guard let textFieldError = getTextFieldError(validationState, file: file, line: line) else {
             return
         }

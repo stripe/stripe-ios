@@ -14,9 +14,9 @@ typealias SectionViewModel = SectionElement.ViewModel
 /// For internal SDK use only
 @objc(STP_Internal_SectionView)
 final class SectionView: UIView {
-    
+
     // MARK: - Views
-    
+
     lazy var errorOrSubLabel: UILabel = {
         return ElementsUI.makeErrorLabel(theme: viewModel.theme)
     }()
@@ -24,12 +24,14 @@ final class SectionView: UIView {
     lazy var titleLabel: UILabel = {
         return ElementsUI.makeSectionTitleLabel(theme: viewModel.theme)
     }()
-    
+
     let viewModel: SectionViewModel
-    
+
     // MARK: - Initializers
-    
-    init(viewModel: SectionViewModel) {
+
+    init(
+        viewModel: SectionViewModel
+    ) {
         self.viewModel = viewModel
         self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme)
         super.init(frame: .zero)
@@ -42,10 +44,12 @@ final class SectionView: UIView {
         update(with: viewModel)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Private methods
 
     func update(with viewModel: SectionViewModel) {

@@ -5,8 +5,8 @@
 //  Created by Ramon Torres on 8/10/22.
 //
 
-import Foundation
 import Compression
+import Foundation
 
 extension Data {
     /// An error that occurs when loading an LZFSE compressed file fails.

@@ -8,11 +8,11 @@
 
 import UIKit
 
-@_spi(STP) public extension UIWindow {
+@_spi(STP) extension UIWindow {
 
     /// Returns the top most presented view controller including the root view controller.
     /// - Returns: The top most view controller, or `nil` if the window has no root view controller.
-    func findTopMostPresentedViewController() -> UIViewController? {
+    public func findTopMostPresentedViewController() -> UIViewController? {
         return self.rootViewController?.findTopMostPresentedViewController()
             ?? self.rootViewController
     }

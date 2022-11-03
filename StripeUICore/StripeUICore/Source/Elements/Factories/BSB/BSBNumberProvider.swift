@@ -21,26 +21,27 @@ import Foundation
         bsbNumberUpdateQueue.async {
             let bundle = StripeUICoreBundleLocator.resourcesBundle
             guard self.bsbNumberToNameMapping.isEmpty,
-                  let url = bundle.url(forResource: self.bsbDataFilename, withExtension: ".json"),
-                  let data = try? Data(contentsOf: url),
-                  let decodedBSBs = try? JSONDecoder().decode([String: String].self, from: data) else {
+                let url = bundle.url(forResource: self.bsbDataFilename, withExtension: ".json"),
+                let data = try? Data(contentsOf: url),
+                let decodedBSBs = try? JSONDecoder().decode([String: String].self, from: data)
+            else {
                 completion?()
                 return
             }
             #if DEBUG
-            var accumulator: [String:String] = ["00": "Stripe Test Bank"]
-            decodedBSBs.forEach { (key, value) in
-                accumulator[key] = value
-            }
-            self.bsbNumberToNameMapping = accumulator
+                var accumulator: [String: String] = ["00": "Stripe Test Bank"]
+                decodedBSBs.forEach { (key, value) in
+                    accumulator[key] = value
+                }
+                self.bsbNumberToNameMapping = accumulator
             #else
-            self.bsbNumberToNameMapping = decodedBSBs
+                self.bsbNumberToNameMapping = decodedBSBs
             #endif
             completion?()
             return
         }
     }
-    
+
     func bsbName(for bsbNumber: String) -> String {
         for i in (2...3).reversed() {
             let bsbPrefix = String(bsbNumber.prefix(i))

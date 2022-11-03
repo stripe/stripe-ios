@@ -8,10 +8,14 @@
 
 import UIKit
 
-@_spi(STP) public extension UIViewController {
+@_spi(STP) extension UIViewController {
     /// Use this to animate changes that affect the height of the sheet
-    func animateHeightChange(forceAnimation: Bool = false, duration: CGFloat = 0.5, _ animations: (() -> Void)? = nil, completion: ((Bool) -> Void)? = nil)
-    {
+    public func animateHeightChange(
+        forceAnimation: Bool = false,
+        duration: CGFloat = 0.5,
+        _ animations: (() -> Void)? = nil,
+        completion: ((Bool) -> Void)? = nil
+    ) {
         guard forceAnimation || !isBeingPresented else {
             animations?()
             return
@@ -26,22 +30,23 @@ import UIKit
             animations: {
                 animations?()
                 self.rootParent.presentationController?.containerView?.layoutIfNeeded()
-            }, completion: { f in
+            },
+            completion: { f in
                 completion?(f)
             }
         )
     }
-    
-    var rootParent: UIViewController {
+
+    public var rootParent: UIViewController {
         if let parent = parent {
             return parent.rootParent
         }
         return self
     }
-    
+
     /// Walks the presented view controller hierarchy and return the top most presented controller.
     /// - Returns: Returns the top most presented view controller, or `nil` if this view controller is not presenting another controller.
-    func findTopMostPresentedViewController() -> UIViewController? {
+    public func findTopMostPresentedViewController() -> UIViewController? {
         var topMostController = self.presentedViewController
 
         while let presented = topMostController?.presentedViewController {

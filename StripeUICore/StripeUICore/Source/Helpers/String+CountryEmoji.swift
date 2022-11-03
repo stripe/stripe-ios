@@ -14,14 +14,15 @@ extension String {
         guard Locale.isoRegionCodes.contains(capitalized) else {
             return nil
         }
-        
-        let unicodeScalars = capitalized.unicodeScalars.compactMap({ Unicode.Scalar($0.value + 127397) })
+
+        let unicodeScalars = capitalized.unicodeScalars.compactMap({
+            Unicode.Scalar($0.value + 127397)
+        })
         guard unicodeScalars.count == 2 else {
             return nil
         }
-                
+
         return String(String.UnicodeScalarView(unicodeScalars))
-        
+
     }
 }
-
