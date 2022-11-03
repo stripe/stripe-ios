@@ -15,6 +15,7 @@
 import Foundation
 
 /// A Decodable object that retains unknown fields.
+/// :nodoc:
 public protocol UnknownFieldsDecodable: Decodable {
     /// This should not be used directly.
     /// Use the `allResponseFields` accessor instead.
@@ -23,6 +24,7 @@ public protocol UnknownFieldsDecodable: Decodable {
 }
 
 /// An Encodable object that allows unknown fields to be set.
+/// :nodoc:
 public protocol UnknownFieldsEncodable: Encodable {
     /// This should not be used directly.
     /// Use the `additionalParameters` accessor instead.
@@ -32,6 +34,7 @@ public protocol UnknownFieldsEncodable: Encodable {
 
 /// A Codable enum that sets an "unparsable" case
 /// instead of failing on values that are unknown to the SDK.
+/// :nodoc:
 public protocol SafeEnumCodable: Codable {
     /// If the value is unparsable, the result will be available in
     /// the `allResponseFields` of the parent object.
@@ -106,16 +109,18 @@ extension Encodable {
 }
 
 /// A protocol that conforms to both UnknownFieldsEncodable and UnknownFieldsDecodable.
+/// :nodoc:
 public protocol UnknownFieldsCodable: UnknownFieldsEncodable, UnknownFieldsDecodable {}
 
 /// This should not be used directly.
-///
 /// Use the `additionalParameters` and `allResponseFields` accessors instead.
+/// :nodoc:
 public struct NonEncodableParameters {
     @_spi(STP) public internal(set) var storage: [String: Any] = [:]
 }
 
 extension NonEncodableParameters: Decodable {
+    /// :nodoc:
     public init(
         from decoder: Decoder
     ) throws {
@@ -124,12 +129,14 @@ extension NonEncodableParameters: Decodable {
 }
 
 extension NonEncodableParameters: Encodable {
+    /// :nodoc:
     public func encode(to encoder: Encoder) throws {
         // no-op
     }
 }
 
 extension NonEncodableParameters: Equatable {
+    /// :nodoc:
     public static func == (lhs: NonEncodableParameters, rhs: NonEncodableParameters) -> Bool {
         return NSDictionary(dictionary: lhs.storage).isEqual(to: rhs.storage)
     }
@@ -141,14 +148,17 @@ extension NonEncodableParameters: Equatable {
 extension NonEncodableParameters: CustomStringConvertible, CustomDebugStringConvertible,
     CustomLeafReflectable
 {
+    /// :nodoc:
     public var customMirror: Mirror {
         return Mirror(reflecting: self.description)
     }
 
+    /// :nodoc:
     public var debugDescription: String {
         return description
     }
 
+    /// :nodoc:
     public var description: String {
         return "\(storage.count) fields"
     }
