@@ -1,4 +1,3 @@
-@_spi(STP)@testable import StripeCore
 //
 //  UIImage+StripeCoreTests.swift
 //  StripeCoreTests
@@ -6,7 +5,11 @@
 //  Created by Brian Dorfman on 4/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
+
 import XCTest
+
+// swift-format-ignore
+@_spi(STP) @testable import StripeCore
 
 class UIImage_StripeTests: XCTestCase {
     static let testJpegImageResizingKBiggerSize = 50000
