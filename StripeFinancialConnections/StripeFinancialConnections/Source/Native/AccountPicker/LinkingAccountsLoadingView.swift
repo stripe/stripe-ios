@@ -28,13 +28,13 @@ final class LinkingAccountsLoadingView: UIView {
             subtitle: {
                 if numberOfSelectedAccounts == 1 {
                     if let businessName = businessName {
-                        return String(format: STPLocalizedString("Please wait while your account is linked to %@ through Stripe.", "The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments.  %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+                        return String(format: STPLocalizedString("Please wait while your account is linked to %@.", "The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments.  %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
                     } else {
                         return STPLocalizedString("Please wait while your account is linked to Stripe.", "The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments.")
                     }
                 } else { // multiple bank accounts (numberOfSelectedAccounts > 1)
                     if let businessName = businessName {
-                        return String(format: STPLocalizedString("Please wait while your accounts are linked to %@ through Stripe.", "The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.  %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+                        return String(format: STPLocalizedString("Please wait while your accounts are linked to %@.", "The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.  %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
                     } else {
                         return STPLocalizedString("Please wait while your accounts are linked to Stripe.", "The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
                     }

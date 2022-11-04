@@ -37,7 +37,7 @@ final class PartnerAuthViewController: UIViewController {
         let establishingConnectionLoadingView = ReusableInformationView(
             iconType: .loading,
             title: STPLocalizedString("Establishing connection", "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."),
-            subtitle: STPLocalizedString("Please wait while a connection is established.", "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank.")
+            subtitle: STPLocalizedString("Please wait while we connect to your bank.", "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank.")
         )
         establishingConnectionLoadingView.isHidden = true
         return establishingConnectionLoadingView
