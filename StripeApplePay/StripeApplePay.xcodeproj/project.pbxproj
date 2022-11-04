@@ -14,8 +14,8 @@
 		313A2A8527B5EBCE00E5EA99 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313A2A8427B5EBCE00E5EA99 /* StripeCoreTestUtils.framework */; };
 		313AA5342915988B00324A8B /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 313AA5332915988B00324A8B /* OHHTTPStubs */; };
 		313AA536291598B000324A8B /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 313AA535291598B000324A8B /* OHHTTPStubsSwift */; };
-		313AA5872915BC3900324A8B /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 313AA5862915BC3900324A8B /* OHHTTPStubs */; };
-		313AA5892915BC3D00324A8B /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 313AA5882915BC3D00324A8B /* OHHTTPStubsSwift */; };
+		313AA5872915BC3900324A8B /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 313AA5862915BC3900324A8B /* OHHTTPStubs */; };
+		313AA5892915BC3D00324A8B /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 313AA5882915BC3D00324A8B /* OHHTTPStubsSwift */; };
 		3148D6C32809125C00501D3D /* CardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3148D6C22809125C00501D3D /* CardBrand.swift */; };
 		315BDBE12788E9D8007BD11F /* STPAPIClient+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315BDBE02788E9D8007BD11F /* STPAPIClient+ApplePay.swift */; };
 		3163E4A22787BB8200956D86 /* STPApplePayContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3163E4A12787BB8200956D86 /* STPApplePayContext.swift */; };

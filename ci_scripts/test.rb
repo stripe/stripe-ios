@@ -131,7 +131,7 @@ else
     destination_string += ',name=' + device
     destination_string += ',OS=' + version
   end
-  destination_string = 'platform=watchOS Simulator' if watchos
+  destination_string = 'platform=watchOS Simulator,name=Apple Watch Series 7 - 41mm' if watchos
 end
 
 skip_tests_command = ''
