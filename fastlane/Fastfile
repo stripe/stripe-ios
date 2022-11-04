@@ -116,6 +116,7 @@ platform :ios do
   lane :stripeapplepay_tests do
     Dir.chdir('..') do
       sh("./ci_scripts/test.rb --scheme StripeApplePay --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+      sh('./ci_scripts/test.rb --scheme StripeApplePay --watch --retry-on-failure')
     end
   end
 

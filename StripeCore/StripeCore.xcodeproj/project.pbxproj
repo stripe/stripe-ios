@@ -15,6 +15,8 @@
 		31337A4926E04B6A005C7E02 /* URLSession+Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */; };
 		313AA5322915939D00324A8B /* SystemVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313AA5312915939D00324A8B /* SystemVersion.swift */; };
 		313AA538291598DD00324A8B /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 313AA537291598DD00324A8B /* iOSSnapshotTestCase */; };
+		313AA5812915BBD200324A8B /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 313AA5802915BBD200324A8B /* OHHTTPStubs */; };
+		313AA5832915BBD600324A8B /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 313AA5822915BBD600324A8B /* OHHTTPStubsSwift */; };
 		315BDBDF2788E2B4007BD11F /* STPDispatchFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315BDBDE2788E2B4007BD11F /* STPDispatchFunctions.swift */; };
 		3160673F2804DA6C0082B148 /* StripeJSONShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3160673E2804DA6C0082B148 /* StripeJSONShared.swift */; };
 		31606741280609840082B148 /* UnknownFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31606740280609840082B148 /* UnknownFields.swift */; };
@@ -103,6 +105,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		313AA5842915BC2300324A8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E69D63F226855B250090B43D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6FB9BB7268EA95F000FDB4F;
+			remoteInfo = StripeCoreTestUtils;
+		};
 		E69D640626855B260090B43D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E69D63F226855B250090B43D /* Project object */;
@@ -294,6 +303,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6233B33269E62330062005D /* StripeCoreTestUtils.framework in Frameworks */,
+				313AA5832915BBD600324A8B /* OHHTTPStubsSwift in Frameworks */,
+				313AA5812915BBD200324A8B /* OHHTTPStubs in Frameworks */,
 				E69D640526855B260090B43D /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -710,9 +721,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				313AA5852915BC2300324A8B /* PBXTargetDependency */,
 				E69D640726855B260090B43D /* PBXTargetDependency */,
 			);
 			name = StripeCoreTests;
+			packageProductDependencies = (
+				313AA5802915BBD200324A8B /* OHHTTPStubs */,
+				313AA5822915BBD600324A8B /* OHHTTPStubsSwift */,
+			);
 			productName = StripeCoreTests;
 			productReference = E69D640426855B260090B43D /* StripeCoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -963,6 +979,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		313AA5852915BC2300324A8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6FB9BB7268EA95F000FDB4F /* StripeCoreTestUtils */;
+			targetProxy = 313AA5842915BC2300324A8B /* PBXContainerItemProxy */;
+		};
 		E69D640726855B260090B43D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E69D63FA26855B250090B43D /* StripeCore */;
@@ -1274,6 +1295,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E25440E828F9C8B000C6F5D3 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
 			productName = iOSSnapshotTestCase;
+		};
+		313AA5802915BBD200324A8B /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E254411828F9FBD200C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		313AA5822915BBD600324A8B /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E254411828F9FBD200C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
 		};
 		E254411D28F9FBEB00C6F5D3 /* OHHTTPStubs */ = {
 			isa = XCSwiftPackageProductDependency;

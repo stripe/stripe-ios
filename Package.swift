@@ -6,6 +6,7 @@ let package = Package(
     defaultLocalization: "en",
     platforms: [
         .iOS(.v13)
+        .watchOS(.v6)
     ],
     products: [
         .library(
