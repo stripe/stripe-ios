@@ -12,46 +12,55 @@ typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
 typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
 typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
 
-
 extension STPAPIClient {
-    func createLinkAccountSession(setupIntentID: String,
-                                  clientSecret: String,
-                                  paymentMethodType: STPPaymentMethodType,
-                                  customerName: String?,
-                                  customerEmailAddress: String?,
-                                  completion: @escaping STPLinkAccountSessionBlock) {
+    func createLinkAccountSession(
+        setupIntentID: String,
+        clientSecret: String,
+        paymentMethodType: STPPaymentMethodType,
+        customerName: String?,
+        customerEmailAddress: String?,
+        completion: @escaping STPLinkAccountSessionBlock
+    ) {
         let endpoint: String = "setup_intents/\(setupIntentID)/link_account_sessions"
-        linkAccountSessions(endpoint: endpoint,
-                            clientSecret: clientSecret,
-                            paymentMethodType: paymentMethodType,
-                            customerName: customerName,
-                            customerEmailAddress: customerEmailAddress,
-                            completion: completion)
+        linkAccountSessions(
+            endpoint: endpoint,
+            clientSecret: clientSecret,
+            paymentMethodType: paymentMethodType,
+            customerName: customerName,
+            customerEmailAddress: customerEmailAddress,
+            completion: completion
+        )
     }
 
-    func createLinkAccountSession(paymentIntentID: String,
-                                  clientSecret: String,
-                                  paymentMethodType: STPPaymentMethodType,
-                                  customerName: String?,
-                                  customerEmailAddress: String?,
-                                  completion: @escaping STPLinkAccountSessionBlock) {
+    func createLinkAccountSession(
+        paymentIntentID: String,
+        clientSecret: String,
+        paymentMethodType: STPPaymentMethodType,
+        customerName: String?,
+        customerEmailAddress: String?,
+        completion: @escaping STPLinkAccountSessionBlock
+    ) {
         let endpoint: String = "payment_intents/\(paymentIntentID)/link_account_sessions"
-        linkAccountSessions(endpoint: endpoint,
-                            clientSecret: clientSecret,
-                            paymentMethodType: paymentMethodType,
-                            customerName: customerName,
-                            customerEmailAddress: customerEmailAddress,
-                            completion: completion)
-        
+        linkAccountSessions(
+            endpoint: endpoint,
+            clientSecret: clientSecret,
+            paymentMethodType: paymentMethodType,
+            customerName: customerName,
+            customerEmailAddress: customerEmailAddress,
+            completion: completion
+        )
+
     }
 
     // MARK: - Helper
-    private func linkAccountSessions(endpoint: String,
-                                     clientSecret: String,
-                                     paymentMethodType: STPPaymentMethodType,
-                                     customerName: String?,
-                                     customerEmailAddress: String?,
-                                     completion: @escaping STPLinkAccountSessionBlock) {
+    private func linkAccountSessions(
+        endpoint: String,
+        clientSecret: String,
+        paymentMethodType: STPPaymentMethodType,
+        customerName: String?,
+        customerEmailAddress: String?,
+        completion: @escaping STPLinkAccountSessionBlock
+    ) {
         var parameters: [String: Any] = [
             "client_secret": clientSecret
         ]
@@ -64,7 +73,7 @@ extension STPAPIClient {
         if let customerEmailAddress = customerEmailAddress {
             parameters["payment_method_data[billing_details][email]"] = customerEmailAddress
         }
-        
+
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
@@ -73,12 +82,15 @@ extension STPAPIClient {
             completion(linkAccountSession, error)
         }
     }
-    
-    func attachLinkAccountSession(setupIntentID: String,
-                                  linkAccountSessionID: String,
-                                  clientSecret: String,
-                                  completion: @escaping STPLinkAccountSessionsAttachSetupIntentBlock) {
-        let endpoint: String = "setup_intents/\(setupIntentID)/link_account_sessions/\(linkAccountSessionID)/attach"
+
+    func attachLinkAccountSession(
+        setupIntentID: String,
+        linkAccountSessionID: String,
+        clientSecret: String,
+        completion: @escaping STPLinkAccountSessionsAttachSetupIntentBlock
+    ) {
+        let endpoint: String =
+            "setup_intents/\(setupIntentID)/link_account_sessions/\(linkAccountSessionID)/attach"
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
             "expand": ["payment_method"],
@@ -91,12 +103,15 @@ extension STPAPIClient {
             completion(setupIntent, error)
         }
     }
-    
-    func attachLinkAccountSession(paymentIntentID: String,
-                                  linkAccountSessionID: String,
-                                  clientSecret: String,
-                                  completion: @escaping STPLinkAccountSessionsAttachPaymentIntentBlock) {
-        let endpoint: String = "payment_intents/\(paymentIntentID)/link_account_sessions/\(linkAccountSessionID)/attach"
+
+    func attachLinkAccountSession(
+        paymentIntentID: String,
+        linkAccountSessionID: String,
+        clientSecret: String,
+        completion: @escaping STPLinkAccountSessionsAttachPaymentIntentBlock
+    ) {
+        let endpoint: String =
+            "payment_intents/\(paymentIntentID)/link_account_sessions/\(linkAccountSessionID)/attach"
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
             "expand": ["payment_method"],
@@ -109,5 +124,5 @@ extension STPAPIClient {
             completion(paymentIntent, error)
         }
     }
-    
+
 }

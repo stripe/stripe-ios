@@ -37,7 +37,9 @@ public class STPPaymentMethodUPI: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: response)
     }
 
-    required init?(dictionary dict: [AnyHashable: Any]) {
+    required init?(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         let nsDict = dict as NSDictionary
         guard let vpa = nsDict.stp_string(forKey: "vpa") else {
             return nil

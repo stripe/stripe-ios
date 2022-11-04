@@ -46,7 +46,9 @@ public class STPPaymentMethodAUBECSDebit: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: dict)
     }
 
-    required init?(dictionary dict: [AnyHashable: Any]) {
+    required init?(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         let nsDict = dict as NSDictionary
         guard let bsbNumber = nsDict.stp_string(forKey: "bsb_number"),
             let fingerprint = nsDict.stp_string(forKey: "fingerprint"),

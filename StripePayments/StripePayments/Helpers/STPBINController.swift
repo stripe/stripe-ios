@@ -15,7 +15,7 @@ import Foundation
     @_spi(STP) public let accountRangeLow: String
     @_spi(STP) public let accountRangeHigh: String
     @_spi(STP) public let country: String?
-    
+
     private enum CodingKeys: String, CodingKey {
         case panLength = "pan_length"
         case brand = "brand"
@@ -23,8 +23,10 @@ import Foundation
         case accountRangeHigh = "account_range_high"
         case country = "country"
     }
-    
-    @_spi(STP) public init(from decoder: Decoder) throws {
+
+    @_spi(STP) public init(
+        from decoder: Decoder
+    ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.panLength = try container.decode(UInt.self, forKey: .panLength)
         let brandString = try container.decode(String.self, forKey: .brand)
@@ -34,8 +36,14 @@ import Foundation
         self.country = try? container.decode(String.self, forKey: .country)
         self.isHardcoded = false
     }
-    
-    @_spi(STP) public init(panLength: UInt, brand: STPCardBrand, accountRangeLow: String, accountRangeHigh: String, country: String?) {
+
+    @_spi(STP) public init(
+        panLength: UInt,
+        brand: STPCardBrand,
+        accountRangeLow: String,
+        accountRangeHigh: String,
+        country: String?
+    ) {
         self.panLength = panLength
         self.brand = brand
         self.accountRangeLow = accountRangeLow
@@ -43,7 +51,7 @@ import Foundation
         self.country = country
         self.isHardcoded = true
     }
-    
+
     /// indicates bin range was included in the SDK (rather than downloaded from edge service)
     @_spi(STP) public var isHardcoded: Bool
 }
@@ -58,22 +66,28 @@ extension STPBINRange {
 
         if number.count < (accountRangeLow.count) {
             withinLowRange =
-                Int(number) ?? 0 >= Int((accountRangeLow as NSString?)?.substring(to: number.count) ?? "")
+                Int(number) ?? 0 >= Int(
+                    (accountRangeLow as NSString?)?.substring(to: number.count) ?? ""
+                )
                 ?? 0
         } else {
             withinLowRange =
-                Int((number as NSString).substring(to: accountRangeLow.count)) ?? 0 >= Int(accountRangeLow)
+                Int((number as NSString).substring(to: accountRangeLow.count)) ?? 0 >= Int(
+                    accountRangeLow
+                )
                 ?? 0
         }
 
         if number.count < (accountRangeHigh.count) {
             withinHighRange =
                 Int(number) ?? 0 <= Int(
-                    (accountRangeHigh as NSString?)?.substring(to: number.count) ?? "") ?? 0
+                    (accountRangeHigh as NSString?)?.substring(to: number.count) ?? ""
+                ) ?? 0
         } else {
             withinHighRange =
                 Int((number as NSString).substring(to: accountRangeHigh.count)) ?? 0 <= Int(
-                    accountRangeHigh) ?? 0
+                    accountRangeHigh
+                ) ?? 0
         }
 
         return withinLowRange && withinHighRange
@@ -81,7 +95,8 @@ extension STPBINRange {
 
     func compare(_ other: STPBINRange) -> ComparisonResult {
         return NSNumber(value: accountRangeLow.count).compare(
-            NSNumber(value: other.accountRangeLow.count))
+            NSNumber(value: other.accountRangeLow.count)
+        )
     }
 }
 
@@ -93,15 +108,16 @@ extension STPBINRange {
     }
 
     typealias BINRangeCompletionBlock = (Result<STPBINRangeResponse, Error>) -> Void
-    
+
     /// Converts a PKPayment object into a Stripe token using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    static func retrieve(apiClient: STPAPIClient = .shared,
-              forPrefix binPrefix: String,
-                       completion: @escaping BINRangeCompletionBlock)
-    {
+    static func retrieve(
+        apiClient: STPAPIClient = .shared,
+        forPrefix binPrefix: String,
+        completion: @escaping BINRangeCompletionBlock
+    ) {
         assert(binPrefix.count == 6, "Requests can only be made with 6-digit binPrefixes.")
         // not adding explicit handling for above assert as endpoint will error anyway
         let params = [
@@ -112,7 +128,8 @@ extension STPBINRange {
     }
 }
 
-@_spi(STP) public typealias STPRetrieveBINRangesCompletionBlock = (Result<[STPBINRange], Error>) -> Void
+@_spi(STP) public typealias STPRetrieveBINRangesCompletionBlock = (Result<[STPBINRange], Error>) ->
+    Void
 
 @_spi(STP) public class STPBINController {
     @_spi(STP) public static let shared = STPBINController()
@@ -167,7 +184,7 @@ extension STPBINRange {
     @_spi(STP) public func maxCardNumberLength() -> Int {
         return kMaxCardNumberLength
     }
-    
+
     /// Returns the shortest possible card number length for the brand
     @_spi(STP) public func minCardNumberLength(for brand: STPCardBrand) -> Int {
         switch brand {
@@ -182,7 +199,7 @@ extension STPBINRange {
         case .unionPay:
             return 16
         case .unknown:
-           return 13
+            return 13
         }
     }
 
@@ -190,18 +207,17 @@ extension STPBINRange {
         return kPrefixLengthForMetadataRequest
     }
 
-    /**
-     This is basically a wrapper around:
-
-     1. Does BIN have variable length pans, i.e. do we need to call the metadata service
-     2. If yes, have we already gotten a response from the metadata service
-     */
+    /// This is basically a wrapper around:
+    ///
+    /// 1. Does BIN have variable length pans, i.e. do we need to call the metadata service
+    /// 2. If yes, have we already gotten a response from the metadata service
     @_spi(STP) public func hasBINRanges(forPrefix binPrefix: String) -> Bool {
         if self.isInvalidBINPrefix(binPrefix) {
             return true  // we won't fetch any more info for this prefix
         }
+        // if we know a card has a static length, we don't need to ask the BIN service
         if !self.isVariableLengthBINPrefix(binPrefix) {
-            return true  // if we know a card has a static length, we don't need to ask the BIN service
+            return true
         }
         var hasBINRanges = false
         self._retrievalQueue.sync(execute: {
@@ -257,8 +273,8 @@ extension STPBINRange {
                             let completionBlocks = self.sPendingRequests[binPrefixKey]
 
                             self.sPendingRequests.removeValue(forKey: binPrefixKey)
-                            
-                            if (recordErrorsAsSuccess) {
+
+                            if recordErrorsAsSuccess {
                                 // The following is a comment for STPCardFormView/STPPaymentCardTextField:
                                 // we'll record this response even if there was an error
                                 // this will prevent our validation from getting stuck thinking we don't
@@ -270,7 +286,7 @@ extension STPBINRange {
                             }
                             self._performSync(withAllRangesLock: {
                                 self.sAllRanges =
-                                self.sAllRanges + ((try? ranges.get()) ?? [])
+                                    self.sAllRanges + ((try? ranges.get()) ?? [])
                             })
 
                             if case .failure(_) = ranges {
@@ -283,7 +299,8 @@ extension STPBINRange {
                                 }
                             })
                         })
-                    })
+                    }
+                )
             }
         })
 
@@ -310,11 +327,12 @@ extension STPBINRange {
             // Mastercard
             ("50", "59", 16, .mastercard),
             ("22", "27", 16, .mastercard),
-            ("67", "67", 16, .mastercard) /* Maestro */,
+            ("67", "67", 16, .mastercard),  // Maestro
             // UnionPay
             ("62", "62", 16, .unionPay),
             ("81", "81", 16, .unionPay),
-            ("621598", "621598", 19, .unionPay), // Include at least one known 19-digit BIN for maxLength
+            // Include at least one known 19-digit BIN for maxLength
+            ("621598", "621598", 19, .unionPay),
             // Visa
             ("40", "49", 16, .visa),
             ("413600", "413600", 13, .visa),
@@ -341,13 +359,17 @@ extension STPBINRange {
         var binRanges: [STPBINRange] = []
         for range in ranges {
             let binRange = STPBINRange.init(
-                panLength: range.2, brand: range.3, accountRangeLow: range.0, accountRangeHigh: range.1,
-                country: nil)
+                panLength: range.2,
+                brand: range.3,
+                accountRangeLow: range.0,
+                accountRangeHigh: range.1,
+                country: nil
+            )
             binRanges.append(binRange)
         }
         return binRanges
     }()
-   
+
     private var sAllRanges: [STPBINRange] = {
         return STPBINRangeInitialRanges
     }()

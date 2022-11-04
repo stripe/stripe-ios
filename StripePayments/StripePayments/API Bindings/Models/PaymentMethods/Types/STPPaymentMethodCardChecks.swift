@@ -34,7 +34,8 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
     // TODO(swift): Figure out deprecation strategy
     /// If a address line1 was provided, results of the check.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
@@ -42,7 +43,8 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
     /// If a address postal code was provided, results of the check.
     /// deprecated Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
@@ -50,7 +52,8 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
     /// If a CVC was provided, results of the check.
     /// deprecated Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )

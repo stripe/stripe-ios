@@ -31,7 +31,9 @@ public class STPPaymentMethodCardNetworks: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    required init?(withDictionary dict: [AnyHashable: Any]) {
+    required init?(
+        withDictionary dict: [AnyHashable: Any]
+    ) {
         super.init()
         let nsDict = (dict as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
         guard let available = nsDict.stp_array(forKey: "available") as? [String] else {

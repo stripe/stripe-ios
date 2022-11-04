@@ -40,7 +40,9 @@ import Foundation
     /// Too many requests hit the API too quickly.
     case rateLimit
 
-    internal init(string: String) {
+    internal init(
+        string: String
+    ) {
         switch string.lowercased() {
         case "api_connection_error":
             self = .apiConnection
@@ -104,7 +106,10 @@ public class STPPaymentIntentLastPaymentError: NSObject {
         let props: [String] = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPPaymentIntentLastPaymentError.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPPaymentIntentLastPaymentError.self),
+                self
+            ),
             // PaymentIntentLastError details (alphabetical)
             "code = \(String(describing: code))",
             "declineCode = \(String(describing: declineCode))",
@@ -159,9 +164,11 @@ extension STPPaymentIntentLastPaymentError: STPAPIResponseDecodable {
             message: dict["message"] as? String,
             param: dict["param"] as? String,
             paymentMethod: STPPaymentMethod.decodedObject(
-                fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any]),
+                fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any]
+            ),
             type: STPPaymentIntentLastPaymentErrorType(string: typeString),
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
 }

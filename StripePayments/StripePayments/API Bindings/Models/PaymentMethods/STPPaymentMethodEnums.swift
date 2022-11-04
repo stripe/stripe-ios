@@ -104,12 +104,10 @@ import Foundation
         case .payPal:
             return STPLocalizedString("PayPal", "Payment Method type brand name")
         case .afterpayClearpay:
-            return Locale.current.regionCode == "GB" ||
-            Locale.current.regionCode == "FR" ||
-            Locale.current.regionCode == "ES" ||
-            Locale.current.regionCode == "IT"
-            ? STPLocalizedString("Clearpay", "Payment Method type brand name")
-            : STPLocalizedString("Afterpay", "Payment Method type brand name")
+            return Locale.current.regionCode == "GB" || Locale.current.regionCode == "FR"
+                || Locale.current.regionCode == "ES" || Locale.current.regionCode == "IT"
+                ? STPLocalizedString("Clearpay", "Payment Method type brand name")
+                : STPLocalizedString("Afterpay", "Payment Method type brand name")
         case .blik:
             return STPLocalizedString("BLIK", "Payment Method type brand name")
         case .weChatPay:
@@ -125,11 +123,14 @@ import Foundation
         case .affirm:
             return STPLocalizedString("Affirm", "Payment Method type brand name")
         case .USBankAccount:
-            return STPLocalizedString("US Bank Account", "Payment Method type name for US Bank Account payments.")
+            return STPLocalizedString(
+                "US Bank Account",
+                "Payment Method type name for US Bank Account payments."
+            )
         case .bacsDebit,
             .cardPresent,
             .unknown:
-            fallthrough
+            return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }

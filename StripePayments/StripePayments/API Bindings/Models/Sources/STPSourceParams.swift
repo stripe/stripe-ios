@@ -355,9 +355,15 @@ extension STPSourceParams {
     /// - Returns: an STPSourceParams object populated with the provided values.
     @available(swift, obsoleted: 1.0)
     @objc(
-        klarnaParamsWithReturnURL:currency:purchaseCountry:items:customPaymentMethods:
+        klarnaParamsWithReturnURL:
+        currency:
+        purchaseCountry:
+        items:
+        customPaymentMethods:
         billingAddress:
-        billingFirstName:billingLastName:billingDOB:
+        billingFirstName:
+        billingLastName:
+        billingDOB:
     )
     public class func objc_klarnaParams(
         withReturnURL returnURL: String,
@@ -374,10 +380,16 @@ extension STPSourceParams {
             STPKlarnaPaymentMethods(rawValue: $0.intValue) ?? STPKlarnaPaymentMethods.none
         }
         return klarnaParams(
-            withReturnURL: returnURL, currency: currency, purchaseCountry: purchaseCountry,
+            withReturnURL: returnURL,
+            currency: currency,
+            purchaseCountry: purchaseCountry,
             items: items,
-            customPaymentMethods: customPaymentMethods, billingAddress: address,
-            billingFirstName: firstName, billingLastName: lastName, billingDOB: dateOfBirth)
+            customPaymentMethods: customPaymentMethods,
+            billingAddress: address,
+            billingFirstName: firstName,
+            billingLastName: lastName,
+            billingDOB: dateOfBirth
+        )
     }
 
     /// Creates params for a Klarna source.
@@ -493,7 +505,8 @@ extension STPSourceParams {
                 customPaymentMethodsArray.add("installments")
             }
             klarnaDict["custom_payment_methods"] = customPaymentMethodsArray.componentsJoined(
-                by: ",")
+                by: ","
+            )
         }
 
         additionalAPIParameters["source_order"] = [
@@ -528,11 +541,18 @@ extension STPSourceParams {
         customPaymentMethods: [NSNumber]
     ) -> STPSourceParams {
         return self.klarnaParams(
-            withReturnURL: returnURL, currency: currency, purchaseCountry: purchaseCountry,
+            withReturnURL: returnURL,
+            currency: currency,
+            purchaseCountry: purchaseCountry,
             items: items,
             customPaymentMethods: customPaymentMethods.map({
                 STPKlarnaPaymentMethods(rawValue: $0.intValue) ?? .none
-            }), billingAddress: nil, billingFirstName: "", billingLastName: "", billingDOB: nil)
+            }),
+            billingAddress: nil,
+            billingFirstName: "",
+            billingLastName: "",
+            billingDOB: nil
+        )
     }
 
     /// Creates params for a Klarna source.
@@ -555,10 +575,16 @@ extension STPSourceParams {
         customPaymentMethods: [STPKlarnaPaymentMethods]
     ) -> STPSourceParams {
         return self.klarnaParams(
-            withReturnURL: returnURL, currency: currency, purchaseCountry: purchaseCountry,
+            withReturnURL: returnURL,
+            currency: currency,
+            purchaseCountry: purchaseCountry,
             items: items,
-            customPaymentMethods: customPaymentMethods, billingAddress: nil, billingFirstName: "",
-            billingLastName: "", billingDOB: nil)
+            customPaymentMethods: customPaymentMethods,
+            billingAddress: nil,
+            billingFirstName: "",
+            billingLastName: "",
+            billingDOB: nil
+        )
     }
 
     /// Creates params for a 3DS source.
@@ -875,7 +901,8 @@ extension STPSourceParams {
             if let url = url {
                 let urlComponents = NSURLComponents(
                     url: url,
-                    resolvingAgainstBaseURL: false)
+                    resolvingAgainstBaseURL: false
+                )
 
                 if let urlComponents = urlComponents {
 
@@ -893,7 +920,9 @@ extension STPSourceParams {
                     queryItems.append(
                         URLQueryItem(
                             name: "redirect_merchant_name",
-                            value: redirectMerchantName))
+                            value: redirectMerchantName
+                        )
+                    )
                     urlComponents.queryItems = queryItems as [URLQueryItem]?
 
                     var redirectCopy = redirect

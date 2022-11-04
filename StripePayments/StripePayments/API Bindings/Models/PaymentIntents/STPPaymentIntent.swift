@@ -44,7 +44,9 @@ import Foundation
     /// Parse the string and return the correct `STPPaymentIntentConfirmationMethod`,
     /// or `STPPaymentIntentConfirmationMethodUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the confirmation method
-    internal static func confirmationMethod(from string: String)
+    internal static func confirmationMethod(
+        from string: String
+    )
         -> STPPaymentIntentConfirmationMethod
     {
         let map: [String: STPPaymentIntentConfirmationMethod] = [
@@ -129,7 +131,7 @@ public class STPPaymentIntent: NSObject {
 
     /// The ordered payment method preference for this PaymentIntent
     @_spi(STP) public let orderedPaymentMethodTypes: [STPPaymentMethodType]
-    
+
     /// A list of payment method types that are not activated in live mode, but activated in test mode
     @_spi(STP) public let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
 
@@ -246,8 +248,10 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
         }
 
         if let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
-           let paymentIntentDict = paymentMethodPrefDict["payment_intent"] as? [AnyHashable: Any],
-           let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"] as? [String] {
+            let paymentIntentDict = paymentMethodPrefDict["payment_intent"] as? [AnyHashable: Any],
+            let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"]
+                as? [String]
+        {
             // Consolidates expanded payment_intent and ordered_payment_method_types into singular dict for decoding
             var dict = paymentIntentDict
             dict["country_code"] = paymentMethodPrefDict["country_code"]
@@ -261,7 +265,8 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
         }
     }
 
-    class func decodeSTPPaymentIntentObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    class func decodeSTPPaymentIntentObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self?
+    {
         guard let dict = response,
             let stripeId = dict["id"] as? String,
             let clientSecret = dict["client_secret"] as? String,
@@ -276,48 +281,59 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
         }
 
         let paymentMethod = STPPaymentMethod.decodedObject(
-            fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any])
+            fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any]
+        )
         let setupFutureUsageString = dict["setup_future_usage"] as? String
         let canceledAtUnixTime = dict["canceled_at"] as? TimeInterval
         let unactivatedPaymentTypes = STPPaymentMethod.paymentMethodTypes(
-            from: dict["unactivated_payment_method_types"] as? [String] ?? [])
+            from: dict["unactivated_payment_method_types"] as? [String] ?? []
+        )
         return STPPaymentIntent(
             allResponseFields: dict,
             amount: amount,
             canceledAt: canceledAtUnixTime != nil
                 ? Date(timeIntervalSince1970: canceledAtUnixTime!) : nil,
             captureMethod: STPPaymentIntentCaptureMethod.captureMethod(
-                from: dict["capture_method"] as? String ?? ""),
+                from: dict["capture_method"] as? String ?? ""
+            ),
             clientSecret: clientSecret,
             confirmationMethod: STPPaymentIntentConfirmationMethod.confirmationMethod(
-                from: dict["confirmation_method"] as? String ?? ""),
+                from: dict["confirmation_method"] as? String ?? ""
+            ),
             countryCode: dict["country_code"] as? String,
             created: Date(timeIntervalSince1970: createdUnixTime),
             currency: currency,
             lastPaymentError: STPPaymentIntentLastPaymentError.decodedObject(
-                fromAPIResponse: dict["last_payment_error"] as? [AnyHashable: Any]),
+                fromAPIResponse: dict["last_payment_error"] as? [AnyHashable: Any]
+            ),
             linkSettings: LinkSettings.decodedObject(
-                fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]),
+                fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
+            ),
             livemode: livemode,
             nextAction: STPIntentAction.decodedObject(
-                fromAPIResponse: dict["next_action"] as? [AnyHashable: Any]),
+                fromAPIResponse: dict["next_action"] as? [AnyHashable: Any]
+            ),
             orderedPaymentMethodTypes: STPPaymentMethod.paymentMethodTypes(
-                from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings),
+                from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
+            ),
             paymentMethod: paymentMethod,
             paymentMethodId: paymentMethod?.stripeId ?? dict["payment_method"] as? String,
             paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
-                fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]),
+                fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
+            ),
             paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
             receiptEmail: dict["receipt_email"] as? String,
             setupFutureUsage: setupFutureUsageString != nil
                 ? STPPaymentIntentSetupFutureUsage(string: setupFutureUsageString!) : .none,
             shipping: STPPaymentIntentShippingDetails.decodedObject(
-                fromAPIResponse: dict["shipping"] as? [AnyHashable: Any]),
+                fromAPIResponse: dict["shipping"] as? [AnyHashable: Any]
+            ),
             sourceId: dict["source"] as? String,
             status: STPPaymentIntentStatus.status(from: rawStatus),
             stripeDescription: dict["description"] as? String,
             stripeId: stripeId,
-            unactivatedPaymentMethodTypes: unactivatedPaymentTypes) as? Self
+            unactivatedPaymentMethodTypes: unactivatedPaymentTypes
+        ) as? Self
     }
 }
 

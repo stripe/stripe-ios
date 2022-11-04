@@ -7,11 +7,11 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
 #endif
-@_spi(STP) import StripeCore
 
 @_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject {
     var threeDS2Service: STDSThreeDS2Service? { get }
@@ -26,14 +26,16 @@ import Foundation
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
 }
 
-@_spi(STP) public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHandlerActionParams {
+@_spi(STP)
+public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHandlerActionParams {
 
     private var serviceInitialized = false
 
     @_spi(STP) public let authenticationContext: STPAuthenticationContext
     @_spi(STP) public let apiClient: STPAPIClient
     @_spi(STP) public let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
-    @_spi(STP) public let paymentIntentCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock
+    @_spi(STP) public let paymentIntentCompletion:
+        STPPaymentHandlerActionPaymentIntentCompletionBlock
     @_spi(STP) public let returnURLString: String?
     @_spi(STP) public var paymentIntent: STPPaymentIntent?
     @_spi(STP) public var threeDS2Transaction: STDSTransaction?
@@ -54,19 +56,23 @@ import Foundation
                     let configParams = STDSConfigParameters()
                     if !(self.paymentIntent?.livemode ?? true) {
                         configParams.addParameterNamed(
-                            "kInternalStripeTestingConfigParam", withValue: "Y")
+                            "kInternalStripeTestingConfigParam",
+                            withValue: "Y"
+                        )
                     }
                     self._threeDS2Service?.initialize(
                         withConfig: configParams,
                         locale: Locale.autoupdatingCurrent,
                         uiSettings: self.threeDSCustomizationSettings.uiCustomization
-                            .uiCustomization)
+                            .uiCustomization
+                    )
                 },
                 catch: { _ in
                     self._threeDS2Service = nil
                 },
                 finallyBlock: {
-                })
+                }
+            )
         }
 
         return _threeDS2Service
@@ -125,19 +131,23 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
                     let configParams = STDSConfigParameters()
                     if !(self.setupIntent?.livemode ?? true) {
                         configParams.addParameterNamed(
-                            "kInternalStripeTestingConfigParam", withValue: "Y")
+                            "kInternalStripeTestingConfigParam",
+                            withValue: "Y"
+                        )
                     }
                     self._threeDS2Service?.initialize(
                         withConfig: configParams,
                         locale: Locale.autoupdatingCurrent,
                         uiSettings: self.threeDSCustomizationSettings.uiCustomization
-                            .uiCustomization)
+                            .uiCustomization
+                    )
                 },
                 catch: { _ in
                     self._threeDS2Service = nil
                 },
                 finallyBlock: {
-                })
+                }
+            )
         }
 
         return _threeDS2Service

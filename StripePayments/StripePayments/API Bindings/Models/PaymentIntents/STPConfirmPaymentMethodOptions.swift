@@ -24,7 +24,7 @@ public class STPConfirmPaymentMethodOptions: NSObject {
 
     /// Options for a WeChat Pay Payment Method.
     @objc public var weChatPayOptions: STPConfirmWeChatPayOptions?
-    
+
     /// Options for a US Bank Account Payment Method.
     @objc public var usBankAccountOptions: STPConfirmUSBankAccountOptions?
 

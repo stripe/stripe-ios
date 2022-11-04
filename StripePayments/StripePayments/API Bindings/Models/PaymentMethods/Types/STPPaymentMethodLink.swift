@@ -10,11 +10,11 @@ import Foundation
 
 /// A Link Payment Method.
 public class STPPaymentMethodLink: NSObject, STPAPIResponseDecodable {
-    
+
     @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
-    
+
     // MARK: - Description
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -33,7 +33,9 @@ public class STPPaymentMethodLink: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: response)
     }
 
-    required init(dictionary dict: [AnyHashable: Any]) {
+    required init(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         super.init()
         allResponseFields = dict
     }

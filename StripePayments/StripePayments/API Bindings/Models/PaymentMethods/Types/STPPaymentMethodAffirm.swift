@@ -27,7 +27,7 @@ public class STPPaymentMethodAffirm: NSObject, STPAPIResponseDecodable {
     // MARK: - STPAPIResponseDecodeable
     @objc
     /// :nodoc:
-    public static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+    public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
         }
@@ -35,7 +35,9 @@ public class STPPaymentMethodAffirm: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: response)
     }
 
-    required init?(dictionary dict: [AnyHashable: Any]) {
+    required init?(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         super.init()
         allResponseFields = dict
     }

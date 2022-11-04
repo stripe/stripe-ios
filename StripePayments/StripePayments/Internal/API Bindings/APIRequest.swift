@@ -21,7 +21,8 @@ let JSONKeyObject = "object"
 /// 2) Define every Stripe API resource explicitly as a Resource { URL, HTTPMethod, ReturnType }
 /// 3) Make this class generic on the Resource
 @_spi(STP) public class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
-    @_spi(STP) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) -> Void
+    @_spi(STP) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) ->
+        Void
 
     @_spi(STP) public class func post(
         with apiClient: STPAPIClient,
@@ -43,7 +44,8 @@ let JSONKeyObject = "object"
             with: request as URLRequest,
             completionHandler: { body, response, error in
                 self.parseResponse(response, body: body, error: error, completion: completion)
-        })
+            }
+        )
     }
 
     @_spi(STP) public class func getWith(
@@ -53,8 +55,12 @@ let JSONKeyObject = "object"
         completion: @escaping STPAPIResponseBlock
     ) {
         self.getWith(
-            apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
-            completion: completion)
+            apiClient,
+            endpoint: endpoint,
+            additionalHeaders: [:],
+            parameters: parameters,
+            completion: completion
+        )
     }
 
     @_spi(STP) public class func getWith(
@@ -77,7 +83,8 @@ let JSONKeyObject = "object"
             with: request as URLRequest,
             completionHandler: { body, response, error in
                 self.parseResponse(response, body: body, error: error, completion: completion)
-        })
+            }
+        )
     }
 
     @_spi(STP) public class func delete(
@@ -87,8 +94,12 @@ let JSONKeyObject = "object"
         completion: @escaping STPAPIResponseBlock
     ) {
         self.delete(
-            with: apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
-            completion: completion)
+            with: apiClient,
+            endpoint: endpoint,
+            additionalHeaders: [:],
+            parameters: parameters,
+            completion: completion
+        )
     }
 
     @_spi(STP) public class func delete(
@@ -111,7 +122,8 @@ let JSONKeyObject = "object"
             with: request as URLRequest,
             completionHandler: { body, response, error in
                 self.parseResponse(response, body: body, error: error, completion: completion)
-        })
+            }
+        )
     }
 
     class func parseResponse<ResponseType: STPAPIResponseDecodable>(
@@ -161,7 +173,9 @@ let JSONKeyObject = "object"
                 NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
             {
                 safeCompletion(nil, error)
-            } else if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
+            } else if let responseObject = ResponseType.decodedObject(
+                fromAPIResponse: jsonDictionary
+            ) {
                 safeCompletion(responseObject, nil)
             } else {
                 safeCompletion(nil, NSError.stp_genericFailedToParseResponseError())
@@ -169,7 +183,7 @@ let JSONKeyObject = "object"
             return
         }
         // END OF STPEmptyStripeResponse HACK
-        
+
         if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
             safeCompletion(responseObject, nil)
         } else {
@@ -181,4 +195,3 @@ let JSONKeyObject = "object"
     }
 
 }
-

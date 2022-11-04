@@ -54,7 +54,8 @@ public class STPPaymentMethodCardWallet: NSObject, STPAPIResponseDecodable {
     class func stringToTypeMapping() -> [String: NSNumber] {
         return [
             "amex_express_checkout": NSNumber(
-                value: STPPaymentMethodCardWalletType.amexExpressCheckout.rawValue),
+                value: STPPaymentMethodCardWalletType.amexExpressCheckout.rawValue
+            ),
             "apple_pay": NSNumber(value: STPPaymentMethodCardWalletType.applePay.rawValue),
             "google_pay": NSNumber(value: STPPaymentMethodCardWalletType.googlePay.rawValue),
             "masterpass": NSNumber(value: STPPaymentMethodCardWalletType.masterpass.rawValue),
@@ -89,9 +90,11 @@ public class STPPaymentMethodCardWallet: NSObject, STPAPIResponseDecodable {
         wallet.allResponseFields = response
         wallet.type = self.type(from: dict.stp_string(forKey: "type") ?? "")
         wallet.visaCheckout = STPPaymentMethodCardWalletVisaCheckout.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "visa_checkout"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "visa_checkout")
+        )
         wallet.masterpass = STPPaymentMethodCardWalletMasterpass.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "masterpass"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "masterpass")
+        )
         return wallet
     }
 }
