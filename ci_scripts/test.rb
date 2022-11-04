@@ -144,6 +144,7 @@ only_tests.each do |only_test|
   only_tests_command += "-only-testing:\"#{only_test}\" "
 end
 
+sdk = watchos ? 'watchsimulator' : 'iphonesimulator'
 quiet_command = ''
 
 quiet_command = '-quiet' if build_action == 'build-for-testing'
@@ -159,7 +160,7 @@ Dir.chdir(__dir__ + '/..') do
     -workspace "Stripe.xcworkspace" \
     -scheme "#{build_scheme}" \
     -configuration "Debug" \
-    -sdk "iphonesimulator" \
+    -sdk "#{sdk}" \
     -destination "#{destination_string}" \
     -derivedDataPath build-ci-tests \
     #{skip_tests_command} \
