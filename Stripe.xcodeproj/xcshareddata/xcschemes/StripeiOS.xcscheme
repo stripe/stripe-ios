@@ -62,6 +62,9 @@
                   Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
                </Test>
                <Test
+                  Identifier = "PaymentMethodMessagingViewFunctionalTest">
+               </Test>
+               <Test
                   Identifier = "STPCardBINMetadataTests">
                </Test>
                <Test
