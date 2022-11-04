@@ -24,7 +24,6 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
 enum AccountPickerType {
     case checkbox
     case radioButton
-    case dropdown
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -66,7 +65,6 @@ final class AccountPickerViewController: UIViewController {
             isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
             businessName: businessName,
             permissions: dataSource.manifest.permissions,
-            singleAccount: dataSource.manifest.singleAccount,
             didSelectLinkAccounts: { [weak self] in
                 guard let self = self else {
                     return
@@ -91,13 +89,7 @@ final class AccountPickerViewController: UIViewController {
     
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.accountPickerType = {
-            if dataSource.authorizationSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.isOauth {
-                return .dropdown
-            } else {
-                return dataSource.manifest.singleAccount ? .radioButton : .checkbox
-            }
-        }()
+        self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -256,22 +248,14 @@ final class AccountPickerViewController: UIViewController {
         let paneLayoutView = PaneWithHeaderLayoutView(
             title: {
                 if dataSource.manifest.singleAccount {
-                    return STPLocalizedString("Select an account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                    return STPLocalizedString("Confirm your account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
                 } else {
-                    return STPLocalizedString("Select accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                    return STPLocalizedString("Confirm your accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
                 }
             }(),
             subtitle: {
-                if accountPickerType == .dropdown {
-                    if dataSource.manifest.isStripeDirect == true {
-                        return STPLocalizedString("Stripe only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
-                    } else {
-                        if let businessName = businessName {
-                            return String(format: STPLocalizedString("%@ only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. %@ will be filled with the business name, ex. Coca-Cola Company."), businessName)
-                        } else {
-                            return STPLocalizedString("This merchant only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
-                        }
-                    }
+                if accountPickerType == .radioButton {
+                    return STPLocalizedString("Select the account you'd like to link.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
                 } else {
                     return nil // no subtitle
                 }
@@ -281,27 +265,11 @@ final class AccountPickerViewController: UIViewController {
         )
         paneLayoutView.addTo(view: view)
         
-        if accountPickerType == .dropdown {
-            let tapOutsideOfDropdownGestureRecognizer = UITapGestureRecognizer(
-                target: self,
-                action: #selector(didTapOutsideOfDropdownControl)
-            )
-            paneLayoutView.scrollView.addGestureRecognizer(tapOutsideOfDropdownGestureRecognizer)
-        }
-        
         switch accountPickerType {
         case .checkbox:
             // select all accounts
             dataSource.updateSelectedAccounts(enabledAccounts)
         case .radioButton:
-            if enabledAccounts.count == 1 {
-                // select the one (and only) available account
-                dataSource.updateSelectedAccounts(enabledAccounts)
-            } else { // accounts.count >= 2
-                // don't select any accounts (...let the user decide which one)
-                dataSource.updateSelectedAccounts([])
-            }
-        case .dropdown:
             if enabledAccounts.count == 1 {
                 // select the one (and only) available account
                 dataSource.updateSelectedAccounts(enabledAccounts)
@@ -368,11 +336,6 @@ final class AccountPickerViewController: UIViewController {
                     self.delegate?.accountPickerViewController(self, didReceiveTerminalError: error)
                 }
             }
-    }
-    
-    @objc private func didTapOutsideOfDropdownControl() {
-        // hide the "dropdown picker view keyboard"
-        view.endEditing(true)
     }
 }
 
