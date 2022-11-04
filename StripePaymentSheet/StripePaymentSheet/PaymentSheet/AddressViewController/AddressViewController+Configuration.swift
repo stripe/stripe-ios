@@ -11,7 +11,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
 
-public extension AddressViewController {
+@_spi(STP) public extension AddressViewController {
+    /// 🏗 Under construction
     /// The customer data collected by `AddressViewController`
     struct AddressDetails {
         /// The customer's address
@@ -67,6 +68,7 @@ public extension AddressViewController {
         }
     }
     
+    /// 🏗 Under construction
     /// Configuration for an `AddressViewController` instance.
     struct Configuration {
         /// Initializes a Configuration
@@ -81,8 +83,9 @@ public extension AddressViewController {
             self.title = title ?? .Localized.shipping_address
         }
         
+        /// 🏗 Under construction
         /// Configuration related to the collection of additional fields beyond the physical address.
-        public struct AdditionalFields {
+        @_spi(STP) public struct AdditionalFields {
             /// Whether a field should be hidden, optional, or required.
             public enum FieldConfiguration {
                 /// The field is not displayed.
@@ -107,6 +110,7 @@ public extension AddressViewController {
             }
         }
         
+        /// 🏗 Under construction
         /// Default values for the fields collected by `AddressViewController`
         public struct DefaultAddressDetails {
             /// The customer's address
