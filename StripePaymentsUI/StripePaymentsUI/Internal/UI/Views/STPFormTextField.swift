@@ -400,6 +400,7 @@ class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
         let hasTextContentType = textField.textContentType != nil
 
         if hasTextContentType && insertingIntoEmptyField && (string == " ") {
+            //         Observed behavior w/iOS 11.0 through 11.2.0 (latest):
             //
             //         1. UITextContentType suggestions are only available when textField is empty
             //         2. When user taps a QuickType suggestion for the `textContentType`, UIKit *first*
