@@ -121,11 +121,7 @@ extension AnalyticsClientV2Protocol {
         payload["created"] = Date().timeIntervalSince1970
 
         // Common payload
-#if os(iOS)
-        let version = UIDevice.current.systemVersion
-#elseif os(watchOS)
-        let version = "Watch" + WKInterfaceDevice.current().systemVersion
-#endif
+        let version = SystemInformation.version
         if !version.isEmpty {
             payload["os_version"] = version
         }
