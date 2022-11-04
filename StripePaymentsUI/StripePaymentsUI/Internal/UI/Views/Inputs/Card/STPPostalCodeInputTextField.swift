@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @_spi(STP) public class STPPostalCodeInputTextField: STPInputTextField {
 
@@ -26,13 +26,21 @@ import UIKit
         return validator.inputValue
     }
 
-    public convenience init(postalCodeRequirement: STPPostalCodeRequirement) {
+    public convenience init(
+        postalCodeRequirement: STPPostalCodeRequirement
+    ) {
         self.init(
             formatter: STPPostalCodeInputTextFieldFormatter(),
-            validator: STPPostalCodeInputTextFieldValidator(postalCodeRequirement: postalCodeRequirement))
+            validator: STPPostalCodeInputTextFieldValidator(
+                postalCodeRequirement: postalCodeRequirement
+            )
+        )
     }
 
-    required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+    required init(
+        formatter: STPInputTextFieldFormatter,
+        validator: STPInputTextFieldValidator
+    ) {
         assert(formatter.isKind(of: STPPostalCodeInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPPostalCodeInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
@@ -40,7 +48,9 @@ import UIKit
         textContentType = .postalCode
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         super.init(coder: coder)
     }
 
@@ -62,7 +72,7 @@ import UIKit
         }
         setNeedsLayout()
     }
-    
+
     private func updateKeyboard() {
         if countryCode == "US" {
             keyboardType = .asciiCapableNumberPad

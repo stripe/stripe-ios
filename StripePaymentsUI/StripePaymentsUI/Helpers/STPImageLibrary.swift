@@ -7,10 +7,9 @@
 //
 
 import Foundation
-import UIKit
-
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
 public class STPImageLibrary: NSObject {
@@ -69,12 +68,14 @@ public class STPImageLibrary: NSObject {
     }
 
     /// This returns the appropriate icon for the specified card brand.
-    @objc(brandImageForCardBrand:) public class func cardBrandImage(for brand: STPCardBrand)
+    @objc(brandImageForCardBrand:) public class func cardBrandImage(
+        for brand: STPCardBrand
+    )
         -> UIImage
     {
         return self.brandImage(for: brand, template: false)
     }
-    
+
     /// This returns the appropriate icon for the specified card brand as a
     /// single color template that can be tinted
     @objc(templatedBrandImageForCardBrand:) public class func templatedBrandImage(
@@ -137,7 +138,8 @@ public class STPImageLibrary: NSObject {
         }
         let image = self.safeImageNamed(
             imageName ?? "",
-            templateIfAvailable: shouldUseTemplate)
+            templateIfAvailable: shouldUseTemplate
+        )
         return image
     }
 }

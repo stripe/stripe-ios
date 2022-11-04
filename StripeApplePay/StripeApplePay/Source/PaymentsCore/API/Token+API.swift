@@ -21,20 +21,23 @@ extension StripeAPI.Token {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    static func create(apiClient: STPAPIClient = .shared,
-                       payment: PKPayment,
-                       completion: @escaping TokenCompletionBlock)
-    {
+    static func create(
+        apiClient: STPAPIClient = .shared,
+        payment: PKPayment,
+        completion: @escaping TokenCompletionBlock
+    ) {
         let params = payment.stp_tokenParameters(apiClient: apiClient)
         create(
             apiClient: apiClient,
             parameters: params,
-            completion: completion)
+            completion: completion
+        )
     }
-    
-    static func create(apiClient: STPAPIClient = .shared,
-                       parameters: [String: Any],
-                       completion: @escaping TokenCompletionBlock
+
+    static func create(
+        apiClient: STPAPIClient = .shared,
+        parameters: [String: Any],
+        completion: @escaping TokenCompletionBlock
     ) {
         let tokenType = STPAnalyticsClient.tokenType(fromParameters: parameters)
         var mutableParams = parameters
@@ -44,7 +47,7 @@ extension StripeAPI.Token {
         apiClient.post(resource: Resource, parameters: mutableParams, completion: completion)
         STPTelemetryClient.shared.sendTelemetryData()
     }
-    
+
     static let Resource = "tokens"
 }
 

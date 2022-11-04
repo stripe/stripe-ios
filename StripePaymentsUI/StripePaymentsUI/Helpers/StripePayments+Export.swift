@@ -7,6 +7,5 @@
 //
 
 import Foundation
-
-@_exported import StripePayments
 @_exported import StripeCore
+@_exported import StripePayments

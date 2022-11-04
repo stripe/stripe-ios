@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
 
@@ -23,14 +23,16 @@ class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
         let numericInput = STPNumericStringValidator.sanitizedNumericString(for: inputValue)
         let monthString = numericInput.stp_safeSubstring(to: 2)
         var yearString = numericInput.stp_safeSubstring(from: 2)
-        
+
         // prepend "20" to ensure we provide a 4 digit year, this is to be consistent with Checkout
         if yearString.count == 2 {
-            let centuryLeadingDigits = Int(floor(Double(Calendar(identifier: .iso8601).component(.year, from: Date())) / 100))
-                                           
+            let centuryLeadingDigits = Int(
+                floor(Double(Calendar(identifier: .iso8601).component(.year, from: Date())) / 100)
+            )
+
             yearString = "\(centuryLeadingDigits)\(yearString)"
         }
-        
+
         if monthString.count == 2 && yearString.count == 4 {
             return (month: monthString, year: yearString)
         } else {
@@ -51,7 +53,9 @@ class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
 
             let monthState = STPCardValidator.validationState(forExpirationMonth: monthString)
             let yearState = STPCardValidator.validationState(
-                forExpirationYear: yearString, inMonth: monthString)
+                forExpirationYear: yearString,
+                inMonth: monthString
+            )
 
             if monthState == .valid && yearState == .valid {
                 validationState = .valid(message: nil)
@@ -59,13 +63,18 @@ class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
                 // TODO: We should be more specific here e.g. "Your card's expiration year is in the past."
                 validationState = .invalid(errorMessage: defaultErrorMessage)
             } else if monthState == .invalid {
-                validationState = .invalid(errorMessage: String.Localized.your_cards_expiration_month_is_invalid)
+                validationState = .invalid(
+                    errorMessage: String.Localized.your_cards_expiration_month_is_invalid
+                )
             } else if yearState == .invalid {
-                validationState = .invalid(errorMessage: String.Localized.your_cards_expiration_year_is_invalid)
+                validationState = .invalid(
+                    errorMessage: String.Localized.your_cards_expiration_year_is_invalid
+                )
             } else {
                 validationState = .incomplete(
                     description: !inputValue.isEmpty
-                    ? String.Localized.your_cards_expiration_date_is_incomplete : nil)
+                        ? String.Localized.your_cards_expiration_date_is_incomplete : nil
+                )
             }
         }
     }
