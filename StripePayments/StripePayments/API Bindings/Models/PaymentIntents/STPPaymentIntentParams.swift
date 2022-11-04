@@ -21,7 +21,9 @@ public class STPPaymentIntentParams: NSObject {
     /// field.
     /// - Parameter clientSecret: the client secret for this PaymentIntent
     @objc
-    public init(clientSecret: String) {
+    public init(
+        clientSecret: String
+    ) {
         self.clientSecret = clientSecret
         super.init()
     }
@@ -31,7 +33,10 @@ public class STPPaymentIntentParams: NSObject {
     /// - Parameter clientSecret: the client secret for this PaymentIntent
     /// - Parameter paymentMethodType: the known type of the PaymentIntent's attached PaymentMethod
     @objc
-    public init(clientSecret: String, paymentMethodType: STPPaymentMethodType) {
+    public init(
+        clientSecret: String,
+        paymentMethodType: STPPaymentMethodType
+    ) {
         self.clientSecret = clientSecret
         self._paymentMethodType = paymentMethodType
         super.init()
@@ -95,7 +100,9 @@ public class STPPaymentIntentParams: NSObject {
         }
         set {
             if let newValue = newValue {
-                setupFutureUsage = STPPaymentIntentSetupFutureUsage(rawValue: Int(truncating: newValue))
+                setupFutureUsage = STPPaymentIntentSetupFutureUsage(
+                    rawValue: Int(truncating: newValue)
+                )
             } else {
                 setupFutureUsage = nil
             }
@@ -110,12 +117,10 @@ public class STPPaymentIntentParams: NSObject {
 
     internal var _paymentMethodType: STPPaymentMethodType?
     internal var paymentMethodType: STPPaymentMethodType? {
-        get {
-            if let type = _paymentMethodType {
-                return type
-            }
-            return paymentMethodParams?.type
+        if let type = _paymentMethodType {
+            return type
         }
+        return paymentMethodParams?.type
     }
 
     internal var _mandateData: STPMandateDataParams?
@@ -130,14 +135,16 @@ public class STPPaymentIntentParams: NSObject {
                 return _mandateData
             }
             switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link,
+                .USBankAccount:
                 // Create default infer from client mandate_data
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                 onlineParams.inferFromClient = NSNumber(value: true)
 
                 if let customerAcceptance = STPMandateCustomerAcceptanceParams(
-                    type: .online, onlineParams: onlineParams)
-                {
+                    type: .online,
+                    onlineParams: onlineParams
+                ) {
                     return STPMandateDataParams(customerAcceptance: customerAcceptance)
                 }
             default: break
@@ -215,7 +222,9 @@ public class STPPaymentIntentParams: NSObject {
     }
 
     static internal let isClientSecretValidRegex: NSRegularExpression? = try? NSRegularExpression(
-        pattern: "^pi_[^_]+_secret_[^_]+$", options: [])
+        pattern: "^pi_[^_]+_secret_[^_]+$",
+        options: []
+    )
 
     @_spi(STP) public class func isClientSecretValid(_ clientSecret: String) -> Bool {
 
@@ -223,7 +232,8 @@ public class STPPaymentIntentParams: NSObject {
             (isClientSecretValidRegex?.numberOfMatches(
                 in: clientSecret,
                 options: .anchored,
-                range: NSRange(location: 0, length: clientSecret.count))) == 1
+                range: NSRange(location: 0, length: clientSecret.count)
+            )) == 1
     }
 }
 

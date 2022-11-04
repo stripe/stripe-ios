@@ -7,20 +7,23 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 import SwiftUI
+import UIKit
 
 @available(iOS 12, *)
 @_spi(STP) public struct FinancialConnectionsSDKAvailability {
-    static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? = NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation") as? FinancialConnectionsSDKInterface.Type
+    static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? =
+        NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
+        as? FinancialConnectionsSDKInterface.Type
 
     static let isUnitOrUITest: Bool = {
-#if targetEnvironment(simulator)
-        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
-#else
-        return false
-#endif
+        #if targetEnvironment(simulator)
+            return NSClassFromString("XCTest") != nil
+                || ProcessInfo.processInfo.environment["UITesting"] != nil
+        #else
+            return false
+        #endif
     }()
 
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
@@ -50,7 +53,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         clientSecret: String,
         returnURL: String?,
         from presentingViewController: UIViewController,
-        completion: @escaping (FinancialConnectionsSDKResult) -> ()
+        completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
         DispatchQueue.main.async {
             completion(FinancialConnectionsSDKResult.completed(linkedBank: StubbedLinkedBank()))

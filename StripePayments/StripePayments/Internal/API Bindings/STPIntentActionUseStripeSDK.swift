@@ -101,10 +101,14 @@ class STPIntentActionUseStripeSDK: NSObject {
             publishableKeyOverride: publishableKeyOverride,
             threeDS2IntentOverride: threeDS2IntentOverride,
             redirectURL: nil,
-            allResponseFields: allResponseFields)
+            allResponseFields: allResponseFields
+        )
     }
 
-    convenience init(redirectURL: URL, allResponseFields: [AnyHashable: Any]) {
+    convenience init(
+        redirectURL: URL,
+        allResponseFields: [AnyHashable: Any]
+    ) {
         var threeDSSourceID: String?
         if redirectURL.lastPathComponent.hasPrefix("src_") {
             threeDSSourceID = redirectURL.lastPathComponent
@@ -121,7 +125,8 @@ class STPIntentActionUseStripeSDK: NSObject {
             publishableKeyOverride: nil,
             threeDS2IntentOverride: nil,
             redirectURL: redirectURL,
-            allResponseFields: allResponseFields)
+            allResponseFields: allResponseFields
+        )
     }
 
     convenience override init() {
@@ -137,7 +142,8 @@ class STPIntentActionUseStripeSDK: NSObject {
             publishableKeyOverride: nil,
             threeDS2IntentOverride: nil,
             redirectURL: nil,
-            allResponseFields: [:])
+            allResponseFields: [:]
+        )
     }
 
     @objc override var description: String {
@@ -180,7 +186,8 @@ extension STPIntentActionUseStripeSDK: STPAPIResponseDecodable {
                     threeDSSourceID: dict["three_d_secure_2_source"] as? String,
                     publishableKeyOverride: dict["publishable_key"] as? String,
                     threeDS2IntentOverride: dict["three_d_secure_2_intent"] as? String,
-                    allResponseFields: dict) as? Self
+                    allResponseFields: dict
+                ) as? Self
             } else {
                 return nil
             }
@@ -189,7 +196,9 @@ extension STPIntentActionUseStripeSDK: STPAPIResponseDecodable {
                 let redirectURL = URL(string: redirectURLString)
             {
                 return STPIntentActionUseStripeSDK(
-                    redirectURL: redirectURL, allResponseFields: dict)
+                    redirectURL: redirectURL,
+                    allResponseFields: dict
+                )
                     as? Self
             } else {
                 return nil
@@ -208,7 +217,8 @@ extension STPIntentActionUseStripeSDK: STPAPIResponseDecodable {
                 publishableKeyOverride: nil,
                 threeDS2IntentOverride: nil,
                 redirectURL: nil,
-                allResponseFields: dict) as? Self
+                allResponseFields: dict
+            ) as? Self
         }
     }
 }

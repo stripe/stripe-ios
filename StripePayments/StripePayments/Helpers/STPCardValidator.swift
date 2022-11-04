@@ -33,7 +33,9 @@ import Foundation
 public class STPCardValidator: NSObject {
     /// Returns a copy of the passed string with all non-numeric characters removed.
     @objc(sanitizedNumericStringForString:)
-    public class func sanitizedNumericString(for string: String)
+    public class func sanitizedNumericString(
+        for string: String
+    )
         -> String
     {
         return stringByRemovingCharactersFromSet(string, CharacterSet.stp_invertedAsciiDigit)
@@ -41,13 +43,19 @@ public class STPCardValidator: NSObject {
 
     /// Returns a copy of the passed string with all characters removed that do not exist within a postal code.
     @objc(sanitizedPostalStringForString:)
-    public class func sanitizedPostalString(for string: String)
+    public class func sanitizedPostalString(
+        for string: String
+    )
         -> String
     {
         let sanitizedString = stringByRemovingCharactersFromSet(
-            string, CharacterSet.stp_invertedPostalCode)
+            string,
+            CharacterSet.stp_invertedPostalCode
+        )
         let sanitizedStringWithoutPunctuation = stringByRemovingCharactersFromSet(
-            sanitizedString, CharacterSet(charactersIn: " -"))
+            sanitizedString,
+            CharacterSet(charactersIn: " -")
+        )
         if sanitizedStringWithoutPunctuation == "" {
             // No postal codes begin with a space or -. If the user has only entered these characters, it was probably a typo.
             return ""
@@ -190,7 +198,9 @@ public class STPCardValidator: NSObject {
     /// STPCardValidationStateIncomplete if the month is a substring of a valid
     /// month (e.g. @"0" or @"1").
     @objc(validationStateForExpirationMonth:)
-    public class func validationState(forExpirationMonth expirationMonth: String)
+    public class func validationState(
+        forExpirationMonth expirationMonth: String
+    )
         -> STPCardValidationState
     {
 
@@ -243,7 +253,8 @@ public class STPCardValidator: NSObject {
             forExpirationYear: expirationYear,
             inMonth: expirationMonth,
             inCurrentYear: self.currentYear(),
-            currentMonth: self.currentMonth())
+            currentMonth: self.currentMonth()
+        )
     }
 
     /// The max CVC length for a card brand (for example, American Express CVCs are
@@ -271,7 +282,10 @@ public class STPCardValidator: NSObject {
     /// STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @"12" and
     /// STPCardBrandVisa, and STPCardValidationStateInvalid for @"12345" and any brand.
     @objc(validationStateForCVC:cardBrand:)
-    public class func validationState(forCVC cvc: String, cardBrand brand: STPCardBrand)
+    public class func validationState(
+        forCVC cvc: String,
+        cardBrand brand: STPCardBrand
+    )
         -> STPCardValidationState
     {
 
@@ -302,7 +316,8 @@ public class STPCardValidator: NSObject {
         return self.validationState(
             forCard: card,
             inCurrentYear: self.currentYear(),
-            currentMonth: self.currentMonth())
+            currentMonth: self.currentMonth()
+        )
     }
 
     class func stringByRemovingSpaces(from string: String) -> String {
@@ -316,8 +331,10 @@ public class STPCardValidator: NSObject {
     }
 
     class func validationState(
-        forExpirationYear expirationYear: String, inMonth expirationMonth: String,
-        inCurrentYear currentYear: Int, currentMonth: Int
+        forExpirationYear expirationYear: String,
+        inMonth expirationMonth: String,
+        inCurrentYear currentYear: Int,
+        currentMonth: Int
     ) -> STPCardValidationState {
 
         let moddedYear = currentYear % 100
@@ -348,10 +365,14 @@ public class STPCardValidator: NSObject {
     }
 
     class func validationState(
-        forCard card: STPCardParams, inCurrentYear currentYear: Int, currentMonth: Int
+        forCard card: STPCardParams,
+        inCurrentYear currentYear: Int,
+        currentMonth: Int
     ) -> STPCardValidationState {
         let numberValidation = self.validationState(
-            forNumber: card.number ?? "", validatingCardBrand: true)
+            forNumber: card.number ?? "",
+            validatingCardBrand: true
+        )
         let expMonthString = String(format: "%02lu", UInt(card.expMonth))
         let expMonthValidation = self.validationState(forExpirationMonth: expMonthString)
         let expYearString = String(format: "%02lu", UInt(card.expYear) % 100)
@@ -359,7 +380,8 @@ public class STPCardValidator: NSObject {
             forExpirationYear: expYearString,
             inMonth: expMonthString,
             inCurrentYear: currentYear,
-            currentMonth: currentMonth)
+            currentMonth: currentMonth
+        )
         let brand = self.brand(forNumber: card.number ?? "")
         let cvcValidation = self.validationState(forCVC: card.cvc ?? "", cardBrand: brand)
 

@@ -41,7 +41,9 @@ public class STPKlarnaLineItem: NSObject {
     ///   - totalAmount:      The total price of this line item.
     @objc
     public init(
-        itemType: STPKlarnaLineItemType, itemDescription: String, quantity: NSNumber,
+        itemType: STPKlarnaLineItemType,
+        itemDescription: String,
+        quantity: NSNumber,
         totalAmount: NSNumber
     ) {
         self.itemType = itemType

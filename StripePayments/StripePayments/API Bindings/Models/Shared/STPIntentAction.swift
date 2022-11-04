@@ -42,23 +42,25 @@ import Foundation
 
     /// The action type for BLIK payment methods. The customer must authorize the transaction in their banking app within 1 minute.
     case BLIKAuthorize
-    
+
     /// Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay App.
     case weChatPayRedirectToApp
-    
+
     /// The action type is Boleto payment. We provide `STPPaymentHandler` to display the Boleto voucher.
     case boletoDisplayDetails
-    
+
     /// Contains details describing the microdeposits verification flow for US Bank Account payments
     case verifyWithMicrodeposits
-    
+
     /// The action type for UPI payment methods. The customer must complete the transaction in their banking app within 5 minutes.
     case upiAwaitNotification
 
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
-    internal init(string: String) {
+    internal init(
+        string: String
+    ) {
         switch string.lowercased() {
         case "redirect_to_url":
             self = .redirectToURL
@@ -140,12 +142,12 @@ public class STPIntentAction: NSObject {
 
     /// The details for displaying Boleto voucher via URL, when `type == .boleto`
     @objc public let boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
-    
+
     /// Contains details describing microdeposits verification flow for US bank accounts
     @objc public let verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
-    
+
     /// :nodoc:
     @objc public let allResponseFields: [AnyHashable: Any]
 
@@ -185,7 +187,7 @@ public class STPIntentAction: NSObject {
                 props.append("boletoDisplayDetails = \(boletoDisplayDetails)")
             }
         case .BLIKAuthorize:
-            break // no additional details
+            break  // no additional details
         case .verifyWithMicrodeposits:
             if let verifyWithMicrodeposits = verifyWithMicrodeposits {
                 props.append("verifyWithMicrodeposits = \(verifyWithMicrodeposits)")
@@ -252,50 +254,57 @@ extension STPIntentAction: STPAPIResponseDecodable {
             break
         case .redirectToURL:
             redirectToURL = STPIntentActionRedirectToURL.decodedObject(
-                fromAPIResponse: dict["redirect_to_url"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["redirect_to_url"] as? [AnyHashable: Any]
+            )
             if redirectToURL == nil {
                 type = .unknown
             }
         case .useStripeSDK:
             useStripeSDK = STPIntentActionUseStripeSDK.decodedObject(
-                fromAPIResponse: dict["use_stripe_sdk"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["use_stripe_sdk"] as? [AnyHashable: Any]
+            )
             if useStripeSDK == nil {
                 type = .unknown
             }
         case .OXXODisplayDetails:
             oxxoDisplayDetails = STPIntentActionOXXODisplayDetails.decodedObject(
-                fromAPIResponse: dict["oxxo_display_details"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["oxxo_display_details"] as? [AnyHashable: Any]
+            )
             if oxxoDisplayDetails == nil {
                 type = .unknown
             }
         case .alipayHandleRedirect:
             alipayHandleRedirect = STPIntentActionAlipayHandleRedirect.decodedObject(
-                fromAPIResponse: dict["alipay_handle_redirect"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["alipay_handle_redirect"] as? [AnyHashable: Any]
+            )
             if alipayHandleRedirect == nil {
                 type = .unknown
             }
         case .weChatPayRedirectToApp:
             weChatPayRedirectToApp = STPIntentActionWechatPayRedirectToApp.decodedObject(
-                fromAPIResponse: dict["wechat_pay_redirect_to_ios_app"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["wechat_pay_redirect_to_ios_app"] as? [AnyHashable: Any]
+            )
             if weChatPayRedirectToApp == nil {
                 type = .unknown
             }
         case .boletoDisplayDetails:
             boletoDisplayDetails = STPIntentActionBoletoDisplayDetails.decodedObject(
-                fromAPIResponse: dict["boleto_display_details"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["boleto_display_details"] as? [AnyHashable: Any]
+            )
             if boletoDisplayDetails == nil {
                 type = .unknown
             }
         case .BLIKAuthorize:
-            break // no additional details
+            break  // no additional details
         case .verifyWithMicrodeposits:
             verifyWithMicrodeposits = STPIntentActionVerifyWithMicrodeposits.decodedObject(
-                fromAPIResponse: dict["verify_with_microdeposits"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["verify_with_microdeposits"] as? [AnyHashable: Any]
+            )
             if verifyWithMicrodeposits == nil {
                 type = .unknown
             }
         case .upiAwaitNotification:
-            break // no additional details
+            break  // no additional details
         }
 
         return STPIntentAction(
@@ -307,7 +316,8 @@ extension STPIntentAction: STPAPIResponseDecodable {
             weChatPayRedirectToApp: weChatPayRedirectToApp,
             boletoDisplayDetails: boletoDisplayDetails,
             verifyWithMicrodeposits: verifyWithMicrodeposits,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
 }

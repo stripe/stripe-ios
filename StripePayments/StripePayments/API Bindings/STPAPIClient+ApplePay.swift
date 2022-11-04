@@ -23,7 +23,8 @@ extension STPAPIClient {
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         createToken(
             withParameters: params,
-            completion: completion)
+            completion: completion
+        )
         STPTelemetryClient.shared.sendTelemetryData()
     }
 
@@ -33,7 +34,8 @@ extension STPAPIClient {
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
     @objc(createSourceWithPayment:completion:)
     public func createSource(
-        with payment: PKPayment, completion: @escaping STPSourceCompletionBlock
+        with payment: PKPayment,
+        completion: @escaping STPSourceCompletionBlock
     ) {
         createToken(with: payment) { token, error in
             if token?.tokenId == nil || error != nil {
@@ -53,7 +55,8 @@ extension STPAPIClient {
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
     @objc(createPaymentMethodWithPayment:completion:)
     public func createPaymentMethod(
-        with payment: PKPayment, completion: @escaping STPPaymentMethodCompletionBlock
+        with payment: PKPayment,
+        completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         createToken(with: payment) { token, error in
             if token?.tokenId == nil || error != nil {
@@ -65,7 +68,8 @@ extension STPAPIClient {
                 let paymentMethodParams = STPPaymentMethodParams(
                     card: cardParams,
                     billingDetails: billingDetails,
-                    metadata: nil)
+                    metadata: nil
+                )
                 self.createPaymentMethod(with: paymentMethodParams, completion: completion)
             }
         }

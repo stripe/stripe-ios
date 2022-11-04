@@ -84,7 +84,9 @@ public class STPConnectAccountParams: NSObject {
     /// This init method cannot change the `tosShownAndAccepted` parameter. Use
     /// `initWithTosShownAndAccepted:individual:` instead if you need to do that.
     @objc
-    public init(individual: STPConnectAccountIndividualParams) {
+    public init(
+        individual: STPConnectAccountIndividualParams
+    ) {
         tosShownAndAccepted = false
         self.individual = individual
         self.company = nil
@@ -98,7 +100,9 @@ public class STPConnectAccountParams: NSObject {
     /// This init method cannot change the `tosShownAndAccepted` parameter. Use
     /// `initWithTosShownAndAccepted:company:` instead if you need to do that.
     @objc
-    public init(company: STPConnectAccountCompanyParams) {
+    public init(
+        company: STPConnectAccountCompanyParams
+    ) {
         tosShownAndAccepted = false
         self.individual = nil
         self.company = company

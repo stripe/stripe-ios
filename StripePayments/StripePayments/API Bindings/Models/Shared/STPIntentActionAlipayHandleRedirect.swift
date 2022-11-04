@@ -29,7 +29,10 @@ public class STPIntentActionAlipayHandleRedirect: NSObject {
         let props: [String] = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPIntentActionAlipayHandleRedirect.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPIntentActionAlipayHandleRedirect.self),
+                self
+            ),
             // RedirectToURL details (alphabetical)
             "nativeURL = \(String(describing: nativeURL))",
             "url = \(url)",
@@ -78,7 +81,8 @@ extension STPIntentActionAlipayHandleRedirect: STPAPIResponseDecodable {
             nativeURL: nativeURL,
             url: url,
             returnURL: returnURL,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
 }
@@ -95,7 +99,9 @@ extension STPIntentActionAlipayHandleRedirect {
         }
         var marlinReturnURL: String?
         let range = NSRange(
-            escapedNativeURL.startIndex..<escapedNativeURL.endIndex, in: escapedNativeURL)
+            escapedNativeURL.startIndex..<escapedNativeURL.endIndex,
+            in: escapedNativeURL
+        )
         regex.enumerateMatches(
             in: escapedNativeURL,
             options: [],

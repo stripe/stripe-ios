@@ -33,7 +33,9 @@ public class STPPaymentMethodEPS: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: response)
     }
 
-    required init(dictionary dict: [AnyHashable: Any]) {
+    required init(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         super.init()
         allResponseFields = dict
     }

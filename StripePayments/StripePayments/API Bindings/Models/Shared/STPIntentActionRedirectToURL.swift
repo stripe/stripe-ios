@@ -73,6 +73,7 @@ extension STPIntentActionRedirectToURL: STPAPIResponseDecodable {
             url: url,
             returnURL: returnURL,
             threeDSSourceID: url.lastPathComponent.hasPrefix("src_") ? url.lastPathComponent : nil,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 }

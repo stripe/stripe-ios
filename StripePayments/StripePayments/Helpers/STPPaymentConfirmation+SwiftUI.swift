@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import SwiftUI
 import SafariServices
+import SwiftUI
 
 @available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
@@ -42,7 +42,9 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
         }
 
         var parent: ConfirmPaymentPresenter
-        init(parent: ConfirmPaymentPresenter) {
+        init(
+            parent: ConfirmPaymentPresenter
+        ) {
             self.parent = parent
         }
 
@@ -82,8 +84,9 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
         }
 
         private func forciblyDismissConfirmationSheet() {
-            if let sfvc = self.authenticationPresentingViewController().presentedViewController as? SFSafariViewController,
-               !sfvc.isBeingDismissed
+            if let sfvc = self.authenticationPresentingViewController().presentedViewController
+                as? SFSafariViewController,
+                !sfvc.isBeingDismissed
             {
                 self.authenticationPresentingViewController().dismiss(animated: true)
             }

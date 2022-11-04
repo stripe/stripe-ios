@@ -11,7 +11,7 @@ import Foundation
 /// WeChat Pay is currently unavailable in the iOS SDK.
 class STPPaymentMethodWeChatPayParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     @objc
     public class func rootObjectName() -> String? {
         return "wechat_pay"
