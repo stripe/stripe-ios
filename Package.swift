@@ -5,7 +5,7 @@ let package = Package(
     name: "Stripe",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v13),
         .watchOS(.v6)
     ],
     products: [
