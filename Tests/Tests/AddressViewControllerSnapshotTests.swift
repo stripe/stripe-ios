@@ -7,15 +7,22 @@
 //
 
 import FBSnapshotTestCase
-@_spi(STP) @testable import Stripe
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripeUICore
+@_spi(STP)@testable import Stripe
+@_spi(STP)@testable import StripeCore
+@_spi(STP)@testable import StripeUICore
 
 class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
-            "US": AddressSpec(format: "NOACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "US": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            )
         ]
         return specProvider
     }()
@@ -24,12 +31,12 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         config.apiClient = .init(publishableKey: "pk_test_1234")
         return config
     }
-    
+
     override func setUp() {
         super.setUp()
-//        self.recordMode = true
+        //        self.recordMode = true
     }
-    
+
     func testShippingAddressViewController() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
@@ -42,7 +49,7 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.rootViewController = navVC
         verify(navVC.view)
     }
-    
+
     @available(iOS 13.0, *)
     func testShippingAddressViewController_darkMode() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
@@ -57,7 +64,7 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.rootViewController = navVC
         verify(navVC.view)
     }
-    
+
     func testShippingAddressViewController_appearance() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
@@ -72,7 +79,7 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.rootViewController = navVC
         verify(navVC.view)
     }
-    
+
     func testShippingAddressViewController_customText() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
@@ -88,13 +95,18 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.rootViewController = navVC
         verify(navVC.view)
     }
-        
+
     func testShippingAddressViewController_checkbox() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         var configuration = configuration
         configuration.additionalFields.checkboxLabel = "Test checkbox text"
-        configuration.defaultValues = .init(address: .init(), name: nil, phone: nil, isCheckboxSelected: true)
+        configuration.defaultValues = .init(
+            address: .init(),
+            name: nil,
+            phone: nil,
+            isCheckboxSelected: true
+        )
         let vc = AddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,
@@ -116,7 +128,10 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
 }
 
 extension AddressViewControllerSnapshotTests: AddressViewControllerDelegate {
-    func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?) {
+    func addressViewControllerDidFinish(
+        _ addressViewController: AddressViewController,
+        with address: AddressViewController.AddressDetails?
+    ) {
         // no-op
     }
 }

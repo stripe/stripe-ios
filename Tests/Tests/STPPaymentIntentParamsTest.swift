@@ -6,11 +6,11 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentIntentParamsTest: XCTestCase {
     func testInit() {
@@ -96,11 +96,15 @@ class STPPaymentIntentParamsTest: XCTestCase {
             XCTAssertNotNil(params.mandateData)
             XCTAssertEqual(
                 params.mandateData!.customerAcceptance.onlineParams!.inferFromClient,
-                NSNumber(value: true))
+                NSNumber(value: true)
+            )
 
             params.mandateData = STPMandateDataParams(
                 customerAcceptance: STPMandateCustomerAcceptanceParams(
-                    type: .offline, onlineParams: nil)!)
+                    type: .offline,
+                    onlineParams: nil
+                )!
+            )
             // Default behavior should not override custom setting
             XCTAssertNotNil(params.mandateData)
             XCTAssertNil(params.mandateData!.customerAcceptance.onlineParams)
@@ -129,7 +133,9 @@ class STPPaymentIntentParamsTest: XCTestCase {
         }
 
         XCTAssertEqual(
-            mapping.values.count, NSSet(array: (mapping as NSDictionary).allValues).count)
+            mapping.values.count,
+            NSSet(array: (mapping as NSDictionary).allValues).count
+        )
     }
 
     func testCopy() {
@@ -139,17 +145,23 @@ class STPPaymentIntentParamsTest: XCTestCase {
         params.savePaymentMethod = NSNumber(value: true)
         params.returnURL = "fake://testing_only"
         params.setupFutureUsage = STPPaymentIntentSetupFutureUsage(
-            rawValue: Int(truncating: NSNumber(value: 1)))
+            rawValue: Int(truncating: NSNumber(value: 1))
+        )
         params.useStripeSDK = NSNumber(value: true)
         params.mandateData = STPMandateDataParams(
             customerAcceptance: STPMandateCustomerAcceptanceParams(
-                type: .offline, onlineParams: nil)!)
+                type: .offline,
+                onlineParams: nil
+            )!
+        )
         params.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         params.additionalAPIParameters = [
             "other_param": "other_value"
         ]
         params.shipping = STPPaymentIntentShippingDetailsParams(
-            address: STPPaymentIntentShippingDetailsAddressParams(line1: ""), name: "")
+            address: STPPaymentIntentShippingDetailsAddressParams(line1: ""),
+            name: ""
+        )
 
         let paramsCopy = params.copy() as! STPPaymentIntentParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
@@ -167,31 +179,39 @@ class STPPaymentIntentParamsTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodOptions, paramsCopy.paymentMethodOptions)
         XCTAssertEqual(
             params.additionalAPIParameters as NSDictionary,
-            paramsCopy.additionalAPIParameters as NSDictionary)
+            paramsCopy.additionalAPIParameters as NSDictionary
+        )
 
     }
 
     func testClientSecretValidation() {
         XCTAssertFalse(
             STPPaymentIntentParams.isClientSecretValid("pi_12345"),
-            "'pi_12345' is not a valid client secret.")
+            "'pi_12345' is not a valid client secret."
+        )
         XCTAssertFalse(
             STPPaymentIntentParams.isClientSecretValid("pi_12345_secret_"),
-            "'pi_12345_secret_' is not a valid client secret.")
+            "'pi_12345_secret_' is not a valid client secret."
+        )
         XCTAssertFalse(
             STPPaymentIntentParams.isClientSecretValid(
-                "pi_a1b2c3_secret_x7y8z9pi_a1b2c3_secret_x7y8z9"),
-            "'pi_a1b2c3_secret_x7y8z9pi_a1b2c3_secret_x7y8z9' is not a valid client secret.")
+                "pi_a1b2c3_secret_x7y8z9pi_a1b2c3_secret_x7y8z9"
+            ),
+            "'pi_a1b2c3_secret_x7y8z9pi_a1b2c3_secret_x7y8z9' is not a valid client secret."
+        )
         XCTAssertFalse(
             STPPaymentIntentParams.isClientSecretValid("seti_a1b2c3_secret_x7y8z9"),
-            "'seti_a1b2c3_secret_x7y8z9' is not a valid client secret.")
+            "'seti_a1b2c3_secret_x7y8z9' is not a valid client secret."
+        )
 
         XCTAssertTrue(
             STPPaymentIntentParams.isClientSecretValid("pi_a1b2c3_secret_x7y8z9"),
-            "'pi_a1b2c3_secret_x7y8z9' is a valid client secret.")
+            "'pi_a1b2c3_secret_x7y8z9' is a valid client secret."
+        )
         XCTAssertTrue(
             STPPaymentIntentParams.isClientSecretValid(
-                "pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA"),
+                "pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA"
+            ),
             "'pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA' is a valid client secret."
         )
     }

@@ -6,11 +6,11 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class NSDictionary_StripeTest: XCTestCase {
     // MARK: - dictionaryByRemovingNullsValidatingRequiredFields
@@ -18,10 +18,10 @@ class NSDictionary_StripeTest: XCTestCase {
         let dictionary =
             [
                 "id": "card_123",
-                "tokenization_method": NSNull() /* null in root */,
+                "tokenization_method": NSNull(),  // null in root
                 "metadata": [
                     "user": "user_123",
-                    "country": NSNull() /* null in dictionary */,
+                    "country": NSNull(),  // null in dictionary
                     "nicknames": ["john", "johnny", NSNull()],
                     "profiles": [
                         "facebook": "fb_123",
@@ -29,7 +29,7 @@ class NSDictionary_StripeTest: XCTestCase {
                     ],
                 ],
                 "fees": [
-                    NSNull() /* null in array */,
+                    NSNull(),  // null in array
                     [
                         "id": "fee_123",
                         "frequency": NSNull(),
@@ -196,7 +196,8 @@ class NSDictionary_StripeTest: XCTestCase {
             dict.stp_dictionary(forKey: "a")! as NSDictionary,
             [
                 "foo": "bar"
-            ])
+            ]
+        )
         XCTAssertNil(dict.stp_dictionary(forKey: "b"))
     }
 

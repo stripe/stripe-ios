@@ -20,7 +20,11 @@ extension PKAddPaymentPassRequest {
         }
         set(stp_error) {
             objc_setAssociatedObject(
-                self, &stpAddPaymentPassRequest, stp_error, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                self,
+                &stpAddPaymentPassRequest,
+                stp_error,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
 }

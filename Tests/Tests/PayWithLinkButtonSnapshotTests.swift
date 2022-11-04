@@ -6,15 +6,15 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 import UIKit
 import iOSSnapshotTestCase
-import StripeCoreTestUtils
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
@@ -23,7 +23,7 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testDefault() {
@@ -86,16 +86,16 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
 }
 
-private extension PayWithLinkButtonSnapshotTests {
+extension PayWithLinkButtonSnapshotTests {
 
-    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+    fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
         let isLoggedIn: Bool
     }
 
-    func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
+    fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
             redactedPhoneNumber: "+1********55",
@@ -104,7 +104,7 @@ private extension PayWithLinkButtonSnapshotTests {
         )
     }
 
-    func makeSUT() -> PayWithLinkButton {
+    fileprivate func makeSUT() -> PayWithLinkButton {
         return PayWithLinkButton()
     }
 

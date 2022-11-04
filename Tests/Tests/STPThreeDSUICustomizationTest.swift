@@ -6,11 +6,11 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPThreeDSUICustomizationTest: XCTestCase {
     func testPropertiesPassedThrough() {
@@ -24,36 +24,45 @@ class STPThreeDSUICustomizationTest: XCTestCase {
         customization.buttonCustomization(for: .cancel).backgroundColor = UIColor.cyan
         XCTAssertEqual(
             customization.uiCustomization.buttonCustomization(for: .next).backgroundColor,
-            UIColor.cyan)
+            UIColor.cyan
+        )
         XCTAssertEqual(
             customization.uiCustomization.buttonCustomization(for: .resend).backgroundColor,
-            UIColor.cyan)
+            UIColor.cyan
+        )
         XCTAssertEqual(
             customization.uiCustomization.buttonCustomization(for: .submit).backgroundColor,
-            UIColor.cyan)
+            UIColor.cyan
+        )
         XCTAssertEqual(
             customization.uiCustomization.buttonCustomization(for: .continue).backgroundColor,
-            UIColor.cyan)
+            UIColor.cyan
+        )
         XCTAssertEqual(
             customization.uiCustomization.buttonCustomization(for: .cancel).backgroundColor,
-            UIColor.cyan)
+            UIColor.cyan
+        )
 
         let buttonCustomization = STPThreeDSButtonCustomization.defaultSettings(for: .next)
         customization.setButtonCustomization(buttonCustomization, for: .next)
         XCTAssertEqual(
             customization.uiCustomization.buttonCustomization(for: .next),
-            buttonCustomization.buttonCustomization)
+            buttonCustomization.buttonCustomization
+        )
 
         // Footer
         customization.footerCustomization.backgroundColor = UIColor.cyan
         XCTAssertEqual(
-            customization.uiCustomization.footerCustomization.backgroundColor, UIColor.cyan)
+            customization.uiCustomization.footerCustomization.backgroundColor,
+            UIColor.cyan
+        )
 
         let footerCustomization = STPThreeDSFooterCustomization.defaultSettings()
         customization.footerCustomization = footerCustomization
         XCTAssertEqual(
             customization.uiCustomization.footerCustomization,
-            footerCustomization.footerCustomization)
+            footerCustomization.footerCustomization
+        )
 
         // Label
         customization.labelCustomization.textColor = UIColor.cyan
@@ -62,28 +71,37 @@ class STPThreeDSUICustomizationTest: XCTestCase {
         let labelCustomization = STPThreeDSLabelCustomization.defaultSettings()
         customization.labelCustomization = labelCustomization
         XCTAssertEqual(
-            customization.uiCustomization.labelCustomization, labelCustomization.labelCustomization)
+            customization.uiCustomization.labelCustomization,
+            labelCustomization.labelCustomization
+        )
 
         // Navigation Bar
         customization.navigationBarCustomization.textColor = UIColor.cyan
         XCTAssertEqual(
-            customization.uiCustomization.navigationBarCustomization.textColor, UIColor.cyan)
+            customization.uiCustomization.navigationBarCustomization.textColor,
+            UIColor.cyan
+        )
 
         let navigationBar = STPThreeDSNavigationBarCustomization.defaultSettings()
         customization.navigationBarCustomization = navigationBar
         XCTAssertEqual(
             customization.uiCustomization.navigationBarCustomization,
-            navigationBar.navigationBarCustomization)
+            navigationBar.navigationBarCustomization
+        )
 
         // Selection
         customization.selectionCustomization.primarySelectedColor = UIColor.cyan
         XCTAssertEqual(
-            customization.uiCustomization.selectionCustomization.primarySelectedColor, UIColor.cyan)
+            customization.uiCustomization.selectionCustomization.primarySelectedColor,
+            UIColor.cyan
+        )
 
         let selection = STPThreeDSSelectionCustomization.defaultSettings()
         customization.selectionCustomization = selection
         XCTAssertEqual(
-            customization.uiCustomization.selectionCustomization, selection.selectionCustomization)
+            customization.uiCustomization.selectionCustomization,
+            selection.selectionCustomization
+        )
 
         // Text Field
         customization.textFieldCustomization.textColor = UIColor.cyan
@@ -92,7 +110,9 @@ class STPThreeDSUICustomizationTest: XCTestCase {
         let textField = STPThreeDSTextFieldCustomization.defaultSettings()
         customization.textFieldCustomization = textField
         XCTAssertEqual(
-            customization.uiCustomization.textFieldCustomization, textField.textFieldCustomization)
+            customization.uiCustomization.textFieldCustomization,
+            textField.textFieldCustomization
+        )
 
         // Other
         customization.backgroundColor = UIColor.red
@@ -103,10 +123,13 @@ class STPThreeDSUICustomizationTest: XCTestCase {
         XCTAssertEqual(customization.backgroundColor, customization.uiCustomization.backgroundColor)
 
         XCTAssertEqual(
-            UIActivityIndicatorView.Style.whiteLarge, customization.activityIndicatorViewStyle)
+            UIActivityIndicatorView.Style.whiteLarge,
+            customization.activityIndicatorViewStyle
+        )
         XCTAssertEqual(
             customization.activityIndicatorViewStyle,
-            customization.uiCustomization.activityIndicatorViewStyle)
+            customization.uiCustomization.activityIndicatorViewStyle
+        )
 
         XCTAssertEqual(UIBlurEffect.Style.dark, customization.blurStyle)
         XCTAssertEqual(customization.blurStyle, customization.uiCustomization.blurStyle)

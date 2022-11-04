@@ -8,8 +8,8 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 /// What set of billing address information you need to collect from your user.
@@ -31,7 +31,6 @@ public enum STPBillingAddressFields: UInt {
     case zip
 }
 
-
 extension STPAddress {
 
     /// Checks if this STPAddress has the level of valid address information
@@ -48,7 +47,8 @@ extension STPAddress {
         case .postalCode:
             return STPPostalCodeValidator.validationState(
                 forPostalCode: postalCode,
-                countryCode: country) == .valid
+                countryCode: country
+            ) == .valid
         case .full:
             return hasValidPostalAddress()
         case .name:
@@ -92,7 +92,9 @@ extension STPAddress {
     /// - Returns: YES if this address contains at least the necessary information,
     /// NO otherwise.
     @objc
-    public func containsRequiredShippingAddressFields(_ requiredFields: Set<STPContactField>?)
+    public func containsRequiredShippingAddressFields(
+        _ requiredFields: Set<STPContactField>?
+    )
         -> Bool
     {
         guard let requiredFields = requiredFields else {
@@ -111,7 +113,9 @@ extension STPAddress {
             containsFields =
                 containsFields
                 && STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                    phone ?? "", forCountryCode: country)
+                    phone ?? "",
+                    forCountryCode: country
+                )
         }
         if requiredFields.contains(.postalAddress) {
             containsFields = containsFields && hasValidPostalAddress()
@@ -129,7 +133,9 @@ extension STPAddress {
     /// @parameter desiredFields The shipping address information the caller is interested in.
     /// - Returns: YES if there is any data in this STPAddress that's relevant for those fields.
     @objc
-    public func containsContent(forShippingAddressFields desiredFields: Set<STPContactField>?)
+    public func containsContent(
+        forShippingAddressFields desiredFields: Set<STPContactField>?
+    )
         -> Bool
     {
         guard let desiredFields = desiredFields else {
@@ -147,7 +153,9 @@ extension STPAddress {
     /// - Returns: The closest representation of the billing address requirement as
     /// a PKContactField value.
     @objc(applePayContactFieldsFromBillingAddressFields:)
-    public class func applePayContactFields(from billingAddressFields: STPBillingAddressFields)
+    public class func applePayContactFields(
+        from billingAddressFields: STPBillingAddressFields
+    )
         -> Set<PKContactField>
     {
         switch billingAddressFields {
@@ -192,12 +200,13 @@ extension STPAddress {
         }
         return pkFields
     }
-    
+
     private func hasValidPostalAddress() -> Bool {
         return (line1?.count ?? 0) > 0 && (city?.count ?? 0) > 0 && (country?.count ?? 0) > 0
             && ((state?.count ?? 0) > 0 || !(country == "US"))
             && (STPPostalCodeValidator.validationState(
                 forPostalCode: postalCode,
-                countryCode: country) == .valid)
+                countryCode: country
+            ) == .valid)
     }
 }

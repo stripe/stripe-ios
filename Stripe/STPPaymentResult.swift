@@ -30,7 +30,9 @@ public class STPPaymentResult: NSObject {
 
     /// Initializes the payment result with a given payment option. This is invoked by `STPPaymentContext` internally; you shouldn't have to call it directly.
     @objc
-    public init(paymentOption: STPPaymentOption?) {
+    public init(
+        paymentOption: STPPaymentOption?
+    ) {
         super.init()
         if paymentOption is STPPaymentMethod {
             paymentMethod = paymentOption as? STPPaymentMethod

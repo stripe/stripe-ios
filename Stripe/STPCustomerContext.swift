@@ -25,7 +25,9 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     /// - Parameter keyProvider:   The key provider the customer context will use.
     /// - Returns: the newly-instantiated customer context.
     @objc(initWithKeyProvider:)
-    public convenience init(keyProvider: STPCustomerEphemeralKeyProvider) {
+    public convenience init(
+        keyProvider: STPCustomerEphemeralKeyProvider
+    ) {
         self.init(keyProvider: keyProvider, apiClient: STPAPIClient.shared)
     }
 
@@ -41,15 +43,17 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     /// - Returns: the newly-instantiated customer context.
     @objc(initWithKeyProvider:apiClient:)
     public convenience init(
-        keyProvider: STPCustomerEphemeralKeyProvider?, apiClient: STPAPIClient
+        keyProvider: STPCustomerEphemeralKeyProvider?,
+        apiClient: STPAPIClient
     ) {
         let keyManager = STPEphemeralKeyManager(
             keyProvider: keyProvider,
             apiVersion: STPAPIClient.apiVersion,
-            performsEagerFetching: true)
+            performsEagerFetching: true
+        )
         self.init(keyManager: keyManager, apiClient: apiClient)
     }
-    
+
     /// `STPCustomerContext` will cache its customer object and associated payment methods
     /// for up to 60 seconds. If your current user logs out of your app and a new user logs
     /// in, be sure to either call this method or create a new instance of `STPCustomerContext`.
@@ -117,7 +121,10 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     private var keyManager: STPEphemeralKeyManagerProtocol
     private var apiClient: STPAPIClient
 
-    init(keyManager: STPEphemeralKeyManagerProtocol, apiClient: STPAPIClient) {
+    init(
+        keyManager: STPEphemeralKeyManagerProtocol,
+        apiClient: STPAPIClient
+    ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCustomerContext.self)
         self.keyManager = keyManager
         self.apiClient = apiClient
@@ -193,7 +200,8 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
 
     @objc
     public func updateCustomer(
-        withShippingAddress shipping: STPAddress, completion: STPErrorBlock?
+        withShippingAddress shipping: STPAddress,
+        completion: STPErrorBlock?
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
             guard let ephemeralKey = ephemeralKey, retrieveKeyError == nil else {
@@ -207,7 +215,8 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
             var params: [String: Any] = [:]
             params["shipping"] = STPAddress.shippingInfoForCharge(
                 with: shipping,
-                shippingMethod: nil)
+                shippingMethod: nil
+            )
             self.apiClient.updateCustomer(
                 withParameters: params,
                 using: ephemeralKey
@@ -228,7 +237,8 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     /// A convenience method for attaching the PaymentMethod to the current Customer
     @objc
     public func attachPaymentMethodToCustomer(
-        paymentMethodId: String, completion: STPErrorBlock?
+        paymentMethodId: String,
+        completion: STPErrorBlock?
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
             guard let ephemeralKey = ephemeralKey, retrieveKeyError == nil else {
@@ -256,16 +266,20 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
 
     @objc
     public func attachPaymentMethod(
-        toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+        toCustomer paymentMethod: STPPaymentMethod,
+        completion: STPErrorBlock?
     ) {
         attachPaymentMethodToCustomer(
-            paymentMethodId: paymentMethod.stripeId, completion: completion)
+            paymentMethodId: paymentMethod.stripeId,
+            completion: completion
+        )
     }
 
     /// A convenience method for detaching the PaymentMethod to the current Customer
     @objc
     public func detachPaymentMethodFromCustomer(
-        paymentMethodId: String, completion: STPErrorBlock?
+        paymentMethodId: String,
+        completion: STPErrorBlock?
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
             guard let ephemeralKey = ephemeralKey, retrieveKeyError == nil else {
@@ -294,10 +308,13 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
 
     @objc
     public func detachPaymentMethod(
-        fromCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+        fromCustomer paymentMethod: STPPaymentMethod,
+        completion: STPErrorBlock?
     ) {
         detachPaymentMethodFromCustomer(
-            paymentMethodId: paymentMethod.stripeId, completion: completion)
+            paymentMethodId: paymentMethod.stripeId,
+            completion: completion
+        )
     }
 
     @objc
@@ -322,7 +339,8 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
             }
 
             self.apiClient.listPaymentMethodsForCustomer(using: ephemeralKey) {
-                paymentMethods, error in
+                paymentMethods,
+                error in
                 if paymentMethods != nil {
                     self.paymentMethods = paymentMethods
                 }
@@ -336,7 +354,8 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     }
 
     func saveLastSelectedPaymentMethodID(
-        forCustomer paymentMethodID: String?, completion: STPErrorBlock?
+        forCustomer paymentMethodID: String?,
+        completion: STPErrorBlock?
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
             guard let ephemeralKey = ephemeralKey, retrieveKeyError == nil else {
@@ -354,7 +373,9 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
             if let customerID = ephemeralKey.customerID {
                 customerToDefaultPaymentMethodID[customerID] = paymentMethodID
                 UserDefaults.standard.set(
-                    customerToDefaultPaymentMethodID, forKey: kLastSelectedPaymentMethodDefaultsKey)
+                    customerToDefaultPaymentMethodID,
+                    forKey: kLastSelectedPaymentMethodDefaultsKey
+                )
             }
 
             if let completion = completion {

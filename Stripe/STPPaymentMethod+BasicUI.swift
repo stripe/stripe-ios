@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 extension STPPaymentMethod: STPPaymentOption {
     // MARK: - STPPaymentOption
@@ -47,7 +47,11 @@ extension STPPaymentMethod: STPPaymentOption {
             }
         case .USBankAccount:
             if let usBankAccount = usBankAccount {
-                return String(format: String.Localized.bank_name_account_ending_in_last_4, usBankAccount.bankName, usBankAccount.last4)
+                return String(
+                    format: String.Localized.bank_name_account_ending_in_last_4,
+                    usBankAccount.bankName,
+                    usBankAccount.last4
+                )
             } else {
                 fallthrough
             }
@@ -60,11 +64,12 @@ extension STPPaymentMethod: STPPaymentOption {
         switch type {
         case .card, .link, .USBankAccount:
             return true
-        case .alipay /* Careful! Revisit this if/when we support recurring Alipay */, .AUBECSDebit,
+        case .alipay,  // Careful! Revisit this if/when we support recurring Alipay
+            .AUBECSDebit,
             .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal,
             .przelewy24, .bancontact,
             .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik,
-            .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, // fall through
+            .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm,  // fall through
             .unknown:
             return false
         @unknown default:

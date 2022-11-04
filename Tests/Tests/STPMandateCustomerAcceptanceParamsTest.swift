@@ -5,11 +5,11 @@
 //  Created by Cameron Sabol on 10/18/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPMandateCustomerAcceptanceParamsTest: XCTestCase {
     func testRootObjectName() {
