@@ -6,14 +6,20 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @_spi(STP) public protocol STPGenericInputPickerFieldDataSource {
     func numberOfRows() -> Int
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
+    func inputPickerField(
+        _ pickerField: STPGenericInputPickerField,
+        titleForRow row: Int
+    )
         -> String?
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int)
+    func inputPickerField(
+        _ pickerField: STPGenericInputPickerField,
+        inputValueForRow row: Int
+    )
         -> String?
 }
 
@@ -29,21 +35,20 @@ import UIKit
         }
     }
 
-    /**
-     Formatter specific to `STPGenericInputPickerField`.
-
-     Contains overrides to `UITextFieldDelegate` that ensure the textfield's text can't be
-     selected and the placeholder text displays correctly for a dropdown/picker style input.
-     
-     For internal SDK use only
-     */
+    /// Formatter specific to `STPGenericInputPickerField`.
+    ///
+    /// Contains overrides to `UITextFieldDelegate` that ensure the textfield's text can't be
+    /// selected and the placeholder text displays correctly for a dropdown/picker style input.
+    ///
+    /// For internal SDK use only
     @objc(STP_Internal_GenericInputPickerFieldFormatter)
     class Formatter: STPInputTextFieldFormatter {
-        
-        override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
-            return false // no typing allowed
+
+        override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool
+        {
+            return false  // no typing allowed
         }
-        
+
         // See extension for rest of implementation
     }
 
@@ -70,7 +75,6 @@ import UIKit
         set {}
     }
 
-
     @objc public override var accessibilityAttributedLabel: NSAttributedString? {
         get {
             return nil
@@ -78,12 +82,17 @@ import UIKit
         set {}
     }
 
-    required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+    required init(
+        formatter: STPInputTextFieldFormatter,
+        validator: STPInputTextFieldValidator
+    ) {
 
         fatalError("Use init(dataSource:formatter:validator:) instead")
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -118,21 +127,19 @@ import UIKit
     }
 
     override func textDidChange() {
-        /*
-         NOTE(mludowise): There's probably a more elegant solution than
-         overriding this method, but this fixes a transcient bug where the
-         validator's inputValue would temprorily get set to the display text
-         (e.g. "United States") instead of value (e.g. "US") causing the field
-         to display as invalid and postal code to sometimes not display when a
-         valid country was selected.
-
-         Override this method from `STPInputTextField` because...
-         1. We don't want to override validator.input with the display text.
-         2. The logic in `STPInputTextField` handles validation and formatting
-            for cases when the user is typing in text into the text field, which
-            we don't allow in this case since the value is determined from our
-            data source.
-         */
+        // NOTE(mludowise): There's probably a more elegant solution than
+        // overriding this method, but this fixes a transcient bug where the
+        // validator's inputValue would temprorily get set to the display text
+        // (e.g. "United States") instead of value (e.g. "US") causing the field
+        // to display as invalid and postal code to sometimes not display when a
+        // valid country was selected.
+        //
+        // Override this method from `STPInputTextField` because...
+        // 1. We don't want to override validator.input with the display text.
+        // 2. The logic in `STPInputTextField` handles validation and formatting
+        //    for cases when the user is typing in text into the text field, which
+        //    we don't allow in this case since the value is determined from our
+        //    data source.
     }
 
     @_spi(STP) public func updateValue() {
@@ -153,14 +160,18 @@ import UIKit
 /// :nodoc:
 extension STPGenericInputPickerField: UIPickerViewDelegate {
     @_spi(STP) public func pickerView(
-        _ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int
+        _ pickerView: UIPickerView,
+        attributedTitleForRow row: Int,
+        forComponent component: Int
     ) -> NSAttributedString? {
         guard let title = dataSource.inputPickerField(self, titleForRow: row) else {
             return nil
         }
         // Make sure the picker font matches our standard input font
         return NSAttributedString(
-            string: title, attributes: [.font: font ?? UIFont.preferredFont(forTextStyle: .body)])
+            string: title,
+            attributes: [.font: font ?? UIFont.preferredFont(forTextStyle: .body)]
+        )
     }
 }
 
@@ -202,7 +213,9 @@ extension STPGenericInputPickerField: DoneButtonToolbarDelegate {
 internal class DataSourceWrapper: NSObject, UIPickerViewDataSource {
     let inputDataSource: STPGenericInputPickerFieldDataSource
 
-    init(inputDataSource: STPGenericInputPickerFieldDataSource) {
+    init(
+        inputDataSource: STPGenericInputPickerFieldDataSource
+    ) {
         self.inputDataSource = inputDataSource
     }
 

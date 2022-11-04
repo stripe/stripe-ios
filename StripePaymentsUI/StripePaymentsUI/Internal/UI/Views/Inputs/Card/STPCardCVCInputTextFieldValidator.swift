@@ -6,16 +6,17 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+import UIKit
 
 class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
 
     override var defaultErrorMessage: String? {
         return STPLocalizedString(
             "Your card's security code is invalid.",
-            "Error message for card entry form when CVC/CVV is invalid")
+            "Error message for card entry form when CVC/CVV is invalid"
+        )
     }
 
     var cardBrand: STPCardBrand = .unknown {
@@ -43,7 +44,8 @@ class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
         case .incomplete:
             validationState = .incomplete(
                 description: !inputValue.isEmpty
-                ? String.Localized.your_cards_security_code_is_incomplete : nil)
+                    ? String.Localized.your_cards_security_code_is_incomplete : nil
+            )
         }
     }
 }

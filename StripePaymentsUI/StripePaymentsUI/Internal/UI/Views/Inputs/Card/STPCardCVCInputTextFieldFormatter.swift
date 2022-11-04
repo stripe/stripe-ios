@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 class STPCardCVCInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
 
@@ -28,7 +28,8 @@ class STPCardCVCInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
     }
 
     override func formattedText(
-        from input: String, with defaultAttributes: [NSAttributedString.Key: Any]
+        from input: String,
+        with defaultAttributes: [NSAttributedString.Key: Any]
     ) -> NSAttributedString {
         let numeric = STPNumericStringValidator.sanitizedNumericString(for: input)
         return NSAttributedString(string: numeric, attributes: defaultAttributes)

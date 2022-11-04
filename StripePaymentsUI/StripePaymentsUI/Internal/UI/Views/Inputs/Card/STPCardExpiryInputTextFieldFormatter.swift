@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 class STPCardExpiryInputTextFieldFormatter: STPInputTextFieldFormatter {
 
@@ -60,7 +60,8 @@ class STPCardExpiryInputTextFieldFormatter: STPInputTextFieldFormatter {
     }
 
     override func formattedText(
-        from input: String, with defaultAttributes: [NSAttributedString.Key: Any]
+        from input: String,
+        with defaultAttributes: [NSAttributedString.Key: Any]
     ) -> NSAttributedString {
         var numericInput = STPNumericStringValidator.sanitizedNumericString(for: input)
 

@@ -16,10 +16,13 @@ import Foundation
     static let expirationDateStringRegex: NSRegularExpression = {
         return try! NSRegularExpression(
             pattern: "^(\\d{2}\\D{1,3})(\\d{1,4})?",
-            options: [])
+            options: []
+        )
     }()
 
-    @objc(expirationDateStringFromString:) @_spi(STP) public class func expirationDateString(from string: String?)
+    @objc(expirationDateStringFromString:) @_spi(STP) public class func expirationDateString(
+        from string: String?
+    )
         -> String?
     {
         guard let string = string else {
@@ -27,7 +30,9 @@ import Foundation
         }
         guard
             let result = expirationDateStringRegex.matches(
-                in: string, options: [], range: NSRange(location: 0, length: string.count)
+                in: string,
+                options: [],
+                range: NSRange(location: 0, length: string.count)
             ).first
         else {
             return string
@@ -48,14 +53,17 @@ import Foundation
     static let stringMayContainExpirationDateRegex: NSRegularExpression? = {
         return try! NSRegularExpression(
             pattern: "^(\\d{2}\\D{1,3})(\\d{1,4})?",
-            options: [])
+            options: []
+        )
     }()
 
     /// Returns YES if the string is likely to contain something formatted similar to an expiration date.
     /// It doesn't confirm that the expiration date is valid, or that it is even a date.
     @_spi(STP) public class func stringMayContainExpirationDate(_ string: String?) -> Bool {
         let result = stringMayContainExpirationDateRegex?.matches(
-            in: string ?? "", options: [], range: NSRange(location: 0, length: string?.count ?? 0)
+            in: string ?? "",
+            options: [],
+            range: NSRange(location: 0, length: string?.count ?? 0)
         ).first
         return result != nil && (result?.numberOfRanges ?? 0) > 0
     }

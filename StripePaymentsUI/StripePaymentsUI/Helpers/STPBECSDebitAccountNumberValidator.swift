@@ -41,12 +41,16 @@ class STPBECSDebitAccountNumberValidator: STPNumericStringValidator {
         }
     }
 
-    class func formattedSanitizedText(from string: String, withBSBNumber bsbNumber: String?)
+    class func formattedSanitizedText(
+        from string: String,
+        withBSBNumber bsbNumber: String?
+    )
         -> String?
     {
         let accountLengthRange = self._accountNumberLengthRange(forBSBNumber: bsbNumber)
         return self.sanitizedNumericString(for: string).stp_safeSubstring(
-            to: NSMaxRange(accountLengthRange))
+            to: NSMaxRange(accountLengthRange)
+        )
     }
 
     class func _accountNumberLengthRange(forBSBNumber bsbNumber: String?) -> NSRange {
