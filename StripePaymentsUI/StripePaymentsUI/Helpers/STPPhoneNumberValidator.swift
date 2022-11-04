@@ -7,9 +7,8 @@
 //
 
 import Foundation
-
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 @_spi(STP) public class STPPhoneNumberValidator: NSObject {
 
@@ -37,7 +36,8 @@ import Foundation
     ) -> String {
         return self.formattedSanitizedPhoneNumber(
             for: string,
-            forCountryCode: nil)
+            forCountryCode: nil
+        )
     }
 
     @objc(formattedSanitizedPhoneNumberForString:forCountryCode:)
@@ -49,7 +49,8 @@ import Foundation
         let sanitized = STPCardValidator.sanitizedNumericString(for: string)
         return self.formattedPhoneNumber(
             for: sanitized,
-            forCountryCode: countryCode)
+            forCountryCode: countryCode
+        )
     }
 
     @objc(formattedRedactedPhoneNumberForString:) class func formattedRedactedPhoneNumber(
@@ -57,7 +58,8 @@ import Foundation
     ) -> String {
         return self.formattedRedactedPhoneNumber(
             for: string,
-            forCountryCode: nil)
+            forCountryCode: nil
+        )
     }
 
     @objc(formattedRedactedPhoneNumberForString:forCountryCode:)
@@ -76,11 +78,14 @@ import Foundation
             #endif
         }
         var number = (string as NSString).replacingOccurrences(
-            of: (prefix ?? "") as String, with: "")
+            of: (prefix ?? "") as String,
+            with: ""
+        )
         number = number.replacingOccurrences(of: "*", with: "•")
         number = self.formattedPhoneNumber(
             for: number,
-            forCountryCode: countryCode)
+            forCountryCode: countryCode
+        )
         return "\(prefix ?? "") \(number)"
     }
 

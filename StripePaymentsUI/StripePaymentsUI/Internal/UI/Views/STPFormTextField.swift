@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 @_spi(STP) public enum STPFormTextFieldAutoFormattingBehavior: Int {
     case none
@@ -26,7 +26,8 @@ import UIKit
     //    }
     //    return true
     @objc(textField:shouldChangeCharactersInRange:replacementString:) func textField(
-        _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool
 
@@ -50,7 +51,7 @@ import UIKit
             delegateProxy?.selectionEnabled = selectionEnabled
         }
     }
-    /* defaults to NO */
+    // defaults to NO
     @_spi(STP) public var preservesContentsOnPaste = false
     // defaults to NO
     private var _compressed = false
@@ -89,7 +90,8 @@ import UIKit
                     }
                     let attributedString = NSMutableAttributedString(attributedString: inputString)
                     let cardNumberFormat = STPCardValidator.cardNumberFormat(
-                        forCardNumber: attributedString.string)
+                        forCardNumber: attributedString.string
+                    )
                     var index = 0
                     for segmentLength in cardNumberFormat {
                         var segmentIndex = 0
@@ -103,12 +105,14 @@ import UIKit
                                 attributedString.addAttribute(
                                     .kern,
                                     value: NSNumber(value: 5),
-                                    range: NSRange(location: index, length: 1))
+                                    range: NSRange(location: index, length: 1)
+                                )
                             } else {
                                 attributedString.addAttribute(
                                     .kern,
                                     value: NSNumber(value: 0),
-                                    range: NSRange(location: index, length: 1))
+                                    range: NSRange(location: index, length: 1)
+                                )
                             }
 
                             index += 1
@@ -127,11 +131,13 @@ import UIKit
                         return inputString!
                     }
                     let phoneNumber = STPPhoneNumberValidator.formattedSanitizedPhoneNumber(
-                        for: inputString?.string ?? "")
+                        for: inputString?.string ?? ""
+                    )
                     let attributes = type(of: strongSelf).attributes(for: inputString)
                     return NSAttributedString(
                         string: phoneNumber,
-                        attributes: attributes as? [NSAttributedString.Key: Any])
+                        attributes: attributes as? [NSAttributedString.Key: Any]
+                    )
                 }
             case .bsbNumber:
                 weak var weakSelf = self
@@ -146,11 +152,13 @@ import UIKit
                         return NSAttributedString()
                     }
                     let bsbNumber = STPBSBNumberValidator.formattedSanitizedText(
-                        from: inputString.string)
+                        from: inputString.string
+                    )
                     let attributes = type(of: strongSelf).attributes(for: inputString)
                     return NSAttributedString(
                         string: bsbNumber ?? "",
-                        attributes: attributes as? [NSAttributedString.Key: Any])
+                        attributes: attributes as? [NSAttributedString.Key: Any]
+                    )
                 }
             }
         }
@@ -174,8 +182,10 @@ import UIKit
             return [:]
         }
         return attributedString?.attributes(
-            at: 0, longestEffectiveRange: nil,
-            in: NSRange(location: 0, length: attributedString?.length ?? 0))
+            at: 0,
+            longestEffectiveRange: nil,
+            in: NSRange(location: 0, length: attributedString?.length ?? 0)
+        )
     }
 
     /// :nodoc:
@@ -190,8 +200,8 @@ import UIKit
         super.deleteBackward()
         if (text?.count ?? 0) == 0 {
             if formDelegate?.responds(
-                to: #selector(STPPaymentCardTextField.formTextFieldDidBackspace(onEmpty:))) ?? false
-            {
+                to: #selector(STPPaymentCardTextField.formTextFieldDidBackspace(onEmpty:))
+            ) ?? false {
                 formDelegate?.formTextFieldDidBackspace?(onEmpty: self)
             }
         }
@@ -223,7 +233,8 @@ import UIKit
                 formDelegate != nil
                 && formDelegate?.responds(
                     to: #selector(
-                        STPFormTextFieldDelegate.formTextField(_:modifyIncomingTextChange:)))
+                        STPFormTextFieldDelegate.formTextField(_:modifyIncomingTextChange:))
+                )
                     ?? false
             var modified: NSAttributedString?
             if let attributedText = attributedText {
@@ -236,8 +247,8 @@ import UIKit
             super.attributedText = transformed
             sendActions(for: .editingChanged)
             if formDelegate?.responds(
-                to: #selector(STPPaymentCardTextField.formTextFieldTextDidChange(_:))) ?? false
-            {
+                to: #selector(STPPaymentCardTextField.formTextFieldTextDidChange(_:))
+            ) ?? false {
                 if let oldValue = oldValue {
                     if !(transformed?.isEqual(to: oldValue) ?? false) {
                         formDelegate?.formTextFieldTextDidChange?(self)
@@ -255,8 +266,10 @@ import UIKit
             let attributedString = NSMutableAttributedString(string: text)
             if #available(iOS 13.0, *) {
                 attributedString.addAttribute(
-                    .accessibilitySpeechSpellOut, value: NSNumber(value: true),
-                    range: attributedString.extent)
+                    .accessibilitySpeechSpellOut,
+                    value: NSNumber(value: true),
+                    range: attributedString.extent
+                )
             }
             return attributedString
         }
@@ -274,12 +287,14 @@ import UIKit
             if !validText {
                 let invalidData = STPLocalizedString(
                     "Invalid data.",
-                    "Spoken during VoiceOver when a form field has failed validation.")
+                    "Spoken during VoiceOver when a form field has failed validation."
+                )
                 let failedString = NSMutableAttributedString(
                     string: invalidData,
                     attributes: [
                         NSAttributedString.Key.accessibilitySpeechPitch: NSNumber(value: 0.6)
-                    ])
+                    ]
+                )
                 attributedString.append(NSAttributedString(string: " "))
                 attributedString.append(failedString)
             }
@@ -311,7 +326,10 @@ import UIKit
     @objc public override var keyCommands: [UIKeyCommand]? {
         return [
             UIKeyCommand(
-                input: "\u{08}", modifierFlags: .command, action: #selector(commandDeleteBackwards))
+                input: "\u{08}",
+                modifierFlags: .command,
+                action: #selector(commandDeleteBackwards)
+            )
         ]
     }
 
@@ -367,7 +385,8 @@ class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
     @_spi(STP) public var selectionEnabled = false
 
     func textField(
-        _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
         if inShouldChangeCharactersInRange {
@@ -381,20 +400,18 @@ class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
         let hasTextContentType = textField.textContentType != nil
 
         if hasTextContentType && insertingIntoEmptyField && (string == " ") {
-            /* Observed behavior w/iOS 11.0 through 11.2.0 (latest):
-
-                     1. UITextContentType suggestions are only available when textField is empty
-                     2. When user taps a QuickType suggestion for the `textContentType`, UIKit *first*
-                     calls this method with `range:{0, 0} replacementString:@" "`
-                     3. If that succeeds (we return YES), this method is called again, this time with
-                     the actual content to insert (and a space at the end)
-
-                     Therefore, always allow entry of a single space in order to support `textContentType`.
-
-                     Warning: This bypasses `setText:`, and subsequently `setAttributedText:` and the
-                     formDelegate methods: `formTextField:modifyIncomingTextChange:` & `formTextFieldTextDidChange:`
-                     That's acceptable for a single space.
-                     */
+            //
+            //         1. UITextContentType suggestions are only available when textField is empty
+            //         2. When user taps a QuickType suggestion for the `textContentType`, UIKit *first*
+            //         calls this method with `range:{0, 0} replacementString:@" "`
+            //         3. If that succeeds (we return YES), this method is called again, this time with
+            //         the actual content to insert (and a space at the end)
+            //
+            //         Therefore, always allow entry of a single space in order to support `textContentType`.
+            //
+            //         Warning: This bypasses `setText:`, and subsequently `setAttributedText:` and the
+            //         formDelegate methods: `formTextField:modifyIncomingTextChange:` & `formTextFieldTextDidChange:`
+            //         That's acceptable for a single space.
             inShouldChangeCharactersInRange = false
             return true
         }
@@ -409,7 +426,9 @@ class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
             }
         } else {
             let newString = (textField.text as NSString?)?.replacingCharacters(
-                in: range, with: string)
+                in: range,
+                with: string
+            )
             // Removes any disallowed characters from the whole string.
             // If we (incorrectly) allowed a space to start the text entry hoping it would be a
             // textContentType completion, this will remove it.
@@ -436,11 +455,15 @@ class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
             }
 
             let newCursorPosition = textField.position(
-                from: textField.beginningOfDocument, offset: cursorOffset ?? 0)
+                from: textField.beginningOfDocument,
+                offset: cursorOffset ?? 0
+            )
             var newSelectedRange: UITextRange?
             if let newCursorPosition = newCursorPosition {
                 newSelectedRange = textField.textRange(
-                    from: newCursorPosition, to: newCursorPosition)
+                    from: newCursorPosition,
+                    to: newCursorPosition
+                )
             }
             textField.selectedTextRange = newSelectedRange
         }

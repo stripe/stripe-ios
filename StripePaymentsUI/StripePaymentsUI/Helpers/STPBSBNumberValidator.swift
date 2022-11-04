@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 class STPBSBNumberValidator: STPNumericStringValidator {
     class func validationState(forText text: String) -> STPTextValidationState {
@@ -28,15 +28,19 @@ class STPBSBNumberValidator: STPNumericStringValidator {
         }
     }
 
-    @objc(formattedSanitizedTextFromString:) class func formattedSanitizedText(from string: String)
+    @objc(formattedSanitizedTextFromString:) class func formattedSanitizedText(
+        from string: String
+    )
         -> String?
     {
         var numericText = self.sanitizedNumericString(for: string).stp_safeSubstring(
-            to: kBSBNumberLength)
+            to: kBSBNumberLength
+        )
         if numericText.count >= kBSBNumberDashIndex {
             numericText.insert(
                 contentsOf: "-",
-                at: numericText.index(numericText.startIndex, offsetBy: kBSBNumberDashIndex))
+                at: numericText.index(numericText.startIndex, offsetBy: kBSBNumberDashIndex)
+            )
         }
 
         return numericText
@@ -50,8 +54,8 @@ class STPBSBNumberValidator: STPNumericStringValidator {
 
         let iconName = self._data(forText: text ?? "")?["icon"] as? String
         if let iconName = iconName {
-            return StripeUICore.Image.brandImage(named: iconName)?.makeImage() ??
-            STPImageLibrary.safeImageNamed(iconName, templateIfAvailable: false)
+            return StripeUICore.Image.brandImage(named: iconName)?.makeImage()
+                ?? STPImageLibrary.safeImageNamed(iconName, templateIfAvailable: false)
         } else {
             return STPImageLibrary.safeImageNamed("stp_icon_bank", templateIfAvailable: false)
         }
@@ -79,7 +83,9 @@ class STPBSBNumberValidator: STPNumericStringValidator {
     static let _BSBDataSBSBData: [AnyHashable: Any] = {
         var bsbData: [AnyHashable: Any] = [:]
         if let url = StripePaymentsUIBundleLocator.resourcesBundle.url(
-            forResource: "au_becs_bsb", withExtension: "json"),
+            forResource: "au_becs_bsb",
+            withExtension: "json"
+        ),
             let inputStream = InputStream.init(url: url)
         {
             inputStream.open()
