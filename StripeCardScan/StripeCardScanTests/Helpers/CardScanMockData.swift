@@ -6,8 +6,9 @@
 //
 
 import Foundation
-@testable import StripeCardScan
 import StripeCoreTestUtils
+
+@testable import StripeCardScan
 
 // note: This class is to find the test bundle
 private class ClassForBundle {}

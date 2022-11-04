@@ -80,7 +80,10 @@ public class STPSourceRedirect: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    required init(returnURL: URL, url: URL) {
+    required init(
+        returnURL: URL,
+        url: URL
+    ) {
         self.returnURL = returnURL
         self.url = url
         super.init()

@@ -17,7 +17,9 @@ import Foundation
         super.init()
     }
 
-    @_spi(STP) public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    @_spi(STP) public class func decodedObject(
+        fromAPIResponse response: [AnyHashable: Any]?
+    ) -> Self? {
         let emptyResponse = self.init()
         if let response = response {
             emptyResponse.allResponseFields = response

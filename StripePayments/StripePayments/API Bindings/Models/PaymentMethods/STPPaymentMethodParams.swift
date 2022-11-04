@@ -97,7 +97,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc
     public convenience init(
-        card: STPPaymentMethodCardParams, billingDetails: STPPaymentMethodBillingDetails?,
+        card: STPPaymentMethodCardParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
         metadata: [String: String]?
     ) {
         self.init()
@@ -114,7 +115,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc
     public convenience init(
-        iDEAL: STPPaymentMethodiDEALParams, billingDetails: STPPaymentMethodBillingDetails?,
+        iDEAL: STPPaymentMethodiDEALParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
         metadata: [String: String]?
     ) {
         self.init()
@@ -131,7 +133,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc
     public convenience init(
-        fpx: STPPaymentMethodFPXParams, billingDetails: STPPaymentMethodBillingDetails?,
+        fpx: STPPaymentMethodFPXParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
         metadata: [String: String]?
     ) {
         self.init()
@@ -166,7 +169,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     ///   - metadata:     Additional information to attach to the PaymentMethod.
     @objc
     public convenience init(
-        bacsDebit: STPPaymentMethodBacsDebitParams, billingDetails: STPPaymentMethodBillingDetails,
+        bacsDebit: STPPaymentMethodBacsDebitParams,
+        billingDetails: STPPaymentMethodBillingDetails,
         metadata: [String: String]?
     ) {
         self.init()
@@ -423,7 +427,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
-    
+
     /// Creates params for a WeChat Pay PaymentMethod.
     /// - Parameters:
     ///   - weChatPay:                An object containing additional WeChat Pay details.
@@ -458,7 +462,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.boleto = boleto
         self.billingDetails = billingDetails
     }
-    
+
     /// Creates params for an Klarna PaymentMethod. :nodoc:
     /// - Parameters:
     ///   - klarna:   An object containing additional Klarna details.
@@ -491,16 +495,18 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.affirm = affirm
         self.metadata = metadata
     }
-    
+
     /// Creates params for a US Bank Account Payment Method
     /// - Parameters:
     ///     - usBankAccount: An object containing additional US bank account details
     ///     - billingDetails: An object containing the user's billing details. Name is required for US Bank Accounts
     ///     - metadata: Additional information to attach to the PaymentMethod
     @objc
-    public convenience init(usBankAccount: STPPaymentMethodUSBankAccountParams,
-                            billingDetails: STPPaymentMethodBillingDetails,
-                            metadata: [String: String]?) {
+    public convenience init(
+        usBankAccount: STPPaymentMethodUSBankAccountParams,
+        billingDetails: STPPaymentMethodBillingDetails,
+        metadata: [String: String]?
+    ) {
         self.init()
         self.type = .USBankAccount
         self.usBankAccount = usBankAccount
@@ -511,7 +517,9 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
-    @objc public convenience init?(singleUsePaymentMethod paymentMethod: STPPaymentMethod) {
+    @objc public convenience init?(
+        singleUsePaymentMethod paymentMethod: STPPaymentMethod
+    ) {
         self.init()
         switch paymentMethod.type {
         case .EPS:
@@ -594,17 +602,17 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.billingDetails = paymentMethod.billingDetails
         // All reusable PaymentMethods go below:
         case .SEPADebit,
-                .bacsDebit,
-                .card,
-                .cardPresent,
-                .AUBECSDebit,
-                .payPal,
-                .blik,
-                .weChatPay,
-                .link,
-                .linkInstantDebit,
-                .USBankAccount,
-                .unknown:
+            .bacsDebit,
+            .card,
+            .cardPresent,
+            .AUBECSDebit,
+            .payPal,
+            .blik,
+            .weChatPay,
+            .link,
+            .linkInstantDebit,
+            .USBankAccount,
+            .unknown:
             return nil
         }
     }
@@ -658,11 +666,15 @@ extension STPPaymentMethodParams {
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc(paramsWithCard:billingDetails:metadata:)
     public class func paramsWith(
-        card: STPPaymentMethodCardParams, billingDetails: STPPaymentMethodBillingDetails?,
+        card: STPPaymentMethodCardParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            card: card, billingDetails: billingDetails, metadata: metadata)
+            card: card,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an iDEAL PaymentMethod.
@@ -672,11 +684,15 @@ extension STPPaymentMethodParams {
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc(paramsWithiDEAL:billingDetails:metadata:)
     public class func paramsWith(
-        iDEAL: STPPaymentMethodiDEALParams, billingDetails: STPPaymentMethodBillingDetails?,
+        iDEAL: STPPaymentMethodiDEALParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            iDEAL: iDEAL, billingDetails: billingDetails, metadata: metadata)
+            iDEAL: iDEAL,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an FPX PaymentMethod.
@@ -686,7 +702,8 @@ extension STPPaymentMethodParams {
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc(paramsWithFPX:billingDetails:metadata:)
     public class func paramsWith(
-        fpx: STPPaymentMethodFPXParams, billingDetails: STPPaymentMethodBillingDetails?,
+        fpx: STPPaymentMethodFPXParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(fpx: fpx, billingDetails: billingDetails, metadata: metadata)
@@ -704,7 +721,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            sepaDebit: sepaDebit, billingDetails: billingDetails, metadata: metadata)
+            sepaDebit: sepaDebit,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a Bacs Debit PaymentMethod;
@@ -714,11 +734,15 @@ extension STPPaymentMethodParams {
     ///   - metadata:     Additional information to attach to the PaymentMethod.
     @objc(paramsWithBacsDebit:billingDetails:metadata:)
     public class func paramsWith(
-        bacsDebit: STPPaymentMethodBacsDebitParams, billingDetails: STPPaymentMethodBillingDetails,
+        bacsDebit: STPPaymentMethodBacsDebitParams,
+        billingDetails: STPPaymentMethodBillingDetails,
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            bacsDebit: bacsDebit, billingDetails: billingDetails, metadata: metadata)
+            bacsDebit: bacsDebit,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an AU BECS Debit PaymentMethod;
@@ -733,7 +757,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            aubecsDebit: auBECSDebit, billingDetails: billingDetails, metadata: metadata)
+            aubecsDebit: auBECSDebit,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a giropay PaymentMethod;
@@ -748,7 +775,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            giropay: giropay, billingDetails: billingDetails, metadata: metadata)
+            giropay: giropay,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an EPS PaymentMethod;
@@ -777,7 +807,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            przelewy24: przelewy24, billingDetails: billingDetails, metadata: metadata)
+            przelewy24: przelewy24,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a Bancontact PaymentMethod;
@@ -792,7 +825,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            bancontact: bancontact, billingDetails: billingDetails, metadata: metadata)
+            bancontact: bancontact,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a NetBanking PaymentMethod;
@@ -807,7 +843,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            netBanking: netBanking, billingDetails: billingDetails, metadata: metadata)
+            netBanking: netBanking,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an OXXO PaymentMethod;
@@ -822,7 +861,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            oxxo: oxxo, billingDetails: billingDetails, metadata: metadata)
+            oxxo: oxxo,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a GrabPay PaymentMethod;
@@ -837,7 +879,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            grabPay: grabPay, billingDetails: billingDetails, metadata: metadata)
+            grabPay: grabPay,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a Sofort PaymentMethod;
@@ -852,7 +897,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            sofort: sofort, billingDetails: billingDetails, metadata: metadata)
+            sofort: sofort,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a UPI PaymentMethod;
@@ -867,7 +915,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            upi: upi, billingDetails: billingDetails, metadata: metadata)
+            upi: upi,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an Alipay PaymentMethod.
@@ -882,7 +933,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            alipay: alipay, billingDetails: billingDetails, metadata: metadata)
+            alipay: alipay,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a PayPal PaymentMethod.
@@ -897,7 +951,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            payPal: payPal, billingDetails: billingDetails, metadata: metadata)
+            payPal: payPal,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an AfterpayClearpay PaymentMethod.
@@ -912,7 +969,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            afterpayClearpay: afterpayClearpay, billingDetails: billingDetails, metadata: metadata)
+            afterpayClearpay: afterpayClearpay,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for a BLIK PaymentMethod.
@@ -927,9 +987,12 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            blik: blik, billingDetails: billingDetails, metadata: metadata)
+            blik: blik,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
-    
+
     /// Creates params for a WeChat Pay PaymentMethod.
     /// - Parameters:
     ///   - weChatPay:           An object containing additional WeChat Pay details.
@@ -942,9 +1005,12 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            weChatPay: weChatPay, billingDetails: billingDetails, metadata: metadata)
+            weChatPay: weChatPay,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
-    
+
     /// Creates params for an Klarna PaymentMethod.
     /// - Parameters:
     ///   - klarna:   An object containing additional Klarna details.
@@ -957,7 +1023,10 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            klarna: klarna, billingDetails: billingDetails, metadata: metadata)
+            klarna: klarna,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
     }
 
     /// Creates params for an Affirm PaymentMethod.
@@ -970,12 +1039,16 @@ extension STPPaymentMethodParams {
         metadata: [String: String]?
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
-            affirm: affirm, metadata: metadata)
+            affirm: affirm,
+            metadata: metadata
+        )
     }
 }
 
 extension STPPaymentMethodParams {
-    @_spi(STP) public convenience init(type: STPPaymentMethodType) {
+    @_spi(STP) public convenience init(
+        type: STPPaymentMethodType
+    ) {
         self.init()
         self.type = type
         switch type {
@@ -990,7 +1063,7 @@ extension STPPaymentMethodParams {
         case .FPX:
             fpx = STPPaymentMethodFPXParams()
         case .cardPresent:
-           break
+            break
         case .SEPADebit:
             sepaDebit = STPPaymentMethodSEPADebitParams()
         case .AUBECSDebit:

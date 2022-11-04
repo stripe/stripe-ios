@@ -8,8 +8,8 @@
 
 import Foundation
 import XCTest
-@testable import StripeIdentity
 
+@testable import StripeIdentity
 
 final class BiometricConsentViewControllerTest: XCTestCase {
 
@@ -23,7 +23,8 @@ final class BiometricConsentViewControllerTest: XCTestCase {
 
         vc = try! BiometricConsentViewController(
             brandLogo: UIImage(),
-            consentContent: BiometricConsentViewControllerTest.mockVerificationPage.biometricConsent,
+            consentContent: BiometricConsentViewControllerTest.mockVerificationPage
+                .biometricConsent,
             sheetController: mockSheetController
         )
     }

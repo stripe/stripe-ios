@@ -37,7 +37,10 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
         let props: [String] = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPIntentActionOXXODisplayDetails.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPIntentActionOXXODisplayDetails.self),
+                self
+            ),
             // OXXODisplayDetails
             "expiresAfter = \(String(describing: expiresAfter))",
             "hostedVoucherURL = \(String(describing: hostedVoucherURL))",
@@ -60,7 +63,8 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
             expiresAfter: expiresAfter,
             hostedVoucherURL: hostedVoucherURL,
             number: number,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
     public private(set) var allResponseFields: [AnyHashable: Any]

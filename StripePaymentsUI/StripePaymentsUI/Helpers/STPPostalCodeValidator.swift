@@ -8,8 +8,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 @objc enum STPPostalCodeIntendedUsage: Int {
     case billingAddress
@@ -32,13 +32,16 @@ import Foundation
                 ?? false)
         }
     }
-    
+
     class func postalCodeIsRequiredForUPE(forCountryCode countryCode: String?) -> Bool {
         guard let countryCode = countryCode else { return false }
         return self.countriesWithPostalRequiredForUPE().contains(countryCode.uppercased())
     }
-    
-    class func postalCodeIsRequired(forCountryCode countryCode: String?, with postalRequirement: STPPostalCodeRequirement) -> Bool {
+
+    class func postalCodeIsRequired(
+        forCountryCode countryCode: String?,
+        with postalRequirement: STPPostalCodeRequirement
+    ) -> Bool {
         switch postalRequirement {
         case .standard:
             return postalCodeIsRequired(forCountryCode: countryCode)
@@ -78,7 +81,8 @@ import Foundation
         if usage != .cardField && (sanitizedCountryCode == STPCountryCodeUnitedStates) {
             return self.formattedSanitizedUSZipCode(
                 from: postalCode,
-                usage: usage)
+                usage: usage
+            )
         } else {
             return self.formattedSanitizedPostalCode(from: postalCode)
         }
@@ -93,8 +97,10 @@ import Foundation
             count += range.length
             while lastPosition < string.count {
                 range = (string as NSString).rangeOfCharacter(
-                    from: cs, options: [],
-                    range: NSRange(location: lastPosition, length: string.count - lastPosition))
+                    from: cs,
+                    options: [],
+                    range: NSRange(location: lastPosition, length: string.count - lastPosition)
+                )
                 if range.location == NSNotFound {
                     break
                 } else {
@@ -125,7 +131,9 @@ import Foundation
         } else {
             // ZIP+4 territory
             let numberOfDigits = countOfCharactersFromSetInString(
-                postalCode ?? "", CharacterSet.stp_asciiDigit)
+                postalCode ?? "",
+                CharacterSet.stp_asciiDigit
+            )
 
             if numberOfDigits > 9 {
                 // Too many digits
@@ -142,9 +150,12 @@ import Foundation
                 // its in the right place
 
                 let separatorCharacter = (postalCode as NSString?)?.substring(
-                    with: NSRange(location: 5, length: 1))
+                    with: NSRange(location: 5, length: 1)
+                )
                 if countOfCharactersFromSetInString(
-                    separatorCharacter ?? "", CharacterSet.stp_asciiDigit)
+                    separatorCharacter ?? "",
+                    CharacterSet.stp_asciiDigit
+                )
                     == 0
                 {
                     // Non-digit is in right position to be separator
@@ -186,23 +197,24 @@ import Foundation
 
         var formattedString = STPCardValidator.sanitizedNumericString(for: zipCode)
             .stp_safeSubstring(
-                to: maxLength)
+                to: maxLength
+            )
 
-        /*
-             If the string is >5 numbers or == 5 and the last char of the unformatted
-             string was already a hyphen, insert a hyphen at position 6 for ZIP+4
-             */
+        //     If the string is >5 numbers or == 5 and the last char of the unformatted
+        //     string was already a hyphen, insert a hyphen at position 6 for ZIP+4
         if formattedString.count > 5
             || formattedString.count == 5
                 && (zipCode as NSString).substring(from: zipCode.count - 1) == "-"
         {
             formattedString.insert(
-                contentsOf: "-", at: formattedString.index(formattedString.startIndex, offsetBy: 5))
+                contentsOf: "-",
+                at: formattedString.index(formattedString.startIndex, offsetBy: 5)
+            )
         }
 
         return formattedString
     }
-    
+
     class func countriesWithPostalRequiredForUPE() -> [AnyHashable] {
         return ["CA", "GB", "US"]
     }

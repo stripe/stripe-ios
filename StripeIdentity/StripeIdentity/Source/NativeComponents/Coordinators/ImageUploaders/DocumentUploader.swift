@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import UIKit
 
 protocol DocumentUploaderDelegate: AnyObject {
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader)
-    
+
     func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol)
-    
+
     func documentUploaderDidUploadBack(_ documentUploader: DocumentUploaderProtocol)
 }
 
@@ -58,7 +58,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
     weak var delegate: DocumentUploaderDelegate?
 
     let imageUploader: IdentityImageUploader
-    
+
     /// Future that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
     private(set) var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
@@ -70,7 +70,8 @@ final class DocumentUploader: DocumentUploaderProtocol {
             frontUploadFuture?.observe { [weak self, weak frontUploadFuture] result in
                 // Only update `frontUploadStatus` if `frontUploadFuture` has not been reassigned
                 guard let self = self,
-                      frontUploadFuture === self.frontUploadFuture else {
+                    frontUploadFuture === self.frontUploadFuture
+                else {
                     return
                 }
                 switch result {
@@ -94,7 +95,8 @@ final class DocumentUploader: DocumentUploaderProtocol {
             backUploadFuture?.observe { [weak self, weak backUploadFuture] result in
                 // Only update `backUploadStatus` if `backUploadFuture` has not been reassigned
                 guard let self = self,
-                      backUploadFuture === self.backUploadFuture else {
+                    backUploadFuture === self.backUploadFuture
+                else {
                     return
                 }
                 switch result {
@@ -111,7 +113,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
     private(set) var frontUploadStatus: UploadStatus = .notStarted {
         didSet {
             delegate?.documentUploaderDidUpdateStatus(self)
-            
+
             if case .complete = frontUploadStatus {
                 delegate?.documentUploaderDidUploadFront(self)
             }
@@ -128,23 +130,23 @@ final class DocumentUploader: DocumentUploaderProtocol {
         }
     }
 
-    init(imageUploader: IdentityImageUploader) {
+    init(
+        imageUploader: IdentityImageUploader
+    ) {
         self.imageUploader = imageUploader
     }
 
-    /**
-     Uploads a high and low resolution image for a specific side of the
-     document and updates either `frontUploadFuture` or `backUploadFuture`.
-     - Note: If `idDetectorOutput` is non-nil, the high-res image will be
-     cropped and an un-cropped image will be uploaded as the low-res image.
-     If `idDetectorOutput` is nil, then only a high-res image will be
-     uploaded and it will not be cropped.
-     - Parameters:
-       - side: The side of the image (front or back) to upload.
-       - originalImage: The original image captured or uploaded by the user.
-       - idDetectorOutput: The output from the IDDetector model
-       - method: The method the image was obtained.
-     */
+    /// Uploads a high and low resolution image for a specific side of the
+    /// document and updates either `frontUploadFuture` or `backUploadFuture`.
+    /// - Note: If `idDetectorOutput` is non-nil, the high-res image will be
+    /// cropped and an un-cropped image will be uploaded as the low-res image.
+    /// If `idDetectorOutput` is nil, then only a high-res image will be
+    /// uploaded and it will not be cropped.
+    /// - Parameters:
+    ///   - side: The side of the image (front or back) to upload.
+    ///   - originalImage: The original image captured or uploaded by the user.
+    ///   - idDetectorOutput: The output from the IDDetector model
+    ///   - method: The method the image was obtained.
     func uploadImages(
         for side: DocumentSide,
         originalImage: CGImage,
@@ -186,13 +188,15 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 lowResFileName: "\(fileNamePrefix)_full_frame",
                 highResFileName: fileNamePrefix
             ).chained { (lowResFile, highResFile) in
-                return Promise(value: StripeAPI.VerificationPageDataDocumentFileData(
-                    documentScannerOutput: documentScannerOutput,
-                    highResImage: highResFile.id,
-                    lowResImage: lowResFile.id,
-                    exifMetadata: exifMetadata,
-                    uploadMethod: method
-                ))
+                return Promise(
+                    value: StripeAPI.VerificationPageDataDocumentFileData(
+                        documentScannerOutput: documentScannerOutput,
+                        highResImage: highResFile.id,
+                        lowResImage: lowResFile.id,
+                        exifMetadata: exifMetadata,
+                        uploadMethod: method
+                    )
+                )
             }
         } else {
             return imageUploader.uploadHighResImage(
@@ -201,13 +205,15 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 cropPaddingComputationMethod: .maxImageWidthOrHeight,
                 fileName: fileNamePrefix
             ).chained { highResFile in
-                return Promise(value: StripeAPI.VerificationPageDataDocumentFileData(
-                    documentScannerOutput: documentScannerOutput,
-                    highResImage: highResFile.id,
-                    lowResImage: nil,
-                    exifMetadata: exifMetadata,
-                    uploadMethod: method
-                ))
+                return Promise(
+                    value: StripeAPI.VerificationPageDataDocumentFileData(
+                        documentScannerOutput: documentScannerOutput,
+                        highResImage: highResFile.id,
+                        lowResImage: nil,
+                        exifMetadata: exifMetadata,
+                        uploadMethod: method
+                    )
+                )
             }
         }
     }

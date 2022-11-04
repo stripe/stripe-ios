@@ -8,6 +8,7 @@
 
 import Foundation
 import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
@@ -16,7 +17,7 @@ final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testViewIsConfiguredFromAPI() {

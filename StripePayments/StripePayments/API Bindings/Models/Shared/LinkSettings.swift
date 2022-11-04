@@ -14,17 +14,19 @@ import Foundation
 
     @_spi(STP) public let bankOnboardingEnabled: Bool
 
-    @_spi(STP) public let allResponseFields: [AnyHashable : Any]
+    @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
     @_spi(STP) public init(
         bankOnboardingEnabled: Bool,
-        allResponseFields: [AnyHashable : Any]
+        allResponseFields: [AnyHashable: Any]
     ) {
         self.bankOnboardingEnabled = bankOnboardingEnabled
         self.allResponseFields = allResponseFields
     }
 
-    @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+    @_spi(STP) public static func decodedObject(
+        fromAPIResponse response: [AnyHashable: Any]?
+    ) -> Self? {
         guard
             let response = response,
             let bankOnboardingEnabled = response["link_bank_onboarding_enabled"] as? Bool

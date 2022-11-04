@@ -88,7 +88,8 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
         card.last4 = dict.stp_string(forKey: "last4")
         card.fingerprint = dict.stp_string(forKey: "fingerprint")
         card.networks = STPPaymentMethodCardNetworks.decodedObject(
-            fromAPIResponse: dict["networks"] as? [AnyHashable: Any])
+            fromAPIResponse: dict["networks"] as? [AnyHashable: Any]
+        )
         card.threeDSecureUsage = STPPaymentMethodThreeDSecureUsage.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "three_d_secure_usage"))
         card.wallet = STPPaymentMethodCardWallet.decodedObject(
@@ -98,7 +99,8 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPCardBrand
 
-    @objc(brandFromString:) @_spi(STP) public class func brand(from string: String) -> STPCardBrand {
+    @objc(brandFromString:) @_spi(STP) public class func brand(from string: String) -> STPCardBrand
+    {
         // Documentation: https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-brand
         let brand = string.lowercased()
         if brand == "visa" {

@@ -204,13 +204,15 @@ platform :ios do
   lane :size_report do
     Dir.chdir('..') do
       sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb master #{ENV['CIRCLE_BRANCH']}")
-      archive_path = Dir.pwd + '/build/size_tests/'
-      arguments = { repo_name: "#{ENV['CIRCLE_PROJECT_USERNAME']}/#{ENV['CIRCLE_PROJECT_REPONAME']}",
-                    pr_number: ENV['CIRCLE_PULL_REQUEST'].partition('/').last.to_s, # get the PR number from the PR URL
-                    sha: `git rev-parse HEAD`.to_s,
-                    base_sha: `git rev-parse master`.to_s,
-                    build_type: 'release' }
       unless ENV['EMERGE_API_TOKEN'].nil?
+        archive_path = Dir.pwd + '/build/size_tests/'
+        arguments = { repo_name: "#{ENV['CIRCLE_PROJECT_USERNAME']}/#{ENV['CIRCLE_PROJECT_REPONAME']}",
+                      sha: `git rev-parse HEAD`.to_s,
+                      build_type: 'release' }
+        unless ENV['CIRCLE_PULL_REQUEST'].nil?
+          arguments[:pr_number] = ENV['CIRCLE_PULL_REQUEST'].split('/').last.to_s # get the PR number from the PR URL
+          arguments[:base_sha] = `git rev-parse master`.to_s
+        end
         emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
         emerge(file_path: archive_path + 'StripeApplePay.xcarchive', **arguments)
         emerge(file_path: archive_path + 'StripeFinancialConnections.xcarchive', **arguments)

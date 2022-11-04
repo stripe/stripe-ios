@@ -40,8 +40,10 @@ public class STPPaymentIntentShippingDetailsAddress: NSObject {
         let props = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPPaymentIntentShippingDetailsAddress.self),
-                self),
+                format: "%@: %p",
+                NSStringFromClass(STPPaymentIntentShippingDetailsAddress.self),
+                self
+            ),
             // Properties
             "line1 = \(String(describing: line1))",
             "line2 = \(String(describing: line2))",
@@ -90,7 +92,8 @@ extension STPPaymentIntentShippingDetailsAddress: STPAPIResponseDecodable {
             line2: dict["line2"] as? String,
             postalCode: dict["postal_code"] as? String,
             state: dict["state"] as? String,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
 }

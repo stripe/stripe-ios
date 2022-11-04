@@ -58,7 +58,9 @@ public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: response)
     }
 
-    required init(dictionary dict: [AnyHashable: Any]) {
+    required init(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         allResponseFields = dict
         let dict = dict.stp_dictionaryByRemovingNulls()
         last4 = dict.stp_string(forKey: "last4")
@@ -73,7 +75,8 @@ public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
         expMonth = UInt(dict.stp_int(forKey: "exp_month", or: 0))
         expYear = UInt(dict.stp_int(forKey: "exp_year", or: 0))
         threeDSecure = STPSourceCardDetails.threeDSecureStatus(
-            from: dict.stp_string(forKey: "three_d_secure") ?? "")
+            from: dict.stp_string(forKey: "three_d_secure") ?? ""
+        )
         isApplePayCard = dict.stp_string(forKey: "tokenization_method") == "apple_pay"
         super.init()
     }
@@ -99,7 +102,9 @@ public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
         return .unknown
     }
 
-    class func string(fromThreeDSecureStatus threeDSecureStatus: STPSourceCard3DSecureStatus)
+    class func string(
+        fromThreeDSecureStatus threeDSecureStatus: STPSourceCard3DSecureStatus
+    )
         -> String?
     {
         return

@@ -102,7 +102,8 @@ public class STPThreeDSUICustomization: NSObject {
         buttonCustomizationDictionary[NSNumber(value: buttonType.rawValue)] = buttonCustomization
         self.uiCustomization.setButton(
             buttonCustomization.buttonCustomization,
-            for: STDSUICustomizationButtonType(rawValue: buttonType.rawValue)!)
+            for: STDSUICustomizationButtonType(rawValue: buttonType.rawValue)!
+        )
     }
 
     /// Retrieves a button customization object for the given button type.

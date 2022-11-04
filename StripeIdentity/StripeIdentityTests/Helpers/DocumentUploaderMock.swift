@@ -7,11 +7,12 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
-@testable import StripeIdentity
+@_spi(STP) import StripeCore
+import UIKit
 import XCTest
+
+@testable import StripeIdentity
 
 final class DocumentUploaderMock: DocumentUploaderProtocol {
     var delegate: DocumentUploaderDelegate?
@@ -22,13 +23,13 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
     var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
         return frontUploadPromise
     }
-    
+
     var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
         return backUploadPromise
     }
-    
+
     let frontUploadPromise = Promise<StripeAPI.VerificationPageDataDocumentFileData>()
-    
+
     let backUploadPromise = Promise<StripeAPI.VerificationPageDataDocumentFileData>()
 
     private(set) var uploadImagesExp = XCTestExpectation(description: "Document Images uploaded")

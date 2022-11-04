@@ -8,6 +8,7 @@
 
 import UIKit
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)

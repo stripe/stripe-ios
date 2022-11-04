@@ -15,40 +15,42 @@ public class STPPaymentMethodUSBankAccount: NSObject {
 
     /// Account holder type
     @objc public let accountHolderType: STPPaymentMethodUSBankAccountHolderType
-    
+
     /// Account type
     @objc public let accountType: STPPaymentMethodUSBankAccountType
-    
+
     /// The name of the bank
     @objc public let bankName: String
-    
+
     /// Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
     @objc public let fingerprint: String
-    
+
     /// Last four digits of the bank account number
     @objc public let last4: String
-    
+
     /// The token of the Linked Account used to create the payment method
     @objc public let linkedAccount: String?
-    
+
     /// Contains information about US bank account networks that can be used
     @objc public let networks: STPPaymentMethodUSBankAccountNetworks?
-    
+
     /// Routing number of the bank account
     @objc public let routingNumber: String
-    
+
     /// :nodoc:
     @objc public let allResponseFields: [AnyHashable: Any]
-    
-    internal init(accountHolderType: STPPaymentMethodUSBankAccountHolderType,
-                  accountType: STPPaymentMethodUSBankAccountType,
-                  bankName: String,
-                  fingerprint: String,
-                  last4: String,
-                  linkedAccount: String?,
-                  networks: STPPaymentMethodUSBankAccountNetworks?,
-                  routingNumber: String,
-                  allResponseFields: [AnyHashable: Any]) {
+
+    internal init(
+        accountHolderType: STPPaymentMethodUSBankAccountHolderType,
+        accountType: STPPaymentMethodUSBankAccountType,
+        bankName: String,
+        fingerprint: String,
+        last4: String,
+        linkedAccount: String?,
+        networks: STPPaymentMethodUSBankAccountNetworks?,
+        routingNumber: String,
+        allResponseFields: [AnyHashable: Any]
+    ) {
         self.accountHolderType = accountHolderType
         self.accountType = accountType
         self.bankName = bankName
@@ -65,32 +67,41 @@ public class STPPaymentMethodUSBankAccount: NSObject {
 // MARK: - STPAPIResponseDecodable
 /// :nodoc:
 extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
-    public static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+    public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response,
-        let accountHolderTypeString = response["account_holder_type"] as? String,
-              let accountTypeString = response["account_type"] as? String,
-              let bankName = response["bank_name"] as? String,
-              let fingerprint = response["fingerprint"] as? String,
-              let last4 = response["last4"] as? String,
-              let routingNumber = response["routing_number"] as? String else {
+            let accountHolderTypeString = response["account_holder_type"] as? String,
+            let accountTypeString = response["account_type"] as? String,
+            let bankName = response["bank_name"] as? String,
+            let fingerprint = response["fingerprint"] as? String,
+            let last4 = response["last4"] as? String,
+            let routingNumber = response["routing_number"] as? String
+        else {
             return nil
         }
         var networks: STPPaymentMethodUSBankAccountNetworks? = nil
         if let networksHash = response["networks"] as? [AnyHashable: Any],
-           let supported = networksHash["supported"] as? [String] {
+            let supported = networksHash["supported"] as? [String]
+        {
             let preferred = networksHash["preferred"] as? String
-            networks = STPPaymentMethodUSBankAccountNetworks(preferred: preferred, supported: supported)
+            networks = STPPaymentMethodUSBankAccountNetworks(
+                preferred: preferred,
+                supported: supported
+            )
         }
-        
-        return STPPaymentMethodUSBankAccount(accountHolderType: STPPaymentMethodUSBankAccountHolderType(string: accountHolderTypeString),
-                                             accountType: STPPaymentMethodUSBankAccountType(string: accountTypeString),
-                                             bankName: bankName,
-                                             fingerprint: fingerprint,
-                                             last4: last4,
-                                             linkedAccount: response["linked_account"] as? String,
-                                             networks: networks,
-                                             routingNumber: routingNumber,
-                                             allResponseFields: response) as? Self
+
+        return STPPaymentMethodUSBankAccount(
+            accountHolderType: STPPaymentMethodUSBankAccountHolderType(
+                string: accountHolderTypeString
+            ),
+            accountType: STPPaymentMethodUSBankAccountType(string: accountTypeString),
+            bankName: bankName,
+            fingerprint: fingerprint,
+            last4: last4,
+            linkedAccount: response["linked_account"] as? String,
+            networks: networks,
+            routingNumber: routingNumber,
+            allResponseFields: response
+        ) as? Self
 
     }
 }
@@ -107,8 +118,10 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
     case individual
     /// Account belongs to a company
     case company
-    
-    internal init(string: String?) {
+
+    internal init(
+        string: String?
+    ) {
         guard let string = string else {
             self = .unknown
             return
@@ -122,7 +135,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
             self = .unknown
         }
     }
-    
+
     internal var stringValue: String? {
         switch self {
         case .unknown:
@@ -133,7 +146,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
             return "company"
         }
     }
-    
+
 }
 
 // MARK: - STPPaymentMethodUSBankAccountType
@@ -148,13 +161,15 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
     case checking
     /// Bank account type is savings
     case savings
-    
-    internal init(string: String?) {
+
+    internal init(
+        string: String?
+    ) {
         guard let string = string else {
             self = .unknown
             return
         }
-        
+
         switch string.lowercased() {
         case "checking":
             self = .checking
@@ -164,7 +179,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
             self = .unknown
         }
     }
-    
+
     internal var stringValue: String? {
         switch self {
         case .unknown:
@@ -180,15 +195,17 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
 // MARK: - STPPaymentMethodUSBankAccountNetworks
 /// Contains information about US bank account networks that can be used
 public class STPPaymentMethodUSBankAccountNetworks: NSObject {
-    
+
     /// The preferred network
     @objc public let preferred: String?
-    
+
     /// All supported networks
     @objc public let supported: [String]
-    
-    internal init(preferred: String?,
-                  supported: [String]) {
+
+    internal init(
+        preferred: String?,
+        supported: [String]
+    ) {
         self.preferred = preferred
         self.supported = supported
         super.init()

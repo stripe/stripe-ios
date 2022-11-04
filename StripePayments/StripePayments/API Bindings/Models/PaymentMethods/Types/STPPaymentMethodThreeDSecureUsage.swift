@@ -19,7 +19,10 @@ public class STPPaymentMethodThreeDSecureUsage: NSObject, STPAPIResponseDecodabl
         let props = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPPaymentMethodThreeDSecureUsage.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPPaymentMethodThreeDSecureUsage.self),
+                self
+            ),
             // Properties
             "supported: \(supported ? "YES" : "NO")",
         ]

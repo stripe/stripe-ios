@@ -14,7 +14,9 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
 
     /// A convenience initializer for creating a payment method from a card source.
     /// This should be used to help with migrations to Payment Methods from Sources.
-    @objc public convenience init(cardSourceParams: STPCardParams) {
+    @objc public convenience init(
+        cardSourceParams: STPCardParams
+    ) {
         self.init()
         number = cardSourceParams.number
         expMonth = NSNumber(value: cardSourceParams.expMonth)

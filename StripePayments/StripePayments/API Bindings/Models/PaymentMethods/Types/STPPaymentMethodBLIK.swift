@@ -35,7 +35,9 @@ public class STPPaymentMethodBLIK: NSObject, STPAPIResponseDecodable {
 
     }
 
-    required init(dictionary dict: [AnyHashable: Any]) {
+    required init(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         super.init()
         allResponseFields = dict
     }

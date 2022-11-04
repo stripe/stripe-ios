@@ -26,11 +26,15 @@ public class STPIntentActionBoletoDisplayDetails: NSObject, STPAPIResponseDecoda
     @objc public override var description: String {
         let props: [String] = [
             // Object
-            String(format: "%@: %p", NSStringFromClass(STPIntentActionBoletoDisplayDetails.self), self),
+            String(
+                format: "%@: %p",
+                NSStringFromClass(STPIntentActionBoletoDisplayDetails.self),
+                self
+            ),
             // BoletoDisplayDetails
             "number = \(String(describing: number))",
             "expiresAt = \(String(describing: expiresAt))",
-            "hostedVoucherURL = \(String(describing: hostedVoucherURL))"
+            "hostedVoucherURL = \(String(describing: hostedVoucherURL))",
         ]
 
         return "<\(props.joined(separator: "; "))>"

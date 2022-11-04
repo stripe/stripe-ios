@@ -42,7 +42,9 @@ public class STPPaymentMethodBacsDebit: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: response)
     }
 
-    required init(dictionary dict: [AnyHashable: Any]) {
+    required init(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         super.init()
         fingerprint = dict["fingerprint"] as? String
         last4 = dict["last4"] as? String

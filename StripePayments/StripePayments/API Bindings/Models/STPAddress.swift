@@ -11,7 +11,6 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeCore
 
-
 /// STPAddress Contains an address as represented by the Stripe API.
 public class STPAddress: NSObject {
     /// The user's full name (e.g. "Jane Doe")
@@ -80,7 +79,9 @@ public class STPAddress: NSObject {
     /// - Parameter billingDetails: The STPPaymentMethodBillingDetails instance you want to populate the STPAddress from.
     /// - Returns: A new STPAddress instance with data copied from the passed in billing details.
     @objc
-    public init(paymentMethodBillingDetails billingDetails: STPPaymentMethodBillingDetails) {
+    public init(
+        paymentMethodBillingDetails billingDetails: STPPaymentMethodBillingDetails
+    ) {
         super.init()
         name = billingDetails.name
         phone = billingDetails.phone
@@ -98,7 +99,9 @@ public class STPAddress: NSObject {
     /// - Parameter contact: The PassKit contact you want to populate the STPAddress from.
     /// - Returns: A new STPAddress instance with data copied from the passed in contact.
     @objc(initWithPKContact:)
-    public init(pkContact contact: PKContact) {
+    public init(
+        pkContact contact: PKContact
+    ) {
         super.init()
         let nameComponents = contact.name
         if let nameComponents = nameComponents {
@@ -143,14 +146,18 @@ public class STPAddress: NSObject {
     /// - Parameter contact: The CNContact you want to populate the STPAddress from.
     /// - Returns: A new STPAddress instance with data copied from the passed in contact.
     @objc(initWithCNContact:)
-    public init(cnContact contact: CNContact) {
+    public init(
+        cnContact contact: CNContact
+    ) {
         super.init()
         givenName = stringIfHasContentsElseNil(contact.givenName)
         familyName = stringIfHasContentsElseNil(contact.familyName)
         name = stringIfHasContentsElseNil(
             CNContactFormatter.string(
                 from: contact,
-                style: .fullName))
+                style: .fullName
+            )
+        )
         email = stringIfHasContentsElseNil(contact.emailAddresses.first?.value as String?)
         if let value1 = contact.phoneNumbers.first?.value {
             phone = sanitizedPhoneString(from: value1)
@@ -167,7 +174,8 @@ public class STPAddress: NSObject {
 
     private func sanitizedPhoneString(from phoneNumber: CNPhoneNumber) -> String? {
         return stringIfHasContentsElseNil(
-            STPCardValidator.sanitizedNumericString(for: phoneNumber.stringValue))
+            STPCardValidator.sanitizedNumericString(for: phoneNumber.stringValue)
+        )
     }
 
     private func setAddressFromCNPostal(_ address: CNPostalAddress?) {
@@ -195,7 +203,8 @@ public class STPAddress: NSObject {
                 let firstName = components.first,
                 let lastName = name?.replacingOccurrences(of: firstName, with: "")
                     .trimmingCharacters(
-                        in: .whitespaces)
+                        in: .whitespaces
+                    )
             {
                 return stringIfHasContentsElseNil(lastName)
             }

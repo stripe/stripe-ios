@@ -24,7 +24,8 @@ import UIKit
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
     private(set) var urlSession: URLSession = URLSession(
-        configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
+        configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
+    )
 
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
@@ -59,9 +60,9 @@ import UIKit
 
     @objc class func shouldCollectAnalytics() -> Bool {
         #if targetEnvironment(simulator)
-        return false
+            return false
         #else
-        return NSClassFromString("XCTest") == nil
+            return NSClassFromString("XCTest") == nil
         #endif
     }
 
@@ -71,9 +72,9 @@ import UIKit
 
     func logPayload(_ payload: [String: Any]) {
         #if DEBUG
-        NSLog("LOG ANALYTICS: \(payload)")
+            NSLog("LOG ANALYTICS: \(payload)")
         #endif
-        
+
         guard type(of: self).shouldCollectAnalytics(),
             let url = URL(string: "https://q.stripe.com")
         else {
@@ -86,42 +87,43 @@ import UIKit
         task.resume()
     }
 
-    /**
-     Creates a payload dictionary for the given analytic that includes the event name, common payload,
-     additional info, and product usage dictionary.
-
-     - Parameter analytic: The analytic to log.
-     - Parameter apiClient: The STPAPIClient instance with which this payload should be associated (i.e. publishable key). Defaults to STPAPIClient.shared
-     */
+    /// Creates a payload dictionary for the given analytic that includes the event name,
+    /// common payload, additional info, and product usage dictionary.
+    ///
+    /// - Parameters:
+    ///   - analytic: The analytic to log.
+    ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
+    ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
     func payload(from analytic: Analytic, apiClient: STPAPIClient = .shared) -> [String: Any] {
         var payload = commonPayload(apiClient)
 
         payload["event"] = analytic.event.rawValue
         payload["additional_info"] = additionalInfo()
         payload["product_usage"] = productUsage.sorted()
-        
+
         // Attach error information if this is an error analytic
-        if let errorAnalytic  = analytic as? ErrorAnalytic {
+        if let errorAnalytic = analytic as? ErrorAnalytic {
             payload["error_dictionary"] = errorAnalytic.error.serializeForLogging()
         }
-        
+
         payload.merge(analytic.params) { (_, new) in new }
         return payload
     }
 
-    /**
-     Logs an analytic with a payload dictionary that includes the event name, common payload,
-     additional info, and product usage dictionary.
-
-     - Parameter analytic: The analytic to log.
-     - Parameter apiClient: The STPAPIClient instance with which this payload should be associated (i.e. publishable key). Defaults to STPAPIClient.shared
-     */
+    /// Logs an analytic with a payload dictionary that includes the event name, common payload,
+    /// additional info, and product usage dictionary.
+    ///
+    /// - Parameters
+    ///   - analytic: The analytic to log.
+    ///   - apiClient: The `STPAPIClient` instance with which this payload should be associated
+    ///     (i.e. publishable key). Defaults to `STPAPIClient.shared`.
     public func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
         logPayload(payload(from: analytic))
     }
 }
 
 // MARK: - Helpers
+
 extension STPAnalyticsClient {
     public func commonPayload(_ apiClient: STPAPIClient) -> [String: Any] {
         var payload: [String: Any] = [:]
@@ -139,7 +141,7 @@ extension STPAnalyticsClient {
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
-        
+
         return payload
     }
 }

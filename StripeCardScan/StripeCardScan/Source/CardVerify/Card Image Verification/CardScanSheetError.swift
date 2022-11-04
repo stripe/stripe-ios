@@ -8,9 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/**
- Errors specific to the `CardImageVerificationSheet`.
- */
+/// Errors specific to the `CardImageVerificationSheet`.
 public enum CardScanSheetError: Error {
     /// The provided client secret is invalid.
     case invalidClientSecret
@@ -30,7 +28,7 @@ extension CardScanSheetError: CustomDebugStringConvertible {
         switch self {
         case .invalidClientSecret:
             return "Invalid client secret"
-        case .unknown(debugDescription: let debugDescription):
+        case .unknown(let debugDescription):
             return debugDescription
         }
     }

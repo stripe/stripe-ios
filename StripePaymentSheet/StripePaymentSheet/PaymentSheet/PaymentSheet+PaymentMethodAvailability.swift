@@ -179,6 +179,7 @@ extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }
         if allowsDelayedPaymentMethods { reqs.append(.userSupportsDelayedPaymentMethods) }
+        if allowsPaymentMethodsRequiringShippingAddress { reqs.append(.shippingAddress) }
         if FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
             reqs.append(.financialConnectionsSDK)
         }

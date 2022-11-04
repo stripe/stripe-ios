@@ -22,7 +22,7 @@ public class STPCustomer: NSObject {
 
     /// The available payment sources the customer has (this may be an empty array).
     @objc public private(set) var sources: [STPSourceProtocol]
-    
+
     /// The customer’s email address.
     @objc public private(set) var email: String?
 
@@ -49,7 +49,8 @@ public class STPCustomer: NSObject {
             sources: sources,
             shippingAddress: nil,
             email: nil,
-            allResponseFields: [:])
+            allResponseFields: [:]
+        )
     }
 
     internal init(
@@ -76,7 +77,8 @@ public class STPCustomer: NSObject {
             sources: [],
             shippingAddress: nil,
             email: nil,
-            allResponseFields: [:])
+            allResponseFields: [:]
+        )
     }
 
     // MARK: - Description
@@ -95,17 +97,17 @@ public class STPCustomer: NSObject {
         return "<\(props.joined(separator: "; "))>"
     }
 
-    /**
-     Replaces the customer's `sources` and `defaultSource` based on whether or not
-     they should include Apple Pay sources. More details on documentation for
-     `STPCustomerContext includeApplePaySources`
-
-     @param filteringApplePay      If YES, Apple Pay sources will be ignored
-     */
+    /// Replaces the customer's `sources` and `defaultSource` based on whether or not
+    /// they should include Apple Pay sources. More details on documentation for
+    /// `STPCustomerContext includeApplePaySources`
+    ///
+    /// @param filteringApplePay      If YES, Apple Pay sources will be ignored
     @objc(updateSourcesFilteringApplePay:)
     public func updateSources(filteringApplePay: Bool) {
         let (defaultSource, sources) = STPCustomer.sources(
-            from: allResponseFields, filterApplePay: filteringApplePay)
+            from: allResponseFields,
+            filterApplePay: filteringApplePay
+        )
         self.defaultSource = defaultSource
         self.sources = sources
     }
@@ -140,11 +142,15 @@ extension STPCustomer: STPAPIResponseDecodable {
             sources: sources,
             shippingAddress: shippingAddress,
             email: dict["email"] as? String,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
 
     }
 
-    private class func sources(from response: [AnyHashable: Any], filterApplePay: Bool) -> (
+    private class func sources(
+        from response: [AnyHashable: Any],
+        filterApplePay: Bool
+    ) -> (
         default: STPSourceProtocol?, sources: [STPSourceProtocol]
     ) {
 
@@ -241,7 +247,9 @@ public class STPCustomerDeserializer: NSObject {
     /// otherwise `error` will be present.
     /// - Parameter json: a JSON dictionary.
     @objc
-    public convenience init(jsonResponse json: Any?) {
+    public convenience init(
+        jsonResponse json: Any?
+    ) {
         if let customer = STPCustomer.decodedObject(fromAPIResponse: json as? [AnyHashable: Any]) {
             self.init(customer: customer, error: nil)
         } else {
@@ -249,7 +257,10 @@ public class STPCustomerDeserializer: NSObject {
         }
     }
 
-    private init(customer: STPCustomer?, error: Error?) {
+    private init(
+        customer: STPCustomer?,
+        error: Error?
+    ) {
         self.customer = customer
         self.error = error
         super.init()

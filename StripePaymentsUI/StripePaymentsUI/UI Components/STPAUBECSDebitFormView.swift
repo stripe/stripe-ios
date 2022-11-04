@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// STPAUBECSDebitFormViewDelegate provides methods for STPAUBECSDebitFormView to inform its delegate
 /// of when the form has been completed.
@@ -42,7 +42,9 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
 
     /// - Parameter companyName: The name of the company collecting AU BECS Debit payment details information. This will be used to provide the required service agreement text. - seealso: https://stripe.com/au-becs/legal
     @objc(initWithCompanyName:)
-    public required init(companyName: String) {
+    public required init(
+        companyName: String
+    ) {
         self.companyName = companyName
         super.init(frame: CGRect.zero)
         viewModel = STPAUBECSFormViewModel()
@@ -55,13 +57,17 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _emailTextField = _buildTextField()
         _emailTextField.keyboardType = .emailAddress
         _emailTextField.placeholder = STPLocalizedString(
-            "example@example.com", "Placeholder string for email entry field.")
+            "example@example.com",
+            "Placeholder string for email entry field."
+        )
         _emailTextField.accessibilityLabel = String.Localized.email
         _emailTextField.textContentType = .emailAddress
 
         _bsbNumberTextField = _buildTextField()
         _bsbNumberTextField.placeholder = STPLocalizedString(
-            "BSB", "Placeholder text for BSB Number entry field for BECS Debit.")
+            "BSB",
+            "Placeholder text for BSB Number entry field for BECS Debit."
+        )
         _bsbNumberTextField.autoFormattingBehavior = .bsbNumber
         _bsbNumberTextField.accessibilityLabel = _bsbNumberTextField.placeholder
         _bsbNumberTextField.leftViewMode = .always
@@ -79,13 +85,17 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _accountNumberTextField.accessibilityLabel = _accountNumberTextField.placeholder
 
         labeledNameField = STPLabeledFormTextFieldView(
-            formLabel: STPAUBECSDebitFormView._nameTextFieldLabel(), textField: _nameTextField)
+            formLabel: STPAUBECSDebitFormView._nameTextFieldLabel(),
+            textField: _nameTextField
+        )
         labeledNameField.formBackgroundColor = formBackgroundColor
         labeledNameField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(labeledNameField)
 
         labeledEmailField = STPLabeledFormTextFieldView(
-            formLabel: STPAUBECSDebitFormView._emailTextFieldLabel(), textField: _emailTextField)
+            formLabel: STPAUBECSDebitFormView._emailTextFieldLabel(),
+            textField: _emailTextField
+        )
         labeledEmailField.topSeparatorHidden = true
         labeledEmailField.formBackgroundColor = formBackgroundColor
         labeledEmailField.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +104,8 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         labeledBECSField = STPLabeledMultiFormTextFieldView(
             formLabel: STPAUBECSDebitFormView._bsbNumberTextFieldLabel(),
             firstTextField: _bsbNumberTextField,
-            secondTextField: _accountNumberTextField)
+            secondTextField: _accountNumberTextField
+        )
         labeledBECSField.formBackgroundColor = formBackgroundColor
         labeledBECSField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(labeledBECSField)
@@ -121,11 +132,14 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
                 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the Direct Debit Request service agreement, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (\"Stripe\") to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of \(companyName) (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above."
         )
         let linkRange = (mandateText.string as NSString).range(
-            of: "Direct Debit Request service agreement")
+            of: "Direct Debit Request service agreement"
+        )
         if linkRange.location != NSNotFound {
             mandateText.addAttribute(
-                .link, value: "https://stripe.com/au-becs-dd-service-agreement/legal",
-                range: linkRange)
+                .link,
+                value: "https://stripe.com/au-becs-dd-service-agreement/legal",
+                range: linkRange
+            )
         } else {
             assert(false, "Shouldn't be missing the text to linkify.")
         }
@@ -149,11 +163,17 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
             bankIconView.topAnchor.constraint(equalTo: iconContainer.topAnchor, constant: 0),
             bankIconView.leadingAnchor.constraint(equalTo: iconContainer.leadingAnchor),
             bankIconView.trailingAnchor.constraint(
-                equalTo: iconContainer.trailingAnchor, constant: -8),
+                equalTo: iconContainer.trailingAnchor,
+                constant: -8
+            ),
             iconContainer.heightAnchor.constraint(
-                greaterThanOrEqualTo: bankIconView.heightAnchor, multiplier: 1.0),
+                greaterThanOrEqualTo: bankIconView.heightAnchor,
+                multiplier: 1.0
+            ),
             iconContainer.widthAnchor.constraint(
-                greaterThanOrEqualTo: bankIconView.widthAnchor, multiplier: 1.0),
+                greaterThanOrEqualTo: bankIconView.widthAnchor,
+                multiplier: 1.0
+            ),
             labeledNameField.leadingAnchor.constraint(equalTo: leadingAnchor),
             labeledNameField.trailingAnchor.constraint(equalTo: trailingAnchor),
             labeledNameField.topAnchor.constraint(equalTo: topAnchor),
@@ -161,30 +181,44 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
             labeledEmailField.trailingAnchor.constraint(equalTo: trailingAnchor),
             labeledEmailField.topAnchor.constraint(equalTo: labeledNameField.bottomAnchor),
             labeledNameField.labelWidthDimension.constraint(
-                equalTo: labeledEmailField.labelWidthDimension),
+                equalTo: labeledEmailField.labelWidthDimension
+            ),
             labeledBECSField.leadingAnchor.constraint(equalTo: leadingAnchor),
             labeledBECSField.trailingAnchor.constraint(equalTo: trailingAnchor),
             labeledBECSField.topAnchor.constraint(
-                equalTo: labeledEmailField.bottomAnchor, constant: 4),
+                equalTo: labeledEmailField.bottomAnchor,
+                constant: 4
+            ),
             bsbLabel.topAnchor.constraint(equalTo: labeledBECSField.bottomAnchor, constant: 4),
             // Constrain to bottom of becs details instead of bank name label becuase it is height 0 when no data
             // has been entered
             mandateTextLabel.topAnchor.constraint(
-                equalTo: labeledBECSField.bottomAnchor, constant: 40.0),
+                equalTo: labeledBECSField.bottomAnchor,
+                constant: 40.0
+            ),
             bottomAnchor.constraint(equalTo: mandateTextLabel.bottomAnchor),
         ].compactMap { $0 }
 
         constraints.append(
             contentsOf: [
                 bsbLabel.leadingAnchor.constraint(
-                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor,
+                    multiplier: 1.0
+                ),
                 layoutMarginsGuide.trailingAnchor.constraint(
-                    equalToSystemSpacingAfter: bsbLabel.trailingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: bsbLabel.trailingAnchor,
+                    multiplier: 1.0
+                ),
                 mandateTextLabel.leadingAnchor.constraint(
-                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor,
+                    multiplier: 1.0
+                ),
                 layoutMarginsGuide.trailingAnchor.constraint(
-                    equalToSystemSpacingAfter: mandateTextLabel.trailingAnchor, multiplier: 1.0),
-            ].compactMap { $0 })
+                    equalToSystemSpacingAfter: mandateTextLabel.trailingAnchor,
+                    multiplier: 1.0
+                ),
+            ].compactMap { $0 }
+        )
 
         NSLayoutConstraint.activate(constraints)
 
@@ -198,13 +232,17 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     /// Use initWithCompanyName instead.
-    required convenience init?(coder: NSCoder) {
+    required convenience init?(
+        coder: NSCoder
+    ) {
         assertionFailure("Use initWithCompanyName instead.")
         self.init(companyName: "")
     }
 
     /// Use initWithCompanyName instead.
-    override convenience init(frame: CGRect) {
+    override convenience init(
+        frame: CGRect
+    ) {
         assertionFailure("Use initWithCompanyName instead.")
         self.init(companyName: "")
     }
@@ -274,25 +312,29 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
                 viewModel.isInputValid(
                     formTextField.text ?? "",
                     for: .BSBNumber,
-                    editing: formTextField.isFirstResponder)
+                    editing: formTextField.isFirstResponder
+                )
         } else if formTextField == _accountNumberTextField {
             formTextField.validText =
                 viewModel.isInputValid(
                     formTextField.text ?? "",
                     for: .accountNumber,
-                    editing: formTextField.isFirstResponder)
+                    editing: formTextField.isFirstResponder
+                )
         } else if formTextField == _nameTextField {
             formTextField.validText =
                 viewModel.isInputValid(
                     formTextField.text ?? "",
                     for: .name,
-                    editing: formTextField.isFirstResponder)
+                    editing: formTextField.isFirstResponder
+                )
         } else if formTextField == _emailTextField {
             formTextField.validText =
                 viewModel.isInputValid(
                     formTextField.text ?? "",
                     for: .email,
-                    editing: formTextField.isFirstResponder)
+                    editing: formTextField.isFirstResponder
+                )
         } else {
             assert(
                 false,
@@ -312,11 +354,14 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         // to get this method to account for the full, non-scrollable size of _mandateLabel
         layoutIfNeeded()
         let tempConstraint = mandateLabel.heightAnchor.constraint(
-            equalToConstant: mandateLabel.contentSize.height)
+            equalToConstant: mandateLabel.contentSize.height
+        )
         tempConstraint.isActive = true
         let size = super.systemLayoutSizeFitting(
-            targetSize, withHorizontalFittingPriority: horizontalFittingPriority,
-            verticalFittingPriority: verticalFittingPriority)
+            targetSize,
+            withHorizontalFittingPriority: horizontalFittingPriority,
+            verticalFittingPriority: verticalFittingPriority
+        )
         tempConstraint.isActive = false
         return size
 
@@ -334,8 +379,10 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     func _updateBSBLabel() {
         var isErrorString = false
         bsbLabel.text = viewModel.bsbLabel(
-            forInput: _bsbNumberTextField.text, editing: _bsbNumberTextField.isFirstResponder,
-            isErrorString: &isErrorString)
+            forInput: _bsbNumberTextField.text,
+            editing: _bsbNumberTextField.isFirstResponder,
+            isErrorString: &isErrorString
+        )
         bsbLabel.textColor = isErrorString ? formTextErrorColor : _defaultBSBLabelTextColor()
     }
 
@@ -368,19 +415,23 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         if formTextField == _bsbNumberTextField {
             return NSAttributedString(
                 string: viewModel.formattedString(forInput: input.string, in: .BSBNumber),
-                attributes: _bsbNumberTextField.defaultTextAttributes)
+                attributes: _bsbNumberTextField.defaultTextAttributes
+            )
         } else if formTextField == _accountNumberTextField {
             return NSAttributedString(
                 string: viewModel.formattedString(forInput: input.string, in: .accountNumber),
-                attributes: _accountNumberTextField.defaultTextAttributes)
+                attributes: _accountNumberTextField.defaultTextAttributes
+            )
         } else if formTextField == _nameTextField {
             return NSAttributedString(
                 string: viewModel.formattedString(forInput: input.string, in: .name),
-                attributes: _nameTextField.defaultTextAttributes)
+                attributes: _nameTextField.defaultTextAttributes
+            )
         } else if formTextField == _emailTextField {
             return NSAttributedString(
                 string: viewModel.formattedString(forInput: input.string, in: .email),
-                attributes: _emailTextField.defaultTextAttributes)
+                attributes: _emailTextField.defaultTextAttributes
+            )
         } else {
             assert(
                 false,
@@ -408,7 +459,8 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
             _updateValidText(for: _accountNumberTextField)
 
             if viewModel.isFieldComplete(
-                withInput: formTextField.text ?? "", in: .BSBNumber,
+                withInput: formTextField.text ?? "",
+                in: .BSBNumber,
                 editing: formTextField.isFirstResponder
             ) {
                 focusNextForm()
@@ -416,9 +468,10 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         } else if formTextField == _accountNumberTextField {
             viewModel.accountNumber = formTextField.text
             if viewModel.isFieldComplete(
-                withInput: formTextField.text ?? "", in: .accountNumber,
-                editing: formTextField.isFirstResponder)
-            {
+                withInput: formTextField.text ?? "",
+                in: .accountNumber,
+                editing: formTextField.isFirstResponder
+            ) {
                 focusNextForm()
             }
         } else if formTextField == _nameTextField {
@@ -435,7 +488,9 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         let nowHasCompletePaymentMethod = viewModel.paymentMethodParams != nil
         if hadCompletePaymentMethod != nowHasCompletePaymentMethod {
             becsDebitFormDelegate?.auBECSDebitForm(
-                self, didChangeToStateComplete: nowHasCompletePaymentMethod)
+                self,
+                didChangeToStateComplete: nowHasCompletePaymentMethod
+            )
         }
     }
 
@@ -445,16 +500,28 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     ) -> Bool {
         if formTextField == _bsbNumberTextField {
             return viewModel.isFieldComplete(
-                withInput: formTextField.text ?? "", in: .BSBNumber, editing: false)
+                withInput: formTextField.text ?? "",
+                in: .BSBNumber,
+                editing: false
+            )
         } else if formTextField == _accountNumberTextField {
             return viewModel.isFieldComplete(
-                withInput: formTextField.text ?? "", in: .accountNumber, editing: false)
+                withInput: formTextField.text ?? "",
+                in: .accountNumber,
+                editing: false
+            )
         } else if formTextField == _nameTextField {
             return viewModel.isFieldComplete(
-                withInput: formTextField.text ?? "", in: .name, editing: false)
+                withInput: formTextField.text ?? "",
+                in: .name,
+                editing: false
+            )
         } else if formTextField == _emailTextField {
             return viewModel.isFieldComplete(
-                withInput: formTextField.text ?? "", in: .email, editing: false)
+                withInput: formTextField.text ?? "",
+                in: .email,
+                editing: false
+            )
         } else {
             assert(
                 false,
@@ -468,7 +535,9 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     /// :nodoc:
     @objc
     public func textView(
-        _ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange,
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
         interaction: UITextItemInteraction
     ) -> Bool {
         return true

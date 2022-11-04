@@ -6,29 +6,26 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
-
-/*
- This view will contain the icons that will be above a banner type header view.
- Here are the two types of icon views:
-
- Brand icon + Stripe icon
- +-----------------------+
- |     +---+   +---+     |
- |     | B | + | S |     |
- |     +---+   +---+     |
- +-----------------------+
-
- A singular icon (i.e. error icon)
- +------------------------+
- |         +---+          |
- |         | B |          |
- |         +---+          |
- +------------------------+
- */
+// This view will contain the icons that will be above a banner type header view.
+// Here are the two types of icon views:
+//
+// Brand icon + Stripe icon
+// +-----------------------+
+// |     +---+   +---+     |
+// |     | B | + | S |     |
+// |     +---+   +---+     |
+// +-----------------------+
+//
+// A singular icon (i.e. error icon)
+// +------------------------+
+// |         +---+          |
+// |         | B |          |
+// |         +---+          |
+// +------------------------+
 class HeaderIconView: UIView {
     struct Styling {
         static let baseIconLength: CGFloat = 32
@@ -73,11 +70,11 @@ class HeaderIconView: UIView {
         }
 
         init(
-         iconType: IconType,
-         iconImage: UIImage,
-         iconImageContentMode: UIView.ContentMode,
-         iconTintColor: UIColor? = nil,
-         shouldIconBackgroundMatchTintColor: Bool = false
+            iconType: IconType,
+            iconImage: UIImage,
+            iconImageContentMode: UIView.ContentMode,
+            iconTintColor: UIColor? = nil,
+            shouldIconBackgroundMatchTintColor: Bool = false
         ) {
             self.iconType = iconType
             self.iconImage = iconImage
@@ -134,7 +131,9 @@ class HeaderIconView: UIView {
         installConstraints()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -167,22 +166,22 @@ class HeaderIconView: UIView {
     }
 }
 
-private extension HeaderIconView {
-    func installViews() {
+extension HeaderIconView {
+    fileprivate func installViews() {
         stackView.addArrangedSubview(baseIconView)
         stackView.addArrangedSubview(plusIconView)
         stackView.addArrangedSubview(stripeIconView)
         addSubview(stackView)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // Set the base icon view's static square height and width
             baseIconView.heightAnchor.constraint(equalToConstant: Styling.baseIconLength),
             baseIconView.widthAnchor.constraint(equalToConstant: Styling.baseIconLength),
-            
+
             // Set the stripe icon view's static square height and width
             stripeIconView.heightAnchor.constraint(equalToConstant: Styling.baseIconLength),
             stripeIconView.widthAnchor.constraint(equalToConstant: Styling.baseIconLength),
@@ -190,8 +189,11 @@ private extension HeaderIconView {
             // The stack view should have some padding for the shadow to show
             // and be aligned to the center.
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: Styling.stackViewPadding),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Styling.stackViewPadding),
-            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
+            stackView.bottomAnchor.constraint(
+                equalTo: bottomAnchor,
+                constant: -Styling.stackViewPadding
+            ),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
     }
 }

@@ -110,7 +110,8 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// this enum value from a string, use `STPCardBrand.funding(from string:)`.
     /// - Returns: an STPCard instance populated with the provided values.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "You cannot directly instantiate an STPCard. You should only use one that has been returned from an STPAPIClient callback."
     )
@@ -233,7 +234,10 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return "card"
     }
 
-    required init(stripeID: String, last4: String) {
+    required init(
+        stripeID: String,
+        last4: String
+    ) {
         self.stripeID = stripeID
         self.last4 = last4
         super.init()
@@ -290,7 +294,8 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     /// - seealso: https://stripe.com/docs/api#metadata
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead."
     )

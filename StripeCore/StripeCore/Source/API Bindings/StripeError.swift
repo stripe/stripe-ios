@@ -8,15 +8,15 @@
 
 import Foundation
 
-/// Error codes returned from STPAPIClient
+/// Error codes returned from STPAPIClient.
 @_spi(STP) public enum StripeError: Error {
-    /// The server returned an API error
+    /// The server returned an API error.
     case apiError(StripeAPIError)
 
-    /// The request was invalid
+    /// The request was invalid.
     case invalidRequest
 
-    /// Localized description of the error
+    /// Localized description of the error.
     public var localizedDescription: String {
         return errorDescription ?? NSError.stp_unexpectedErrorMessage()
     }
@@ -63,7 +63,7 @@ extension StripeError: LocalizedError {
 }
 
 extension StripeError: AnalyticLoggableError {
-    public func analyticLoggableSerializeForLogging() -> [String : Any] {
+    public func analyticLoggableSerializeForLogging() -> [String: Any] {
         var code: Int
         switch self {
         case .apiError:
@@ -74,7 +74,7 @@ extension StripeError: AnalyticLoggableError {
 
         return [
             "domain": (self as NSError).domain,
-            "code": code
+            "code": code,
         ]
     }
 }

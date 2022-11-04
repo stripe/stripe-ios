@@ -17,24 +17,26 @@ struct VerificationClientSecret {
 extension VerificationClientSecret {
     private static let expectedComponentsCount = 4
 
-    /**
-     Initialize from string.
-     - returns: nil if the client secret is invalid
-     */
-    init?(string: String) {
-        let components = string
+    /// Initialize from string.
+    /// - returns: nil if the client secret is invalid
+    init?(
+        string: String
+    ) {
+        let components =
+            string
             .trimmingCharacters(in: .whitespacesAndNewlines)
-            .split(separator: "_",
-                   maxSplits: VerificationClientSecret.expectedComponentsCount - 1,
-                   omittingEmptySubsequences: false)
+            .split(
+                separator: "_",
+                maxSplits: VerificationClientSecret.expectedComponentsCount - 1,
+                omittingEmptySubsequences: false
+            )
 
         // Matching regex /^((vi|vs)_[0-9a-zA-Z]+)_secret_(.+)$/
-        guard components.count >= VerificationClientSecret.expectedComponentsCount &&
-                (components[0] == "vi" || components[0] == "vs") &&
-                !components[1].isEmpty &&
-                (components[1].rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil) &&
-                components[2] == "secret" &&
-                !components[3].isEmpty
+        guard
+            components.count >= VerificationClientSecret.expectedComponentsCount
+                && (components[0] == "vi" || components[0] == "vs") && !components[1].isEmpty
+                && (components[1].rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil)
+                && components[2] == "secret" && !components[3].isEmpty
         else {
             return nil
         }

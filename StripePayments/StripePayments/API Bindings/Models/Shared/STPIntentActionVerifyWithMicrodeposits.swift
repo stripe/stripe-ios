@@ -9,21 +9,22 @@
 import UIKit
 
 @objc public enum STPMicrodepositType: Int {
-    
+
     /// This is an unknown type that's been added since the SDK
     /// was last updated.
     /// Update your SDK, or use the `allResponseFields`
     /// for custom handling.
     case unknown
-    
+
     /// Two non-unique micro-deposits to the customer's bank account
     case amounts
-    
+
     /// A single micro-deposit sent to the customer's bank account with a unique descriptor code
     case descriptorCode
-        
-    
-    internal init(string: String) {
+
+    internal init(
+        string: String
+    ) {
         switch string.lowercased() {
         case "amounts":
             self = .amounts
@@ -40,20 +41,22 @@ public class STPIntentActionVerifyWithMicrodeposits: NSObject {
 
     /// The timestamp when the microdeposits are expected to land
     @objc public let arrivalDate: Date
-    
+
     /// The URL for the hosted verification page, which allows customers to verify their bank account
     @objc public let hostedVerificationURL: URL
-    
+
     /// The type of the microdeposit sent to the customer. Used to distinguish between different verificaion methods.
     @objc public let microdepositType: STPMicrodepositType
 
     /// :nodoc:
     @objc public let allResponseFields: [AnyHashable: Any]
-    
-    internal init(arrivalDate: Date,
-                  hostedVerificationURL: URL,
-                  microdepositType: STPMicrodepositType,
-                  allResponseFields: [AnyHashable: Any]) {
+
+    internal init(
+        arrivalDate: Date,
+        hostedVerificationURL: URL,
+        microdepositType: STPMicrodepositType,
+        allResponseFields: [AnyHashable: Any]
+    ) {
         self.arrivalDate = arrivalDate
         self.hostedVerificationURL = hostedVerificationURL
         self.microdepositType = microdepositType
@@ -73,12 +76,13 @@ extension STPIntentActionVerifyWithMicrodeposits: STPAPIResponseDecodable {
         else {
             return nil
         }
-        
-        return STPIntentActionVerifyWithMicrodeposits(arrivalDate: arrivalDate,
-                                                      hostedVerificationURL: hostedVerificationURL,
-                                                      microdepositType: STPMicrodepositType(string: microdepositTypeString),
-                                                      allResponseFields: response) as? Self
+
+        return STPIntentActionVerifyWithMicrodeposits(
+            arrivalDate: arrivalDate,
+            hostedVerificationURL: hostedVerificationURL,
+            microdepositType: STPMicrodepositType(string: microdepositTypeString),
+            allResponseFields: response
+        ) as? Self
     }
-    
-    
+
 }

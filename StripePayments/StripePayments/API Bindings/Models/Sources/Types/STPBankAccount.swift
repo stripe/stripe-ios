@@ -58,14 +58,16 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
     /// @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     /// - seealso: https://stripe.com/docs/api#metadata
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead."
     )
     private(set) var metadata: [String: String]?
     /// The Stripe ID for the bank account.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message: "Use stripeID (defined in STPSourceProtocol)"
     )
     @objc public var bankAccountId: String? {
@@ -81,7 +83,8 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
             "validated": NSNumber(value: STPBankAccountStatus.validated.rawValue),
             "verified": NSNumber(value: STPBankAccountStatus.verified.rawValue),
             "verification_failed": NSNumber(
-                value: STPBankAccountStatus.verificationFailed.rawValue),
+                value: STPBankAccountStatus.verificationFailed.rawValue
+            ),
             "errored": NSNumber(value: STPBankAccountStatus.errored.rawValue),
         ]
     }
@@ -189,7 +192,8 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
         bankAccount.accountHolderName = dict.stp_string(forKey: "account_holder_name")
         let rawAccountHolderType = dict.stp_string(forKey: "account_holder_type")
         bankAccount.accountHolderType = STPBankAccountParams.accountHolderType(
-            from: rawAccountHolderType ?? "")
+            from: rawAccountHolderType ?? ""
+        )
 
         bankAccount.allResponseFields = dict
 

@@ -62,7 +62,9 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
         "company": .company,
     ]
 
-    @objc(accountHolderTypeFromString:) class func accountHolderType(from string: String)
+    @objc(accountHolderTypeFromString:) class func accountHolderType(
+        from string: String
+    )
         -> STPBankAccountHolderType
     {
         let key = string.lowercased()

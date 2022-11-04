@@ -68,7 +68,8 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     /// - seealso: https://stripe.com/docs/api#metadata
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead."
     )
@@ -301,7 +302,8 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         let rawVerification = dict.stp_dictionary(forKey: "verification")
         if let rawVerification = rawVerification {
             source.verification = STPSourceVerification.decodedObject(
-                fromAPIResponse: rawVerification)
+                fromAPIResponse: rawVerification
+            )
         }
         source.details = dict.stp_dictionary(forKey: rawType ?? "")
         source.allResponseFields = dict
@@ -312,13 +314,16 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             }
         } else if source.type == .SEPADebit {
             source.sepaDebitDetails = STPSourceSEPADebitDetails.decodedObject(
-                fromAPIResponse: source.details)
+                fromAPIResponse: source.details
+            )
         } else if source.type == .weChatPay {
             source.weChatPayDetails = STPSourceWeChatPayDetails.decodedObject(
-                fromAPIResponse: source.details)
+                fromAPIResponse: source.details
+            )
         } else if source.type == .klarna {
             source.klarnaDetails = STPSourceKlarnaDetails.decodedObject(
-                fromAPIResponse: source.details)
+                fromAPIResponse: source.details
+            )
         }
 
         return source

@@ -79,7 +79,10 @@ public class STPConnectAccountIndividualParams: NSObject {
         let props: [String] = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPConnectAccountIndividualParams.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPConnectAccountIndividualParams.self),
+                self
+            ),
             // Properties
             "address = \(address != nil ? "<redacted>" : "")",
             "kanaAddress = \(kanaAddress != nil ? "<redacted>" : "")",

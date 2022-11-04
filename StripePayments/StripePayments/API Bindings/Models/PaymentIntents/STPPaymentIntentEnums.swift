@@ -17,7 +17,9 @@ import Foundation
     /// This PaymentIntent requires a Source
     /// Deprecated: Use STPPaymentIntentStatusRequiresPaymentMethod instead.
     @available(
-        *, deprecated, message: "Use STPPaymentIntentStatus.requiresPaymentMethod instead",
+        *,
+        deprecated,
+        message: "Use STPPaymentIntentStatus.requiresPaymentMethod instead",
         renamed: "STPPaymentIntentStatus.requiresPaymentMethod"
     )
     case requiresSource
@@ -30,7 +32,9 @@ import Foundation
     /// Additional actions found via `next_source_action`
     /// Deprecated: Use STPPaymentIntentStatusRequiresAction instead.
     @available(
-        *, deprecated, message: "Use STPPaymentIntentStatus.requiresAction instead",
+        *,
+        deprecated,
+        message: "Use STPPaymentIntentStatus.requiresAction instead",
         renamed: "STPPaymentIntentStatus.requiresAction"
     )
     case requiresSourceAction
@@ -60,7 +64,9 @@ import Foundation
     /// Parse the string and return the correct `STPPaymentIntentSetupFutureUsage`,
     /// or `STPPaymentIntentSetupFutureUsageUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the setup future usage value
-    internal init(string: String) {
+    internal init(
+        string: String
+    ) {
         let map: [String: STPPaymentIntentSetupFutureUsage] = [
             "on_session": .onSession,
             "off_session": .offSession,
@@ -91,14 +97,18 @@ import Foundation
     /// Update your SDK, or use the `nextAction.allResponseFields`
     /// for custom handling.
     @available(
-        *, deprecated, message: "Use STPIntentActionType instead",
+        *,
+        deprecated,
+        message: "Use STPIntentActionType instead",
         renamed: "STPIntentActionType.unknown"
     )
     case unknown
     /// The payment intent needs to be authorized by the user. We provide
     /// `STPRedirectContext` to handle the url redirections necessary.
     @available(
-        *, deprecated, message: "Use STPIntentActionType instead",
+        *,
+        deprecated,
+        message: "Use STPIntentActionType instead",
         renamed: "STPIntentActionType.redirectToURL"
     )
     case redirectToURL
@@ -108,7 +118,10 @@ import Foundation
 /// status is `STPPaymentIntentStatusRequiresSourceAction`.
 /// @deprecated Use`STPPaymentIntentActionType` instead.
 @available(
-    *, deprecated, message: "Use STPIntentActionType instead", renamed: "STPIntentActionType"
+    *,
+    deprecated,
+    message: "Use STPIntentActionType instead",
+    renamed: "STPIntentActionType"
 )
 @objc public enum STPPaymentIntentSourceActionType: Int {
     /// This is an unknown source action, that's been added since the SDK
