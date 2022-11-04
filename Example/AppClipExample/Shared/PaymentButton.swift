@@ -11,6 +11,8 @@ Abstract:
 A button that hosts PKPaymentButton from Apple's Fruta example app.
 */
 
+#if os(iOS)
+
 import SwiftUI
 import PassKit
 
@@ -106,3 +108,81 @@ struct PaymentButton_Previews: PreviewProvider {
         .previewLayout(.sizeThatFits)
     }
 }
+
+#elseif os(watchOS)
+
+import SwiftUI
+import PassKit
+
+struct PaymentButton: View {
+    var action: () -> Void
+    
+    var height: CGFloat {
+        return 30
+    }
+    
+    var body: some View {
+        Representable(action: action)
+            .frame(minWidth: 100, maxWidth: 400)
+            .frame(height: height)
+            .frame(maxWidth: .infinity)
+            .accessibility(label: Text("Buy with Apple Pay"))
+    }
+}
+
+extension PaymentButton {
+    typealias ViewRepresentable = WKInterfaceObjectRepresentable
+    
+    struct Representable: ViewRepresentable {
+        typealias WKInterfaceObjectType = WKInterfacePaymentButton
+        
+        func makeWKInterfaceObject(context: Context) -> WKInterfacePaymentButton {
+            WKInterfacePaymentButton(target: context.coordinator, action: #selector(Coordinator.callback))
+        }
+
+        func updateWKInterfaceObject(_ wkInterfaceObject: WKInterfacePaymentButton, context: Context) {
+            context.coordinator.action = action
+       }
+        
+        var action: () -> Void
+        
+        init(action: @escaping () -> Void) {
+            self.action = action
+        }
+        
+        func makeCoordinator() -> Coordinator {
+            Coordinator(action: action)
+        }
+        
+    }
+    
+    class Coordinator: NSObject {
+        var action: () -> Void
+
+        init(action: @escaping () -> Void) {
+            self.action = action
+            super.init()
+        }
+
+        @objc func callback() {
+            action()
+        }
+    }
+}
+
+struct PaymentButton_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            PaymentButton(action: {})
+                .padding()
+                .preferredColorScheme(.light)
+            PaymentButton(action: {})
+                .padding()
+                .preferredColorScheme(.dark)
+        }
+        .previewLayout(.sizeThatFits)
+    }
+}
+
+
+#endif

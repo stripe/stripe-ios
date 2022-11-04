@@ -116,7 +116,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private var screenSize: String {
 #if os(iOS)
         let screenRect = UIScreen.main.bounds
-        let scale = screen.scale
+        let scale = UIScreen.main.scale
 #elseif os(watchOS)
         let screenRect = WKInterfaceDevice.current().screenBounds
         let scale = WKInterfaceDevice.current().screenScale
