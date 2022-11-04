@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 // TODO(mludowise|IDPROD-2540): These values will eventually come from a backend
 // response that's been localized, but temporarily hardcoding for now.
@@ -30,13 +30,13 @@ final class IndividualViewController: IdentityFlowViewController {
         return FormElement(elements: [
             elementsFactory.makeNameSection(),
             SectionElement(elements: [
-                TextFieldElement.makeEmail(defaultValue: nil),
+                TextFieldElement.makeEmail(defaultValue: nil)
             ]),
             SectionElement(elements: [
-                elementsFactory.makeDateOfBirth(),
+                elementsFactory.makeDateOfBirth()
             ]),
             elementsFactory.makeIDNumberSection(countryToIDNumberTypes: countryToIDNumberTypes),
-            elementsFactory.makeAddressSection(countries: addressCountryAllowList)
+            elementsFactory.makeAddressSection(countries: addressCountryAllowList),
         ])
     }()
 

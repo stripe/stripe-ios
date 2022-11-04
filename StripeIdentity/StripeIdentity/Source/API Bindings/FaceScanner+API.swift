@@ -9,9 +9,10 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-
 extension FaceScanner.Configuration {
-    init(from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage) {
+    init(
+        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    ) {
         self.init(
             faceDetectorMinScore: selfiePageConfig.models.faceDetectorMinScore.floatValue,
             faceDetectorMinIOU: selfiePageConfig.models.faceDetectorMinIou.floatValue,

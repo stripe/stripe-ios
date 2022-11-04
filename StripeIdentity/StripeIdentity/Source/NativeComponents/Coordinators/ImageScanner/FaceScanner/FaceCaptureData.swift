@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 @_spi(STP) import StripeCameraCore
 
 struct FaceScannerInputOutput: Equatable {
@@ -30,11 +30,15 @@ struct FaceCaptureData: Equatable {
 }
 
 extension FaceCaptureData {
-    init?(samples: [FaceScannerInputOutput]) {
+    init?(
+        samples: [FaceScannerInputOutput]
+    ) {
         guard let first = samples.first,
-              let last = samples.last,
-              samples.count >= 3,
-              let bestMiddle = samples[1..<samples.count-1].max(by: { $0.scannerOutput.quality < $1.scannerOutput.quality })
+            let last = samples.last,
+            samples.count >= 3,
+            let bestMiddle = samples[1..<samples.count - 1].max(by: {
+                $0.scannerOutput.quality < $1.scannerOutput.quality
+            })
         else {
             return nil
         }

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class CameraPreviewContainerView: UIView {
     struct Styling {
@@ -26,7 +26,7 @@ final class CameraPreviewContainerView: UIView {
                 shadowOffset: CGSize(width: 0, height: 2),
                 shadowOpacity: 0.08,
                 shadowRadius: 5
-            )
+            ),
         ]
     }
 
@@ -66,14 +66,18 @@ final class CameraPreviewContainerView: UIView {
 
     // MARK: - Init
 
-    init(cornerRadius: CornerRadius = .large) {
+    init(
+        cornerRadius: CornerRadius = .large
+    ) {
         self.cornerRadius = cornerRadius
         super.init(frame: .zero)
         addAndPinSubview(contentView)
         installShadowLayers()
     }
 
-    required init(coder: NSCoder) {
+    required init(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -85,24 +89,28 @@ final class CameraPreviewContainerView: UIView {
     }
 
     override func addSubview(_ view: UIView) {
-        assert(view === contentView, "Do not add subviews directly to CameraPreviewContainerView. Instead, add them to its contentView.")
+        assert(
+            view === contentView,
+            "Do not add subviews directly to CameraPreviewContainerView. Instead, add them to its contentView."
+        )
         super.addSubview(view)
     }
 }
 
 // MARK: - Helpers
 
-private extension CameraPreviewContainerView {
-    func installShadowLayers() {
+extension CameraPreviewContainerView {
+    fileprivate func installShadowLayers() {
         shadowLayers.forEach { layer.addSublayer($0) }
     }
 
-    func updateShadowBounds() {
+    fileprivate func updateShadowBounds() {
         shadowLayers.forEach { layer in
-            layer.shadowPath = UIBezierPath(
-                roundedRect: bounds,
-                cornerRadius: cornerRadius.rawValue
-            ).cgPath
+            layer.shadowPath =
+                UIBezierPath(
+                    roundedRect: bounds,
+                    cornerRadius: cornerRadius.rawValue
+                ).cgPath
         }
     }
 }

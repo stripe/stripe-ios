@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class HTMLViewWithIconLabels: UIView {
 
@@ -29,7 +29,7 @@ final class HTMLViewWithIconLabels: UIView {
             let text: String
             let isTextHTML: Bool
         }
-        
+
         struct NonIconText {
             let text: String
             let isTextHTML: Bool
@@ -37,7 +37,7 @@ final class HTMLViewWithIconLabels: UIView {
 
         var iconText: [IconText] = []
         var nonIconText: [NonIconText] = []
-        
+
         let bodyHtmlString: String
         let didOpenURL: (URL) -> Void
 
@@ -50,23 +50,28 @@ final class HTMLViewWithIconLabels: UIView {
         }
 
         var iconLabelViewModels: [IconLabelHTMLView.ViewModel] {
-            return iconText.map { .init(
-                image: $0.image,
-                text: $0.text,
-                isTextHTML: $0.isTextHTML,
-                didOpenURL: didOpenURL
-            )}
+            return iconText.map {
+                .init(
+                    image: $0.image,
+                    text: $0.text,
+                    isTextHTML: $0.isTextHTML,
+                    didOpenURL: didOpenURL
+                )
+            }
         }
-        
+
         var nonIconLabelViewModels: [HTMLTextView.ViewModel] {
             return nonIconText.map {
                 let style: HTMLTextView.ViewModel.Style
                 if $0.isTextHTML {
                     style = .html(makeStyle: Styling.nonIconLabelHTMLStyle)
                 } else {
-                    style = .plainText(font: Styling.nonIconLabelFont, textColor: IdentityUI.textColor)
+                    style = .plainText(
+                        font: Styling.nonIconLabelFont,
+                        textColor: IdentityUI.textColor
+                    )
                 }
-                
+
                 return .init(text: $0.text, style: style, didOpenURL: didOpenURL)
             }
         }
@@ -106,7 +111,9 @@ final class HTMLViewWithIconLabels: UIView {
         installConstraints()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -114,7 +121,8 @@ final class HTMLViewWithIconLabels: UIView {
 
     func configure(with viewModel: ViewModel) throws {
         try textView.configure(with: viewModel.bodyTextViewModel)
-        separatorView.isHidden = viewModel.nonIconLabelViewModels.isEmpty && viewModel.iconLabelViewModels.isEmpty
+        separatorView.isHidden =
+            viewModel.nonIconLabelViewModels.isEmpty && viewModel.iconLabelViewModels.isEmpty
         try rebuildNonIconTextViews(for: viewModel.nonIconLabelViewModels)
         try rebuildIconTextViews(for: viewModel.iconLabelViewModels)
         self.didOpenURL = viewModel.didOpenURL
@@ -123,23 +131,26 @@ final class HTMLViewWithIconLabels: UIView {
 
 // MARK: - Private Helpers
 
-private extension HTMLViewWithIconLabels {
-    func installViews() {
+extension HTMLViewWithIconLabels {
+    fileprivate func installViews() {
         addAndPinSubview(vStack)
         vStack.addArrangedSubview(separatorView)
         vStack.addArrangedSubview(textView)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         NSLayoutConstraint.activate([
             separatorView.heightAnchor.constraint(equalToConstant: IdentityUI.separatorHeight),
-            separatorView.bottomAnchor.constraint(equalTo: textView.topAnchor, constant: -Styling.separatorVerticalSpacing),
+            separatorView.bottomAnchor.constraint(
+                equalTo: textView.topAnchor,
+                constant: -Styling.separatorVerticalSpacing
+            ),
             separatorView.leadingAnchor.constraint(equalTo: vStack.leadingAnchor),
-            separatorView.trailingAnchor.constraint(equalTo: vStack.trailingAnchor)
+            separatorView.trailingAnchor.constraint(equalTo: vStack.trailingAnchor),
         ])
     }
 
-    func rebuildIconTextViews(for viewModels: [IconLabelHTMLView.ViewModel]) throws {
+    fileprivate func rebuildIconTextViews(for viewModels: [IconLabelHTMLView.ViewModel]) throws {
         iconLabelViews.forEach { $0.removeFromSuperview() }
 
         iconLabelViews = try viewModels.enumerated().map { _, viewModel in
@@ -150,10 +161,8 @@ private extension HTMLViewWithIconLabels {
             return view
         }
     }
-    
-    
 
-    func rebuildNonIconTextViews(for viewModels: [HTMLTextView.ViewModel]) throws {
+    fileprivate func rebuildNonIconTextViews(for viewModels: [HTMLTextView.ViewModel]) throws {
         nonIconLabelViews.forEach { $0.removeFromSuperview() }
 
         nonIconLabelViews = try viewModels.enumerated().map { index, viewModel in
@@ -176,7 +185,7 @@ extension HTMLViewWithIconLabels.Styling {
     static var iconLabelFont: UIFont {
         return IdentityUI.preferredFont(forTextStyle: iconLabelTextStyle)
     }
-    
+
     static var nonIconLabelFont: UIFont {
         return IdentityUI.preferredFont(forTextStyle: nonIconLabelTextStyle)
     }
@@ -188,7 +197,7 @@ extension HTMLViewWithIconLabels.Styling {
     static func iconLabelHTMLStyle() -> HTMLStyle {
         return htmlStyle(for: iconLabelTextStyle)
     }
-    
+
     static func nonIconLabelHTMLStyle() -> HTMLStyle {
         return htmlStyle(for: nonIconLabelTextStyle, shouldCenterText: true)
     }
@@ -197,7 +206,10 @@ extension HTMLViewWithIconLabels.Styling {
         return htmlStyle(for: bodyTextStyle)
     }
 
-    private static func htmlStyle(for textStyle: UIFont.TextStyle, shouldCenterText ceterText: Bool = false) -> HTMLStyle {
+    private static func htmlStyle(
+        for textStyle: UIFont.TextStyle,
+        shouldCenterText ceterText: Bool = false
+    ) -> HTMLStyle {
         let boldFont = IdentityUI.preferredFont(forTextStyle: textStyle, weight: .bold)
         return .init(
             bodyFont: IdentityUI.preferredFont(forTextStyle: textStyle),

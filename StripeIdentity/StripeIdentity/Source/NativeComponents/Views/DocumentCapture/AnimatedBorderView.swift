@@ -18,8 +18,8 @@ final class AnimatedBorderView: UIView {
     }
 
     #if DEBUG
-    /// Disables animation. This should be only be modified for snapshot tests.
-    static var isAnimationEnabled = true
+        /// Disables animation. This should be only be modified for snapshot tests.
+        static var isAnimationEnabled = true
     #endif
 
     struct ViewModel {
@@ -46,7 +46,7 @@ final class AnimatedBorderView: UIView {
             0.12,
             0.55,
             0.75,
-            1
+            1,
         ]
         return layer
     }()
@@ -79,7 +79,9 @@ final class AnimatedBorderView: UIView {
         clipsToBounds = true
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -119,7 +121,7 @@ final class AnimatedBorderView: UIView {
     }
 }
 
-private extension AnimatedBorderView {
+extension AnimatedBorderView {
     private func updateLayerBounds() {
         // Gradient layer needs to be a square with width >= the diagonal
         // dimension of this view so there are no gaps during animation
@@ -133,7 +135,14 @@ private extension AnimatedBorderView {
         )
 
         // Update mask layer bounds
-        let cutoutRect = bounds.inset(by: UIEdgeInsets(top: borderWidth, left: borderWidth, bottom: borderWidth, right: borderWidth))
+        let cutoutRect = bounds.inset(
+            by: UIEdgeInsets(
+                top: borderWidth,
+                left: borderWidth,
+                bottom: borderWidth,
+                right: borderWidth
+            )
+        )
         let cutoutPath = UIBezierPath(
             roundedRect: cutoutRect,
             cornerRadius: layer.cornerRadius - borderWidth
@@ -145,7 +154,7 @@ private extension AnimatedBorderView {
 
     private func startAnimating() {
         #if DEBUG
-        guard AnimatedBorderView.isAnimationEnabled else { return }
+            guard AnimatedBorderView.isAnimationEnabled else { return }
         #endif
 
         let rotatingAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
