@@ -5,8 +5,9 @@
 //  Created by Jaime Park on 3/10/22.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
+
 @testable import StripeCardScan
 
 struct ScannedCardDetails {
@@ -15,7 +16,9 @@ struct ScannedCardDetails {
     let last4: String
     let scannedImageData: ScannedCardImageData
 
-    init(number: String) {
+    init(
+        number: String
+    ) {
         self.number = number
         self.iin = String(number.prefix(6))
         self.last4 = String(number.suffix(4))
