@@ -7,6 +7,7 @@ import CoreGraphics
 import Foundation
 import UIKit
 
+#if os(iOS)
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
 @_spi(STP) public class DownloadManager: NSObject, URLSessionDelegate {
@@ -232,3 +233,5 @@ extension DownloadManager {
         return image!
     }
 }
+
+#endif

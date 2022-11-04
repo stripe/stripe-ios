@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,6 +12,8 @@
 		3137B6AD2743816300CE7F5C /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3137B6AC2743816300CE7F5C /* StripeCore+Import.swift */; };
 		3137B6AF2743837400CE7F5C /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B6AE2743837400CE7F5C /* StripeCore.framework */; };
 		313A2A8527B5EBCE00E5EA99 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313A2A8427B5EBCE00E5EA99 /* StripeCoreTestUtils.framework */; };
+		313AA5342915988B00324A8B /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 313AA5332915988B00324A8B /* OHHTTPStubs */; };
+		313AA536291598B000324A8B /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 313AA535291598B000324A8B /* OHHTTPStubsSwift */; };
 		3148D6C32809125C00501D3D /* CardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3148D6C22809125C00501D3D /* CardBrand.swift */; };
 		315BDBE12788E9D8007BD11F /* STPAPIClient+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315BDBE02788E9D8007BD11F /* STPAPIClient+ApplePay.swift */; };
 		3163E4A22787BB8200956D86 /* STPApplePayContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3163E4A12787BB8200956D86 /* STPApplePayContext.swift */; };
@@ -46,8 +48,6 @@
 		31E6D9722744591800A89B6D /* STPTelemetryClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9702744591700A89B6D /* STPTelemetryClientTest.swift */; };
 		31E6D9732744591800A89B6D /* STPTelemetryClientFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9712744591700A89B6D /* STPTelemetryClientFunctionalTest.swift */; };
 		B69D5C3F289C9A6D004FD287 /* ShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */; };
-		E254412728F9FC1700C6F5D3 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = E254412628F9FC1700C6F5D3 /* OHHTTPStubs */; };
-		E254412928F9FC1700C6F5D3 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E254412828F9FC1700C6F5D3 /* OHHTTPStubsSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,8 +130,6 @@
 				313A2A8527B5EBCE00E5EA99 /* StripeCoreTestUtils.framework in Frameworks */,
 				319E82F82743191200F202D6 /* StripeApplePayTestUtils.framework in Frameworks */,
 				3181D736273A00BF00525C02 /* StripeApplePay.framework in Frameworks */,
-				E254412928F9FC1700C6F5D3 /* OHHTTPStubsSwift in Frameworks */,
-				E254412728F9FC1700C6F5D3 /* OHHTTPStubs in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +138,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				319E82F72743190B00F202D6 /* StripeApplePay.framework in Frameworks */,
+				313AA536291598B000324A8B /* OHHTTPStubsSwift in Frameworks */,
+				313AA5342915988B00324A8B /* OHHTTPStubs in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,8 +381,6 @@
 			);
 			name = StripeApplePayTests;
 			packageProductDependencies = (
-				E254412628F9FC1700C6F5D3 /* OHHTTPStubs */,
-				E254412828F9FC1700C6F5D3 /* OHHTTPStubsSwift */,
 			);
 			productName = StripeApplePayTests;
 			productReference = 3181D735273A00BF00525C02 /* StripeApplePayTests.xctest */;
@@ -402,6 +400,10 @@
 			dependencies = (
 			);
 			name = StripeApplePayTestUtils;
+			packageProductDependencies = (
+				313AA5332915988B00324A8B /* OHHTTPStubs */,
+				313AA535291598B000324A8B /* OHHTTPStubsSwift */,
+			);
 			productName = StripeApplePayTestUtils;
 			productReference = 319E82EF274318DE00F202D6 /* StripeApplePayTestUtils.framework */;
 			productType = "com.apple.product-type.framework";
@@ -592,9 +594,14 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-apple-pay";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,4";
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Debug;
 		};
@@ -615,8 +622,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-apple-pay";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,4";
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
 		};
@@ -630,8 +642,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeApplePayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,4";
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Debug;
 		};
@@ -645,8 +662,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeApplePayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,4";
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
 		};
@@ -667,8 +689,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeApplePayTestUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,4";
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Debug;
 		};
@@ -689,8 +716,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeApplePayTestUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,4";
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
 		};
@@ -747,12 +779,12 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E254412628F9FC1700C6F5D3 /* OHHTTPStubs */ = {
+		313AA5332915988B00324A8B /* OHHTTPStubs */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E254412128F9FC0800C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
 			productName = OHHTTPStubs;
 		};
-		E254412828F9FC1700C6F5D3 /* OHHTTPStubsSwift */ = {
+		313AA535291598B000324A8B /* OHHTTPStubsSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E254412128F9FC0800C6F5D3 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
 			productName = OHHTTPStubsSwift;

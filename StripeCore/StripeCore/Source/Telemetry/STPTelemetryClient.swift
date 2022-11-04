@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+#if os(watchOS)
+import WatchKit
+#endif
+
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
 @_spi(STP) public final class STPTelemetryClient: NSObject {
@@ -107,17 +111,20 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         return model ?? "Unknown"
     }()
 
-    private var osVersion = UIDevice.current.systemVersion
-
+    private var osVersion = SystemInformation.version
+    
     private var screenSize: String {
-        let screen = UIScreen.main
-        let screenRect = screen.bounds
+#if os(iOS)
+        let screenRect = UIScreen.main.bounds
+        let scale = screen.scale
+#elseif os(watchOS)
+        let screenRect = WKInterfaceDevice.current().screenBounds
+        let scale = WKInterfaceDevice.current().screenScale
+#endif
         let width = screenRect.size.width
         let height = screenRect.size.height
-        let scale = screen.scale
         return String(format: "%.0fw_%.0fh_%.0fr", width, height, scale)
     }
-
     private var timeZoneOffset: String {
         let timeZone = NSTimeZone.local as NSTimeZone
         let hoursFromGMT = Double(timeZone.secondsFromGMT) / (60 * 60)
