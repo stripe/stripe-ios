@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import SwiftUI
 @_spi(STP) import StripePayments
+import SwiftUI
 
 @available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
@@ -21,7 +21,9 @@ extension STPPaymentCardTextField {
         /// Initialize a SwiftUI representation of an STPPaymentCardTextField.
         /// - Parameter paymentMethodParams: A binding to the payment card text field's contents.
         /// The STPPaymentMethodParams will be `nil` if the payment card text field's contents are invalid.
-        public init(paymentMethodParams: Binding<STPPaymentMethodParams?>) {
+        public init(
+            paymentMethodParams: Binding<STPPaymentMethodParams?>
+        ) {
             _paymentMethodParams = paymentMethodParams
         }
 
@@ -48,7 +50,9 @@ extension STPPaymentCardTextField {
 
         public class Coordinator: NSObject, STPPaymentCardTextFieldDelegate {
             var parent: Representable
-            init(parent: Representable) {
+            init(
+                parent: Representable
+            ) {
                 self.parent = parent
             }
 

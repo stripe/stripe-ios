@@ -8,7 +8,11 @@
 
 import Foundation
 import XCTest
+
+// swift-format-ignore
 @_spi(STP) @testable import StripeApplePay
+
+// swift-format-ignore
 @_spi(STP) @testable import StripeCore
 
 class STPAnalyticsClientApplePayTest: XCTestCase {
