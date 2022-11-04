@@ -57,10 +57,10 @@ class PhoneNumberTests: XCTestCase {
             formattedNumber: "+49 49" // never treats input as country code
           ),
           (
-            number: "0160 1234567",
+            number: "160 1234567",
             country: "DE",
             format: .international,
-            formattedNumber: "+49 0160 1234567"
+            formattedNumber: "+49 160 1234567"
           ),
           (
             number: "5551231234",
@@ -126,24 +126,6 @@ class PhoneNumberTests: XCTestCase {
             XCTAssertEqual(phoneNumber.string(as: c.format), c.formattedNumber)
         }
     }
-
-    func testEquatable_shouldReturnTrueForEqualNumbers() {
-        let phone1 = PhoneNumber(number: "5555555555", countryCode: "US")
-        let phone2 = PhoneNumber(number: "5555555555", countryCode: "US")
-        XCTAssertTrue(phone1 == phone2)
-    }
-
-    func testEquatable_shouldReturnFalseForDifferentNumbers() {
-        let phone1 = PhoneNumber(number: "5555555555", countryCode: "US")
-        let phone2 = PhoneNumber(number: "6666666666", countryCode: "US")
-        XCTAssertFalse(phone1 == phone2)
-    }
-
-    func testEquatable_shouldDistinguishNumbersByRegion() {
-        let phone1 = PhoneNumber(number: "5555555555", countryCode: "US")
-        let phone2 = PhoneNumber(number: "5555555555", countryCode: "PR")
-        XCTAssertFalse(phone1 == phone2)
-    }
     
     func teste164FormatDropsLeadingZeros() {
         guard let phoneNumber = PhoneNumber(number: "08022223333", countryCode: "JP") else {
@@ -154,11 +136,11 @@ class PhoneNumberTests: XCTestCase {
     }
     
     func teste164MaxLength() {
-        guard let phoneNumber = PhoneNumber(number: "23456789123456789", countryCode: "US") else {
+        guard let phoneNumber = PhoneNumber(number: "123456789123456789", countryCode: "US") else {
             XCTFail("Could not create phone number")
             return
         }
-        XCTAssertEqual(phoneNumber.string(as: .e164), "+12345678912345678")
+        XCTAssertEqual(phoneNumber.string(as: .e164), "+112345678912345")
     }
 
     func testFromE164() {
@@ -176,7 +158,7 @@ class PhoneNumberTests: XCTestCase {
         XCTAssertNil(PhoneNumber.fromE164("++"))
         XCTAssertNil(PhoneNumber.fromE164("+13"))
         XCTAssertNil(PhoneNumber.fromE164("1 (555) 555 5555"))
-        XCTAssertNil(PhoneNumber.fromE164("+155555555555555555")) // too long
+        XCTAssertNil(PhoneNumber.fromE164("+1555555555555555")) // too long
     }
 
     func testFromE164_shouldDisambiguateUsingLocale() {
@@ -192,31 +174,6 @@ class PhoneNumberTests: XCTestCase {
 
         XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "ja_JP"))?.countryCode, "US")
         XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "ar_LB"))?.countryCode, "US")
-    }
-
-    func test_string_E164_shouldRemoveTrunkPrefix() throws {
-        // Hungary - Trunk prefix "06", country code "+36"
-        let sut1 = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
-        XCTAssertEqual(sut1.string(as: .e164), "+3612345678")
-
-        // United States - Trunk prefix "1", country code "+1"
-        let sut2 = try XCTUnwrap(PhoneNumber(number: "15551234567", countryCode: "US"))
-        XCTAssertEqual(sut2.string(as: .e164), "+15551234567")
-    }
-
-    func test_isComplete_shouldAccountForTrunkPrefix() throws {
-        // Hungary numbers must be at least 8 digits, excl. trunk prefix.
-        let sut1 = try XCTUnwrap(PhoneNumber(number: "06123456", countryCode: "HU"))
-        XCTAssertFalse(sut1.isComplete)
-
-        let sut2 = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
-        XCTAssertTrue(sut2.isComplete)
-    }
-
-    func test_string_shouldFormatInNationalFormatIfTrunkCodeIsProvided() throws {
-        // "06" is the trunk prefix of Hungary
-        let sut = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
-        XCTAssertEqual(sut.string(as: .national), "(06 1) 234 5678")
     }
 
 }

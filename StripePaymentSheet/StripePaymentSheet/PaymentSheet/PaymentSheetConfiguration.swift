@@ -82,7 +82,7 @@ extension PaymentSheet {
         /// If `true`, allows payment methods that require a shipping address, like Afterpay and Affirm. Defaults to `false`.
         /// Set this to `true` if you collect shipping addresses and set `Configuration.shippingDetails` or set `shipping` details directly on the PaymentIntent.
         /// - Note: PaymentSheet considers this property `true` and allows payment methods that require a shipping address if `shipping` details are present on the PaymentIntent when PaymentSheet loads.
-        public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
+        @_spi(STP) public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
         
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
@@ -147,10 +147,11 @@ extension PaymentSheet {
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
         
+        /// 🏗 Under construction
         /// A closure that returns the customer's shipping details.
         /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided
         /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.
-        public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
+        @_spi(STP) public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
         
         /// Initializes a Configuration with default values
         public init() {}
