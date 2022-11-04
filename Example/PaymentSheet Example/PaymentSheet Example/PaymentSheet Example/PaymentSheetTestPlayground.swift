@@ -70,12 +70,6 @@ class PaymentSheetTestPlayground: UIViewController {
         case paymentWithSetup = "payment_with_setup"
         case setup
     }
-    
-    enum ShippingMode {
-        case on
-        case onWithDefaults
-        case off
-    }
 
     var customerMode: CustomerMode {
         switch customerModeSelector.selectedSegmentIndex {
@@ -183,14 +177,6 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
-    
-    var shippingMode: ShippingMode {
-        switch shippingInfoSelector.selectedSegmentIndex {
-        case 0: return .on
-        case 1: return .onWithDefaults
-        default: return .off
-        }
-    }
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -213,11 +199,8 @@ class PaymentSheetTestPlayground: UIViewController {
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
         }
-        if shippingMode != .off {
-            configuration.allowsPaymentMethodsRequiringShippingAddress = true
-            configuration.shippingDetails = { [weak self] in
-                return self?.addressDetails
-            }
+        configuration.shippingDetails = { [weak self] in
+            return self?.addressDetails
         }
         if !(customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false) {
             configuration.primaryButtonLabel = customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -227,7 +210,7 @@ class PaymentSheetTestPlayground: UIViewController {
     }
     var addressConfiguration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
-        if case .onWithDefaults = shippingMode {
+        if shippingInfoSelector.selectedSegmentIndex == 1 {
             configuration.defaultValues = .init(
                 address: .init(
                     city: "San Francisco",
@@ -431,9 +414,9 @@ extension PaymentSheetTestPlayground {
             "currency": currency.rawValue,
             "merchant_country_code": merchantCountryCode.rawValue,
             "mode": intentMode.rawValue,
+            "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0
-//            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)

@@ -19,7 +19,7 @@ class PaymentSheet_AddressTests: XCTestCase {
     }
 
     func testManualAddressEntry() throws {
-        loadPlayground(app, settings: ["shipping":"on"])
+        loadPlayground(app, settings: [:])
         let shippingButton = app.buttons["Shipping address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
@@ -74,7 +74,7 @@ class PaymentSheet_AddressTests: XCTestCase {
     }
     
     func testAddressWithDefaults() throws {
-        loadPlayground(app, settings: ["shipping": "on w/ defaults"])
+        loadPlayground(app, settings: ["shipping_info": "provided"])
 
         let shippingButton = app.buttons["Shipping address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
