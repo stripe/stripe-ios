@@ -67,7 +67,8 @@ import UIKit
         let nonNilPlaceholder = placeholder ?? ""
         let attributedPlaceholder = NSAttributedString(
             string: nonNilPlaceholder,
-            attributes: placeholderTextAttributes() as? [NSAttributedString.Key: Any])
+            attributes: placeholderTextAttributes() as? [NSAttributedString.Key: Any]
+        )
         self.attributedPlaceholder = attributedPlaceholder
     }
 

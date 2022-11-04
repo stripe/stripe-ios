@@ -47,24 +47,35 @@ class STPLabeledMultiFormTextFieldView: UIView {
 
         var constraints = [
             formLabel.topAnchor.constraint(
-                equalTo: topAnchor, constant: kLabeledFormVeriticalMargin),
+                equalTo: topAnchor,
+                constant: kLabeledFormVeriticalMargin
+            ),
             fieldContainer.topAnchor.constraint(
-                equalTo: formLabel.bottomAnchor, constant: kLabeledFormVeriticalMargin),
+                equalTo: formLabel.bottomAnchor,
+                constant: kLabeledFormVeriticalMargin
+            ),
             fieldContainer.heightAnchor.constraint(
-                greaterThanOrEqualToConstant: kLabeledFormFieldHeight),
+                greaterThanOrEqualToConstant: kLabeledFormFieldHeight
+            ),
             bottomAnchor.constraint(equalTo: fieldContainer.bottomAnchor),
             fieldContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             fieldContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             textField1.centerYAnchor.constraint(equalTo: fieldContainer.centerYAnchor),
             textField2.centerYAnchor.constraint(equalTo: fieldContainer.centerYAnchor),
             textField1.trailingAnchor.constraint(
-                equalTo: centerXAnchor, constant: -0.5 * kLabeledFormHorizontalMargin),
+                equalTo: centerXAnchor,
+                constant: -0.5 * kLabeledFormHorizontalMargin
+            ),
             textField2.leadingAnchor.constraint(
-                equalTo: centerXAnchor, constant: 0.5 * kLabeledFormHorizontalMargin),
+                equalTo: centerXAnchor,
+                constant: 0.5 * kLabeledFormHorizontalMargin
+            ),
             fieldContainer.topAnchor.anchorWithOffset(to: textField1.topAnchor).constraint(
-                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin),
+                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin
+            ),
             fieldContainer.topAnchor.anchorWithOffset(to: textField2.topAnchor).constraint(
-                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin),
+                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin
+            ),
             // constraining the height here works around an issue where UITextFields without a border style
             // change height slightly when they become or resign first responder
             textField1.heightAnchor.constraint(
@@ -82,14 +93,21 @@ class STPLabeledMultiFormTextFieldView: UIView {
         constraints.append(
             contentsOf: [
                 formLabel.leadingAnchor.constraint(
-                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor,
+                    multiplier: 1.0
+                ),
                 layoutMarginsGuide.trailingAnchor.constraint(
                     greaterThanOrEqualToSystemSpacingAfter: formLabel.trailingAnchor,
-                    multiplier: 1.0),
+                    multiplier: 1.0
+                ),
                 textField1.leadingAnchor.constraint(
-                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor,
+                    multiplier: 1.0
+                ),
                 layoutMarginsGuide.trailingAnchor.constraint(
-                    equalToSystemSpacingAfter: textField2.trailingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: textField2.trailingAnchor,
+                    multiplier: 1.0
+                ),
             ])
 
         NSLayoutConstraint.activate(constraints)
@@ -106,7 +124,9 @@ class STPLabeledMultiFormTextFieldView: UIView {
         }
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

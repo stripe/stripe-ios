@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 enum STPAUBECSFormViewField: Int {
     case name
@@ -33,7 +33,8 @@ class STPAUBECSFormViewModel {
         let params = STPPaymentMethodAUBECSDebitParams()
         params.bsbNumber = STPBSBNumberValidator.sanitizedNumericString(for: bsbNumber ?? "")
         params.accountNumber = STPBECSDebitAccountNumberValidator.sanitizedNumericString(
-            for: accountNumber ?? "")
+            for: accountNumber ?? ""
+        )
 
         return params
     }
@@ -52,7 +53,8 @@ class STPAUBECSFormViewModel {
         return STPPaymentMethodParams(
             aubecsDebit: params,
             billingDetails: billing,
-            metadata: nil)
+            metadata: nil
+        )
     }
 
     func formattedString(forInput input: String, in field: STPAUBECSFormViewField) -> String {
@@ -66,12 +68,17 @@ class STPAUBECSFormViewModel {
         case .accountNumber:
             return STPBECSDebitAccountNumberValidator.formattedSanitizedText(
                 from: input,
-                withBSBNumber: STPBSBNumberValidator.sanitizedNumericString(for: bsbNumber ?? ""))
+                withBSBNumber: STPBSBNumberValidator.sanitizedNumericString(for: bsbNumber ?? "")
+            )
                 ?? ""
         }
     }
 
-    func bsbLabel(forInput input: String?, editing: Bool, isErrorString: UnsafeMutablePointer<Bool>)
+    func bsbLabel(
+        forInput input: String?,
+        editing: Bool,
+        isErrorString: UnsafeMutablePointer<Bool>
+    )
         -> String?
     {
         let state = STPBSBNumberValidator.validationState(forText: input ?? "")
@@ -79,7 +86,8 @@ class STPAUBECSFormViewModel {
             isErrorString.pointee = true
             return STPLocalizedString(
                 "The BSB you entered is invalid.",
-                "Error string displayed to user when they enter in an invalid BSB number.")
+                "Error string displayed to user when they enter in an invalid BSB number."
+            )
         } else if state == .incomplete && !editing {
             isErrorString.pointee = true
             return String.Localized.incompleteBSBEntered
@@ -93,7 +101,11 @@ class STPAUBECSFormViewModel {
         return STPBSBNumberValidator.icon(forText: input)
     }
 
-    func isFieldComplete(withInput input: String, in field: STPAUBECSFormViewField, editing: Bool)
+    func isFieldComplete(
+        withInput input: String,
+        in field: STPAUBECSFormViewField,
+        editing: Bool
+    )
         -> Bool
     {
         switch field {
@@ -109,7 +121,8 @@ class STPAUBECSFormViewModel {
             return STPBECSDebitAccountNumberValidator.validationState(
                 forText: input,
                 withBSBNumber: STPBSBNumberValidator.sanitizedNumericString(for: bsbNumber ?? ""),
-                completeOnMaxLengthOnly: editing) == .complete
+                completeOnMaxLengthOnly: editing
+            ) == .complete
         }
     }
 
@@ -132,7 +145,8 @@ class STPAUBECSFormViewModel {
             let state = STPBECSDebitAccountNumberValidator.validationState(
                 forText: input,
                 withBSBNumber: STPBSBNumberValidator.sanitizedNumericString(for: bsbNumber ?? ""),
-                completeOnMaxLengthOnly: editing)
+                completeOnMaxLengthOnly: editing
+            )
             if editing {
                 return state != .invalid
             } else {
