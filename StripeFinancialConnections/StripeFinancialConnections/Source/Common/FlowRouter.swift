@@ -42,7 +42,12 @@ class FlowRouter {
     // MARK: - Public
 
     var shouldUseNative: Bool {
-
+        if let isNativeEnabled = UserDefaults.standard.value(
+            forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
+        ) as? Bool {
+            return isNativeEnabled
+        }
+        
         // if this version is killswitched by server, fallback to webview.
         if killswitchActive { return false }
 

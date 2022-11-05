@@ -23,6 +23,8 @@
 		6A01988629117D5F00418064 /* PlaygroundMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A01988529117D5F00418064 /* PlaygroundMainView.swift */; };
 		6A0198902916BD8D00418064 /* PlaygroundMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A01988F2916BD8D00418064 /* PlaygroundMainViewModel.swift */; };
 		6A0198932916C97A00418064 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0198922916C97A00418064 /* UIViewController+Extensions.swift */; };
+		6A0198952916D1E300418064 /* PlaygroundUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0198942916D1E300418064 /* PlaygroundUserDefaults.swift */; };
+		6A0198972916EA6600418064 /* UIAlertController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0198962916EA6600418064 /* UIAlertController+Extensions.swift */; };
 		6AE674A02908879F001854B2 /* PlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +60,8 @@
 		6A01988529117D5F00418064 /* PlaygroundMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundMainView.swift; sourceTree = "<group>"; };
 		6A01988F2916BD8D00418064 /* PlaygroundMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundMainViewModel.swift; sourceTree = "<group>"; };
 		6A0198922916C97A00418064 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		6A0198942916D1E300418064 /* PlaygroundUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundUserDefaults.swift; sourceTree = "<group>"; };
+		6A0198962916EA6600418064 /* UIAlertController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Extensions.swift"; sourceTree = "<group>"; };
 		6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +126,8 @@
 			isa = PBXGroup;
 			children = (
 				6A0198922916C97A00418064 /* UIViewController+Extensions.swift */,
+				6A0198942916D1E300418064 /* PlaygroundUserDefaults.swift */,
+				6A0198962916EA6600418064 /* UIAlertController+Extensions.swift */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -209,6 +215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A0198972916EA6600418064 /* UIAlertController+Extensions.swift in Sources */,
 				3CD1DD05280711B400A3A5CD /* ExampleListViewController.swift in Sources */,
 				3CD1DD072807218200A3A5CD /* CollectBankAccountTokenViewController.swift in Sources */,
 				3CEB0CBD273EFEF5009680F8 /* ConnectAccountViewController.swift in Sources */,
@@ -216,6 +223,7 @@
 				6A0198932916C97A00418064 /* UIViewController+Extensions.swift in Sources */,
 				6A01988629117D5F00418064 /* PlaygroundMainView.swift in Sources */,
 				3CEB0CB9273EFEF5009680F8 /* AppDelegate.swift in Sources */,
+				6A0198952916D1E300418064 /* PlaygroundUserDefaults.swift in Sources */,
 				6A0198902916BD8D00418064 /* PlaygroundMainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,10 +12,63 @@ import StripeFinancialConnections
 
 final class PlaygroundMainViewModel: ObservableObject {
     
-    @Published var enableTestMode: Bool = false
+    enum Flow: String, CaseIterable, Identifiable {
+        case data
+        case payments
+        
+        var id: String {
+            return rawValue
+        }
+    }
+    @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow)! {
+        didSet {
+            PlaygroundUserDefaults.flow = flow.rawValue
+        }
+    }
+    
+    enum NativeSelection: String, CaseIterable, Identifiable {
+        case automatic
+        case web
+        case native
+        
+        var id: String {
+            return rawValue
+        }
+    }
+    @Published var nativeSelection: NativeSelection {
+        didSet {
+            switch nativeSelection {
+            case .automatic:
+                PlaygroundUserDefaults.enableNative = nil
+            case .web:
+                PlaygroundUserDefaults.enableNative = false
+            case .native:
+                PlaygroundUserDefaults.enableNative = true
+            }
+        }
+    }
+    @Published var enableNative: Bool? = PlaygroundUserDefaults.enableNative {
+        didSet {
+            PlaygroundUserDefaults.enableNative = enableNative
+        }
+    }
+    
+    @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
+        didSet {
+            PlaygroundUserDefaults.enableTestMode = enableTestMode
+        }
+    }
+    
+    @Published var isLoading: Bool = false
     
     init() {
-        
+        self.nativeSelection = {
+            if let enableNative = PlaygroundUserDefaults.enableNative {
+                return enableNative ? .native : .web
+            } else {
+                return .automatic
+            }
+        }()
     }
     
     func didSelectShow() {
@@ -23,24 +76,49 @@ final class PlaygroundMainViewModel: ObservableObject {
     }
     
     private func setup() {
+        isLoading = true
         SetupPlayground(
-            enableTestMode: enableTestMode
-        ) { setupPlaygroundResponse in
+            enableTestMode: enableTestMode,
+            flow: flow.rawValue
+        ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
                     setupPlaygroundResponseJSON: setupPlaygroundResponse
-                ) {
-                    
+                ) { result in
+                    switch result {
+                    case .completed(session: let session):
+                        let accounts = session.accounts.data.filter { $0.last4 != nil }
+                        let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+                        UIAlertController.showAlert(
+                            title: "Success",
+                            message: "\(accountInfos)"
+                        )
+                    case .canceled:
+                        UIAlertController.showAlert(
+                            title: "Cancelled"
+                        )
+                    case .failed(let error):
+                        UIAlertController.showAlert(
+                            title: "Failed",
+                            message: error.localizedDescription
+                        )
+                    }
                 }
             } else {
                 
             }
+            self?.isLoading = false
         }
+    }
+    
+    func didSelectClearCaches() {
+        URLSession.shared.reset(completionHandler: {})
     }
 }
 
 private func SetupPlayground(
     enableTestMode: Bool,
+    flow: String,
     completionHandler: @escaping ([String:String]?) -> Void
 ) {
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
@@ -52,6 +130,7 @@ private func SetupPlayground(
     urlRequest.httpBody = {
         var requestBody: [String:Any] = [:]
         requestBody["enable_test_mode"] = enableTestMode
+        requestBody["flow"] = flow
         return try! JSONSerialization.data(
             withJSONObject: requestBody,
             options: .prettyPrinted
@@ -66,6 +145,8 @@ private func SetupPlayground(
         ) { data, response, error in
             if
                 error == nil,
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
                 let data = data,
                 let responseJson = try? JSONDecoder().decode([String: String].self, from: data)
             {
@@ -83,15 +164,13 @@ private func SetupPlayground(
 
 private func PresentFinancialConnectionsSheet(
     setupPlaygroundResponseJSON: [String:String],
-    completionHandler: @escaping () -> Void
+    completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
-        assertionFailure("Did not receive a valid client secret.")
-        return
+        fatalError("Did not receive a valid client secret.")
     }
     guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"]  else {
-        assertionFailure("Did not receive a valid publishable key.")
-        return
+        fatalError("Did not receive a valid publishable key.")
     }
     
     STPAPIClient.shared.publishableKey = publishableKey
@@ -103,18 +182,7 @@ private func PresentFinancialConnectionsSheet(
     financialConnectionsSheet.present(
         from: UIViewController.topMostViewController()!,
         completion: { result in
-            switch result {
-            case .completed(session: let session):
-                let accounts = session.accounts.data.filter { $0.last4 != nil }
-                let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
-                print(accountInfos)
-//                self?.displayAlert("Completed with \(accountInfos.joined(separator: "\n")) accounts")
-            case .canceled:
-                print("cancelled")
-//                self?.displayAlert("Canceled!")
-            case .failed(let error):
-                print(error)
-            }
+            completionHandler(result)
             _ = financialConnectionsSheet // retain the sheet
         })
 }

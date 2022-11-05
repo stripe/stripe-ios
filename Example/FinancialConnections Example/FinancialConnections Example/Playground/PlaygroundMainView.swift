@@ -13,23 +13,71 @@ struct PlaygroundMainView: View {
     @StateObject var viewModel = PlaygroundMainViewModel()
     
     var body: some View {
-        VStack {
-            Form {
-                Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
-            }
+        ZStack {
             VStack {
-                Button(action: viewModel.didSelectShow) {
-                    VStack {
-                        Text("Show Auth Flow")
-                            .frame(maxWidth: .infinity)
+                Form {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("What do you want to use Financial Connections for?")
+                            .font(.headline)
+                        Picker("Flow?", selection: $viewModel.flow) {
+                            ForEach(PlaygroundMainViewModel.Flow.allCases) {
+                                Text($0.rawValue.capitalized)
+                                    .tag($0)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        Text("'Payments' has manual entry enabled.")
+                            .font(.caption)
+                            .italic()
                     }
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(20)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("How do you want it to look like?")
+                            .font(.headline)
+                        Picker("Enable Native?", selection: $viewModel.nativeSelection) {
+                            ForEach(PlaygroundMainViewModel.NativeSelection.allCases) {
+                                Text($0.rawValue.capitalized)
+                                    .tag($0)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
+                            .font(.caption)
+                            .italic()
+                    }
+                    
+                    Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
+                    
+                    Button(action: viewModel.didSelectClearCaches) {
+                        Text("Clear Caches")
+                    }
                 }
-                .buttonStyle(.plain)
-            }.padding()
+                VStack {
+                    Button(action: viewModel.didSelectShow) {
+                        VStack {
+                            Text("Show Auth Flow")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(20)
+                    }
+                    .buttonStyle(.plain)
+                }.padding()
+            }
             
+            if viewModel.isLoading {
+                ZStack {
+                    Color(UIColor.systemGray)
+                        .opacity(0.5)
+                    if #available(iOS 14.0, *) {
+                        ProgressView()
+                            .scaleEffect(2.0)
+                    }
+                }
+            } else {
+                EmptyView()
+            }
         }
     }
 }
@@ -39,3 +87,5 @@ struct PlaygroundMainView_Previews: PreviewProvider {
         PlaygroundMainView()
     }
 }
+
+
