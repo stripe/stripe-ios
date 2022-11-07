@@ -19,9 +19,7 @@ protocol AccountPickerSelectionViewDelegate: AnyObject {
 final class AccountPickerSelectionView: UIView {
     
     private weak var delegate: AccountPickerSelectionViewDelegate?
-    
-    private var listView: AccountPickerSelectionListView?
-    private var dropdownView: AccountPickerSelectionDropdownView?
+    private let listView: AccountPickerSelectionListView
     
     init(
         accountPickerType: AccountPickerType,
@@ -31,34 +29,14 @@ final class AccountPickerSelectionView: UIView {
         delegate: AccountPickerSelectionViewDelegate
     ) {
         self.delegate = delegate
+        self.listView = AccountPickerSelectionListView(
+            selectionType: accountPickerType == .checkbox ? .checkbox : .radioButton,
+            enabledAccounts: enabledAccounts,
+            disabledAccounts: disabledAccounts
+        )
         super.init(frame: .zero)
-        
-        let contentView: UIView
-        switch accountPickerType {
-        case .checkbox:
-            fallthrough
-        case .radioButton:
-            let listView = AccountPickerSelectionListView(
-                selectionType: accountPickerType == .checkbox ? .checkbox : .radioButton,
-                enabledAccounts: enabledAccounts,
-                disabledAccounts: disabledAccounts
-            )
-            listView.delegate = self
-            self.listView = listView
-            contentView = listView
-        case .dropdown:
-            let dropdownView = AccountPickerSelectionDropdownView(
-                enabledAccounts: enabledAccounts,
-                disabledAccounts: disabledAccounts,
-                institution: institution
-            )
-            dropdownView.delegate = self
-            self.dropdownView = dropdownView
-            contentView = dropdownView
-        }
-        addAndPinSubviewToSafeArea(contentView)
-        
-        assert(listView != nil || dropdownView != nil)
+        listView.delegate = self
+        addAndPinSubviewToSafeArea(listView)
     }
     
     required init?(coder: NSCoder) {
@@ -66,25 +44,7 @@ final class AccountPickerSelectionView: UIView {
     }
     
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
-        if let listView = listView {
-            listView.selectAccounts(selectedAccounts)
-        } else if let dropdownView = dropdownView {
-            dropdownView.selectAccounts(selectedAccounts)
-        } else {
-            assertionFailure("It should be impossible to have no selection view available.")
-        }
-    }
-}
-
-// MARK: - AccountPickerSelectionDropdownViewDelegate
-
-extension AccountPickerSelectionView: AccountPickerSelectionDropdownViewDelegate {
-    
-    func accountPickerSelectionDropdownView(
-        _ view: AccountPickerSelectionDropdownView,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
-    ) {
-        delegate?.accountPickerSelectionView(self, didSelectAccounts: [selectedAccount])
+        listView.selectAccounts(selectedAccounts)
     }
 }
 
