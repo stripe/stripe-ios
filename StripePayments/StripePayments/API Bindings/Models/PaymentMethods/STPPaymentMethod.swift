@@ -218,7 +218,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         // Required fields
         guard let stripeId = dict.stp_string(forKey: "id") else {
