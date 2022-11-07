@@ -1,4 +1,6 @@
 ## 23.1.1 2022-11-07
+### Payments
+* [Fixed] Fixed an issue with linking the StripePayments SDK in certain configurations.
 
 ## 23.1.0 2022-10-31
 ### CardScan
