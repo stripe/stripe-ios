@@ -175,14 +175,15 @@ extension STPConfirmPaymentMethodOptions {
         We write payment method options SFU to set the customer’s desired save behavior
      */
     func setSetupFutureUsageIfNecessary(_ shouldSave: Bool, paymentMethodType: STPPaymentMethodType) {
-        guard paymentMethodType == .card || paymentMethodType == .USBankAccount else {
-            // Only support card and US bank setup_future_usage in payment_method_options
+        // Only set the value to `off_session` when `shouldSave` is `true`.
+        // Only support card and US bank setup_future_usage in payment_method_options.
+        guard shouldSave && (paymentMethodType == .card || paymentMethodType == .USBankAccount)
+        else {
             return
         }
 
         additionalAPIParameters[STPPaymentMethod.string(from: paymentMethodType)] = [
-            // We pass an empty string to 'unset' this value. This makes the PaymentIntent inherit the top-level setup_future_usage.
-            "setup_future_usage": shouldSave ? "off_session" : ""
+            "setup_future_usage": "off_session",
         ]
     }
     func setSetupFutureUsageIfNecessary(_ shouldSave: Bool, paymentMethodType: PaymentSheet.PaymentMethodType) {
