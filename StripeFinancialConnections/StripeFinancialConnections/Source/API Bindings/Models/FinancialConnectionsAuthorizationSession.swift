@@ -102,9 +102,11 @@ enum FinancialConnectionsPartner {
         case .mx:
             return Image.mx.makeImage()
         case .wellsFargo:
-            return nil // TODO(kgaidis): do we need a wells fargo icon?
+            // we never show icons for direct integrations
+            return nil
         case .trueLayer:
-            return nil // TODO(kgaidis): do we need a true layer icon?
+            // icon not needed until EU support
+            return nil
         }
     }
 }

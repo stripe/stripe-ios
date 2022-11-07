@@ -59,9 +59,9 @@ private func CreateLabelView(
     ])
     
     let label = ClickableLabel(
-        font: UIFont.stripeFont(forTextStyle: .detail),
-        boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-        linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        font: UIFont.stripeFont(forTextStyle: .body),
+        boldFont: UIFont.stripeFont(forTextStyle: .bodyEmphasized),
+        linkFont: UIFont.stripeFont(forTextStyle: .bodyEmphasized),
         textColor: .textSecondary
     )
     label.setText(text, action: action)
