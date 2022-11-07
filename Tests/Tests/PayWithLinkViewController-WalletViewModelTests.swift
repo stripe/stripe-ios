@@ -100,8 +100,12 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 extension PayWithLinkViewController_WalletViewModelTests {
 
     func makeSUT() throws -> PayWithLinkViewController.WalletViewModel {
+        // No link_settings in the test JSON, so inject it here
+        // TODO(bmelts): Should this be in the test JSON?
+        var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)
+        json?["link_settings"] = ["link_funding_sources": ["CARD"]]
         let paymentIntent = try XCTUnwrap(
-            STPPaymentIntent.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
+            STPPaymentIntent.decodedObject(fromAPIResponse: json)
         )
 
         return PayWithLinkViewController.WalletViewModel(
