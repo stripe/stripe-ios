@@ -49,7 +49,7 @@ Table of contents
 
 **App Clips**: The `StripeApplePay` module provides a [lightweight SDK for offering Apple Pay in an App Clip](https://stripe.com/docs/apple-pay#app-clips).
 
-**watchOS**: The `StripeApplePay` module supports watchOS 6.1 or later, enabling you to [take payments in your Apple Watch apps](https://stripe.com/docs/apple-pay).
+**watchOS**: The `StripeApplePay` module supports watchOS 6.2 or later, enabling you to [take payments in your Apple Watch apps](https://stripe.com/docs/apple-pay).
 
 **Localized**: We support the following localizations: Bulgarian, Catalan, Chinese (Hong Kong), Chinese (Simplified), Chinese (Traditional), Croatian, Czech, Danish, Dutch, English (US), English (United Kingdom), Estonian, Filipino, Finnish, French, French (Canada), German, Greek, Hungarian, Indonesian, Italian, Japanese, Korean, Latvian, Lithuanian, Malay, Maltese, Norwegian Bokmål, Norwegian Nynorsk (Norway), Polish, Portuguese, Portuguese (Brazil), Romanian, Russian, Slovak, Slovenian, Spanish, Spanish (Latin America), Swedish, Turkish, Thai and Vietnamese.
 
