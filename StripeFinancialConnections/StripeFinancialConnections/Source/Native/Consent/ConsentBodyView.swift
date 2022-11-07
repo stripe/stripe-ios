@@ -49,7 +49,7 @@ private func CreateLabelView(
     iconUrl: String?,
     action: @escaping (URL) -> Void
 ) -> UIView {
-    let imageView = AlwaysTemplateImageView(tintColor: .textPrimary)
+    let imageView = AlwaysTemplateImageView(tintColor: .textSecondary)
     imageView.contentMode = .scaleAspectFit
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
