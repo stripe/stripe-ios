@@ -9,7 +9,8 @@
 //  an example of what you should do in a real app!
 //  Note: Do not import Stripe using `@_spi(STP)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeCore
 import Contacts
 import UIKit
 import SwiftUI
