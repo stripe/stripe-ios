@@ -28,7 +28,7 @@ public class STPPaymentMethodCardPresent: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let dict = (response as NSDictionary?)?.stp_dictionaryByRemovingNulls() else {
+        guard let dict = response?.stp_dictionaryByRemovingNulls() else {
             return nil
         }
         let cardPresent = self.init()

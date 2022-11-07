@@ -44,7 +44,7 @@ class STP3DS2AuthenticateResponse: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let fallbackURL = dict.stp_url(forKey: "fallback_redirect_url")
 

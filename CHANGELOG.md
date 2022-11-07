@@ -1,4 +1,6 @@
-## X.Y.Z 2022-XX-YY
+## 23.1.1 2022-11-07
+### Payments
+* [Fixed] Fixed an issue with linking the StripePayments SDK in certain configurations.
 
 ### Apple Pay
 * [Added] StripeApplePay now supports watchOS 6.2 or later. See [AppClipExample](Example/AppClipExample) for an example project.

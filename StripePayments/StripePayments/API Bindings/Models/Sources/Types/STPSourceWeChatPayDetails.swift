@@ -31,7 +31,7 @@ public class STPSourceWeChatPayDetails: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         let details = self.init()
         details.weChatAppURL = dict.stp_string(forKey: "ios_native_url")
         details.allResponseFields = response

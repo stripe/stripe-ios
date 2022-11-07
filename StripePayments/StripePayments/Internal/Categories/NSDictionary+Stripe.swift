@@ -8,8 +8,7 @@
 
 import Foundation
 
-@objc
-extension NSDictionary {
+extension Dictionary where Key == AnyHashable, Value: Any {
     @_spi(STP) public func stp_dictionaryByRemovingNulls() -> [AnyHashable: Any] {
         var result = [AnyHashable: Any]()
 
@@ -22,9 +21,9 @@ extension NSDictionary {
                 // Save array after removing any null values
                 let stp = obj.stp_arrayByRemovingNulls()
                 result[key] = stp
-            } else if let obj = obj as? NSDictionary {
+            } else if let obj = obj as? [AnyHashable: Any] {
                 // Save dictionary after removing any null values
-                let stp = obj.stp_dictionaryByRemovingNulls() as NSDictionary
+                let stp = obj.stp_dictionaryByRemovingNulls()
                 result[key] = stp
             } else if obj is NSNull {
                 // Skip null value

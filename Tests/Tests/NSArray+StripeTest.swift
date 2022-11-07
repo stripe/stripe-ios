@@ -61,6 +61,6 @@ class Array_StripeTest: XCTestCase {
         let array = [NSNull()]
         let result = array.stp_arrayByRemovingNulls()
 
-        XCTAssertEqual(result, [])
+        XCTAssertEqual(result as NSArray, [] as NSArray)
     }
 }

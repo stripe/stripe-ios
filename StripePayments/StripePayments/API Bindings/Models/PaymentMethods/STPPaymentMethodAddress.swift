@@ -129,7 +129,7 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         let address = self.init()
         address.allResponseFields = response
         address.city = dict.stp_string(forKey: "city")
