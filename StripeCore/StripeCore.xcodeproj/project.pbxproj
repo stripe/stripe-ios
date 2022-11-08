@@ -589,6 +589,11 @@
 				E69D641C26855B9B0090B43D /* StripeiOS Tests-Shared.xcconfig */,
 				E69D641D26855B9B0090B43D /* StripeiOS-Shared.xcconfig */,
 				E69D641E26855B9B0090B43D /* Project-Debug.xcconfig */,
+				3162520A291B0D0600EC4DA4 /* StripeSupportsWatch Tests-Debug.xcconfig */,
+				3162520B291B0D0600EC4DA4 /* StripeSupportsWatch Tests-Release.xcconfig */,
+				3162520C291B0D0600EC4DA4 /* StripeSupportsWatch-Debug.xcconfig */,
+				31625208291B0D0600EC4DA4 /* StripeSupportsWatch-Release.xcconfig */,
+				31625209291B0D0600EC4DA4 /* StripeSupportsWatch-Shared.xcconfig */,
 				E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */,
 			);
 			name = BuildConfigurations;
@@ -1084,7 +1089,7 @@
 		};
 		E69D641026855B260090B43D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E69D641726855B9B0090B43D /* StripeiOS-Debug.xcconfig */;
+			baseConfigurationReference = 3162520C291B0D0600EC4DA4 /* StripeSupportsWatch-Debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1110,7 +1115,7 @@
 		};
 		E69D641126855B260090B43D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */;
+			baseConfigurationReference = 31625208291B0D0600EC4DA4 /* StripeSupportsWatch-Release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1135,7 +1140,7 @@
 		};
 		E69D641326855B260090B43D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E69D641626855B9B0090B43D /* StripeiOS Tests-Debug.xcconfig */;
+			baseConfigurationReference = 3162520A291B0D0600EC4DA4 /* StripeSupportsWatch Tests-Debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1160,7 +1165,7 @@
 		};
 		E69D641426855B260090B43D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E69D641926855B9B0090B43D /* StripeiOS Tests-Release.xcconfig */;
+			baseConfigurationReference = 3162520B291B0D0600EC4DA4 /* StripeSupportsWatch Tests-Release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1184,7 +1189,7 @@
 		};
 		E6FB9BBE268EA95F000FDB4F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E69D641726855B9B0090B43D /* StripeiOS-Debug.xcconfig */;
+			baseConfigurationReference = 3162520C291B0D0600EC4DA4 /* StripeSupportsWatch-Debug.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -1208,7 +1213,7 @@
 		};
 		E6FB9BBF268EA95F000FDB4F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */;
+			baseConfigurationReference = 31625208291B0D0600EC4DA4 /* StripeSupportsWatch-Release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
