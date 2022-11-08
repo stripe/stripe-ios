@@ -44,6 +44,11 @@
       },
       "type": "invalid_request_error"
   },
+  "link_settings": {
+      "link_funding_sources": [
+          "CARD"
+      ]
+  },
   "livemode": false,
   "next_source_action": {
     "type": "authorize_with_url",

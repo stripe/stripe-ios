@@ -53,6 +53,11 @@
       },
       "type": "invalid_request_error"
   },
+  "link_settings": {
+      "link_funding_sources": [
+          "CARD"
+      ]
+  },
   "livemode": false,
   "next_action": {
       "type": "redirect_to_url",
