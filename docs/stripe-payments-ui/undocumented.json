@@ -1,68 +1,68 @@
 {
   "warnings": [
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
-      "line": 82,
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
+      "line": 90,
       "symbol": "STPAPIClient.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 118,
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 112,
       "symbol": "AnalyticsClientV2Protocol.makeCommonPayload()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 147,
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 141,
       "symbol": "AnalyticsClientV2Protocol.payload(withEventName:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
-      "line": 125,
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
+      "line": 127,
       "symbol": "STPAnalyticsClient",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
-      "line": 58,
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
+      "line": 77,
       "symbol": "StripeJSONEncoder",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 63,
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 71,
       "symbol": "DownloadManager.downloadImage(url:updateHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 202,
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 221,
       "symbol": "DownloadManager.imagePlaceHolder()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
+      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
       "line": 32,
       "symbol": "BundleLocatorProtocol",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/porter/stripe/stripe-ios/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift",
-      "line": 830,
+      "file": "/Users/eurias/stripe/stripe-ios/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift",
+      "line": 873,
       "symbol": "STPPaymentCardTextField.traitCollectionDidChange(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/porter/stripe/stripe-ios"
+  "source_directory": "/Users/eurias/stripe/stripe-ios"
 }
