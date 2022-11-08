@@ -134,11 +134,18 @@ class IntentConfirmParams {
         self.paymentMethodParams = params
     }
     
-    func makeParams(paymentIntentClientSecret: String) -> STPPaymentIntentParams {
+    func makeParams(
+        paymentIntentClientSecret: String,
+        configuration: PaymentSheet.Configuration
+    ) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         params.paymentMethodParams = paymentMethodParams
         let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-        options.setSetupFutureUsageIfNecessary(shouldSavePaymentMethod, paymentMethodType: paymentMethodType)
+        options.setSetupFutureUsageIfNecessary(
+            shouldSavePaymentMethod,
+            paymentMethodType: paymentMethodType,
+            customer: configuration.customer
+        )
         params.paymentMethodOptions = options
 
         return params
@@ -150,14 +157,22 @@ class IntentConfirmParams {
         return params
     }
     
-    func makeDashboardParams(paymentIntentClientSecret: String, paymentMethodID: String) -> STPPaymentIntentParams {
+    func makeDashboardParams(
+        paymentIntentClientSecret: String,
+        paymentMethodID: String,
+        configuration: PaymentSheet.Configuration
+    ) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         params.paymentMethodId = paymentMethodID
         
         // Dashboard only supports a specific payment flow today
         assert(paymentMethodOptions == nil)
         let options = STPConfirmPaymentMethodOptions()
-        options.setSetupFutureUsageIfNecessary(shouldSavePaymentMethod, paymentMethodType: paymentMethodType)
+        options.setSetupFutureUsageIfNecessary(
+            shouldSavePaymentMethod,
+            paymentMethodType: paymentMethodType,
+            customer: configuration.customer
+        )
         let cardOptions = STPConfirmCardOptions()
         cardOptions.additionalAPIParameters["moto"] = true
         options.cardOptions = cardOptions
@@ -174,21 +189,33 @@ extension STPConfirmPaymentMethodOptions {
         We read the top-level SFU to know the merchant’s desired save behavior
         We write payment method options SFU to set the customer’s desired save behavior
      */
-    func setSetupFutureUsageIfNecessary(_ shouldSave: Bool, paymentMethodType: STPPaymentMethodType) {
-        // Only set the value to `off_session` when `shouldSave` is `true`.
-        // Only support card and US bank setup_future_usage in payment_method_options.
-        guard shouldSave && (paymentMethodType == .card || paymentMethodType == .USBankAccount)
+    func setSetupFutureUsageIfNecessary(
+        _ shouldSave: Bool,
+        paymentMethodType: STPPaymentMethodType,
+        customer: PaymentSheet.CustomerConfiguration?
+    ) {
+        // When no customer is set this property cannot be set.
+        // Only support card and US bank setup_future_usage in payment_method_options
+        guard customer != nil && paymentMethodType == .card || paymentMethodType == .USBankAccount
         else {
             return
         }
-
         additionalAPIParameters[STPPaymentMethod.string(from: paymentMethodType)] = [
-            "setup_future_usage": "off_session",
+            // We pass an empty string to 'unset' this value. This makes the PaymentIntent inherit the top-level setup_future_usage.
+            "setup_future_usage": shouldSave ? "off_session" : ""
         ]
     }
-    func setSetupFutureUsageIfNecessary(_ shouldSave: Bool, paymentMethodType: PaymentSheet.PaymentMethodType) {
+    func setSetupFutureUsageIfNecessary(
+        _ shouldSave: Bool,
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        customer: PaymentSheet.CustomerConfiguration?
+    ) {
         if let bridgePaymentMethodType = paymentMethodType.stpPaymentMethodType {
-            setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: bridgePaymentMethodType)
+            setSetupFutureUsageIfNecessary(
+                shouldSave,
+                paymentMethodType: bridgePaymentMethodType,
+                customer: customer
+            )
         }
     }
 }
