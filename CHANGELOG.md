@@ -1,3 +1,7 @@
+## X.Y.Z 2022-xx-xx
+### PaymentSheet
+* [Fixed] Fixed user facing error messages for card related errors.
+
 ## 23.1.1 2022-11-07
 ### Payments
 * [Fixed] Fixed an issue with linking the StripePayments SDK in certain configurations.
