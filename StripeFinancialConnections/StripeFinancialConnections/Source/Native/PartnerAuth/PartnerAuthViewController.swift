@@ -208,16 +208,78 @@ final class PartnerAuthViewController: UIViewController {
             // sending errors, it's only related to `ASWebAuthenticationSession`
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
-                
-                if error == nil, let returnUrl = returnUrl, returnUrl.scheme == "stripe", returnUrl.absoluteString.contains("success") {
-                    if authorizationSession.isOauth {
-                        // for OAuth flows, we need to fetch OAuth results
-                        self.authorizeAuthSession(authorizationSession)
-                    } else {
-                        // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
-                        self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
+                if
+                    let returnUrl = returnUrl,
+                    returnUrl.scheme == "stripe",
+                    let urlComponsents = URLComponents(url: returnUrl, resolvingAgainstBaseURL: true),
+                    let status = urlComponsents.queryItems?.first(where: { $0.name == "status" })?.value
+                {
+                    if status == "success" {
+                        self.dataSource.recordAuthSessionEvent(
+                            eventName: "success",
+                            authSessionId: authorizationSession.id
+                        )
+                        
+                        if authorizationSession.isOauth {
+                            // for OAuth flows, we need to fetch OAuth results
+                            self.authorizeAuthSession(authorizationSession)
+                        } else {
+                            // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
+                            self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
+                        }
+                    } else if status == "failure" {
+                        self.dataSource.recordAuthSessionEvent(
+                            eventName: "failure",
+                            authSessionId: authorizationSession.id
+                        ) // TODO(kgaidis): we maybe need to send error_message and error_code here...
+                        
+                        // cancel current auth session
+                        self.dataSource.cancelPendingAuthSessionIfNeeded()
+                        
+                        // show a terminal error
+                        self.showErrorView(
+                            FinancialConnectionsSheetError.unknown(
+                                debugDescription: "Shim returned a failure."
+                            )
+                        )
+                    } else { // assume `status == cancel`
+                        self.dataSource.recordAuthSessionEvent(
+                            eventName: "cancel",
+                            authSessionId: authorizationSession.id
+                        )
+                        
+                        // cancel current auth session
+                        self.dataSource.cancelPendingAuthSessionIfNeeded()
+                        
+                        // whether legacy or OAuth, we always go back
+                        // if we got an explicit cancel from backend
+                        self.navigateBack()
                     }
-                } else {
+                }
+                // we did NOT get a `status` back from the backend,
+                // so assume a "cancel"
+                else {
+                    // `error` is usually NOT null when user closes
+                    // the browser by pressing 'Cancel' button
+                    //
+                    // the `error` may not always be set because of
+                    // a cancellation, but we still treat it as one
+                    if error != nil {
+                        if authorizationSession.isOauth {
+                            // on "manual cancels" (for OAuth) we log retry event:
+                            self.dataSource.recordAuthSessionEvent(
+                                eventName: "retry",
+                                authSessionId: authorizationSession.id
+                            )
+                        } else {
+                            // on "manual cancels" (for Legacy) we log cancel event:
+                            self.dataSource.recordAuthSessionEvent(
+                                eventName: "cancel",
+                                authSessionId: authorizationSession.id
+                            )
+                        }
+                    }
+                    
                     if let error = error {
                         self.dataSource
                             .analyticsClient
@@ -238,24 +300,6 @@ final class PartnerAuthViewController: UIViewController {
                     } else {
                         // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
                         self.navigateBack()
-                    }
-                    
-                    // `error` is NOT null when user closes the browser
-                    // by pressing 'Cancel' button
-                    if error != nil {
-                        if authorizationSession.isOauth {
-                            // on "manual cancels" (for OAuth) we log retry event:
-                            self.dataSource.recordAuthSessionEvent(
-                                eventName: "retry",
-                                authSessionId: authorizationSession.id
-                            )
-                        } else {
-                            // on "manual cancels" (for Legacy) we log cancel event:
-                            self.dataSource.recordAuthSessionEvent(
-                                eventName: "cancel",
-                                authSessionId: authorizationSession.id
-                            )
-                        }
                     }
                 }
                 
