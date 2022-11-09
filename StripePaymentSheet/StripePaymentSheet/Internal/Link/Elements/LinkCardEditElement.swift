@@ -169,10 +169,10 @@ private extension LinkCardEditElement {
             paymentMethod.cardDetails.map { "•••• \($0.last4)" }
         }
 
-        func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
+        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             paymentMethod.cardDetails.map { cardDetails in
                 let image = STPImageLibrary.cardBrandImage(for: cardDetails.brand)
-                return (lightMode: image, darkMode: image)
+                return IconView(image: image)
             }
         }
     }
