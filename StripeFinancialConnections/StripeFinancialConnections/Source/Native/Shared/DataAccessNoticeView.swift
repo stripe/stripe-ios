@@ -107,9 +107,9 @@ private func CreateContentView(
             }
             if let connectedAccountNotice = connectedAccountNotice {
                 let connectedAccountNoticeLabel = ClickableLabel(
-                    font: .stripeFont(forTextStyle: .caption),
-                    boldFont: .stripeFont(forTextStyle: .captionEmphasized),
-                    linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+                    font: .stripeFont(forTextStyle: .detail),
+                    boldFont: .stripeFont(forTextStyle: .detailEmphasized),
+                    linkFont: .stripeFont(forTextStyle: .detailEmphasized),
                     textColor: .textSecondary
                 )
                 connectedAccountNoticeLabel.setText(connectedAccountNotice, action: didSelectURL)
@@ -135,9 +135,9 @@ private func CreateHeaderView(
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let headerLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .bodyEmphasized),
-        boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-        linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+        font: .stripeFont(forTextStyle: .heading),
+        boldFont: .stripeFont(forTextStyle: .heading),
+        linkFont: .stripeFont(forTextStyle: .heading),
         textColor: .textPrimary
     )
     headerLabel.setText(text, action: didSelectURL)
@@ -162,21 +162,21 @@ private func CreateBulletinView(
     
     let verticalLabelStackView = UIStackView()
     verticalLabelStackView.axis = .vertical
-    verticalLabelStackView.spacing = 5
+    verticalLabelStackView.spacing = 2
     if let title = title {
         let primaryLabel = ClickableLabel(
-            font: .stripeFont(forTextStyle: .detailEmphasized),
-            boldFont: .stripeFont(forTextStyle: .detailEmphasized),
-            linkFont: .stripeFont(forTextStyle: .detailEmphasized),
+            font: .stripeFont(forTextStyle: .bodyEmphasized),
+            boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
             textColor: .textPrimary
         )
         primaryLabel.setText(title, action: didSelectURL)
         verticalLabelStackView.addArrangedSubview(primaryLabel)
     }
     let subtitleLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .caption),
-        boldFont: .stripeFont(forTextStyle: .captionEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+        font: .stripeFont(forTextStyle: .detail),
+        boldFont: .stripeFont(forTextStyle: .detailEmphasized),
+        linkFont: .stripeFont(forTextStyle: .detailEmphasized),
         textColor: .textSecondary
     )
     subtitleLabel.setText(subtitle, action: didSelectURL)
@@ -200,9 +200,9 @@ private func CreateLearnMoreLabel(
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let label = ClickableLabel(
-        font: .stripeFont(forTextStyle: .caption),
-        boldFont: .stripeFont(forTextStyle: .captionEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionEmphasized),
+        font: .stripeFont(forTextStyle: .detail),
+        boldFont: .stripeFont(forTextStyle: .detailEmphasized),
+        linkFont: .stripeFont(forTextStyle: .detailEmphasized),
         textColor: .textSecondary
     )
     label.setText(text, action: didSelectURL)
