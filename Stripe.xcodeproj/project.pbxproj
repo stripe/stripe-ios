@@ -392,6 +392,8 @@
 		D0FA063127F62C9400EED2AD /* PayWithLinkViewController-WalletViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FA063027F62C9400EED2AD /* PayWithLinkViewController-WalletViewModelTests.swift */; };
 		D0FA063727F63EE700EED2AD /* LinkStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FA063627F63EE700EED2AD /* LinkStubs.swift */; };
 		D0FA063C27F652B800EED2AD /* LinkNoticeViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FA063B27F652B800EED2AD /* LinkNoticeViewSnapshotTests.swift */; };
+		E2379395291B378700C63FDD /* RotatingCardBrandsViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2379394291B378700C63FDD /* RotatingCardBrandsViewSnapshotTests.swift */; };
+		E2379397291B37F200C63FDD /* RotatingCardBrandsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2379396291B37F200C63FDD /* RotatingCardBrandsViewTests.swift */; };
 		E254410028F9CC8800C6F5D3 /* OCMock in Frameworks */ = {isa = PBXBuildFile; productRef = E25440FF28F9CC8800C6F5D3 /* OCMock */; };
 		E254410528F9CCD400C6F5D3 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = E254410428F9CCD400C6F5D3 /* iOSSnapshotTestCase */; };
 		E254410628F9CCD400C6F5D3 /* iOSSnapshotTestCase in CopyFiles */ = {isa = PBXBuildFile; productRef = E254410428F9CCD400C6F5D3 /* iOSSnapshotTestCase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -929,6 +931,8 @@
 		D0FA063027F62C9400EED2AD /* PayWithLinkViewController-WalletViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-WalletViewModelTests.swift"; sourceTree = "<group>"; };
 		D0FA063627F63EE700EED2AD /* LinkStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkStubs.swift; sourceTree = "<group>"; };
 		D0FA063B27F652B800EED2AD /* LinkNoticeViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeViewSnapshotTests.swift; sourceTree = "<group>"; };
+		E2379394291B378700C63FDD /* RotatingCardBrandsViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingCardBrandsViewSnapshotTests.swift; sourceTree = "<group>"; };
+		E2379396291B37F200C63FDD /* RotatingCardBrandsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingCardBrandsViewTests.swift; sourceTree = "<group>"; };
 		E254411328F9E0D600C6F5D3 /* SWHttpTrafficRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHttpTrafficRecorder.m; sourceTree = "<group>"; };
 		E254411428F9E0D600C6F5D3 /* SWHttpTrafficRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHttpTrafficRecorder.h; sourceTree = "<group>"; };
 		E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldSnapshotTests.swift; sourceTree = "<group>"; };
@@ -1520,6 +1524,7 @@
 				366ECD51254B4C4B0082868E /* STPStackViewWithSeparatorSnapshotTests.swift */,
 				36AEBFBB241C39A800CFCAE8 /* STPSTPViewWithSeparatorSnapshotTests.m */,
 				D071C95427626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift */,
+				E2379394291B378700C63FDD /* RotatingCardBrandsViewSnapshotTests.swift */,
 			);
 			name = Snapshot;
 			sourceTree = "<group>";
@@ -1648,6 +1653,7 @@
 				3111C3E8252BC79A00207E32 /* STPNumericStringValidatorTests.swift */,
 				045A62AA1B8E7259000165CE /* STPPaymentCardTextFieldTest.m */,
 				3663CEA326D5B21B00D0E123 /* STPPaymentCardTextFieldTestsSwift.swift */,
+				E2379396291B37F200C63FDD /* RotatingCardBrandsViewTests.swift */,
 				3111C410252BC7A100207E32 /* STPPaymentCardTextFieldViewModelTest.swift */,
 				8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */,
 				F14C872E1D4FCDBA00C7CC6A /* STPPaymentContextApplePayTest.m */,
@@ -2210,6 +2216,7 @@
 				B600F3C3223088F900264403 /* STPPaymentMethodFunctionalTest.m in Sources */,
 				36345D5727D0181900D2445D /* STPPaymentMethodUSBankAccountTest.swift in Sources */,
 				3111C63A252D3FBF00207E32 /* STPBinRangeTest.swift in Sources */,
+				E2379397291B37F200C63FDD /* RotatingCardBrandsViewTests.swift in Sources */,
 				F3064297268C42BE0076CDDA /* PaymentSheet+APITest.swift in Sources */,
 				36E28415254B44360028C186 /* STPCardFormViewSnapshotTests.swift in Sources */,
 				3111C60F252D270D00207E32 /* STPPaymentMethodSofortTests.swift in Sources */,
@@ -2262,6 +2269,7 @@
 				F3E73D4A2683B78300438FD6 /* STPIntentWithPreferencesTest.swift in Sources */,
 				B3302F462006FBA7005DDBE9 /* STPConnectAccountParamsTest.m in Sources */,
 				448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */,
+				E2379395291B378700C63FDD /* RotatingCardBrandsViewSnapshotTests.swift in Sources */,
 				B613DD3C22C54AA800C7603F /* STPSetupIntentTest.m in Sources */,
 				3111C555252BD8DD00207E32 /* NSDictionary+StripeTest.swift in Sources */,
 				3111C606252D201F00207E32 /* STPMandateCustomerAcceptanceParamsTest.swift in Sources */,

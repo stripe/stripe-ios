@@ -29,6 +29,11 @@ import Foundation
 }
 
 /// :nodoc:
+extension STPCardBrand: CaseIterable {
+    // intentionally empty
+}
+
+/// :nodoc:
 @available(
     *,
     deprecated,
