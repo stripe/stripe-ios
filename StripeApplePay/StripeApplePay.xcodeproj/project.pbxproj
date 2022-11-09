@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -46,8 +46,8 @@
 		31E6D9722744591800A89B6D /* STPTelemetryClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9702744591700A89B6D /* STPTelemetryClientTest.swift */; };
 		31E6D9732744591800A89B6D /* STPTelemetryClientFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9712744591700A89B6D /* STPTelemetryClientFunctionalTest.swift */; };
 		B69D5C3F289C9A6D004FD287 /* ShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */; };
-		E254412728F9FC1700C6F5D3 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = E254412628F9FC1700C6F5D3 /* OHHTTPStubs */; };
-		E254412928F9FC1700C6F5D3 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E254412828F9FC1700C6F5D3 /* OHHTTPStubsSwift */; };
+		E254412728F9FC1700C6F5D3 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = E254412628F9FC1700C6F5D3 /* OHHTTPStubs */; };
+		E254412928F9FC1700C6F5D3 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = E254412828F9FC1700C6F5D3 /* OHHTTPStubsSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

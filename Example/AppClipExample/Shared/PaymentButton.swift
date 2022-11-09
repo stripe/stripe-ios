@@ -11,8 +11,6 @@ Abstract:
 A button that hosts PKPaymentButton from Apple's Fruta example app.
 */
 
-#if os(iOS)
-
 import SwiftUI
 import PassKit
 
@@ -39,11 +37,17 @@ struct PaymentButton: View {
 extension PaymentButton {
     #if os(iOS)
     typealias ViewRepresentable = UIViewRepresentable
+    #elseif os(watchOS)
+    typealias ViewRepresentable = WKInterfaceObjectRepresentable
     #else
     typealias ViewRepresentable = NSViewRepresentable
     #endif
     
     struct Representable: ViewRepresentable {
+        #if os(watchOS)
+        typealias WKInterfaceObjectType = WKInterfacePaymentButton
+        #endif
+        
         var action: () -> Void
         
         init(action: @escaping () -> Void) {
@@ -62,6 +66,14 @@ extension PaymentButton {
         func updateUIView(_ rootView: UIView, context: Context) {
             context.coordinator.action = action
         }
+        #elseif os(watchOS)
+        func makeWKInterfaceObject(context: Context) -> WKInterfacePaymentButton {
+            WKInterfacePaymentButton(target: context.coordinator, action: #selector(Coordinator.callback))
+        }
+
+        func updateWKInterfaceObject(_ wkInterfaceObject: WKInterfacePaymentButton, context: Context) {
+            context.coordinator.action = action
+        }
         #else
         func makeNSView(context: Context) -> NSView {
             context.coordinator.button
@@ -75,21 +87,23 @@ extension PaymentButton {
     
     class Coordinator: NSObject {
         var action: () -> Void
+        #if os(iOS) || os(macOS)
         var button = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .automatic)
+        #endif
         
         init(action: @escaping () -> Void) {
             self.action = action
             super.init()
             #if os(iOS)
-            button.addTarget(self, action: #selector(callback(_:)), for: .touchUpInside)
-            #else
-            button.action = #selector(callback(_:))
+            button.addTarget(self, action: #selector(callback), for: .touchUpInside)
+            #elseif os(macOS)
+            button.action = #selector(callback)
             button.target = self
             #endif
         }
         
         @objc
-        func callback(_ sender: Any) {
+        func callback() {
             action()
         }
     }
@@ -109,80 +123,3 @@ struct PaymentButton_Previews: PreviewProvider {
     }
 }
 
-#elseif os(watchOS)
-
-import SwiftUI
-import PassKit
-
-struct PaymentButton: View {
-    var action: () -> Void
-    
-    var height: CGFloat {
-        return 30
-    }
-    
-    var body: some View {
-        Representable(action: action)
-            .frame(minWidth: 100, maxWidth: 400)
-            .frame(height: height)
-            .frame(maxWidth: .infinity)
-            .accessibility(label: Text("Buy with Apple Pay"))
-    }
-}
-
-extension PaymentButton {
-    typealias ViewRepresentable = WKInterfaceObjectRepresentable
-    
-    struct Representable: ViewRepresentable {
-        typealias WKInterfaceObjectType = WKInterfacePaymentButton
-        
-        func makeWKInterfaceObject(context: Context) -> WKInterfacePaymentButton {
-            WKInterfacePaymentButton(target: context.coordinator, action: #selector(Coordinator.callback))
-        }
-
-        func updateWKInterfaceObject(_ wkInterfaceObject: WKInterfacePaymentButton, context: Context) {
-            context.coordinator.action = action
-       }
-        
-        var action: () -> Void
-        
-        init(action: @escaping () -> Void) {
-            self.action = action
-        }
-        
-        func makeCoordinator() -> Coordinator {
-            Coordinator(action: action)
-        }
-        
-    }
-    
-    class Coordinator: NSObject {
-        var action: () -> Void
-
-        init(action: @escaping () -> Void) {
-            self.action = action
-            super.init()
-        }
-
-        @objc func callback() {
-            action()
-        }
-    }
-}
-
-struct PaymentButton_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            PaymentButton(action: {})
-                .padding()
-                .preferredColorScheme(.light)
-            PaymentButton(action: {})
-                .padding()
-                .preferredColorScheme(.dark)
-        }
-        .previewLayout(.sizeThatFits)
-    }
-}
-
-
-#endif
