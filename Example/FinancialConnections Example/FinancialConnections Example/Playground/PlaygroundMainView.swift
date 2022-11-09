@@ -45,8 +45,14 @@ struct PlaygroundMainView: View {
                             .font(.caption)
                             .italic()
                     }
-                    
-                    Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
+
+                    if #available(iOS 14.0, *) {
+                        Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
+                            // test mode color
+                            .toggleStyle(SwitchToggleStyle(tint: Color(red: 231/255.0, green: 151/255.0, blue: 104/255.0)))
+                    } else {
+                        Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
+                    }
                     
                     Button(action: viewModel.didSelectClearCaches) {
                         Text("Clear Caches")
