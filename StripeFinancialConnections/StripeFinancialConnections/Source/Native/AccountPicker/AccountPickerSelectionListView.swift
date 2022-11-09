@@ -20,7 +20,7 @@ final class AccountPickerSelectionListView: UIView {
     
     private let selectionType: AccountPickerSelectionRowView.SelectionType
     private let enabledAccounts: [FinancialConnectionsPartnerAccount]
-    private let disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]
+    private let disabledAccounts: [FinancialConnectionsPartnerAccount]
     weak var delegate: AccountPickerSelectionListViewDelegate?
     
     private lazy var verticalStackView: UIStackView = {
@@ -33,7 +33,7 @@ final class AccountPickerSelectionListView: UIView {
     init(
         selectionType: AccountPickerSelectionRowView.SelectionType,
         enabledAccounts: [FinancialConnectionsPartnerAccount],
-        disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]
+        disabledAccounts: [FinancialConnectionsPartnerAccount]
     ) {
         self.selectionType = selectionType
         self.enabledAccounts = enabledAccounts
@@ -120,9 +120,9 @@ final class AccountPickerSelectionListView: UIView {
                 }
             )
             accountCellView.setLeadingTitle(
-                AccountPickerHelpers.rowTitles(forAccount: disabledAccount.account).leadingTitle,
-                trailingTitle: "••••\(disabledAccount.account.displayableAccountNumbers ?? "")",
-                subtitle: disabledAccount.disableReason,
+                AccountPickerHelpers.rowTitles(forAccount: disabledAccount).leadingTitle,
+                trailingTitle: "••••\(disabledAccount.displayableAccountNumbers ?? "")",
+                subtitle: disabledAccount.allowSelectionMessage,
                 isSelected: false,
                 isLinked: false
             )
