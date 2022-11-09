@@ -194,7 +194,9 @@ extension STPConfirmPaymentMethodOptions {
         paymentMethodType: STPPaymentMethodType,
         customer: PaymentSheet.CustomerConfiguration?
     ) {
-        // When no customer is set this property cannot be set.
+        // This property cannot be set if there is no customer.
+        assert(!(shouldSave && customer == nil))
+
         // Only support card and US bank setup_future_usage in payment_method_options
         guard customer != nil && paymentMethodType == .card || paymentMethodType == .USBankAccount
         else {
