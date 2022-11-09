@@ -154,9 +154,10 @@ class StripeErrorTest: XCTestCase {
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.invalidRequestError.rawValue)
+        // Error type is not `card_error`, so `NSLocalizedDescription` will be a generic error.
         XCTAssertEqual(
             error.userInfo[NSLocalizedDescriptionKey] as! String,
-            NSError.stp_cardErrorInvalidNumberUserMessage())
+            NSError.stp_unexpectedErrorMessage())
         XCTAssertEqual(
             error.userInfo[STPError.cardErrorCodeKey] as! String, STPError.incorrectNumber)
         XCTAssertEqual(
@@ -180,7 +181,7 @@ class StripeErrorTest: XCTestCase {
         XCTAssertEqual(error.code, STPErrorCode.cardError.rawValue)
         XCTAssertEqual(
             error.userInfo[NSLocalizedDescriptionKey] as! String,
-            NSError.stp_cardErrorInvalidNumberUserMessage())
+            "Your card number is incorrect.")
         XCTAssertEqual(
             error.userInfo[STPError.cardErrorCodeKey] as! String, STPError.incorrectNumber)
         XCTAssertEqual(
@@ -195,7 +196,6 @@ class StripeErrorTest: XCTestCase {
         let response = [
             "error": [
                 "type": "card_error",
-                "message": "Your card has insufficient funds.",
                 "code": "card_declined",
                 "decline_code": "insufficient_funds",
             ]
@@ -207,6 +207,7 @@ class StripeErrorTest: XCTestCase {
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.cardError.rawValue)
         XCTAssertEqual(error.userInfo[STPError.cardErrorCodeKey] as? String, STPCardErrorCode.cardDeclined.rawValue)
+        // Response didn't include a message, so a built in message will be used.
         XCTAssertEqual(error.userInfo[NSLocalizedDescriptionKey] as? String, NSError.stp_cardErrorDeclinedUserMessage())
         XCTAssertEqual(error.userInfo[STPError.stripeDeclineCodeKey] as? String, "insufficient_funds")
     }
