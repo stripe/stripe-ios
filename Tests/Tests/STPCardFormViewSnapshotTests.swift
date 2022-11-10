@@ -8,17 +8,17 @@
 
 import iOSSnapshotTestCase
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testEmpty() {
@@ -72,44 +72,44 @@ class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
 
         STPSnapshotVerifyView(formView)
     }
-    
+
     // MARK: - Standalone
-    
+
     func testDefaultStandalone() {
         let formView = STPCardFormView()
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
-        
+
         STPSnapshotVerifyView(formView)
     }
-    
+
     func testBorderlessStandalone() {
         let formView = STPCardFormView(style: .borderless)
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
-        
+
         STPSnapshotVerifyView(formView)
     }
-    
+
     func testCustomBackgroundStandalone() {
         let formView = STPCardFormView()
         formView.countryCode = "US"
         formView.backgroundColor = .green
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
-        
+
         STPSnapshotVerifyView(formView)
     }
-    
+
     func testCustomBackgroundDisabledColorStandalone() {
         let formView = STPCardFormView()
         formView.countryCode = "US"
         formView.disabledBackgroundColor = .green
         formView.isUserInteractionEnabled = false
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
-        
+
         STPSnapshotVerifyView(formView)
     }
-    
+
     func testBorderlessStandaloneIncomplete() {
         let formView = STPCardFormView(style: .borderless)
         formView.countryCode = "US"

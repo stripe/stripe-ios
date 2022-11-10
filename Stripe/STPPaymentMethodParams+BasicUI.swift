@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 extension STPPaymentMethodParams: STPPaymentOption {
     // MARK: - STPPaymentOption
@@ -38,7 +38,7 @@ extension STPPaymentMethodParams: STPPaymentOption {
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
-            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, // fall through
+            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm,
             .unknown:
             return false
         @unknown default:

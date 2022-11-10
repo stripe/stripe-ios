@@ -115,7 +115,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         super.init()
         authorizationController?.delegate = self
     }
-
+    
+#if os(iOS)
     private var presentationWindow: UIWindow?
 
     /// Presents the Apple Pay sheet from the key window, starting the payment process.
@@ -191,6 +192,35 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         let window = viewController.viewIfLoaded?.window
         presentApplePay(from: window, completion: completion)
     }
+#elseif os(watchOS)
+    /// Presents the Apple Pay sheet from the specified window, starting the payment process.
+    /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+    /// - Parameters:
+    ///   - completion:               Called after the Apple Pay sheet is presented
+    @objc(presentApplePayWithCompletion:)
+    public func presentApplePay(completion: STPVoidBlock? = nil) {
+        guard !didPresentApplePay, let applePayController = self.authorizationController else {
+            assert(
+                false,
+                "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
+            )
+            return
+        }
+        didPresentApplePay = true
+
+        // This instance (and the associated Objective-C bridge object, if any) must live so
+        // that the apple pay sheet is dismissed; until then, the app is effectively frozen.
+        objc_setAssociatedObject(
+            applePayController, UnsafeRawPointer(&kApplePayContextAssociatedObjectKey), self,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+
+        applePayController.present { (presented) in
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }
+    }
+#endif
 
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
@@ -422,13 +452,15 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
     }
 
+#if os(iOS)
     /// :nodoc:
     @objc public func presentationWindow(
         for controller: PKPaymentAuthorizationController
     ) -> UIWindow? {
         return presentationWindow
     }
-
+#endif
+    
     // MARK: - Helpers
     func _completePayment(
         with payment: PKPayment,

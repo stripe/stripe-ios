@@ -8,35 +8,23 @@
 
 import iOSSnapshotTestCase
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class AfterpayPriceBreakdownViewSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
-    func embedInRenderableView(_ priceBreakdownView: AfterpayPriceBreakdownView, width: Int, height: Int) -> UIView {
+    func embedInRenderableView(
+        _ priceBreakdownView: AfterpayPriceBreakdownView,
+        width: Int,
+        height: Int
+    ) -> UIView {
         let containingView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
         containingView.addSubview(priceBreakdownView)
         priceBreakdownView.translatesAutoresizingMaskIntoConstraints = false
@@ -49,20 +37,20 @@ class AfterpayPriceBreakdownViewSnapshotTests: FBSnapshotTestCase {
 
         return containingView
     }
-    
+
     func testClearpayInMultiRow() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_GB") as Locale) { [self] in
             let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "GBP")
             let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
-            
+
             STPSnapshotVerifyView(containingView)
         }
     }
-    
+
     func testAfterpayInSingleRow() {
         let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "USD")
         let containingView = embedInRenderableView(priceBreakdownView, width: 500, height: 30)
-        
+
         STPSnapshotVerifyView(containingView)
     }
 }

@@ -7,18 +7,19 @@
 //
 
 import XCTest
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPTextFieldDelegateProxyTests: XCTestCase {
 
     func testProxyShouldDeleteLeadingWhitespace() {
         let textField = STPFormTextField()
         textField.autoFormattingBehavior = .cardNumbers
-        textField.text = " " // space
+        textField.text = " "  // space
 
         let sut = STPTextFieldDelegateProxy()
 

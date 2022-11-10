@@ -7,10 +7,10 @@
 //
 
 import PassKit
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 /// The payment methods supported by STPBankSelectionViewController.
 @objc public enum STPBankSelectionMethod: Int {
@@ -28,15 +28,22 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
 {
     /// A convenience initializer; equivalent to calling `init( bankMethod:bankMethod configuration:STPPaymentConfiguration.shared theme:STPTheme.defaultTheme`.
     @objc
-    public convenience init(bankMethod: STPBankSelectionMethod) {
+    public convenience init(
+        bankMethod: STPBankSelectionMethod
+    ) {
         self.init(
-            bankMethod: bankMethod, configuration: STPPaymentConfiguration.shared,
-            theme: STPTheme.defaultTheme)
+            bankMethod: bankMethod,
+            configuration: STPPaymentConfiguration.shared,
+            theme: STPTheme.defaultTheme
+        )
     }
 
-    @objc public convenience required init(theme: STPTheme?) {
+    @objc public convenience required init(
+        theme: STPTheme?
+    ) {
         self.init(
-            bankMethod: .FPX, configuration: STPPaymentConfiguration.shared,
+            bankMethod: .FPX,
+            configuration: STPPaymentConfiguration.shared,
             theme: theme ?? .defaultTheme
         )
     }
@@ -54,7 +61,8 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
     ) {
         super.init(theme: theme)
         STPAnalyticsClient.sharedClient.addClass(
-            toProductUsageIfNecessary: STPBankSelectionViewController.self)
+            toProductUsageIfNecessary: STPBankSelectionViewController.self
+        )
         assert(bankMethod == .FPX, "STPBankSelectionViewController currently only supports FPX.")
         self.bankMethod = bankMethod
         self.configuration = configuration
@@ -63,19 +71,22 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
         if bankMethod == .FPX {
             _refreshFPXStatus()
             NotificationCenter.default.addObserver(
-                self, selector: #selector(_refreshFPXStatus),
-                name: UIApplication.didBecomeActiveNotification, object: nil)
+                self,
+                selector: #selector(_refreshFPXStatus),
+                name: UIApplication.didBecomeActiveNotification,
+                object: nil
+            )
         }
         title = String.Localized.bank_account
     }
 
     /// The view controller's delegate. This must be set before showing the view controller in order for it to work properly. - seealso: STPBankSelectionViewControllerDelegate
     @objc public weak var delegate: STPBankSelectionViewControllerDelegate?
-    
+
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
     public var apiClient: STPAPIClient = .shared
-    
+
     private var bankMethod: STPBankSelectionMethod = .unknown
     private var selectedBank: STPFPXBankBrand = .unknown
     private var configuration: STPPaymentConfiguration?
@@ -103,7 +114,8 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
 
         tableView?.register(
             STPBankSelectionTableViewCell.self,
-            forCellReuseIdentifier: STPBankSelectionCellReuseIdentifier)
+            forCellReuseIdentifier: STPBankSelectionCellReuseIdentifier
+        )
 
         tableView?.dataSource = self
         tableView?.delegate = self
@@ -152,7 +164,9 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
     ) -> UITableViewCell {
         let cell =
             tableView.dequeueReusableCell(
-                withIdentifier: STPBankSelectionCellReuseIdentifier, for: indexPath)
+                withIdentifier: STPBankSelectionCellReuseIdentifier,
+                for: indexPath
+            )
             as? STPBankSelectionTableViewCell
         let bankBrand = STPFPXBankBrand(rawValue: indexPath.row)
         let selected = selectedBank == bankBrand
@@ -162,8 +176,12 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
         }
         if let bankBrand = bankBrand {
             cell?.configure(
-                withBank: bankBrand, theme: theme, selected: selected, offline: offline ?? false,
-                enabled: !loading)
+                withBank: bankBrand,
+                theme: theme,
+                selected: selected,
+                offline: offline ?? false,
+                enabled: !loading
+            )
         }
         return cell!
     }
@@ -171,7 +189,9 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
     /// :nodoc:
     @objc
     public func tableView(
-        _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
     ) {
         let topRow = indexPath.row == 0
         let bottomRow =
@@ -185,7 +205,10 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        heightForFooterInSection section: Int
+    )
         -> CGFloat
     {
         return 27.0
@@ -193,7 +216,10 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath)
+    public func tableView(
+        _ tableView: UITableView,
+        shouldHighlightRowAt indexPath: IndexPath
+    )
         -> Bool
     {
         return !loading
@@ -211,7 +237,8 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
         selectedBank = STPFPXBankBrand(rawValue: bankIndex) ?? .unknown
         tableView.reloadSections(
             NSIndexSet(index: indexPath.section) as IndexSet,
-            with: .none)
+            with: .none
+        )
 
         let fpx = STPPaymentMethodFPXParams()
         fpx.bank = STPFPXBankBrand(rawValue: bankIndex) ?? .unknown
@@ -219,22 +246,32 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
         let paymentMethodParams = STPPaymentMethodParams(
             fpx: fpx,
             billingDetails: nil,
-            metadata: nil)
+            metadata: nil
+        )
         if delegate?.responds(
             to: #selector(
                 STPBankSelectionViewControllerDelegate.bankSelectionViewController(
-                    _:didCreatePaymentMethodParams:))) ?? false
-        {
+                    _:
+                    didCreatePaymentMethodParams:
+                ))
+        ) ?? false {
             delegate?.bankSelectionViewController(
-                self, didCreatePaymentMethodParams: paymentMethodParams)
+                self,
+                didCreatePaymentMethodParams: paymentMethodParams
+            )
         }
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 
-    required init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    required init(
+        nibName nibNameOrNil: String?,
+        bundle nibBundleOrNil: Bundle?
+    ) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 }

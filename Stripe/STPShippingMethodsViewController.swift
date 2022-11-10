@@ -7,8 +7,8 @@
 //
 
 import PassKit
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewDataSource,
     UITableViewDelegate
@@ -44,10 +44,14 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
 
         tableView?.register(
             STPShippingMethodTableViewCell.self,
-            forCellReuseIdentifier: STPShippingMethodCellReuseIdentifier)
+            forCellReuseIdentifier: STPShippingMethodCellReuseIdentifier
+        )
 
         let doneItem = UIBarButtonItem(
-            barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
+            barButtonSystemItem: .done,
+            target: self,
+            action: #selector(done(_:))
+        )
         self.doneItem = doneItem
         stp_navigationItemProxy?.rightBarButtonItem = doneItem
         stp_navigationItemProxy?.rightBarButtonItem?.accessibilityIdentifier =
@@ -56,8 +60,11 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
         let imageView = UIImageView(image: STPLegacyImageLibrary.largeShippingImage())
         imageView.contentMode = .center
         imageView.frame = CGRect(
-            x: 0, y: 0, width: view.bounds.size.width,
-            height: imageView.bounds.size.height + (57 * 2))
+            x: 0,
+            y: 0,
+            width: view.bounds.size.width,
+            height: imageView.bounds.size.height + (57 * 2)
+        )
         self.imageView = imageView
 
         tableView?.tableHeaderView = imageView
@@ -111,7 +118,9 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
     ) -> UITableViewCell {
         let cell =
             tableView.dequeueReusableCell(
-                withIdentifier: STPShippingMethodCellReuseIdentifier, for: indexPath)
+                withIdentifier: STPShippingMethodCellReuseIdentifier,
+                for: indexPath
+            )
             as? STPShippingMethodTableViewCell
         let method =
             shippingMethods?.stp_boundSafeObject(at: indexPath.row)
@@ -124,7 +133,9 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
     }
 
     func tableView(
-        _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
     ) {
         let topRow = indexPath.row == 0
         let bottomRow =
@@ -144,11 +155,15 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
         return 27.0
     }
 
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int)
+    override func tableView(
+        _ tableView: UITableView,
+        heightForHeaderInSection section: Int
+    )
         -> CGFloat
     {
         let size = headerView?.sizeThatFits(
-            CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude))
+            CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude)
+        )
         return size?.height ?? 0.0
     }
 
@@ -162,18 +177,26 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
             shippingMethods?.stp_boundSafeObject(at: indexPath.row)
         tableView.reloadSections(
             NSIndexSet(index: indexPath.section) as IndexSet,
-            with: .fade)
+            with: .fade
+        )
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 
-    required init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    required init(
+        nibName nibNameOrNil: String?,
+        bundle nibBundleOrNil: Bundle?
+    ) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
-    required init(theme: STPTheme?) {
+    required init(
+        theme: STPTheme?
+    ) {
         fatalError("init(theme:) has not been implemented")
     }
 }

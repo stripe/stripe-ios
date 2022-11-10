@@ -6,16 +6,14 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
-@_spi(STP) public extension PaymentMethodMessagingView {
-    /**
-     🏗 Under construction
-     
-     Configuration for the `PaymentMethodMessagingView` class.
-     */
-    struct Configuration {
+@_spi(STP) extension PaymentMethodMessagingView {
+    /// 🏗 Under construction
+    ///
+    /// Configuration for the `PaymentMethodMessagingView` class.
+    public struct Configuration {
         /// Initializes a `PaymentMethodMessagingView.Configuration`
         public init(
             apiClient: STPAPIClient = .shared,
@@ -26,7 +24,10 @@ import UIKit
             countryCode: String = Locale.current.regionCode ?? "",
             font: UIFont = .preferredFont(forTextStyle: .footnote),
             textColor: UIColor = .label,
-            imageColor: (userInterfaceStyleLight: PaymentMethodMessagingView.Configuration.ImageColor, userInterfaceStyleDark: PaymentMethodMessagingView.Configuration.ImageColor) = (userInterfaceStyleLight: .dark, userInterfaceStyleDark: .light)
+            imageColor: (
+                userInterfaceStyleLight: PaymentMethodMessagingView.Configuration.ImageColor,
+                userInterfaceStyleDark: PaymentMethodMessagingView.Configuration.ImageColor
+            ) = (userInterfaceStyleLight: .dark, userInterfaceStyleDark: .light)
         ) {
             self.apiClient = apiClient
             self.paymentMethods = paymentMethods
@@ -60,7 +61,7 @@ import UIKit
         public var font: UIFont = .preferredFont(forTextStyle: .footnote)
         /// The color of text displayed in the view. Defaults to `UIColor.labelColor`.
         public var textColor: UIColor = .label
-        
+
         /// The colors of the image
         public enum ImageColor {
             case light
@@ -69,7 +70,10 @@ import UIKit
         }
         /// The color of the images displayed in the view as a tuple specifying the color to use in light and dark mode.
         /// Defaults to `(.dark, .light)`.
-        public var imageColor: (userInterfaceStyleLight: ImageColor, userInterfaceStyleDark: ImageColor) = (userInterfaceStyleLight: .dark, userInterfaceStyleDark: .light)
+        public var imageColor:
+            (userInterfaceStyleLight: ImageColor, userInterfaceStyleDark: ImageColor) = (
+                userInterfaceStyleLight: .dark, userInterfaceStyleDark: .light
+            )
     }
 }
 

@@ -14,6 +14,8 @@ import UIKit
     case failed(error: Error)
 }
 
+#if os(iOS)
+
 @_spi(STP) public protocol FinancialConnectionsSDKInterface {
     init()
     func presentFinancialConnectionsSheet(
@@ -24,6 +26,8 @@ import UIKit
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     )
 }
+
+#endif
 
 // MARK: - Types
 

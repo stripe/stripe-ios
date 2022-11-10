@@ -7,11 +7,12 @@
 //
 
 import XCTest
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class OneTimeCodeTextFieldTests: XCTestCase {
 
@@ -40,7 +41,10 @@ class OneTimeCodeTextFieldTests: XCTestCase {
     func test_insertText_shouldNotInsertBeyondNumberOfDigits() {
         let field = makeSUT(numberOfDigits: 4)
         field.value = "123"
-        field.selectedTextRange = field.textRange(from: field.endOfDocument, to: field.endOfDocument)
+        field.selectedTextRange = field.textRange(
+            from: field.endOfDocument,
+            to: field.endOfDocument
+        )
         field.insertText("45")
         XCTAssertEqual(field.value, "1234")
     }
@@ -69,7 +73,10 @@ class OneTimeCodeTextFieldTests: XCTestCase {
         XCTAssertEqual(field.value, "")
 
         // Delete while empty
-        field.selectedTextRange = field.textRange(from: field.beginningOfDocument, to: field.endOfDocument)
+        field.selectedTextRange = field.textRange(
+            from: field.beginningOfDocument,
+            to: field.endOfDocument
+        )
         field.deleteBackward()
         XCTAssertEqual(field.value, "")
     }
@@ -87,7 +94,9 @@ class OneTimeCodeTextFieldTests: XCTestCase {
     func test_beginningOfDocument() throws {
         let field = makeSUT(value: "123456")
 
-        let position = try XCTUnwrap(field.beginningOfDocument as? OneTimeCodeTextField.TextPosition)
+        let position = try XCTUnwrap(
+            field.beginningOfDocument as? OneTimeCodeTextField.TextPosition
+        )
         XCTAssertEqual(position.index, 0)
     }
 
@@ -101,10 +110,12 @@ class OneTimeCodeTextFieldTests: XCTestCase {
     func test_textInRange() {
         let field = makeSUT(value: "123456")
 
-        let result = field.text(in: OneTimeCodeTextField.TextRange(
-            start: OneTimeCodeTextField.TextPosition(0),
-            end: OneTimeCodeTextField.TextPosition(3)
-        ))
+        let result = field.text(
+            in: OneTimeCodeTextField.TextRange(
+                start: OneTimeCodeTextField.TextPosition(0),
+                end: OneTimeCodeTextField.TextPosition(3)
+            )
+        )
 
         XCTAssertEqual(result, "123")
     }
@@ -112,10 +123,12 @@ class OneTimeCodeTextFieldTests: XCTestCase {
     func test_textInRange_emptyRange() {
         let field = makeSUT(value: "123456")
 
-        let result = field.text(in: OneTimeCodeTextField.TextRange(
-            start: OneTimeCodeTextField.TextPosition(0),
-            end: OneTimeCodeTextField.TextPosition(0)
-        ))
+        let result = field.text(
+            in: OneTimeCodeTextField.TextRange(
+                start: OneTimeCodeTextField.TextPosition(0),
+                end: OneTimeCodeTextField.TextPosition(0)
+            )
+        )
 
         XCTAssertNil(result)
     }
@@ -188,14 +201,20 @@ class OneTimeCodeTextFieldTests: XCTestCase {
 
         XCTAssertEqual(field.offset(from: field.beginningOfDocument, to: field.endOfDocument), 6)
         XCTAssertEqual(field.offset(from: field.endOfDocument, to: field.beginningOfDocument), -6)
-        XCTAssertEqual(field.offset(from: field.beginningOfDocument, to: OneTimeCodeTextField.TextPosition(3)), 3)
+        XCTAssertEqual(
+            field.offset(from: field.beginningOfDocument, to: OneTimeCodeTextField.TextPosition(3)),
+            3
+        )
     }
 
     func test_positionFarthestInDirection() throws {
         let field = makeSUT(value: "123456")
 
         let position = try XCTUnwrap(
-            OneTimeCodeTextField.TextRange(start: field.beginningOfDocument, end: field.endOfDocument)
+            OneTimeCodeTextField.TextRange(
+                start: field.beginningOfDocument,
+                end: field.endOfDocument
+            )
         )
 
         XCTAssertEqual(
@@ -283,16 +302,16 @@ class OneTimeCodeTextFieldTests: XCTestCase {
 
 // MARK: - Factory methods
 
-private extension OneTimeCodeTextFieldTests {
+extension OneTimeCodeTextFieldTests {
 
-    func makeSUT(numberOfDigits: Int = 6) -> OneTimeCodeTextField {
+    fileprivate func makeSUT(numberOfDigits: Int = 6) -> OneTimeCodeTextField {
         let sut = OneTimeCodeTextField(numberOfDigits: numberOfDigits)
         sut.frame = CGRect(x: 0, y: 0, width: 320, height: 60)
         sut.layoutIfNeeded()
         return sut
     }
 
-    func makeSUT(value: String) -> OneTimeCodeTextField {
+    fileprivate func makeSUT(value: String) -> OneTimeCodeTextField {
         let sut = makeSUT()
         sut.value = value
         return sut

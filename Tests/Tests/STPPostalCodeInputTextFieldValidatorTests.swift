@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
 
@@ -22,16 +22,21 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
 
         validator.inputValue = nil
         XCTAssertEqual(
-            STPValidatedInputState.incomplete(description: nil), validator.validationState)
+            STPValidatedInputState.incomplete(description: nil),
+            validator.validationState
+        )
 
         validator.inputValue = ""
         XCTAssertEqual(
-            STPValidatedInputState.incomplete(description: nil), validator.validationState)
+            STPValidatedInputState.incomplete(description: nil),
+            validator.validationState
+        )
 
         validator.inputValue = "1234"
         XCTAssertEqual(
             STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."),
-            validator.validationState)
+            validator.validationState
+        )
 
         validator.inputValue = "12345"
         XCTAssertEqual(STPValidatedInputState.valid(message: nil), validator.validationState)
@@ -39,7 +44,8 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
         validator.inputValue = "12345678"
         XCTAssertEqual(
             STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."),
-            validator.validationState)
+            validator.validationState
+        )
 
         validator.inputValue = "123456789"
         XCTAssertEqual(STPValidatedInputState.valid(message: nil), validator.validationState)
@@ -50,17 +56,20 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
         validator.inputValue = "12-3456789"
         XCTAssertEqual(
             STPValidatedInputState.invalid(errorMessage: "Your ZIP is invalid."),
-            validator.validationState)
+            validator.validationState
+        )
 
         validator.inputValue = "12345-"
         XCTAssertEqual(
             STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."),
-            validator.validationState)
+            validator.validationState
+        )
 
         validator.inputValue = "hi"
         XCTAssertEqual(
             STPValidatedInputState.invalid(errorMessage: "Your ZIP is invalid."),
-            validator.validationState)
+            validator.validationState
+        )
 
         validator.countryCode = "UK"
         validator.inputValue = "hi"

@@ -7,7 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments 
+@_spi(STP) import StripePayments
+
 class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
     let cardId: String
     let livemode: Bool
@@ -70,7 +71,8 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
                 livemode: livemode,
                 encryptedPass: encryptedPassData,
                 activationData: activationData,
-                ephemeralPublicKey: ephemeralPublicKeyData)
+                ephemeralPublicKey: ephemeralPublicKeyData
+            )
             details.allResponseFields = dict
             return details
         }
