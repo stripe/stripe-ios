@@ -29,7 +29,7 @@ extension TextFieldElement {
                     return IconView(
                         image: STPImageLibrary.safeImageNamed(
                             "card_unknown_updated_icon",
-                            darkMode: !theme.isLight()))
+                            darkMode: theme.isDark))
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
@@ -175,7 +175,7 @@ extension TextFieldElement {
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             let logoName = cardBrandProvider() == .amex ? "card_cvc_amex_updated_icon" : "card_cvc_updated_icon"
             return IconView(
-                image: STPImageLibrary.safeImageNamed(logoName, darkMode: !theme.isLight()))
+                image: STPImageLibrary.safeImageNamed(logoName, darkMode: theme.isDark))
         }
     }
 }

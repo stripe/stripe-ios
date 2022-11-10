@@ -119,6 +119,25 @@ import UIKit
         return (red, green, blue, alpha)
     }
 
+    var perceivedBrightness: CGFloat {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        if getRed(&red, green: &green, blue: &blue, alpha: nil) {
+            // We're using the luma value from YIQ
+            // https://en.wikipedia.org/wiki/YIQ#From_RGB_to_YIQ
+            // recommended by https://www.w3.org/WAI/ER/WD-AERT/#color-contrast
+            return red * CGFloat(0.299) + green * CGFloat(0.587) + blue * CGFloat(0.114)
+        } else {
+            // Couldn't get RGB for this color, device couldn't convert it from whatever
+            // colorspace it's in.
+            // Make it "bright", since most of the color space is (based on our current
+            // formula), but not very bright.
+            return CGFloat(0.4)
+        }
+    }
+
+    var isBright: Bool { perceivedBrightness > 0.3 }
 }
 
 // MARK: - Helpers

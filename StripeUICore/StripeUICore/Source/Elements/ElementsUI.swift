@@ -70,36 +70,11 @@ import UIKit
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
 
-    /// Checks if the theme is light.
-    ///
-    /// This uses the algorithm defined in https://www.w3.org/WAI/ER/WD-AERT/#color-contrast to
-    /// determine if the theme's background color is dark or light.
-    /// Defaults to `true` when it cannot be determined.
-    public func isLight(threshold: Float = 0.7) -> Bool {
-        let originalCGColor = colors.background.cgColor
+    /// Checks if the theme is bright.
+    public var isBright: Bool { colors.background.isBright }
 
-        // We need to convert it to the RGB colorspace.
-        // UIColor.white / UIColor.black are greyscale and not RGB.
-        // If you don't do this then you will crash when accessing components
-        // index 2 below when evaluating greyscale colors.
-        let RGBCGColor = originalCGColor.converted(
-            to: CGColorSpaceCreateDeviceRGB(),
-            intent: .defaultIntent,
-            options: nil
-        )
-        guard let components = RGBCGColor?.components else {
-            return true
-        }
-        guard components.count >= 3 else {
-            return true
-        }
-
-        let brightness = Float(((components[0] * 299)
-                                + (components[1] * 587)
-                                + (components[2] * 114))
-                               / 1000)
-        return brightness > threshold
-    }
+    /// Checks if the theme is dark.
+    public var isDark: Bool { !isBright }
 
     public struct Font {
         public init() {}

@@ -6,6 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeUICore
 import UIKit
 
 // swift-format-ignore: DontRepeatTypeInStaticProperties
@@ -174,7 +175,7 @@ final public class STPTheme: NSObject {
     }
 
     private func barStyle(for color: UIColor) -> UIBarStyle {
-        if STPColorUtils.colorIsBright(color) {
+        if color.isBright {
             return .default
         } else {
             return .black
