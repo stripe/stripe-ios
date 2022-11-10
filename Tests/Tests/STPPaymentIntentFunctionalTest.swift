@@ -148,5 +148,5 @@ class STPPaymentIntentFunctionalTestSwift: XCTestCase {
             XCTAssertNotNil(clientSecret)
         }
     }
-    
+
 }
