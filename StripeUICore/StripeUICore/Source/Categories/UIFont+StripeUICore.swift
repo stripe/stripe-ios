@@ -27,7 +27,7 @@ import UIKit
 
         return fontMetrics.scaledFont(for: self, compatibleWith: traitCollection)
     }
-    
+
     /// The default size category used to compute font size prior to scaling it.
     ///
     /// - seealso:

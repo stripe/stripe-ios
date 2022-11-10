@@ -127,7 +127,7 @@ class PhoneNumberTests: XCTestCase {
             XCTAssertEqual(phoneNumber.string(as: c.format), c.formattedNumber)
         }
     }
-    
+
     func teste164FormatDropsLeadingZeros() {
         guard let phoneNumber = PhoneNumber(number: "08022223333", countryCode: "JP") else {
             XCTFail("Could not create phone number")
@@ -188,8 +188,14 @@ class PhoneNumberTests: XCTestCase {
             "JM"
         )
 
-        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "ja_JP"))?.countryCode, "US")
-        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "ar_LB"))?.countryCode, "US")
+        XCTAssertEqual(
+            PhoneNumber.fromE164(number, locale: .init(identifier: "ja_JP"))?.countryCode,
+            "US"
+        )
+        XCTAssertEqual(
+            PhoneNumber.fromE164(number, locale: .init(identifier: "ar_LB"))?.countryCode,
+            "US"
+        )
     }
 
 }
