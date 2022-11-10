@@ -36,7 +36,7 @@ class Dictionary_StripeTest: XCTestCase {
                     ],
                     ["payment", NSNull()],
                 ],
-            ] as [AnyHashable : Any]
+            ] as [AnyHashable: Any]
 
         let expected =
             [
@@ -53,7 +53,7 @@ class Dictionary_StripeTest: XCTestCase {
                         "id": "fee_123"
                     ], ["payment"],
                 ],
-            ] as [AnyHashable : Any]
+            ] as [AnyHashable: Any]
 
         let result = dictionary.stp_dictionaryByRemovingNulls()
         XCTAssertEqual(result as NSDictionary, expected as NSDictionary)
@@ -112,7 +112,7 @@ class Dictionary_StripeTest: XCTestCase {
             ]
         result = dictionary.stp_dictionaryByRemovingNonStrings()
         XCTAssertEqual(result as NSDictionary, expected as NSDictionary)
-        
+
         // Strips non-NSString keys and values
         dictionary =
             [
