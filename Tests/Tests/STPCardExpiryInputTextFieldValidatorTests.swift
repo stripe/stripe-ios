@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
 
@@ -20,10 +20,12 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
         let now = Date()
         guard
             let nowMonth = Calendar(identifier: .gregorian).dateComponents(
-                Set([Calendar.Component.month]), from: now
+                Set([Calendar.Component.month]),
+                from: now
             ).month,
             let fullYear = Calendar(identifier: .gregorian).dateComponents(
-                Set([Calendar.Component.year]), from: now
+                Set([Calendar.Component.year]),
+                from: now
             ).year
         else {
             XCTFail("Chaos reigns")
@@ -95,7 +97,7 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
         } else {
             XCTFail("Single digit month should be incomplete")
         }
-        
+
         validator.inputValue = "13/"
         if case .invalid(let description) = validator.validationState {
             XCTAssertEqual(description, "Your card's expiration month is invalid.")
@@ -103,25 +105,25 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
             XCTFail("Invalid month should be invalid")
         }
     }
-    
+
     func testExpiryStringFormatsYear() throws {
         let validator = STPCardExpiryInputTextFieldValidator()
-        
+
         validator.inputValue = "02/24"
-        
+
         let expiryStrings = try XCTUnwrap(validator.expiryStrings)
-        
+
         XCTAssertEqual(expiryStrings.month, "02")
         XCTAssertEqual(expiryStrings.year, "2024")
     }
-    
+
     func testExpiryStringDoesNotFormatYear() throws {
         let validator = STPCardExpiryInputTextFieldValidator()
-        
+
         validator.inputValue = "02/2024"
-        
+
         let expiryStrings = try XCTUnwrap(validator.expiryStrings)
-        
+
         XCTAssertEqual(expiryStrings.month, "02")
         XCTAssertEqual(expiryStrings.year, "2024")
     }

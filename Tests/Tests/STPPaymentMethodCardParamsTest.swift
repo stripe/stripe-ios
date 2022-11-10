@@ -6,11 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodCardParamsTest: XCTestCase {
     func testEqualityCheck() {
@@ -30,7 +30,7 @@ class STPPaymentMethodCardParamsTest: XCTestCase {
         params2.additionalAPIParameters["test"] = "bla"
         XCTAssertEqual(params1, params2)
     }
-    
+
     func testCardParamsFromPaymentMethodParams() {
         let pmCardParams = STPPaymentMethodCardParams()
         pmCardParams.number = "4242424242424242"
@@ -47,7 +47,11 @@ class STPPaymentMethodCardParamsTest: XCTestCase {
         address.country = "US"
         address.postalCode = "12345"
         addressParams.address = address
-        let pmParams = STPPaymentMethodParams(card: pmCardParams, billingDetails: addressParams, metadata: nil)
+        let pmParams = STPPaymentMethodParams(
+            card: pmCardParams,
+            billingDetails: addressParams,
+            metadata: nil
+        )
         let cardParams = STPCardParams(paymentMethodParams: pmParams)
         XCTAssertEqual(cardParams.number, "4242424242424242")
         XCTAssertEqual(cardParams.cvc, "123")

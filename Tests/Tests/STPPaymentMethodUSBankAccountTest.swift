@@ -6,18 +6,19 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import StripeCoreTestUtils
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+import XCTest
 
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodUSBankAccountTest: XCTestCase {
 
-    static let usBankAccountPaymentIntentClientSecret = "pi_3KhHLqFY0qyl6XeW1X2ZMsOT_secret_k5bOLoKJEW8ZhQFpokL0OrpbU"
+    static let usBankAccountPaymentIntentClientSecret =
+        "pi_3KhHLqFY0qyl6XeW1X2ZMsOT_secret_k5bOLoKJEW8ZhQFpokL0OrpbU"
 
     func retrieveUSBankAccountJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

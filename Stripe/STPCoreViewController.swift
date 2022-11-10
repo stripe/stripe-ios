@@ -21,7 +21,9 @@ public class STPCoreViewController: UIViewController {
 
     /// Initializes a new view controller with the specified theme
     /// - Parameter theme: The theme to use to inform the view controller's visual appearance. - seealso: STPTheme
-    @objc public required init(theme: STPTheme?) {
+    @objc public required init(
+        theme: STPTheme?
+    ) {
         super.init(nibName: nil, bundle: nil)
         commonInit(with: theme)
     }
@@ -29,7 +31,8 @@ public class STPCoreViewController: UIViewController {
     /// Passes through to the default UIViewController behavior for this initializer,
     /// and then also sets the default theme as in `init`
     @objc public required override init(
-        nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?
+        nibName nibNameOrNil: String?,
+        bundle nibBundleOrNil: Bundle?
     ) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         commonInit(with: STPTheme.defaultTheme)
@@ -37,7 +40,9 @@ public class STPCoreViewController: UIViewController {
 
     /// Passes through to the default UIViewController behavior for this initializer,
     /// and then also sets the default theme as in `init`
-    @objc public required init?(coder aDecoder: NSCoder) {
+    @objc public required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
         commonInit(with: STPTheme.defaultTheme)
     }
@@ -67,15 +72,19 @@ public class STPCoreViewController: UIViewController {
             cancelItem = UIBarButtonItem(
                 barButtonSystemItem: .cancel,
                 target: self,
-                action: #selector(STPAddCardViewController.handleCancelTapped(_:)))
+                action: #selector(STPAddCardViewController.handleCancelTapped(_:))
+            )
             cancelItem?.accessibilityIdentifier = "CoreViewControllerCancelIdentifier"
 
             stp_navigationItemProxy?.leftBarButtonItem = cancelItem
         }
 
         NotificationCenter.default.addObserver(
-            self, selector: #selector(STPAddCardViewController.updateAppearance),
-            name: UIContentSizeCategory.didChangeNotification, object: nil)
+            self,
+            selector: #selector(STPAddCardViewController.updateAppearance),
+            name: UIContentSizeCategory.didChangeNotification,
+            object: nil
+        )
     }
 
     /// Called in viewDidLoad after doing base implementation, before

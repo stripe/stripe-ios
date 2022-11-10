@@ -8,20 +8,21 @@
 
 import Foundation
 import XCTest
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentsUI
 
-class STPApplePaySwiftTest : XCTestCase {
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
+
+class STPApplePaySwiftTest: XCTestCase {
     func testAdditionalPaymentNetwork() {
         XCTAssertFalse(StripeAPI.supportedPKPaymentNetworks().contains(.JCB))
         StripeAPI.additionalEnabledApplePayNetworks = [.JCB]
         XCTAssertTrue(StripeAPI.supportedPKPaymentNetworks().contains(.JCB))
         StripeAPI.additionalEnabledApplePayNetworks = []
     }
-    
+
     // Tests stp_tokenParameters in StripePayments, not StripeApplePay
     func testStpTokenParameters() {
         let applePay = STPFixtures.applePayPayment()

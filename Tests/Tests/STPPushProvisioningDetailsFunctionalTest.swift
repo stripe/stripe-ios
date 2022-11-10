@@ -8,11 +8,11 @@
 
 import Stripe
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPushProvisioningDetailsFunctionalTest: STPNetworkStubbingTestCase {
     override func setUp() {
@@ -36,13 +36,16 @@ class STPPushProvisioningDetailsFunctionalTest: STPNetworkStubbingTestCase {
         ]
         let expectation = self.expectation(description: "Push provisioning details")
         let params = STPPushProvisioningDetailsParams(
-            cardId: "ic_1C0Xig4JYtv6MPZK91WoXa9u", certificates: certs,
+            cardId: "ic_1C0Xig4JYtv6MPZK91WoXa9u",
+            certificates: certs,
             nonce: Data(base64Encoded: nonce, options: [])!,
-            nonceSignature: Data(base64Encoded: nonceSignature, options: [])!)
+            nonceSignature: Data(base64Encoded: nonceSignature, options: [])!
+        )
         // To re-record this test, get an ephemeral key for the above Issuing card and pass that instead of [STPFixtures ephemeralKey]
         let ephemeralKey = STPFixtures.ephemeralKey()
         client.retrievePushProvisioningDetails(with: params, ephemeralKey: ephemeralKey) {
-            details, error in
+            details,
+            error in
             expectation.fulfill()
             XCTAssertNil(error)
             XCTAssert((details?.cardId == cardId))

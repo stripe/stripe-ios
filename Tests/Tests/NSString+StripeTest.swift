@@ -5,11 +5,11 @@
 //  Created by Ben Guo on 3/22/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class NSString_StripeTest: XCTestCase {
 
@@ -66,13 +66,28 @@ class NSString_StripeTest: XCTestCase {
         XCTAssertEqual(String.localizedAmountDisplayString(for: 1099, currency: "USD"), "$10.99")
         XCTAssertEqual(
             String.localizedAmountDisplayString(
-                for: 1099, currency: "USD", locale: Locale(identifier: "fr_FR")), "10,99 $US")
+                for: 1099,
+                currency: "USD",
+                locale: Locale(identifier: "fr_FR")
+            ),
+            "10,99 $US"
+        )
         XCTAssertEqual(
             String.localizedAmountDisplayString(
-                for: 1099, currency: "USD", locale: Locale(identifier: "zh_HANT")), "US$10.99")
+                for: 1099,
+                currency: "USD",
+                locale: Locale(identifier: "zh_HANT")
+            ),
+            "US$10.99"
+        )
 
         XCTAssertEqual(
             String.localizedAmountDisplayString(
-                for: 1099, currency: "ZZZ", locale: Locale(identifier: "z")), "ZZZ 10.99")
+                for: 1099,
+                currency: "ZZZ",
+                locale: Locale(identifier: "z")
+            ),
+            "ZZZ 10.99"
+        )
     }
 }

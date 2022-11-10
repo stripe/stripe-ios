@@ -7,14 +7,16 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @objc protocol STPPaymentOptionsInternalViewControllerDelegate: AnyObject {
     func internalViewControllerDidSelect(_ paymentOption: STPPaymentOption?)
     func internalViewControllerDidDelete(_ paymentOption: STPPaymentOption?)
     func internalViewControllerDidCreatePaymentOption(
-        _ paymentOption: STPPaymentOption?, completion: @escaping STPErrorBlock)
+        _ paymentOption: STPPaymentOption?,
+        completion: @escaping STPErrorBlock
+    )
     func internalViewControllerDidCancel()
 }
 
@@ -73,10 +75,14 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     func _didSetCustomFooterView() {
         if isViewLoaded {
             if let size = _customFooterView?.sizeThatFits(
-                CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude))
-            {
+                CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude)
+            ) {
                 _customFooterView?.frame = CGRect(
-                    x: 0, y: 0, width: size.width, height: size.height)
+                    x: 0,
+                    y: 0,
+                    width: size.width,
+                    height: size.height
+                )
             }
 
             tableView?.tableFooterView = _customFooterView
@@ -100,7 +106,8 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         // Table view
         tableView?.register(
             STPPaymentOptionTableViewCell.self,
-            forCellReuseIdentifier: PaymentOptionCellReuseIdentifier)
+            forCellReuseIdentifier: PaymentOptionCellReuseIdentifier
+        )
 
         tableView?.dataSource = self
         tableView?.delegate = self
@@ -110,8 +117,11 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         let cardImageView = UIImageView(image: STPLegacyImageLibrary.largeCardFrontImage())
         cardImageView.contentMode = .center
         cardImageView.frame = CGRect(
-            x: 0.0, y: 0.0, width: view.bounds.size.width,
-            height: cardImageView.bounds.size.height + (57.0 * 2.0))
+            x: 0.0,
+            y: 0.0,
+            width: view.bounds.size.width,
+            height: cardImageView.bounds.size.height + (57.0 * 2.0)
+        )
         cardImageView.image = STPLegacyImageLibrary.largeCardFrontImage()
         cardImageView.tintColor = theme.accentColor
         self.cardImageView = cardImageView
@@ -121,7 +131,9 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         // Table view editing state
         tableView?.setEditing(false, animated: false)
         reloadRightBarButtonItem(
-            withTableViewIsEditing: tableView?.isEditing ?? false, animated: false)
+            withTableViewIsEditing: tableView?.isEditing ?? false,
+            animated: false
+        )
 
         stp_navigationItemProxy?.leftBarButtonItem?.accessibilityIdentifier =
             "PaymentOptionsViewControllerCancelButtonIdentifier"
@@ -147,8 +159,10 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             if isAnyPaymentOptionDetachable() {
                 // Show edit button
                 barButtonItem = UIBarButtonItem(
-                    barButtonSystemItem: .edit, target: self,
-                    action: #selector(handleEditButtonTapped(_:)))
+                    barButtonSystemItem: .edit,
+                    target: self,
+                    action: #selector(handleEditButtonTapped(_:))
+                )
             } else {
                 // Show no button
                 barButtonItem = nil
@@ -156,8 +170,10 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         } else {
             // Show done button
             barButtonItem = UIBarButtonItem(
-                barButtonSystemItem: .done, target: self,
-                action: #selector(handleDoneButtonTapped(_:)))
+                barButtonSystemItem: .done,
+                target: self,
+                action: #selector(handleDoneButtonTapped(_:))
+            )
         }
 
         barButtonItem?.stp_setTheme(theme)
@@ -187,7 +203,8 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         }
 
         if !(apiAdapter?.responds(
-            to: #selector(STPCustomerContext.detachPaymentMethod(fromCustomer:completion:)))
+            to: #selector(STPCustomerContext.detachPaymentMethod(fromCustomer:completion:))
+        )
             ?? false)
         {
             // Cannot detach payment methods if customerContext is an apiAdapter
@@ -249,13 +266,17 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     @objc func handleEditButtonTapped(_ sender: Any?) {
         tableView?.setEditing(true, animated: true)
         reloadRightBarButtonItem(
-            withTableViewIsEditing: tableView?.isEditing ?? false, animated: true)
+            withTableViewIsEditing: tableView?.isEditing ?? false,
+            animated: true
+        )
     }
 
     @objc func handleDoneButtonTapped(_ sender: Any?) {
         _endTableViewEditing()
         reloadRightBarButtonItem(
-            withTableViewIsEditing: tableView?.isEditing ?? false, animated: true)
+            withTableViewIsEditing: tableView?.isEditing ?? false,
+            animated: true
+        )
     }
 
     func _endTableViewEditing() {
@@ -290,12 +311,14 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell =
             tableView.dequeueReusableCell(
-                withIdentifier: PaymentOptionCellReuseIdentifier, for: indexPath)
+                withIdentifier: PaymentOptionCellReuseIdentifier,
+                for: indexPath
+            )
             as? STPPaymentOptionTableViewCell
 
         if indexPath.section == PaymentOptionSectionCardList {
             weak var paymentOption =
-            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
+                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             let selected = paymentOption!.isEqual(selectedPaymentOption)
 
             cell?.configure(with: paymentOption!, theme: theme, selected: selected)
@@ -304,7 +327,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             cell?.accessibilityIdentifier = "PaymentOptionsTableViewAddNewCardButtonIdentifier"
         } else if indexPath.section == PaymentOptionSectionAPM {
             weak var paymentOption =
-            apmPaymentOptions().stp_boundSafeObject(at: indexPath.row)
+                apmPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             if paymentOption is STPPaymentMethodParams {
                 let paymentMethodParams = paymentOption as? STPPaymentMethodParams
                 if paymentMethodParams?.type == .FPX {
@@ -320,7 +343,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == PaymentOptionSectionCardList {
             weak var paymentOption =
-            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
+                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
 
             if isPaymentOptionDetachable(paymentOption) {
                 return true
@@ -331,7 +354,8 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     }
 
     func tableView(
-        _ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+        _ tableView: UITableView,
+        commit editingStyle: UITableViewCell.EditingStyle,
         forRowAt indexPath: IndexPath
     ) {
         if indexPath.section == PaymentOptionSectionCardList {
@@ -348,7 +372,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             }
 
             weak var paymentOptionToDelete =
-            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
+                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
 
             if !isPaymentOptionDetachable(paymentOptionToDelete) {
                 // Showed the user a delete option for a payment method when we shouldn't have
@@ -397,12 +421,14 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         if indexPath.section == PaymentOptionSectionCardList {
             // Update data source
             weak var paymentOption =
-            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
+                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             selectedPaymentOption = paymentOption
 
             // Perform selection animation
             tableView.reloadSections(
-                NSIndexSet(index: PaymentOptionSectionCardList) as IndexSet, with: .fade)
+                NSIndexSet(index: PaymentOptionSectionCardList) as IndexSet,
+                with: .fade
+            )
 
             // Notify delegate
             delegate?.internalViewControllerDidSelect(paymentOption)
@@ -410,7 +436,9 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             var paymentCardViewController: STPAddCardViewController?
             if let configuration = configuration {
                 paymentCardViewController = STPAddCardViewController(
-                    configuration: configuration, theme: theme)
+                    configuration: configuration,
+                    theme: theme
+                )
             }
             paymentCardViewController?.apiClient = apiClient
             paymentCardViewController?.delegate = self
@@ -423,7 +451,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             }
         } else if indexPath.section == PaymentOptionSectionAPM {
             weak var paymentOption =
-            apmPaymentOptions().stp_boundSafeObject(at: indexPath.row)
+                apmPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             if paymentOption is STPPaymentMethodParams {
                 if let paymentMethodParams = paymentOption as? STPPaymentMethodParams,
                     paymentMethodParams.type == .FPX
@@ -431,14 +459,19 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
                     var bankSelectionViewController: STPBankSelectionViewController?
                     if let configuration = configuration {
                         bankSelectionViewController = STPBankSelectionViewController(
-                            bankMethod: .FPX, configuration: configuration, theme: theme)
+                            bankMethod: .FPX,
+                            configuration: configuration,
+                            theme: theme
+                        )
                     }
                     bankSelectionViewController?.apiClient = apiClient
                     bankSelectionViewController?.delegate = self
 
                     if let bankSelectionViewController = bankSelectionViewController {
                         navigationController?.pushViewController(
-                            bankSelectionViewController, animated: true)
+                            bankSelectionViewController,
+                            animated: true
+                        )
                     }
                 }
             }
@@ -448,7 +481,9 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     }
 
     func tableView(
-        _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
     ) {
         let isTopRow = indexPath.row == 0
         let isBottomRow =
@@ -469,13 +504,19 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         return 27.0
     }
 
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int)
+    override func tableView(
+        _ tableView: UITableView,
+        heightForHeaderInSection section: Int
+    )
         -> CGFloat
     {
         return 0.01
     }
 
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)
+    func tableView(
+        _ tableView: UITableView,
+        editingStyleForRowAt indexPath: IndexPath
+    )
         -> UITableViewCell.EditingStyle
     {
         if indexPath.section == PaymentOptionSectionCardList {
@@ -500,10 +541,13 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
 
     @objc func addCardViewController(
         _ addCardViewController: STPAddCardViewController,
-        didCreatePaymentMethod paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        completion: @escaping STPErrorBlock
     ) {
         delegate?.internalViewControllerDidCreatePaymentOption(
-            paymentMethod, completion: completion)
+            paymentMethod,
+            completion: completion
+        )
     }
 
     @objc func bankSelectionViewController(
@@ -514,15 +558,22 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         }
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 
-    required init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    required init(
+        nibName nibNameOrNil: String?,
+        bundle nibBundleOrNil: Bundle?
+    ) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
-    required init(theme: STPTheme?) {
+    required init(
+        theme: STPTheme?
+    ) {
         fatalError("init(theme:) has not been implemented")
     }
 }

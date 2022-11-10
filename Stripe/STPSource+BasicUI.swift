@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import UIKit
-
 @_spi(STP) import StripePayments
+import UIKit
 
 extension STPSource: STPPaymentOption {
     // MARK: - STPPaymentOption

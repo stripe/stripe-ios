@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardExpiryInputTextFieldFormatterTests: XCTestCase {
 
@@ -41,16 +41,24 @@ class STPCardExpiryInputTextFieldFormatterTests: XCTestCase {
     func testFormattedText() {
         let formatter = STPCardExpiryInputTextFieldFormatter()
         XCTAssertEqual(
-            formatter.formattedText(from: "1226", with: [:]), NSAttributedString(string: "12/26"))
-        XCTAssertEqual(
-            formatter.formattedText(from: "12/26", with: [:]), NSAttributedString(string: "12/26"))
-        XCTAssertEqual(
-            formatter.formattedText(from: "12 / 26", with: [:]), NSAttributedString(string: "12/26")
+            formatter.formattedText(from: "1226", with: [:]),
+            NSAttributedString(string: "12/26")
         )
         XCTAssertEqual(
-            formatter.formattedText(from: "122026", with: [:]), NSAttributedString(string: "12/26"))
+            formatter.formattedText(from: "12/26", with: [:]),
+            NSAttributedString(string: "12/26")
+        )
+        XCTAssertEqual(
+            formatter.formattedText(from: "12 / 26", with: [:]),
+            NSAttributedString(string: "12/26")
+        )
+        XCTAssertEqual(
+            formatter.formattedText(from: "122026", with: [:]),
+            NSAttributedString(string: "12/26")
+        )
         XCTAssertEqual(
             formatter.formattedText(from: "12 / 2026", with: [:]),
-            NSAttributedString(string: "12/26"))
+            NSAttributedString(string: "12/26")
+        )
     }
 }

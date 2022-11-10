@@ -20,7 +20,12 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
 
     /// You cannot directly instantiate an `STPEphemeralKey`. You should instead use
     /// `decodedObjectFromAPIResponse:` to create a key from a JSON response.
-    required init(stripeID: String, created: Date, secret: String, expires: Date) {
+    required init(
+        stripeID: String,
+        created: Date,
+        secret: String,
+        expires: Date
+    ) {
         self.stripeID = stripeID
         self.created = created
         self.secret = secret

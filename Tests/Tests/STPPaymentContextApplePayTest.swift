@@ -6,11 +6,11 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 /// These tests cover STPPaymentContext's Apple Pay specific behavior:
 /// - building a PKPaymentRequest
@@ -24,7 +24,8 @@ class STPPaymentContextApplePayTest: XCTestCase {
         let paymentContext = STPPaymentContext(
             customerContext: customerContext,
             configuration: config,
-            theme: theme)
+            theme: theme
+        )
         return paymentContext
     }
 
@@ -36,7 +37,8 @@ class STPPaymentContextApplePayTest: XCTestCase {
 
         XCTAssertTrue(
             (request?.paymentSummaryItems.last?.amount == NSDecimalNumber(string: "1.50")),
-            "PKPayment total is not equal to STPPaymentContext amount")
+            "PKPayment total is not equal to STPPaymentContext amount"
+        )
     }
 
     func testBuildPaymentRequest_USDDefault() {
@@ -46,7 +48,8 @@ class STPPaymentContextApplePayTest: XCTestCase {
 
         XCTAssertTrue(
             (request?.currencyCode == "USD"),
-            "Default PKPaymentRequest currency code is not USD")
+            "Default PKPaymentRequest currency code is not USD"
+        )
     }
 
     func testBuildPaymentRequest_currency() {
@@ -57,7 +60,8 @@ class STPPaymentContextApplePayTest: XCTestCase {
 
         XCTAssertTrue(
             (request?.currencyCode == "GBP"),
-            "PKPaymentRequest currency code is not equal to STPPaymentContext currency")
+            "PKPaymentRequest currency code is not equal to STPPaymentContext currency"
+        )
     }
 
     func testBuildPaymentRequest_uppercaseCurrency() {
@@ -68,23 +72,28 @@ class STPPaymentContextApplePayTest: XCTestCase {
 
         XCTAssertTrue(
             (request?.currencyCode == "EUR"),
-            "PKPaymentRequest currency code is not uppercased")
+            "PKPaymentRequest currency code is not uppercased"
+        )
     }
 
     func testSummaryItems() -> [PKPaymentSummaryItem]? {
         return [
             PKPaymentSummaryItem(
                 label: "First item",
-                amount: NSDecimalNumber(mantissa: 20, exponent: 0, isNegative: false)),
+                amount: NSDecimalNumber(mantissa: 20, exponent: 0, isNegative: false)
+            ),
             PKPaymentSummaryItem(
                 label: "Second item",
-                amount: NSDecimalNumber(mantissa: 90, exponent: 0, isNegative: false)),
+                amount: NSDecimalNumber(mantissa: 90, exponent: 0, isNegative: false)
+            ),
             PKPaymentSummaryItem(
                 label: "Discount",
-                amount: NSDecimalNumber(mantissa: 10, exponent: 0, isNegative: true)),
+                amount: NSDecimalNumber(mantissa: 10, exponent: 0, isNegative: true)
+            ),
             PKPaymentSummaryItem(
                 label: "Total",
-                amount: NSDecimalNumber(mantissa: 100, exponent: 0, isNegative: false)),
+                amount: NSDecimalNumber(mantissa: 100, exponent: 0, isNegative: false)
+            ),
         ]
     }
 
@@ -104,7 +113,8 @@ class STPPaymentContextApplePayTest: XCTestCase {
         let itemTotalAmount = context.paymentSummaryItems.last?.amount
         let correctTotalAmount = NSDecimalNumber.stp_decimalNumber(
             withAmount: context.paymentAmount,
-            currency: context.paymentCurrency)
+            currency: context.paymentCurrency
+        )
 
         XCTAssertTrue((itemTotalAmount == correctTotalAmount))
     }
