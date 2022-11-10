@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPostalCodeInputTextFieldFormatterTests: XCTestCase {
 
@@ -40,15 +40,19 @@ class STPPostalCodeInputTextFieldFormatterTests: XCTestCase {
         formatter.countryCode = "US"
 
         XCTAssertEqual(
-            NSAttributedString(string: ""), formatter.formattedText(from: "- ", with: [:]))
+            NSAttributedString(string: ""),
+            formatter.formattedText(from: "- ", with: [:])
+        )
         XCTAssertEqual(
             NSAttributedString(string: "10002"),
-            formatter.formattedText(from: "10002-1234", with: [:]))
+            formatter.formattedText(from: "10002-1234", with: [:])
+        )
 
         formatter.countryCode = "UK"
         XCTAssertEqual(
             NSAttributedString(string: "A B C D E F G"),
-            formatter.formattedText(from: " a b c d e f g", with: [:]))
+            formatter.formattedText(from: " a b c d e f g", with: [:])
+        )
     }
 
 }

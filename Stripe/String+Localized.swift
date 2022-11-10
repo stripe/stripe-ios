@@ -8,8 +8,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 // MARK: - Legacy strings
 
@@ -17,6 +17,6 @@ import Foundation
 extension StripeSharedStrings {
     static func localizedPostalCodeString(for countryCode: String?) -> String {
         return countryCode == "US"
-        ? String.Localized.zip : String.Localized.postal_code
+            ? String.Localized.zip : String.Localized.postal_code
     }
 }

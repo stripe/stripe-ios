@@ -36,7 +36,7 @@ public class STPPaymentMethodFPX: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let fpx = self.init()
         fpx.allResponseFields = response

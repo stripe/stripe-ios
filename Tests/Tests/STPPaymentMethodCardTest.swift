@@ -6,11 +6,12 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 import StripeCoreTestUtils
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 private let kCardPaymentIntentClientSecret =
     "pi_1H5J4RFY0qyl6XeWFTpgue7g_secret_1SS59M0x65qWMaX2wEB03iwVE"
@@ -67,7 +68,8 @@ class STPPaymentMethodCardTest: XCTestCase {
         }
         let json = STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)?["card"]
         let decoded = STPPaymentMethodCard.decodedObject(
-            fromAPIResponse: json as? [AnyHashable: Any])
+            fromAPIResponse: json as? [AnyHashable: Any]
+        )
         XCTAssertNotNil(decoded)
     }
 

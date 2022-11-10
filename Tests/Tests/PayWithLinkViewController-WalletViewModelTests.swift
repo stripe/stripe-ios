@@ -6,14 +6,14 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import StripeCoreTestUtils
+import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
@@ -26,7 +26,10 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
         // Card with failing CVC checks
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.cardWithFailingChecks
-        XCTAssertTrue(sut.shouldRecollectCardCVC, "Should recollect CVC when CVC checks are failing")
+        XCTAssertTrue(
+            sut.shouldRecollectCardCVC,
+            "Should recollect CVC when CVC checks are failing"
+        )
 
         // Expired card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.expiredCard
@@ -46,7 +49,10 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
         // Expired card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.expiredCard
-        XCTAssertTrue(sut.shouldRecollectCardExpiryDate, "Should recollect new expiry date when card has expired")
+        XCTAssertTrue(
+            sut.shouldRecollectCardExpiryDate,
+            "Should recollect new expiry date when card has expired"
+        )
 
         // Bank account (CVC not supported)
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
@@ -101,7 +107,9 @@ extension PayWithLinkViewController_WalletViewModelTests {
 
     func makeSUT() throws -> PayWithLinkViewController.WalletViewModel {
         let paymentIntent = try XCTUnwrap(
-            STPPaymentIntent.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
+            STPPaymentIntent.decodedObject(
+                fromAPIResponse: STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)
+            )
         )
 
         return PayWithLinkViewController.WalletViewModel(

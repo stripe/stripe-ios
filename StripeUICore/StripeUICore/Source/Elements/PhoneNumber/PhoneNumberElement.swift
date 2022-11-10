@@ -67,7 +67,7 @@ import UIKit
             phoneNumber: defaultPhoneNumber
         )
         let allowedCountryCodes =
-            allowedCountryCodes ?? PhoneMetadataProvider.shared.metadata.map { $0.region }
+            allowedCountryCodes ?? PhoneNumber.Metadata.allMetadata.map { $0.regionCode }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(
             countryCodes: allowedCountryCodes,
             defaultCountry: defaults.countryCode,
@@ -99,7 +99,7 @@ import UIKit
             // Note: We only validate against the currently selected country code, as an autofilled number _without_ a country code can trigger false positives, e.g. "2481234567" could be either "(248) 123-4567" (a phone number from Michigan, USA with no country code) or "+248 1 234 567" (a phone number from Seychelles with a country code). We can assume that generally, a user's autofilled phone number will match their phone's region setting.
             // Autofilled numbers can include the + prefix indicating a country code, but we can't tell if they do here, as by the time we get here the input has already been sanitized and the "+" has been removed.
             let countryCode = countryDropdownElement.selectedItem.rawData
-            if let prefix = PhoneMetadataProvider.shared.metadata(for: countryCode)?.code
+            if let prefix = PhoneNumber.Metadata.metadata(for: countryCode)?.prefix
                 .dropFirst(), textFieldElement.text.hasPrefix(prefix)
             {
                 let unprefixedNumber = String(textFieldElement.text.dropFirst(prefix.count))
@@ -152,7 +152,7 @@ extension DropdownFieldElement {
         let countryDisplayStrings: [DropdownFieldElement.DropdownItem] = countryCodes.map {
             let flagEmoji = String.countryFlagEmoji(for: $0) ?? ""  // 🇺🇸
             let name = locale.localizedString(forRegionCode: $0) ?? $0  // United States
-            let prefix = PhoneMetadataProvider.shared.metadata(for: $0)?.code ?? ""  // +1
+            let prefix = PhoneNumber.Metadata.metadata(for: $0)?.prefix ?? ""  // +1
             return .init(
                 pickerDisplayName: "\(flagEmoji) \(name) \(prefix)",  // 🇺🇸 United States +1
                 labelDisplayName: "\(flagEmoji) \(prefix)",

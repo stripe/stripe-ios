@@ -7,5 +7,4 @@
 //
 
 import Foundation
-
 @_exported import StripeCore

@@ -6,14 +6,15 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import StripeCoreTestUtils
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
 import OHHTTPStubs
 import OHHTTPStubsSwift
+import StripeCoreTestUtils
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController) {
@@ -24,16 +25,23 @@ class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
         (STPAddCardViewController, STPPaymentMethod, STPErrorBlock) -> Void = { _, _, _ in }
     func addCardViewController(
         _ addCardViewController: STPAddCardViewController,
-        didCreatePaymentMethod paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        completion: @escaping STPErrorBlock
     ) {
         addCardViewControllerDidCreatePaymentMethodBlock(
-            addCardViewController, paymentMethod, completion)
+            addCardViewController,
+            paymentMethod,
+            completion
+        )
     }
 }
 
 class STPAddCardViewControllerTest: APIStubbedTestCase {
-    
-    func paymentMethodAPIFilter(expectedCardParams: STPPaymentMethodCardParams, urlRequest: URLRequest) -> Bool {
+
+    func paymentMethodAPIFilter(
+        expectedCardParams: STPPaymentMethodCardParams,
+        urlRequest: URLRequest
+    ) -> Bool {
         if urlRequest.url?.absoluteString.contains("payment_methods") ?? false {
             let cardNumber = urlRequest.queryItems?.first(where: { item in
                 item.name == "card[number]"
@@ -43,13 +51,14 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         }
         return false
     }
-    
+
     func buildAddCardViewController() -> STPAddCardViewController? {
         let config = STPFixtures.paymentConfiguration()
         let theme = STPTheme.defaultTheme
         let vc = STPAddCardViewController(
             configuration: config,
-            theme: theme)
+            theme: theme
+        )
         XCTAssertNotNil(vc.view)
         return vc
     }
@@ -59,7 +68,8 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         config.requiredBillingAddressFields = .postalCode
         let sut = STPAddCardViewController(
             configuration: config,
-            theme: STPTheme.defaultTheme)
+            theme: STPTheme.defaultTheme
+        )
         let address = STPAddress()
         address.name = "John Smith Doe"
         address.phone = "8885551212"
@@ -67,7 +77,8 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         address.line1 = "55 John St"
         address.city = "Harare"
         address.postalCode = "10002"
-        address.country = "ZW"  // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+        // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+        address.country = "ZW"
         // Sanity checks
         XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
         XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
@@ -90,7 +101,8 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
             config.requiredBillingAddressFields = .postalCode
             let sut = STPAddCardViewController(
                 configuration: config,
-                theme: STPTheme.defaultTheme)
+                theme: STPTheme.defaultTheme
+            )
             let address = STPAddress()
             address.name = "John Smith Doe"
             address.phone = "8885551212"
@@ -119,7 +131,10 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
 
         let exp = expectation(description: "createPaymentMethodWithCard network request")
         stub { urlRequest in
-            return self.paymentMethodAPIFilter(expectedCardParams: expectedCardParams, urlRequest: urlRequest)
+            return self.paymentMethodAPIFilter(
+                expectedCardParams: expectedCardParams,
+                urlRequest: urlRequest
+            )
         } response: { urlRequest in
             XCTAssertTrue(sut.loading)
             let paymentMethod = ["error": "intentionally_invalid"]
@@ -134,7 +149,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         _ = nextButton?.target?.perform(nextButton?.action, with: nextButton)
 
         waitForExpectations(timeout: 2, handler: nil)
-        
+
         // It takes a few more spins on the runloop before we get a response from
         // the HTTP stubs, so we'll wait 0.5 seconds before checking the loading indicator.
         let loadExp = expectation(description: "loading has stopped")
@@ -152,22 +167,29 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         let expectedCardParams = STPFixtures.paymentMethodCardParams()
         let expectedPaymentMethod = STPFixtures.paymentMethod()
         let expectedPaymentMethodData = STPFixtures.paymentMethodJSON()
-        
+
         stub { urlRequest in
-            return self.paymentMethodAPIFilter(expectedCardParams: expectedCardParams, urlRequest: urlRequest)
+            return self.paymentMethodAPIFilter(
+                expectedCardParams: expectedCardParams,
+                urlRequest: urlRequest
+            )
         } response: { urlRequest in
             XCTAssertTrue(sut.loading)
             defer {
                 createPaymentMethodExp.fulfill()
             }
-            return HTTPStubsResponse(jsonObject: expectedPaymentMethodData, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(
+                jsonObject: expectedPaymentMethodData,
+                statusCode: 200,
+                headers: nil
+            )
         }
 
         let mockDelegate = MockDelegate()
         sut.apiClient = stubbedAPIClient()
         sut.delegate = mockDelegate
         sut.paymentCell?.paymentField!.cardParams = expectedCardParams
-        
+
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
 
         mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {
@@ -187,32 +209,36 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         waitForExpectations(timeout: 2, handler: nil)
     }
 
-    
     func testNextWithCreateTokenSuccessAndDidCreateTokenSuccess() {
         let sut = buildAddCardViewController()!
 
         let createPaymentMethodExp = expectation(description: "createPaymentMethodWithCard")
-        
+
         let expectedCardParams = STPFixtures.paymentMethodCardParams()
         let expectedPaymentMethod = STPFixtures.paymentMethod()
         let expectedPaymentMethodData = STPFixtures.paymentMethodJSON()
-        
+
         stub { urlRequest in
-            return self.paymentMethodAPIFilter(expectedCardParams: expectedCardParams, urlRequest: urlRequest)
+            return self.paymentMethodAPIFilter(
+                expectedCardParams: expectedCardParams,
+                urlRequest: urlRequest
+            )
         } response: { urlRequest in
             XCTAssertTrue(sut.loading)
             defer {
                 createPaymentMethodExp.fulfill()
             }
-            return HTTPStubsResponse(jsonObject: expectedPaymentMethodData, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(
+                jsonObject: expectedPaymentMethodData,
+                statusCode: 200,
+                headers: nil
+            )
         }
 
-        
         let mockDelegate = MockDelegate()
         sut.apiClient = stubbedAPIClient()
         sut.delegate = mockDelegate
         sut.paymentCell?.paymentField!.cardParams = expectedCardParams
-
 
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
         mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {

@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 let STPExamplePublishableKey = "bad_key"
 
@@ -39,7 +39,8 @@ class STPCertTest: XCTestCase {
             XCTAssertEqual((error as NSError?)?.domain, "NSURLErrorDomain")
             XCTAssertNotNil(
                 (error as NSError?)?.userInfo["NSURLErrorFailingURLPeerTrustErrorKey"],
-                "There should be a secTustRef for Foundation HTTPS errors")
+                "There should be a secTustRef for Foundation HTTPS errors"
+            )
         }
     }
 

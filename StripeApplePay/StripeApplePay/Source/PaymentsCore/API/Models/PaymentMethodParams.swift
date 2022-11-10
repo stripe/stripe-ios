@@ -16,13 +16,13 @@ extension StripeAPI {
         /// The type of payment method.
         /// The associated property will contain additional information (e.g. `type == .card` means `card` should also be populated).
         @_spi(STP) public var type: PaymentMethod.PaymentMethodType
-        
+
         /// If this is a card PaymentMethod, this contains the user’s card details.
         @_spi(STP) public var card: Card?
 
         /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
         @_spi(STP) public var billingDetails: BillingDetails?
-        
+
         /// Used internally to identify the version of the SDK sending the request
         @_spi(STP) public var paymentUserAgent: String? = {
             return PaymentsSDKVariant.paymentUserAgent
@@ -56,16 +56,18 @@ extension StripeAPI {
     }
 }
 
-extension StripeAPI.PaymentMethodParams.Card: CustomStringConvertible, CustomDebugStringConvertible, CustomLeafReflectable {
+extension StripeAPI.PaymentMethodParams.Card: CustomStringConvertible, CustomDebugStringConvertible,
+    CustomLeafReflectable
+{
     @_spi(STP) public var debugDescription: String {
         return description
     }
-    
+
     @_spi(STP) public var description: String {
         return "Card \(last4 ?? "")"
     }
-    
+
     @_spi(STP) public var customMirror: Mirror {
-        return Mirror(reflecting:self.description)
+        return Mirror(reflecting: self.description)
     }
 }

@@ -43,7 +43,10 @@ public class STPCoreTableViewController: STPCoreScrollViewController {
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        heightForHeaderInSection section: Int
+    )
         -> CGFloat
     {
         return 0.01

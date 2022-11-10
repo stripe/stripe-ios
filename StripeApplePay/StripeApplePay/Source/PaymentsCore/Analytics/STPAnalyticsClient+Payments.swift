@@ -9,17 +9,15 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/**
- An analytic specific to payments that serializes payment-specific
- information into its params.
- */
+/// An analytic specific to payments that serializes payment-specific
+/// information into its params.
 @_spi(STP) public protocol PaymentAnalytic: Analytic {
     var productUsage: Set<String> { get }
     var additionalParams: [String: Any] { get }
 }
 
-@_spi(STP) public extension PaymentAnalytic {
-    var params: [String: Any] {
+@_spi(STP) extension PaymentAnalytic {
+    public var params: [String: Any] {
         var params = additionalParams
 
         params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())

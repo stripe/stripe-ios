@@ -7,17 +7,18 @@
 //
 
 import XCTest
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripeUICore
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class TextFieldElementIBANTest: XCTestCase {
     typealias IBANError = TextFieldElement.IBANError
     typealias Error = TextFieldElement.Error
-    
+
     func testValidation() throws {
         let testcases: [String: TextFieldElement.ValidationState] = [
             "": .invalid(Error.empty),
@@ -25,17 +26,18 @@ class TextFieldElementIBANTest: XCTestCase {
             "GB": .invalid(IBANError.incomplete),
             "GB1": .invalid(IBANError.incomplete),
             "GB12": .invalid(IBANError.incomplete),
-            
+
             "1": .invalid(IBANError.shouldStartWithCountryCode),
             "12": .invalid(IBANError.shouldStartWithCountryCode),
             "Z1": .invalid(IBANError.shouldStartWithCountryCode),
             "🤦🏻🇺🇸": .invalid(IBANError.shouldStartWithCountryCode),
-            
+
             "ZZ": .invalid(IBANError.invalidCountryCode(countryCode: "ZZ")),
-            
+
             "GB82WEST12345698765432🇺🇸": .invalid(IBANError.invalidFormat),
-            "GB94BARC20201530093459": .invalid(IBANError.invalidFormat), // https://www.iban.com/testibans
-            
+            // https://www.iban.com/testibans
+            "GB94BARC20201530093459": .invalid(IBANError.invalidFormat),
+
             "GB33BUKB20201555555555": .valid,
             "GB94BARC10201530093459": .valid,
             "SK6902000000001933504555": .valid,
@@ -44,7 +46,7 @@ class TextFieldElementIBANTest: XCTestCase {
             "AT611904300234573201": .valid,
             "AT861904300235473202": .valid,
         ]
-        
+
         let config = TextFieldElement.IBANConfiguration()
         for (text, expected) in testcases {
             let actual = config.validate(text: text, isOptional: false)
@@ -60,11 +62,11 @@ class TextFieldElementIBANTest: XCTestCase {
             "": .invalid(IBANError.incomplete),
             "A": .invalid(IBANError.incomplete),
             "D": .invalid(IBANError.incomplete),
-            
+
             "ū": .invalid(IBANError.shouldStartWithCountryCode),
             "1": .invalid(IBANError.shouldStartWithCountryCode),
             ".": .invalid(IBANError.shouldStartWithCountryCode),
-            
+
             "AT": .valid,
             "DE": .valid,
         ]
@@ -73,7 +75,7 @@ class TextFieldElementIBANTest: XCTestCase {
             XCTAssertTrue(actual == expected)
         }
     }
-    
+
     func testTransformToASCIIDigits() {
         let testcases: [String: String] = [
             "": "",
@@ -87,7 +89,7 @@ class TextFieldElementIBANTest: XCTestCase {
             XCTAssertTrue(actual == expected)
         }
     }
-    
+
     func testMod97() {
         let testcases: [String: Int?] = [
             "0": 0,
@@ -101,7 +103,7 @@ class TextFieldElementIBANTest: XCTestCase {
             let actual = TextFieldElement.IBANConfiguration.mod97(test)
             XCTAssertTrue(actual == expected)
         }
-        
+
         for _ in 0...100 {
             let test = Int.random(in: 0...Int.max)
             let actual = TextFieldElement.IBANConfiguration.mod97(String(test))
@@ -115,11 +117,14 @@ class TextFieldElementIBANTest: XCTestCase {
 // TODO(mludowise): These should get migrated to a shared StripeUICoreTestUtils target
 
 extension TextFieldElement.ValidationState: Equatable {
-    public static func == (lhs: TextFieldElement.ValidationState, rhs: TextFieldElement.ValidationState) -> Bool {
+    public static func == (
+        lhs: TextFieldElement.ValidationState,
+        rhs: TextFieldElement.ValidationState
+    ) -> Bool {
         switch (lhs, rhs) {
         case (.valid, .valid):
             return true
-        case let (.invalid(lhsError), .invalid(rhsError)):
+        case (.invalid(let lhsError), .invalid(let rhsError)):
             return lhsError == rhsError
         default:
             return false

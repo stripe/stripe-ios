@@ -32,12 +32,12 @@ class STPFPXBankStatusResponse: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let statusResponse = self.init()
         statusResponse.bankList =
             dict.stp_dictionary(forKey: "parsed_bank_status") as? [String: NSNumber]
-        statusResponse.allResponseFields = dict as! [AnyHashable: Any]
+        statusResponse.allResponseFields = dict
 
         return statusResponse
     }

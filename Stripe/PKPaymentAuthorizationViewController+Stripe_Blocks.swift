@@ -47,7 +47,9 @@ extension PKPaymentAuthorizationViewController {
             objc_setAssociatedObject(
                 viewController,
                 UnsafeRawPointer(&kSTPBlockBasedApplePayDelegateAssociatedObjectKey),
-                delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                delegate,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
         return viewController
     }
@@ -79,7 +81,8 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
         onPaymentAuthorization?(payment)
 
         let paymentMethodCreateCompletion: ((STPPaymentMethod?, Error?) -> Void)? = {
-            result, paymentMethodCreateError in
+            result,
+            paymentMethodCreateError in
             if let paymentMethodCreateError = paymentMethodCreateError {
                 self.lastError = paymentMethodCreateError
                 completion(.failure)
@@ -108,7 +111,8 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
                         // If we call completion() after dismissing, didFinishWithStatus is NOT called.
                         self._finish()
                     }
-                })
+                }
+            )
         }
         if let paymentMethodCreateCompletion = paymentMethodCreateCompletion {
             apiClient?.createPaymentMethod(with: payment, completion: paymentMethodCreateCompletion)
@@ -124,7 +128,8 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
             shippingMethod,
             { summaryItems in
                 completion(PKPaymentAuthorizationStatus.success, summaryItems)
-            })
+            }
+        )
     }
 
     func paymentAuthorizationViewController(
@@ -140,18 +145,26 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
                     let genericShippingError = NSError(
                         domain: PKPaymentErrorDomain,
                         code: PKPaymentError.shippingContactInvalidError.rawValue,
-                        userInfo: nil)
+                        userInfo: nil
+                    )
                     completion(
                         PKPaymentRequestShippingContactUpdate(
-                            errors: [genericShippingError], paymentSummaryItems: summaryItems,
-                            shippingMethods: shippingMethods))
+                            errors: [genericShippingError],
+                            paymentSummaryItems: summaryItems,
+                            shippingMethods: shippingMethods
+                        )
+                    )
                 } else {
                     completion(
                         PKPaymentRequestShippingContactUpdate(
-                            errors: nil, paymentSummaryItems: summaryItems,
-                            shippingMethods: shippingMethods))
+                            errors: nil,
+                            paymentSummaryItems: summaryItems,
+                            shippingMethods: shippingMethods
+                        )
+                    )
                 }
-            })
+            }
+        )
     }
 
     func paymentAuthorizationViewControllerDidFinish(

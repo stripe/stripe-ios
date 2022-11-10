@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import UIKit
 
 class STPCardNumberInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
 
@@ -28,7 +28,8 @@ class STPCardNumberInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
         var maxLength = STPBINController.shared.maxCardNumberLength()
 
         let hasCompleteMetadataForCardNumber = STPBINController.shared.hasBINRanges(
-            forPrefix: unformattedProposed)
+            forPrefix: unformattedProposed
+        )
         if hasCompleteMetadataForCardNumber {
             let brand = STPCardValidator.brand(forNumber: unformattedProposed)
             maxLength = STPCardValidator.maxLength(for: brand)
@@ -42,7 +43,8 @@ class STPCardNumberInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
     }
 
     override func formattedText(
-        from input: String, with defaultAttributes: [NSAttributedString.Key: Any]
+        from input: String,
+        with defaultAttributes: [NSAttributedString.Key: Any]
     ) -> NSAttributedString {
         let numeric = STPNumericStringValidator.sanitizedNumericString(for: input)
         let attributed = NSMutableAttributedString(string: numeric, attributes: defaultAttributes)
@@ -60,12 +62,14 @@ class STPCardNumberInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
                     attributed.addAttribute(
                         .kern,
                         value: NSNumber(value: 5),
-                        range: NSRange(location: index, length: 1))
+                        range: NSRange(location: index, length: 1)
+                    )
                 } else {
                     attributed.addAttribute(
                         .kern,
                         value: NSNumber(value: 0),
-                        range: NSRange(location: index, length: 1))
+                        range: NSRange(location: index, length: 1)
+                    )
                 }
 
                 index += 1

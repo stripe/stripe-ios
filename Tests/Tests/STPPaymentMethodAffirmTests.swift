@@ -5,17 +5,19 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import StripeCoreTestUtils
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodAffirmTests: XCTestCase {
 
-    static let affirmPaymentIntentClientSecret = "pi_3KUFbTFY0qyl6XeW1oDBbiQk_secret_8kdpLx37oa5WMrI2xoXThCK9s"
+    static let affirmPaymentIntentClientSecret =
+        "pi_3KUFbTFY0qyl6XeW1oDBbiQk_secret_8kdpLx37oa5WMrI2xoXThCK9s"
 
     func _retrieveAffirmJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

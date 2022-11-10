@@ -116,6 +116,10 @@ platform :ios do
   lane :stripeapplepay_tests do
     Dir.chdir('..') do
       sh("./ci_scripts/test.rb --scheme StripeApplePay --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+      unless `/usr/bin/xcodebuild -version`.start_with?('Xcode 13')
+        # Because Xcode 13 incorrectly tries to build iOS-only test dependencies, watchOS tests are not supported on Xcode 13.
+        sh('./ci_scripts/test.rb --scheme StripeApplePay --watch --retry-on-failure')
+      end
     end
   end
 

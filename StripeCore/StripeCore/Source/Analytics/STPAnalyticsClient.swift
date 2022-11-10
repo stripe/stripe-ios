@@ -129,7 +129,7 @@ extension STPAnalyticsClient {
         var payload: [String: Any] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
         payload["analytics_ua"] = "analytics.stripeios-1.0"
-        let version = UIDevice.current.systemVersion
+        let version = SystemInformation.version
         if !version.isEmpty {
             payload["os_version"] = version
         }

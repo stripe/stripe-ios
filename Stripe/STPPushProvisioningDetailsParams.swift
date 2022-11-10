@@ -59,7 +59,10 @@ public class STPPushProvisioningDetailsParams: NSObject {
         nonceSignature: Data
     ) -> Self {
         return self.init(
-            cardId: cardId, certificates: certificates, nonce: nonce, nonceSignature: nonceSignature
+            cardId: cardId,
+            certificates: certificates,
+            nonce: nonce,
+            nonceSignature: nonceSignature
         )
     }
 

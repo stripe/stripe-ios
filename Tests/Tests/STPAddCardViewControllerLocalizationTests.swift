@@ -8,18 +8,17 @@
 
 import iOSSnapshotTestCase
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripeCore
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAddCardViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-//                self.recordMode = true
+        //                self.recordMode = true
     }
 
     func performSnapshotTest(forLanguage language: String?, delivery: Bool) {
@@ -32,7 +31,8 @@ class STPAddCardViewControllerLocalizationTests: FBSnapshotTestCase {
 
         let addCardVC = STPAddCardViewController(
             configuration: config,
-            theme: STPTheme.defaultTheme)
+            theme: STPTheme.defaultTheme
+        )
         addCardVC.shippingAddress = STPAddress()
         addCardVC.shippingAddress?.line1 = "1"  // trigger "use shipping address" button
 
