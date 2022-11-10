@@ -35,12 +35,12 @@ public class STPPaymentMethodCardNetworks: NSObject, STPAPIResponseDecodable {
         withDictionary dict: [AnyHashable: Any]
     ) {
         super.init()
-        let nsDict = (dict as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
-        guard let available = nsDict.stp_array(forKey: "available") as? [String] else {
+        let dict = dict.stp_dictionaryByRemovingNulls()
+        guard let available = dict.stp_array(forKey: "available") as? [String] else {
             return nil
         }
         self.available = available
-        self.preferred = nsDict.stp_string(forKey: "preferred")
+        self.preferred = dict.stp_string(forKey: "preferred")
         self.allResponseFields = dict
     }
 

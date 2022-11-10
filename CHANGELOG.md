@@ -1,6 +1,11 @@
-## X.Y.Z 2022-XX-YY
+## X.Y.Z 2022-xx-xx
 ### PaymentSheet
 * [Added] Added `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress`. Previously, to allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, you attached a shipping address to the PaymentIntent before initializing PaymentSheet. Now, you can instead set this property to `true` and set `PaymentSheet.Configuration.shippingDetails` to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
+* [Fixed] Fixed user facing error messages for card related errors.
+
+## 23.1.1 2022-11-07
+### Payments
+* [Fixed] Fixed an issue with linking the StripePayments SDK in certain configurations.
 
 ## 23.1.0 2022-10-31
 ### CardScan

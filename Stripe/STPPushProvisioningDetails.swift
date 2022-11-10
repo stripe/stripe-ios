@@ -35,7 +35,7 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
     // MARK: - STPAPIResponseDecodable
     class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard
-            let dict = (response as NSDictionary?)?.stp_dictionaryByRemovingNulls() as NSDictionary?
+            let dict = response?.stp_dictionaryByRemovingNulls()
         else {
             return nil
         }
@@ -73,7 +73,7 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
                 activationData: activationData,
                 ephemeralPublicKey: ephemeralPublicKeyData
             )
-            details.allResponseFields = dict as! [AnyHashable: Any]
+            details.allResponseFields = dict
             return details
         }
         return nil

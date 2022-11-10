@@ -193,13 +193,16 @@ extension NSError {
                     userInfo[STPError.cardErrorCodeKey] = cardErrorCode.rawValue
                 }
 
-                let localizedMessage = Utils.localizedMessage(
-                    fromAPIErrorCode: stripeErrorCode,
-                    declineCode: declineCode as? String
-                )
+                // If the server didn't send an error message, use a local one.
+                if stripeErrorMessage == nil {
+                    let localizedMessage = Utils.localizedMessage(
+                        fromAPIErrorCode: stripeErrorCode,
+                        declineCode: declineCode as? String
+                    )
 
-                if let localizedMessage = localizedMessage {
-                    userInfo[NSLocalizedDescriptionKey] = localizedMessage
+                    if let localizedMessage = localizedMessage {
+                        userInfo[NSLocalizedDescriptionKey] = localizedMessage
+                    }
                 }
             }
         }

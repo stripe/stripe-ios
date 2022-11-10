@@ -62,7 +62,7 @@ public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
         dictionary dict: [AnyHashable: Any]
     ) {
         allResponseFields = dict
-        let dict = (dict as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = dict.stp_dictionaryByRemovingNulls()
         last4 = dict.stp_string(forKey: "last4")
         brand = STPCard.brand(from: dict.stp_string(forKey: "brand") ?? "")
         //#pragma clang diagnostic push
