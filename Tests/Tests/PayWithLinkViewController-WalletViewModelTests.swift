@@ -106,6 +106,8 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 extension PayWithLinkViewController_WalletViewModelTests {
 
     func makeSUT() throws -> PayWithLinkViewController.WalletViewModel {
+        // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
+        // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
         let paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
         let orderedPaymentJson = ["card", "link"]
         let paymentIntentResponse = ["payment_intent": paymentIntentJson,
