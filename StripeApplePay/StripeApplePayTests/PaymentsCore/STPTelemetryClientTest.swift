@@ -8,7 +8,10 @@
 
 import XCTest
 
+// swift-format-ignore
 @testable @_spi(STP) import StripeApplePay
+
+// swift-format-ignore
 @testable @_spi(STP) import StripeCore
 
 class STPTelemetryClientTest: XCTestCase {
@@ -26,7 +29,8 @@ class STPTelemetryClientTest: XCTestCase {
                 sut.addTelemetryFields(toParams: &params)
                 XCTAssertNotNil(params)
                 exp.fulfill()
-            })
+            }
+        )
         waitForExpectations(timeout: 2, handler: nil)
     }
 

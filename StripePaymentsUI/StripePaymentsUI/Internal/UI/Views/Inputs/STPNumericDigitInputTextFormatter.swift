@@ -6,13 +6,15 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 class STPNumericDigitInputTextFormatter: STPInputTextFieldFormatter {
     let allowedFormattingCharacterSet: CharacterSet?
 
-    internal init(allowedFormattingCharacterSet: CharacterSet?) {
+    internal init(
+        allowedFormattingCharacterSet: CharacterSet?
+    ) {
         self.allowedFormattingCharacterSet = allowedFormattingCharacterSet
         super.init()
     }
@@ -29,7 +31,8 @@ class STPNumericDigitInputTextFormatter: STPInputTextFieldFormatter {
         let unformattedInput: String
         if let allowedFormattingCharacterSet = allowedFormattingCharacterSet {
             unformattedInput = input.stp_stringByRemovingCharacters(
-                from: allowedFormattingCharacterSet)
+                from: allowedFormattingCharacterSet
+            )
         } else {
             unformattedInput = input
         }
@@ -38,7 +41,8 @@ class STPNumericDigitInputTextFormatter: STPInputTextFieldFormatter {
     }
 
     override func formattedText(
-        from input: String, with defaultAttributes: [NSAttributedString.Key: Any]
+        from input: String,
+        with defaultAttributes: [NSAttributedString.Key: Any]
     ) -> NSAttributedString {
         let numeric = STPNumericStringValidator.sanitizedNumericString(for: input)
         return NSAttributedString(string: numeric, attributes: defaultAttributes)

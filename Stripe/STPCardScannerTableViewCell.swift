@@ -25,7 +25,10 @@ class STPCardScannerTableViewCell: UITableViewCell {
 
     let cardSizeRatio: CGFloat = 2.125 / 3.370  // ID-1 card size (in inches)
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let cameraView = STPCameraView(frame: bounds)
         contentView.addSubview(cameraView)
@@ -35,7 +38,9 @@ class STPCardScannerTableViewCell: UITableViewCell {
         contentView.addConstraints(
             [
                 cameraView.heightAnchor.constraint(
-                    equalTo: cameraView.widthAnchor, multiplier: cardSizeRatio),
+                    equalTo: cameraView.widthAnchor,
+                    multiplier: cardSizeRatio
+                ),
                 cameraView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
                 cameraView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0),
                 cameraView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0),
@@ -54,7 +59,9 @@ class STPCardScannerTableViewCell: UITableViewCell {
         cameraView?.backgroundColor = UIColor.black
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

@@ -170,7 +170,7 @@ import UIKit
             "lang": "objective-c",
             "bindings_version": STPSDKVersion,
         ]
-        let version = UIDevice.current.systemVersion
+        let version = SystemInformation.version
         if version != "" {
             details["os_version"] = version
         }
@@ -184,12 +184,12 @@ import UIKit
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
         details["type"] = deviceType
-        let model = UIDevice.current.localizedModel
+        let model = SystemInformation.localizedModel
         if model != "" {
             details["model"] = model
         }
 
-        if let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString {
+        if let vendorIdentifier = SystemInformation.identifierForVendor?.uuidString {
             details["vendor_identifier"] = vendorIdentifier
         }
         if let appInfo = appInfo {

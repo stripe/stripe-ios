@@ -6,12 +6,12 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 @_spi(STP) public class STPCardNumberInputTextField: STPInputTextField {
-    
+
     /// Describes which input fields can take input
     @_spi(STP) public enum InputMode {
         /// All input fields can be edited
@@ -28,13 +28,21 @@ import UIKit
         return (validator as! STPCardNumberInputTextFieldValidator).cardBrand
     }
 
-    @_spi(STP) public convenience init(inputMode: InputMode = .standard, prefillDetails: STPCardFormView.PrefillDetails? = nil) {
+    @_spi(STP) public convenience init(
+        inputMode: InputMode = .standard,
+        prefillDetails: STPCardFormView.PrefillDetails? = nil
+    ) {
         // Don't format for panLocked input mode
         self.init(
-            formatter: inputMode == .panLocked ? STPInputTextFieldFormatter() : STPCardNumberInputTextFieldFormatter(),
-            validator: STPCardNumberInputTextFieldValidator(inputMode: inputMode, cardBrand: prefillDetails?.cardBrand))
-        
-        self.text = prefillDetails?.formattedLast4 // pre-fill last 4 if available
+            formatter: inputMode == .panLocked
+                ? STPInputTextFieldFormatter() : STPCardNumberInputTextFieldFormatter(),
+            validator: STPCardNumberInputTextFieldValidator(
+                inputMode: inputMode,
+                cardBrand: prefillDetails?.cardBrand
+            )
+        )
+
+        self.text = prefillDetails?.formattedLast4  // pre-fill last 4 if available
     }
 
     let brandImageView = CardBrandView()
@@ -45,7 +53,10 @@ import UIKit
         return loadingIndicator
     }()
 
-    required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+    required init(
+        formatter: STPInputTextFieldFormatter,
+        validator: STPInputTextFieldValidator
+    ) {
         assert(validator.isKind(of: STPCardNumberInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
         keyboardType = .asciiCapableNumberPad
@@ -54,7 +65,9 @@ import UIKit
         updateRightView()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         super.init(coder: coder)
     }
 
@@ -82,7 +95,8 @@ import UIKit
                 // delay a bit before showing loading indicator because the response may come quickly
                 DispatchQueue.main.asyncAfter(
                     deadline: DispatchTime.now() + Double(
-                        Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC),
+                        Int64(0.1 * Double(NSEC_PER_SEC))
+                    ) / Double(NSEC_PER_SEC),
                     execute: {
                         if case .processing = self.validator.validationState,
                             self.loadingIndicator.superview == nil
@@ -92,21 +106,26 @@ import UIKit
                                 [
                                     self.loadingIndicator.rightAnchor.constraint(
                                         equalTo: self.brandImageView.rightAnchor,
-                                        constant: LayoutConstants.loadingIndicatorOffset),
+                                        constant: LayoutConstants.loadingIndicatorOffset
+                                    ),
                                     self.loadingIndicator.topAnchor.constraint(
                                         equalTo: self.brandImageView.topAnchor,
-                                        constant: -LayoutConstants.loadingIndicatorOffset),
+                                        constant: -LayoutConstants.loadingIndicatorOffset
+                                    ),
                                 ]
                             )
                         }
-                    })
+                    }
+                )
             }
         }
     }
 
     override func validationDidUpdate(
-        to state: STPValidatedInputState, from previousState: STPValidatedInputState,
-        for unformattedInput: String?, in input: STPFormInput
+        to state: STPValidatedInputState,
+        from previousState: STPValidatedInputState,
+        for unformattedInput: String?,
+        in input: STPFormInput
     ) {
         super.validationDidUpdate(to: state, from: previousState, for: unformattedInput, in: input)
         updateRightView()

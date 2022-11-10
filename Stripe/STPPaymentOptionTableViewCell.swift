@@ -6,10 +6,9 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 class STPPaymentOptionTableViewCell: UITableViewCell {
     @objc(configureForNewCardRowWithTheme:) func configureForNewCardRow(with theme: STPTheme) {
@@ -34,7 +33,9 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
     }
 
     @objc(configureWithPaymentOption:theme:selected:) func configure(
-        with paymentOption: STPPaymentOption?, theme: STPTheme, selected: Bool
+        with paymentOption: STPPaymentOption?,
+        theme: STPTheme,
+        selected: Bool
     ) {
         self.paymentOption = paymentOption
         self.theme = theme
@@ -77,7 +78,9 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         titleLabel.font = theme.font
         titleLabel.textColor = self.theme.primaryForegroundColor
         titleLabel.text = STPLocalizedString(
-            "Online Banking (FPX)", "Button to pay with a Bank Account (using FPX).")
+            "Online Banking (FPX)",
+            "Button to pay with a Bank Account (using FPX)."
+        )
 
         // Checkmark icon
         checkmarkIcon.isHidden = true
@@ -91,7 +94,10 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
     private var titleLabel = UILabel()
     private var checkmarkIcon = UIImageView(image: STPLegacyImageLibrary.checkmarkIcon())
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // Left icon
         leftIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -108,24 +114,33 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate(
             [
                 self.leftIcon.centerXAnchor.constraint(
-                    equalTo: contentView.leadingAnchor, constant: kPadding + 0.5 * kDefaultIconWidth
+                    equalTo: contentView.leadingAnchor,
+                    constant: kPadding + 0.5 * kDefaultIconWidth
                 ),
                 self.leftIcon.centerYAnchor.constraint(
-                    lessThanOrEqualTo: contentView.centerYAnchor),
+                    lessThanOrEqualTo: contentView.centerYAnchor
+                ),
                 self.checkmarkIcon.widthAnchor.constraint(equalToConstant: kCheckmarkWidth),
                 self.checkmarkIcon.heightAnchor.constraint(
-                    equalTo: self.checkmarkIcon.widthAnchor, multiplier: 1.0),
+                    equalTo: self.checkmarkIcon.widthAnchor,
+                    multiplier: 1.0
+                ),
                 self.checkmarkIcon.centerXAnchor.constraint(
-                    equalTo: contentView.trailingAnchor, constant: -kPadding),
+                    equalTo: contentView.trailingAnchor,
+                    constant: -kPadding
+                ),
                 self.checkmarkIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 // Constrain label to leadingAnchor with the default
                 // icon width so that the text always aligns vertically
                 // even if the icond widths differ
                 self.titleLabel.leadingAnchor.constraint(
-                    equalTo: contentView.leadingAnchor, constant: 2.0 * kPadding + kDefaultIconWidth
+                    equalTo: contentView.leadingAnchor,
+                    constant: 2.0 * kPadding + kDefaultIconWidth
                 ),
                 self.titleLabel.trailingAnchor.constraint(
-                    equalTo: self.checkmarkIcon.leadingAnchor, constant: -kPadding),
+                    equalTo: self.checkmarkIcon.leadingAnchor,
+                    constant: -kPadding
+                ),
                 self.titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             ])
         accessibilityTraits.insert(.button)
@@ -146,7 +161,10 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         return (selected ? theme.accentColor : fadedColor)
     }
 
-    func buildAttributedString(with paymentOption: STPPaymentOption?, selected: Bool)
+    func buildAttributedString(
+        with paymentOption: STPPaymentOption?,
+        selected: Bool
+    )
         -> NSAttributedString
     {
         if let paymentOption = paymentOption as? STPCard {
@@ -158,12 +176,15 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         } else if let paymentMethod = paymentOption as? STPPaymentMethod {
             if paymentMethod.type == .card && paymentMethod.card != nil {
                 return buildAttributedString(
-                    withCardPaymentMethod: paymentMethod, selected: selected)
+                    withCardPaymentMethod: paymentMethod,
+                    selected: selected
+                )
             }
             if paymentMethod.type == .FPX && paymentMethod.fpx != nil {
                 return buildAttributedString(
                     with: STPFPXBank.brandFrom(paymentMethod.fpx?.bankIdentifierCode),
-                    selected: selected)
+                    selected: selected
+                )
             }
         } else if paymentOption is STPApplePayPaymentOption {
             let label = String.Localized.apple_pay
@@ -172,16 +193,20 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
                 string: label,
                 attributes: [
                     NSAttributedString.Key.foregroundColor: primaryColor
-                ])
+                ]
+            )
         } else if let paymentMethodParams = paymentOption as? STPPaymentMethodParams {
             if paymentMethodParams.type == .card && paymentMethodParams.card != nil {
                 return buildAttributedString(
-                    withCardPaymentMethodParams: paymentMethodParams, selected: selected)
+                    withCardPaymentMethodParams: paymentMethodParams,
+                    selected: selected
+                )
             }
             if paymentMethodParams.type == .FPX && paymentMethodParams.fpx != nil {
                 return buildAttributedString(
                     with: paymentMethodParams.fpx?.bank ?? STPFPXBankBrand.unknown,
-                    selected: selected)
+                    selected: selected
+                )
             }
         }
 
@@ -193,7 +218,8 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         return buildAttributedString(
             with: card.brand,
             last4: card.last4,
-            selected: selected)
+            selected: selected
+        )
     }
 
     func buildAttributedString(withCardSource card: STPSource, selected: Bool) -> NSAttributedString
@@ -201,31 +227,39 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         return buildAttributedString(
             with: card.cardDetails?.brand ?? .unknown,
             last4: card.cardDetails?.last4 ?? "",
-            selected: selected)
+            selected: selected
+        )
     }
 
     func buildAttributedString(
-        withCardPaymentMethod paymentMethod: STPPaymentMethod, selected: Bool
+        withCardPaymentMethod paymentMethod: STPPaymentMethod,
+        selected: Bool
     )
         -> NSAttributedString
     {
         return buildAttributedString(
             with: paymentMethod.card?.brand ?? .unknown,
             last4: paymentMethod.card?.last4 ?? "",
-            selected: selected)
+            selected: selected
+        )
     }
 
     func buildAttributedString(
-        withCardPaymentMethodParams paymentMethodParams: STPPaymentMethodParams, selected: Bool
+        withCardPaymentMethodParams paymentMethodParams: STPPaymentMethodParams,
+        selected: Bool
     ) -> NSAttributedString {
         let brand = STPCardValidator.brand(forNumber: paymentMethodParams.card?.number ?? "")
         return buildAttributedString(
             with: brand,
             last4: paymentMethodParams.card?.last4 ?? "",
-            selected: selected)
+            selected: selected
+        )
     }
 
-    func buildAttributedString(with bankBrand: STPFPXBankBrand, selected: Bool)
+    func buildAttributedString(
+        with bankBrand: STPFPXBankBrand,
+        selected: Bool
+    )
         -> NSAttributedString
     {
         let label = (STPFPXBank.stringFrom(bankBrand) ?? "") + " (FPX)"
@@ -234,7 +268,8 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
             string: label,
             attributes: [
                 NSAttributedString.Key.foregroundColor: primaryColor
-            ])
+            ]
+        )
     }
 
     func buildAttributedString(
@@ -264,21 +299,36 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         ]
 
         let attributedString = NSMutableAttributedString(
-            string: label, attributes: attributes as [NSAttributedString.Key: Any])
-        attributedString.addAttribute(
-            .foregroundColor, value: primaryColor, range: (label as NSString).range(of: brandString)
+            string: label,
+            attributes: attributes as [NSAttributedString.Key: Any]
         )
         attributedString.addAttribute(
-            .foregroundColor, value: primaryColor, range: (label as NSString).range(of: last4))
+            .foregroundColor,
+            value: primaryColor,
+            range: (label as NSString).range(of: brandString)
+        )
         attributedString.addAttribute(
-            .font, value: theme.emphasisFont, range: (label as NSString).range(of: brandString))
+            .foregroundColor,
+            value: primaryColor,
+            range: (label as NSString).range(of: last4)
+        )
         attributedString.addAttribute(
-            .font, value: theme.emphasisFont, range: (label as NSString).range(of: last4))
+            .font,
+            value: theme.emphasisFont,
+            range: (label as NSString).range(of: brandString)
+        )
+        attributedString.addAttribute(
+            .font,
+            value: theme.emphasisFont,
+            range: (label as NSString).range(of: last4)
+        )
 
         return attributedString
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

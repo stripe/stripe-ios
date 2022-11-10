@@ -5,11 +5,11 @@
 //  Created by Cameron Sabol on 7/15/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPSetupIntentConfirmParamsTest: XCTestCase {
     func testInit() {
@@ -53,10 +53,13 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
             XCTAssertNotNil(params.mandateData)
             XCTAssertEqual(
                 params.mandateData?.customerAcceptance.onlineParams?.inferFromClient,
-                NSNumber(value: true))
+                NSNumber(value: true)
+            )
 
             let customerAcceptance = STPMandateCustomerAcceptanceParams(
-                type: .offline, onlineParams: nil)
+                type: .offline,
+                onlineParams: nil
+            )
             params.mandateData = STPMandateDataParams(customerAcceptance: customerAcceptance!)
             // Default behavior should not override custom setting
             XCTAssertNotNil(params.mandateData)
@@ -94,7 +97,10 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         params.useStripeSDK = NSNumber(value: true)
         params.mandateData = STPMandateDataParams(
             customerAcceptance: STPMandateCustomerAcceptanceParams(
-                type: .offline, onlineParams: nil)!)
+                type: .offline,
+                onlineParams: nil
+            )!
+        )
         params.additionalAPIParameters = [
             "other_param": "other_value"
         ]
@@ -111,31 +117,39 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         XCTAssertEqual(params.useStripeSDK, paramsCopy.useStripeSDK)
         XCTAssertEqual(
             params.additionalAPIParameters as NSDictionary,
-            paramsCopy.additionalAPIParameters as NSDictionary)
+            paramsCopy.additionalAPIParameters as NSDictionary
+        )
 
     }
 
     func testClientSecretValidation() {
         XCTAssertFalse(
             STPSetupIntentConfirmParams.isClientSecretValid("seti_12345"),
-            "'seti_12345' is not a valid client secret.")
+            "'seti_12345' is not a valid client secret."
+        )
         XCTAssertFalse(
             STPSetupIntentConfirmParams.isClientSecretValid("seti_12345_secret_"),
-            "'seti_12345_secret_' is not a valid client secret.")
+            "'seti_12345_secret_' is not a valid client secret."
+        )
         XCTAssertFalse(
             STPSetupIntentConfirmParams.isClientSecretValid(
-                "seti_a1b2c3_secret_x7y8z9seti_a1b2c3_secret_x7y8z9"),
-            "'seti_a1b2c3_secret_x7y8z9seti_a1b2c3_secret_x7y8z9' is not a valid client secret.")
+                "seti_a1b2c3_secret_x7y8z9seti_a1b2c3_secret_x7y8z9"
+            ),
+            "'seti_a1b2c3_secret_x7y8z9seti_a1b2c3_secret_x7y8z9' is not a valid client secret."
+        )
         XCTAssertFalse(
             STPSetupIntentConfirmParams.isClientSecretValid("pi_a1b2c3_secret_x7y8z9"),
-            "'pi_a1b2c3_secret_x7y8z9' is not a valid client secret.")
+            "'pi_a1b2c3_secret_x7y8z9' is not a valid client secret."
+        )
 
         XCTAssertTrue(
             STPSetupIntentConfirmParams.isClientSecretValid("seti_a1b2c3_secret_x7y8z9"),
-            "'seti_a1b2c3_secret_x7y8z9' is a valid client secret.")
+            "'seti_a1b2c3_secret_x7y8z9' is a valid client secret."
+        )
         XCTAssertTrue(
             STPSetupIntentConfirmParams.isClientSecretValid(
-                "seti_1Eq5kyGMT9dGPIDGxiSp4cce_secret_FKlHb3yTI0YZWe4iqghS8ZXqwwMoMmy"),
+                "seti_1Eq5kyGMT9dGPIDGxiSp4cce_secret_FKlHb3yTI0YZWe4iqghS8ZXqwwMoMmy"
+            ),
             "'seti_1Eq5kyGMT9dGPIDGxiSp4cce_secret_FKlHb3yTI0YZWe4iqghS8ZXqwwMoMmy' is a valid client secret."
         )
     }

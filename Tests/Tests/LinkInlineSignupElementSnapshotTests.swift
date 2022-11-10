@@ -6,22 +6,22 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
 import UIKit
 import iOSSnapshotTestCase
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripeCoreTestUtils
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class LinkInlineSignupElementSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testDefaultState() {
@@ -35,7 +35,11 @@ class LinkInlineSignupElementSnapshotTests: FBSnapshotTestCase {
     }
 
     func testExpandedState_nonUS() {
-        let sut = makeSUT(saveCheckboxChecked: true, emailAddress: "user@example.com", country: "CA")
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            emailAddress: "user@example.com",
+            country: "CA"
+        )
         verify(sut)
     }
 
@@ -69,11 +73,17 @@ extension LinkInlineSignupElementSnapshotTests {
             withEmail email: String?,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
-            completion(.success(
-                PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
-            ))
+            completion(
+                .success(
+                    PaymentSheetLinkAccount(
+                        email: "user@example.com",
+                        session: nil,
+                        publishableKey: nil
+                    )
+                )
+            )
         }
-        
+
         func hasEmailLoggedOut(email: String) -> Bool {
             // TODO(porter): Determine if we want to implement this in tests
             return false

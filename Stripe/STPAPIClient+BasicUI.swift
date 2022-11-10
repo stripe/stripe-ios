@@ -16,11 +16,14 @@ extension STPAPIClient {
     /// - Parameter configuration: The configuration to use.
     /// - Returns: An instance of STPAPIClient.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "This initializer previously configured publishableKey and stripeAccount via the STPPaymentConfiguration instance. This behavior is deprecated; set the STPAPIClient configuration, publishableKey, and stripeAccount properties directly on the STPAPIClient instead."
     )
-    public convenience init(configuration: STPPaymentConfiguration) {
+    public convenience init(
+        configuration: STPPaymentConfiguration
+    ) {
         // For legacy reasons, we'll support this initializer and use the deprecated configuration.{publishableKey, stripeAccount} properties
         self.init()
         publishableKey = configuration.publishableKey
@@ -43,8 +46,7 @@ extension STPAPIClient {
             _stored_configuration = newValue
         }
     }
-    
-    
+
     /// Update a customer with parameters
     /// - seealso: https://stripe.com/docs/api#update_customer
     func updateCustomer(
@@ -66,7 +68,8 @@ extension STPAPIClient {
     /// Attach a Payment Method to a customer
     /// - seealso: https://stripe.com/docs/api/payment_methods/attach
     func attachPaymentMethod(
-        _ paymentMethodID: String, toCustomerUsing ephemeralKey: STPEphemeralKey,
+        _ paymentMethodID: String,
+        toCustomerUsing ephemeralKey: STPEphemeralKey,
         completion: @escaping STPErrorBlock
     ) {
         guard let customerID = ephemeralKey.customerID else {
@@ -86,11 +89,12 @@ extension STPAPIClient {
             completion(error)
         }
     }
-    
+
     /// Detach a Payment Method from a customer
     /// - seealso: https://stripe.com/docs/api/payment_methods/detach
     func detachPaymentMethod(
-        _ paymentMethodID: String, fromCustomerUsing ephemeralKey: STPEphemeralKey,
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKey: STPEphemeralKey,
         completion: @escaping STPErrorBlock
     ) {
         let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
@@ -103,16 +107,17 @@ extension STPAPIClient {
             completion(error)
         }
     }
-    
+
     /// Retrieves a list of Payment Methods attached to a customer.
     /// @note This only fetches card type Payment Methods
     func listPaymentMethodsForCustomer(
-        using ephemeralKey: STPEphemeralKey, completion: @escaping STPPaymentMethodsCompletionBlock
+        using ephemeralKey: STPEphemeralKey,
+        completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
         let header = authorizationHeader(using: ephemeralKey.secret)
         let params: [String: Any] = [
             "customer": ephemeralKey.customerID ?? "",
-            "type": "card"
+            "type": "card",
         ]
         APIRequest<STPPaymentMethodListDeserializer>.getWith(
             self,
@@ -127,11 +132,12 @@ extension STPAPIClient {
             }
         }
     }
-    
+
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
     func retrieveCustomer(
-        using ephemeralKey: STPEphemeralKey, completion: @escaping STPCustomerCompletionBlock
+        using ephemeralKey: STPEphemeralKey,
+        completion: @escaping STPCustomerCompletionBlock
     ) {
         let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
         APIRequest<STPCustomer>.getWith(
@@ -143,7 +149,7 @@ extension STPAPIClient {
             completion(object, error)
         }
     }
-    
+
     // MARK: FPX
     /// Retrieves the online status of the FPX banks from the Stripe API.
     /// - Parameter completion:  The callback to run with the returned FPX bank list, or an error.
@@ -160,8 +166,7 @@ extension STPAPIClient {
             completion(statusResponse, error)
         }
     }
-    
-    
+
     // MARK: Helpers
 
     /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.

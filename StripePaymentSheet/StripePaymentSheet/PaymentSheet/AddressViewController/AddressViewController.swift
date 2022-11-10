@@ -11,17 +11,19 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+/// 🏗 Under construction
 /// A delegate for `AddressViewController`
-public protocol AddressViewControllerDelegate: AnyObject {
+@_spi(STP) public protocol AddressViewControllerDelegate: AnyObject {
     /// Called when the customer finishes entering their address or cancels. Your implemententation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the customer cancels the flow.
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
 
+/// 🏗 Under construction
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
-@objc(STPAddressViewController)
-public class AddressViewController: UIViewController {
+@objc(STP_Internal_AddressViewController)
+@_spi(STP) public class AddressViewController: UIViewController {
     // MARK: - Public properties
     /// Configuration containing e.g. appearance styling properties, default values, etc.
     public let configuration: Configuration
@@ -130,7 +132,7 @@ public class AddressViewController: UIViewController {
     /// - Note: Make sure you put this in a `UINavigationController` before presenting or pushing it.
     /// - Parameter configuration: The configuration for this `AddressViewController` e.g., to style the appearance.
     /// - Parameter delegate: This is called after the customer completes entering their address or cancels the sheet.
-    public convenience init(
+    @_spi(STP) public convenience init(
         configuration: Configuration,
         delegate: AddressViewControllerDelegate
     ) {
@@ -354,7 +356,7 @@ extension AddressViewController {
 }
 
 // MARK: - ElementDelegate
- @_spi(STP) extension AddressViewController: ElementDelegate {
+ extension AddressViewController: ElementDelegate {
      @_spi(STP) public func didUpdate(element: Element) {
          guard let addressSection = addressSection else { assertionFailure(); return }
          self.latestError = nil // clear error on new input

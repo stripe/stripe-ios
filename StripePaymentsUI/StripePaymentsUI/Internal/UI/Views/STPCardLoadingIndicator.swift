@@ -16,20 +16,29 @@ private let kLoadingAnimationIdentifier = "STPCardLoadingIndicator.spinning"
 class STPCardLoadingIndicator: UIView {
     private var indicatorLayer: CALayer?
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
         backgroundColor = UIColor(
-            red: 79.0 / 255.0, green: 86.0 / 255.0, blue: 107.0 / 255.0, alpha: 1.0)
+            red: 79.0 / 255.0,
+            green: 86.0 / 255.0,
+            blue: 107.0 / 255.0,
+            alpha: 1.0
+        )
 
         // Make us a circle
         let shape = CAShapeLayer()
         let path = UIBezierPath(
             arcCenter: CGPoint(
-                x: 0.5 * kCardLoadingIndicatorDiameter, y: 0.5 * kCardLoadingIndicatorDiameter),
+                x: 0.5 * kCardLoadingIndicatorDiameter,
+                y: 0.5 * kCardLoadingIndicatorDiameter
+            ),
             radius: 0.5 * kCardLoadingIndicatorDiameter,
             startAngle: 0.0,
             endAngle: 2.0 * .pi,
-            clockwise: true)
+            clockwise: true
+        )
         shape.path = path.cgPath
         layer.mask = shape
 
@@ -37,14 +46,17 @@ class STPCardLoadingIndicator: UIView {
         let innerCircle = CAShapeLayer()
         innerCircle.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         innerCircle.position = CGPoint(
-            x: 0.5 * kCardLoadingIndicatorDiameter, y: 0.5 * kCardLoadingIndicatorDiameter)
+            x: 0.5 * kCardLoadingIndicatorDiameter,
+            y: 0.5 * kCardLoadingIndicatorDiameter
+        )
 
         let indicatorPath = UIBezierPath(
             arcCenter: CGPoint(x: 0.0, y: 0.0),
             radius: 0.5 * kCardLoadingInnerCircleDiameter,
             startAngle: 0.0,
             endAngle: 9.0 * .pi / 6.0,
-            clockwise: true)
+            clockwise: true
+        )
         innerCircle.path = indicatorPath.cgPath
         innerCircle.strokeColor = UIColor(white: 1.0, alpha: 0.8).cgColor
         innerCircle.fillColor = UIColor.clear.cgColor
@@ -82,7 +94,9 @@ class STPCardLoadingIndicator: UIView {
         indicatorLayer?.removeAnimation(forKey: kLoadingAnimationIdentifier)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

@@ -3,10 +3,9 @@
 //  ModelTests
 //
 
+@_spi(STP) import StripeCardScan
 import UIKit
 import XCTest
-
-@_spi(STP) import StripeCardScan
 
 class StripeCardScanAssetTests: XCTestCase {
 

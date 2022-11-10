@@ -40,7 +40,7 @@ public class STPPaymentMethodiDEAL: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let ideal = self.init()
         ideal.allResponseFields = response

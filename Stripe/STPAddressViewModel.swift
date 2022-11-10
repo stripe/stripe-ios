@@ -8,9 +8,9 @@
 
 import Contacts
 import CoreLocation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 protocol STPAddressViewModelDelegate: AnyObject {
     func addressViewModelDidChange(_ addressViewModel: STPAddressViewModel)
@@ -96,13 +96,16 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
         }
     }
 
-    /* The default value of availableCountries is nil, which will allow all known countries. */
+    // The default value of availableCountries is nil, which will allow all known countries.
     var availableCountries: Set<String>?
 
     var isValid: Bool {
         if isBillingAddress {
+            // The AddressViewModel is only for address fields.
+            // Determining whether the postal code is present is up to the
+            // STPCardTextFieldViewModel.
             if requiredBillingAddressFields == .postalCode {
-                return true  // The AddressViewModel is only for address fields. Determining whether the postal code is present is up to the STPCardTextFieldViewModel.
+                return true
             } else {
                 return address.containsRequiredFields(requiredBillingAddressFields)
             }
@@ -131,24 +134,51 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
         case .full:
             addressCells = [
                 STPAddressFieldTableViewCell(
-                    type: .name, contents: "", lastInList: false, delegate: self),
+                    type: .name,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .line1, contents: "", lastInList: false, delegate: self),
+                    type: .line1,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .line2, contents: "", lastInList: false, delegate: self),
+                    type: .line2,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .country, contents: addressFieldTableViewCountryCode, lastInList: false,
-                    delegate: self),
+                    type: .country,
+                    contents: addressFieldTableViewCountryCode,
+                    lastInList: false,
+                    delegate: self
+                ),
                 // Postal code cell will be added here later if necessary
                 STPAddressFieldTableViewCell(
-                    type: .city, contents: "", lastInList: false, delegate: self),
+                    type: .city,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .state, contents: "", lastInList: true, delegate: self),
+                    type: .state,
+                    contents: "",
+                    lastInList: true,
+                    delegate: self
+                ),
             ]
         case .name:
             addressCells = [
                 STPAddressFieldTableViewCell(
-                    type: .name, contents: "", lastInList: true, delegate: self)
+                    type: .name,
+                    contents: "",
+                    lastInList: true,
+                    delegate: self
+                )
             ]
         default:
             fatalError()
@@ -168,29 +198,62 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
         if requiredShippingAddressFields.contains(STPContactField.name) {
             cells.append(
                 STPAddressFieldTableViewCell(
-                    type: .name, contents: "", lastInList: false, delegate: self))
+                    type: .name,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                )
+            )
         }
         if requiredShippingAddressFields.contains(.emailAddress) {
             cells.append(
                 STPAddressFieldTableViewCell(
-                    type: .email, contents: "", lastInList: false, delegate: self))
+                    type: .email,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                )
+            )
         }
         if requiredShippingAddressFields.contains(STPContactField.postalAddress) {
             var postalCells = [
                 STPAddressFieldTableViewCell(
-                    type: .name, contents: "", lastInList: false, delegate: self),
+                    type: .name,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .line1, contents: "", lastInList: false, delegate: self),
+                    type: .line1,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .line2, contents: "", lastInList: false, delegate: self),
+                    type: .line2,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .country, contents: addressFieldTableViewCountryCode, lastInList: false,
-                    delegate: self),
+                    type: .country,
+                    contents: addressFieldTableViewCountryCode,
+                    lastInList: false,
+                    delegate: self
+                ),
                 // Postal code cell will be added here later if necessary
                 STPAddressFieldTableViewCell(
-                    type: .city, contents: "", lastInList: false, delegate: self),
+                    type: .city,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
                 STPAddressFieldTableViewCell(
-                    type: .state, contents: "", lastInList: false, delegate: self),
+                    type: .state,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                ),
             ]
             if requiredShippingAddressFields.contains(.name) {
                 postalCells.remove(at: 0)
@@ -200,7 +263,12 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
         if requiredShippingAddressFields.contains(.phoneNumber) {
             cells.append(
                 STPAddressFieldTableViewCell(
-                    type: .phone, contents: "", lastInList: false, delegate: self))
+                    type: .phone,
+                    contents: "",
+                    lastInList: false,
+                    delegate: self
+                )
+            )
         }
         if let lastCell = cells.last {
             lastCell.lastInList = true
@@ -234,7 +302,8 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
     private func updatePostalCodeCellIfNecessary() {
         delegate?.addressViewModelWillUpdate(self)
         let shouldBeShowingPostalCode = STPPostalCodeValidator.postalCodeIsRequired(
-            forCountryCode: addressFieldTableViewCountryCode)
+            forCountryCode: addressFieldTableViewCountryCode
+        )
 
         if shouldBeShowingPostalCode && !showingPostalCodeCell {
             if containsStateAndPostalFields() {
@@ -244,8 +313,13 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
                 var mutableAddressCells = addressCells
                 mutableAddressCells.insert(
                     STPAddressFieldTableViewCell(
-                        type: .zip, contents: "", lastInList: false, delegate: self),
-                    at: zipFieldIndex)
+                        type: .zip,
+                        contents: "",
+                        lastInList: false,
+                        delegate: self
+                    ),
+                    at: zipFieldIndex
+                )
                 addressCells = mutableAddressCells
                 delegate?.addressViewModel(self, addedCellAt: zipFieldIndex)
                 delegate?.addressViewModelDidChange(self)
@@ -328,7 +402,8 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
 
             geocoder.geocodePostalAddress(
                 address,
-                completionHandler: onCompletion)
+                completionHandler: onCompletion
+            )
         }
     }
 

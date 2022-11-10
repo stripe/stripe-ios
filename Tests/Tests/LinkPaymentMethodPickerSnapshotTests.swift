@@ -6,21 +6,21 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 import UIKit
 import iOSSnapshotTestCase
-import StripeCoreTestUtils
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testNormal() {
@@ -82,12 +82,14 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
 
 }
 
-private extension LinkPaymentMethodPickerSnapshotTests {
+extension LinkPaymentMethodPickerSnapshotTests {
 
-    final class MockDataSource: LinkPaymentMethodPickerDataSource {
+    fileprivate final class MockDataSource: LinkPaymentMethodPickerDataSource {
         let paymentMethods: [ConsumerPaymentDetails]
 
-        init(empty: Bool = false) {
+        init(
+            empty: Bool = false
+        ) {
             self.paymentMethods = empty ? [] : LinkStubs.paymentMethods()
         }
 
@@ -95,7 +97,10 @@ private extension LinkPaymentMethodPickerSnapshotTests {
             return paymentMethods.count
         }
 
-        func paymentPicker(_ picker: LinkPaymentMethodPicker, paymentMethodAt index: Int) -> ConsumerPaymentDetails {
+        func paymentPicker(
+            _ picker: LinkPaymentMethodPicker,
+            paymentMethodAt index: Int
+        ) -> ConsumerPaymentDetails {
             return paymentMethods[index]
         }
     }

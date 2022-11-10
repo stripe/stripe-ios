@@ -17,8 +17,11 @@ extension UIViewController {
         }
         set(stp_navigationItemProxy) {
             objc_setAssociatedObject(
-                self, UnsafeRawPointer(&kSTPNavigationItemProxyKey), stp_navigationItemProxy,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                self,
+                UnsafeRawPointer(&kSTPNavigationItemProxyKey),
+                stp_navigationItemProxy,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
             if navigationItem.leftBarButtonItem != nil {
                 stp_navigationItemProxy?.leftBarButtonItem = navigationItem.leftBarButtonItem
             }

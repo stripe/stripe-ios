@@ -7,11 +7,12 @@
 //
 
 import StripeCoreTestUtils
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardBINMetadataTests: XCTestCase {
     func testAPICall() {
@@ -27,7 +28,8 @@ class STPCardBINMetadataTests: XCTestCase {
                 XCTAssertTrue(cardMetadata.data.count > 0)
                 XCTAssertEqual(cardMetadata.data.first!.brand, .unionPay)
                 expectation.fulfill()
-            })
+            }
+        )
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
@@ -40,7 +42,8 @@ class STPCardBINMetadataTests: XCTestCase {
             let ranges = try! result.get()
             XCTAssertTrue(ranges.count > 0)
             XCTAssertTrue(
-                STPBINController.shared.allRanges().count == hardCodedBinRanges.count + ranges.count)
+                STPBINController.shared.allRanges().count == hardCodedBinRanges.count + ranges.count
+            )
             for range in ranges {
                 XCTAssertTrue(STPBINController.shared.allRanges().contains(range))
             }

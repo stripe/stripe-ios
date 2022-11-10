@@ -6,8 +6,8 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// This view controller presents a list of payment method options to the user,
 /// which they can select between. They can also add credit cards to the list.
@@ -34,7 +34,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     /// information it needs from your application.
     /// - Returns: an initialized view controller.
     @objc(initWithPaymentContext:)
-    public convenience init(paymentContext: STPPaymentContext) {
+    public convenience init(
+        paymentContext: STPPaymentContext
+    ) {
         self.init(
             configuration: paymentContext.configuration,
             apiAdapter: paymentContext.apiAdapter,
@@ -42,7 +44,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
             loadingPromise: paymentContext.currentValuePromise,
             theme: paymentContext.theme,
             shippingAddress: paymentContext.shippingAddress,
-            delegate: paymentContext)
+            delegate: paymentContext
+        )
     }
 
     init(
@@ -57,8 +60,13 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         self.apiAdapter = apiAdapter
         super.init(theme: theme)
         commonInit(
-            configuration: configuration, apiAdapter: apiAdapter, apiClient: apiClient,
-            loadingPromise: loadingPromise, shippingAddress: shippingAddress, delegate: delegate)
+            configuration: configuration,
+            apiAdapter: apiAdapter,
+            apiClient: apiClient,
+            loadingPromise: loadingPromise,
+            shippingAddress: shippingAddress,
+            delegate: delegate
+        )
     }
 
     func commonInit(
@@ -70,7 +78,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         delegate: STPPaymentOptionsViewControllerDelegate
     ) {
         STPAnalyticsClient.sharedClient.addClass(
-            toProductUsageIfNecessary: STPPaymentOptionsViewController.self)
+            toProductUsageIfNecessary: STPPaymentOptionsViewController.self
+        )
 
         self.configuration = configuration
         self.apiClient = apiClient ?? .shared
@@ -80,7 +89,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         self.delegate = delegate
 
         navigationItem.title = STPLocalizedString(
-            "Loading…", "Title for screen when data is still loading from the network.")
+            "Loading…",
+            "Title for screen when data is still loading from the network."
+        )
 
         weak var weakSelf = self
         loadingPromise?.onSuccess({ tuple in
@@ -101,7 +112,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                         prefilledInformation: strongSelf.prefilledInformation,
                         shippingAddress: strongSelf.shippingAddress,
                         paymentOptionTuple: tuple,
-                        delegate: strongSelf)
+                        delegate: strongSelf
+                    )
                 }
                 if strongSelf.paymentOptionsViewControllerFooterView != nil {
                     payMethodsInternal?.customFooterView =
@@ -116,7 +128,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                 var addCardViewController: STPAddCardViewController?
                 if let configuration1 = strongSelf.configuration {
                     addCardViewController = STPAddCardViewController(
-                        configuration: configuration1, theme: strongSelf.theme)
+                        configuration: configuration1,
+                        theme: strongSelf.theme
+                    )
                 }
                 addCardViewController?.apiClient = strongSelf.apiClient
                 addCardViewController?.delegate = strongSelf
@@ -153,7 +167,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                 strongSelf.activityIndicator?.animating = false
             }
             strongSelf.navigationItem.setRightBarButton(
-                `internal`?.stp_navigationItemProxy?.rightBarButtonItem, animated: true)
+                `internal`?.stp_navigationItemProxy?.rightBarButtonItem,
+                animated: true
+            )
             strongSelf.internalViewController = `internal`
         })
     }
@@ -177,8 +193,11 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         delegate: STPPaymentOptionsViewControllerDelegate
     ) {
         self.init(
-            configuration: configuration, theme: theme, apiAdapter: customerContext,
-            delegate: delegate)
+            configuration: configuration,
+            theme: theme,
+            apiAdapter: customerContext,
+            delegate: delegate
+        )
     }
 
     /// Note: Instead of providing your own backend API adapter, we recommend using
@@ -206,8 +225,13 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         let promise = retrievePaymentMethods(with: configuration, apiAdapter: apiAdapter)
 
         commonInit(
-            configuration: configuration, apiAdapter: apiAdapter, apiClient: STPAPIClient.shared,
-            loadingPromise: promise, shippingAddress: nil, delegate: delegate)
+            configuration: configuration,
+            apiAdapter: apiAdapter,
+            apiClient: STPAPIClient.shared,
+            loadingPromise: promise,
+            shippingAddress: nil,
+            delegate: delegate
+        )
     }
 
     /// If you've already collected some information from your user, you can set it
@@ -255,21 +279,30 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                 previous = viewController
             }
             navigationController?.stp_pop(
-                to: previous, animated: true, completion: completion ?? {})
+                to: previous,
+                animated: true,
+                completion: completion ?? {}
+            )
         }
     }
 
     /// Use one of the initializers declared in this interface.
     @available(
-        *, unavailable, message: "Use one of the initializers declared in this interface instead."
+        *,
+        unavailable,
+        message: "Use one of the initializers declared in this interface instead."
     )
-    @objc public required init(theme: STPTheme?) {
+    @objc public required init(
+        theme: STPTheme?
+    ) {
         fatalError("init(theme:) has not been implemented")
     }
 
     /// Use one of the initializers declared in this interface.
     @available(
-        *, unavailable, message: "Use one of the initializers declared in this interface instead."
+        *,
+        unavailable,
+        message: "Use one of the initializers declared in this interface instead."
     )
     @objc public required init(
         nibName nibNameOrNil: String?,
@@ -280,9 +313,13 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
 
     /// Use one of the initializers declared in this interface.
     @available(
-        *, unavailable, message: "Use one of the initializers declared in this interface instead."
+        *,
+        unavailable,
+        message: "Use one of the initializers declared in this interface instead."
     )
-    @objc public required init?(coder aDecoder: NSCoder) {
+    @objc public required init?(
+        coder aDecoder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -315,7 +352,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                                         paymentTuple = STPPaymentOptionTuple.init(
                                             filteredForUIWith: paymentMethods,
                                             selectedPaymentMethod: paymentMethodID,
-                                            configuration: configuration)
+                                            configuration: configuration
+                                        )
                                     }
                                     promise.succeed(paymentTuple!)
                                 })
@@ -325,7 +363,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                         paymentTuple = STPPaymentOptionTuple.init(
                             filteredForUIWith: paymentMethods,
                             selectedPaymentMethod: defaultPaymentMethod,
-                            configuration: configuration)
+                            configuration: configuration
+                        )
                     }
                     promise.succeed(paymentTuple!)
                 }
@@ -350,8 +389,11 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         let centerX = (view.frame.size.width - (activityIndicator?.frame.size.width ?? 0.0)) / 2
         let centerY = (view.frame.size.height - (activityIndicator?.frame.size.height ?? 0.0)) / 2
         activityIndicator?.frame = CGRect(
-            x: centerX, y: centerY, width: activityIndicator?.frame.size.width ?? 0.0,
-            height: activityIndicator?.frame.size.height ?? 0.0)
+            x: centerX,
+            y: centerY,
+            width: activityIndicator?.frame.size.width ?? 0.0,
+            height: activityIndicator?.frame.size.height ?? 0.0
+        )
         internalViewController?.view.frame = view.bounds
     }
 
@@ -370,7 +412,10 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                 if strongSelf?.delegate?.responds(
                     to: #selector(
                         STPPaymentOptionsViewControllerDelegate.paymentOptionsViewController(
-                            _:didSelect:)))
+                            _:
+                            didSelect:
+                        ))
+                )
                     ?? false
                 {
                     if let strongSelf = strongSelf,
@@ -378,7 +423,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                     {
                         strongSelf.delegate?.paymentOptionsViewController?(
                             strongSelf,
-                            didSelect: selectedPaymentOption)
+                            didSelect: selectedPaymentOption
+                        )
                     }
                 }
             }
@@ -390,7 +436,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
 
             if let strongSelf = strongSelf {
                 strongSelf.delegate?.paymentOptionsViewController(
-                    strongSelf, didFailToLoadWithError: error)
+                    strongSelf,
+                    didFailToLoadWithError: error
+                )
             }
         })
     }
@@ -411,17 +459,22 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                 // Save the payment method
                 let paymentMethod = paymentOption as? STPPaymentMethod
                 (apiAdapter as? STPCustomerContext)?.saveLastSelectedPaymentMethodID(
-                    forCustomer: paymentMethod?.stripeId ?? "", completion: nil)
+                    forCustomer: paymentMethod?.stripeId ?? "",
+                    completion: nil
+                )
             } else {
                 // The customer selected something else (like Apple Pay)
                 (apiAdapter as? STPCustomerContext)?.saveLastSelectedPaymentMethodID(
-                    forCustomer: nil, completion: nil)
+                    forCustomer: nil,
+                    completion: nil
+                )
             }
         }
 
         if delegate?.responds(
             to: #selector(
-                STPPaymentOptionsViewControllerDelegate.paymentOptionsViewController(_:didSelect:)))
+                STPPaymentOptionsViewControllerDelegate.paymentOptionsViewController(_:didSelect:))
+        )
             ?? false
         {
             if let paymentOption = paymentOption {
@@ -447,7 +500,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     }
 
     func internalViewControllerDidCreatePaymentOption(
-        _ paymentOption: STPPaymentOption?, completion: @escaping STPErrorBlock
+        _ paymentOption: STPPaymentOption?,
+        completion: @escaping STPErrorBlock
     ) {
         if !(paymentOption?.isReusable ?? false) {
             // Don't save a non-reusable payment option
@@ -463,7 +517,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                         var promise: STPPromise<STPPaymentOptionTuple>?
                         if let configuration = self.configuration {
                             promise = self.retrievePaymentMethods(
-                                with: configuration, apiAdapter: self.apiAdapter)
+                                with: configuration,
+                                apiAdapter: self.apiAdapter
+                            )
                         }
                         weak var weakSelf = self
                         promise?.onSuccess({ tuple in
@@ -473,7 +529,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                             }
                             let paymentTuple = STPPaymentOptionTuple(
                                 paymentOptions: tuple.paymentOptions,
-                                selectedPaymentOption: paymentMethod)
+                                selectedPaymentOption: paymentMethod
+                            )
                             if strongSelf?.internalViewController
                                 is STPPaymentOptionsInternalViewController
                             {
@@ -539,12 +596,14 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     /// You should dismiss the view controller when this is called.
     /// - Parameter paymentOptionsViewController: the view controller that has finished
     func paymentOptionsViewControllerDidFinish(
-        _ paymentOptionsViewController: STPPaymentOptionsViewController)
+        _ paymentOptionsViewController: STPPaymentOptionsViewController
+    )
     /// This is called when the user taps "cancel".
     /// You should dismiss the view controller when this is called.
     /// - Parameter paymentOptionsViewController: the view controller that has finished
     func paymentOptionsViewControllerDidCancel(
-        _ paymentOptionsViewController: STPPaymentOptionsViewController)
+        _ paymentOptionsViewController: STPPaymentOptionsViewController
+    )
 
     /// This is called when the user either makes a selection, or adds a new card.
     /// This will be triggered after the view controller loads with the user's current

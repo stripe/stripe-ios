@@ -353,11 +353,12 @@
     XCTAssertEqual(source.type, STPSourceTypeThreeDSecure);
     XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
     XCTAssertNil(source.verification);
-    XCTAssertEqualObjects(source.details, [response[@"three_d_secure"] stp_dictionaryByRemovingNulls]);
+    NSMutableDictionary *threedsecure = [response[@"three_d_secure"] mutableCopy];
+    [threedsecure removeObjectForKey:@"customer"]; // should be nil
+    XCTAssertEqualObjects(source.details, threedsecure);
     XCTAssertNil(source.cardDetails);  // STPSourceCardDetailsTest
     XCTAssertNil(source.sepaDebitDetails);  // STPSourceSEPADebitDetailsTest
     XCTAssertNotEqual(source.allResponseFields, response);  // Verify is copy
-    XCTAssertEqualObjects(source.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
 - (void)testDecodingSource_alipay {
@@ -381,11 +382,13 @@
     XCTAssertEqual(source.type, STPSourceTypeAlipay);
     XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
     XCTAssertNil(source.verification);
-    XCTAssertEqualObjects(source.details, [response[@"alipay"] stp_dictionaryByRemovingNulls]);
+    NSMutableDictionary *alipayResponse = [response[@"alipay"] mutableCopy];
+    [alipayResponse removeObjectForKey:@"native_url"]; // should be nil
+    [alipayResponse removeObjectForKey:@"statement_descriptor"]; // should be nil
+    XCTAssertEqualObjects(source.details, alipayResponse);
     XCTAssertNil(source.cardDetails);  // STPSourceCardDetailsTest
     XCTAssertNil(source.sepaDebitDetails);  // STPSourceSEPADebitDetailsTest
     XCTAssertNotEqual(source.allResponseFields, response);  // Verify is copy
-    XCTAssertEqualObjects(source.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
 - (void)testDecodingSource_card {
@@ -413,7 +416,6 @@
     XCTAssert(source.cardDetails);  // STPSourceCardDetailsTest
     XCTAssertNil(source.sepaDebitDetails);  // STPSourceSEPADebitDetailsTest
     XCTAssertNotEqual(source.allResponseFields, response);  // Verify is copy
-    XCTAssertEqualObjects(source.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
 - (void)testDecodingSource_ideal {
@@ -441,7 +443,6 @@
     XCTAssertNil(source.cardDetails);  // STPSourceCardDetailsTest
     XCTAssertNil(source.sepaDebitDetails);  // STPSourceSEPADebitDetailsTest
     XCTAssertNotEqual(source.allResponseFields, response);  // Verify is copy
-    XCTAssertEqualObjects(source.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
 - (void)testDecodingSource_sepa_debit {
@@ -471,7 +472,6 @@
     XCTAssertNil(source.cardDetails);  // STPSourceCardDetailsTest
     XCTAssert(source.sepaDebitDetails);  // STPSourceSEPADebitDetailsTest
     XCTAssertNotEqual(source.allResponseFields, response);  // Verify is copy
-    XCTAssertEqualObjects(source.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
 #pragma mark - STPPaymentOption Tests

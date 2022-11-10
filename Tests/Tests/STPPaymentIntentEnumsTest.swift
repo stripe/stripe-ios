@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentIntentEnumsTest: XCTestCase {
 
@@ -20,130 +20,164 @@ class STPPaymentIntentEnumsTest: XCTestCase {
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "requires_payment_method"),
-            .requiresPaymentMethod)
+            .requiresPaymentMethod
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "REQUIRES_PAYMENT_METHOD"),
-            .requiresPaymentMethod)
+            .requiresPaymentMethod
+        )
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "requires_confirmation"),
-            .requiresConfirmation)
+            .requiresConfirmation
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "REQUIRES_CONFIRMATION"),
-            .requiresConfirmation)
+            .requiresConfirmation
+        )
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "requires_action"),
-            .requiresAction)
+            .requiresAction
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "REQUIRES_ACTION"),
-            .requiresAction)
+            .requiresAction
+        )
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "processing"),
-            .processing)
+            .processing
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "PROCESSING"),
-            .processing)
+            .processing
+        )
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "succeeded"),
-            .succeeded)
+            .succeeded
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "SUCCEEDED"),
-            .succeeded)
+            .succeeded
+        )
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "requires_capture"),
-            .requiresCapture)
+            .requiresCapture
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "REQUIRES_CAPTURE"),
-            .requiresCapture)
+            .requiresCapture
+        )
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "canceled"),
-            .canceled)
+            .canceled
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "CANCELED"),
-            .canceled)
+            .canceled
+        )
 
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "garbage"),
-            .unknown)
+            .unknown
+        )
         XCTAssertEqual(
             STPPaymentIntentStatus.status(from: "GARBAGE"),
-            .unknown)
+            .unknown
+        )
     }
 
     func testCaptureMethodFromString() {
         XCTAssertEqual(
             STPPaymentIntentCaptureMethod.captureMethod(from: "manual"),
-            .manual)
+            .manual
+        )
         XCTAssertEqual(
             STPPaymentIntentCaptureMethod.captureMethod(from: "MANUAL"),
-            .manual)
+            .manual
+        )
 
         XCTAssertEqual(
             STPPaymentIntentCaptureMethod.captureMethod(from: "automatic"),
-            .automatic)
+            .automatic
+        )
         XCTAssertEqual(
             STPPaymentIntentCaptureMethod.captureMethod(from: "AUTOMATIC"),
-            .automatic)
+            .automatic
+        )
 
         XCTAssertEqual(
             STPPaymentIntentCaptureMethod.captureMethod(from: "garbage"),
-            .unknown)
+            .unknown
+        )
         XCTAssertEqual(
             STPPaymentIntentCaptureMethod.captureMethod(from: "GARBAGE"),
-            .unknown)
+            .unknown
+        )
     }
 
     func testConfirmationMethodFromString() {
         XCTAssertEqual(
             STPPaymentIntentConfirmationMethod.confirmationMethod(from: "automatic"),
-            .automatic)
+            .automatic
+        )
         XCTAssertEqual(
             STPPaymentIntentConfirmationMethod.confirmationMethod(from: "AUTOMATIC"),
-            .automatic)
+            .automatic
+        )
 
         XCTAssertEqual(
             STPPaymentIntentConfirmationMethod.confirmationMethod(from: "manual"),
-            .manual)
+            .manual
+        )
         XCTAssertEqual(
             STPPaymentIntentConfirmationMethod.confirmationMethod(from: "MANUAL"),
-            .manual)
+            .manual
+        )
 
         XCTAssertEqual(
             STPPaymentIntentConfirmationMethod.confirmationMethod(from: "garbage"),
-            .unknown)
+            .unknown
+        )
         XCTAssertEqual(
             STPPaymentIntentConfirmationMethod.confirmationMethod(from: "GARBAGE"),
-            .unknown)
+            .unknown
+        )
     }
 
     func testSetupFutureUsageFromString() {
         XCTAssertEqual(
             STPPaymentIntentSetupFutureUsage(string: "on_session"),
-            .onSession)
+            .onSession
+        )
         XCTAssertEqual(
             STPPaymentIntentSetupFutureUsage(string: "ON_SESSION"),
-            .onSession)
+            .onSession
+        )
 
         XCTAssertEqual(
             STPPaymentIntentSetupFutureUsage(string: "off_session"),
-            .offSession)
+            .offSession
+        )
         XCTAssertEqual(
             STPPaymentIntentSetupFutureUsage(string: "OFF_SESSION"),
-            .offSession)
+            .offSession
+        )
 
         XCTAssertEqual(
             STPPaymentIntentSetupFutureUsage(string: "garbage"),
-            .unknown)
+            .unknown
+        )
         XCTAssertEqual(
             STPPaymentIntentSetupFutureUsage(string: "GARBAGE"),
-            .unknown)
+            .unknown
+        )
     }
-    
+
     func testStringConvertible() {
         XCTAssertEqual(String(describing: STPPaymentIntentStatus.requiresAction), "requiresAction")
     }

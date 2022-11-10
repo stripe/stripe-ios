@@ -6,21 +6,21 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeUICore
 import iOSSnapshotTestCase
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 @available(iOS 13.0, *)
 class CircularButtonSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testNormal() {
@@ -42,7 +42,10 @@ class CircularButtonSnapshotTests: FBSnapshotTestCase {
     ) {
         // Ensures that the button shadow gets captured
         let wrapper = UIView()
-        wrapper.addAndPinSubview(button, insets: .insets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        wrapper.addAndPinSubview(
+            button,
+            insets: .insets(top: 10, leading: 10, bottom: 10, trailing: 10)
+        )
 
         // Adding the view to a window updates the traits
         let window = UIWindow()

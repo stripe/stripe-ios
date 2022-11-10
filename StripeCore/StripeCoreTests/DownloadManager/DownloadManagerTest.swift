@@ -1,3 +1,4 @@
+#if os(iOS)
 import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP)@testable import StripeCore
@@ -334,3 +335,5 @@ class DownloadManagerTest: APIStubbedTestCase {
     }
     struct NotFoundError: Error {}
 }
+
+#endif

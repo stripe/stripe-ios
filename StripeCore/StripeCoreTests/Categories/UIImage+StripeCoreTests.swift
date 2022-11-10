@@ -1,3 +1,4 @@
+#if os(iOS)
 //
 //  UIImage+StripeCoreTests.swift
 //  StripeCoreTests
@@ -83,3 +84,4 @@ class UIImage_StripeTests: XCTestCase {
         XCTAssertEqual(resultingImage.size, testImage.size)
     }
 }
+#endif
