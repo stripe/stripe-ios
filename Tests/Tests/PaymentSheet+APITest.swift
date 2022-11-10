@@ -330,6 +330,80 @@ class PaymentSheetAPITest: XCTestCase {
         // ...PaymentSheet should not set shipping params on /confirm
         XCTAssertNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
     }
+
+    /// Setting SFU to `true` when a customer is set should set the parameter to `off_session`.
+    func testPaymentIntentParamsWithSFUTrueAndCustomer() {
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
+            true,
+            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            customer: .init(id: "", ephemeralKeySecret: "")
+        )
+
+        let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
+        guard
+            let paymentMethodOptions = params["payment_method_options"] as? [String: Any],
+            let card = paymentMethodOptions["card"] as? [String: Any],
+            let setupFutureUsage = card["setup_future_usage"] as? String
+        else {
+            XCTFail("Incorrect params")
+            return
+        }
+
+        XCTAssertEqual(setupFutureUsage, "off_session")
+    }
+
+    /// Setting SFU to `false` when a customer is set should set the parameter to an empty string.
+    func testPaymentIntentParamsWithSFUFalseAndCustomer() {
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
+            false,
+            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            customer: .init(id: "", ephemeralKeySecret: "")
+        )
+
+        let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
+        guard
+            let paymentMethodOptions = params["payment_method_options"] as? [String: Any],
+            let card = paymentMethodOptions["card"] as? [String: Any],
+            let setupFutureUsage = card["setup_future_usage"] as? String
+        else {
+            XCTFail("Incorrect params")
+            return
+        }
+
+        XCTAssertEqual(setupFutureUsage, "")
+    }
+
+    /// Setting SFU to `true` when no customer is set shouldn't set the parameter.
+    func testPaymentIntentParamsWithSFUTrueAndNoCustomer() {
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
+            false,
+            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            customer: nil
+        )
+
+        let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
+        XCTAssertEqual((params["payment_method_options"] as! [String: Any]).count, 0)
+    }
+
+    /// Setting SFU to `false` when no customer is set shouldn't set the parameter.
+    func testPaymentIntentParamsWithSFUFalseAndNoCustomer() {
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
+            false,
+            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            customer: nil
+        )
+
+        let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
+        XCTAssertEqual((params["payment_method_options"] as! [String: Any]).count, 0)
+    }
 }
 
 extension PaymentSheetAPITest: STPAuthenticationContext {
