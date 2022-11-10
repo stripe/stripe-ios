@@ -163,25 +163,12 @@ final class AccountPickerViewController: UIViewController {
                     } else {
                         let (enabledAccounts, disabledAccounts) = accounts
                             .reduce(
-                                ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsDisabledPartnerAccount]())
+                                ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsPartnerAccount]())
                             ) { accountsTuple, account in
-                                if let paymentMethodType = self.dataSource.manifest.paymentMethodType, !account.supportedPaymentMethodTypes.contains(paymentMethodType) {
+                                if !account.allowSelection {
                                     return (
                                         accountsTuple.0,
-                                        accountsTuple.1 + [
-                                            FinancialConnectionsDisabledPartnerAccount(
-                                                account: account,
-                                                disableReason: {
-                                                    if paymentMethodType == .usBankAccount {
-                                                        return STPLocalizedString("Must be checking or savings account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                    } else if paymentMethodType == .link {
-                                                        return STPLocalizedString("Must be US checking account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                    } else {
-                                                        return STPLocalizedString("Unsuppported account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                    }
-                                                }()
-                                            )
-                                        ]
+                                        accountsTuple.1 + [account]
                                     )
                                 } else {
                                     return (
@@ -235,7 +222,7 @@ final class AccountPickerViewController: UIViewController {
     
     private func displayAccounts(
         _ enabledAccounts: [FinancialConnectionsPartnerAccount],
-        _ disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]
+        _ disabledAccounts: [FinancialConnectionsPartnerAccount]
     ) {
         let accountPickerSelectionView = AccountPickerSelectionView(
             accountPickerType: accountPickerType,

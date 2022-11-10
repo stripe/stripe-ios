@@ -24,7 +24,7 @@ final class AccountPickerSelectionView: UIView {
     init(
         accountPickerType: AccountPickerType,
         enabledAccounts: [FinancialConnectionsPartnerAccount],
-        disabledAccounts: [FinancialConnectionsDisabledPartnerAccount],
+        disabledAccounts: [FinancialConnectionsPartnerAccount],
         institution: FinancialConnectionsInstitution,
         delegate: AccountPickerSelectionViewDelegate
     ) {
