@@ -6,19 +6,21 @@
 //
 
 import Foundation
-import XCTest
 @_spi(STP) import StripeCameraCore
+import XCTest
 
 @_spi(STP) public class MockCameraPermissionsManager: CameraPermissionsManagerProtocol {
 
     public var hasCameraAccess = false
 
     public private(set) var didRequestCameraAccess = false
-    public let didCompleteExpectation = XCTestExpectation(description: "MockCameraPermissionsManager completion did finish")
+    public let didCompleteExpectation = XCTestExpectation(
+        description: "MockCameraPermissionsManager completion did finish"
+    )
 
     private var completion: CompletionBlock = { _ in }
 
-    public init() { }
+    public init() {}
 
     public func requestCameraAccess(
         completeOnQueue queue: DispatchQueue,
