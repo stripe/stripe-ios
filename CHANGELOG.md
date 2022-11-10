@@ -1,4 +1,6 @@
 ## X.Y.Z 2022-xx-xx
+### Apple Pay
+* [Added] StripeApplePay now supports watchOS 6.2 or later. See [AppClipExample](Example/AppClipExample) for an example project.
 ### PaymentSheet
 * [Added] Added `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress`. Previously, to allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, you attached a shipping address to the PaymentIntent before initializing PaymentSheet. Now, you can instead set this property to `true` and set `PaymentSheet.Configuration.shippingDetails` to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
 * [Fixed] Fixed user facing error messages for card related errors.

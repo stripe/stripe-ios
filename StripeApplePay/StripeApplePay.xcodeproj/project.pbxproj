@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -46,8 +46,8 @@
 		31E6D9722744591800A89B6D /* STPTelemetryClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9702744591700A89B6D /* STPTelemetryClientTest.swift */; };
 		31E6D9732744591800A89B6D /* STPTelemetryClientFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9712744591700A89B6D /* STPTelemetryClientFunctionalTest.swift */; };
 		B69D5C3F289C9A6D004FD287 /* ShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */; };
-		E254412728F9FC1700C6F5D3 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = E254412628F9FC1700C6F5D3 /* OHHTTPStubs */; };
-		E254412928F9FC1700C6F5D3 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E254412828F9FC1700C6F5D3 /* OHHTTPStubsSwift */; };
+		E254412728F9FC1700C6F5D3 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = E254412628F9FC1700C6F5D3 /* OHHTTPStubs */; };
+		E254412928F9FC1700C6F5D3 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = E254412828F9FC1700C6F5D3 /* OHHTTPStubsSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +69,11 @@
 		313A2A8427B5EBCE00E5EA99 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3148D6C22809125C00501D3D /* CardBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrand.swift; sourceTree = "<group>"; };
 		315BDBE02788E9D8007BD11F /* STPAPIClient+ApplePay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+ApplePay.swift"; sourceTree = "<group>"; };
+		31625203291B0CF600EC4DA4 /* StripeSupportsWatch-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeSupportsWatch-Shared.xcconfig"; sourceTree = "<group>"; };
+		31625204291B0CF600EC4DA4 /* StripeSupportsWatch Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeSupportsWatch Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		31625205291B0CF600EC4DA4 /* StripeSupportsWatch-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeSupportsWatch-Debug.xcconfig"; sourceTree = "<group>"; };
+		31625206291B0CF600EC4DA4 /* StripeSupportsWatch Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeSupportsWatch Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		31625207291B0CF700EC4DA4 /* StripeSupportsWatch-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeSupportsWatch-Release.xcconfig"; sourceTree = "<group>"; };
 		3163E4A12787BB8200956D86 /* STPApplePayContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPApplePayContext.swift; sourceTree = "<group>"; };
 		3163E4A32787BD0E00956D86 /* Blocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Blocks.swift; path = ../Blocks.swift; sourceTree = "<group>"; };
 		31689983279B34BA00FEBDE3 /* STPAnalyticsClient+PaymentsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+PaymentsAPI.swift"; sourceTree = "<group>"; };
@@ -212,6 +217,11 @@
 				3181D74C273A011B00525C02 /* StripeiOS Tests-Shared.xcconfig */,
 				3181D74D273A011B00525C02 /* StripeiOS-Shared.xcconfig */,
 				3181D74E273A011B00525C02 /* Project-Debug.xcconfig */,
+				31625206291B0CF600EC4DA4 /* StripeSupportsWatch Tests-Debug.xcconfig */,
+				31625204291B0CF600EC4DA4 /* StripeSupportsWatch Tests-Release.xcconfig */,
+				31625205291B0CF600EC4DA4 /* StripeSupportsWatch-Debug.xcconfig */,
+				31625207291B0CF700EC4DA4 /* StripeSupportsWatch-Release.xcconfig */,
+				31625203291B0CF600EC4DA4 /* StripeSupportsWatch-Shared.xcconfig */,
 				3181D74F273A011B00525C02 /* StripeiOS-Release.xcconfig */,
 			);
 			name = BuildConfigurations;
@@ -577,7 +587,7 @@
 		};
 		3181D740273A00BF00525C02 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3181D747273A011B00525C02 /* StripeiOS-Debug.xcconfig */;
+			baseConfigurationReference = 31625205291B0CF600EC4DA4 /* StripeSupportsWatch-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
@@ -600,7 +610,7 @@
 		};
 		3181D741273A00BF00525C02 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3181D74F273A011B00525C02 /* StripeiOS-Release.xcconfig */;
+			baseConfigurationReference = 31625207291B0CF700EC4DA4 /* StripeSupportsWatch-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
@@ -622,7 +632,7 @@
 		};
 		3181D743273A00BF00525C02 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3181D746273A011B00525C02 /* StripeiOS Tests-Debug.xcconfig */;
+			baseConfigurationReference = 31625206291B0CF600EC4DA4 /* StripeSupportsWatch Tests-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
@@ -637,7 +647,7 @@
 		};
 		3181D744273A00BF00525C02 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3181D749273A011B00525C02 /* StripeiOS Tests-Release.xcconfig */;
+			baseConfigurationReference = 31625204291B0CF600EC4DA4 /* StripeSupportsWatch Tests-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
@@ -652,7 +662,7 @@
 		};
 		319E82F3274318DE00F202D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3181D747273A011B00525C02 /* StripeiOS-Debug.xcconfig */;
+			baseConfigurationReference = 31625205291B0CF600EC4DA4 /* StripeSupportsWatch-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
@@ -674,7 +684,7 @@
 		};
 		319E82F4274318DE00F202D6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3181D74F273A011B00525C02 /* StripeiOS-Release.xcconfig */;
+			baseConfigurationReference = 31625207291B0CF700EC4DA4 /* StripeSupportsWatch-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;

@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if os(iOS)
 import AVFoundation
 import Foundation
 import OHHTTPStubs
@@ -93,3 +94,6 @@ class TelemetryInjectionTest: APIStubbedTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 }
+
+
+#endif
