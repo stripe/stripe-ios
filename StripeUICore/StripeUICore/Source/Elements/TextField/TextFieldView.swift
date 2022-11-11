@@ -56,7 +56,8 @@ class TextFieldView: UIView {
     }()
 
     let accessoryContainerView = UIView()
-    /// This could contain the logos of networks,  banks, etc.
+
+    /// This could contain the logos of networks, banks, etc.
     var accessoryView: UIView? {
         didSet {
             guard oldValue != accessoryView else {
@@ -203,7 +204,7 @@ class TextFieldView: UIView {
         }
 
         // Update accessory view
-        accessoryView = viewModel.accessoryView
+        accessoryView = viewModel.accessoryViewBuilder()
         // Manually call layoutIfNeeded to avoid unintentional animations
         // in next layout pass
         layoutIfNeeded()

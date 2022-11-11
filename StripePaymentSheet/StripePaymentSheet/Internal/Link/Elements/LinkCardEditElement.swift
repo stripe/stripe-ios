@@ -172,7 +172,7 @@ private extension LinkCardEditElement {
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             paymentMethod.cardDetails.map { cardDetails in
                 let image = STPImageLibrary.cardBrandImage(for: cardDetails.brand)
-                return IconView(image: image)
+                return UIImageView(icon: image)
             }
         }
     }

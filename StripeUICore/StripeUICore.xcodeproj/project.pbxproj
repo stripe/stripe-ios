@@ -49,9 +49,9 @@
 		D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */; };
 		D0CF912A273B104A00EE2E60 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9129273B104A00EE2E60 /* Button.swift */; };
 		D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */; };
-		E2379393291B31E300C63FDD /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2379392291B31E300C63FDD /* IconView.swift */; };
 		E25440E528F9C87500C6F5D3 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = E25440E428F9C87500C6F5D3 /* iOSSnapshotTestCase */; };
 		E25440E728F9C87500C6F5D3 /* iOSSnapshotTestCase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = E25440E428F9C87500C6F5D3 /* iOSSnapshotTestCase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		E25CFBB5291DCE480067AA3C /* UIImageView+Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFBB4291DCE480067AA3C /* UIImageView+Icon.swift */; };
 		E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */; };
 		E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */; };
 		E606937327041A4400742859 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937227041A4400742859 /* TextFieldFormatter.swift */; };
@@ -186,7 +186,7 @@
 		D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
 		D0CF9129273B104A00EE2E60 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
-		E2379392291B31E300C63FDD /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
+		E25CFBB4291DCE480067AA3C /* UIImageView+Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Icon.swift"; sourceTree = "<group>"; };
 		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
 		E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropdownFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
 		E606937227041A4400742859 /* TextFieldFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatter.swift; sourceTree = "<group>"; };
@@ -458,6 +458,7 @@
 				367199DB280756C700773613 /* UIStackView+StripeUICore.swift */,
 				D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */,
 				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
+				E25CFBB4291DCE480067AA3C /* UIImageView+Icon.swift */,
 				E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */,
 				B6A0D60028FF4F9E00A9F7A7 /* UIWindow+StripeUICore.swift */,
 			);
@@ -491,7 +492,6 @@
 				E6B0DDCF2714C19600CE86DC /* DoneButtonToolbar.swift */,
 				E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */,
 				E659A09E282C50EB00DF8C0C /* LinkOpeningTextView.swift */,
-				E2379392291B31E300C63FDD /* IconView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -852,6 +852,7 @@
 				61078DA628C28D2D007C7001 /* TextOrDropdownElement.swift in Sources */,
 				D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */,
 				D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */,
+				E25CFBB5291DCE480067AA3C /* UIImageView+Icon.swift in Sources */,
 				367199DC280756C800773613 /* UIStackView+StripeUICore.swift in Sources */,
 				363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */,
@@ -860,7 +861,6 @@
 				6138B89C28CAA6ED0096E7FC /* STPVPANumberValidator.swift in Sources */,
 				E6B0DDD02714C19600CE86DC /* DoneButtonToolbar.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
-				E2379393291B31E300C63FDD /* IconView.swift in Sources */,
 				B647A5F72889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift in Sources */,
 				E61ADAC6270E4916004ED998 /* AddressSectionElement.swift in Sources */,
 				61A6294527E401C900C8DF08 /* CALayer+StripeUICore.swift in Sources */,

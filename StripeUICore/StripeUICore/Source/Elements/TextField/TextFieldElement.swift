@@ -70,7 +70,7 @@ import UIKit
         let attributedText: NSAttributedString
         let keyboardProperties: KeyboardProperties
         let validationState: ValidationState
-        let accessoryView: UIView?
+        let accessoryViewBuilder: () -> UIView?
         let shouldShowClearButton: Bool
         let theme: ElementsUITheme
     }
@@ -90,7 +90,9 @@ import UIKit
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
-            accessoryView: configuration.accessoryView(for: text, theme: theme),
+            accessoryViewBuilder: { () -> UIView? in
+                self.configuration.accessoryView(for: self.text, theme: self.theme)
+            },
             shouldShowClearButton: configuration.shouldShowClearButton,
             theme: theme
         )

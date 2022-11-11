@@ -26,10 +26,12 @@ extension TextFieldElement {
 
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
-                    return IconView(
-                        image: STPImageLibrary.safeImageNamed(
+                    return UIImageView(
+                        icon: STPImageLibrary.safeImageNamed(
                             "card_unknown_updated_icon",
-                            darkMode: theme.isDark))
+                            darkMode: theme.isDark
+                        )
+                    )
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
@@ -174,8 +176,9 @@ extension TextFieldElement {
         }
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             let logoName = cardBrandProvider() == .amex ? "card_cvc_amex_updated_icon" : "card_cvc_updated_icon"
-            return IconView(
-                image: STPImageLibrary.safeImageNamed(logoName, darkMode: theme.isDark))
+            return UIImageView(
+                icon: STPImageLibrary.safeImageNamed(logoName, darkMode: theme.isDark)
+            )
         }
     }
 }
