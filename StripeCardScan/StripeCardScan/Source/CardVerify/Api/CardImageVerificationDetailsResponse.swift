@@ -9,8 +9,8 @@ import Foundation
 @_spi(STP) import StripeCore
 
 struct CardImageVerificationExpectedCard: Decodable {
-    let last4: String
-    let issuer: String
+    let last4: String?
+    let issuer: String?
 }
 
 struct CardImageVerificationImageSettings: Decodable {
@@ -42,7 +42,7 @@ struct CardImageVerificationAcceptedImageConfigs: Decodable {
 }
 
 struct CardImageVerificationDetailsResponse: Decodable {
-    let expectedCard: CardImageVerificationExpectedCard?
+    let expectedCard: CardImageVerificationExpectedCard
     let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
 }
 

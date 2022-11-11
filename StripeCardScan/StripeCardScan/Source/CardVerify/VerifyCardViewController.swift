@@ -8,6 +8,9 @@
 /// for more information on how to customize the look and feel of this view controller.
 import UIKit
 
+
+protocol VerifyViewController: AnyObject {}
+
 /// TODO(jaimepark): Consolidate both add flow and card-set flow into a single view controller.
 /// This means replacing `VerifyCardViewControllerDelegate` and `VerifyCardAddViewControllerDelegate` with this one.
 protocol VerifyViewControllerDelegate: AnyObject {
@@ -33,7 +36,7 @@ protocol VerifyViewControllerDelegate: AnyObject {
     )
 }
 
-class VerifyCardViewController: SimpleScanViewController {
+class VerifyCardViewController: SimpleScanViewController, VerifyViewController {
     typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
 
     // our UI components
@@ -42,7 +45,8 @@ class VerifyCardViewController: SimpleScanViewController {
     static var torchButton: UIButton?
 
     // configuration
-    private let expectedCard: CardImageVerificationExpectedCard
+    private let expectedCardLast4: String
+    private let expectedCardIssuer: String?
     private let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
     private let configuration: CardImageVerificationSheet.Configuration
 
@@ -63,13 +67,15 @@ class VerifyCardViewController: SimpleScanViewController {
     var userId: String?
 
     init(
-        expectedCard: CardImageVerificationExpectedCard,
         acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
-        configuration: CardImageVerificationSheet.Configuration
+        configuration: CardImageVerificationSheet.Configuration,
+        expectedCardLast4: String,
+        expectedCardIssuer: String?
     ) {
-        self.expectedCard = expectedCard
         self.acceptedImageConfigs = acceptedImageConfigs
         self.configuration = configuration
+        self.expectedCardLast4 = expectedCardLast4
+        self.expectedCardIssuer = expectedCardIssuer
         self.mainLoopDurationTask = TrackableTask()
 
         super.init()
@@ -80,7 +86,7 @@ class VerifyCardViewController: SimpleScanViewController {
     override func viewDidLoad() {
         // setup our ML so that we use the UX model + OCR in the main loop
         let fraudData = CardVerifyFraudData(
-            last4: expectedCard.last4,
+            last4: expectedCardLast4,
             acceptedImageConfigs: acceptedImageConfigs
         )
         if debugRetainCompletionLoopImages {
@@ -95,7 +101,7 @@ class VerifyCardViewController: SimpleScanViewController {
     override func createOcrMainLoop() -> OcrMainLoop? {
         var uxAndOcrMainLoop = UxAndOcrMainLoop(
             stateMachine: CardVerifyStateMachine(
-                requiredLastFour: expectedCard.last4,
+                requiredLastFour: expectedCardLast4,
                 requiredBin: nil,
                 strictModeFramesCount: configuration.strictModeFrames
             )
@@ -104,7 +110,7 @@ class VerifyCardViewController: SimpleScanViewController {
         if #available(iOS 13.0, *), scanPerformancePriority == .accurate {
             uxAndOcrMainLoop = UxAndOcrMainLoop(
                 stateMachine: CardVerifyAccurateStateMachine(
-                    requiredLastFour: expectedCard.last4,
+                    requiredLastFour: expectedCardLast4,
                     requiredBin: nil,
                     maxNameExpiryDurationSeconds: maxErrorCorrectionDuration,
                     strictModeFramesCount: configuration.strictModeFrames
@@ -140,19 +146,14 @@ class VerifyCardViewController: SimpleScanViewController {
         ///TODO(jaimepark): Update text ui with viewmodel
         //let network = bin.map { CreditCardUtils.determineCardNetwork(cardNumber: $0) }
         //var text = "\(network.map { $0.toString() } ?? cardNetwork?.toString() ?? "")"
-        var text = ""
-        text.append(contentsOf: " •••• \(expectedCard.last4)")
+        let text = "\(expectedCardIssuer ?? "") •••• \(expectedCardLast4)"
 
         cardDescriptionText.textColor = .white
         cardDescriptionText.textAlignment = .center
         cardDescriptionText.numberOfLines = 2
+        cardDescriptionText.text = text
+        cardDescriptionText.isHidden = false
 
-        if !text.isEmpty {
-            cardDescriptionText.text = text
-            cardDescriptionText.isHidden = false
-        } else {
-            cardDescriptionText.isHidden = true
-        }
     }
 
     // MARK: -Autolayout constraints

@@ -13,7 +13,7 @@ extension STPAPIClient {
     func fetchCardImageVerificationDetails(
         cardImageVerificationSecret: String,
         cardImageVerificationId: String
-    ) -> Promise<CardImageVerificationDetailsResponse?> {
+    ) -> Promise<CardImageVerificationDetailsResponse> {
         let parameters: [String: Any] = ["client_secret": cardImageVerificationSecret]
         let endpoint = APIEndpoints.fetchCardImageVerificationDetails(id: cardImageVerificationId)
         return self.post(resource: endpoint, parameters: parameters)

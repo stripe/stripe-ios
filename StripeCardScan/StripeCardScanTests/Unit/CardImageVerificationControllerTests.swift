@@ -14,6 +14,7 @@ import XCTest
 @testable import StripeCardScan
 
 class CardImageVerificationControllerTests: APIStubbedTestCase {
+    private let expectedCard = CardImageVerificationExpectedCard(last4: "1234", issuer: nil)
     private var result: CardImageVerificationSheetResult?
     private var resultExp: XCTestExpectation!
     private var verifyFramesRequestExp: XCTestExpectation!
@@ -54,7 +55,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         stubUploadScanStats()
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
-        verificationSheetController.present(with: nil, and: nil, from: baseViewController)
+        verificationSheetController.present(with: expectedCard, and: nil, from: baseViewController)
         verificationSheetController.verifyViewControllerDidCancel(
             baseViewController,
             with: .back
@@ -73,7 +74,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         stubUploadScanStats()
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
-        verificationSheetController.present(with: nil, and: nil, from: baseViewController)
+        verificationSheetController.present(with: expectedCard, and: nil, from: baseViewController)
         verificationSheetController.verifyViewControllerDidCancel(
             baseViewController,
             with: .closed
@@ -93,7 +94,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         stubUploadScanStats()
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
-        verificationSheetController.present(with: nil, and: nil, from: baseViewController)
+        verificationSheetController.present(with: expectedCard, and: nil, from: baseViewController)
 
         /// Mock the event where the scanning is complete and the verification frames data is passed back to be submitted for completion
         verificationSheetController.verifyViewControllerDidFinish(
