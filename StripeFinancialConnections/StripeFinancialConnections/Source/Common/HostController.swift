@@ -28,7 +28,7 @@ class HostController {
     private let returnURL: String?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
 
-    private var authFlowController: AuthFlowController?
+    private var authFlowController: NativeFlowController?
     lazy var hostViewController = HostViewController(clientSecret: clientSecret, returnURL: returnURL, apiClient: api, delegate: self)
     lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
 
@@ -90,14 +90,14 @@ extension HostController: HostViewControllerDelegate {
         
         navigationController.configureAppearanceForNative()
 
-        let dataManager = AuthFlowAPIDataManager(
+        let dataManager = NativeFlowAPIDataManager(
             manifest: synchronizePayload.manifest,
             consentPaneModel: consentPaneModel,
             apiClient: api,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient
         )
-        authFlowController = AuthFlowController(
+        authFlowController = NativeFlowController(
             dataManager: dataManager,
             navigationController: navigationController
         )
@@ -134,8 +134,8 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
 }
 
 @available(iOSApplicationExtension, unavailable)
-extension HostController: AuthFlowControllerDelegate {
-    func authFlow(controller: AuthFlowController, didFinish result: FinancialConnectionsSheet.Result) {
+extension HostController: NativeFlowControllerDelegate {
+    func authFlow(controller: NativeFlowController, didFinish result: FinancialConnectionsSheet.Result) {
         guard let viewController = navigationController.topViewController else {
             assertionFailure("Navigation stack is empty")
             return

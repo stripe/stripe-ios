@@ -45,9 +45,9 @@
 		3CAD99B4284ADEBF00B163EB /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99B3284ADEBF00B163EB /* HostViewController.swift */; };
 		3CAD99B6284ADF5A00B163EB /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99B5284ADF5A00B163EB /* LoadingView.swift */; };
 		3CAD99BB284E381100B163EB /* FinancialConnectionsInstitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BA284E381100B163EB /* FinancialConnectionsInstitution.swift */; };
-		3CAD99BE284E39C400B163EB /* AuthFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BD284E39C400B163EB /* AuthFlowController.swift */; };
+		3CAD99BE284E39C400B163EB /* NativeFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BD284E39C400B163EB /* NativeFlowController.swift */; };
 		3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BF284E438C00B163EB /* FinancialConnectionsNavigationController.swift */; };
-		3CAD99C2284FE42000B163EB /* AuthFlowDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */; };
+		3CAD99C2284FE42000B163EB /* NativeFlowDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C1284FE42000B163EB /* NativeFlowDataManager.swift */; };
 		3CAD99C5284FE75F00B163EB /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */; };
 		3CAD99C7285032E600B163EB /* InstitutionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C6285032E600B163EB /* InstitutionPickerViewController.swift */; };
 		3CAD99CA2851155400B163EB /* InstitutionDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C92851155400B163EB /* InstitutionDataSource.swift */; };
@@ -268,9 +268,9 @@
 		3CAD99B3284ADEBF00B163EB /* HostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostViewController.swift; sourceTree = "<group>"; };
 		3CAD99B5284ADF5A00B163EB /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		3CAD99BA284E381100B163EB /* FinancialConnectionsInstitution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsInstitution.swift; sourceTree = "<group>"; };
-		3CAD99BD284E39C400B163EB /* AuthFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowController.swift; sourceTree = "<group>"; };
+		3CAD99BD284E39C400B163EB /* NativeFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFlowController.swift; sourceTree = "<group>"; };
 		3CAD99BF284E438C00B163EB /* FinancialConnectionsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsNavigationController.swift; sourceTree = "<group>"; };
-		3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowDataManager.swift; sourceTree = "<group>"; };
+		3CAD99C1284FE42000B163EB /* NativeFlowDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFlowDataManager.swift; sourceTree = "<group>"; };
 		3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
 		3CAD99C6285032E600B163EB /* InstitutionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionPickerViewController.swift; sourceTree = "<group>"; };
 		3CAD99C92851155400B163EB /* InstitutionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionDataSource.swift; sourceTree = "<group>"; };
@@ -635,8 +635,8 @@
 				6A038F0A288F2CBA00D3331D /* PartnerAuth */,
 				3CAD99C3284FE75000B163EB /* Placeholder */,
 				6A1E29AB28A71B5300F99E9D /* Success */,
-				3CAD99BD284E39C400B163EB /* AuthFlowController.swift */,
-				3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */,
+				3CAD99BD284E39C400B163EB /* NativeFlowController.swift */,
+				3CAD99C1284FE42000B163EB /* NativeFlowDataManager.swift */,
 			);
 			path = Native;
 			sourceTree = "<group>";
@@ -1004,7 +1004,7 @@
 				3C9F0BD9276293D300E1FDFA /* FinancialConnectionsSheetAnalytics.swift in Sources */,
 				6AFD485128871A98003439CB /* FeaturedInstitutionGridView.swift in Sources */,
 				6A8B4B0028CAE6EC00128356 /* AccountPickerLabelRowView.swift in Sources */,
-				3CAD99BE284E39C400B163EB /* AuthFlowController.swift in Sources */,
+				3CAD99BE284E39C400B163EB /* NativeFlowController.swift in Sources */,
 				6AD448B728C25F1F002CABB0 /* ResetFlowViewController.swift in Sources */,
 				6A1E29AA28A3FF8400F99E9D /* CheckboxView.swift in Sources */,
 				3CAD99CA2851155400B163EB /* InstitutionDataSource.swift in Sources */,
@@ -1062,7 +1062,7 @@
 				6A038F09288F040800D3331D /* ReusableInformationView.swift in Sources */,
 				3C27785A29117C4100E352E0 /* FlowRouter.swift in Sources */,
 				6AD58642290AC9FA0088522B /* FinancialConnectionsPartnerAccount.swift in Sources */,
-				3CAD99C2284FE42000B163EB /* AuthFlowDataManager.swift in Sources */,
+				3CAD99C2284FE42000B163EB /* NativeFlowDataManager.swift in Sources */,
 				3C82F4AF275A8178008A7162 /* AuthenticationSessionManager.swift in Sources */,
 				3C82F4AB275A8162008A7162 /* FinancialConnectionsWebFlowViewController.swift in Sources */,
 				6A59FCA828B8204E00F0F33E /* ManualEntryValidator.swift in Sources */,
