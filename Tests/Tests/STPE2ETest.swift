@@ -19,7 +19,9 @@ class STPE2ETest: XCTestCase {
     }
 
     class E2EBackend {
-        static let backendAPIURL = URL(string: "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/e2e")!
+        static let backendAPIURL = URL(
+            string: "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/e2e"
+        )!
 
         func createPaymentIntent(
             completion: @escaping (STPPaymentIntentParams, E2EExpectation) -> Void
@@ -34,8 +36,11 @@ class STPE2ETest: XCTestCase {
                 completion(
                     STPPaymentIntentParams(clientSecret: paymentIntentClientSecret),
                     E2EExpectation(
-                        amount: expectedAmount, currency: expectedCurrency,
-                        accountID: expectedAccountID))
+                        amount: expectedAmount,
+                        currency: expectedCurrency,
+                        accountID: expectedAccountID
+                    )
+                )
             }
         }
 
@@ -46,17 +51,24 @@ class STPE2ETest: XCTestCase {
                 let resultAccountID = json["on_behalf_of"] as! String
                 completion(
                     E2EExpectation(
-                        amount: resultAmount, currency: resultCurrency, accountID: resultAccountID))
+                        amount: resultAmount,
+                        currency: resultCurrency,
+                        accountID: resultAccountID
+                    )
+                )
             }
         }
 
         private func requestAPI(
-            _ resource: String, method: String = "GET", queryItems: [URLQueryItem] = [],
+            _ resource: String,
+            method: String = "GET",
+            queryItems: [URLQueryItem] = [],
             completion: @escaping ([String: Any]) -> Void
         ) {
             var url = URLComponents(
                 url: Self.backendAPIURL.appendingPathComponent(resource),
-                resolvingAgainstBaseURL: false)!
+                resolvingAgainstBaseURL: false
+            )!
             url.queryItems = queryItems
             var request = URLRequest(url: url.url!)
             request.httpMethod = method
@@ -75,7 +87,8 @@ class STPE2ETest: XCTestCase {
                     DispatchQueue.main.async {
                         completion(json)
                     }
-                })
+                }
+            )
             task.resume()
         }
     }
@@ -98,9 +111,11 @@ class STPE2ETest: XCTestCase {
         let backend = E2EBackend()
         let createPI = XCTestExpectation(description: "Create PaymentIntent")
         let fetchPIBackend = XCTestExpectation(
-            description: "Fetch and check PaymentIntent via backend")
+            description: "Fetch and check PaymentIntent via backend"
+        )
         let fetchPIClient = XCTestExpectation(
-            description: "Fetch and check PaymentIntent via client")
+            description: "Fetch and check PaymentIntent via client"
+        )
         let confirmPI = XCTestExpectation(description: "Confirm PaymentIntent")
 
         // Create a PaymentIntent

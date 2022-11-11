@@ -35,7 +35,9 @@ public class STPPaymentIntentShippingDetailsAddressParams: NSObject {
 
     /// Initialize an `STPPaymentIntentShippingDetailsAddressParams` instance with required properties.
     @objc
-    public init(line1: String) {
+    public init(
+        line1: String
+    ) {
         self.line1 = line1
         super.init()
     }
@@ -46,7 +48,8 @@ public class STPPaymentIntentShippingDetailsAddressParams: NSObject {
             // Object
             String(
                 format: "%@: %p",
-                NSStringFromClass(STPPaymentIntentShippingDetailsAddressParams.self), self
+                NSStringFromClass(STPPaymentIntentShippingDetailsAddressParams.self),
+                self
             ),
             // Properties
             "line1 = \(line1)",
@@ -64,12 +67,8 @@ public class STPPaymentIntentShippingDetailsAddressParams: NSObject {
         guard let other = object as? Self else {
             return false
         }
-        return other.city == city &&
-        other.country == country &&
-        other.line1 == line1 &&
-        other.line2 == line2 &&
-        other.postalCode == postalCode &&
-        other.state == state
+        return other.city == city && other.country == country && other.line1 == line1
+            && other.line2 == line2 && other.postalCode == postalCode && other.state == state
     }
 }
 

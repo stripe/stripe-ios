@@ -79,17 +79,17 @@ extension PaymentSheet {
         /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
         public var allowsDelayedPaymentMethods: Bool = false
         
+        /// If `true`, allows payment methods that require a shipping address, like Afterpay and Affirm. Defaults to `false`.
+        /// Set this to `true` if you collect shipping addresses and set `Configuration.shippingDetails` or set `shipping` details directly on the PaymentIntent.
+        /// - Note: PaymentSheet considers this property `true` and allows payment methods that require a shipping address if `shipping` details are present on the PaymentIntent when PaymentSheet loads.
+        public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
+        
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
 
         /// Configuration related to Apple Pay
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration? = nil
-
-        /// The amount of billing address details to collect
-        /// Intentionally non-public.
-        /// @see BillingAddressCollection
-        var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
@@ -101,6 +101,13 @@ extension PaymentSheet {
                 return appearance.primaryButton.backgroundColor
             }
         }
+        
+
+        /// The label to use for the primary button.
+        ///
+        /// If not set, Payment Sheet will display suitable default labels
+        /// for payment and setup intents.
+        public var primaryButtonLabel: String?
 
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
         /// The color styling to use for PaymentSheet UI
@@ -137,19 +144,24 @@ extension PaymentSheet {
         /// @see SavePaymentMethodOptInBehavior
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
         
-        internal var linkPaymentMethodsOnly: Bool = false
-        
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
         
-        /// 🏗 Under construction
         /// A closure that returns the customer's shipping details.
         /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided
         /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.
-        @_spi(STP) public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
+        public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
         
         /// Initializes a Configuration with default values
         public init() {}
+        
+        // MARK: Internal
+        internal var linkPaymentMethodsOnly: Bool = false
+        
+        /// The amount of billing address details to collect
+        /// Intentionally non-public.
+        /// @see BillingAddressCollection
+        var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
     }
 
     /// Configuration related to the Stripe Customer
@@ -177,6 +189,11 @@ extension PaymentSheet {
         /// The two-letter ISO 3166 code of the country of your business, e.g. "US"
         /// See your account's country value here https://dashboard.stripe.com/settings/account
         public let merchantCountryCode: String
+        
+        /// Defines the label that will be displayed in the Apple Pay button.
+        /// See <https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/buttons-and-marks/>
+        /// for all available options.
+        public let buttonType: PKPaymentButtonType
         
         /// An array of payment summary item objects that summarize the amount of the payment. This property is identical to `PKPaymentRequest.paymentSummaryItems`.
         /// If `nil`, we display a single line item with the amount on the PaymentIntent or "Amount pending" for SetupIntents.
@@ -223,9 +240,16 @@ extension PaymentSheet {
         }
         
         /// Initializes a ApplePayConfiguration
-        public init(merchantId: String, merchantCountryCode: String, paymentSummaryItems: [PKPaymentSummaryItem]? = nil, customHandlers: Handlers? = nil) {
+        public init(
+            merchantId: String,
+            merchantCountryCode: String,
+            buttonType: PKPaymentButtonType = .plain,
+            paymentSummaryItems: [PKPaymentSummaryItem]? = nil,
+            customHandlers: Handlers? = nil
+        ) {
             self.merchantId = merchantId
             self.merchantCountryCode = merchantCountryCode
+            self.buttonType = buttonType
             self.paymentSummaryItems = paymentSummaryItems
             self.customHandlers = customHandlers
         }

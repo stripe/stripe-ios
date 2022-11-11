@@ -10,15 +10,15 @@ import UIKit
 import iOSSnapshotTestCase
 
 @testable import Stripe
-@testable @_spi(STP) import StripeUICore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripeCoreTestUtils
+@testable@_spi(STP) import StripeCoreTestUtils
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripeUICore
 
 final class LinkCardEditElementSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        self.recordMode = true
+        //        self.recordMode = true
 
         // `LinkCardEditElement` depends on `AddressSectionElement`, which requires
         // address specs to be loaded in memory.
@@ -57,14 +57,16 @@ extension LinkCardEditElementSnapshotTests {
     func makeSUT(isDefault: Bool) -> LinkCardEditElement {
         let paymentMethod = ConsumerPaymentDetails(
             stripeID: "1",
-            details: .card(card: .init(
-                expiryYear: 2032,
-                expiryMonth: 1,
-                brand: "visa",
-                last4: "4242",
-                checks: nil,
-                allResponseFields: [:]
-            )),
+            details: .card(
+                card: .init(
+                    expiryYear: 2032,
+                    expiryMonth: 1,
+                    brand: "visa",
+                    last4: "4242",
+                    checks: nil,
+                    allResponseFields: [:]
+                )
+            ),
             isDefault: isDefault,
             allResponseFields: [:]
         )
@@ -73,4 +75,3 @@ extension LinkCardEditElementSnapshotTests {
     }
 
 }
-

@@ -16,7 +16,9 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// A convenience initializer for creating a card params from a card payment method params.
-    @objc public convenience init(paymentMethodParams: STPPaymentMethodParams) {
+    @objc public convenience init(
+        paymentMethodParams: STPPaymentMethodParams
+    ) {
         self.init()
         number = paymentMethodParams.card?.number
         expMonth = paymentMethodParams.card?.expMonth as? UInt ?? 0
@@ -30,7 +32,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
         addressState = paymentMethodParams.billingDetails?.address?.state
         addressCountry = paymentMethodParams.billingDetails?.address?.country
     }
-    
+
     /// The card's number.
     @objc public var number: String?
 

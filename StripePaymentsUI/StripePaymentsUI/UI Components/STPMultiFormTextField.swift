@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// STPMultiFormFieldDelegate provides methods for a delegate to respond to editing and text changes.
 @objc protocol STPMultiFormFieldDelegate: NSObjectProtocol {
@@ -46,14 +46,18 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     /// :nodoc:
     @objc
     public func textField(
-        _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
         if let textField = textField as? STPFormTextField,
             let delegateProxy = textField.delegateProxy
         {
             return delegateProxy.textField(
-                textField, shouldChangeCharactersIn: range, replacementString: string)
+                textField,
+                shouldChangeCharactersIn: range,
+                replacementString: string
+            )
         }
         return true
     }
@@ -187,13 +191,15 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
             (multiFormFieldDelegate?.modifiedIncomingTextChange(
                 input,
                 for: formTextField,
-                inMultiForm: self))!
+                inMultiForm: self
+            ))!
     }
 
     @objc func formTextFieldTextDidChange(_ formTextField: STPFormTextField) {
         multiFormFieldDelegate?.formTextFieldTextDidChange(
             formTextField,
-            inMultiForm: self)
+            inMultiForm: self
+        )
     }
 
     // MARK: - Helpers
@@ -237,7 +243,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
             let index = formTextFields?.firstIndex(of: currentFirstResponder) ?? NSNotFound
             if index != NSNotFound {
                 let nextField =
-                formTextFields!.stp_boundSafeObject(at: index + 1)
+                    formTextFields!.stp_boundSafeObject(at: index + 1)
                 if let nextField = nextField {
                     return nextField
                 }

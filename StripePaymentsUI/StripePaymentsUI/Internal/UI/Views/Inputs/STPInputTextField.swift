@@ -6,10 +6,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
-@_spi(STP) public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidationObserver {
+@_spi(STP)
+public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidationObserver {
     let formatter: STPInputTextFieldFormatter
 
     let validator: STPInputTextFieldValidator
@@ -33,7 +34,10 @@ import UIKit
         return imageView
     }()
 
-    required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+    required init(
+        formatter: STPInputTextFieldFormatter,
+        validator: STPInputTextFieldValidator
+    ) {
         self.formatter = formatter
         self.validator = validator
         super.init(frame: .zero)
@@ -48,15 +52,17 @@ import UIKit
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         font = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 14))
         placeholderLabel.font = font
-        defaultPlaceholderColor = CompatibleColor.secondaryLabel
-        floatingPlaceholderColor = CompatibleColor.secondaryLabel
+        defaultPlaceholderColor = .secondaryLabel
+        floatingPlaceholderColor = .secondaryLabel
         rightView = accessoryImageStackView
         rightViewMode = .always
         errorStateImageView.alpha = 0
         accessoryImageStackView.addArrangedSubview(errorStateImageView)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -89,14 +95,17 @@ import UIKit
                 let cursorPosition = offset(from: beginningOfDocument, to: selection.start)
                 updatedCursorPosition = position(
                     from: beginningOfDocument,
-                    offset: cursorPosition - (text.count - formatted.length))
+                    offset: cursorPosition - (text.count - formatted.length)
+                )
 
             }
             attributedText = formatted
             sendActions(for: .valueChanged)
             if let updatedCursorPosition = updatedCursorPosition {
                 selectedTextRange = textRange(
-                    from: updatedCursorPosition, to: updatedCursorPosition)
+                    from: updatedCursorPosition,
+                    to: updatedCursorPosition
+                )
             }
         }
         validator.inputValue = formatted.string
@@ -140,8 +149,8 @@ import UIKit
         didSet {
             if isUserInteractionEnabled {
                 updateTextColor()
-                defaultPlaceholderColor = CompatibleColor.secondaryLabel
-                floatingPlaceholderColor = CompatibleColor.secondaryLabel
+                defaultPlaceholderColor = .secondaryLabel
+                floatingPlaceholderColor = .secondaryLabel
             } else {
                 textColor = InputFormColors.disabledTextColor
                 defaultPlaceholderColor = InputFormColors.disabledTextColor
@@ -184,8 +193,10 @@ import UIKit
             let attributedString = NSMutableAttributedString(string: text)
             if #available(iOS 13.0, *) {
                 attributedString.addAttribute(
-                    .accessibilitySpeechSpellOut, value: NSNumber(value: true),
-                    range: attributedString.extent)
+                    .accessibilitySpeechSpellOut,
+                    value: NSNumber(value: true),
+                    range: attributedString.extent
+                )
             }
             return attributedString
         }
@@ -203,12 +214,14 @@ import UIKit
             if !isValid {
                 let invalidData = STPLocalizedString(
                     "Invalid data.",
-                    "Spoken during VoiceOver when a form field has failed validation.")
+                    "Spoken during VoiceOver when a form field has failed validation."
+                )
                 let failedString = NSMutableAttributedString(
                     string: invalidData,
                     attributes: [
                         NSAttributedString.Key.accessibilitySpeechPitch: NSNumber(value: 0.6)
-                    ])
+                    ]
+                )
                 attributedString.append(NSAttributedString(string: " "))
                 attributedString.append(failedString)
             }
@@ -234,7 +247,10 @@ import UIKit
     public override var keyCommands: [UIKeyCommand]? {
         return [
             UIKeyCommand(
-                input: "\u{08}", modifierFlags: .command, action: #selector(commandDeleteBackwards))
+                input: "\u{08}",
+                modifierFlags: .command,
+                action: #selector(commandDeleteBackwards)
+            )
         ]
     }
 
@@ -245,8 +261,10 @@ import UIKit
 
     // MARK: - STPInputTextFieldValidationObserver
     func validationDidUpdate(
-        to state: STPValidatedInputState, from previousState: STPValidatedInputState,
-        for unformattedInput: String?, in input: STPFormInput
+        to state: STPValidatedInputState,
+        from previousState: STPValidatedInputState,
+        for unformattedInput: String?,
+        in input: STPFormInput
     ) {
 
         guard input == self,

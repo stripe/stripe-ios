@@ -8,8 +8,8 @@
 
 import Foundation
 
-@_spi(STP) public extension Decimal {
-    var floatValue: Float {
+@_spi(STP) extension Decimal {
+    public var floatValue: Float {
         return (self as NSDecimalNumber).floatValue
     }
 }

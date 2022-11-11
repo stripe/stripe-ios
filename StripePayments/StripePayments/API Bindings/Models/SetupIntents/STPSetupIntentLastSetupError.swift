@@ -82,17 +82,22 @@ public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
     class func type(from string: String) -> STPSetupIntentLastSetupErrorType {
         let map = [
             "api_connection_error": NSNumber(
-                value: STPSetupIntentLastSetupErrorType.apiConnection.rawValue),
+                value: STPSetupIntentLastSetupErrorType.apiConnection.rawValue
+            ),
             "api_error": NSNumber(value: STPSetupIntentLastSetupErrorType.API.rawValue),
             "authentication_error": NSNumber(
-                value: STPSetupIntentLastSetupErrorType.authentication.rawValue),
+                value: STPSetupIntentLastSetupErrorType.authentication.rawValue
+            ),
             "card_error": NSNumber(value: STPSetupIntentLastSetupErrorType.card.rawValue),
             "idempotency_error": NSNumber(
-                value: STPSetupIntentLastSetupErrorType.idempotency.rawValue),
+                value: STPSetupIntentLastSetupErrorType.idempotency.rawValue
+            ),
             "invalid_request_error": NSNumber(
-                value: STPSetupIntentLastSetupErrorType.invalidRequest.rawValue),
+                value: STPSetupIntentLastSetupErrorType.invalidRequest.rawValue
+            ),
             "rate_limit_error": NSNumber(
-                value: STPSetupIntentLastSetupErrorType.rateLimit.rawValue),
+                value: STPSetupIntentLastSetupErrorType.rateLimit.rawValue
+            ),
         ]
 
         let key = string.lowercased()
@@ -110,7 +115,7 @@ public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         let lastError = self.init()
         lastError.code = dict.stp_string(forKey: "code")
         lastError.declineCode = dict.stp_string(forKey: "decline_code")
@@ -118,7 +123,8 @@ public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
         lastError.message = dict.stp_string(forKey: "message")
         lastError.param = dict.stp_string(forKey: "param")
         lastError.paymentMethod = STPPaymentMethod.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "payment_method"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "payment_method")
+        )
         lastError.type = self.type(from: dict.stp_string(forKey: "type") ?? "")
         lastError.allResponseFields = response
 

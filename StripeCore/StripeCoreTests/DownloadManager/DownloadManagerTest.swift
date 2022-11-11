@@ -1,14 +1,14 @@
+#if os(iOS)
+import OHHTTPStubs
+import OHHTTPStubsSwift
+@_spi(STP)@testable import StripeCore
+import StripeCoreTestUtils
 //
 //  DownloadManagerTest.swift
 //  StripeCoreTests
 //
 //
 import XCTest
-import OHHTTPStubs
-import OHHTTPStubsSwift
-
-@_spi(STP) @testable import StripeCore
-import StripeCoreTestUtils
 
 class DownloadManagerTest: APIStubbedTestCase {
     let validURL = URL(string: "https://js.stripe.com/validImage.png")!
@@ -112,10 +112,13 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
-        let image = rm.downloadImage(url: validURL, updateHandler: { image in
-            XCTAssertEqual(image.size, self.validImageSize)
-            expected_imageUpdaterCalled.fulfill()
-        })
+        let image = rm.downloadImage(
+            url: validURL,
+            updateHandler: { image in
+                XCTAssertEqual(image.size, self.validImageSize)
+                expected_imageUpdaterCalled.fulfill()
+            }
+        )
 
         XCTAssertEqual(image.size, placeholderImageSize)
         wait(for: [expected_imageUpdaterCalled], timeout: 1.0)
@@ -136,19 +139,27 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
-        let image = rm.downloadImage(url: validURL, updateHandler: { image in
-            XCTAssertEqual(image.size, self.validImageSize)
-            expected1.fulfill()
-        })
+        let image = rm.downloadImage(
+            url: validURL,
+            updateHandler: { image in
+                XCTAssertEqual(image.size, self.validImageSize)
+                expected1.fulfill()
+            }
+        )
 
         XCTAssertEqual(image.size, placeholderImageSize)
         wait(for: [expected1], timeout: 1.0)
 
-        let expected2 = expectation(description: "updateHandler will not be called when image is cached")
+        let expected2 = expectation(
+            description: "updateHandler will not be called when image is cached"
+        )
         expected2.isInverted = true
-        let imageCached = rm.downloadImage(url: validURL, updateHandler: { image in
-            expected2.fulfill()
-        })
+        let imageCached = rm.downloadImage(
+            url: validURL,
+            updateHandler: { image in
+                expected2.fulfill()
+            }
+        )
 
         XCTAssertEqual(imageCached.size, validImageSize)
         waitForExpectations(timeout: 0.5)
@@ -167,10 +178,13 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
-        let image = rm.downloadImage(url: validURL, updateHandler: { image in
-            XCTAssertEqual(image.size, self.validImageSize)
-            expected1.fulfill()
-        })
+        let image = rm.downloadImage(
+            url: validURL,
+            updateHandler: { image in
+                XCTAssertEqual(image.size, self.validImageSize)
+                expected1.fulfill()
+            }
+        )
 
         XCTAssertEqual(image.size, placeholderImageSize)
         wait(for: [expected1], timeout: 1.0)
@@ -179,10 +193,13 @@ class DownloadManagerTest: APIStubbedTestCase {
         rm.resetDiskCache()
 
         let expected2 = expectation(description: "updateHandler us called a second time")
-        let image2 = rm.downloadImage(url: validURL, updateHandler: { image in
-            XCTAssertEqual(image.size, self.validImageSize)
-            expected2.fulfill()
-        })
+        let image2 = rm.downloadImage(
+            url: validURL,
+            updateHandler: { image in
+                XCTAssertEqual(image.size, self.validImageSize)
+                expected2.fulfill()
+            }
+        )
 
         XCTAssertEqual(image2.size, self.placeholderImageSize)
         wait(for: [expected2], timeout: 1.0)
@@ -197,10 +214,13 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(error: NotFoundError())
         }
 
-        let image = rm.downloadImage(url: invalidURL, updateHandler: { image in
-            XCTAssertEqual(image.size, self.validImageSize)
-            expected.fulfill()
-        })
+        let image = rm.downloadImage(
+            url: invalidURL,
+            updateHandler: { image in
+                XCTAssertEqual(image.size, self.validImageSize)
+                expected.fulfill()
+            }
+        )
 
         XCTAssertEqual(image.size, placeholderImageSize)
         waitForExpectations(timeout: 0.5)
@@ -222,15 +242,21 @@ class DownloadManagerTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: self.validImageData2(), statusCode: 200, headers: nil)
         }
 
-        let image = rm.downloadImage(url: validURL, updateHandler: { cb_image1 in
-            XCTAssertEqual(cb_image1.size, self.validImageSize)
-            expected_imageUpdater1.fulfill()
-            let image2 = self.rm.downloadImage(url: self.validURL2, updateHandler: { cb_image2 in
-                XCTAssertEqual(cb_image2.size, self.validImageSize2)
-                expected_imageUpdater2.fulfill()
-            })
-            XCTAssertEqual(image2.size, self.placeholderImageSize)
-        })
+        let image = rm.downloadImage(
+            url: validURL,
+            updateHandler: { cb_image1 in
+                XCTAssertEqual(cb_image1.size, self.validImageSize)
+                expected_imageUpdater1.fulfill()
+                let image2 = self.rm.downloadImage(
+                    url: self.validURL2,
+                    updateHandler: { cb_image2 in
+                        XCTAssertEqual(cb_image2.size, self.validImageSize2)
+                        expected_imageUpdater2.fulfill()
+                    }
+                )
+                XCTAssertEqual(image2.size, self.placeholderImageSize)
+            }
+        )
 
         XCTAssertEqual(image.size, placeholderImageSize)
         wait(for: [expected_imageUpdater1], timeout: 1.0)
@@ -242,7 +268,9 @@ class DownloadManagerTest: APIStubbedTestCase {
         let img0 = rm.imageNameFromURL(url: URL(string: "http://js.stripe.com/icon0.png")!)
         XCTAssertEqual(img0, "icon0.png")
 
-        let img1 = rm.imageNameFromURL(url: URL(string: "http://js.stripe.com/icon1.png?key1=value1")!)
+        let img1 = rm.imageNameFromURL(
+            url: URL(string: "http://js.stripe.com/icon1.png?key1=value1")!
+        )
         XCTAssertEqual(img1, "icon1.png")
     }
 
@@ -254,14 +282,15 @@ class DownloadManagerTest: APIStubbedTestCase {
     func test_AddUpdateHandlerWithoutLocking_appends() {
         let expect1 = expectation(description: "first")
         let expect2 = expectation(description: "second")
-        let updateHandler1: DownloadManager.UpdateImageHandler = { _ in  expect1.fulfill() }
-        let updateHandler2: DownloadManager.UpdateImageHandler = { _ in  expect2.fulfill() }
+        let updateHandler1: DownloadManager.UpdateImageHandler = { _ in expect1.fulfill() }
+        let updateHandler2: DownloadManager.UpdateImageHandler = { _ in expect2.fulfill() }
 
         rm.addUpdateHandlerWithoutLocking(updateHandler1, forImageName: "imgName1")
         rm.addUpdateHandlerWithoutLocking(updateHandler2, forImageName: "imgName1")
 
         guard let firstHandler = rm.updateHandlers["imgName1"]?.first,
-              let lastHandler = rm.updateHandlers["imgName1"]?.last else {
+            let lastHandler = rm.updateHandlers["imgName1"]?.last
+        else {
             XCTFail("Unable to get handlers")
             return
         }
@@ -307,3 +336,4 @@ class DownloadManagerTest: APIStubbedTestCase {
     struct NotFoundError: Error {}
 }
 
+#endif

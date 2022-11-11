@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 
 extension StripeAPI {
-    
+
     /// A convenience method to build a `PKPaymentRequest` with sane default values.
     /// You will still need to configure the `paymentSummaryItems` property to indicate
     /// what the user is purchasing, as well as the optional `requiredShippingAddressFields`,
@@ -24,26 +24,32 @@ extension StripeAPI {
     /// Apple Pay is available in many countries and currencies, and you should use
     /// the appropriate values for your business.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message: "Use `paymentRequestWithMerchantIdentifier:country:currency:` instead."
     )
     @objc(paymentRequestWithMerchantIdentifier:)
-    public class func paymentRequest(withMerchantIdentifier merchantIdentifier: String)
+    public class func paymentRequest(
+        withMerchantIdentifier merchantIdentifier: String
+    )
         -> PKPaymentRequest
     {
         return self.paymentRequest(
-            withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+            withMerchantIdentifier: merchantIdentifier,
+            country: "US",
+            currency: "USD"
+        )
     }
 
 }
-
 
 // MARK: Deprecated top-level Stripe functions.
 // These are included so Xcode can offer guidance on how to replace top-level Stripe usage.
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message:
         "Use StripeAPI.defaultPublishableKey instead. (StripeAPI.defaultPublishableKey = \"pk_12345_xyzabc\")"
 )
@@ -53,7 +59,8 @@ public func setDefaultPublishableKey(_ publishableKey: String) {
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.advancedFraudSignalsEnabled instead."
 )
 public var advancedFraudSignalsEnabled: Bool {
@@ -67,7 +74,8 @@ public var advancedFraudSignalsEnabled: Bool {
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.jcbPaymentNetworkSupported instead."
 )
 public var jcbPaymentNetworkSupported: Bool {
@@ -81,7 +89,8 @@ public var jcbPaymentNetworkSupported: Bool {
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.additionalEnabledApplePayNetworks instead."
 )
 public var additionalEnabledApplePayNetworks: [PKPaymentNetwork] {
@@ -95,7 +104,8 @@ public var additionalEnabledApplePayNetworks: [PKPaymentNetwork] {
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.canSubmitPaymentRequest(_:) instead."
 )
 public func canSubmitPaymentRequest(_ paymentRequest: PKPaymentRequest) -> Bool {
@@ -104,7 +114,8 @@ public func canSubmitPaymentRequest(_ paymentRequest: PKPaymentRequest) -> Bool 
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.deviceSupportsApplePay() instead."
 )
 public func deviceSupportsApplePay() -> Bool {
@@ -113,7 +124,8 @@ public func deviceSupportsApplePay() -> Bool {
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.paymentRequest(withMerchantIdentifier:country:currency:) instead."
 )
 public func paymentRequest(
@@ -122,24 +134,34 @@ public func paymentRequest(
     currency currencyCode: String
 ) -> PKPaymentRequest {
     return StripeAPI.paymentRequest(
-        withMerchantIdentifier: merchantIdentifier, country: countryCode, currency: currencyCode)
+        withMerchantIdentifier: merchantIdentifier,
+        country: countryCode,
+        currency: currencyCode
+    )
 }
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.paymentRequest(withMerchantIdentifier:country:currency:) instead."
 )
-func paymentRequest(withMerchantIdentifier merchantIdentifier: String)
+func paymentRequest(
+    withMerchantIdentifier merchantIdentifier: String
+)
     -> PKPaymentRequest
 {
     return StripeAPI.paymentRequest(
-        withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+        withMerchantIdentifier: merchantIdentifier,
+        country: "US",
+        currency: "USD"
+    )
 }
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "Use StripeAPI.handleURLCallback(with:) instead."
 )
 public func handleURLCallback(with url: URL) -> Bool {

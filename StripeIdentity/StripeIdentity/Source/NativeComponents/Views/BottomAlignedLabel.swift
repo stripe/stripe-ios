@@ -54,12 +54,16 @@ final class BottomAlignedLabel: UIView {
         installConstraints()
     }
 
-    convenience init(from viewModel: ViewModel) {
+    convenience init(
+        from viewModel: ViewModel
+    ) {
         self.init()
         configure(from: viewModel)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -88,29 +92,30 @@ final class BottomAlignedLabel: UIView {
     }
 }
 
-private extension BottomAlignedLabel {
-    func installConstraints() {
+extension BottomAlignedLabel {
+    fileprivate func installConstraints() {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentHuggingPriority(.required, for: .vertical)
 
-        /*
-         The label should be bottom-aligned to the scanningView, leaving enough
-         vertical space above the label to display up to
-         `Styling.labelMinHeightNumberOfLines` lines of text.
-
-         Constrain the bottom of the label >= the top of this view using a
-         constant equivalent to the height of `labelMinHeightNumberOfLines` of
-         text, taking the label's font into account.
-
-         Constrain the top of the label to the top of this view with a lower
-         priority constraint so the label will align to the top if its text
-         exceeds `labelMinHeightNumberOfLines`.
-         */
+        // The label should be bottom-aligned to the scanningView, leaving enough
+        // vertical space above the label to display up to
+        // `Styling.labelMinHeightNumberOfLines` lines of text.
+        //
+        // Constrain the bottom of the label >= the top of this view using a
+        // constant equivalent to the height of `labelMinHeightNumberOfLines` of
+        // text, taking the label's font into account.
+        //
+        // Constrain the top of the label to the top of this view with a lower
+        // priority constraint so the label will align to the top if its text
+        // exceeds `labelMinHeightNumberOfLines`.
         let labelMinTopPaddingConstraint = label.topAnchor.constraint(equalTo: topAnchor)
         labelMinTopPaddingConstraint.priority = .defaultHigh
 
         // This constant is set in adjustLabelTopPadding()
-        labelMaxTopPaddingConstraint = label.bottomAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 0)
+        labelMaxTopPaddingConstraint = label.bottomAnchor.constraint(
+            greaterThanOrEqualTo: topAnchor,
+            constant: 0
+        )
 
         NSLayoutConstraint.activate([
             labelMinTopPaddingConstraint,
@@ -121,7 +126,7 @@ private extension BottomAlignedLabel {
         ])
     }
 
-    func adjustLabelTopPadding() {
+    fileprivate func adjustLabelTopPadding() {
         guard let font = label.font else { return }
 
         // In case `minNumberOfLines` is <=0, use a min of 1
@@ -129,10 +134,11 @@ private extension BottomAlignedLabel {
 
         // Create some text that is the minimum number of lines of text and
         // compute its height based on the label's font
-        let textWithMinLines = " " + Array(repeating: "\n", count: minNumberOfLines-1).joined()
+        let textWithMinLines = " " + Array(repeating: "\n", count: minNumberOfLines - 1).joined()
 
-        labelMaxTopPaddingConstraint.constant = (textWithMinLines as NSString).size(withAttributes: [
-            .font: font
-        ]).height
+        labelMaxTopPaddingConstraint.constant =
+            (textWithMinLines as NSString).size(withAttributes: [
+                .font: font
+            ]).height
     }
 }

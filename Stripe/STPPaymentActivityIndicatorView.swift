@@ -26,7 +26,8 @@ public class STPPaymentActivityIndicatorView: UIView {
                     withDuration: animated ? 0.2 : 0,
                     animations: {
                         self.alpha = 1.0
-                    })
+                    }
+                )
             }
             var currentRotation = Double(0)
             if let currentLayer = layer.presentation() {
@@ -47,7 +48,8 @@ public class STPPaymentActivityIndicatorView: UIView {
                     withDuration: animated ? 0.2 : 0,
                     animations: {
                         self.alpha = 0.0
-                    })
+                    }
+                )
             }
         }
     }
@@ -81,7 +83,9 @@ public class STPPaymentActivityIndicatorView: UIView {
     private weak var indicatorLayer: CAShapeLayer?
 
     /// :nodoc:
-    @objc override init(frame: CGRect) {
+    @objc override init(
+        frame: CGRect
+    ) {
         var initialFrame = frame
         if initialFrame.isEmpty {
             initialFrame = CGRect(x: frame.origin.x, y: frame.origin.y, width: 40, height: 40)
@@ -123,7 +127,9 @@ public class STPPaymentActivityIndicatorView: UIView {
         indicatorLayer?.path = path.cgPath
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

@@ -37,7 +37,7 @@ struct StripeContact {
 
     /// The email of the address (e.g. "jane@doe.com")
     public var email: String?
-    
+
     internal var givenName: String?
     internal var familyName: String?
 }

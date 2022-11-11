@@ -18,12 +18,12 @@ extension Intent {
         }
     }
 
-    var linkBankOnboardingEnabled: Bool {
+    var linkFundingSources: Set<LinkSettings.FundingSource>? {
         switch self {
         case .paymentIntent(let paymentIntent):
-            return paymentIntent.linkSettings?.bankOnboardingEnabled ?? false
+            return paymentIntent.linkSettings?.fundingSources
         case .setupIntent(let setupIntent):
-            return setupIntent.linkSettings?.bankOnboardingEnabled ?? false
+            return setupIntent.linkSettings?.fundingSources
         }
     }
 

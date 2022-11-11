@@ -7,8 +7,8 @@
 //
 
 import Foundation
+@_spi(STP)@testable import StripeCore
 import XCTest
-@_spi(STP) @testable import StripeCore
 
 final class Dictionary_StripeTests: XCTestCase {
     func testJsonEncodeNestedDicts() {
@@ -19,7 +19,7 @@ final class Dictionary_StripeTests: XCTestCase {
             "nested_string_dict": [
                 "string": "some_other_string",
                 "int": 1,
-                "float": Float(0.5)
+                "float": Float(0.5),
             ],
         ]
 
@@ -29,6 +29,9 @@ final class Dictionary_StripeTests: XCTestCase {
         XCTAssertEqual(output["string"] as? String, "some_string")
         XCTAssertEqual(output["int"] as? Int, 0)
         XCTAssertEqual(output["float"] as? Float, 0.1)
-        XCTAssertEqual(output["nested_string_dict"] as? String, "{\"float\":0.5,\"int\":1,\"string\":\"some_other_string\"}")
+        XCTAssertEqual(
+            output["nested_string_dict"] as? String,
+            "{\"float\":0.5,\"int\":1,\"string\":\"some_other_string\"}"
+        )
     }
 }

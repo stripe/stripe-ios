@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// A view that displays a card brand icon/logo, or an icon to help the user locate the CVC
 /// for a specific card brand.
@@ -45,10 +45,12 @@ import UIKit
     /// TODO(ramont): remove baked-in padding and perform alignment in code.
     private static let iconPadding = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 3)
     private var centeringPadding: UIEdgeInsets {
-        return UIEdgeInsets(top: 0,
-                            left: centerHorizontally ? Self.iconPadding.right : 0,
-                            bottom: Self.iconPadding.top,
-                            right: 0)
+        return UIEdgeInsets(
+            top: 0,
+            left: centerHorizontally ? Self.iconPadding.right : 0,
+            bottom: Self.iconPadding.top,
+            right: 0
+        )
     }
 
     /// Card brand to display.
@@ -60,27 +62,33 @@ import UIKit
 
     /// If `true`, the view will display the CVC hint icon instead of the card brand image.
     let showCVC: Bool
-    
+
     /// If `true`, will center the card brand icon horizontally in the containing view
     let centerHorizontally: Bool
 
     @_spi(STP) public override var intrinsicContentSize: CGSize {
         return size(for: Self.targetIconSize)
     }
-    
+
     @_spi(STP) public func size(for targetSize: CGSize) -> CGSize {
         let padding = centeringPadding
 
         // The way this scaling works isn't perfect since the returned size has to map to a valid point value
         // (see rounding) which can change the effects of scaleX/scaleY. In practice this is only 1 pixel off so
         // acceptable for now.
-        let scaleX = targetSize.width / (Self.legacyIconSize.width - Self.iconPadding.left - Self.iconPadding.right)
-        let scaleY = targetSize.height / (Self.legacyIconSize.height - Self.iconPadding.top - Self.iconPadding.bottom)
+        let scaleX =
+            targetSize.width
+            / (Self.legacyIconSize.width - Self.iconPadding.left - Self.iconPadding.right)
+        let scaleY =
+            targetSize.height
+            / (Self.legacyIconSize.height - Self.iconPadding.top - Self.iconPadding.bottom)
         // We could adapt this for multiple screens, but probably not worth it (better solution is to remove padding from images)
         let screenScale = UIScreen.main.scale
         return CGSize(
-            width: (round(Self.legacyIconSize.width * scaleX * screenScale) / screenScale) + padding.right + padding.left,
-            height: (round(Self.legacyIconSize.height * scaleY * screenScale) / screenScale) + padding.top + padding.bottom
+            width: (round(Self.legacyIconSize.width * scaleX * screenScale) / screenScale)
+                + padding.right + padding.left,
+            height: (round(Self.legacyIconSize.height * scaleY * screenScale) / screenScale)
+                + padding.top + padding.bottom
         )
     }
 
@@ -94,26 +102,39 @@ import UIKit
     /// Creates and returns an initialized card brand view.
     /// - Parameter showCVC: Whether or not to show the CVC hint icon instead of the card brand image.
     /// - Parameter centerHorizontally: Whether or not the card icon should be centered horizontally
-    @_spi(STP) public init(showCVC: Bool = false,
-         centerHorizontally: Bool = false) {
+    @_spi(STP) public init(
+        showCVC: Bool = false,
+        centerHorizontally: Bool = false
+    ) {
         self.showCVC = showCVC
         self.centerHorizontally = centerHorizontally
         super.init(frame: .zero)
-        
+
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: centeringPadding.top),
-            self.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: centeringPadding.bottom),
-            imageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: centeringPadding.left),
-            imageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: centeringPadding.right)
+            self.bottomAnchor.constraint(
+                equalTo: imageView.bottomAnchor,
+                constant: centeringPadding.bottom
+            ),
+            imageView.leftAnchor.constraint(
+                equalTo: self.leftAnchor,
+                constant: centeringPadding.left
+            ),
+            imageView.rightAnchor.constraint(
+                equalTo: self.rightAnchor,
+                constant: centeringPadding.right
+            ),
         ])
 
         updateIcon()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -176,7 +197,9 @@ import UIKit
 
     // MARK: - Callbacks
 
-    @_spi(STP) public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    @_spi(STP) public override func traitCollectionDidChange(
+        _ previousTraitCollection: UITraitCollection?
+    ) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateIcon()
     }

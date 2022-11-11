@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPInputTextFieldFormatterTests: XCTestCase {
 
@@ -21,28 +21,48 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         let textField = UITextField()
         XCTAssertTrue(
             formatter.textField(
-                textField, shouldChangeCharactersIn: NSMakeRange(0, 2), replacementString: ""),
-            "Should allow deletion on empty")
+                textField,
+                shouldChangeCharactersIn: NSMakeRange(0, 2),
+                replacementString: ""
+            ),
+            "Should allow deletion on empty"
+        )
         textField.text = "Hi"
         XCTAssertTrue(
             formatter.textField(
-                textField, shouldChangeCharactersIn: NSMakeRange(0, 2), replacementString: ""),
-            "Should allow full deletion")
+                textField,
+                shouldChangeCharactersIn: NSMakeRange(0, 2),
+                replacementString: ""
+            ),
+            "Should allow full deletion"
+        )
         textField.text = "Hello"
         XCTAssertTrue(
             formatter.textField(
-                textField, shouldChangeCharactersIn: NSMakeRange(4, 1), replacementString: ""),
-            "Should allow partial deletion at end")
+                textField,
+                shouldChangeCharactersIn: NSMakeRange(4, 1),
+                replacementString: ""
+            ),
+            "Should allow partial deletion at end"
+        )
         textField.text = "Hello"
         XCTAssertTrue(
             formatter.textField(
-                textField, shouldChangeCharactersIn: NSMakeRange(3, 1), replacementString: ""),
-            "Should allow partial deletion in middle")
+                textField,
+                shouldChangeCharactersIn: NSMakeRange(3, 1),
+                replacementString: ""
+            ),
+            "Should allow partial deletion in middle"
+        )
         textField.text = "Hello"
         XCTAssertTrue(
             formatter.textField(
-                textField, shouldChangeCharactersIn: NSMakeRange(0, 1), replacementString: ""),
-            "Should allow partial deletion at beginning")
+                textField,
+                shouldChangeCharactersIn: NSMakeRange(0, 1),
+                replacementString: ""
+            ),
+            "Should allow partial deletion at beginning"
+        )
     }
 
     func testAllowsInitialSpaceForAutofill() {
@@ -51,7 +71,11 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         textField.textContentType = .nickname
         XCTAssertTrue(
             formatter.textField(
-                textField, shouldChangeCharactersIn: NSMakeRange(0, 0), replacementString: " "))
+                textField,
+                shouldChangeCharactersIn: NSMakeRange(0, 0),
+                replacementString: " "
+            )
+        )
     }
 
 }

@@ -8,15 +8,16 @@
 
 import Foundation
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class MockEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     func createCustomerKey(
-        withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock
+        withAPIVersion apiVersion: String,
+        completion: @escaping STPJSONResponseCompletionBlock
     ) {
         completion(STPFixtures.ephemeralKey().allResponseFields, nil)
     }
@@ -37,16 +38,23 @@ class Testing_StaticCustomerContext: STPCustomerContext {
         let paymentMethods = [STPFixtures.paymentMethod()].compactMap { $0 }
         self.init(
             customer: customer,
-            paymentMethods: paymentMethods)
+            paymentMethods: paymentMethods
+        )
     }
-    init(customer: STPCustomer, paymentMethods: [STPPaymentMethod]) {
+    init(
+        customer: STPCustomer,
+        paymentMethods: [STPPaymentMethod]
+    ) {
         self.customer = customer
         self.paymentMethods = paymentMethods
         super.init(
             keyManager: STPEphemeralKeyManager(
-                keyProvider: MockEphemeralKeyProvider(), apiVersion: "1",
-                performsEagerFetching: false),
-            apiClient: STPAPIClient.shared)
+                keyProvider: MockEphemeralKeyProvider(),
+                apiVersion: "1",
+                performsEagerFetching: false
+            ),
+            apiClient: STPAPIClient.shared
+        )
     }
 
     override func retrieveCustomer(_ completion: STPCustomerCompletionBlock?) {
@@ -63,7 +71,8 @@ class Testing_StaticCustomerContext: STPCustomerContext {
 
     var didAttach = false
     override func attachPaymentMethod(
-        toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+        toCustomer paymentMethod: STPPaymentMethod,
+        completion: STPErrorBlock?
     ) {
         didAttach = true
         if let completion = completion {

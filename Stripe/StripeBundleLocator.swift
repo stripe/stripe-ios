@@ -14,7 +14,7 @@ import Foundation
     public static let internalClass: AnyClass = StripeBundleLocator.self
     public static let bundleName = "Stripe"
     #if SWIFT_PACKAGE
-    public static let spmResourcesBundle = Bundle.module
+        public static let spmResourcesBundle = Bundle.module
     #endif
     public static let resourcesBundle = StripeBundleLocator.computeResourcesBundle()
 }

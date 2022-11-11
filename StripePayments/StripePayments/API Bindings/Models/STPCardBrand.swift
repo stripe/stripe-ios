@@ -30,7 +30,8 @@ import Foundation
 
 /// :nodoc:
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message: "STPStringFromCardBrand has been replaced with STPCardBrandUtilities.stringFrom(brand)"
 )
 @objc public class STPStringFromCardBrand: NSObject {

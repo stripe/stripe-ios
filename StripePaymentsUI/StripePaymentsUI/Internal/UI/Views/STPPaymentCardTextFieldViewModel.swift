@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripePayments
+import UIKit
 
 @objc enum STPCardFieldType: Int {
     case number
@@ -25,14 +25,17 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
         set(cardNumber) {
             let sanitizedNumber = STPCardValidator.sanitizedNumericString(for: cardNumber ?? "")
-            hasCompleteMetadataForCardNumber = STPBINController.shared.hasBINRanges(forPrefix: sanitizedNumber)
+            hasCompleteMetadataForCardNumber = STPBINController.shared.hasBINRanges(
+                forPrefix: sanitizedNumber
+            )
             if hasCompleteMetadataForCardNumber {
                 let brand = STPCardValidator.brand(forNumber: sanitizedNumber)
                 let maxLength = STPCardValidator.maxLength(for: brand)
                 _cardNumber = sanitizedNumber.stp_safeSubstring(to: maxLength)
             } else {
                 _cardNumber = sanitizedNumber.stp_safeSubstring(
-                    to: Int(STPBINController.shared.maxCardNumberLength()))
+                    to: Int(STPBINController.shared.maxCardNumberLength())
+                )
             }
         }
     }
@@ -65,7 +68,8 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         set(cvc) {
             let maxLength = STPCardValidator.maxCVCLength(for: brand)
             _cvc = STPCardValidator.sanitizedNumericString(for: cvc ?? "").stp_safeSubstring(
-                to: Int(maxLength))
+                to: Int(maxLength)
+            )
         }
     }
     @objc dynamic var postalCodeRequested = false
@@ -84,7 +88,8 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             _postalCode = STPPostalCodeValidator.formattedSanitizedPostalCode(
                 from: postalCode,
                 countryCode: postalCodeCountryCode,
-                usage: .cardField)
+                usage: .cardField
+            )
         }
     }
 
@@ -98,7 +103,8 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             postalCode = STPPostalCodeValidator.formattedSanitizedPostalCode(
                 from: postalCode,
                 countryCode: postalCodeCountryCode,
-                usage: .cardField)
+                usage: .cardField
+            )
         }
     }
 
@@ -108,7 +114,9 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
     @objc dynamic var isValid: Bool {
         return STPCardValidator.validationState(
-            forNumber: cardNumber ?? "", validatingCardBrand: true)
+            forNumber: cardNumber ?? "",
+            validatingCardBrand: true
+        )
             == .valid && hasCompleteMetadataForCardNumber
             && validationStateForExpiration() == .valid
             && validationStateForCVC() == .valid
@@ -155,7 +163,9 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     func validationStateForExpiration() -> STPCardValidationState {
         let monthState = STPCardValidator.validationState(forExpirationMonth: expirationMonth ?? "")
         let yearState = STPCardValidator.validationState(
-            forExpirationYear: expirationYear ?? "", inMonth: expirationMonth ?? "")
+            forExpirationYear: expirationYear ?? "",
+            inMonth: expirationMonth ?? ""
+        )
         if monthState == .valid && yearState == .valid {
             return .valid
         } else if monthState == .invalid || yearState == .invalid {
@@ -180,10 +190,14 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     func validationStateForCardNumber(handler: @escaping (STPCardValidationState) -> Void) {
         STPBINController.shared.retrieveBINRanges(forPrefix: cardNumber ?? "") { _ in
             self.hasCompleteMetadataForCardNumber = STPBINController.shared.hasBINRanges(
-                forPrefix: self.cardNumber ?? "")
+                forPrefix: self.cardNumber ?? ""
+            )
             handler(
                 STPCardValidator.validationState(
-                    forNumber: self.cardNumber ?? "", validatingCardBrand: true))
+                    forNumber: self.cardNumber ?? "",
+                    validatingCardBrand: true
+                )
+            )
         }
     }
 

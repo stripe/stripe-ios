@@ -16,26 +16,24 @@ struct VerificationFramesData: Encodable {
     let viewfinderMargins: ViewFinderMargins
 }
 
-/*
- Bounds of the scanner's card viewfinder (measured in pixels)
- ----------------------------------------------
- |                     |                      |
- |                   upper                    |
- |                    300                     |
- |                     |                      |
- |        ------------300------------         |
- |        |                         |         |
- |        1                         |         |
- |--left--0                         |--right--|
- |   100  0---4242 4242 4242 4242---|   400   |
- |        |          05/23          |         |
- |        ---------------------------         |
- |                     |                      |
- |                   lower                    |
- |                    400                     |
- |                     |                      |
- ----------------------------------------------
- */
+// Bounds of the scanner's card viewfinder (measured in pixels)
+// ----------------------------------------------
+// |                     |                      |
+// |                   upper                    |
+// |                    300                     |
+// |                     |                      |
+// |        ------------300------------         |
+// |        |                         |         |
+// |        1                         |         |
+// |--left--0                         |--right--|
+// |   100  0---4242 4242 4242 4242---|   400   |
+// |        |          05/23          |         |
+// |        ---------------------------         |
+// |                     |                      |
+// |                   lower                    |
+// |                    400                     |
+// |                     |                      |
+// ----------------------------------------------
 struct ViewFinderMargins: Encodable {
     /// The amount of pixels from the left-most bound of the image to the left-most bound of the viewfinder
     let left: Int

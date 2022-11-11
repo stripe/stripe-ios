@@ -15,7 +15,10 @@ extension UIButton {
     /// - Parameters:
     ///   - spacing: Space between image and title label.
     ///   - edgeInsets: Directional content edge insets.
-    @_spi(STP) public func setContentSpacing(_ spacing: CGFloat, withEdgeInsets edgeInsets: NSDirectionalEdgeInsets) {
+    @_spi(STP) public func setContentSpacing(
+        _ spacing: CGFloat,
+        withEdgeInsets edgeInsets: NSDirectionalEdgeInsets
+    ) {
         // UIButton doesn't have support for directional edge insets. We should
         // apply insets depending on the layout direction.
         if self.effectiveUserInterfaceLayoutDirection == .leftToRight {

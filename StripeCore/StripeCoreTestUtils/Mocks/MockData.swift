@@ -6,25 +6,30 @@
 //
 
 import Foundation
-@testable @_spi(STP) import StripeCore
 
-/// Protocol for easily opening JSON mock files
+@testable@_spi(STP) import StripeCore
+
+/// Protocol for easily opening JSON mock files.
 public protocol MockData: RawRepresentable where RawValue == String {
     associatedtype ResponseType: Decodable
     var bundle: Bundle { get }
 }
 
-public extension MockData {
-    var url: URL {
+extension MockData {
+    public var url: URL {
         return bundle.url(forResource: rawValue, withExtension: "json")!
     }
 
-    func data() throws -> Data {
+    public func data() throws -> Data {
         return try Data(contentsOf: url)
     }
 
-    func make() throws -> ResponseType {
-        let result: Result<ResponseType, Error> = STPAPIClient.decodeResponse(data: try data(), error: nil, response: nil)
+    public func make() throws -> ResponseType {
+        let result: Result<ResponseType, Error> = STPAPIClient.decodeResponse(
+            data: try data(),
+            error: nil,
+            response: nil
+        )
         switch result {
         case .success(let response):
             return response
@@ -35,7 +40,7 @@ public extension MockData {
 }
 
 // Dummy class to determine this bundle
-private class ClassForBundle { }
+private class ClassForBundle {}
 
 @_spi(STP) public enum FileMock: String, MockData {
     public typealias ResponseType = StripeFile

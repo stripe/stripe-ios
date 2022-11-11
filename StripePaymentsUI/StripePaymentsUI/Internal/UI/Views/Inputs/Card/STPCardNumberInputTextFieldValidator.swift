@@ -6,13 +6,13 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+import UIKit
 
-class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {    
+class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     private var inputMode = STPCardNumberInputTextField.InputMode.standard
-    
+
     override var defaultErrorMessage: String? {
         return String.Localized.your_card_number_is_invalid
     }
@@ -43,9 +43,11 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                     self.validationState = .valid(message: nil)
                     return
                 }
-                
+
                 switch STPCardValidator.validationState(
-                    forNumber: inputValue, validatingCardBrand: true)
+                    forNumber: inputValue,
+                    validatingCardBrand: true
+                )
                 {
 
                 case .valid:
@@ -55,7 +57,8 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 case .incomplete:
                     self.validationState = .incomplete(
                         description: !inputValue.isEmpty
-                        ? String.Localized.your_card_number_is_incomplete : nil)
+                            ? String.Localized.your_card_number_is_incomplete : nil
+                    )
                 }
             }
             if STPBINController.shared.hasBINRanges(forPrefix: inputValue) {
@@ -71,8 +74,11 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
             }
         }
     }
-    
-    init(inputMode: STPCardNumberInputTextField.InputMode = .standard, cardBrand: STPCardBrand? = nil) {
+
+    init(
+        inputMode: STPCardNumberInputTextField.InputMode = .standard,
+        cardBrand: STPCardBrand? = nil
+    ) {
         self.inputMode = inputMode
         self.overridenCardBrand = cardBrand
     }

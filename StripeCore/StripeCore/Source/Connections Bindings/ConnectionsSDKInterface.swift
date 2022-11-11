@@ -14,14 +14,20 @@ import UIKit
     case failed(error: Error)
 }
 
+#if os(iOS)
+
 @_spi(STP) public protocol FinancialConnectionsSDKInterface {
     init()
-    func presentFinancialConnectionsSheet(apiClient: STPAPIClient,
-                                          clientSecret: String,
-                                          returnURL: String?,
-                                          from presentingViewController: UIViewController,
-                                          completion: @escaping (FinancialConnectionsSDKResult) -> ())
+    func presentFinancialConnectionsSheet(
+        apiClient: STPAPIClient,
+        clientSecret: String,
+        returnURL: String?,
+        from presentingViewController: UIViewController,
+        completion: @escaping (FinancialConnectionsSDKResult) -> Void
+    )
 }
+
+#endif
 
 // MARK: - Types
 

@@ -156,7 +156,7 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = CompatibleColor.systemBackground
+        view.backgroundColor = .systemBackground
 
         let stackView = UIStackView(arrangedSubviews: [
             paymentMethodTypesView, paymentMethodDetailsContainerView,

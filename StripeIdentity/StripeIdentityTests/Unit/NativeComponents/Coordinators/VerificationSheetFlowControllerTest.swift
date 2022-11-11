@@ -6,18 +6,21 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 import Vision
-@_spi(STP) import StripeCore
+import XCTest
+
+// swift-format-ignore
 @_spi(STP) @testable import StripeIdentity
 
 private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
-
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
-    let mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>] = [[.biometricConsent], [.idDocumentType], [.idDocumentFront, .idDocumentBack]]
+    let mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>] = [
+        [.biometricConsent], [.idDocumentType], [.idDocumentFront, .idDocumentBack],
+    ]
 
     let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     var mockMLModelLoader: IdentityMLModelLoaderMock!
@@ -36,8 +39,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testInitialStateIsLoading() {
         XCTAssertEqual(flowController.navigationController.viewControllers.count, 1)
-        XCTAssertIs(flowController.navigationController.viewControllers.first as Any,
-                    LoadingViewController.self)
+        XCTAssertIs(
+            flowController.navigationController.viewControllers.first as Any,
+            LoadingViewController.self
+        )
     }
 
     // Tests the navigation stack between screen transitions
@@ -60,8 +65,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             shouldAnimate: false,
             completion: { exp1.fulfill() }
         )
-        XCTAssertEqual(flowController.navigationController.viewControllers,
-                       [mockNextViewController1])
+        XCTAssertEqual(
+            flowController.navigationController.viewControllers,
+            [mockNextViewController1]
+        )
 
         // Verify following transition pushes view controller
         flowController.transition(
@@ -69,8 +76,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             shouldAnimate: false,
             completion: { exp2.fulfill() }
         )
-        XCTAssertEqual(flowController.navigationController.viewControllers,
-                       [mockNextViewController1, mockNextViewController2])
+        XCTAssertEqual(
+            flowController.navigationController.viewControllers,
+            [mockNextViewController1, mockNextViewController2]
+        )
 
         // Verify transitioning to success screen replaces navigation stack
         flowController.transition(
@@ -78,8 +87,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             shouldAnimate: false,
             completion: { exp3.fulfill() }
         )
-        XCTAssertEqual(flowController.navigationController.viewControllers,
-                       [mockSuccessViewController])
+        XCTAssertEqual(
+            flowController.navigationController.viewControllers,
+            [mockSuccessViewController]
+        )
 
         wait(for: [exp1, exp2, exp3], timeout: 1)
     }
@@ -159,7 +170,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
                 XCTAssertIs(nextVC, ErrorViewController.self)
                 XCTAssertEqual(
                     (nextVC as? ErrorViewController)?.model,
-                    .error(VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType]))
+                    .error(
+                        VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType])
+                    )
                 )
                 exp.fulfill()
             }
@@ -193,9 +206,11 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
                 XCTAssertIs(nextVC, ErrorViewController.self)
                 XCTAssertEqual(
                     (nextVC as? ErrorViewController)?.model,
-                    .error(VerificationSheetFlowControllerError.unknown(
-                        IdentityMLModelLoaderError.mlModelNeverLoaded
-                    ))
+                    .error(
+                        VerificationSheetFlowControllerError.unknown(
+                            IdentityMLModelLoaderError.mlModelNeverLoaded
+                        )
+                    )
                 )
                 exp.fulfill()
             }
@@ -260,29 +275,27 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     // TODO(IDPROD-2745): Re-enable when `IndividualViewController` is supported
-    /*
-    func testNextViewControllerIndividualFields() {
-        XCTAssertIs(nextViewController(
-            missingRequirements: [.address]
-        ), IndividualViewController.self)
-        XCTAssertIs(nextViewController(
-            missingRequirements: [.dob]
-        ), IndividualViewController.self)
-        XCTAssertIs(nextViewController(
-            missingRequirements: [.email]
-        ), IndividualViewController.self)
-        XCTAssertIs(nextViewController(
-            missingRequirements: [.idNumber]
-        ), IndividualViewController.self)
-        XCTAssertIs(nextViewController(
-            missingRequirements: [.name]
-        ), IndividualViewController.self)
-        XCTAssertIs(nextViewController(
-            missingRequirements: [.phoneNumber]
-        ), IndividualViewController.self)
-    }
-     */
-    
+    //func testNextViewControllerIndividualFields() {
+    //    XCTAssertIs(nextViewController(
+    //        missingRequirements: [.address]
+    //    ), IndividualViewController.self)
+    //    XCTAssertIs(nextViewController(
+    //        missingRequirements: [.dob]
+    //    ), IndividualViewController.self)
+    //    XCTAssertIs(nextViewController(
+    //        missingRequirements: [.email]
+    //    ), IndividualViewController.self)
+    //    XCTAssertIs(nextViewController(
+    //        missingRequirements: [.idNumber]
+    //    ), IndividualViewController.self)
+    //    XCTAssertIs(nextViewController(
+    //        missingRequirements: [.name]
+    //    ), IndividualViewController.self)
+    //    XCTAssertIs(nextViewController(
+    //        missingRequirements: [.phoneNumber]
+    //    ), IndividualViewController.self)
+    //}
+
     func testNextViewControllerDocumentCapture() throws {
         // Mock that user has selected document type
         mockSheetController.collectedData = .init(idDocumentType: .idCard)
@@ -335,7 +348,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
                 backExp.fulfill()
             }
         )
-        
+
         wait(for: [frontExp, backExp], timeout: 1)
     }
 
@@ -356,7 +369,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     func testDelegateChain() {
-        let mockNavigationController = IdentityFlowNavigationController(rootViewController: UIViewController(nibName: nil, bundle: nil))
+        let mockNavigationController = IdentityFlowNavigationController(
+            rootViewController: UIViewController(nibName: nil, bundle: nil)
+        )
         let mockDelegate = MockDelegate()
         flowController.delegate = mockDelegate
         flowController.identityFlowNavigationControllerDidDismiss(mockNavigationController)
@@ -365,9 +380,14 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testCanPopToScreen() {
         let mockViewController = MockIdentityDataCollectingViewController(
-            fields: Set(StripeAPI.VerificationPageFieldType.allCases).subtracting([.idDocumentFront, .idDocumentBack])
+            fields: Set(StripeAPI.VerificationPageFieldType.allCases).subtracting([
+                .idDocumentFront, .idDocumentBack,
+            ])
         )
-        flowController.navigationController.setViewControllers([mockViewController], animated: false)
+        flowController.navigationController.setViewControllers(
+            [mockViewController],
+            animated: false
+        )
 
         XCTAssertTrue(flowController.canPopToScreen(withField: .biometricConsent))
         XCTAssertTrue(flowController.canPopToScreen(withField: .idDocumentType))
@@ -391,7 +411,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             popToField: .idDocumentType,
             shouldResetViewController: true
         )
-        XCTAssertEqual(viewControllers.map { $0.collectedFields }, [[.biometricConsent], [.idDocumentType]])
+        XCTAssertEqual(
+            viewControllers.map { $0.collectedFields },
+            [[.biometricConsent], [.idDocumentType]]
+        )
         XCTAssertEqual(viewControllers.last?.didReset, true)
     }
 
@@ -406,23 +429,28 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 }
 
-
-private extension VerificationSheetFlowControllerTest {
-    func nextViewController(
+extension VerificationSheetFlowControllerTest {
+    fileprivate func nextViewController(
         missingRequirements: Set<StripeAPI.VerificationPageFieldType>,
-        staticContentResult: Result<StripeAPI.VerificationPage, Error> = .success(try! VerificationPageMock.response200.make()),
+        staticContentResult: Result<StripeAPI.VerificationPage, Error> = .success(
+            try! VerificationPageMock.response200.make()
+        ),
         isSubmitted: Bool = false,
         completion: @escaping (UIViewController) -> Void
     ) throws {
         let mockViewController = MockIdentityDataCollectingViewController(
             fields: Set()
         )
-        flowController.navigationController.setViewControllers([mockViewController], animated: false)
-        
-        let dataResponse = isSubmitted
-        ? try VerificationPageDataMock.submitted.make()
-        : try VerificationPageDataMock.noErrorsWithMissings(with: missingRequirements)
-        
+        flowController.navigationController.setViewControllers(
+            [mockViewController],
+            animated: false
+        )
+
+        let dataResponse =
+            isSubmitted
+            ? try VerificationPageDataMock.submitted.make()
+            : try VerificationPageDataMock.noErrorsWithMissings(with: missingRequirements)
+
         flowController.nextViewController(
             staticContentResult: staticContentResult,
             updateDataResult: .success(dataResponse),
@@ -431,7 +459,7 @@ private extension VerificationSheetFlowControllerTest {
         )
     }
 
-    func popToScreen(
+    fileprivate func popToScreen(
         mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>],
         popToField: StripeAPI.VerificationPageFieldType,
         shouldResetViewController: Bool,
@@ -450,20 +478,22 @@ private extension VerificationSheetFlowControllerTest {
             animated: false
         )
 
-        return flowController.navigationController.viewControllers.compactMap { $0 as? MockIdentityDataCollectingViewController }
+        return flowController.navigationController.viewControllers.compactMap {
+            $0 as? MockIdentityDataCollectingViewController
+        }
     }
 }
 
 extension ErrorViewController.Model: Equatable {
     public static func == (lhs: ErrorViewController.Model, rhs: ErrorViewController.Model) -> Bool {
         switch (lhs, rhs) {
-        case let (.error(lError), .error(rError)):
+        case (.error(let lError), .error(let rError)):
             let lNSError = lError as NSError
             let rNSError = rError as NSError
             return lNSError.code == rNSError.code
                 && lNSError.domain == rNSError.domain
                 && (lNSError.userInfo as NSDictionary).isEqual(to: rNSError.userInfo)
-        case let (.inputError(lError), .inputError(rError)):
+        case (.inputError(let lError), .inputError(let rError)):
             return lError == rError
         default:
             return false
@@ -474,11 +504,15 @@ extension ErrorViewController.Model: Equatable {
 private class MockDelegate: VerificationSheetFlowControllerDelegate {
     private(set) var didDismissCalled = false
 
-    func verificationSheetFlowControllerDidDismissNativeView(_ flowController: VerificationSheetFlowControllerProtocol) {
+    func verificationSheetFlowControllerDidDismissNativeView(
+        _ flowController: VerificationSheetFlowControllerProtocol
+    ) {
         didDismissCalled = true
     }
 
-    func verificationSheetFlowControllerDidDismissWebView(_ flowController: VerificationSheetFlowControllerProtocol) {
+    func verificationSheetFlowControllerDidDismissWebView(
+        _ flowController: VerificationSheetFlowControllerProtocol
+    ) {
         didDismissCalled = true
     }
 }
@@ -489,12 +523,16 @@ private class MockIdentityDataCollectingViewController: UIViewController, Identi
 
     private(set) var didReset = false
 
-    init(fields: Set<StripeAPI.VerificationPageFieldType>) {
+    init(
+        fields: Set<StripeAPI.VerificationPageFieldType>
+    ) {
         self.collectedFields = fields
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 

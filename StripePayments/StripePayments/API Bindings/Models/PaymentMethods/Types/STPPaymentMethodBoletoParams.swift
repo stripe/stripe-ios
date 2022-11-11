@@ -27,7 +27,7 @@ public class STPPaymentMethodBoletoParams: NSObject, STPFormEncodable {
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodBoletoParams.self), self),
             // Properties
-            "taxID: \(taxID != nil ? "<redacted>" : "")"
+            "taxID: \(taxID != nil ? "<redacted>" : "")",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -43,7 +43,7 @@ public class STPPaymentMethodBoletoParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:taxID)): "tax_id",
+            NSStringFromSelector(#selector(getter:taxID)): "tax_id"
         ]
     }
 }

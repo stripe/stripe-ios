@@ -107,11 +107,7 @@ extension STPAPIClient {
         for (apKey, apValue) in additionalParameters {
             parameters[apKey] = apValue
         }
-
-        if let languageCode = Locale.current.languageCode,
-           let regionCode = Locale.current.regionCode {
-            parameters["locale"] = "\(languageCode)-\(regionCode)"
-        }
+        parameters["locale"] = Locale.current.toLanguageTag()
 
         APIRequest<STPPaymentIntent>.getWith(self,
                                              endpoint: APIEndpointIntentWithPreferences,
@@ -139,11 +135,7 @@ extension STPAPIClient {
         parameters["client_secret"] = secret
         parameters["type"] = "setup_intent"
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
-
-        if let languageCode = Locale.current.languageCode,
-           let regionCode = Locale.current.regionCode {
-            parameters["locale"] = "\(languageCode)-\(regionCode)"
-        }
+        parameters["locale"] = Locale.current.toLanguageTag()
 
         APIRequest<STPSetupIntent>.getWith(self,
                                            endpoint: APIEndpointIntentWithPreferences,

@@ -79,6 +79,16 @@ extension PayWithLinkViewController {
             ])
         }
 
+        override func present(
+            _ viewControllerToPresent: UIViewController,
+            animated flag: Bool,
+            completion: (() -> Void)? = nil
+        ) {
+            // Any view controller presented by this controller should also be customized.
+            context.configuration.style.configure(viewControllerToPresent)
+            super.present(viewControllerToPresent, animated: flag, completion: completion)
+        }
+
         @objc
         func onBackButtonTapped(_ sender: UIButton) {
             navigationController?.popViewController(animated: true)

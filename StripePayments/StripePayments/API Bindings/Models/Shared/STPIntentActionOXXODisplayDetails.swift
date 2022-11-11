@@ -37,7 +37,10 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
         let props: [String] = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPIntentActionOXXODisplayDetails.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPIntentActionOXXODisplayDetails.self),
+                self
+            ),
             // OXXODisplayDetails
             "expiresAfter = \(String(describing: expiresAfter))",
             "hostedVoucherURL = \(String(describing: hostedVoucherURL))",
@@ -48,10 +51,10 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
     }
 
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let dict = response, let nsDict = response as NSDictionary?,
-            let expiresAfter = nsDict.stp_date(forKey: "expires_after"),
-            let hostedVoucherURL = nsDict.stp_url(forKey: "hosted_voucher_url"),
-            let number = nsDict.stp_string(forKey: "number")
+        guard let dict = response,
+            let expiresAfter = dict.stp_date(forKey: "expires_after"),
+            let hostedVoucherURL = dict.stp_url(forKey: "hosted_voucher_url"),
+            let number = dict.stp_string(forKey: "number")
         else {
             return nil
         }
@@ -60,7 +63,8 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
             expiresAfter: expiresAfter,
             hostedVoucherURL: hostedVoucherURL,
             number: number,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
     public private(set) var allResponseFields: [AnyHashable: Any]

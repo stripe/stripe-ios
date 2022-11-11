@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardNumberInputTextFieldFormatterTests: XCTestCase {
 
@@ -21,14 +21,16 @@ class STPCardNumberInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(formatter.isAllowedInput("4242424242424242", to: "", at: NSMakeRange(0, 0)))
         XCTAssertTrue(formatter.isAllowedInput("424242424242424", to: "", at: NSMakeRange(0, 0)))
         XCTAssertTrue(
-            formatter.isAllowedInput("4242 4242 4242 4242", to: "", at: NSMakeRange(0, 0)))
+            formatter.isAllowedInput("4242 4242 4242 4242", to: "", at: NSMakeRange(0, 0))
+        )
         XCTAssertTrue(formatter.isAllowedInput("42424242 42424242", to: "", at: NSMakeRange(0, 0)))
         XCTAssertTrue(formatter.isAllowedInput("4242 ", to: "", at: NSMakeRange(0, 0)))
         XCTAssertTrue(formatter.isAllowedInput("3566002020360505", to: "", at: NSMakeRange(0, 0)))
         XCTAssertTrue(formatter.isAllowedInput(" ", to: "4242", at: NSMakeRange(4, 0)))
 
         XCTAssertFalse(
-            formatter.isAllowedInput("4242.4242.4242.4242", to: "", at: NSMakeRange(0, 0)))
+            formatter.isAllowedInput("4242.4242.4242.4242", to: "", at: NSMakeRange(0, 0))
+        )
         XCTAssertFalse(formatter.isAllowedInput("4", to: "4242424242424242", at: NSMakeRange(0, 0)))
     }
 

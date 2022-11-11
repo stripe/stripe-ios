@@ -9,7 +9,9 @@
 import Foundation
 
 @_spi(STP) public class STPFormEncoder: NSObject {
-    @objc @_spi(STP) public class func dictionary(forObject object: (NSObject & STPFormEncodable)) -> [String: Any] {
+    @objc @_spi(STP) public class func dictionary(
+        forObject object: (NSObject & STPFormEncodable)
+    ) -> [String: Any] {
         // returns [object root name : object.coded (eg [property name strings: property values)]
         let keyPairs = self.keyPairDictionary(forObject: object)
         let rootObjectName = type(of: object).rootObjectName()
@@ -23,7 +25,9 @@ import Foundation
     // MARK: - Internal
 
     /// Returns [Property name : Property's form encodable value]
-    private class func keyPairDictionary(forObject object: (NSObject & STPFormEncodable))
+    private class func keyPairDictionary(
+        forObject object: (NSObject & STPFormEncodable)
+    )
         -> [String:
         Any]
     {

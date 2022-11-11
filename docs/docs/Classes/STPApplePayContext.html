@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 23.0.0
+          Stripe iOS SDKs 23.1.1
         </a>
         
       </p>
@@ -55,9 +55,6 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripeCore@objc(cs)STP_Internal_DownloadManager">DownloadManager</a>
-              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -908,7 +905,7 @@ Usage looks like this:</p>
 </ol>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L91-L615">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L91-L709">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -940,7 +937,10 @@ Usage looks like this:</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(initWithPaymentRequest:delegate:)</span>
-<span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">PKPaymentRequest</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="n">_stpinternal_STPApplePayContextDelegateBase</span><span class="p">?)</span></code></pre>
+<span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span>
+    <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">PKPaymentRequest</span><span class="p">,</span>
+    <span class="nv">delegate</span><span class="p">:</span> <span class="n">_stpinternal_STPApplePayContextDelegateBase</span><span class="p">?</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -976,7 +976,7 @@ Usage looks like this:</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L99-L114">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L99-L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1029,7 +1029,7 @@ Usage looks like this:</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L131-L134">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L136-L139">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1092,7 +1092,7 @@ Usage looks like this:</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L142-L164">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L147-L172">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1122,7 +1122,8 @@ Usage looks like this:</p>
                           <pre class="highlight swift"><code><span class="kd">@available(*, deprecated, renamed: "presentApplePay(completion:﹚", message: "Use `presentApplePay(completion:﹚` instead.")</span>
 <span class="kd">@objc(presentApplePayOnViewController:completion:)</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">presentApplePay</span><span class="p">(</span>
-    <span class="n">on</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:14StripeApplePay12STPVoidBlocka">STPVoidBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="n">on</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:14StripeApplePay12STPVoidBlocka">STPVoidBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1159,7 +1160,7 @@ Usage looks like this:</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L177-L182">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L187-L193">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1191,7 +1192,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@StripeCore@objc(cs
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L186">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L197">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1236,7 +1237,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@StripeCore@objc(cs
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L607-L614">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift#L701-L708">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1249,7 +1250,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@StripeCore@objc(cs
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-24)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-11-07)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

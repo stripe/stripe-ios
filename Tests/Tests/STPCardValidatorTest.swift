@@ -9,11 +9,11 @@
 import UIKit
 import XCTest
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardValidatorTest: XCTestCase {
     static let cardData: [(STPCardBrand, String, STPCardValidationState)] = {
@@ -153,7 +153,9 @@ class STPCardValidatorTest: XCTestCase {
         for test in tests {
             let card = test.1
             let validationState = STPCardValidator.validationState(
-                forNumber: card, validatingCardBrand: true)
+                forNumber: card,
+                validatingCardBrand: true
+            )
             let expected = test.0
             if !(validationState == expected) {
                 XCTFail("Expected \(expected), got \(validationState) for number \(card)")
@@ -162,30 +164,43 @@ class STPCardValidatorTest: XCTestCase {
 
         XCTAssertEqual(
             .incomplete,
-            STPCardValidator.validationState(forNumber: "1", validatingCardBrand: false))
+            STPCardValidator.validationState(forNumber: "1", validatingCardBrand: false)
+        )
         XCTAssertEqual(
             .incomplete,
             STPCardValidator.validationState(
-                forNumber: "0000000000000000", validatingCardBrand: false))
+                forNumber: "0000000000000000",
+                validatingCardBrand: false
+            )
+        )
         XCTAssertEqual(
             .incomplete,
             STPCardValidator.validationState(
-                forNumber: "9999999999999995", validatingCardBrand: false))
-        XCTAssertEqual(
-            .valid,
-            STPCardValidator.validationState(
-                forNumber: "0000000000000000000", validatingCardBrand: false)
+                forNumber: "9999999999999995",
+                validatingCardBrand: false
+            )
         )
         XCTAssertEqual(
             .valid,
             STPCardValidator.validationState(
-                forNumber: "9999999999999999998", validatingCardBrand: false)
+                forNumber: "0000000000000000000",
+                validatingCardBrand: false
+            )
+        )
+        XCTAssertEqual(
+            .valid,
+            STPCardValidator.validationState(
+                forNumber: "9999999999999999998",
+                validatingCardBrand: false
+            )
         )
         XCTAssertEqual(
             .incomplete,
-            STPCardValidator.validationState(forNumber: "4242424242424", validatingCardBrand: true))
+            STPCardValidator.validationState(forNumber: "4242424242424", validatingCardBrand: true)
+        )
         XCTAssertEqual(
-            .incomplete, STPCardValidator.validationState(forNumber: nil, validatingCardBrand: true)
+            .incomplete,
+            STPCardValidator.validationState(forNumber: nil, validatingCardBrand: true)
         )
     }
 
@@ -273,7 +288,11 @@ class STPCardValidatorTest: XCTestCase {
 
         for test in tests {
             let state = STPCardValidator.validationState(
-                forExpirationYear: test.1, inMonth: test.0, inCurrentYear: 15, currentMonth: 8)
+                forExpirationYear: test.1,
+                inMonth: test.0,
+                inCurrentYear: 15,
+                currentMonth: 8
+            )
             XCTAssertEqual(state, test.2)
         }
     }
@@ -398,7 +417,8 @@ class STPCardValidatorTest: XCTestCase {
             let state = STPCardValidator.validationState(
                 forCard: card,
                 inCurrentYear: 15,
-                currentMonth: 8)
+                currentMonth: 8
+            )
             if state != test.4 {
                 XCTFail(
                     "Wrong validation state for \(String(describing: card.number)). Expected \(test.4), got \(state))"

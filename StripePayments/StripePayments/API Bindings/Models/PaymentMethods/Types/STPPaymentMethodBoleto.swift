@@ -24,7 +24,7 @@ public class STPPaymentMethodBoleto: NSObject, STPAPIResponseDecodable {
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodBoleto.self), self),
             // Properties
-            "taxID: <redacted>"
+            "taxID: <redacted>",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -32,7 +32,9 @@ public class STPPaymentMethodBoleto: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
 
-    required init?(dictionary: [AnyHashable: Any]) {
+    required init?(
+        dictionary: [AnyHashable: Any]
+    ) {
         guard let taxID = dictionary["tax_id"] as? String else {
             return nil
         }

@@ -59,7 +59,6 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         return nil
     }
 
-    
     // MARK: - NSCopying
     @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
         let copyBillingDetails = type(of: self).init()
@@ -72,8 +71,7 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
 
         return copyBillingDetails
     }
-    
-  
+
     // MARK: - Equality
     /// :nodoc:
     @objc
@@ -90,29 +88,27 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
             return false
         }
 
-        if !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters))
-        {
+        if !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters)) {
             return false
         }
-        
+
         return
-            address == other.address &&
-            email == other.email &&
-            name == other.name &&
-            phone == other.phone
+            address == other.address && email == other.email && name == other.name
+            && phone == other.phone
     }
-    
+
     // MARK: - STPAPIResponseDecodable
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         let billingDetails = self.init()
         billingDetails.allResponseFields = response
         billingDetails.address = STPPaymentMethodAddress.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "address"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "address")
+        )
         billingDetails.email = dict.stp_string(forKey: "email")
         billingDetails.name = dict.stp_string(forKey: "name")
         billingDetails.phone = dict.stp_string(forKey: "phone")
@@ -123,7 +119,10 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
 /// :nodoc:
 extension STPPaymentMethodBillingDetails {
     /// Convenience initializer for creating an `STPPaymentMethodBillingDetails` instance with a postal and country code
-    @objc convenience init(postalCode: String, countryCode: String? = Locale.autoupdatingCurrent.regionCode) {
+    @objc convenience init(
+        postalCode: String,
+        countryCode: String? = Locale.autoupdatingCurrent.regionCode
+    ) {
         self.init()
         let address = STPPaymentMethodAddress()
         address.postalCode = postalCode

@@ -7,22 +7,24 @@
 //
 
 import Foundation
-import UIKit
-
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
 @objc class STPLegacyImageLibrary: NSObject {
 
     /// This returns the appropriate icon for the specified bank brand.
-    @objc(brandImageForFPXBankBrand:) public class func fpxBrandImage(for brand: STPFPXBankBrand)
+    @objc(brandImageForFPXBankBrand:) public class func fpxBrandImage(
+        for brand: STPFPXBankBrand
+    )
         -> UIImage
     {
         let imageName = "stp_bank_fpx_\(STPFPXBank.identifierFrom(brand) ?? "")"
         let image = self.safeImageNamed(
             imageName,
-            templateIfAvailable: false)
+            templateIfAvailable: false
+        )
         return image
     }
 
@@ -72,7 +74,12 @@ import UIKit
         let templateImage = image.withRenderingMode(.alwaysTemplate)
         templateImage.draw(
             in: CGRect(
-                x: 0, y: 0, width: templateImage.size.width, height: templateImage.size.height))
+                x: 0,
+                y: 0,
+                width: templateImage.size.width,
+                height: templateImage.size.height
+            )
+        )
         newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage ?? image

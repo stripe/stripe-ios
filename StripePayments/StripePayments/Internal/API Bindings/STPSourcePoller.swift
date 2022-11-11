@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -38,22 +38,26 @@ class STPSourcePoller: NSObject {
             self,
             selector: #selector(restartPolling),
             name: UIApplication.didBecomeActiveNotification,
-            object: nil)
+            object: nil
+        )
         notificationCenter.addObserver(
             self,
             selector: #selector(restartPolling),
             name: UIApplication.willEnterForegroundNotification,
-            object: nil)
+            object: nil
+        )
         notificationCenter.addObserver(
             self,
             selector: #selector(pausePolling),
             name: UIApplication.willResignActiveNotification,
-            object: nil)
+            object: nil
+        )
         notificationCenter.addObserver(
             self,
             selector: #selector(pausePolling),
             name: UIApplication.didEnterBackgroundNotification,
-            object: nil)
+            object: nil
+        )
     }
 
     // Stops polling and cancels the request in progress.
@@ -91,7 +95,8 @@ class STPSourcePoller: NSObject {
         if apiClient == nil || shouldTimeout {
             cleanupAndFireCompletion(
                 with: latestSource,
-                error: error)
+                error: error
+            )
             return
         }
         if pollingPaused || pollingStopped {
@@ -102,7 +107,8 @@ class STPSourcePoller: NSObject {
             target: self,
             selector: #selector(_poll),
             userInfo: nil,
-            repeats: false)
+            repeats: false
+        )
     }
 
     @objc func _poll() {
@@ -121,7 +127,8 @@ class STPSourcePoller: NSObject {
                 self.requestCount += 1
                 application.endBackgroundTask(bgTaskID)
                 bgTaskID = .invalid
-        })
+            }
+        )
     }
 
     func _continue(
@@ -135,7 +142,8 @@ class STPSourcePoller: NSObject {
                 // Don't retry requests that 4xx
                 cleanupAndFireCompletion(
                     with: latestSource,
-                    error: error)
+                    error: error
+                )
             } else if status == 200 {
                 pollInterval = DefaultPollInterval
                 retryCount = 0
@@ -145,7 +153,8 @@ class STPSourcePoller: NSObject {
                 } else {
                     cleanupAndFireCompletion(
                         with: latestSource,
-                        error: nil)
+                        error: nil
+                    )
                 }
             } else {
                 // Backoff and increment retry count
@@ -166,7 +175,8 @@ class STPSourcePoller: NSObject {
                 if let error = error, error.code != CFNetworkErrors.cfurlErrorCancelled.rawValue {
                     cleanupAndFireCompletion(
                         with: latestSource,
-                        error: error)
+                        error: error
+                    )
                 }
                 stopPolling()
             }

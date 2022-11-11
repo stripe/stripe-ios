@@ -111,15 +111,12 @@ typealias STP3DS2AuthenticateCompletionBlock = (STP3DS2AuthenticateResponse?, Er
 /// - Parameter error: The error that occurred, if any.
 public typealias STPPaymentStatusBlock = (STPPaymentStatus, Error?) -> Void
 
-/**
- A callback to be run with an STPRadarSession
-
- - Parameters:
-    - radarSession: The RadarSession object.
-    - error: The error that occured, if any.
- */
+/// A callback to be run with an STPRadarSession
+///
+/// - Parameters:
+///    - radarSession: The RadarSession object.
+///    - error: The error that occured, if any.
 public typealias STPRadarSessionCompletionBlock = (STPRadarSession?, Error?) -> Void
-
 
 /// An empty block, called with no arguments, returning nothing.
 public typealias STPVoidBlock = () -> Void

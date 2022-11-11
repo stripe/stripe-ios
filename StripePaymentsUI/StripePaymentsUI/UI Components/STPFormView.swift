@@ -6,43 +6,36 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
-/**
- Base protocol to support manually backspacing between form inputs and
- responding to different inputs receiving/losing focus.
- */
+/// Base protocol to support manually backspacing between form inputs and
+/// responding to different inputs receiving/losing focus.
 protocol STPFormContainer: NSObjectProtocol {
     func inputTextFieldDidBackspaceOnEmpty(_ textField: STPInputTextField)
     func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField)
     func inputTextFieldDidResignFirstResponder(_ textField: STPInputTextField)
 }
 
-/**
- Internal version of `STPFormViewDelegate` that also includes additional methods for controlling
- form view interactions.
- */
+/// Internal version of `STPFormViewDelegate` that also includes additional methods for controlling
+/// form view interactions.
 @_spi(STP) public protocol STPFormViewInternalDelegate: NSObjectProtocol {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool)
     func formViewWillBecomeFirstResponder(_ form: STPFormView)
     func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton)
 }
 
-/**
- Protocol for observing the state of a specific input field within an `STPFormView`.
- */
+/// Protocol for observing the state of a specific input field within an `STPFormView`.
 protocol STPFormInputValidationObserver: NSObjectProtocol {
     func validationDidUpdate(
         to state: STPValidatedInputState,
         from previousState: STPValidatedInputState,
         for unformattedInput: String?,
-        in input: STPFormInput)
+        in input: STPFormInput
+    )
 }
 
-/**
- Protocol for various input types that may be in an `STPFormView`.
- */
+/// Protocol for various input types that may be in an `STPFormView`.
 protocol STPFormInput where Self: UIView {
 
     var formContainer: STPFormContainer? { get set }
@@ -57,12 +50,10 @@ protocol STPFormInput where Self: UIView {
 
 }
 
-/**
- `STPFormView` is a base class for the Stripe SDK's form input UI. You should use one of the available subclasses
- (`STPCardFormView`) rather than instantiating an `STPFormView` instance directly.
- */
+/// `STPFormView` is a base class for the Stripe SDK's form input UI. You should use one of the available subclasses
+/// (`STPCardFormView`) rather than instantiating an `STPFormView` instance directly.
 public class STPFormView: UIView, STPFormInputValidationObserver {
-    
+
     static let borderlessInset: CGFloat = StackViewWithSeparator.borderlessInset
 
     let sections: [Section]
@@ -73,10 +64,12 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     static let borderWidth: CGFloat = 1
     static let cornerRadius: CGFloat = 6
     static let interSectionSpacing: CGFloat = 7
-    
+
     @_spi(STP) public weak var formViewInternalDelegate: STPFormViewInternalDelegate?
-    
-    required init(sections: [Section]) {
+
+    required init(
+        sections: [Section]
+    ) {
         self.sections = sections
 
         vStack = UIStackView()
@@ -106,12 +99,15 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
         ])
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
     func shouldAutoAdvance(
-        for input: STPInputTextField, with validationState: STPValidatedInputState,
+        for input: STPInputTextField,
+        with validationState: STPValidatedInputState,
         from previousState: STPValidatedInputState
     ) -> Bool {
         if case .valid = validationState {
@@ -193,7 +189,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             return true
         }
     }
-    
+
     /// :nodoc:
     @objc
     public override func resignFirstResponder() -> Bool {
@@ -204,23 +200,23 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             return ret
         }
     }
-    
+
     /// :nodoc:
     @objc
     public override var isFirstResponder: Bool {
         return super.isFirstResponder || currentFirstResponderField()?.isFirstResponder ?? false
     }
-    
+
     /// :nodoc:
     @objc
     public override var canBecomeFirstResponder: Bool {
         return sequentialFields.count > 0
     }
-    
+
     /// :nodoc:
     @objc
     public override func becomeFirstResponder() -> Bool {
-      // grab the next first responder before calling super (which will cause any current first responder to resign)
+        // grab the next first responder before calling super (which will cause any current first responder to resign)
         var firstResponder: STPFormInput? = nil
         if currentFirstResponderField() != nil {
             // we are already first responder, move to next field sequentially
@@ -260,7 +256,8 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
                             result.append(input)
                         }
                     }
-                })
+                }
+            )
         }
     }
 
@@ -291,7 +288,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
         }
         return nil
     }
-    
+
     @_spi(STP) public func nextFirstResponderFieldBecomeFirstResponder() {
         nextFirstResponderField()?.becomeFirstResponder()
     }
@@ -349,7 +346,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
         }
         return nil
     }
-    
+
     func configureFooter(in sectionView: STPFormView.SectionView) {
         let fields = sectionView.sequentialFields
         let invalidFields = fields.filter { (field) -> Bool in
@@ -404,20 +401,22 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             case .valid(let message) = firstCompleteWithMessageField.validationState,
             let nonNilMessage = message
         {
-            sectionView.footerTextColor = CompatibleColor.label
+            sectionView.footerTextColor = .label
             sectionView.footerText = nonNilMessage
             return
         }
 
-        sectionView.footerTextColor = CompatibleColor.label
+        sectionView.footerTextColor = .label
         sectionView.footerText = nil
     }
 
     // MARK: - STPInputTextFieldValidationObserver
 
     func validationDidUpdate(
-        to state: STPValidatedInputState, from previousState: STPValidatedInputState,
-        for unformattedInput: String?, in input: STPFormInput
+        to state: STPValidatedInputState,
+        from previousState: STPValidatedInputState,
+        for unformattedInput: String?,
+        in input: STPFormInput
     ) {
         guard let textField = input as? STPInputTextField,
             let sectionView = sectionView(for: textField)
@@ -472,7 +471,7 @@ extension STPFormView: STPFormContainer {
 
     func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField) {
         self.formViewInternalDelegate?.formViewWillBecomeFirstResponder(self)
-        
+
         // Always update on become firstResponder in case some fields
         // were hidden or unhidden
         if textField == lastSubField() {
@@ -482,7 +481,7 @@ extension STPFormView: STPFormContainer {
             // sometimes messes up the keyboardType for asciiCapableNumberPad
             textField.returnKeyType = .default
         }
-        
+
         if let sectionView = sectionView(for: textField) {
             configureFooter(in: sectionView)
         }
@@ -543,13 +542,14 @@ extension STPFormView {
                 }
             }
         }
-        
+
         var insetFooterLabel: Bool = false {
             didSet {
-                footerLabelLeadingConstraint.constant = insetFooterLabel ? STPFormView.borderlessInset : 0
+                footerLabelLeadingConstraint.constant =
+                    insetFooterLabel ? STPFormView.borderlessInset : 0
             }
         }
-        
+
         lazy var footerLabelLeadingConstraint: NSLayoutConstraint = {
             return footerLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
         }()
@@ -564,7 +564,9 @@ extension STPFormView {
             }
         }
 
-        required init(section: Section) {
+        required init(
+            section: Section
+        ) {
             self.section = section
             let rows = section.rows
 
@@ -603,8 +605,9 @@ extension STPFormView {
                 titleLabel.text = title
                 let fontMetrics = UIFontMetrics(forTextStyle: .body)
                 titleLabel.font = fontMetrics.scaledFont(
-                    for: UIFont.systemFont(ofSize: 13, weight: .semibold))
-                titleLabel.textColor = CompatibleColor.secondaryLabel
+                    for: UIFont.systemFont(ofSize: 13, weight: .semibold)
+                )
+                titleLabel.textColor = .secondaryLabel
                 titleLabel.accessibilityTraits = [.header]
 
                 titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -615,7 +618,9 @@ extension STPFormView {
                 if let button = section.accessoryButton {
                     button.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
                     titleLabel.setContentCompressionResistancePriority(
-                        .defaultHigh + 1, for: .horizontal)
+                        .defaultHigh + 1,
+                        for: .horizontal
+                    )
                     button.translatesAutoresizingMaskIntoConstraints = false
                     arrangedSubviews.append(button)
                 }
@@ -628,7 +633,9 @@ extension STPFormView {
                     trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
                     headerView.topAnchor.constraint(equalTo: topAnchor),
                     stackView.topAnchor.constraint(
-                        equalTo: headerView.bottomAnchor, constant: SectionView.titleVerticalMargin),
+                        equalTo: headerView.bottomAnchor,
+                        constant: SectionView.titleVerticalMargin
+                    ),
                 ])
             } else {
                 constraints.append(stackView.topAnchor.constraint(equalTo: topAnchor))
@@ -642,7 +649,9 @@ extension STPFormView {
                 footerLabelLeadingConstraint,
                 trailingAnchor.constraint(equalTo: footerLabel.trailingAnchor),
                 footerLabel.topAnchor.constraint(
-                    equalTo: stackView.bottomAnchor, constant: SectionView.titleVerticalMargin),
+                    equalTo: stackView.bottomAnchor,
+                    constant: SectionView.titleVerticalMargin
+                ),
                 bottomAnchor.constraint(equalTo: footerLabel.bottomAnchor),
             ])
 
@@ -656,7 +665,9 @@ extension STPFormView {
             setContentHuggingPriority(.required, for: .vertical)
         }
 
-        required init(coder: NSCoder) {
+        required init(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 

@@ -74,34 +74,33 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls()
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let card = self.init()
         card.allResponseFields = response
-        guard let nsDict = dict as NSDictionary? else {
-            return nil
-        }
-        card.brand = self.brand(from: nsDict.stp_string(forKey: "brand") ?? "")
+        card.brand = self.brand(from: dict.stp_string(forKey: "brand") ?? "")
         card.checks = STPPaymentMethodCardChecks.decodedObject(
-            fromAPIResponse: nsDict.stp_dictionary(forKey: "checks"))
-        card.country = nsDict.stp_string(forKey: "country")
-        card.expMonth = nsDict.stp_int(forKey: "exp_month", or: 0)
-        card.expYear = nsDict.stp_int(forKey: "exp_year", or: 0)
-        card.funding = nsDict.stp_string(forKey: "funding")
-        card.last4 = nsDict.stp_string(forKey: "last4")
-        card.fingerprint = nsDict.stp_string(forKey: "fingerprint")
+            fromAPIResponse: dict.stp_dictionary(forKey: "checks"))
+        card.country = dict.stp_string(forKey: "country")
+        card.expMonth = dict.stp_int(forKey: "exp_month", or: 0)
+        card.expYear = dict.stp_int(forKey: "exp_year", or: 0)
+        card.funding = dict.stp_string(forKey: "funding")
+        card.last4 = dict.stp_string(forKey: "last4")
+        card.fingerprint = dict.stp_string(forKey: "fingerprint")
         card.networks = STPPaymentMethodCardNetworks.decodedObject(
-            fromAPIResponse: dict["networks"] as? [AnyHashable: Any])
+            fromAPIResponse: dict["networks"] as? [AnyHashable: Any]
+        )
         card.threeDSecureUsage = STPPaymentMethodThreeDSecureUsage.decodedObject(
-            fromAPIResponse: nsDict.stp_dictionary(forKey: "three_d_secure_usage"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "three_d_secure_usage"))
         card.wallet = STPPaymentMethodCardWallet.decodedObject(
-            fromAPIResponse: nsDict.stp_dictionary(forKey: "wallet"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "wallet"))
         return card
     }
 
     // MARK: - STPCardBrand
 
-    @objc(brandFromString:) @_spi(STP) public class func brand(from string: String) -> STPCardBrand {
+    @objc(brandFromString:) @_spi(STP) public class func brand(from string: String) -> STPCardBrand
+    {
         // Documentation: https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-brand
         let brand = string.lowercased()
         if brand == "visa" {

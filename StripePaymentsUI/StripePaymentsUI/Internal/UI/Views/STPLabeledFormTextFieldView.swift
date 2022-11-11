@@ -16,7 +16,10 @@ let kLabeledFormHorizontalMargin: CGFloat = 12.0
 class STPLabeledFormTextFieldView: STPViewWithSeparator {
     private var formLabel: UILabel?
 
-    @objc init(formLabel formLabelText: String, textField: STPFormTextField) {
+    @objc init(
+        formLabel formLabelText: String,
+        textField: STPFormTextField
+    ) {
         super.init(frame: CGRect.zero)
         let formLabel = UILabel()
         formLabel.text = formLabelText
@@ -32,29 +35,40 @@ class STPLabeledFormTextFieldView: STPViewWithSeparator {
 
         var constraints = [
             formLabel.widthAnchor.constraint(
-                lessThanOrEqualTo: layoutMarginsGuide.widthAnchor, multiplier: 0.5),
+                lessThanOrEqualTo: layoutMarginsGuide.widthAnchor,
+                multiplier: 0.5
+            ),
             heightAnchor.constraint(greaterThanOrEqualToConstant: kLabeledFormFieldHeight),
             textField.centerYAnchor.constraint(equalTo: centerYAnchor),
             formLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             topAnchor.anchorWithOffset(to: textField.topAnchor).constraint(
-                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin),
+                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin
+            ),
             topAnchor.anchorWithOffset(to: formLabel.topAnchor).constraint(
-                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin),
+                greaterThanOrEqualToConstant: kLabeledFormVeriticalMargin
+            ),
             // constraining the height here works around an issue where UITextFields without a border style
             // change height slightly when they become or resign first responder
             textField.heightAnchor.constraint(
                 equalToConstant: textField.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize)
-                    .height),
+                    .height
+            ),
         ]
 
         constraints.append(
             contentsOf: [
                 formLabel.leadingAnchor.constraint(
-                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor,
+                    multiplier: 1.0
+                ),
                 textField.leadingAnchor.constraint(
-                    equalToSystemSpacingAfter: formLabel.trailingAnchor, multiplier: 2.0),
+                    equalToSystemSpacingAfter: formLabel.trailingAnchor,
+                    multiplier: 2.0
+                ),
                 layoutMarginsGuide.trailingAnchor.constraint(
-                    equalToSystemSpacingAfter: textField.trailingAnchor, multiplier: 1.0),
+                    equalToSystemSpacingAfter: textField.trailingAnchor,
+                    multiplier: 1.0
+                ),
             ])
 
         labelWidthDimension = formLabel.widthAnchor
@@ -93,7 +107,9 @@ class STPLabeledFormTextFieldView: STPViewWithSeparator {
     }
     private(set) var labelWidthDimension = NSLayoutDimension()
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

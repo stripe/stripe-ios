@@ -19,7 +19,10 @@ public class STPPaymentMethodThreeDSecureUsage: NSObject, STPAPIResponseDecodabl
         let props = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPPaymentMethodThreeDSecureUsage.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPPaymentMethodThreeDSecureUsage.self),
+                self
+            ),
             // Properties
             "supported: \(supported ? "YES" : "NO")",
         ]
@@ -38,7 +41,7 @@ public class STPPaymentMethodThreeDSecureUsage: NSObject, STPAPIResponseDecodabl
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         if dict["supported"] == nil {
             return nil
         }

@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
+import UIKit
 
 enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringError {
     /// The app cannot access to the photo library on this device
@@ -60,13 +60,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             updateUI()
         }
     }
-    
+
     private(set) var continueButtonEnabled = false {
         didSet {
             updateUI()
         }
     }
-    
 
     // MARK: - Coordinators
 
@@ -80,7 +79,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         var items: [ListItemView.ViewModel] = [
             .init(
                 text: listItemText(for: .front),
-                accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
+                accessibilityLabel: accessibilityLabel(
+                    for: .front,
+                    uploadStatus: documentUploader.frontUploadStatus
+                ),
                 accessory: listItemAccessory(
                     for: .front,
                     isLoadingImageFile: isLoadingFrontImageFile,
@@ -94,7 +96,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             items.append(
                 .init(
                     text: listItemText(for: .back),
-                    accessibilityLabel: accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
+                    accessibilityLabel: accessibilityLabel(
+                        for: .back,
+                        uploadStatus: documentUploader.backUploadStatus
+                    ),
                     accessory: listItemAccessory(
                         for: .back,
                         isLoadingImageFile: isLoadingBackImageFile,
@@ -107,7 +112,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
         return .init(instructionText: instructionText, listViewModel: .init(items: items))
     }
-    
+
     var buttonState: IdentityFlowView.ViewModel.Button.State {
         switch (isSubmitting, continueButtonEnabled) {
         case (true, _):
@@ -126,7 +131,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         requireLiveCapture: Bool,
         sheetController: VerificationSheetControllerProtocol,
         documentUploader: DocumentUploaderProtocol,
-        cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
+        cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager
+            .shared,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
         self.documentType = documentType
@@ -141,7 +147,9 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         updateUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -156,7 +164,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             ),
             viewModel: .init(
                 headerViewModel: .init(
-                    backgroundColor: CompatibleColor.systemBackground,
+                    backgroundColor: .systemBackground,
                     headerType: .plain,
                     titleText: STPLocalizedString(
                         "File upload",
@@ -165,13 +173,16 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 ),
                 contentViewModel: .init(
                     view: instructionListView,
-                    inset: .zero),
-                buttons: [.continueButton(
-                    state: buttonState,
-                    didTap: { [weak self] in
-                        self?.didTapContinueButton()
-                    }
-                )]
+                    inset: .zero
+                ),
+                buttons: [
+                    .continueButton(
+                        state: buttonState,
+                        didTap: { [weak self] in
+                            self?.didTapContinueButton()
+                        }
+                    )
+                ]
             )
         )
     }
@@ -192,7 +203,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         }
         switch uploadStatus {
         case .notStarted,
-             .error:
+            .error:
             return .button(
                 title: String.Localized.select,
                 onTap: { [weak self] in
@@ -250,48 +261,56 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         )
 
         if !requireLiveCapture && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            alert.addAction(.init(
-                title: STPLocalizedString(
-                    "Photo Library",
-                    "When selected in an action sheet, opens the device's photo library"
-                ),
-                style: .default,
-                handler: { [weak self] _ in
-                    self?.selectPhotoFromLibrary()
-                }
-            ))
+            alert.addAction(
+                .init(
+                    title: STPLocalizedString(
+                        "Photo Library",
+                        "When selected in an action sheet, opens the device's photo library"
+                    ),
+                    style: .default,
+                    handler: { [weak self] _ in
+                        self?.selectPhotoFromLibrary()
+                    }
+                )
+            )
         }
 
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            alert.addAction(.init(
-                title: STPLocalizedString(
-                    "Take Photo",
-                    "When selected in an action sheet, opens the device's camera interface"
-                ),
-                style: .default,
-                handler: { [weak self] _ in
-                    self?.takePhoto()
-                }
-            ))
+            alert.addAction(
+                .init(
+                    title: STPLocalizedString(
+                        "Take Photo",
+                        "When selected in an action sheet, opens the device's camera interface"
+                    ),
+                    style: .default,
+                    handler: { [weak self] _ in
+                        self?.takePhoto()
+                    }
+                )
+            )
         }
 
         if !requireLiveCapture {
-            alert.addAction(.init(
-                title: STPLocalizedString(
-                    "Choose File",
-                    "When selected in an action sheet, opens the device's file system browser"
-                ),
-                style: .default,
-                handler: { [weak self] _ in
-                    self?.selectFileFromSystem()
-                }
-            ))
+            alert.addAction(
+                .init(
+                    title: STPLocalizedString(
+                        "Choose File",
+                        "When selected in an action sheet, opens the device's file system browser"
+                    ),
+                    style: .default,
+                    handler: { [weak self] _ in
+                        self?.selectFileFromSystem()
+                    }
+                )
+            )
         }
 
-        alert.addAction(.init(
-            title: String.Localized.cancel,
-            style: .cancel
-        ))
+        alert.addAction(
+            .init(
+                title: String.Localized.cancel,
+                style: .cancel
+            )
+        )
 
         present(alert, animated: true, completion: nil)
     }
@@ -299,7 +318,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     func selectPhotoFromLibrary() {
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {
             sheetController?.analyticsClient.logGenericError(
-                error: DocumentFileUploadViewControllerError.imagePickerSourcePhotoLibraryUnavailable
+                error: DocumentFileUploadViewControllerError
+                    .imagePickerSourcePhotoLibraryUnavailable
             )
             return
         }
@@ -313,7 +333,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func takePhoto() {
         // Check for camera permissions first.
-        cameraPermissionsManager.requestCameraAccess(completeOnQueue: .main) { [weak self] granted in
+        cameraPermissionsManager.requestCameraAccess(completeOnQueue: .main) {
+            [weak self] granted in
             guard let self = self else { return }
             guard granted == true else {
                 self.showCameraPermissionsAlert()
@@ -345,7 +366,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 asCopy: true
             )
         } else {
-            documentPicker = UIDocumentPickerViewController(documentTypes: ["public.image", "public.jpeg", "public.png"], in: UIDocumentPickerMode.import)
+            documentPicker = UIDocumentPickerViewController(
+                documentTypes: ["public.image", "public.jpeg", "public.png"],
+                in: UIDocumentPickerMode.import
+            )
         }
         documentPicker.allowsMultipleSelection = false
         documentPicker.delegate = self
@@ -388,20 +412,24 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         )
 
         if appSettingsHelper.canOpenAppSettings {
-            alert.addAction(.init(
-                title: String.Localized.app_settings,
-                style: .default,
-                handler: { [weak self] _ in
-                    self?.appSettingsHelper.openAppSettings()
-                }
-            ))
+            alert.addAction(
+                .init(
+                    title: String.Localized.app_settings,
+                    style: .default,
+                    handler: { [weak self] _ in
+                        self?.appSettingsHelper.openAppSettings()
+                    }
+                )
+            )
         }
 
-        alert.addAction(.init(
-            title: String.Localized.ok,
-            style: .cancel,
-            handler: nil
-        ))
+        alert.addAction(
+            .init(
+                title: String.Localized.ok,
+                style: .cancel,
+                handler: nil
+            )
+        )
 
         present(alert, animated: true, completion: nil)
     }
@@ -412,7 +440,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         isSubmitting = true
         sheetController?.saveDocumentBackAndTransition(
             from: analyticsScreenName,
-            documentUploader: self.documentUploader) { [weak self] in
+            documentUploader: self.documentUploader
+        ) { [weak self] in
             self?.isSubmitting = false
             self?.continueButtonEnabled = false
         }
@@ -422,18 +451,20 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     #if DEBUG
 
-    /* NOTE:
-     Since `presentedViewController` isn't updated within the test target,
-     we're book keeping it here for the purpose of testing the presented view
-     controller is what we expect.
-     */
+        //ce `presentedViewController` isn't updated within the test target,
+        //re book keeping it here for the purpose of testing the presented view
+        //troller is what we expect.
 
-    private(set) var test_presentedViewController: UIViewController?
+        private(set) var test_presentedViewController: UIViewController?
 
-    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-        test_presentedViewController = viewControllerToPresent
-        super.present(viewControllerToPresent, animated: flag, completion: completion)
-    }
+        override func present(
+            _ viewControllerToPresent: UIViewController,
+            animated flag: Bool,
+            completion: (() -> Void)? = nil
+        ) {
+            test_presentedViewController = viewControllerToPresent
+            super.present(viewControllerToPresent, animated: flag, completion: completion)
+        }
 
     #endif
 }
@@ -451,7 +482,7 @@ extension DocumentFileUploadViewController: UINavigationControllerDelegate {
 extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
     func imagePickerController(
         _ picker: UIImagePickerController,
-        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
     ) {
         defer {
             currentlySelectingSide = nil
@@ -518,7 +549,8 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
                 let data = try Data(contentsOf: url)
                 guard let image = UIImage(data: data) else {
                     self.sheetController?.analyticsClient.logGenericError(
-                        error: DocumentFileUploadViewControllerError.documentPickerDataNotFormattedAsImage
+                        error: DocumentFileUploadViewControllerError
+                            .documentPickerDataNotFormattedAsImage
                     )
                     return
                 }
@@ -555,11 +587,11 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
             }
         )
     }
-    
+
     func documentUploaderDidUploadBack(_ documentUploader: DocumentUploaderProtocol) {
         continueButtonEnabled = true
     }
-    
+
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader) {
         DispatchQueue.main.async { [weak self] in
             self?.updateUI()

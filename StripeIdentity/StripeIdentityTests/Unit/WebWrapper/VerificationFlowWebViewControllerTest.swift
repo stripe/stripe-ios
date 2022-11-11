@@ -24,8 +24,14 @@ final class VerificationFlowWebViewControllerTest: XCTestCase {
         result = nil
 
         // Make view controller
-        let navigationController = VerificationFlowWebViewController.makeInNavigationController(clientSecret: mockSecret, delegate: self)
-        guard let viewController = navigationController.viewControllers.first as? VerificationFlowWebViewController else {
+        let navigationController = VerificationFlowWebViewController.makeInNavigationController(
+            clientSecret: mockSecret,
+            delegate: self
+        )
+        guard
+            let viewController = navigationController.viewControllers.first
+                as? VerificationFlowWebViewController
+        else {
             return XCTFail("Expected `VerificationFlowWebViewController `")
         }
         self.viewController = viewController
@@ -46,7 +52,9 @@ final class VerificationFlowWebViewControllerTest: XCTestCase {
 
     func testCompletedResult() {
         // Mock that user closes view after reaching success URL
-        viewController.verificationWebView?.webView.load(URLRequest(url: VerifyWebURLHelper.successURL))
+        viewController.verificationWebView?.webView.load(
+            URLRequest(url: VerifyWebURLHelper.successURL)
+        )
         viewController.viewDidDisappear(false)
         guard case .flowCompleted = result else {
             return XCTFail("Expected `flowCompleted`")
@@ -56,7 +64,10 @@ final class VerificationFlowWebViewControllerTest: XCTestCase {
 
 @available(iOS 14.3, *)
 extension VerificationFlowWebViewControllerTest: VerificationFlowWebViewControllerDelegate {
-    func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: IdentityVerificationSheet.VerificationFlowResult) {
+    func verificationFlowWebViewController(
+        _ viewController: VerificationFlowWebViewController,
+        didFinish result: IdentityVerificationSheet.VerificationFlowResult
+    ) {
         self.result = result
     }
 }

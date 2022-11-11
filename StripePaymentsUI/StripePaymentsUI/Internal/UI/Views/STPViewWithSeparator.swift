@@ -22,12 +22,16 @@ class STPViewWithSeparator: UIView {
         }
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         super.init(coder: coder)
         _addSeparators()
     }
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
         _addSeparators()
     }
@@ -44,7 +48,8 @@ class STPViewWithSeparator: UIView {
         addSubview(topSeparator)
 
         separatorHeightConstraint = topSeparator.heightAnchor.constraint(
-            equalToConstant: _currentPixelHeight())
+            equalToConstant: _currentPixelHeight()
+        )
 
         if #available(iOS 13.0, *) {
             bottomSeparator.backgroundColor = UIColor.opaqueSeparator
@@ -66,7 +71,9 @@ class STPViewWithSeparator: UIView {
                 bottomSeparator.trailingAnchor.constraint(equalTo: trailingAnchor),
                 bottomSeparator.bottomAnchor.constraint(equalTo: bottomAnchor),
                 bottomSeparator.heightAnchor.constraint(
-                    equalTo: topSeparator.heightAnchor, multiplier: 1.0),
+                    equalTo: topSeparator.heightAnchor,
+                    multiplier: 1.0
+                ),
             ])
     }
 

@@ -122,6 +122,8 @@
 		3159F7EA2888C5FD007C8C3A /* card_unknown_updated_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3159F7BA2888C47B007C8C3A /* card_unknown_updated_icon_dark@3x.png */; };
 		31904C6628D9206F00E1F9F5 /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 31904C6528D9206F00E1F9F5 /* au_becs_bsb.json */; };
 		31DCB11B28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB11A28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift */; };
+		B6A0D5FA28FF4ED800A9F7A7 /* PaymentMethodMessagingView+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0D5F828FF4ED800A9F7A7 /* PaymentMethodMessagingView+Configuration.swift */; };
+		B6A0D5FB28FF4ED800A9F7A7 /* PaymentMethodMessagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0D5F928FF4ED800A9F7A7 /* PaymentMethodMessagingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -302,6 +304,8 @@
 		3159F7C22888C47C007C8C3A /* card_mastercard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_mastercard@3x.png"; sourceTree = "<group>"; };
 		31904C6528D9206F00E1F9F5 /* au_becs_bsb.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = au_becs_bsb.json; sourceTree = "<group>"; };
 		31DCB11A28F4EE20002EF128 /* STPAnalyticsClient+PaymentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+PaymentsUITests.swift"; sourceTree = "<group>"; };
+		B6A0D5F828FF4ED800A9F7A7 /* PaymentMethodMessagingView+Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PaymentMethodMessagingView+Configuration.swift"; path = "../../../Stripe/PaymentMethodMessagingView+Configuration.swift"; sourceTree = "<group>"; };
+		B6A0D5F928FF4ED800A9F7A7 /* PaymentMethodMessagingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentMethodMessagingView.swift; path = ../../../Stripe/PaymentMethodMessagingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -356,6 +360,8 @@
 		3122706A286E3BF80007ED5E /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				B6A0D5F928FF4ED800A9F7A7 /* PaymentMethodMessagingView.swift */,
+				B6A0D5F828FF4ED800A9F7A7 /* PaymentMethodMessagingView+Configuration.swift */,
 				3122706F286E3C0B0007ED5E /* STPAUBECSDebitFormView.swift */,
 				3122706B286E3C0A0007ED5E /* STPCardFormView.swift */,
 				31227073286E3C0B0007ED5E /* STPCardFormView+SwiftUI.swift */,
@@ -846,6 +852,7 @@
 				312271F428760BBF0007ED5E /* STPStringUtils.swift in Sources */,
 				312271BD2874EB130007ED5E /* STPPostalCodeInputTextField.swift in Sources */,
 				312271BC2874EB130007ED5E /* STPCardNumberInputTextFieldValidator.swift in Sources */,
+				B6A0D5FB28FF4ED800A9F7A7 /* PaymentMethodMessagingView.swift in Sources */,
 				312271F828760CB20007ED5E /* String+Localized.swift in Sources */,
 				31227076286E3C0B0007ED5E /* STPFormTextFieldContainer.swift in Sources */,
 				31138E6B28DBBB79008AF554 /* Enums+CustomStringConvertible.swift in Sources */,
@@ -854,6 +861,7 @@
 				312271C42874EB130007ED5E /* STPCardNumberInputTextField.swift in Sources */,
 				31227201287629870007ED5E /* StripePayments+Export.swift in Sources */,
 				312271BB2874EB130007ED5E /* STPCardNumberInputTextFieldFormatter.swift in Sources */,
+				B6A0D5FA28FF4ED800A9F7A7 /* PaymentMethodMessagingView+Configuration.swift in Sources */,
 				312271BF2874EB130007ED5E /* STPPostalCodeInputTextFieldValidator.swift in Sources */,
 				312271F228760B9D0007ED5E /* STPBECSDebitAccountNumberValidator.swift in Sources */,
 				312271EE28760B740007ED5E /* STPViewWithSeparator.swift in Sources */,

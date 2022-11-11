@@ -53,7 +53,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     /// @deprecated Metadata is not  returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     /// - seealso: https://stripe.com/docs/api#metadata
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Metadata is not returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
@@ -123,10 +124,10 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethod = \(String(describing: paymentMethod))",
             "paymentMethodOptions = \(String(describing: paymentMethodOptions))",
-            "paymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "payment_method_types") ?? [])",
-            "status = \((allResponseFields as NSDictionary).stp_string(forKey: "status") ?? "")",
-            "usage = \((allResponseFields as NSDictionary).stp_string(forKey: "usage") ?? "")",
-            "unactivatedPaymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "unactivated_payment_method_types") ?? [])",
+            "paymentMethodTypes = \(allResponseFields.stp_array(forKey: "payment_method_types") ?? [])",
+            "status = \(allResponseFields.stp_string(forKey: "status") ?? "")",
+            "usage = \(allResponseFields.stp_string(forKey: "usage") ?? "")",
+            "unactivatedPaymentMethodTypes = \(allResponseFields.stp_array(forKey: "unactivated_payment_method_types") ?? [])",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -136,9 +137,11 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     class func status(from string: String) -> STPSetupIntentStatus {
         let map = [
             "requires_payment_method": NSNumber(
-                value: STPSetupIntentStatus.requiresPaymentMethod.rawValue),
+                value: STPSetupIntentStatus.requiresPaymentMethod.rawValue
+            ),
             "requires_confirmation": NSNumber(
-                value: STPSetupIntentStatus.requiresConfirmation.rawValue),
+                value: STPSetupIntentStatus.requiresConfirmation.rawValue
+            ),
             "requires_action": NSNumber(value: STPSetupIntentStatus.requiresAction.rawValue),
             "processing": NSNumber(value: STPSetupIntentStatus.processing.rawValue),
             "succeeded": NSNumber(value: STPSetupIntentStatus.succeeded.rawValue),
@@ -178,8 +181,10 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         }
         // Consolidates expanded setup_intent and ordered_payment_method_types into singular dict for decoding
         if let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
-           let setupIntentDict = paymentMethodPrefDict["setup_intent"] as? [AnyHashable: Any],
-           let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"] as? [String] {
+            let setupIntentDict = paymentMethodPrefDict["setup_intent"] as? [AnyHashable: Any],
+            let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"]
+                as? [String]
+        {
             var dict = setupIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
@@ -194,7 +199,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         // required fields
         guard
@@ -212,25 +217,32 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         let customerID = dict.stp_string(forKey: "customer")
         let stripeDescription = dict.stp_string(forKey: "description")
         let linkSettings = LinkSettings.decodedObject(
-            fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any])
+            fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
+        )
         let livemode = dict.stp_bool(forKey: "livemode", or: true)
         let nextActionDict = dict.stp_dictionary(forKey: "next_action")
         let nextAction = STPIntentAction.decodedObject(fromAPIResponse: nextActionDict)
         let orderedPaymentMethodTypes = STPPaymentMethod.paymentMethodTypes(
-            from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings)
+            from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
+        )
         let paymentMethod = STPPaymentMethod.decodedObject(
-            fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any])
+            fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any]
+        )
         let paymentMethodID = paymentMethod?.stripeId ?? dict.stp_string(forKey: "payment_method")
         let paymentMethodOptions = STPPaymentMethodOptions.decodedObject(
-            fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any])
+            fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
+        )
         let paymentMethodTypes = STPPaymentMethod.types(from: paymentMethodTypeStrings)
         let status = self.status(from: rawStatus)
         let rawUsage = dict.stp_string(forKey: "usage")
         let usage = rawUsage != nil ? self.usage(from: rawUsage ?? "") : .none
-        let lastSetupError =  STPSetupIntentLastSetupError.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "last_setup_error"))
+        let lastSetupError = STPSetupIntentLastSetupError.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "last_setup_error")
+        )
         let unactivatedPaymentTypes = STPPaymentMethod.paymentMethodTypes(
-            from: dict["unactivated_payment_method_types"] as? [String] ?? [])
-        
+            from: dict["unactivated_payment_method_types"] as? [String] ?? []
+        )
+
         let setupIntent = self.init(
             stripeID: stripeId,
             clientSecret: clientSecret,

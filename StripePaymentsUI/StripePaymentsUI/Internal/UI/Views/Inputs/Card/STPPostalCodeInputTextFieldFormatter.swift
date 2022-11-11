@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 class STPPostalCodeInputTextFieldFormatter: STPInputTextFieldFormatter {
 
@@ -27,17 +27,22 @@ class STPPostalCodeInputTextFieldFormatter: STPInputTextFieldFormatter {
             return false
         }
         return STPPostalCodeValidator.validationState(
-            forPostalCode: proposed, countryCode: countryCode) != .invalid
+            forPostalCode: proposed,
+            countryCode: countryCode
+        ) != .invalid
     }
 
     override func formattedText(
-        from input: String, with defaultAttributes: [NSAttributedString.Key: Any]
+        from input: String,
+        with defaultAttributes: [NSAttributedString.Key: Any]
     ) -> NSAttributedString {
         return NSAttributedString(
             string: STPPostalCodeValidator.formattedSanitizedPostalCode(
                 from: input.trimmingCharacters(in: .whitespacesAndNewlines),
                 countryCode: countryCode,
-                usage: .billingAddress) ?? "",
-            attributes: defaultAttributes)
+                usage: .billingAddress
+            ) ?? "",
+            attributes: defaultAttributes
+        )
     }
 }

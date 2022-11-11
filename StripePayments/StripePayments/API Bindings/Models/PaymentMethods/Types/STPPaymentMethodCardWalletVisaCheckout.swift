@@ -30,14 +30,16 @@ public class STPPaymentMethodCardWalletVisaCheckout: NSObject, STPAPIResponseDec
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let visaCheckout = self.init()
         visaCheckout.allResponseFields = response
         visaCheckout.billingAddress = STPPaymentMethodAddress.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "billing_address"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "billing_address")
+        )
         visaCheckout.shippingAddress = STPPaymentMethodAddress.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "shipping_address"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "shipping_address")
+        )
         visaCheckout.email = dict.stp_string(forKey: "email")
         visaCheckout.name = dict.stp_string(forKey: "name")
         return visaCheckout

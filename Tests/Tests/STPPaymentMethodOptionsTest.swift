@@ -7,11 +7,12 @@
 //
 
 import XCTest
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodOptionsTest: XCTestCase {
 
@@ -28,11 +29,17 @@ class STPPaymentMethodOptionsTest: XCTestCase {
         for verificationMethod in verificationMethods {
             var clientSecret: String? = nil
             let createPIExpectation = expectation(description: "Create PaymentIntent")
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: ["payment_method_types": ["us_bank_account"],
-                                                                          "payment_method_options": ["us_bank_account": ["verification_method": verificationMethod]],
-                                                                          "currency": "usd",
-                                                                          "amount": 1000],
-                                                             account: nil) { intentClientSecret, error in
+            STPTestingAPIClient.shared().createPaymentIntent(
+                withParams: [
+                    "payment_method_types": ["us_bank_account"],
+                    "payment_method_options": [
+                        "us_bank_account": ["verification_method": verificationMethod]
+                    ],
+                    "currency": "usd",
+                    "amount": 1000,
+                ],
+                account: nil
+            ) { intentClientSecret, error in
                 XCTAssertNil(error)
                 XCTAssertNotNil(intentClientSecret)
                 clientSecret = intentClientSecret
@@ -49,15 +56,20 @@ class STPPaymentMethodOptionsTest: XCTestCase {
                 XCTAssertNil(error)
                 XCTAssertNotNil(paymentIntent)
 
-                XCTAssertNotNil(paymentIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod)
-                XCTAssertEqual(paymentIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod,
-                               STPPaymentMethodOptions.USBankAccount.VerificationMethod(rawValue: verificationMethod))
+                XCTAssertNotNil(
+                    paymentIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod
+                )
+                XCTAssertEqual(
+                    paymentIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod,
+                    STPPaymentMethodOptions.USBankAccount.VerificationMethod(
+                        rawValue: verificationMethod
+                    )
+                )
                 retrievePIExpectation.fulfill()
 
             }
             waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
         }
-
 
     }
 
@@ -74,10 +86,15 @@ class STPPaymentMethodOptionsTest: XCTestCase {
         for verificationMethod in verificationMethods {
             var clientSecret: String? = nil
             let createPIExpectation = expectation(description: "Create SetupIntent")
-            STPTestingAPIClient.shared().createSetupIntent(withParams: ["payment_method_types": ["us_bank_account"],
-                                                                        "payment_method_options": ["us_bank_account": ["verification_method": verificationMethod]],
-                                                                       ],
-                                                           account: nil) { intentClientSecret, error in
+            STPTestingAPIClient.shared().createSetupIntent(
+                withParams: [
+                    "payment_method_types": ["us_bank_account"],
+                    "payment_method_options": [
+                        "us_bank_account": ["verification_method": verificationMethod]
+                    ],
+                ],
+                account: nil
+            ) { intentClientSecret, error in
                 XCTAssertNil(error)
                 XCTAssertNotNil(intentClientSecret)
                 clientSecret = intentClientSecret
@@ -94,15 +111,20 @@ class STPPaymentMethodOptionsTest: XCTestCase {
                 XCTAssertNil(error)
                 XCTAssertNotNil(setupIntent)
 
-                XCTAssertNotNil(setupIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod)
-                XCTAssertEqual(setupIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod,
-                               STPPaymentMethodOptions.USBankAccount.VerificationMethod(rawValue: verificationMethod))
+                XCTAssertNotNil(
+                    setupIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod
+                )
+                XCTAssertEqual(
+                    setupIntent?.paymentMethodOptions?.usBankAccount?.verificationMethod,
+                    STPPaymentMethodOptions.USBankAccount.VerificationMethod(
+                        rawValue: verificationMethod
+                    )
+                )
                 retrievePIExpectation.fulfill()
 
             }
             waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
         }
-
 
     }
 

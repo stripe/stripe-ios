@@ -85,7 +85,8 @@ extension PaymentSheet {
                         }
                         let paymentIntentParams = confirmParams.makeDashboardParams(
                             paymentIntentClientSecret: paymentIntent.clientSecret,
-                            paymentMethodID: paymentMethod?.stripeId ?? ""
+                            paymentMethodID: paymentMethod?.stripeId ?? "",
+                            configuration: configuration
                         )
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentHandler.confirmPayment(
@@ -94,7 +95,10 @@ extension PaymentSheet {
                             completion: paymentHandlerCompletion)
                     }
                 } else {
-                    let paymentIntentParams = confirmParams.makeParams(paymentIntentClientSecret: paymentIntent.clientSecret)
+                    let paymentIntentParams = confirmParams.makeParams(
+                        paymentIntentClientSecret: paymentIntent.clientSecret,
+                        configuration: configuration
+                    )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     paymentHandler.confirmPayment(paymentIntentParams,
@@ -122,7 +126,11 @@ extension PaymentSheet {
                 paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                 // Overwrite in case payment_method_options was set previously - we don't want to save an already-saved payment method
                 paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
-                paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(false, paymentMethodType: paymentMethod.type)
+                paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
+                    false,
+                    paymentMethodType: paymentMethod.type,
+                    customer: configuration.customer
+                )
                 
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
@@ -316,7 +324,10 @@ extension PaymentSheet {
                 }
                 intentPromise.resolve(with: .paymentIntent(paymentIntent))
             }
-            let additionalParameters = ["merchant_support_async": configuration.allowsDelayedPaymentMethods]
+            let additionalParameters = [
+                "merchant_support_async": configuration.allowsDelayedPaymentMethods,
+                "merchant_support_shipping": configuration.allowsPaymentMethodsRequiringShippingAddress
+            ]
             configuration.apiClient.retrievePaymentIntentWithPreferences(
                 withClientSecret: clientSecret,
                 additionalParameters: additionalParameters) { result in

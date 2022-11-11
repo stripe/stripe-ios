@@ -7,9 +7,12 @@
 //
 
 import Foundation
-import XCTest
-@testable @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
+import XCTest
+
+// swift-format-ignore
+@testable @_spi(STP) import StripeCore
+
 @testable import StripeIdentity
 
 final class IdentityImageUploaderTest: XCTestCase {
@@ -49,10 +52,22 @@ final class IdentityImageUploaderTest: XCTestCase {
     func testSetup() {
         // The config max dimensions must be smaller than the image size for
         // this test to be valid
-        XCTAssertLessThan(IdentityImageUploaderTest.mockConfig.lowResImageMaxDimension, mockImage.width)
-        XCTAssertLessThan(IdentityImageUploaderTest.mockConfig.lowResImageMaxDimension, mockImage.height)
-        XCTAssertLessThan(IdentityImageUploaderTest.mockConfig.highResImageMaxDimension, mockImage.width)
-        XCTAssertLessThan(IdentityImageUploaderTest.mockConfig.highResImageMaxDimension, mockImage.height)
+        XCTAssertLessThan(
+            IdentityImageUploaderTest.mockConfig.lowResImageMaxDimension,
+            mockImage.width
+        )
+        XCTAssertLessThan(
+            IdentityImageUploaderTest.mockConfig.lowResImageMaxDimension,
+            mockImage.height
+        )
+        XCTAssertLessThan(
+            IdentityImageUploaderTest.mockConfig.highResImageMaxDimension,
+            mockImage.width
+        )
+        XCTAssertLessThan(
+            IdentityImageUploaderTest.mockConfig.highResImageMaxDimension,
+            mockImage.height
+        )
 
         // This test also assumes that the test image is in portrait
         XCTAssertLessThan(mockImage.width, mockImage.height)
@@ -92,10 +107,14 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest?.fileName, fileName)
 
         // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success((
-            file: DocumentUploaderTest.mockStripeFile,
-            metrics: DocumentUploaderTest.mockUploadMetrics
-        )))
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: DocumentUploaderTest.mockStripeFile,
+                    metrics: DocumentUploaderTest.mockUploadMetrics
+                )
+            )
+        )
         wait(for: [uploadResponseExp], timeout: 1)
     }
 
@@ -113,21 +132,31 @@ final class IdentityImageUploaderTest: XCTestCase {
 
         // Respond to request
         wait(for: uploadRequestExpectations, timeout: 1)
-        mockAPIClient.imageUpload.respondToRequests(with: .success((
-            file: DocumentUploaderTest.mockStripeFile,
-            metrics: .init(
-                timeToUpload: 3.5,  // 3500ms
-                fileSizeBytes: 2500 // 2.44kB
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success(
+                (
+                    file: DocumentUploaderTest.mockStripeFile,
+                    metrics: .init(
+                        timeToUpload: 3.5,  // 3500ms
+                        fileSizeBytes: 2500  // 2.44kB
+                    )
+                )
             )
-        )))
+        )
 
         // Wait for analytics to be logged
         wait(for: [uploadResponseExp], timeout: 1)
 
-        let uploadAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "image_upload").first
+        let uploadAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "image_upload"
+        ).first
 
         XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 1)
-        XCTAssert(analytic: uploadAnalytic, hasMetadata: "compression_quality", withValue: CGFloat(0.9))
+        XCTAssert(
+            analytic: uploadAnalytic,
+            hasMetadata: "compression_quality",
+            withValue: CGFloat(0.9)
+        )
         XCTAssert(analytic: uploadAnalytic, hasMetadata: "scan_type", withValue: "passport")
         XCTAssert(analytic: uploadAnalytic, hasMetadata: "id", withValue: "file_id")
         XCTAssert(analytic: uploadAnalytic, hasMetadata: "file_name", withValue: "mock_file_name")
@@ -145,7 +174,6 @@ final class IdentityImageUploaderTest: XCTestCase {
             // no-op
         }
 
-
         // Wait until request is made
         wait(for: uploadRequestExpectations, timeout: 1)
 
@@ -160,7 +188,10 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest.fileName, "low-res-prefix_full_frame")
 
         // Verify jpeg data is the expected size
-        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(
+            maxBytes: nil,
+            compressionQuality: 0.5
+        )
         let imageFromData = UIImage(data: data)
         XCTAssertEqual(imageFromData?.scale, 1)
         XCTAssertEqual(imageFromData?.size, imageSize)
@@ -192,7 +223,10 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest.fileName, "high-res-prefix")
 
         // Verify jpeg data is the expected size
-        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(
+            maxBytes: nil,
+            compressionQuality: 0.5
+        )
         let imageFromData = UIImage(data: data)
         XCTAssertEqual(imageFromData?.scale, 1)
         XCTAssertEqual(imageFromData?.size, imageSize)
@@ -224,7 +258,10 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest.fileName, "high-res-prefix")
 
         // Verify jpeg data is the expected size
-        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(
+            maxBytes: nil,
+            compressionQuality: 0.5
+        )
         let imageFromData = UIImage(data: data)
         XCTAssertEqual(imageFromData?.scale, 1)
         XCTAssertEqual(imageFromData?.size, imageSize)

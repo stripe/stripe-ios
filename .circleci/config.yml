@@ -96,7 +96,7 @@ jobs:
       - run: "bundle install"
       - run:
           name: "Run size report"
-          command: bundle exec ruby Tests/installation_tests/size_test/size_report.rb private $CIRCLE_BRANCH
+          command: "bundle exec fastlane size_report"
 
   framework-tests:
     executor: mac-executor
@@ -320,6 +320,7 @@ jobs:
       - macos/switch-ruby:
           version: "system" # Xcode's ipatool depends on a specific version of ruby, without this App Store archiving will fail
       - run: "sudo gem install bundler"
+      - run: "bundle config set without 'development'"
       - run: "bundle install"
       - run:
           name: "Submit app to Data Theorem for SAST"
@@ -333,7 +334,9 @@ workflows:
   version: 2.1
   build-and-test:
     jobs:
-      - size-report
+      - size-report:
+          context:
+            - EmergeTools
       - framework-tests
       - ui-tests
       - install-tests
@@ -366,7 +369,7 @@ workflows:
           filters:
             branches:
               only:
-                - private
+                - master
     jobs:
       - e2e-only:
           context:
@@ -378,7 +381,7 @@ workflows:
           filters:
             branches:
               only:
-                - private
+                - master
     jobs:
       - integration-all:
           context:
