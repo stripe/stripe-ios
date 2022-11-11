@@ -8,9 +8,6 @@
 /// for more information on how to customize the look and feel of this view controller.
 import UIKit
 
-
-protocol VerifyViewController: AnyObject {}
-
 /// TODO(jaimepark): Consolidate both add flow and card-set flow into a single view controller.
 /// This means replacing `VerifyCardViewControllerDelegate` and `VerifyCardAddViewControllerDelegate` with this one.
 protocol VerifyViewControllerDelegate: AnyObject {
@@ -36,7 +33,7 @@ protocol VerifyViewControllerDelegate: AnyObject {
     )
 }
 
-class VerifyCardViewController: SimpleScanViewController, VerifyViewController {
+class VerifyCardViewController: SimpleScanViewController {
     typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
 
     // our UI components
