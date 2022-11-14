@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 23.0.0
+          Stripe iOS SDKs 23.1.1
         </a>
         
       </p>
@@ -55,9 +55,6 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripeCore@objc(cs)STP_Internal_DownloadManager">DownloadManager</a>
-              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -889,7 +886,7 @@
             <p>A class responsible for collecting bank account information</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L29-L349">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L29-L462">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -923,7 +920,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L32">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -964,10 +961,12 @@ and if completed successfully, link your bank account to a PaymentIntent</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@available(iOS 12, *)</span>
 <span class="kd">@objc(collectBankAccountForPaymentWithClientSecret:params:from:completion:)</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForPayment</span><span class="p">(</span><span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                                         <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
-                                         <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
-                                         <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForPaymentCompletionBlock</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForPayment</span><span class="p">(</span>
+    <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
+    <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForPaymentCompletionBlock</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1029,7 +1028,7 @@ and if completed successfully, link your bank account to a PaymentIntent</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L74-L83">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L82-L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1057,11 +1056,13 @@ and if completed successfully, link your bank account to a PaymentIntent</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@available(iOS 12, *)</span>
 <span class="kd">@objc(collectBankAccountForPaymentWithClientSecret:returnURL:params:from:completion:)</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForPayment</span><span class="p">(</span><span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                                         <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-                                         <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
-                                         <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
-                                         <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForPaymentCompletionBlock</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForPayment</span><span class="p">(</span>
+    <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
+    <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForPaymentCompletionBlock</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1135,7 +1136,7 @@ and if completed successfully, link your bank account to a PaymentIntent</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L97-L142">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L109-L179">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1176,10 +1177,12 @@ and if completed successfully, link your bank account to a SetupIntent</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@available(iOS 12, *)</span>
 <span class="kd">@objc(collectBankAccountForSetupWithClientSecret:params:from:completion:)</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForSetup</span><span class="p">(</span><span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                                       <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
-                                       <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
-                                       <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForSetupCompletionBlock</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForSetup</span><span class="p">(</span>
+    <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
+    <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForSetupCompletionBlock</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1241,7 +1244,7 @@ and if completed successfully, link your bank account to a SetupIntent</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L221-L230">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L282-L295">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1269,11 +1272,13 @@ and if completed successfully, link your bank account to a SetupIntent</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@available(iOS 12, *)</span>
 <span class="kd">@objc(collectBankAccountForSetupWithClientSecret:returnURL:params:from:completion:)</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForSetup</span><span class="p">(</span><span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                                       <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-                                       <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
-                                       <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
-                                       <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForSetupCompletionBlock</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">collectBankAccountForSetup</span><span class="p">(</span>
+    <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a></span><span class="p">,</span>
+    <span class="n">from</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">STPCollectBankAccountForSetupCompletionBlock</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1347,7 +1352,7 @@ and if completed successfully, link your bank account to a SetupIntent</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.0.0/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L244-L288">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift#L309-L378">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1360,7 +1365,7 @@ and if completed successfully, link your bank account to a SetupIntent</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-10-24)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-11-07)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

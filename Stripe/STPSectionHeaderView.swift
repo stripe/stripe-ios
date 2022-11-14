@@ -36,7 +36,8 @@ class STPSectionHeaderView: UIView {
                 ]
                 label?.attributedText = NSAttributedString(
                     string: title,
-                    attributes: attributes)
+                    attributes: attributes
+                )
             } else {
                 label?.attributedText = nil
             }
@@ -58,7 +59,9 @@ class STPSectionHeaderView: UIView {
     private weak var label: UILabel?
     private let buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 15)
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
         let label = UILabel()
         label.numberOfLines = 0
@@ -97,12 +100,14 @@ class STPSectionHeaderView: UIView {
                 x: bounds.origin.x,
                 y: bounds.origin.y,
                 width: halfWidth,
-                height: heightThatFits)
+                height: heightThatFits
+            )
             button?.frame = CGRect(
                 x: bounds.origin.x + halfWidth,
                 y: bounds.origin.y,
                 width: halfWidth,
-                height: heightThatFits)
+                height: heightThatFits
+            )
         }
     }
 
@@ -115,7 +120,9 @@ class STPSectionHeaderView: UIView {
             let halfSize = CGSize(width: size.width / 2, height: size.height)
             let labelHeight = (label?.sizeThatFits(halfSize).height ?? 0.0) + labelPadding
             let buttonHeight = height(
-                forButtonText: button?.titleLabel?.text, width: halfSize.width)
+                forButtonText: button?.titleLabel?.text,
+                width: halfSize.width
+            )
             return CGFloat(max(buttonHeight, labelHeight))
         }
     }
@@ -124,19 +131,21 @@ class STPSectionHeaderView: UIView {
         let insets = buttonInsets
         let textSize = CGSize(
             width: width - insets.left - insets.right,
-            height: CGFloat.greatestFiniteMagnitude)
+            height: CGFloat.greatestFiniteMagnitude
+        )
         var attributes: [NSAttributedString.Key: Any]?
         if let font1 = button?.titleLabel?.font {
             attributes = [
                 NSAttributedString.Key.font: font1
             ]
         }
-        let buttonSize = text?.boundingRect(
-            with: textSize,
-            options: .usesLineFragmentOrigin,
-            attributes: attributes,
-            context: nil
-        ).size ?? .zero
+        let buttonSize =
+            text?.boundingRect(
+                with: textSize,
+                options: .usesLineFragmentOrigin,
+                attributes: attributes,
+                context: nil
+            ).size ?? .zero
         return buttonSize.height + insets.top + insets.bottom
     }
 
@@ -144,7 +153,9 @@ class STPSectionHeaderView: UIView {
         return CGSize(width: size.width, height: heightThatFits(size))
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

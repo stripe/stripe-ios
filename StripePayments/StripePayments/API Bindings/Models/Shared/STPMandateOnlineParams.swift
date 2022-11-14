@@ -26,7 +26,10 @@ public class STPMandateOnlineParams: NSObject {
     /// - Parameter userAgent: The user agent of the browser from which the Mandate was accepted by the customer.
     /// - Returns: A new STPMandateOnlineParams instance with the specified parameters.
     @objc(initWithIPAddress:userAgent:)
-    public init(ipAddress: String, userAgent: String) {
+    public init(
+        ipAddress: String,
+        userAgent: String
+    ) {
         self.ipAddress = ipAddress
         self.userAgent = userAgent
         super.init()

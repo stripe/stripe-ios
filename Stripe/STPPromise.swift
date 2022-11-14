@@ -29,12 +29,16 @@ class STPPromise<T>: NSObject {
     private var successCallbacks: [STPPromiseValueBlock] = []
     private var errorCallbacks: [STPPromiseErrorBlock] = []
 
-    convenience init(error: Error) {
+    convenience init(
+        error: Error
+    ) {
         self.init()
         self.fail(error)
     }
 
-    convenience init(value: T) {
+    convenience init(
+        value: T
+    ) {
         self.init()
         self.succeed(value)
     }

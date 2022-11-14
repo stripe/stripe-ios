@@ -77,12 +77,14 @@ extension STPPaymentIntentShippingDetails: STPAPIResponseDecodable {
 
         return STPPaymentIntentShippingDetails(
             address: STPPaymentIntentShippingDetailsAddress.decodedObject(
-                fromAPIResponse: dict["address"] as? [AnyHashable: Any]),
+                fromAPIResponse: dict["address"] as? [AnyHashable: Any]
+            ),
             name: dict["name"] as? String,
             carrier: dict["carrier"] as? String,
             phone: dict["phone"] as? String,
             trackingNumber: dict["tracking_number"] as? String,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
 }

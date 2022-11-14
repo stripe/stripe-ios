@@ -6,44 +6,35 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 import WebKit
-@_spi(STP) import StripeCore
 
 @available(iOS 14.3, *)
 protocol VerificationFlowWebViewDelegate: AnyObject {
-    /**
-     The view's URL was changed.
-     - Parameters:
-       - view: The view whose URL changed.
-       - url: The new URL value.
-     */
+    /// The view's URL was changed.
+    /// - Parameters:
+    ///   - view: The view whose URL changed.
+    ///   - url: The new URL value.
     func verificationFlowWebView(_ view: VerificationFlowWebView, didChangeURL url: URL?)
 
-    /**
-     The view finished loading the web page.
-     - Parameter view: The view that finished loading.
-     */
+    /// The view finished loading the web page.
+    /// - Parameter view: The view that finished loading.
     func verificationFlowWebViewDidFinishLoading(_ view: VerificationFlowWebView)
 
-    /**
-     The view received a `window.close` signal from Javascript.
-     - Parameter view: The view who's sending the close action.
-     */
+    /// The view received a `window.close` signal from Javascript.
+    /// - Parameter view: The view who's sending the close action.
     func verificationFlowWebViewDidClose(_ view: VerificationFlowWebView)
 
-    /**
-     The user tapped on a link that should be opened in a new target.
-     - Parameters:
-       - view: The view who's opening a URL.
-       - url: The new URL that should be opened in a new target.
-     */
+    /// The user tapped on a link that should be opened in a new target.
+    /// - Parameters:
+    ///   - view: The view who's opening a URL.
+    ///   - url: The new URL that should be opened in a new target.
     func verificationFlowWebView(_ view: VerificationFlowWebView, didOpenURLInNewTarget url: URL)
 }
 
-/**
- Basic WebView that displays a spinner while the page is loading or an error message with a "Try Again" button
- */
+/// Basic WebView that displays a spinner while the page is loading or an error message with a "Try Again" button
 @available(iOS 14.3, *)
 final class VerificationFlowWebView: UIView {
 
@@ -79,14 +70,20 @@ final class VerificationFlowWebView: UIView {
         webView.uiDelegate = self
 
         // Add custom JS-handler
-        webView.configuration.userContentController.add(self, name: ScriptMessageHandler.closeWindow.rawValue)
+        webView.configuration.userContentController.add(
+            self,
+            name: ScriptMessageHandler.closeWindow.rawValue
+        )
 
         return webView
     }()
 
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
-        label.text = STPLocalizedString("Unable to establish a connection.", "Error message that displays when we're unable to connect to the server.")
+        label.text = STPLocalizedString(
+            "Unable to establish a connection.",
+            "Error message that displays when we're unable to connect to the server."
+        )
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = Styling.errorLabelFont
@@ -121,18 +118,22 @@ final class VerificationFlowWebView: UIView {
 
     // MARK: Init
 
-    init(initialURL: URL) {
+    init(
+        initialURL: URL
+    ) {
         self.urlRequest = URLRequest(url: initialURL)
         super.init(frame: .zero)
 
         backgroundColor = .systemBackground
-        
+
         installViews()
         installConstraints()
         installObservers()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -161,8 +162,8 @@ final class VerificationFlowWebView: UIView {
 // MARK: - Private
 
 @available(iOS 14.3, *)
-private extension VerificationFlowWebView {
-    func installViews() {
+extension VerificationFlowWebView {
+    fileprivate func installViews() {
         errorView.addArrangedSubview(errorLabel)
         errorView.addArrangedSubview(tryAgainButton)
         addSubview(errorView)
@@ -170,7 +171,7 @@ private extension VerificationFlowWebView {
         addSubview(activityIndicatorView)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         webView.translatesAutoresizingMaskIntoConstraints = false
         errorView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -188,25 +189,41 @@ private extension VerificationFlowWebView {
             webView.trailingAnchor.constraint(equalTo: trailingAnchor),
 
             // Center activity indicator
-            activityIndicatorView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            activityIndicatorView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            activityIndicatorView.centerYAnchor.constraint(
+                equalTo: safeAreaLayoutGuide.centerYAnchor
+            ),
+            activityIndicatorView.centerXAnchor.constraint(
+                equalTo: safeAreaLayoutGuide.centerXAnchor
+            ),
 
             // Pin error view to top
-            errorView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Styling.errorViewInsets.top),
-            errorView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Styling.errorViewInsets.left),
-            errorView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: Styling.errorViewInsets.right),
+            errorView.topAnchor.constraint(
+                equalTo: safeAreaLayoutGuide.topAnchor,
+                constant: Styling.errorViewInsets.top
+            ),
+            errorView.leadingAnchor.constraint(
+                equalTo: safeAreaLayoutGuide.leadingAnchor,
+                constant: Styling.errorViewInsets.left
+            ),
+            errorView.trailingAnchor.constraint(
+                equalTo: safeAreaLayoutGuide.trailingAnchor,
+                constant: Styling.errorViewInsets.right
+            ),
         ])
     }
 
-    func installObservers() {
-        urlObservation = observe(\.webView.url, changeHandler: { [weak self] (_, _) in
-            guard let self = self else { return }
-            self.delegate?.verificationFlowWebView(self, didChangeURL: self.webView.url)
-        })
+    fileprivate func installObservers() {
+        urlObservation = observe(
+            \.webView.url,
+            changeHandler: { [weak self] (_, _) in
+                guard let self = self else { return }
+                self.delegate?.verificationFlowWebView(self, didChangeURL: self.webView.url)
+            }
+        )
     }
 
     @objc
-    func didTapTryAgainButton() {
+    fileprivate func didTapTryAgainButton() {
         load()
     }
 }
@@ -227,7 +244,11 @@ extension VerificationFlowWebView: WKNavigationDelegate {
         displayRetryMessage()
     }
 
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation!,
+        withError error: Error
+    ) {
         displayRetryMessage()
     }
 }
@@ -241,11 +262,17 @@ extension VerificationFlowWebView: WKUIDelegate {
         delegate?.verificationFlowWebViewDidClose(self)
     }
 
-    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+    func webView(
+        _ webView: WKWebView,
+        createWebViewWith configuration: WKWebViewConfiguration,
+        for navigationAction: WKNavigationAction,
+        windowFeatures: WKWindowFeatures
+    ) -> WKWebView? {
         // A link is attempting to open in a new window
         // Open it in the platform's default browser
         if navigationAction.targetFrame?.isMainFrame != true,
-           let url = navigationAction.request.url {
+            let url = navigationAction.request.url
+        {
             delegate?.verificationFlowWebView(self, didOpenURLInNewTarget: url)
         }
         return nil
@@ -256,7 +283,10 @@ extension VerificationFlowWebView: WKUIDelegate {
 
 @available(iOS 14.3, *)
 extension VerificationFlowWebView: WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
         guard let messageHandler = ScriptMessageHandler(rawValue: message.name) else { return }
 
         switch messageHandler {

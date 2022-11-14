@@ -41,16 +41,15 @@ public class STPPaymentMethodAUBECSDebit: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls()
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         return self.init(dictionary: dict)
     }
 
     required init?(dictionary dict: [AnyHashable: Any]) {
-        let nsDict = dict as NSDictionary
-        guard let bsbNumber = nsDict.stp_string(forKey: "bsb_number"),
-            let fingerprint = nsDict.stp_string(forKey: "fingerprint"),
-            let last4 = nsDict.stp_string(forKey: "last4")
+        guard let bsbNumber = dict.stp_string(forKey: "bsb_number"),
+            let fingerprint = dict.stp_string(forKey: "fingerprint"),
+            let last4 = dict.stp_string(forKey: "last4")
         else {
             return nil
         }

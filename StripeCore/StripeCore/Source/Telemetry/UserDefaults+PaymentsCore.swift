@@ -9,9 +9,9 @@
 import Foundation
 
 extension UserDefaults {
-    /// Canonical list of all UserDefaults keys the SDK uses
+    /// Canonical list of all UserDefaults keys the SDK uses.
     enum StripePaymentsCoreKeys: String {
-        /// The key for a dictionary FraudDetectionData dictionary
+        /// The key for a dictionary FraudDetectionData dictionary.
         case fraudDetectionData = "com.stripe.lib:FraudDetectionDataKey"
     }
 
@@ -23,8 +23,7 @@ extension UserDefaults {
             }
             do {
                 return try JSONDecoder().decode(FraudDetectionData.self, from: data)
-            }
-            catch(let e) {
+            } catch let e {
                 assertionFailure("\(e)")
                 return nil
             }
@@ -34,12 +33,10 @@ extension UserDefaults {
             do {
                 let data = try JSONEncoder().encode(newValue)
                 setValue(data, forKey: key)
-            }
-            catch(let e) {
+            } catch let e {
                 assertionFailure("\(e)")
                 return
             }
         }
     }
 }
-

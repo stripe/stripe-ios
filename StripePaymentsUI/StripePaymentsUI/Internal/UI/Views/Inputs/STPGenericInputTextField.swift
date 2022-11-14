@@ -44,13 +44,18 @@ class STPGenericInputTextField: STPInputTextField {
         self.keyboardType = keyboardType
     }
 
-    required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+    required init(
+        formatter: STPInputTextFieldFormatter,
+        validator: STPInputTextFieldValidator
+    ) {
         assert(formatter.isKind(of: STPInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPGenericInputTextField.Validator.self))
         super.init(formatter: formatter, validator: validator)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 

@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 class STPCardExpiryInputTextField: STPInputTextField {
 
@@ -15,22 +15,30 @@ class STPCardExpiryInputTextField: STPInputTextField {
         return (validator as! STPCardExpiryInputTextFieldValidator).expiryStrings
     }
 
-    public convenience init(prefillDetails: STPCardFormView.PrefillDetails? = nil) {
+    public convenience init(
+        prefillDetails: STPCardFormView.PrefillDetails? = nil
+    ) {
         self.init(
             formatter: STPCardExpiryInputTextFieldFormatter(),
-            validator: STPCardExpiryInputTextFieldValidator())
-        
-        self.text = prefillDetails?.formattedExpiry // pre-fill expiry if available
+            validator: STPCardExpiryInputTextFieldValidator()
+        )
+
+        self.text = prefillDetails?.formattedExpiry  // pre-fill expiry if available
     }
 
-    required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+    required init(
+        formatter: STPInputTextFieldFormatter,
+        validator: STPInputTextFieldValidator
+    ) {
         assert(formatter.isKind(of: STPCardExpiryInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPCardExpiryInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
         keyboardType = .asciiCapableNumberPad
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         super.init(coder: coder)
     }
 

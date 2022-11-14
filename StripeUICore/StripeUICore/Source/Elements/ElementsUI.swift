@@ -14,7 +14,7 @@ import UIKit
     
     /// The distances between an Element's content and its containing view
     public static let contentViewInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
-    public static let fieldBorderColor: UIColor = CompatibleColor.systemGray3
+    public static let fieldBorderColor: UIColor = .systemGray3
     public static let fieldBorderWidth: CGFloat = 1
     public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
     public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 13, weight: .semibold))
@@ -25,18 +25,7 @@ import UIKit
     public static let defaultCornerRadius: CGFloat = 6
     public static let backgroundColor: UIColor = {
         // systemBackground has a 'base' and 'elevated' state; we don't want this behavior.
-        if #available(iOS 13.0, *) {
-            return UIColor { (traitCollection) -> UIColor in
-                switch traitCollection.userInterfaceStyle {
-                case .dark:
-                    return CompatibleColor.secondarySystemBackground
-                default:
-                    return CompatibleColor.systemBackground
-                }
-            }
-        } else {
-            return CompatibleColor.systemBackground
-        }
+        return .dynamic(light: .systemBackground, dark: .secondarySystemBackground)
     }()
 
     public static func makeErrorLabel(theme: ElementsUITheme = .default) -> UILabel {
@@ -98,14 +87,14 @@ import UIKit
         public init() {}
 
         public var primary = UIColor.systemBlue
-        public var parentBackground = CompatibleColor.systemBackground
+        public var parentBackground = UIColor.systemBackground
         public var background = ElementsUI.backgroundColor
         public var border = ElementsUI.fieldBorderColor
         public var divider = ElementsUI.fieldBorderColor
-        public var textFieldText = CompatibleColor.label
-        public var bodyText = CompatibleColor.label
-        public var secondaryText = CompatibleColor.secondaryLabel
-        public var placeholderText = CompatibleColor.secondaryLabel
+        public var textFieldText = UIColor.label
+        public var bodyText = UIColor.label
+        public var secondaryText = UIColor.secondaryLabel
+        public var placeholderText = UIColor.secondaryLabel
         public var danger = UIColor.systemRed
     }
 

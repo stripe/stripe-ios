@@ -19,7 +19,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// Initialize this `STPSetupIntentConfirmParams` with a `clientSecret`.
     /// - Parameter clientSecret: the client secret for this SetupIntent
     @objc
-    public init(clientSecret: String) {
+    public init(
+        clientSecret: String
+    ) {
         self.clientSecret = clientSecret
         super.init()
         additionalAPIParameters = [:]
@@ -30,7 +32,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// - Parameter clientSecret: the client secret for this SetupIntent
     /// - Parameter paymentMethodType: the known type of the SetupIntent's attached PaymentMethod
     @objc
-    public init(clientSecret: String, paymentMethodType: STPPaymentMethodType) {
+    public init(
+        clientSecret: String,
+        paymentMethodType: STPPaymentMethodType
+    ) {
         self.clientSecret = clientSecret
         self._paymentMethodType = paymentMethodType
         super.init()
@@ -66,14 +71,16 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
                 return _mandateData
             }
             switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link,
+                .USBankAccount:
                 // Create default infer from client mandate_data
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                 onlineParams.inferFromClient = NSNumber(value: true)
 
                 if let customerAcceptance = STPMandateCustomerAcceptanceParams(
-                    type: .online, onlineParams: onlineParams)
-                {
+                    type: .online,
+                    onlineParams: onlineParams
+                ) {
                     return STPMandateDataParams(customerAcceptance: customerAcceptance)
                 }
             default: break
@@ -85,12 +92,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
 
     internal var _paymentMethodType: STPPaymentMethodType?
     internal var paymentMethodType: STPPaymentMethodType? {
-        get {
-            if let type = _paymentMethodType {
-                return type
-            }
-            return paymentMethodParams?.type
+        if let type = _paymentMethodType {
+            return type
         }
+        return paymentMethodParams?.type
     }
 
     override convenience init() {
@@ -154,12 +159,15 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
 
     // MARK: - Utilities
     static private let regex = try! NSRegularExpression(
-        pattern: "^seti_[^_]+_secret_[^_]+$", options: [])
+        pattern: "^seti_[^_]+_secret_[^_]+$",
+        options: []
+    )
     @_spi(STP) public static func isClientSecretValid(_ clientSecret: String) -> Bool {
         return
             (regex.numberOfMatches(
                 in: clientSecret,
                 options: .anchored,
-                range: NSRange(location: 0, length: clientSecret.count))) == 1
+                range: NSRange(location: 0, length: clientSecret.count)
+            )) == 1
     }
 }

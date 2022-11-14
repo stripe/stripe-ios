@@ -17,7 +17,7 @@ This library can be used entirely outside of a Stripe integration and with other
 
 # Example
 
-See the [CardImageVerification Example](https://github.com/stripe-ios/stripe-ios/tree/private/Example/CardImageVerification%20Example) directory for an example application that you can try for yourself!
+See the [CardImageVerification Example](https://github.com/stripe/stripe-ios/tree/master/Example/CardImageVerification%20Example) directory for an example application that you can try for yourself!
 
 # Installation
 

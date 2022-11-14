@@ -20,7 +20,11 @@ public class STPIssuingCardPin: NSObject {
         self.init(pin: nil, error: nil, allResponseFields: [:])
     }
 
-    private init(pin: String?, error: [AnyHashable: Any]?, allResponseFields: [AnyHashable: Any]) {
+    private init(
+        pin: String?,
+        error: [AnyHashable: Any]?,
+        allResponseFields: [AnyHashable: Any]
+    ) {
         self.pin = pin
         self.error = error
         self.allResponseFields = allResponseFields

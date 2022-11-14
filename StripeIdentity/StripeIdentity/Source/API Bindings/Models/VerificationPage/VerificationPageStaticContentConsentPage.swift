@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
+extension StripeAPI {
 
     struct VerificationPageStaticContentConsentPage: Decodable, Equatable {
         let acceptButtonText: String

@@ -14,7 +14,7 @@ extension DocumentType {
         case .passport:
             return false
         case .drivingLicense,
-             .idCard:
+            .idCard:
             return true
         }
     }

@@ -34,7 +34,8 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
     }
 
     @objc convenience init?(
-        type: STPMandateCustomerAcceptanceType, onlineParams: STPMandateOnlineParams?
+        type: STPMandateCustomerAcceptanceType,
+        onlineParams: STPMandateOnlineParams?
     ) {
         guard type == .offline || onlineParams != nil else {
             return nil

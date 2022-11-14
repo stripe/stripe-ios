@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
 
@@ -16,11 +16,13 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
         if countryCode?.uppercased() == "US" {
             return STPLocalizedString(
                 "Your ZIP is invalid.",
-                "Error message for when postal code in form is invalid (US only)")
+                "Error message for when postal code in form is invalid (US only)"
+            )
         } else {
             return STPLocalizedString(
                 "Your postal code is invalid.",
-                "Error message for when postal code in form is invalid")
+                "Error message for when postal code in form is invalid"
+            )
         }
     }
 
@@ -35,10 +37,12 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
             updateValidationState()
         }
     }
-    
+
     let postalCodeRequirement: STPPostalCodeRequirement
-    
-    required init(postalCodeRequirement: STPPostalCodeRequirement) {
+
+    required init(
+        postalCodeRequirement: STPPostalCodeRequirement
+    ) {
         self.postalCodeRequirement = postalCodeRequirement
         super.init()
     }
@@ -48,7 +52,8 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
         switch STPPostalCodeValidator.validationState(
             forPostalCode: inputValue,
             countryCode: countryCode,
-            with: postalCodeRequirement)
+            with: postalCodeRequirement
+        )
         {
         case .valid:
             validationState = .valid(message: nil)

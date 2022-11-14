@@ -28,22 +28,20 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         return window
     }
     
-    private var configuration: PaymentSheet.Configuration {
-        var configuration = PaymentSheet.Configuration()
-        configuration.merchantDisplayName = "Example, Inc."
-        configuration.applePay = .init(
-            merchantId: "com.foo.example", merchantCountryCode: "US")
-        configuration.allowsDelayedPaymentMethods = true
-        configuration.returnURL = "mockReturnUrl"
-        
-        return configuration
-    }
+    private var configuration = PaymentSheet.Configuration()
 
     // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
     var runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
+        
+        configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = .init(
+            merchantId: "com.foo.example", merchantCountryCode: "US")
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "mockReturnUrl"
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore() // use in-memory cookie store
 //        self.recordMode = true
@@ -56,6 +54,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
+        configuration = PaymentSheet.Configuration()
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
@@ -317,6 +316,43 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     
+    func testPaymentSheetCustomPrimaryButtonLabel() {
+        stubNewCustomerResponse()
+
+        configuration.primaryButtonLabel = "Donate"
+        
+        preparePaymentSheet()
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetCustomApplePayCta() {
+        stubNewCustomerResponse()
+
+        configuration.applePay = .init(
+            merchantId: "com.foo.example",
+            merchantCountryCode: "US",
+            buttonType: .donate)
+        
+        preparePaymentSheet(applePayEnabled: true)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomPrimaryButtonAndApplePayCta() {
+        stubNewCustomerResponse()
+
+        configuration.primaryButtonLabel = "Donate"
+        configuration.applePay = .init(
+            merchantId: "com.foo.example",
+            merchantCountryCode: "US",
+            buttonType: .donate)
+        
+        preparePaymentSheet(applePayEnabled: true)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetCustomCornerRadius() {
         stubReturningCustomerResponse()
 

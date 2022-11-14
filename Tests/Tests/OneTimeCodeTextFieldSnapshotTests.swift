@@ -6,21 +6,21 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 import UIKit
 import iOSSnapshotTestCase
-import StripeCoreTestUtils
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class OneTimeCodeTextFieldSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        self.recordMode = true
+        //        self.recordMode = true
     }
 
     func testEmpty() {

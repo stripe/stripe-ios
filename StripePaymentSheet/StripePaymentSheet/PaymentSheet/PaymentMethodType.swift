@@ -268,7 +268,7 @@ extension STPPaymentMethod {
             if let str = STPPaymentMethod.string(from: self.type) {
                 return .dynamic(str)
             } else {
-                let dict = (allResponseFields as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+                let dict = allResponseFields.stp_dictionaryByRemovingNulls()
                 let paymentMethodType = dict.stp_string(forKey: "type") ?? ""
                 return .dynamic(paymentMethodType)
             }

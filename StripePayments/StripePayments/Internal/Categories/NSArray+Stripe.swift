@@ -9,19 +9,19 @@
 import Foundation
 
 extension Array {
-    func stp_arrayByRemovingNulls() -> [AnyHashable] {
-        var result: [AnyHashable] = []
+    func stp_arrayByRemovingNulls() -> [Any] {
+        var result: [Any] = []
 
         for obj in self {
             switch obj {
             case let obj as Array:
                 // Save array after removing any null values
                 result.append(obj.stp_arrayByRemovingNulls())
-            case let obj as NSDictionary:
+            case let obj as [AnyHashable: Any]:
                 // Save dictionary after removing any null values
-                let dict = obj.stp_dictionaryByRemovingNulls() as NSDictionary
+                let dict = obj.stp_dictionaryByRemovingNulls()
                 result.append(dict)
-            case let obj as AnyHashable:
+            case let obj as Any:
                 if obj is NSNull {
                     // Skip null value
                     continue

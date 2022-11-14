@@ -21,7 +21,8 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
         return STPThreeDSNavigationBarCustomization()
     }
 
-    @_spi(STP) public var navigationBarCustomization = STDSNavigationBarCustomization.defaultSettings()
+    @_spi(STP) public var navigationBarCustomization =
+        STDSNavigationBarCustomization.defaultSettings()
 
     /// The tint color of the navigation bar background.
     /// Defaults to nil.

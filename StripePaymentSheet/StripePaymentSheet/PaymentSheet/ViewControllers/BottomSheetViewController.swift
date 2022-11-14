@@ -134,7 +134,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = CompatibleColor.systemBackground
+        view.backgroundColor = .systemBackground
         registerForKeyboardNotifications()
         [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
             view.addSubview($0)

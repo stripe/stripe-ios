@@ -92,7 +92,8 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
     /// An enum value representing which payment options you will accept from your user
     /// in addition to credit cards.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "additionalPaymentOptions has been removed. Set applePayEnabled and fpxEnabled on STPPaymentConfiguration instead."
     )
@@ -103,7 +104,8 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
     /// Your Stripe publishable key
     /// - seealso: https://dashboard.stripe.com/account/apikeys
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "If you used STPPaymentConfiguration.shared.publishableKey, use STPAPIClient.shared.publishableKey instead. If you passed a STPPaymentConfiguration instance to an SDK component, create an STPAPIClient, set publishableKey on it, and set the SDK component's APIClient property."
     )
@@ -130,7 +132,8 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
     /// account for which this request is being made.
     /// - seealso: https://stripe.com/docs/payments#connected-accounts
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "If you used STPPaymentConfiguration.shared.stripeAccount, use STPAPIClient.shared.stripeAccount instead. If you passed a STPPaymentConfiguration instance to an SDK component, create an STPAPIClient, set stripeAccount on it, and set the SDK component's APIClient property."
     )

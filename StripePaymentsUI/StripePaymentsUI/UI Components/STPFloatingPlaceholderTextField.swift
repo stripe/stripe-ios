@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A `UITextField` subclass that moves the placeholder text to the top leading side of the field
 /// instead of hiding it upon text entry or editing.
@@ -21,9 +21,9 @@ import UIKit
 
         static let floatingPlaceholderScale: CGFloat = 0.75
 
-        static let defaultPlaceholderColor: UIColor = CompatibleColor.secondaryLabel
+        static let defaultPlaceholderColor: UIColor = .secondaryLabel
 
-        static let floatingPlaceholderColor: UIColor = CompatibleColor.secondaryLabel
+        static let floatingPlaceholderColor: UIColor = .secondaryLabel
     }
 
     let placeholderLabel: UILabel = {
@@ -51,12 +51,16 @@ import UIKit
         }
     }
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         super.init(coder: coder)
         setupSubviews()
     }
@@ -76,8 +80,12 @@ import UIKit
     func floatingPlaceholderHeight() -> CGFloat {
         let placeholderLabelHeight = placeholderLabel.textRect(
             forBounds: CGRect(
-                x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude,
-                height: CGFloat.greatestFiniteMagnitude), limitedToNumberOfLines: 1
+                x: 0,
+                y: 0,
+                width: CGFloat.greatestFiniteMagnitude,
+                height: CGFloat.greatestFiniteMagnitude
+            ),
+            limitedToNumberOfLines: 1
         ).height
         return placeholderLabelHeight
             * STPFloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale
@@ -88,29 +96,27 @@ import UIKit
         let floatingPlaceholderLabelHeight = floatingPlaceholderHeight()
         let availableHeight = bounds.height
 
-        /*
-
-         |----------------------------------------------------|
-         |_______|vMargin_____________________________________|
-         |       |                                            |
-         |_______|floatingPlacholderLabelHeight_______________|
-         |       |                                            |
-         |       |                                            | availableHeight
-         |       |                                            |
-         |_______|textEntryHeight_____________________________|
-         |_______|vMargin_____________________________________|
-
-         vMargin is calculated as follows:
-
-         We want the text content to be vertically centered, giving the equation:
-            (floatingPlaceholderLabelHeight + textEntryHeight)/2 = availableHeight/2
-
-         We want the distance from the top to the midpoint of the floating placeholder to
-         be the same as the distance from the bottom to the center of the text entry rect,
-         but scaled by floatingPlaceholderScale giving:
-            floatingPlaceholderScale * (textEntryHeight/2 + vMargin) = floatingPlacholderLabelHeight/2 + vMargin
-
-         */
+        //
+        // |----------------------------------------------------|
+        // |_______|vMargin_____________________________________|
+        // |       |                                            |
+        // |_______|floatingPlacholderLabelHeight_______________|
+        // |       |                                            |
+        // |       |                                            | availableHeight
+        // |       |                                            |
+        // |_______|textEntryHeight_____________________________|
+        // |_______|vMargin_____________________________________|
+        //
+        // vMargin is calculated as follows:
+        //
+        // We want the text content to be vertically centered, giving the equation:
+        //    (floatingPlaceholderLabelHeight + textEntryHeight)/2 = availableHeight/2
+        //
+        // We want the distance from the top to the midpoint of the floating placeholder to
+        // be the same as the distance from the bottom to the center of the text entry rect,
+        // but scaled by floatingPlaceholderScale giving:
+        //    floatingPlaceholderScale * (textEntryHeight/2 + vMargin) = floatingPlacholderLabelHeight/2 + vMargin
+        //
 
         let vMargin =
             floatingPlaceholderLabelHeight > 0
@@ -121,7 +127,8 @@ import UIKit
                         - (floatingPlaceholderLabelHeight
                             / STPFloatingPlaceholderTextField.LayoutConstants
                             .floatingPlaceholderScale))
-                    / CGFloat(2)) : 0
+                    / CGFloat(2)
+            ) : 0
 
         var leftMargin = STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
         if leftView != nil,
@@ -144,8 +151,11 @@ import UIKit
         let isRTL = traitCollection.layoutDirection == .rightToLeft
 
         return UIEdgeInsets(
-            top: vMargin, left: isRTL ? rightMargin : leftMargin, bottom: vMargin,
-            right: isRTL ? leftMargin : rightMargin)
+            top: vMargin,
+            left: isRTL ? rightMargin : leftMargin,
+            bottom: vMargin,
+            right: isRTL ? leftMargin : rightMargin
+        )
     }
 
     func textEntryFieldInset() -> UIEdgeInsets {
@@ -172,7 +182,8 @@ import UIKit
         var placeholderFrame = textEntryFrame()
         placeholderFrame.size.width = min(
             placeholderFrame.size.width,
-            placeholderLabel.textRect(forBounds: placeholderFrame, limitedToNumberOfLines: 1).width)
+            placeholderLabel.textRect(forBounds: placeholderFrame, limitedToNumberOfLines: 1).width
+        )
         if traitCollection.layoutDirection == .rightToLeft {
             placeholderFrame.origin.x = textEntryFrame().maxX - placeholderFrame.width
         }
@@ -190,7 +201,8 @@ import UIKit
                 placeholderFrame.origin.x =
                     placeholderFrame.origin.x + (1 - scale) * placeholderFrame.width
             }
-            placeholderFrame.size.width = placeholderFrame.width * scale  // scaling the width here leads to a clean up and down animation
+            // scaling the width here leads to a clean up and down animation
+            placeholderFrame.size.width = placeholderFrame.width * scale
             placeholderFrame.size.height =
                 placeholderLabel.textRect(forBounds: placeholderFrame, limitedToNumberOfLines: 1)
                 .height * scale
@@ -202,7 +214,10 @@ import UIKit
             // Stop any in-flight animations
             lastAnimator?.stopAnimation(true)
             let params = UISpringTimingParameters(
-                mass: 1.0, dampingRatio: 0.93, frequencyResponse: 0.22)
+                mass: 1.0,
+                dampingRatio: 0.93,
+                frequencyResponse: 0.22
+            )
             let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
             animator.isInterruptible = true
             animator.addAnimations {
@@ -372,11 +387,14 @@ extension STPFloatingPlaceholderTextField {
     /// :nodoc:
     @objc public override var intrinsicContentSize: CGSize {
         let height = UIFontMetrics.default.scaledValue(
-            for: STPFloatingPlaceholderTextField.LayoutConstants.defaultHeight)
+            for: STPFloatingPlaceholderTextField.LayoutConstants.defaultHeight
+        )
         let contentPadding = self.contentPadding()
         return CGSize(
             width: placeholderLabel.intrinsicContentSize.width + contentPadding.left
-                + contentPadding.right, height: height)
+                + contentPadding.right,
+            height: height
+        )
     }
 
     /// :nodoc:
@@ -394,8 +412,10 @@ extension STPFloatingPlaceholderTextField {
         verticalFittingPriority: UILayoutPriority
     ) -> CGSize {
         var size = super.systemLayoutSizeFitting(
-            targetSize, withHorizontalFittingPriority: horizontalFittingPriority,
-            verticalFittingPriority: verticalFittingPriority)
+            targetSize,
+            withHorizontalFittingPriority: horizontalFittingPriority,
+            verticalFittingPriority: verticalFittingPriority
+        )
         size.width = max(size.width, intrinsicContentSize.width)
         return size
     }

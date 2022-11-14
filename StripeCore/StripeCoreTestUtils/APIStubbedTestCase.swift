@@ -6,13 +6,16 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if os(iOS)
+
 import Foundation
-import XCTest
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable @_spi(STP) import StripeCore
+import XCTest
 
-/* A test case offering a custom STPAPIClient with manual JSON stubbing. */
+@testable@_spi(STP) import StripeCore
+
+/// A test case offering a custom STPAPIClient with manual JSON stubbing.
 open class APIStubbedTestCase: XCTestCase {
     open override func setUp() {
         super.setUp()
@@ -50,3 +53,5 @@ open class APIStubbedTestCase: XCTestCase {
         return urlSessionConfig
     }
 }
+
+#endif

@@ -7,10 +7,10 @@
 
 import CoreML
 
-extension SSDOcr : MLModelClassType {
+extension SSDOcr: MLModelClassType {
 }
 
-extension SSDOcr : AsyncMLModelLoading {
+extension SSDOcr: AsyncMLModelLoading {
     typealias ModelClassType = SSDOcr
 
     static func createModelClass(using model: MLModel) -> SSDOcr {

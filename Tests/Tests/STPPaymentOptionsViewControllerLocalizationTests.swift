@@ -8,11 +8,11 @@
 
 import iOSSnapshotTestCase
 
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class MockSTPPaymentOptionsViewControllerDelegate: NSObject, STPPaymentOptionsViewControllerDelegate
 {
@@ -58,7 +58,8 @@ class STPPaymentOptionsViewControllerLocalizationTests: FBSnapshotTestCase {
             configuration: config,
             theme: theme,
             customerContext: customerContext,
-            delegate: delegate)
+            delegate: delegate
+        )
         let didLoadExpectation = expectation(description: "VC did load")
 
         paymentOptionsVC.loadingPromise?.onSuccess({ (_) in

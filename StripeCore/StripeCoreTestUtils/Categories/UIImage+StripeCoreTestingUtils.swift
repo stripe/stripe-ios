@@ -7,11 +7,12 @@
 
 import UIKit
 
-public extension UIImage {
+#if os(iOS)
+extension UIImage {
 
     /// Returns a 24x24 icon for testing purposes.
     /// - Returns: Plus sign icon.
-    class func mockIcon() -> UIImage {
+    public class func mockIcon() -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 24, height: 24))
 
         let icon = renderer.image { context in
@@ -28,3 +29,4 @@ public extension UIImage {
     }
 
 }
+#endif

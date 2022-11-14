@@ -30,7 +30,9 @@ public class STPConfirmBLIKOptions: NSObject {
 
     /// Initializes STPConfirmBLIKOptions
     /// - parameter code: The 6-digit BLIK code that a customer has generated using their banking application.
-    @objc public required init(code: String) {
+    @objc public required init(
+        code: String
+    ) {
         self.code = code
         super.init()
     }
@@ -41,7 +43,7 @@ extension STPConfirmBLIKOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:code)): "code",
+            NSStringFromSelector(#selector(getter:code)): "code"
         ]
     }
 

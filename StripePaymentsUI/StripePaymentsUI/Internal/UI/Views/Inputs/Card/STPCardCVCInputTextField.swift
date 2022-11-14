@@ -6,10 +6,10 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 @_spi(STP) public class STPCardCVCInputTextField: STPInputTextField {
 
@@ -32,25 +32,33 @@ import UIKit
 
     let cvcHintView = CardBrandView(showCVC: true)
 
-    public convenience init(prefillDetails: STPCardFormView.PrefillDetails? = nil) {
+    public convenience init(
+        prefillDetails: STPCardFormView.PrefillDetails? = nil
+    ) {
         self.init(
             formatter: STPCardCVCInputTextFieldFormatter(),
-            validator: STPCardCVCInputTextFieldValidator())
-        
+            validator: STPCardCVCInputTextFieldValidator()
+        )
+
         // set card brand in a defer to ensure didSet is called updating the formatter & validator
         defer {
             self.cardBrand = prefillDetails?.cardBrand ?? .unknown
         }
     }
 
-    required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+    required init(
+        formatter: STPInputTextFieldFormatter,
+        validator: STPInputTextFieldValidator
+    ) {
         assert(formatter.isKind(of: STPCardCVCInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPCardCVCInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
         keyboardType = .asciiCapableNumberPad
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         super.init(coder: coder)
     }
 

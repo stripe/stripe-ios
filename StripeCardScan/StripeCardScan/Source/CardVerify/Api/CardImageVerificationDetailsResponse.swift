@@ -30,9 +30,11 @@ struct CardImageVerificationAcceptedImageConfigs: Decodable {
     internal let formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]?
     let preferredFormats: [CardImageVerificationFormat]?
 
-    init(defaultSettings: CardImageVerificationImageSettings? = CardImageVerificationImageSettings(),
-         formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]? = nil,
-         preferredFormats: [CardImageVerificationFormat]? = [.jpeg]) {
+    init(
+        defaultSettings: CardImageVerificationImageSettings? = CardImageVerificationImageSettings(),
+        formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]? = nil,
+        preferredFormats: [CardImageVerificationFormat]? = [.jpeg]
+    ) {
         self.defaultSettings = defaultSettings
         self.formatSettings = formatSettings
         self.preferredFormats = preferredFormats
@@ -53,8 +55,11 @@ extension CardImageVerificationAcceptedImageConfigs {
             result.imageSize = defaultSettings.imageSize ?? result.imageSize
         }
 
-        if let formatSpecificSettings = formatSettings?[format], let formatSpecificSettings = formatSpecificSettings {
-            result.compressionRatio = formatSpecificSettings.compressionRatio ?? result.compressionRatio
+        if let formatSpecificSettings = formatSettings?[format],
+            let formatSpecificSettings = formatSpecificSettings
+        {
+            result.compressionRatio =
+                formatSpecificSettings.compressionRatio ?? result.compressionRatio
             result.imageSize = formatSpecificSettings.imageSize ?? result.imageSize
         }
 

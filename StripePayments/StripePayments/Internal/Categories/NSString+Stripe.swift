@@ -52,7 +52,9 @@ extension String {
         locale: Locale = NSLocale.autoupdatingCurrent
     ) -> String {
         let decimalizedAmount = NSDecimalNumber.stp_decimalNumber(
-            withAmount: amount, currency: currency)
+            withAmount: amount,
+            currency: currency
+        )
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.usesGroupingSeparator = true
@@ -62,12 +64,10 @@ extension String {
         return formatter.string(from: decimalizedAmount) ?? failsafeString
     }
 
-    /**
-     Function to determine if this string is the country code of the United State
-    @param caseSensitive - Whether this string should only be considered the US country code if it matches the expected capitalization
-     */
+    /// Function to determine if this string is the country code of the United State
+    ///@param caseSensitive - Whether this string should only be considered the US country code if it matches the expected capitalization
     @_spi(STP) public func isUSCountryCode(_ caseSensitive: Bool = false) -> Bool {
         return caseSensitive ? self == "US" : self.caseInsensitiveCompare("US") == .orderedSame
     }
-    
+
 }

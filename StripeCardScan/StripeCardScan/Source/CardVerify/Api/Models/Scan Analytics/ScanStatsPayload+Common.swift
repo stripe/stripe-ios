@@ -10,7 +10,7 @@ import Foundation
 
 extension ScanAnalyticsPayload {
     /// Default app info used when uploading scan stats
-    struct AppInfo: Encodable{
+    struct AppInfo: Encodable {
         let appPackageName = Bundle.stp_applicationName() ?? ""
         let build = Bundle.buildVersion() ?? ""
         let isDebugBuild = AppInfoUtils.getIsDebugBuild()

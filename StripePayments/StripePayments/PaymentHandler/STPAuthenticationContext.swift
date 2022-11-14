@@ -21,7 +21,8 @@ import UIKit
     /// This method is called before presenting a UIViewController for authentication.
     /// @note `STPPaymentHandler` will not proceed until `completion` is called.
     @objc(prepareAuthenticationContextForPresentation:) optional func prepare(
-        forPresentation completion: @escaping STPVoidBlock)
+        forPresentation completion: @escaping STPVoidBlock
+    )
     /// This method is called before presenting an SFSafariViewController for web-based authentication.
     /// Implement this method to configure the `SFSafariViewController` instance, e.g. `viewController.preferredBarTintColor = MyBarTintColor`
     /// @note Setting the `delegate` property has no effect.

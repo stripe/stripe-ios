@@ -16,13 +16,17 @@ class STPPaymentContextAmountModel: NSObject {
     private var paymentAmount = 0
     private var paymentSummaryItems: [PKPaymentSummaryItem]?
 
-    init(amount paymentAmount: Int) {
+    init(
+        amount paymentAmount: Int
+    ) {
         super.init()
         self.paymentAmount = paymentAmount
         paymentSummaryItems = nil
     }
 
-    init(paymentSummaryItems: [PKPaymentSummaryItem]?) {
+    init(
+        paymentSummaryItems: [PKPaymentSummaryItem]?
+    ) {
         super.init()
         paymentAmount = 0
         self.paymentSummaryItems = paymentSummaryItems
@@ -49,13 +53,15 @@ class STPPaymentContextAmountModel: NSObject {
         if let shippingMethod = shippingMethod {
             shippingItem = PKPaymentSummaryItem(
                 label: shippingMethod.label,
-                amount: shippingMethod.amount)
+                amount: shippingMethod.amount
+            )
         }
         if paymentSummaryItems == nil {
             let shippingAmount = shippingMethod?.amount.stp_amount(withCurrency: currency) ?? 0
             let total = NSDecimalNumber.stp_decimalNumber(
                 withAmount: paymentAmount + shippingAmount,
-                currency: currency)
+                currency: currency
+            )
             let totalItem = PKPaymentSummaryItem(label: companyName ?? "", amount: total)
             var items = [totalItem]
             if let shippingItem = shippingItem {
@@ -73,7 +79,9 @@ class STPPaymentContextAmountModel: NSObject {
                 var totalItem: PKPaymentSummaryItem?
                 if let newTotal = newTotal {
                     totalItem = PKPaymentSummaryItem(
-                        label: origTotalItem?.label ?? "", amount: newTotal)
+                        label: origTotalItem?.label ?? "",
+                        amount: newTotal
+                    )
                 }
                 items?.removeLast()
                 if let items = items {

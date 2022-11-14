@@ -1,6 +1,22 @@
 ## X.Y.Z 2022-xx-xx
+### Apple Pay
+* [Added] StripeApplePay now supports watchOS 6.2 or later. See [AppClipExample](Example/AppClipExample) for an example project.
+### PaymentSheet
+* [Added] Added `AddressViewController`, a customizable view controller that collects local and international addresses for your customers. See https://stripe.com/docs/elements/address-element?platform=ios.
+* [Added] Added `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress`. Previously, to allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, you attached a shipping address to the PaymentIntent before initializing PaymentSheet. Now, you can instead set this property to `true` and set `PaymentSheet.Configuration.shippingDetails` to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
+* [Fixed] Fixed user facing error messages for card related errors.
+* [Fixed] Fixed `setup_future_usage` value being set when there's no customer.
+
+## 23.1.1 2022-11-07
+### Payments
+* [Fixed] Fixed an issue with linking the StripePayments SDK in certain configurations.
+
+## 23.1.0 2022-10-31
 ### CardScan
 * [Added] Added a README.md for the `CardScanSheet` integration.
+
+### PaymentSheet
+* [Added] Added parameters to customize the primary button and Apple Pay button labels. They can be found under `PaymentSheet.Configuration.primaryButtonLabel` and `PaymentSheet.ApplePayConfiguration.buttonType` respectively.
 
 ## 23.0.0 2022-10-24
 ### Payments

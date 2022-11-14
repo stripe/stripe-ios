@@ -114,7 +114,9 @@ import Foundation
         super.init()
     }
 
-    public convenience init(value: Value) {
+    public convenience init(
+        value: Value
+    ) {
         self.init()
 
         // If the value was already known at the time the promise
@@ -122,7 +124,9 @@ import Foundation
         result = .success(value)
     }
 
-    public convenience init(error: Error) {
+    public convenience init(
+        error: Error
+    ) {
         self.init()
         result = .failure(error)
     }

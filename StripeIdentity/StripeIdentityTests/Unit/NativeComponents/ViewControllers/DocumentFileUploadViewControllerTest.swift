@@ -7,11 +7,12 @@
 //
 
 import Foundation
-import XCTest
-import UIKit
-@testable import StripeIdentity
 @_spi(STP) import StripeCameraCoreTestUtils
 @_spi(STP) import StripeCore
+import UIKit
+import XCTest
+
+@testable import StripeIdentity
 
 final class DocumentFileUploadViewControllerTest: XCTestCase {
 
@@ -22,7 +23,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
     let mockImage = CapturedImageMock.frontDriversLicense.image
     let mockImageURL = CapturedImageMock.frontDriversLicense.url
-    
+
     override func setUp() {
         super.setUp()
 
@@ -39,18 +40,19 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
         XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license")
     }
-    
+
     func testDrivingLicenseBack() {
         // Mock front collected
-        mockSheetController.collectedData.merge(VerificationPageDataUpdateMock.frontOnly.collectedData!)
-        
+        mockSheetController.collectedData.merge(
+            VerificationPageDataUpdateMock.frontOnly.collectedData!
+        )
+
         let vc = makeViewController(documentType: .drivingLicense)
         // Allows front and back
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
         XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license")
         XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of driver's license")
 
-        
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
@@ -58,17 +60,19 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockDocumentUploader.frontUploadStatus = .complete
         XCTAssertEqual(vc.buttonState, .disabled)
     }
-    
+
     func testIdCardFront() {
         let vc = makeViewController(documentType: .idCard)
         // Allows front
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
         XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
     }
-    
+
     func testIdCardBack() {
         // Mock front collected
-        mockSheetController.collectedData.merge(VerificationPageDataUpdateMock.frontOnly.collectedData!)
+        mockSheetController.collectedData.merge(
+            VerificationPageDataUpdateMock.frontOnly.collectedData!
+        )
 
         let vc = makeViewController(documentType: .idCard)
         // Allows front and back
@@ -76,7 +80,6 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
         XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of identity card")
 
-        
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
@@ -113,11 +116,15 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         vc.didTapSelect(for: .front)
         // Mock that user chooses to Photo Library
         vc.selectPhotoFromLibrary()
-        guard let pickerController = vc.test_presentedViewController as? UIImagePickerController else {
+        guard let pickerController = vc.test_presentedViewController as? UIImagePickerController
+        else {
             return XCTFail("Expected UIImagePickerController")
         }
         // Mock that user selects a photo
-        vc.imagePickerController(pickerController, didFinishPickingMediaWithInfo: [.originalImage: mockImage])
+        vc.imagePickerController(
+            pickerController,
+            didFinishPickingMediaWithInfo: [.originalImage: mockImage]
+        )
         // Verify front upload is triggered
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertNil(mockDocumentUploader.uploadedDocumentScannerOutput)
@@ -154,7 +161,9 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         vc.didTapSelect(for: .front)
         // Mock that user chooses to Select File
         vc.selectFileFromSystem()
-        guard let documentPicker = vc.test_presentedViewController as? UIDocumentPickerViewController else {
+        guard
+            let documentPicker = vc.test_presentedViewController as? UIDocumentPickerViewController
+        else {
             return XCTFail("Expected UIDocumentPickerViewController")
         }
         vc.documentPicker(documentPicker, didPickDocumentsAt: [mockImageURL])
@@ -167,10 +176,10 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
     func testContinueButton() {
         let vc = makeViewController(documentType: .drivingLicense)
-        
+
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
         let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
-        
+
         // Mock that files have been uploaded
         mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
         mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
@@ -180,10 +189,10 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         // click continue button to upload back
         vc.didTapContinueButton()
         // Verify data saved and transitioned to next screen
-        guard case let .success(front) = mockSheetController.frontUploadedDocumentsResult else {
+        guard case .success(let front) = mockSheetController.frontUploadedDocumentsResult else {
             return XCTFail("Expected success result")
         }
-        guard case let .success(back) = mockSheetController.backUploadedDocumentsResult else {
+        guard case .success(let back) = mockSheetController.backUploadedDocumentsResult else {
             return XCTFail("Expected success result")
         }
         XCTAssertEqual(front, frontFileData)
@@ -191,8 +200,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 }
 
-private extension DocumentFileUploadViewControllerTest {
-    func makeViewController(
+extension DocumentFileUploadViewControllerTest {
+    fileprivate func makeViewController(
         documentType: DocumentType,
         requireLiveCapture: Bool = false
     ) -> DocumentFileUploadViewController {

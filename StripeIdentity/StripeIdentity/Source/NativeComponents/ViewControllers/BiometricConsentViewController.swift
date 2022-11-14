@@ -6,10 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class BiometricConsentViewController: IdentityFlowViewController {
@@ -26,13 +25,13 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             updateUI()
         }
     }
-    
+
     var scrolledToBottom = false {
         didSet {
             updateUI()
         }
     }
-    
+
     private var scrolledToBottomYOffset: CGFloat? = nil
 
     var flowViewModel: IdentityFlowView.ViewModel {
@@ -52,7 +51,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             acceptButtonState = .enabled
             declineButtonState = .enabled
         }
-        
+
         var buttons: [IdentityFlowView.ViewModel.Button] = []
         if scrolledToBottom {
             buttons.append(
@@ -82,16 +81,17 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 }
             )
         )
-        
 
         return .init(
             headerViewModel: .init(
-                backgroundColor: CompatibleColor.systemBackground,
-                headerType: .banner(iconViewModel: .init(
-                    iconType: .brand,
-                    iconImage: brandLogo,
-                    iconImageContentMode: .scaleToFill
-                )),
+                backgroundColor: .systemBackground,
+                headerType: .banner(
+                    iconViewModel: .init(
+                        iconType: .brand,
+                        iconImage: brandLogo,
+                        iconImageContentMode: .scaleToFill
+                    )
+                ),
                 titleText: consentContent.title
             ),
             contentViewModel: .init(
@@ -115,41 +115,44 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
-        try htmlView.configure(with: .init(
-            iconText: [
-                .init(
-                    image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
-                    text: consentContent.timeEstimate,
-                    isTextHTML: false
-                )
-            ],
-            nonIconText: [
-                .init(
-                    text: consentContent.privacyPolicy,
-                    isTextHTML: true
-                )
-            ],
-            bodyHtmlString: consentContent.body,
-            didOpenURL: { [weak self] url in
-                self?.openInSafariViewController(url: url)
-            }
-        ))
+        try htmlView.configure(
+            with: .init(
+                iconText: [
+                    .init(
+                        image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
+                        text: consentContent.timeEstimate,
+                        isTextHTML: false
+                    )
+                ],
+                nonIconText: [
+                    .init(
+                        text: consentContent.privacyPolicy,
+                        isTextHTML: true
+                    )
+                ],
+                bodyHtmlString: consentContent.body,
+                didOpenURL: { [weak self] url in
+                    self?.openInSafariViewController(url: url)
+                }
+            )
+        )
 
         updateUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - Private Helpers
 
-
 @available(iOSApplicationExtension, unavailable)
-private extension BiometricConsentViewController {
+extension BiometricConsentViewController {
 
-    func updateUI() {
+    fileprivate func updateUI() {
         configure(
             backButtonTitle: STPLocalizedString(
                 "Consent",
@@ -159,19 +162,21 @@ private extension BiometricConsentViewController {
         )
     }
 
-    func didTapButton(consentValue: Bool) {
+    fileprivate func didTapButton(consentValue: Bool) {
         consentSelection = consentValue
         isSaving = true
-        sheetController?.saveAndTransition(from: analyticsScreenName, collectedData: .init(
-            biometricConsent: consentValue
-        )) { [weak self] in
+        sheetController?.saveAndTransition(
+            from: analyticsScreenName,
+            collectedData: .init(
+                biometricConsent: consentValue
+            )
+        ) { [weak self] in
             self?.isSaving = false
         }
     }
 }
 
 // MARK: - IdentityDataCollecting
-
 
 @available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityDataCollecting {
@@ -186,7 +191,8 @@ extension BiometricConsentViewController: IdentityDataCollecting {
 extension BiometricConsentViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let scrolledToBottomYOffset = scrolledToBottomYOffset,
-            scrollView.contentOffset.y  > scrolledToBottomYOffset {
+            scrollView.contentOffset.y > scrolledToBottomYOffset
+        {
             scrolledToBottom = true
         }
     }
@@ -200,10 +206,11 @@ extension BiometricConsentViewController: IdentityFlowViewDelegate {
         guard scrolledToBottomYOffset == nil else {
             return
         }
-        
+
         let initialContentYOffset = scrollView.contentOffset.y
         let contentSizeHeight = scrollView.contentSize.height
-        let visibleContentHeight = scrollView.frame.size.height + initialContentYOffset - scrollView.contentInset.bottom
+        let visibleContentHeight =
+            scrollView.frame.size.height + initialContentYOffset - scrollView.contentInset.bottom
         let nonVisibleContentHeight = contentSizeHeight - visibleContentHeight
         scrolledToBottomYOffset = initialContentYOffset + nonVisibleContentHeight
 

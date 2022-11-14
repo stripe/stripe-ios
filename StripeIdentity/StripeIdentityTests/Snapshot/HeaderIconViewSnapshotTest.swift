@@ -6,10 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
+import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
@@ -18,7 +19,7 @@ class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     override func tearDown() {
@@ -27,29 +28,35 @@ class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
     }
 
     func testBrandIconView() {
-        verifyView(with: .init(
-            iconType: .brand,
-            iconImage: iconImage,
-            iconImageContentMode: .scaleAspectFill
-        ))
+        verifyView(
+            with: .init(
+                iconType: .brand,
+                iconImage: iconImage,
+                iconImageContentMode: .scaleAspectFill
+            )
+        )
     }
 
     func testPlainIconView() {
-        verifyView(with: .init(
-            iconType: .plain,
-            iconImage: iconImage,
-            iconImageContentMode: .scaleAspectFill
-        ))
+        verifyView(
+            with: .init(
+                iconType: .plain,
+                iconImage: iconImage,
+                iconImageContentMode: .scaleAspectFill
+            )
+        )
     }
 
     func testPlainIconViewWithBackground() {
-        verifyView(with: .init(
-            iconType: .plain,
-            iconImage: StripeIdentity.Image.iconClock.makeImage(template: true),
-            iconImageContentMode: .center,
-            iconTintColor: .white,
-            shouldIconBackgroundMatchTintColor: true
-        ))
+        verifyView(
+            with: .init(
+                iconType: .plain,
+                iconImage: StripeIdentity.Image.iconClock.makeImage(template: true),
+                iconImageContentMode: .center,
+                iconTintColor: .white,
+                shouldIconBackgroundMatchTintColor: true
+            )
+        )
 
         // Change the tint color and verify it updates
         iconView.tintColor = .systemPink
@@ -57,8 +64,8 @@ class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
     }
 }
 
-private extension HeaderIconViewSnapshotTest {
-    func verifyView(
+extension HeaderIconViewSnapshotTest {
+    fileprivate func verifyView(
         with viewModel: HeaderIconView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line

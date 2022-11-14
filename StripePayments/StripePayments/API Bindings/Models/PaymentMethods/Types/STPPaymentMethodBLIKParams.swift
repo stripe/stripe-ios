@@ -15,7 +15,6 @@ import Foundation
 public class STPPaymentMethodBLIKParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-
     @objc
     public class func rootObjectName() -> String? {
         return "blik"

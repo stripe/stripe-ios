@@ -6,16 +6,16 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
-import StripeCoreTestUtils
-
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsUI
-@testable @_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class LinkInlineSignupViewModelTests: XCTestCase {
 
@@ -48,16 +48,27 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         sut.emailAddress = "user@example.com"
 
         // Wait for async change on `shouldShowPhoneField`.
-        let showPhoneFieldExpectation = expectation(for: sut, keyPath: \.shouldShowPhoneField, equalsToValue: true)
+        let showPhoneFieldExpectation = expectation(
+            for: sut,
+            keyPath: \.shouldShowPhoneField,
+            equalsToValue: true
+        )
         wait(for: [showPhoneFieldExpectation], timeout: accountLookupTimeout)
 
         XCTAssertFalse(sut.shouldShowNameField, "Should not show name field for US customers")
-        XCTAssertTrue(sut.shouldShowLegalTerms, "Should show legal terms when creating a new account")
+        XCTAssertTrue(
+            sut.shouldShowLegalTerms,
+            "Should show legal terms when creating a new account"
+        )
 
         sut.emailAddress = nil
 
         // Wait for async change on `shouldShowPhoneField`.
-        let hidePhoneFieldExpectation = expectation(for: sut, keyPath: \.shouldShowPhoneField, equalsToValue: false)
+        let hidePhoneFieldExpectation = expectation(
+            for: sut,
+            keyPath: \.shouldShowPhoneField,
+            equalsToValue: false
+        )
         wait(for: [hidePhoneFieldExpectation], timeout: accountLookupTimeout)
         XCTAssertFalse(sut.shouldShowNameField)
         XCTAssertFalse(sut.shouldShowLegalTerms)
@@ -105,7 +116,11 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         sut.emailAddress = "user@example.com"
 
         // Wait for lookup to fail
-        let lookupFailedExpectation = expectation(for: sut, keyPath: \.lookupFailed, equalsToValue: true)
+        let lookupFailedExpectation = expectation(
+            for: sut,
+            keyPath: \.lookupFailed,
+            equalsToValue: true
+        )
         wait(for: [lookupFailedExpectation], timeout: accountLookupTimeout)
 
         XCTAssertEqual(sut.action, .continueWithoutLink)
@@ -125,12 +140,18 @@ extension LinkInlineSignupViewModelTests {
             if shouldFailLookup {
                 completion(.failure(NSError.stp_genericConnectionError()))
             } else {
-                completion(.success(
-                    PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
-                ))
+                completion(
+                    .success(
+                        PaymentSheetLinkAccount(
+                            email: "user@example.com",
+                            session: nil,
+                            publishableKey: nil
+                        )
+                    )
+                )
             }
         }
-        
+
         func hasEmailLoggedOut(email: String) -> Bool {
             // TODO(porter): Determine if we want to implement this in tests
             return false
@@ -142,7 +163,8 @@ extension LinkInlineSignupViewModelTests {
         hasAccount: Bool = false,
         shouldFailLookup: Bool = false
     ) -> LinkInlineSignupViewModel {
-        let linkAccount: PaymentSheetLinkAccount? = hasAccount
+        let linkAccount: PaymentSheetLinkAccount? =
+            hasAccount
             ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
             : nil
 

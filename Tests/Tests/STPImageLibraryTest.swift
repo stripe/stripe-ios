@@ -7,17 +7,16 @@
 //
 
 import XCTest
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import Stripe
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeUICore
-@testable @_spi(STP) import StripePaymentsUI
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class STPImageLibraryTestSwift: XCTestCase {
-    
+
     static let cardBrands: [STPCardBrand] = [
         .amex,
         .dinersClub,
@@ -26,119 +25,269 @@ class STPImageLibraryTestSwift: XCTestCase {
         .mastercard,
         .unionPay,
         .unknown,
-        .visa
+        .visa,
     ]
-    
+
     func testCardIconMethods() {
-        STPAssertEqualImages(STPImageLibrary.applePayCardImage(), STPImageLibrary.safeImageNamed("stp_card_applepay", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.amexCardImage(), STPImageLibrary.safeImageNamed("stp_card_amex", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.dinersClubCardImage(), STPImageLibrary.safeImageNamed("stp_card_diners", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.discoverCardImage(), STPImageLibrary.safeImageNamed("stp_card_discover", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.jcbCardImage(), STPImageLibrary.safeImageNamed("stp_card_jcb", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.mastercardCardImage(), STPImageLibrary.safeImageNamed("stp_card_mastercard", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.unionPayCardImage(), STPImageLibrary.safeImageNamed("stp_card_unionpay_en", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.visaCardImage(), STPImageLibrary.safeImageNamed("stp_card_visa", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.unknownCardCardImage(), STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: false))
+        STPAssertEqualImages(
+            STPImageLibrary.applePayCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_applepay", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.amexCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_amex", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.dinersClubCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_diners", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.discoverCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_discover", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.jcbCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_jcb", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.mastercardCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_mastercard", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.unionPayCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_unionpay_en", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.visaCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_visa", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.unknownCardCardImage(),
+            STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: false)
+        )
     }
-    
+
     func testBrandImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.brandImage(for: brand, template: false)
-            
+
             switch brand {
             case .visa:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_visa", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_visa", templateIfAvailable: false)
+                )
             case .amex:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_amex", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_amex", templateIfAvailable: false)
+                )
             case .mastercard:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_mastercard", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_mastercard",
+                        templateIfAvailable: false
+                    )
+                )
             case .discover:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_discover", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_discover", templateIfAvailable: false)
+                )
             case .JCB:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_jcb", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_jcb", templateIfAvailable: false)
+                )
             case .dinersClub:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_diners", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_diners", templateIfAvailable: false)
+                )
             case .unionPay:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_unionpay_en", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_unionpay_en",
+                        templateIfAvailable: false
+                    )
+                )
             case .unknown:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: false)
+                )
             }
         }
     }
-    
+
     func testTemplatedBrandImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.templatedBrandImage(for: brand)
-            
+
             switch brand {
             case .visa:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_visa_template", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_visa_template",
+                        templateIfAvailable: true
+                    )
+                )
             case .amex:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_amex_template", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_amex_template",
+                        templateIfAvailable: true
+                    )
+                )
             case .mastercard:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_mastercard_template", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_mastercard_template",
+                        templateIfAvailable: true
+                    )
+                )
             case .discover:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_discover_template", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_discover_template",
+                        templateIfAvailable: true
+                    )
+                )
             case .JCB:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_jcb_template", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_jcb_template",
+                        templateIfAvailable: true
+                    )
+                )
             case .dinersClub:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_diners_template", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_diners_template",
+                        templateIfAvailable: true
+                    )
+                )
             case .unionPay:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_unionpay_template_en", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_unionpay_template_en",
+                        templateIfAvailable: true
+                    )
+                )
             case .unknown:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: true))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: true)
+                )
             }
         }
     }
-    
+
     func testBrandImageForCardBrand_zh() {
         let zh = Locale(identifier: "zh-Hans")
         let image = STPImageLibrary.brandImage(for: .unionPay, template: false, locale: zh)
         let templateImage = STPImageLibrary.brandImage(for: .unionPay, template: true, locale: zh)
-        STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_unionpay_zh", templateIfAvailable: false))
-        STPAssertEqualImages(templateImage, STPImageLibrary.safeImageNamed("stp_card_unionpay_template_zh", templateIfAvailable: true))
+        STPAssertEqualImages(
+            image,
+            STPImageLibrary.safeImageNamed("stp_card_unionpay_zh", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            templateImage,
+            STPImageLibrary.safeImageNamed(
+                "stp_card_unionpay_template_zh",
+                templateIfAvailable: true
+            )
+        )
     }
-    
+
     func testTemplatedBrandImageForCardBrand_zh() {
         // TODO: Replace this with a screenshot test, it isn't straightforward to mock the Locale
     }
-    
+
     func testCVCImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.cvcImage(for: brand)
-            
+
             switch brand {
             case .amex:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_cvc_amex", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_cvc_amex", templateIfAvailable: false)
+                )
             default:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_cvc", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_cvc", templateIfAvailable: false)
+                )
             }
         }
     }
-    
+
     func testErrorImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.errorImage(for: brand)
-            
+
             switch brand {
             case .amex:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_error_amex", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_error_amex",
+                        templateIfAvailable: false
+                    )
+                )
             default:
-                STPAssertEqualImages(image, STPImageLibrary.safeImageNamed("stp_card_error", templateIfAvailable: false))
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_error", templateIfAvailable: false)
+                )
             }
         }
     }
-    
+
     func testMiscImages() {
-        STPAssertEqualImages(STPLegacyImageLibrary.addIcon(), STPLegacyImageLibrary.safeImageNamed("stp_icon_add", templateIfAvailable: false))
-        STPAssertEqualImages(STPImageLibrary.bankIcon(), STPImageLibrary.safeImageNamed("stp_icon_bank", templateIfAvailable: false))
-        STPAssertEqualImages(STPLegacyImageLibrary.checkmarkIcon(), STPLegacyImageLibrary.safeImageNamed("stp_icon_checkmark", templateIfAvailable: false))
-        STPAssertEqualImages(STPLegacyImageLibrary.largeCardFrontImage(), STPLegacyImageLibrary.safeImageNamed("stp_card_form_front", templateIfAvailable: false))
-        STPAssertEqualImages(STPLegacyImageLibrary.largeCardBackImage(), STPLegacyImageLibrary.safeImageNamed("stp_card_form_back", templateIfAvailable: false))
-        STPAssertEqualImages(STPLegacyImageLibrary.largeCardAmexCVCImage(), STPLegacyImageLibrary.safeImageNamed("stp_card_form_amex_cvc", templateIfAvailable: false))
-        STPAssertEqualImages(STPLegacyImageLibrary.largeShippingImage(), STPLegacyImageLibrary.safeImageNamed("stp_shipping_form", templateIfAvailable: false))
+        STPAssertEqualImages(
+            STPLegacyImageLibrary.addIcon(),
+            STPLegacyImageLibrary.safeImageNamed("stp_icon_add", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPImageLibrary.bankIcon(),
+            STPImageLibrary.safeImageNamed("stp_icon_bank", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPLegacyImageLibrary.checkmarkIcon(),
+            STPLegacyImageLibrary.safeImageNamed("stp_icon_checkmark", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPLegacyImageLibrary.largeCardFrontImage(),
+            STPLegacyImageLibrary.safeImageNamed("stp_card_form_front", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPLegacyImageLibrary.largeCardBackImage(),
+            STPLegacyImageLibrary.safeImageNamed("stp_card_form_back", templateIfAvailable: false)
+        )
+        STPAssertEqualImages(
+            STPLegacyImageLibrary.largeCardAmexCVCImage(),
+            STPLegacyImageLibrary.safeImageNamed(
+                "stp_card_form_amex_cvc",
+                templateIfAvailable: false
+            )
+        )
+        STPAssertEqualImages(
+            STPLegacyImageLibrary.largeShippingImage(),
+            STPLegacyImageLibrary.safeImageNamed("stp_shipping_form", templateIfAvailable: false)
+        )
     }
-    
+
     func testFPXImages() {
         // Probably better to make STPFPXBankBrand conform to CaseIterable,
         // but let's not change behavior of a legacy product just for this test.
@@ -146,14 +295,20 @@ class STPImageLibraryTestSwift: XCTestCase {
             let brand = STPFPXBankBrand(rawValue: i)!
             let bankIdentifier = STPFPXBank.identifierFrom(brand)!
             let bankImageName = "stp_bank_fpx_" + bankIdentifier
-            STPAssertEqualImages(STPLegacyImageLibrary.fpxBrandImage(for: brand), STPLegacyImageLibrary.safeImageNamed(bankImageName, templateIfAvailable: false))
-            
+            STPAssertEqualImages(
+                STPLegacyImageLibrary.fpxBrandImage(for: brand),
+                STPLegacyImageLibrary.safeImageNamed(bankImageName, templateIfAvailable: false)
+            )
+
         }
     }
 
     func testBankIconCodeImagesExist() {
         for iconCode in PaymentSheetImageLibrary.BankIconCodeRegexes.keys {
-            XCTAssertNotNil(PaymentSheetImageLibrary.bankIcon(for: iconCode), "Missing image for \(iconCode)")
+            XCTAssertNotNil(
+                PaymentSheetImageLibrary.bankIcon(for: iconCode),
+                "Missing image for \(iconCode)"
+            )
         }
     }
 
@@ -162,7 +317,6 @@ class STPImageLibraryTestSwift: XCTestCase {
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "bank of america"), "boa")
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "BANK of AMERICA"), "boa")
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "BANKof AMERICA"), "default")
-
 
         // capital one
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "capital one"), "capitalone")
@@ -206,7 +360,10 @@ class STPImageLibraryTestSwift: XCTestCase {
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "SILICONVALLEYBANK"), "default")
 
         // usaa
-        XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "USAA Federal Savings Bank"), "usaa")
+        XCTAssertEqual(
+            PaymentSheetImageLibrary.bankIconCode(for: "USAA Federal Savings Bank"),
+            "usaa"
+        )
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "USAA Bank"), "usaa")
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "USAA Savings Bank"), "default")
 
@@ -216,7 +373,7 @@ class STPImageLibraryTestSwift: XCTestCase {
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "u.s. Bank"), "usbank")
 
         // wellsfargo
-        XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for:"Wells Fargo"), "wellsfargo")
+        XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "Wells Fargo"), "wellsfargo")
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "WELLS FARGO"), "wellsfargo")
         XCTAssertEqual(PaymentSheetImageLibrary.bankIconCode(for: "Well's Fargo"), "default")
     }

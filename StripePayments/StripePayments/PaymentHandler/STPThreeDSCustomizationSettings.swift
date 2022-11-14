@@ -19,7 +19,8 @@ public class STPThreeDSCustomizationSettings: NSObject {
     /// Stripe UI settings and a 10 minute `authenticationTimeout`.
     /// @deprecated Use STPThreeDSCustomizationSettings() instead. The default settings are the same.
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Use STPThreeDSCustomizationSettings() instead of STPThreeDSCustomizationSettings.defaultSettings()."
     )

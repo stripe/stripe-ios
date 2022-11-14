@@ -46,10 +46,12 @@ public class STPThreeDSButtonCustomization: NSObject {
         for type: STPThreeDSCustomizationButtonType
     ) -> STPThreeDSButtonCustomization {
         let stdsButtonCustomization = STDSButtonCustomization.defaultSettings(
-            for: STDSUICustomizationButtonType(rawValue: type.rawValue)!)
+            for: STDSUICustomizationButtonType(rawValue: type.rawValue)!
+        )
         let buttonCustomization = STPThreeDSButtonCustomization.init(
             backgroundColor: stdsButtonCustomization.backgroundColor,
-            cornerRadius: stdsButtonCustomization.cornerRadius)
+            cornerRadius: stdsButtonCustomization.cornerRadius
+        )
         buttonCustomization.buttonCustomization = stdsButtonCustomization
         return buttonCustomization
     }
@@ -58,9 +60,14 @@ public class STPThreeDSButtonCustomization: NSObject {
 
     /// Initializes an instance of STDSButtonCustomization with the given backgroundColor and colorRadius.
     @objc
-    public init(backgroundColor: UIColor, cornerRadius: CGFloat) {
+    public init(
+        backgroundColor: UIColor,
+        cornerRadius: CGFloat
+    ) {
         buttonCustomization = STDSButtonCustomization(
-            backgroundColor: backgroundColor, cornerRadius: cornerRadius)
+            backgroundColor: backgroundColor,
+            cornerRadius: cornerRadius
+        )
         super.init()
     }
 

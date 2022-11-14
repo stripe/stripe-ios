@@ -9,7 +9,7 @@
 import UIKit
 
 @_spi(STP) public class STPCountryPickerInputField: STPGenericInputPickerField {
-    
+
     var countryPickerDataSource: CountryPickerDataSource {
         wrappedDataSource.inputDataSource as! CountryPickerDataSource
     }
@@ -30,13 +30,13 @@ import UIKit
     convenience init() {
         self.init(dataSource: CountryPickerDataSource(), validator: CountryCodeValidator())
     }
-    
+
     func select(countryCode: String) {
         if let row = countryPickerDataSource.row(for: countryCode) {
             select(row: row)
         }
     }
-    
+
     func select(row: Int) {
         pickerView.selectRow(row, inComponent: 0, animated: false)
         updateValue()
@@ -53,7 +53,8 @@ import UIKit
 
 /// :nodoc:
 extension STPCountryPickerInputField {
-    @_spi(STP) public class CountryPickerDataSource: NSObject, STPGenericInputPickerFieldDataSource {
+    @_spi(STP) public class CountryPickerDataSource: NSObject, STPGenericInputPickerFieldDataSource
+    {
 
         @_spi(STP) public let countries: [(code: String, displayName: String)] = {
 
@@ -65,8 +66,9 @@ extension STPCountryPickerInputField {
                     NSLocale.Key.countryCode.rawValue: code
                 ])
                 if let countryName = (locale as NSLocale).displayName(
-                    forKey: .identifier, value: identifier)
-                {
+                    forKey: .identifier,
+                    value: identifier
+                ) {
                     return (code, countryName)
                 } else {
                     return nil
@@ -88,14 +90,17 @@ extension STPCountryPickerInputField {
                 }
             }
         }()
-        
+
         func row(for countryCode: String) -> Int? {
             return countries.firstIndex { (code: String, _) in
                 code == countryCode
             }
         }
 
-        @_spi(STP) public func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
+        @_spi(STP) public func inputPickerField(
+            _ pickerField: STPGenericInputPickerField,
+            titleForRow row: Int
+        )
             -> String?
         {
             guard row >= 0,
@@ -107,7 +112,10 @@ extension STPCountryPickerInputField {
             return countries[row].displayName
         }
 
-        @_spi(STP) public func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int)
+        @_spi(STP) public func inputPickerField(
+            _ pickerField: STPGenericInputPickerField,
+            inputValueForRow row: Int
+        )
             -> String?
         {
             guard row >= 0,

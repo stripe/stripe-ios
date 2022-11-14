@@ -8,36 +8,37 @@
 
 import Foundation
 import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 final class NSAttributedString_HTMLSnapshotTest: FBSnapshotTestCase {
     static let htmlText = """
-    <h1>header 1</h1>
-    <h2>header 2</h2>
-    <h3>header 3</h3>
-    <h4>header 4</h4>
-    <h5>header 5</h5>
-    <h6>header 6</h6>
-    <p>
-    Lorem ipsum dolor sit amet, <b>consectetur adipiscing elit</b>. Suspendisse
-    hendrerit diam id <i>risus accumsan</i>, <em>tempus rutrum</em> nibh varius.
-    Aenean id congue nunc. <strong>Sed tellus et ligula luctus aliquam.</strong>
-    <u>Nulla facilisis sit amet metus eu lacinia.</u> In et libero quam.
-    <a href="https://stripe.com>">Phasellus lobortis eros enim</a>, eu pretium
-    purus euismod fringilla. Maecenas eget dictum sapien.
-    </p>
-    <p>
-        <a href="https://stripe.com">Stand alone link</a>
-    </p>
-    <ul>
-      <li>List Item</li>
-      <li>List Item</li>
-    </ul>
-    <ol>
-      <li>List Item</li>
-      <li>List Item</li>
-    </ol>
-    """
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        <p>
+        Lorem ipsum dolor sit amet, <b>consectetur adipiscing elit</b>. Suspendisse
+        hendrerit diam id <i>risus accumsan</i>, <em>tempus rutrum</em> nibh varius.
+        Aenean id congue nunc. <strong>Sed tellus et ligula luctus aliquam.</strong>
+        <u>Nulla facilisis sit amet metus eu lacinia.</u> In et libero quam.
+        <a href="https://stripe.com>">Phasellus lobortis eros enim</a>, eu pretium
+        purus euismod fringilla. Maecenas eget dictum sapien.
+        </p>
+        <p>
+            <a href="https://stripe.com">Stand alone link</a>
+        </p>
+        <ul>
+          <li>List Item</li>
+          <li>List Item</li>
+        </ul>
+        <ol>
+          <li>List Item</li>
+          <li>List Item</li>
+        </ol>
+        """
 
     let textView = UITextView()
 
@@ -53,7 +54,7 @@ final class NSAttributedString_HTMLSnapshotTest: FBSnapshotTestCase {
         // Test that link color matches tint color
         textView.tintColor = .systemPink
 
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testDefaultStyle() throws {
@@ -81,8 +82,8 @@ final class NSAttributedString_HTMLSnapshotTest: FBSnapshotTestCase {
     }
 }
 
-private extension NSAttributedString_HTMLSnapshotTest {
-    func verifyView(
+extension NSAttributedString_HTMLSnapshotTest {
+    fileprivate func verifyView(
         htmlString: String,
         style: HTMLStyle,
         file: StaticString = #filePath,

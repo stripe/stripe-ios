@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import UIKit
-
 @_spi(STP) import StripeCore
+import UIKit
 
 /// PaymentMethod objects represent your customer's payment instruments. They can be used with PaymentIntents to collect payments.
 /// - seealso: https://stripe.com/docs/api/payment_methods
@@ -85,7 +84,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     /// - seealso: https://stripe.com/docs/api#metadata
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
@@ -206,7 +206,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
-    @objc required init(stripeId: String) {
+    @objc required init(
+        stripeId: String
+    ) {
         self.stripeId = stripeId
         super.init()
     }
@@ -216,7 +218,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         // Required fields
         guard let stripeId = dict.stp_string(forKey: "id") else {
@@ -229,66 +231,91 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.created = dict.stp_date(forKey: "created")
         paymentMethod.liveMode = dict.stp_bool(forKey: "livemode", or: false)
         paymentMethod.billingDetails = STPPaymentMethodBillingDetails.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "billing_details"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "billing_details")
+        )
         paymentMethod.card = STPPaymentMethodCard.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "card"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "card")
+        )
         paymentMethod.type = self.type(from: dict.stp_string(forKey: "type") ?? "")
         paymentMethod.iDEAL = STPPaymentMethodiDEAL.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "ideal"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "ideal")
+        )
         if let stp = dict.stp_dictionary(forKey: "fpx") {
             paymentMethod.fpx = STPPaymentMethodFPX.decodedObject(fromAPIResponse: stp)
         }
         if let stp = dict.stp_dictionary(forKey: "card_present") {
             paymentMethod.cardPresent = STPPaymentMethodCardPresent.decodedObject(
-                fromAPIResponse: stp)
+                fromAPIResponse: stp
+            )
         }
         paymentMethod.sepaDebit = STPPaymentMethodSEPADebit.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "sepa_debit"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "sepa_debit")
+        )
         paymentMethod.bacsDebit = STPPaymentMethodBacsDebit.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "bacs_debit"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "bacs_debit")
+        )
         paymentMethod.auBECSDebit = STPPaymentMethodAUBECSDebit.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "au_becs_debit"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "au_becs_debit")
+        )
         paymentMethod.giropay = STPPaymentMethodGiropay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "giropay"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "giropay")
+        )
         paymentMethod.eps = STPPaymentMethodEPS.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "eps"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "eps")
+        )
         paymentMethod.przelewy24 = STPPaymentMethodPrzelewy24.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "p24"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "p24")
+        )
         paymentMethod.bancontact = STPPaymentMethodBancontact.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "bancontact"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "bancontact")
+        )
         paymentMethod.netBanking = STPPaymentMethodNetBanking.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "netbanking"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "netbanking")
+        )
         paymentMethod.oxxo = STPPaymentMethodOXXO.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "oxxo"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "oxxo")
+        )
         paymentMethod.sofort = STPPaymentMethodSofort.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "sofort"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "sofort")
+        )
         paymentMethod.upi = STPPaymentMethodUPI.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "upi"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "upi")
+        )
         paymentMethod.customerId = dict.stp_string(forKey: "customer")
         paymentMethod.alipay = STPPaymentMethodAlipay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "alipay"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "alipay")
+        )
         paymentMethod.grabPay = STPPaymentMethodGrabPay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "grabpay"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "grabpay")
+        )
         paymentMethod.payPal = STPPaymentMethodPayPal.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "paypal"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "paypal")
+        )
         paymentMethod.afterpayClearpay = STPPaymentMethodAfterpayClearpay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "afterpay_clearpay"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "afterpay_clearpay")
+        )
         paymentMethod.blik = STPPaymentMethodBLIK.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "blik"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "blik")
+        )
         paymentMethod.weChatPay = STPPaymentMethodWeChatPay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "wechat_pay"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "wechat_pay")
+        )
         paymentMethod.boleto = STPPaymentMethodBoleto.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "boleto"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "boleto")
+        )
         paymentMethod.link = STPPaymentMethodLink.decodedObject(
-                fromAPIResponse: dict.stp_dictionary(forKey: "link"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "link")
+        )
         paymentMethod.klarna = STPPaymentMethodKlarna.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "klarna"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "klarna")
+        )
         paymentMethod.affirm = STPPaymentMethodAffirm.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "affirm"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "affirm")
+        )
         paymentMethod.usBankAccount = STPPaymentMethodUSBankAccount.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "us_bank_account"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "us_bank_account")
+        )
 
         return paymentMethod
     }
 }
-

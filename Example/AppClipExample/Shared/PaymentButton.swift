@@ -37,11 +37,17 @@ struct PaymentButton: View {
 extension PaymentButton {
     #if os(iOS)
     typealias ViewRepresentable = UIViewRepresentable
+    #elseif os(watchOS)
+    typealias ViewRepresentable = WKInterfaceObjectRepresentable
     #else
     typealias ViewRepresentable = NSViewRepresentable
     #endif
     
     struct Representable: ViewRepresentable {
+        #if os(watchOS)
+        typealias WKInterfaceObjectType = WKInterfacePaymentButton
+        #endif
+        
         var action: () -> Void
         
         init(action: @escaping () -> Void) {
@@ -60,6 +66,14 @@ extension PaymentButton {
         func updateUIView(_ rootView: UIView, context: Context) {
             context.coordinator.action = action
         }
+        #elseif os(watchOS)
+        func makeWKInterfaceObject(context: Context) -> WKInterfacePaymentButton {
+            WKInterfacePaymentButton(target: context.coordinator, action: #selector(Coordinator.callback))
+        }
+
+        func updateWKInterfaceObject(_ wkInterfaceObject: WKInterfacePaymentButton, context: Context) {
+            context.coordinator.action = action
+        }
         #else
         func makeNSView(context: Context) -> NSView {
             context.coordinator.button
@@ -73,21 +87,23 @@ extension PaymentButton {
     
     class Coordinator: NSObject {
         var action: () -> Void
+        #if os(iOS) || os(macOS)
         var button = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .automatic)
+        #endif
         
         init(action: @escaping () -> Void) {
             self.action = action
             super.init()
             #if os(iOS)
-            button.addTarget(self, action: #selector(callback(_:)), for: .touchUpInside)
-            #else
-            button.action = #selector(callback(_:))
+            button.addTarget(self, action: #selector(callback), for: .touchUpInside)
+            #elseif os(macOS)
+            button.action = #selector(callback)
             button.target = self
             #endif
         }
         
         @objc
-        func callback(_ sender: Any) {
+        func callback() {
             action()
         }
     }
@@ -106,3 +122,4 @@ struct PaymentButton_Previews: PreviewProvider {
         .previewLayout(.sizeThatFits)
     }
 }
+

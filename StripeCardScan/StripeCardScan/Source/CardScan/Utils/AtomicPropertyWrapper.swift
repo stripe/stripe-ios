@@ -18,7 +18,9 @@ class AtomicProperty<Value> {
         return lock
     }()
 
-    init(wrappedValue value: Value) {
+    init(
+        wrappedValue value: Value
+    ) {
         self.value = value
     }
 
@@ -27,15 +29,15 @@ class AtomicProperty<Value> {
     }
 
     var wrappedValue: Value {
-      get {
-          os_unfair_lock_lock(lock)
-          defer { os_unfair_lock_unlock(lock) }
-          return value
-      }
-      set {
-          os_unfair_lock_lock(lock)
-          defer { os_unfair_lock_unlock(lock) }
-          value = newValue
-      }
+        get {
+            os_unfair_lock_lock(lock)
+            defer { os_unfair_lock_unlock(lock) }
+            return value
+        }
+        set {
+            os_unfair_lock_lock(lock)
+            defer { os_unfair_lock_unlock(lock) }
+            value = newValue
+        }
     }
 }

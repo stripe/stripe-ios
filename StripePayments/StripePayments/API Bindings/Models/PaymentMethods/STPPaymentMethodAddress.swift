@@ -28,7 +28,9 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
 
     /// Convenience initializer for creating a STPPaymentMethodAddress from an STPAddress.
     @objc
-    public init(address: STPAddress) {
+    public init(
+        address: STPAddress
+    ) {
         super.init()
         city = address.city
         country = address.country
@@ -96,7 +98,7 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
         copyPaymentMethodAddress.state = state
         return copyPaymentMethodAddress
     }
-    
+
     // MARK: - Equality
     /// :nodoc:
     @objc
@@ -113,26 +115,21 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
             return false
         }
 
-        if !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters))
-        {
+        if !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters)) {
             return false
         }
-        
-        return city == other.city &&
-        country == other.country &&
-        line1 == other.line1 &&
-        line2 == other.line2 &&
-        postalCode == other.postalCode &&
-        state == other.state
+
+        return city == other.city && country == other.country && line1 == other.line1
+            && line2 == other.line2 && postalCode == other.postalCode && state == other.state
     }
-    
+
     // MARK: - STPAPIResponseDecodable
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
         let address = self.init()
         address.allResponseFields = response
         address.city = dict.stp_string(forKey: "city")

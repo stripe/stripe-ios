@@ -61,7 +61,7 @@ class PlaceholderViewController: UIViewController {
 fileprivate extension PlaceholderViewController {
 
     func installViews() {
-        view.backgroundColor = CompatibleColor.systemBackground
+        view.backgroundColor = .systemBackground
         view.addSubview(label)
         view.addSubview(actionButton)
     }

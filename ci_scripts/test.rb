@@ -11,50 +11,56 @@ device = nil
 version = nil
 build_only = false
 retry_tests = false
+watchos = false
 skip_tests = []
 only_tests = []
 
 OptionParser.new do |opts|
   opts.banner = "Testing tool for stripe-ios\n Usage: test.rb [options]"
 
-  opts.on("--scheme [SCHEME]",
-    "Build scheme (required) (stripe-ios, PaymentSheet Example, etc)") do |t|
+  opts.on('--scheme [SCHEME]',
+          'Build scheme (required) (stripe-ios, PaymentSheet Example, etc)') do |t|
     build_scheme = t
   end
 
-  opts.on("--device [DEVICE]",
-    "Device to run tests on (iPhone 8, iPhone 11, etc)") do |t|
+  opts.on('--watch',
+          'Test for watchOS') do |s|
+    watchos = s
+  end
+
+  opts.on('--device [DEVICE]',
+          'Device to run tests on (iPhone 8, iPhone 11, etc)') do |t|
     device = t
   end
 
-  opts.on("--version [VERSION]",
-    "OS version to run tests on (13.7, 14.2, etc)") do |t|
+  opts.on('--version [VERSION]',
+          'OS version to run tests on (13.7, 14.2, etc)') do |t|
     version = t
   end
 
-  opts.on("--only-test [TEST1,TEST2,TEST3]", Array,
-    "List of tests to run") do |t|
+  opts.on('--only-test [TEST1,TEST2,TEST3]', Array,
+          'List of tests to run') do |t|
     only_tests = t
   end
 
-  opts.on("--skip-test [TEST1,TEST2,TEST3]", Array,
-    "List of tests to exclude") do |t|
+  opts.on('--skip-test [TEST1,TEST2,TEST3]', Array,
+          'List of tests to exclude') do |t|
     skip_tests = t
   end
 
-  opts.on("--skip-snapshot-tests", "Don't run snapshot tests") do |s|
+  opts.on('--skip-snapshot-tests', "Don't run snapshot tests") do |s|
     skip_snapshot_tests = s
   end
 
-  opts.on("--cache", "Use cached tests") do |s|
+  opts.on('--cache', 'Use cached tests') do |s|
     use_cache = s
   end
 
-  opts.on("--build-only", "Only build and cache the tests, don't run them.") do |s|
+  opts.on('--build-only', "Only build and cache the tests, don't run them.") do |s|
     build_only = s
   end
 
-  opts.on("--retry-on-failure", "Retry tests on failure") do |s|
+  opts.on('--retry-on-failure', 'Retry tests on failure') do |s|
     retry_tests = s
   end
 end.parse!
@@ -106,7 +112,7 @@ if skip_snapshot_tests
     'StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests'
   ]
 
-  skip_tests += discover_snapshot_tests()
+  skip_tests += discover_snapshot_tests
 end
 
 destination_string = 'generic/platform=iOS Simulator'
@@ -118,34 +124,34 @@ if build_only
   build_action = 'build-for-testing'
 else
   if use_cache
-    if File.exist?(__dir__ + '/../build-ci-tests/' + build_scheme + '.finished')
-      build_action = 'test-without-building'
-    end
+    build_action = 'test-without-building' if File.exist?(__dir__ + '/../build-ci-tests/' + build_scheme + '.finished')
   end
   if !device.nil? && !version.nil?
     destination_string = 'platform=iOS Simulator'
     destination_string += ',name=' + device
     destination_string += ',OS=' + version
   end
+  destination_string = 'platform=watchOS Simulator,name=Apple Watch Series 7 (41mm),OS=latest' if watchos
 end
 
-skip_tests_command = ""
-for skip_test in skip_tests
+skip_tests_command = ''
+skip_tests.each do |skip_test|
   skip_tests_command += "-skip-testing:\"#{skip_test}\" "
 end
 
-only_tests_command = ""
-for only_test in only_tests
+only_tests_command = ''
+only_tests.each do |only_test|
   only_tests_command += "-only-testing:\"#{only_test}\" "
 end
 
-quiet_command = ""
+sdk = watchos ? 'watchsimulator' : 'iphonesimulator'
+quiet_command = ''
 
-quiet_command = "-quiet" if build_action == 'build-for-testing'
+quiet_command = '-quiet' if build_action == 'build-for-testing'
 
-retry_tests_command = ""
+retry_tests_command = ''
 
-retry_tests_command = "-retry-tests-on-failure -test-iterations 5" if retry_tests
+retry_tests_command = '-retry-tests-on-failure -test-iterations 5' if retry_tests
 
 Dir.chdir(__dir__ + '/..') do
   xcodebuild_command = <<~HEREDOC
@@ -154,7 +160,7 @@ Dir.chdir(__dir__ + '/..') do
     -workspace "Stripe.xcworkspace" \
     -scheme "#{build_scheme}" \
     -configuration "Debug" \
-    -sdk "iphonesimulator" \
+    -sdk "#{sdk}" \
     -destination "#{destination_string}" \
     -derivedDataPath build-ci-tests \
     #{skip_tests_command} \

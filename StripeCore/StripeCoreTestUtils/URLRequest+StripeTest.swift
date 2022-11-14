@@ -8,10 +8,10 @@
 
 import Foundation
 
-public extension URLRequest {
+extension URLRequest {
     /// A Data representation of the response's body,
     /// fetched from the body Data or body InputStream.
-    var httpBodyOrBodyStream: Data? {
+    public var httpBodyOrBodyStream: Data? {
         if let httpBody = httpBody {
             return httpBody
         }
@@ -20,24 +20,27 @@ public extension URLRequest {
             var data = Data()
             var buffer = Data(count: maxLength)
             httpBodyStream.open()
-                buffer.withUnsafeMutableBytes { bufferPtr in
-                    let bufferTypedPtr = bufferPtr.bindMemory(to: UInt8.self)
-                    while httpBodyStream.hasBytesAvailable {
-                        let length = httpBodyStream.read(bufferTypedPtr.baseAddress!, maxLength: maxLength)
-                        if length == 0 {
-                            break
-                        } else {
-                            data.append(bufferTypedPtr.baseAddress!, count: length)
-                        }
+            buffer.withUnsafeMutableBytes { bufferPtr in
+                let bufferTypedPtr = bufferPtr.bindMemory(to: UInt8.self)
+                while httpBodyStream.hasBytesAvailable {
+                    let length = httpBodyStream.read(
+                        bufferTypedPtr.baseAddress!,
+                        maxLength: maxLength
+                    )
+                    if length == 0 {
+                        break
+                    } else {
+                        data.append(bufferTypedPtr.baseAddress!, count: length)
                     }
                 }
+            }
             return data
         }
         return nil
     }
-    
+
     // Query items sent as part of this URLRequest
-    var queryItems: [URLQueryItem]? {
+    public var queryItems: [URLQueryItem]? {
         let body = String(data: httpBodyOrBodyStream!, encoding: .utf8)!
         // Create a combined URLComponents with the URL params from the body
         var urlComponents = URLComponents(url: url!, resolvingAgainstBaseURL: false)
@@ -45,4 +48,3 @@ public extension URLRequest {
         return urlComponents?.queryItems
     }
 }
-

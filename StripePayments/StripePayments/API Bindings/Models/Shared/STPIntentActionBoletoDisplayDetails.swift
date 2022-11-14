@@ -26,11 +26,15 @@ public class STPIntentActionBoletoDisplayDetails: NSObject, STPAPIResponseDecoda
     @objc public override var description: String {
         let props: [String] = [
             // Object
-            String(format: "%@: %p", NSStringFromClass(STPIntentActionBoletoDisplayDetails.self), self),
+            String(
+                format: "%@: %p",
+                NSStringFromClass(STPIntentActionBoletoDisplayDetails.self),
+                self
+            ),
             // BoletoDisplayDetails
             "number = \(String(describing: number))",
             "expiresAt = \(String(describing: expiresAt))",
-            "hostedVoucherURL = \(String(describing: hostedVoucherURL))"
+            "hostedVoucherURL = \(String(describing: hostedVoucherURL))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -39,11 +43,9 @@ public class STPIntentActionBoletoDisplayDetails: NSObject, STPAPIResponseDecoda
     // MARK: - STPAPIResponseDecodable
 
     required init?(dictionary: [AnyHashable: Any]) {
-        let nsDict = dictionary as NSDictionary
-
-        guard let number = nsDict.stp_string(forKey: "number"),
-              let expiresAt = nsDict.stp_date(forKey: "expires_at"),
-              let hostedVoucherURL = nsDict.stp_url(forKey: "hosted_voucher_url")
+        guard let number = dictionary.stp_string(forKey: "number"),
+              let expiresAt = dictionary.stp_date(forKey: "expires_at"),
+              let hostedVoucherURL = dictionary.stp_url(forKey: "hosted_voucher_url")
         else {
             return nil
         }

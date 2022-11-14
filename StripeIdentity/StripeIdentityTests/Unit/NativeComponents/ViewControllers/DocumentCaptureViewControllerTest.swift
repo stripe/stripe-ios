@@ -6,14 +6,15 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
-import XCTest
 import AVKit
-@testable @_spi(STP) import StripeCameraCore
+import Foundation
+@_spi(STP) import StripeCameraCoreTestUtils
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@_spi(STP) import StripeCameraCoreTestUtils
 import StripeCoreTestUtils
+import XCTest
+
+@testable@_spi(STP) import StripeCameraCore
 @testable import StripeIdentity
 
 final class DocumentCaptureViewControllerTest: XCTestCase {
@@ -53,7 +54,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockAnalyticsClient = .init()
         mockSheetController = .init(
             flowController: mockFlowController,
-            analyticsClient: IdentityAnalyticsClient(verificationSessionId: "", analyticsClient: mockAnalyticsClient)
+            analyticsClient: IdentityAnalyticsClient(
+                verificationSessionId: "",
+                analyticsClient: mockAnalyticsClient
+            )
         )
         mockDocumentScanner = .init()
     }
@@ -109,7 +113,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
-        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, mockDocumentScannerOutput)
+        XCTAssertEqual(
+            mockDocumentUploader.uploadedDocumentScannerOutput,
+            mockDocumentScannerOutput
+        )
     }
 
     func testTransitionFromScannedCardFront() {
@@ -164,7 +171,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
-        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, mockDocumentScannerOutput)
+        XCTAssertEqual(
+            mockDocumentUploader.uploadedDocumentScannerOutput,
+            mockDocumentScannerOutput
+        )
     }
 
     func testTransitionFromScannedCardBack() {
@@ -236,7 +246,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
-        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, mockDocumentScannerOutput)
+        XCTAssertEqual(
+            mockDocumentUploader.uploadedDocumentScannerOutput,
+            mockDocumentScannerOutput
+        )
     }
 
     func testTransitionFromScannedPassport() {
@@ -264,17 +277,17 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedButtonState: .disabled
         )
     }
-    
+
     func testSaveDataFrontAndTransition() {
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
-        
+
         let mockFrontImage = UIImage()
 
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
-        
+
         mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
-        
+
         // Request to save data
         vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
 
@@ -292,12 +305,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testSaveDataBackAndTransition() {
         let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
-        
+
         let mockBackImage = UIImage()
 
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
-        
+
         mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
 
         // Request to save data
@@ -331,9 +344,15 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedButtonState: .enabled
         )
         // Verify analytics
-        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied").first
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_permission_denied"
+        ).first
         XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
-        XCTAssertEqual(mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted").count, 0)
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
+                .count,
+            0
+        )
     }
 
     func testCameraSessionFailedConfigure() {
@@ -356,9 +375,16 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
 
         // Verify analytics
-        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_error").first
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_error")
+            .first
         XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
-        XCTAssert(analytic: analytic, hasMetadataError: "error", withDomain: "mock_error", code: 100, fileName: "DocumentCaptureViewController.swift")
+        XCTAssert(
+            analytic: analytic,
+            hasMetadataError: "error",
+            withDomain: "mock_error",
+            code: 100,
+            fileName: "DocumentCaptureViewController.swift"
+        )
     }
 
     func testCameraAccessGrantedAnalytic() {
@@ -372,9 +398,15 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         grantCameraAccess(granted: true)
 
         // Verify analytics
-        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted").first
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_permission_granted"
+        ).first
         XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
-        XCTAssertEqual(mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied").count, 0)
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied")
+                .count,
+            0
+        )
     }
 
     func testSettingsButton() {
@@ -394,14 +426,20 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let vc = makeViewController(state: .noCameraAccess, documentType: .idCard)
         vc.buttonViewModels.first!.didTap()
         // Should open File Upload screen
-        XCTAssertIs(mockFlowController.replacedWithViewController as Any, DocumentFileUploadViewController.self)
+        XCTAssertIs(
+            mockFlowController.replacedWithViewController as Any,
+            DocumentFileUploadViewController.self
+        )
     }
 
     func testFileUploadButtonTimeout() {
         let vc = makeViewController(state: .timeout(.front), documentType: .idCard)
         vc.buttonViewModels.first!.didTap()
         // Should open File Upload screen
-        XCTAssertIs(mockFlowController.replacedWithViewController as Any, DocumentFileUploadViewController.self)
+        XCTAssertIs(
+            mockFlowController.replacedWithViewController as Any,
+            DocumentFileUploadViewController.self
+        )
     }
 
     func testNoCameraAccessButtonsReqLiveCapture() throws {
@@ -445,14 +483,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             return XCTFail("Expected timeout timer to be set")
         }
 
-        /*
-         `autocapture_timeout` in mock API response is 1000ms.
-         We want to test that the timer will fire 10s after `startScanning()` is
-         called. Since `Timer.timeInterval` is always 0 for non-repeating timers,
-         we'll check the delta between the timer's firing date and when
-         `startScanning` was called. Using an accuracy of 0.2s to account for
-         processing time of calling `startScanning`.
-         */
+        // `autocapture_timeout` in mock API response is 1000ms.
+        // We want to test that the timer will fire 10s after `startScanning()` is
+        // called. Since `Timer.timeInterval` is always 0 for non-repeating timers,
+        // we'll check the delta between the timer's firing date and when
+        // `startScanning` was called. Using an accuracy of 0.2s to account for
+        // processing time of calling `startScanning`.
         XCTAssertEqual(timer.fireDate.timeIntervalSince(startedScanningDate), 10, accuracy: 0.2)
 
         // Simulate time out
@@ -469,7 +505,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertTrue(mockConcurrencyManager.didReset)
 
         // Verify analytic logged
-        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout").first
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout")
+            .first
         XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
         XCTAssert(analytic: analytic, hasMetadata: "side", withValue: "front")
     }
@@ -525,7 +562,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
 
         // Mock that scanner found desired classification, but is blurry
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront, isHighQuality: false))
+        mockConcurrencyManager.respondToScan(
+            output: makeDocumentScannerOutput(with: .idCardFront, isHighQuality: false)
+        )
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .idCardFront))
 
         // Mock that scanner found desired classification
@@ -602,14 +641,16 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock metrics
         mockConcurrencyManager.mockAverageFPSMetric = 30
         mockConcurrencyManager.mockNumFramesScannedMetric = 50
-        mockDocumentScanner.mlModelMetricsTrackers = [MLDetectorMetricsTrackerMock(
-            modelName: "mock_model",
-            mockAverageMetrics: .init(
-                inference: 0.005,
-                postProcess: 0.01
-            ),
-            mockNumFrames: 50
-        )]
+        mockDocumentScanner.mlModelMetricsTrackers = [
+            MLDetectorMetricsTrackerMock(
+                modelName: "mock_model",
+                mockAverageMetrics: .init(
+                    inference: 0.005,
+                    postProcess: 0.01
+                ),
+                mockNumFrames: 50
+            )
+        ]
 
         // Mock that vc is scanning
         let vc = makeViewController(
@@ -624,7 +665,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
 
         // Verify average_fps analytic sent
-        let averageFPSAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "average_fps")
+        let averageFPSAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "average_fps"
+        )
         let averageFPSAnalytic = averageFPSAnalytics.first
         XCTAssertEqual(averageFPSAnalytics.count, 1)
         XCTAssert(analytic: averageFPSAnalytic, hasMetadata: "type", withValue: "document")
@@ -632,7 +675,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssert(analytic: averageFPSAnalytic, hasMetadata: "frames", withValue: 50)
 
         // Verify model_performance analytic sent
-        let modelPerfAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "model_performance")
+        let modelPerfAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "model_performance"
+        )
         let modelPerfAnalytic = modelPerfAnalytics.first
         XCTAssertEqual(modelPerfAnalytics.count, 1)
         XCTAssert(analytic: modelPerfAnalytic, hasMetadata: "inference", withValue: Double(5))
@@ -642,43 +687,55 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 }
 
-private extension DocumentCaptureViewControllerTest {
-    func verify(
+extension DocumentCaptureViewControllerTest {
+    fileprivate func verify(
         _ vc: DocumentCaptureViewController,
         expectedState: DocumentCaptureViewController.State,
         expectedButtonState: IdentityFlowView.ViewModel.Button.State?,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        XCTAssertStateEqual(vc.imageScanningSession.state, expectedState, "state", file: file, line: line)
-        XCTAssertEqual(vc.buttonViewModels.first?.state, expectedButtonState, "buttonState", file: file, line: line)
+        XCTAssertStateEqual(
+            vc.imageScanningSession.state,
+            expectedState,
+            "state",
+            file: file,
+            line: line
+        )
+        XCTAssertEqual(
+            vc.buttonViewModels.first?.state,
+            expectedButtonState,
+            "buttonState",
+            file: file,
+            line: line
+        )
     }
 
-    func grantCameraAccess(granted: Bool = true) {
+    fileprivate func grantCameraAccess(granted: Bool = true) {
         mockCameraPermissionsManager.respondToRequest(granted: granted)
         wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
     }
 
-    func waitForCameraSessionToConfigure(setupResult: CameraSession.SetupResult) {
+    fileprivate func waitForCameraSessionToConfigure(setupResult: CameraSession.SetupResult) {
         mockCameraSession.respondToConfigureSession(setupResult: setupResult)
         wait(for: [mockCameraSession.configureSessionCompletionExp], timeout: 1)
     }
 
-    func waitForCameraSessionToStart() {
+    fileprivate func waitForCameraSessionToStart() {
         mockCameraSession.respondToStartSession()
         wait(for: [mockCameraSession.startSessionCompletionExp], timeout: 1)
     }
 
-    func waitForCameraSessionToStop() {
+    fileprivate func waitForCameraSessionToStop() {
         mockCameraSession.respondToStopSession()
         wait(for: [mockCameraSession.stopSessionCompletionExp], timeout: 1)
     }
 
-    func mockTimeoutTimer(_ vc: DocumentCaptureViewController) {
+    fileprivate func mockTimeoutTimer(_ vc: DocumentCaptureViewController) {
         vc.imageScanningSession.startTimeoutTimer(expectedClassification: .front)
     }
 
-    func mockCameraFrameCaptured(_ vc: DocumentCaptureViewController) {
+    fileprivate func mockCameraFrameCaptured(_ vc: DocumentCaptureViewController) {
         vc.imageScanningSession.captureOutput(
             mockVideoOutput,
             didOutput: DocumentCaptureViewControllerTest.mockSampleBuffer,
@@ -686,7 +743,7 @@ private extension DocumentCaptureViewControllerTest {
         )
     }
 
-    func makeViewController(
+    fileprivate func makeViewController(
         documentType: DocumentType
     ) -> DocumentCaptureViewController {
         return .init(
@@ -702,10 +759,11 @@ private extension DocumentCaptureViewControllerTest {
         )
     }
 
-    func makeViewController(
+    fileprivate func makeViewController(
         state: DocumentCaptureViewController.State,
         documentType: DocumentType,
-        apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage = DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture
+        apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage =
+            DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture
     ) -> DocumentCaptureViewController {
         return .init(
             apiConfig: apiConfig,
@@ -721,7 +779,7 @@ private extension DocumentCaptureViewControllerTest {
         )
     }
 
-    func makeDocumentScannerOutput(
+    fileprivate func makeDocumentScannerOutput(
         with classification: IDDetectorOutput.Classification,
         isHighQuality: Bool = true
     ) -> DocumentScannerOutput {
@@ -757,7 +815,7 @@ private extension DocumentCaptureViewControllerTest {
     }
 
     /// Same as XCTAssertEqual but ignores image pointer discrepencies
-    func XCTAssertStateEqual(
+    fileprivate func XCTAssertStateEqual(
         _ lhs: DocumentCaptureViewController.State,
         _ rhs: DocumentCaptureViewController.State,
         _ message: String = "",
@@ -769,12 +827,12 @@ private extension DocumentCaptureViewControllerTest {
         case (.scanning(let lSide, let lClass), .scanning(let rSide, let rClass)):
             isEqual = (lSide == rSide) && (lClass == rClass)
         case (.scanned(let left, _), .scanned(let right, _)),
-             (.timeout(let left), .timeout(let right)):
+            (.timeout(let left), .timeout(let right)):
             isEqual = (left == right)
         case (.initial, .initial),
-             (.saving, .saving),
-             (.noCameraAccess, .noCameraAccess),
-             (.cameraError, .cameraError):
+            (.saving, .saving),
+            (.noCameraAccess, .noCameraAccess),
+            (.cameraError, .cameraError):
             isEqual = true
         default:
             isEqual = false

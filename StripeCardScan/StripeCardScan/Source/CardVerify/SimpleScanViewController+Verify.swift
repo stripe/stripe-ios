@@ -13,8 +13,7 @@ extension SimpleScanViewController {
         if #available(iOS 13.0, *) {
             activityIndicator.style = .large
             activityIndicator.color = .white
-        }
-        else {
+        } else {
             activityIndicator.style = .whiteLarge
         }
 

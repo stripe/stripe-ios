@@ -22,7 +22,10 @@ public class STPIntentActionWechatPayRedirectToApp: NSObject {
         let props: [String] = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPIntentActionAlipayHandleRedirect.self), self),
+                format: "%@: %p",
+                NSStringFromClass(STPIntentActionAlipayHandleRedirect.self),
+                self
+            ),
             // RedirectToURL details (alphabetical)
             "nativeURL = \(String(describing: nativeURL))",
         ]
@@ -51,10 +54,11 @@ extension STPIntentActionWechatPayRedirectToApp: STPAPIResponseDecodable {
         else {
             return nil
         }
-        
+
         return STPIntentActionWechatPayRedirectToApp(
             nativeURL: nativeURL,
-            allResponseFields: dict) as? Self
+            allResponseFields: dict
+        ) as? Self
     }
 
 }

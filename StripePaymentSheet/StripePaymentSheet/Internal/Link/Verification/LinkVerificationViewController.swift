@@ -82,7 +82,7 @@ final class LinkVerificationViewController: UIViewController {
         super.viewDidLoad()
 
         view.tintColor = .linkBrand
-        view.backgroundColor = CompatibleColor.systemBackground
+        view.backgroundColor = .systemBackground
 
         view.addSubview(verificationView)
         view.addSubview(activityIndicator)

@@ -26,7 +26,9 @@ public class STPPaymentMethodCardWalletMasterpass: NSObject, STPAPIResponseDecod
         let props = [
             // Object
             String(
-                format: "%@: %p", NSStringFromClass(STPPaymentMethodCardWalletMasterpass.self), self
+                format: "%@: %p",
+                NSStringFromClass(STPPaymentMethodCardWalletMasterpass.self),
+                self
             ),
             // Properties
             "email: \(email ?? "")",
@@ -47,14 +49,16 @@ public class STPPaymentMethodCardWalletMasterpass: NSObject, STPAPIResponseDecod
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         let masterpass = self.init()
         masterpass.allResponseFields = response
         masterpass.billingAddress = STPPaymentMethodAddress.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "billing_address"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "billing_address")
+        )
         masterpass.shippingAddress = STPPaymentMethodAddress.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "shipping_address"))
+            fromAPIResponse: dict.stp_dictionary(forKey: "shipping_address")
+        )
         masterpass.email = dict.stp_string(forKey: "email")
         masterpass.name = dict.stp_string(forKey: "name")
         return masterpass

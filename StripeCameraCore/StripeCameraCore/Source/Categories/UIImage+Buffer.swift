@@ -1,3 +1,7 @@
+// Ignoring file format becase of compiler directive which would force the whole file to be
+// indented, including import statements.
+// swift-format-ignore-file
+
 // Taken from https://gist.github.com/createwithswift/30a058c2745c8b09e64e7b073485e516
 //
 // MIT License
@@ -30,21 +34,24 @@ import CoreMedia
 extension UIImage {
     @_spi(STP) public func convertToPixelBuffer() -> CVPixelBuffer? {
 
-        let attributes = [
-            kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
-            kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue
-        ] as CFDictionary
+        let attributes =
+            [
+                kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
+                kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue,
+            ] as CFDictionary
 
         var pixelBuffer: CVPixelBuffer?
 
         let status = CVPixelBufferCreate(
-            kCFAllocatorDefault, Int(self.size.width),
+            kCFAllocatorDefault,
+            Int(self.size.width),
             Int(self.size.height),
             kCVPixelFormatType_32ARGB,
             attributes,
-            &pixelBuffer)
+            &pixelBuffer
+        )
 
-        guard (status == kCVReturnSuccess) else {
+        guard status == kCVReturnSuccess else {
             return nil
         }
 
@@ -60,7 +67,8 @@ extension UIImage {
             bitsPerComponent: 8,
             bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!),
             space: rgbColorSpace,
-            bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
+            bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue
+        )
 
         context?.translateBy(x: 0, y: self.size.height)
         context?.scaleBy(x: 1.0, y: -1.0)

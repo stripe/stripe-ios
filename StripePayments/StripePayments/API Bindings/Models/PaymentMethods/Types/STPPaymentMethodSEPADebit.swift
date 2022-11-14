@@ -53,10 +53,12 @@ public class STPPaymentMethodSEPADebit: NSObject, STPAPIResponseDecodable {
         return self.init(dictionary: response)
     }
 
-    required init(dictionary dict: [AnyHashable: Any]) {
+    required init(
+        dictionary dict: [AnyHashable: Any]
+    ) {
         super.init()
         allResponseFields = dict
-        let dict = (dict as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = dict.stp_dictionaryByRemovingNulls()
         last4 = dict.stp_string(forKey: "last4")
         bankCode = dict.stp_string(forKey: "bank_code")
         branchCode = dict.stp_string(forKey: "branch_code")

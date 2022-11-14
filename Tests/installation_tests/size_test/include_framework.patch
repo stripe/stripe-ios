@@ -1,5 +1,5 @@
 diff --git a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
-index 00e8033d4..d6129aba8 100644
+index 25e500978..64bc46ad4 100644
 --- a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 +++ b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 @@ -3,11 +3,12 @@
@@ -72,30 +72,38 @@ index 00e8033d4..d6129aba8 100644
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  				TEST_TARGET_NAME = SPMTest;
-@@ -433,7 +444,10 @@
+@@ -433,9 +444,12 @@
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
  				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
+-				PRODUCT_NAME = "$(TARGET_NAME)";
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
 +					"@executable_path/Frameworks",
 +				);
- 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
- 				PRODUCT_NAME = "$(TARGET_NAME)";
++				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.{{SDK}}Size;
++				PRODUCT_NAME = "{{SDK}}Size";
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-@@ -452,7 +466,10 @@
+ 				SWIFT_VERSION = 5.0;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+@@ -452,9 +466,12 @@
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
  				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
+-				PRODUCT_NAME = "$(TARGET_NAME)";
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
 +					"@executable_path/Frameworks",
 +				);
- 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
- 				PRODUCT_NAME = "$(TARGET_NAME)";
++				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.{{SDK}}Size;
++				PRODUCT_NAME = "{{SDK}}Size";
  				SWIFT_VERSION = 5.0;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
 @@ -491,6 +508,13 @@
  			defaultConfigurationName = Release;
  		};
@@ -111,23 +119,19 @@ index 00e8033d4..d6129aba8 100644
  	rootObject = C176897B20616C7E003DE895 /* Project object */;
  }
 diff --git a/Tests/installation_tests/size_test/SPMTest/ViewController.swift b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
-index 8e3a96dce..c20ba6536 100644
+index dd31eb2d0..4f1b644e1 100644
 --- a/Tests/installation_tests/size_test/SPMTest/ViewController.swift
 +++ b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
-@@ -7,8 +7,15 @@
+@@ -7,5 +7,11 @@
  //
  
  import UIKit
 +import {{SDK}}
-+
+ 
+-class ViewController: UIViewController {}
 +class ViewController: UIViewController {
-+
 +    override func viewDidLoad() {
 +        super.viewDidLoad()
 +        StripeAPI.defaultPublishableKey = "foo"
 +    }
- 
--class ViewController: UIViewController {    
- 
-     /*
-     // MARK: - Navigation
++}

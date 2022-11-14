@@ -10,17 +10,20 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-@objc(STPBasicUIAnalyticsSerializer) class STPBasicUIAnalyticsSerializer: NSObject, STPAnalyticsSerializer {
-    static func serializeConfiguration(_ configuration: NSObject) -> [String:
+@objc(STPBasicUIAnalyticsSerializer)
+class STPBasicUIAnalyticsSerializer: NSObject, STPAnalyticsSerializer {
+    static func serializeConfiguration(
+        _ configuration: NSObject
+    ) -> [String:
         String]
     {
         var dictionary: [String: String] = [:]
         dictionary["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
-        
+
         guard let configuration = configuration as? STPPaymentConfiguration else {
             return dictionary
         }
-        
+
         if configuration.applePayEnabled && !configuration.fpxEnabled {
             dictionary["additional_payment_methods"] = "default"
         } else if !configuration.applePayEnabled && !configuration.fpxEnabled {
