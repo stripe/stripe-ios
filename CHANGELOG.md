@@ -1,4 +1,4 @@
-## X.Y.Z 2022-xx-xx
+## 23.2.0 2022-11-14
 ### Apple Pay
 * [Added] StripeApplePay now supports watchOS 6.2 or later. See [AppClipExample](Example/AppClipExample) for an example project.
 ### PaymentSheet

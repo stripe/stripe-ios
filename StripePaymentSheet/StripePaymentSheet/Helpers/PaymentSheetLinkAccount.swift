@@ -536,8 +536,6 @@ private extension LinkSettings.FundingSource {
             return .card
         case .bankAccount:
             return .bankAccount
-        @unknown default:
-            return nil
         }
     }
 }
