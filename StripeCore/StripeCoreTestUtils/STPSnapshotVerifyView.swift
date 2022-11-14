@@ -5,8 +5,6 @@
 //  Created by David Estes on 4/13/22.
 //
 
-#if os(iOS)
-
 import Foundation
 import iOSSnapshotTestCase
 
@@ -32,5 +30,3 @@ extension FBSnapshotTestCase {
         )
     }
 }
-
-#endif
