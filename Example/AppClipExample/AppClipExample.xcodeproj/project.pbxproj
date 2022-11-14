@@ -7,21 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		313AA54229159AB100324A8B /* WatchApplePayExample Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 313AA54129159AB100324A8B /* WatchApplePayExample Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		313AA54B29159AB300324A8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 313AA54A29159AB300324A8B /* Assets.xcassets */; };
-		313AA54E29159AB300324A8B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 313AA54D29159AB300324A8B /* Preview Assets.xcassets */; };
-		313AA55829159AB400324A8B /* WatchApplePayExample_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313AA55729159AB400324A8B /* WatchApplePayExample_Watch_AppTests.swift */; };
-		313AA56229159AB400324A8B /* WatchApplePayExample_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313AA56129159AB400324A8B /* WatchApplePayExample_Watch_AppUITests.swift */; };
-		313AA56429159AB400324A8B /* WatchApplePayExample_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313AA56329159AB400324A8B /* WatchApplePayExample_Watch_AppUITestsLaunchTests.swift */; };
-		313AA57229159AD700324A8B /* AppClipExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFDF32789135400AB706D /* AppClipExampleApp.swift */; };
-		313AA57329159AD700324A8B /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992C279A09A000FEBDE3 /* BackendModel.swift */; };
-		313AA57429159AD700324A8B /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992A279A093F00FEBDE3 /* ApplePayModel.swift */; };
-		313AA57529159AD700324A8B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFDF42789135400AB706D /* ContentView.swift */; };
-		313AA57629159AD700324A8B /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992E279A0C1200FEBDE3 /* PaymentButton.swift */; };
-		313AA57829159BCF00324A8B /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313AA57729159BCF00324A8B /* StripeApplePay.framework */; };
-		313AA57929159BCF00324A8B /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 313AA57729159BCF00324A8B /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		313AA57C29159BEE00324A8B /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313AA57B29159BEE00324A8B /* StripeCore.framework */; };
-		313AA57D29159BEE00324A8B /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 313AA57B29159BEE00324A8B /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3168992B279A093F00FEBDE3 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992A279A093F00FEBDE3 /* ApplePayModel.swift */; };
 		3168992D279A09A000FEBDE3 /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992C279A09A000FEBDE3 /* BackendModel.swift */; };
 		3168992F279A0C1200FEBDE3 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992E279A0C1200FEBDE3 /* PaymentButton.swift */; };
@@ -52,27 +37,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		313AA54329159AB100324A8B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 313AA54029159AB100324A8B;
-			remoteInfo = "WatchApplePayExample Watch App";
-		};
-		313AA55429159AB300324A8B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 313AA54029159AB100324A8B;
-			remoteInfo = "WatchApplePayExample Watch App";
-		};
-		313AA55E29159AB400324A8B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 313AA54029159AB100324A8B;
-			remoteInfo = "WatchApplePayExample Watch App";
-		};
 		3168994E279A123E00FEBDE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
@@ -104,29 +68,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		313AA56729159AB400324A8B /* Embed Watch Content */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
-			dstSubfolderSpec = 16;
-			files = (
-				313AA54229159AB100324A8B /* WatchApplePayExample Watch App.app in Embed Watch Content */,
-			);
-			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA57A29159BCF00324A8B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				313AA57D29159BEE00324A8B /* StripeCore.framework in Embed Frameworks */,
-				313AA57929159BCF00324A8B /* StripeApplePay.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		31689934279A0EA200FEBDE3 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -165,17 +106,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		313AA53C29159AB100324A8B /* WatchApplePayExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchApplePayExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		313AA54129159AB100324A8B /* WatchApplePayExample Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchApplePayExample Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		313AA54A29159AB300324A8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		313AA54D29159AB300324A8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		313AA55329159AB300324A8B /* WatchApplePayExample Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchApplePayExample Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		313AA55729159AB400324A8B /* WatchApplePayExample_Watch_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApplePayExample_Watch_AppTests.swift; sourceTree = "<group>"; };
-		313AA55D29159AB400324A8B /* WatchApplePayExample Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchApplePayExample Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		313AA56129159AB400324A8B /* WatchApplePayExample_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApplePayExample_Watch_AppUITests.swift; sourceTree = "<group>"; };
-		313AA56329159AB400324A8B /* WatchApplePayExample_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApplePayExample_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		313AA57729159BCF00324A8B /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		313AA57B29159BEE00324A8B /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3168992A279A093F00FEBDE3 /* ApplePayModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplePayModel.swift; sourceTree = "<group>"; };
 		3168992C279A09A000FEBDE3 /* BackendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendModel.swift; sourceTree = "<group>"; };
 		3168992E279A0C1200FEBDE3 /* PaymentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButton.swift; sourceTree = "<group>"; };
@@ -206,29 +136,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		313AA53E29159AB100324A8B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				313AA57C29159BEE00324A8B /* StripeCore.framework in Frameworks */,
-				313AA57829159BCF00324A8B /* StripeApplePay.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA55029159AB300324A8B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA55A29159AB400324A8B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		31689939279A123D00FEBDE3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -271,45 +178,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		313AA54529159AB100324A8B /* WatchApplePayExample Watch App */ = {
-			isa = PBXGroup;
-			children = (
-				313AA54A29159AB300324A8B /* Assets.xcassets */,
-				313AA54C29159AB300324A8B /* Preview Content */,
-			);
-			path = "WatchApplePayExample Watch App";
-			sourceTree = "<group>";
-		};
-		313AA54C29159AB300324A8B /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				313AA54D29159AB300324A8B /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		313AA55629159AB400324A8B /* WatchApplePayExample Watch AppTests */ = {
-			isa = PBXGroup;
-			children = (
-				313AA55729159AB400324A8B /* WatchApplePayExample_Watch_AppTests.swift */,
-			);
-			path = "WatchApplePayExample Watch AppTests";
-			sourceTree = "<group>";
-		};
-		313AA56029159AB400324A8B /* WatchApplePayExample Watch AppUITests */ = {
-			isa = PBXGroup;
-			children = (
-				313AA56129159AB400324A8B /* WatchApplePayExample_Watch_AppUITests.swift */,
-				313AA56329159AB400324A8B /* WatchApplePayExample_Watch_AppUITestsLaunchTests.swift */,
-			);
-			path = "WatchApplePayExample Watch AppUITests";
-			sourceTree = "<group>";
-		};
 		31689930279A0EA100FEBDE3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				313AA57B29159BEE00324A8B /* StripeCore.framework */,
-				313AA57729159BCF00324A8B /* StripeApplePay.framework */,
 				3168997F279A16BD00FEBDE3 /* StripeCore.framework */,
 				3168997B279A16B900FEBDE3 /* StripeApplePay.framework */,
 				31689978279A16B200FEBDE3 /* StripeApplePay.framework */,
@@ -364,9 +235,6 @@
 				3168993D279A123D00FEBDE3 /* AppClipExampleClip */,
 				31689950279A123E00FEBDE3 /* AppClipExampleClipTests */,
 				3168995A279A123E00FEBDE3 /* AppClipExampleClipUITests */,
-				313AA54529159AB100324A8B /* WatchApplePayExample Watch App */,
-				313AA55629159AB400324A8B /* WatchApplePayExample Watch AppTests */,
-				313AA56029159AB400324A8B /* WatchApplePayExample Watch AppUITests */,
 				31FBFDFB2789135600AB706D /* Products */,
 				31689930279A0EA100FEBDE3 /* Frameworks */,
 			);
@@ -393,10 +261,6 @@
 				3168993C279A123D00FEBDE3 /* AppClipExampleClip.app */,
 				3168994D279A123E00FEBDE3 /* AppClipExampleClipTests.xctest */,
 				31689957279A123E00FEBDE3 /* AppClipExampleClipUITests.xctest */,
-				313AA53C29159AB100324A8B /* WatchApplePayExample.app */,
-				313AA54129159AB100324A8B /* WatchApplePayExample Watch App.app */,
-				313AA55329159AB300324A8B /* WatchApplePayExample Watch AppTests.xctest */,
-				313AA55D29159AB400324A8B /* WatchApplePayExample Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -422,77 +286,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		313AA53B29159AB100324A8B /* WatchApplePayExample */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 313AA56F29159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample" */;
-			buildPhases = (
-				313AA53A29159AB100324A8B /* Resources */,
-				313AA56729159AB400324A8B /* Embed Watch Content */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				313AA54429159AB100324A8B /* PBXTargetDependency */,
-			);
-			name = WatchApplePayExample;
-			productName = WatchApplePayExample;
-			productReference = 313AA53C29159AB100324A8B /* WatchApplePayExample.app */;
-			productType = "com.apple.product-type.application.watchapp2-container";
-		};
-		313AA54029159AB100324A8B /* WatchApplePayExample Watch App */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 313AA56E29159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample Watch App" */;
-			buildPhases = (
-				313AA53D29159AB100324A8B /* Sources */,
-				313AA53E29159AB100324A8B /* Frameworks */,
-				313AA53F29159AB100324A8B /* Resources */,
-				313AA57A29159BCF00324A8B /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "WatchApplePayExample Watch App";
-			productName = "WatchApplePayExample Watch App";
-			productReference = 313AA54129159AB100324A8B /* WatchApplePayExample Watch App.app */;
-			productType = "com.apple.product-type.application";
-		};
-		313AA55229159AB300324A8B /* WatchApplePayExample Watch AppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 313AA57029159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample Watch AppTests" */;
-			buildPhases = (
-				313AA54F29159AB300324A8B /* Sources */,
-				313AA55029159AB300324A8B /* Frameworks */,
-				313AA55129159AB300324A8B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				313AA55529159AB300324A8B /* PBXTargetDependency */,
-			);
-			name = "WatchApplePayExample Watch AppTests";
-			productName = "WatchApplePayExample Watch AppTests";
-			productReference = 313AA55329159AB300324A8B /* WatchApplePayExample Watch AppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		313AA55C29159AB400324A8B /* WatchApplePayExample Watch AppUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 313AA57129159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample Watch AppUITests" */;
-			buildPhases = (
-				313AA55929159AB400324A8B /* Sources */,
-				313AA55A29159AB400324A8B /* Frameworks */,
-				313AA55B29159AB400324A8B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				313AA55F29159AB400324A8B /* PBXTargetDependency */,
-			);
-			name = "WatchApplePayExample Watch AppUITests";
-			productName = "WatchApplePayExample Watch AppUITests";
-			productReference = 313AA55D29159AB400324A8B /* WatchApplePayExample Watch AppUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		3168993B279A123D00FEBDE3 /* AppClipExampleClip */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 31689962279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */;
@@ -592,24 +385,10 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1400;
+				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
-					313AA53B29159AB100324A8B = {
-						CreatedOnToolsVersion = 14.0;
-					};
-					313AA54029159AB100324A8B = {
-						CreatedOnToolsVersion = 14.0;
-					};
-					313AA55229159AB300324A8B = {
-						CreatedOnToolsVersion = 14.0;
-						TestTargetID = 313AA54029159AB100324A8B;
-					};
-					313AA55C29159AB400324A8B = {
-						CreatedOnToolsVersion = 14.0;
-						TestTargetID = 313AA54029159AB100324A8B;
-					};
 					3168993B279A123D00FEBDE3 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -648,45 +427,11 @@
 				3168993B279A123D00FEBDE3 /* AppClipExampleClip */,
 				3168994C279A123E00FEBDE3 /* AppClipExampleClipTests */,
 				31689956279A123E00FEBDE3 /* AppClipExampleClipUITests */,
-				313AA53B29159AB100324A8B /* WatchApplePayExample */,
-				313AA54029159AB100324A8B /* WatchApplePayExample Watch App */,
-				313AA55229159AB300324A8B /* WatchApplePayExample Watch AppTests */,
-				313AA55C29159AB400324A8B /* WatchApplePayExample Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		313AA53A29159AB100324A8B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA53F29159AB100324A8B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				313AA54E29159AB300324A8B /* Preview Assets.xcassets in Resources */,
-				313AA54B29159AB300324A8B /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA55129159AB300324A8B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA55B29159AB400324A8B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3168993A279A123D00FEBDE3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -728,35 +473,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		313AA53D29159AB100324A8B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				313AA57229159AD700324A8B /* AppClipExampleApp.swift in Sources */,
-				313AA57329159AD700324A8B /* BackendModel.swift in Sources */,
-				313AA57429159AD700324A8B /* ApplePayModel.swift in Sources */,
-				313AA57529159AD700324A8B /* ContentView.swift in Sources */,
-				313AA57629159AD700324A8B /* PaymentButton.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA54F29159AB300324A8B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				313AA55829159AB400324A8B /* WatchApplePayExample_Watch_AppTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		313AA55929159AB400324A8B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				313AA56229159AB400324A8B /* WatchApplePayExample_Watch_AppUITests.swift in Sources */,
-				313AA56429159AB400324A8B /* WatchApplePayExample_Watch_AppUITestsLaunchTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		31689938279A123D00FEBDE3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -810,21 +526,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		313AA54429159AB100324A8B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 313AA54029159AB100324A8B /* WatchApplePayExample Watch App */;
-			targetProxy = 313AA54329159AB100324A8B /* PBXContainerItemProxy */;
-		};
-		313AA55529159AB300324A8B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 313AA54029159AB100324A8B /* WatchApplePayExample Watch App */;
-			targetProxy = 313AA55429159AB300324A8B /* PBXContainerItemProxy */;
-		};
-		313AA55F29159AB400324A8B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 313AA54029159AB100324A8B /* WatchApplePayExample Watch App */;
-			targetProxy = 313AA55E29159AB400324A8B /* PBXContainerItemProxy */;
-		};
 		3168994F279A123E00FEBDE3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3168993B279A123D00FEBDE3 /* AppClipExampleClip */;
@@ -848,192 +549,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		313AA56529159AB400324A8B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				INFOPLIST_KEY_CFBundleDisplayName = WatchApplePayExample;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.WatchApplePayExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		313AA56629159AB400324A8B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				INFOPLIST_KEY_CFBundleDisplayName = WatchApplePayExample;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.WatchApplePayExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		313AA56829159AB400324A8B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"WatchApplePayExample Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = WatchApplePayExample;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKWatchOnly = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.WatchApplePayExample.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
-			};
-			name = Debug;
-		};
-		313AA56929159AB400324A8B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"WatchApplePayExample Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = WatchApplePayExample;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKWatchOnly = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.WatchApplePayExample.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
-			};
-			name = Release;
-		};
-		313AA56A29159AB400324A8B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.WatchApplePayExample-Watch-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchApplePayExample Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchApplePayExample Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
-			};
-			name = Debug;
-		};
-		313AA56B29159AB400324A8B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.WatchApplePayExample-Watch-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchApplePayExample Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchApplePayExample Watch App";
-				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
-			};
-			name = Release;
-		};
-		313AA56C29159AB400324A8B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.WatchApplePayExample-Watch-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "WatchApplePayExample Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
-			};
-			name = Debug;
-		};
-		313AA56D29159AB400324A8B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.WatchApplePayExample-Watch-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "WatchApplePayExample Watch App";
-				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
-			};
-			name = Release;
-		};
 		31689963279A123F00FEBDE3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1186,7 +701,6 @@
 		31FBFE212789135700AB706D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1238,7 +752,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1247,7 +761,6 @@
 		31FBFE222789135700AB706D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1405,42 +918,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		313AA56E29159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample Watch App" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				313AA56829159AB400324A8B /* Debug */,
-				313AA56929159AB400324A8B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		313AA56F29159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				313AA56529159AB400324A8B /* Debug */,
-				313AA56629159AB400324A8B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		313AA57029159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample Watch AppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				313AA56A29159AB400324A8B /* Debug */,
-				313AA56B29159AB400324A8B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		313AA57129159AB400324A8B /* Build configuration list for PBXNativeTarget "WatchApplePayExample Watch AppUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				313AA56C29159AB400324A8B /* Debug */,
-				313AA56D29159AB400324A8B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		31689962279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
