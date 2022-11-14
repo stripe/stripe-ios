@@ -1,5 +1,5 @@
 //
-//  AuthFlowController.swift
+//  NativeFlowController.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 6/6/22.
@@ -10,20 +10,20 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
-protocol AuthFlowControllerDelegate: AnyObject {
+protocol NativeFlowControllerDelegate: AnyObject {
 
     func authFlow(
-        controller: AuthFlowController,
+        controller: NativeFlowController,
         didFinish result: FinancialConnectionsSheet.Result
     )
 }
 
 @available(iOSApplicationExtension, unavailable)
-class AuthFlowController {
+class NativeFlowController {
 
-    private let dataManager: AuthFlowDataManager
+    private let dataManager: NativeFlowDataManager
     private let navigationController: FinancialConnectionsNavigationController
-    weak var delegate: AuthFlowControllerDelegate?
+    weak var delegate: NativeFlowControllerDelegate?
     
     private lazy var navigationBarCloseBarButtonItem: UIBarButtonItem = {
         let item = UIBarButtonItem(
@@ -37,7 +37,7 @@ class AuthFlowController {
     }()
 
     init(
-        dataManager: AuthFlowDataManager,
+        dataManager: NativeFlowDataManager,
         navigationController: FinancialConnectionsNavigationController
     ) {
         self.dataManager = dataManager
@@ -83,7 +83,7 @@ class AuthFlowController {
 // MARK: - Core Navigation Helpers
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController {
+extension NativeFlowController {
     
     private func setNavigationControllerViewControllers(_ viewControllers: [UIViewController], animated: Bool = true) {
         viewControllers.forEach { viewController in
@@ -115,7 +115,7 @@ extension AuthFlowController {
 // MARK: - Other Helpers
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController {
+extension NativeFlowController {
     
     private func pushManualEntry() {
         let manualEntryViewController = CreatePaneViewController(
@@ -275,7 +275,7 @@ extension AuthFlowController {
 // MARK: - ConsentViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: ConsentViewControllerDelegate {
+extension NativeFlowController: ConsentViewControllerDelegate {
     
     func consentViewController(
         _ viewController: ConsentViewController,
@@ -299,7 +299,7 @@ extension AuthFlowController: ConsentViewControllerDelegate {
 // MARK: - InstitutionPickerViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: InstitutionPickerViewControllerDelegate {
+extension NativeFlowController: InstitutionPickerViewControllerDelegate {
     
     func institutionPickerViewController(_ viewController: InstitutionPickerViewController, didSelect institution: FinancialConnectionsInstitution) {
         dataManager.institution = institution
@@ -320,7 +320,7 @@ extension AuthFlowController: InstitutionPickerViewControllerDelegate {
 // MARK: - PartnerAuthViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: PartnerAuthViewControllerDelegate {
+extension NativeFlowController: PartnerAuthViewControllerDelegate {
     
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController) {
         didSelectAnotherBank()
@@ -359,7 +359,7 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
 // MARK: - AccountPickerViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: AccountPickerViewControllerDelegate {
+extension NativeFlowController: AccountPickerViewControllerDelegate {
     
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
@@ -397,7 +397,7 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
 // MARK: - SuccessViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: SuccessViewControllerDelegate {
+extension NativeFlowController: SuccessViewControllerDelegate {
     
     func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController) {
         didSelectAnotherBank()
@@ -411,7 +411,7 @@ extension AuthFlowController: SuccessViewControllerDelegate {
 // MARK: - ManualEntryViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: ManualEntryViewControllerDelegate {
+extension NativeFlowController: ManualEntryViewControllerDelegate {
     
     func manualEntryViewController(
         _ viewController: ManualEntryViewController,
@@ -437,7 +437,7 @@ extension AuthFlowController: ManualEntryViewControllerDelegate {
 // MARK: - ManualEntrySuccessViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: ManualEntrySuccessViewControllerDelegate {
+extension NativeFlowController: ManualEntrySuccessViewControllerDelegate {
     
     func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController) {
         closeAuthFlow(showConfirmationAlert: false, error: nil)
@@ -447,7 +447,7 @@ extension AuthFlowController: ManualEntrySuccessViewControllerDelegate {
 // MARK: - ResetFlowViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: ResetFlowViewControllerDelegate {
+extension NativeFlowController: ResetFlowViewControllerDelegate {
     
     func resetFlowViewController(
         _ viewController: ResetFlowViewController,
@@ -483,7 +483,7 @@ extension AuthFlowController: ResetFlowViewControllerDelegate {
 // MARK: - TerminalErrorViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: TerminalErrorViewControllerDelegate {
+extension NativeFlowController: TerminalErrorViewControllerDelegate {
     
     func terminalErrorViewController(
         _ viewController: TerminalErrorViewController,
@@ -500,7 +500,7 @@ extension AuthFlowController: TerminalErrorViewControllerDelegate {
 // MARK: - AttachLinkedPaymentAccountViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
+extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
     
     func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
@@ -529,8 +529,8 @@ extension AuthFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 private func CreatePaneViewController(
     pane: FinancialConnectionsSessionManifest.NextPane,
-    authFlowController: AuthFlowController,
-    dataManager: AuthFlowDataManager
+    authFlowController: NativeFlowController,
+    dataManager: NativeFlowDataManager
 ) -> UIViewController? {
     let viewController: UIViewController?
     switch pane {

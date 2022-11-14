@@ -1,5 +1,5 @@
 //
-//  AuthFlowDataManager.swift
+//  NativeFlowDataManager.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 6/7/22.
@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol AuthFlowDataManager: AnyObject {
+protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
     var consentPaneModel: FinancialConnectionsConsent { get }
     var apiClient: FinancialConnectionsAPIClient { get }
@@ -26,7 +26,7 @@ protocol AuthFlowDataManager: AnyObject {
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
 }
 
-class AuthFlowAPIDataManager: AuthFlowDataManager {
+class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     var manifest: FinancialConnectionsSessionManifest {
         didSet {
