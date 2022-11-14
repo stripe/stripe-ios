@@ -11,7 +11,7 @@ import Foundation
 /// For internal SDK use only
 @objc(STP_Internal_LinkSettings)
 @_spi(STP) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
-    @_spi(STP) public enum FundingSource: String {
+    @_spi(STP) @frozen public enum FundingSource: String {
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
     }

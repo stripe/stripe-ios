@@ -7,7 +7,6 @@
 
 import UIKit
 
-#if os(iOS)
 extension UIImage {
 
     /// Returns a 24x24 icon for testing purposes.
@@ -29,4 +28,3 @@ extension UIImage {
     }
 
 }
-#endif

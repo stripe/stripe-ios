@@ -6,8 +6,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-#if os(iOS)
-
 import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -53,5 +51,3 @@ open class APIStubbedTestCase: XCTestCase {
         return urlSessionConfig
     }
 }
-
-#endif
