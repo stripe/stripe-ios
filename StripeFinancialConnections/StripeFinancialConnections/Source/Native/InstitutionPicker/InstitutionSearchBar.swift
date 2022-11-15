@@ -77,7 +77,6 @@ final class InstitutionSearchBar: UIView {
     
     init() {
         super.init(frame: .zero)
-        layer.borderWidth = 1
         layer.cornerRadius = 8
         
         let horizontalStackView = UIStackView(
@@ -126,12 +125,16 @@ final class InstitutionSearchBar: UIView {
     
     private func highlightBorder(_ shouldHighlightBorder: Bool) {
         let searchBarBorderColor: UIColor
+        let searchBarBorderWidth: CGFloat
         if shouldHighlightBorder {
             searchBarBorderColor = .textBrand
+            searchBarBorderWidth = 2
         } else {
             searchBarBorderColor = .borderNeutral
+            searchBarBorderWidth = 1
         }
         layer.borderColor = searchBarBorderColor.cgColor
+        layer.borderWidth = searchBarBorderWidth
     }
 }
 
