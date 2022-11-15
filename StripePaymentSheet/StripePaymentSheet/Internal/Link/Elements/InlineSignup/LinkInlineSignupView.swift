@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import SafariServices
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView)
@@ -25,26 +25,30 @@ final class LinkInlineSignupView: UIView {
     private var theme: ElementsUITheme {
         return viewModel.configuration.appearance.asElementsTheme
     }
-    
+
     private(set) lazy var checkboxElement = CheckboxElement(
         merchantName: viewModel.configuration.merchantDisplayName,
         appearance: viewModel.configuration.appearance
     )
 
-    private(set) lazy var emailElement : LinkEmailElement = {
+    private(set) lazy var emailElement: LinkEmailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
         element.indicatorTintColor = theme.colors.primary
         return element
     }()
 
     private(set) lazy var nameElement: TextFieldElement = {
-        let configuration = TextFieldElement.NameConfiguration(type: .full, defaultValue: viewModel.legalName)
+        let configuration = TextFieldElement.NameConfiguration(
+            type: .full,
+            defaultValue: viewModel.legalName
+        )
         return TextFieldElement(configuration: configuration, theme: theme)
     }()
 
     private(set) lazy var phoneNumberElement = PhoneNumberElement(
         defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
-        defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone, theme: theme
+        defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone,
+        theme: theme
     )
 
     // MARK: Sections
@@ -53,14 +57,17 @@ final class LinkInlineSignupView: UIView {
 
     private lazy var nameSection = SectionElement(elements: [nameElement], theme: theme)
 
-    private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: theme)
+    private lazy var phoneNumberSection = SectionElement(
+        elements: [phoneNumberElement],
+        theme: theme
+    )
 
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
-        
+
         return StaticElement(
             view: legalView
         )
@@ -71,16 +78,21 @@ final class LinkInlineSignupView: UIView {
         return StaticElement(view: infoView)
     }()
 
-    private lazy var formElement = FormElement(elements: [
-        checkboxElement,
-        emailSection,
-        phoneNumberSection,
-        nameSection,
-        legalTermsElement,
-        moreInfoElement,
-    ], theme: theme)
+    private lazy var formElement = FormElement(
+        elements: [
+            checkboxElement,
+            emailSection,
+            phoneNumberSection,
+            nameSection,
+            legalTermsElement,
+            moreInfoElement,
+        ],
+        theme: theme
+    )
 
-    init(viewModel: LinkInlineSignupViewModel) {
+    init(
+        viewModel: LinkInlineSignupViewModel
+    ) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupUI()
@@ -89,7 +101,9 @@ final class LinkInlineSignupView: UIView {
         updateUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -104,9 +118,9 @@ final class LinkInlineSignupView: UIView {
             formElement.view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             formElement.view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             formElement.view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            formElement.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            formElement.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
-        
+
         updateAppearance()
     }
 
@@ -127,28 +141,50 @@ final class LinkInlineSignupView: UIView {
             emailElement.stopAnimating()
         }
 
-        formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
-        formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
-        formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
-        formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
-        formElement.toggleChild(moreInfoElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        formElement.toggleChild(
+            emailSection,
+            show: viewModel.shouldShowEmailField,
+            animated: animated
+        )
+        formElement.toggleChild(
+            phoneNumberSection,
+            show: viewModel.shouldShowPhoneField,
+            animated: animated
+        )
+        formElement.toggleChild(
+            nameSection,
+            show: viewModel.shouldShowNameField,
+            animated: animated
+        )
+        formElement.toggleChild(
+            legalTermsElement,
+            show: viewModel.shouldShowLegalTerms,
+            animated: animated
+        )
+        formElement.toggleChild(
+            moreInfoElement,
+            show: viewModel.shouldShowLegalTerms,
+            animated: animated
+        )
 
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked
     }
-    
+
     private func updateAppearance() {
         backgroundColor = viewModel.configuration.appearance.colors.background
         layer.cornerRadius = viewModel.configuration.appearance.cornerRadius
         // If the borders are hidden give Link a default 1.0 border that contrasts with the background color
-        if viewModel.configuration.appearance.borderWidth == 0.0 ||
-            viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0 {
+        if viewModel.configuration.appearance.borderWidth == 0.0
+            || viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0
+        {
             layer.borderWidth = 1.0
-            layer.borderColor = viewModel.configuration.appearance
+            layer.borderColor =
+                viewModel.configuration.appearance
                 .colors.background.contrastingColor.withAlphaComponent(0.2).cgColor
         }
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateAppearance()
@@ -212,7 +248,8 @@ extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 
 extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
-    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool
+    {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .close
         safariVC.modalPresentationStyle = .overFullScreen

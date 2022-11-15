@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension PayWithLinkViewController {
 
@@ -47,12 +47,16 @@ extension PayWithLinkViewController {
 
         private(set) lazy var contentView = UIView()
 
-        init(context: Context) {
+        init(
+            context: Context
+        ) {
             self.context = context
             super.init(nibName: nil, bundle: nil)
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -75,7 +79,7 @@ extension PayWithLinkViewController {
                 contentView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor),
                 contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         }
 
@@ -105,14 +109,20 @@ extension PayWithLinkViewController {
 
         @objc
         func onMenuButtonTapped(_ sender: UIButton) {
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            actionSheet.addAction(UIAlertAction(
-                title: STPLocalizedString("Log out of Link", "Title of the logout action."),
-                style: .destructive,
-                handler: { [weak self] _ in
-                    self?.coordinator?.logout(cancel: true)
-                }
-            ))
+            let actionSheet = UIAlertController(
+                title: nil,
+                message: nil,
+                preferredStyle: .actionSheet
+            )
+            actionSheet.addAction(
+                UIAlertAction(
+                    title: STPLocalizedString("Log out of Link", "Title of the logout action."),
+                    style: .destructive,
+                    handler: { [weak self] _ in
+                        self?.coordinator?.logout(cancel: true)
+                    }
+                )
+            )
             actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
 
             // iPad support

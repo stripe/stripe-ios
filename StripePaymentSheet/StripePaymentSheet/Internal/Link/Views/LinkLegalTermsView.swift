@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkLegalTermsViewDelegate: AnyObject {
     /// Called when the user taps on a legal link.
@@ -32,7 +32,7 @@ final class LinkLegalTermsView: UIView {
 
     private let links: [String: URL] = [
         "terms": URL(string: "https://link.co/terms")!,
-        "privacy": URL(string: "https://link.co/privacy")!
+        "privacy": URL(string: "https://link.co/privacy")!,
     ]
 
     weak var delegate: LinkLegalTermsViewDelegate?
@@ -45,7 +45,7 @@ final class LinkLegalTermsView: UIView {
             textView.textColor = newValue
         }
     }
-    
+
     var font: UIFont? {
         get {
             return textView.font
@@ -71,14 +71,19 @@ final class LinkLegalTermsView: UIView {
         return textView
     }()
 
-    init(textAlignment: NSTextAlignment = .left, delegate: LinkLegalTermsViewDelegate? = nil) {
+    init(
+        textAlignment: NSTextAlignment = .left,
+        delegate: LinkLegalTermsViewDelegate? = nil
+    ) {
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         self.delegate = delegate
         addAndPinSubview(textView)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -90,7 +95,9 @@ final class LinkLegalTermsView: UIView {
 
         let formattedString = NSMutableAttributedString()
 
-        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
+        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) {
+            string,
+            matches in
             formattedString.append(NSAttributedString(string: string))
 
             for (tag, range) in matches {
@@ -111,7 +118,10 @@ final class LinkLegalTermsView: UIView {
             textStyle: .caption
         )
 
-        formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: formattedString.extent)
+        formattedString.addAttributes(
+            [.paragraphStyle: paragraphStyle],
+            range: formattedString.extent
+        )
 
         return formattedString
     }

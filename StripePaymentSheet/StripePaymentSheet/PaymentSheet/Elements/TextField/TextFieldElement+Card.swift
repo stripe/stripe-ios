@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 // MARK: - PAN Configuration
 extension TextFieldElement {
@@ -19,24 +19,31 @@ extension TextFieldElement {
         var label: String = String.Localized.card_number
         var binController = STPBINController.shared
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
-        
+
         func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
             let cardBrand = STPCardValidator.brand(forNumber: text)
-            
+
             if cardBrand == .unknown {
                 return (
                     STPImageLibrary.safeImageNamed("card_unknown_updated_icon", darkMode: false),
                     STPImageLibrary.safeImageNamed("card_unknown_updated_icon", darkMode: true)
                 )
             }
-            
-            return (STPImageLibrary.cardBrandImage(for: cardBrand), STPImageLibrary.cardBrandImage(for: cardBrand))
+
+            return (
+                STPImageLibrary.cardBrandImage(for: cardBrand),
+                STPImageLibrary.cardBrandImage(for: cardBrand)
+            )
         }
-        
+
         func keyboardProperties(for text: String) -> KeyboardProperties {
-            return .init(type: .asciiCapableNumberPad, textContentType: .creditCardNumber, autocapitalization: .none)
+            return .init(
+                type: .asciiCapableNumberPad,
+                textContentType: .creditCardNumber,
+                autocapitalization: .none
+            )
         }
-        
+
         func maxLength(for text: String) -> Int {
             if binController.hasBINRanges(forPrefix: text) {
                 return Int(binController.mostSpecificBINRange(forNumber: text).panLength)
@@ -44,13 +51,13 @@ extension TextFieldElement {
                 return binController.maxCardNumberLength()
             }
         }
-        
+
         enum Error: TextFieldValidationError {
             case empty
             case incomplete
             case invalidBrand
             case invalidLuhn
-            
+
             func shouldDisplay(isUserEditing: Bool) -> Bool {
                 switch self {
                 case .empty:
@@ -61,7 +68,7 @@ extension TextFieldElement {
                     return true
                 }
             }
-            
+
             var localizedDescription: String {
                 switch self {
                 case .empty:
@@ -73,27 +80,29 @@ extension TextFieldElement {
                 }
             }
         }
-        
+
         func validate(text: String, isOptional: Bool) -> ValidationState {
             // Is it empty?
             if text.isEmpty {
                 return .invalid(Error.empty)
             }
-            
+
             // Is the card brand valid?
             // We assume our hardcoded mapping of BIN to brand is correct, so if we don't know the brand, the number must be invalid.
             let binRange = binController.mostSpecificBINRange(forNumber: text)
             if binRange.brand == .unknown {
                 return .invalid(Error.invalidBrand)
             }
-            
+
             // Is the PAN the correct length?
             // First, get the minimum valid length
             let minimumValidLength: Int = {
                 let isCorrectPANLengthKnownYet = binController.hasBINRanges(forPrefix: text)
                 if !isCorrectPANLengthKnownYet {
                     // If `hasBINRanges` returns false, we need to call `retrieveBINRanges` to fetch the correct card length from the card metadata service. See go/card-metadata-edge.
-                    binController.retrieveBINRanges(forPrefix: text, recordErrorsAsSuccess: false) { _ in }
+                    binController.retrieveBINRanges(forPrefix: text, recordErrorsAsSuccess: false) {
+                        _ in
+                    }
                     // If we don't know the correct length, return the shortest possible length for the brand
                     return binController.minCardNumberLength(for: binRange.brand)
                 } else {
@@ -103,15 +112,15 @@ extension TextFieldElement {
             if text.count < minimumValidLength {
                 return .invalid(Error.incomplete)
             }
-            
+
             // Does it fail a luhn check?
             if !STPCardValidator.stringIsValidLuhn(text) {
                 return .invalid(Error.invalidLuhn)
             }
-            
+
             return .valid
         }
-        
+
         func makeDisplayText(for text: String) -> NSAttributedString {
             let kerningValue = 5
             // Add kerning in between groups of digits
@@ -123,10 +132,18 @@ extension TextFieldElement {
                 }
             let attributed = NSMutableAttributedString(string: text)
             // Set the kerning to 0 - this avoids a strange bug where all characters have kerning
-            attributed.addAttribute(.kern, value: 0, range: NSRange(location: 0, length: text.count))
+            attributed.addAttribute(
+                .kern,
+                value: 0,
+                range: NSRange(location: 0, length: text.count)
+            )
             for index in indicesToKern {
                 if index < text.count {
-                    attributed.addAttribute(.kern, value: kerningValue, range: NSRange(location: index - 1, length: 1))
+                    attributed.addAttribute(
+                        .kern,
+                        value: kerningValue,
+                        range: NSRange(location: index - 1, length: 1)
+                    )
                 }
             }
             return attributed
@@ -147,7 +164,11 @@ extension TextFieldElement {
         }
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         func keyboardProperties(for text: String) -> KeyboardProperties {
-            return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
+            return .init(
+                type: .asciiCapableNumberPad,
+                textContentType: nil,
+                autocapitalization: .none
+            )
         }
         func maxLength(for text: String) -> Int {
             return Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))
@@ -156,20 +177,31 @@ extension TextFieldElement {
             if text.isEmpty {
                 return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
             }
-            
+
             if text.count < STPCardValidator.minCVCLength() {
-                return .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_cards_security_code_is_incomplete))
+                return .invalid(
+                    TextFieldElement.Error.incomplete(
+                        localizedDescription: String.Localized
+                            .your_cards_security_code_is_incomplete
+                    )
+                )
             }
-            
+
             return .valid
         }
         func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
-            let logoName = cardBrandProvider() == .amex ? "card_cvc_amex_updated_icon" : "card_cvc_updated_icon"
+            let logoName =
+                cardBrandProvider() == .amex
+                ? "card_cvc_amex_updated_icon" : "card_cvc_updated_icon"
             return (
                 STPImageLibrary.safeImageNamed(
-                    logoName, darkMode: false),
+                    logoName,
+                    darkMode: false
+                ),
                 STPImageLibrary.safeImageNamed(
-                    logoName, darkMode: true)
+                    logoName,
+                    darkMode: true
+                )
             )
         }
     }
@@ -182,26 +214,30 @@ extension TextFieldElement {
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         func keyboardProperties(for text: String) -> KeyboardProperties {
-            return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
+            return .init(
+                type: .asciiCapableNumberPad,
+                textContentType: nil,
+                autocapitalization: .none
+            )
         }
         func maxLength(for text: String) -> Int {
             return 4
         }
-        
+
         enum Error: TextFieldValidationError {
             case empty
             case incomplete
             case invalidMonth
             case invalid
-            
+
             public func shouldDisplay(isUserEditing: Bool) -> Bool {
                 switch self {
-                case .empty:                    return false
-                case .incomplete:               return !isUserEditing
-                case .invalidMonth, .invalid:   return true
+                case .empty: return false
+                case .incomplete: return !isUserEditing
+                case .invalidMonth, .invalid: return true
                 }
             }
-            
+
             public var localizedDescription: String {
                 switch self {
                 case .empty:
@@ -215,12 +251,14 @@ extension TextFieldElement {
                 }
             }
         }
-        
+
         func validate(text: String, isOptional: Bool) -> ValidationState {
             // Validate the month here so we can reuse the result later
-            let validMonths = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+            let validMonths = [
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12",
+            ]
             let textHasValidMonth = validMonths.contains { text.hasPrefix($0) }
-            
+
             switch text.count {
             case 0:
                 return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
@@ -247,7 +285,7 @@ extension TextFieldElement {
             if let firstDigit = text.first?.wholeNumberValue, (2...9).contains(firstDigit) {
                 text = "0" + text
             }
-            
+
             // Insert a "/" after two digits
             if text.count > 2 {
                 text.insert("/", at: text.index(text.startIndex, offsetBy: 2))

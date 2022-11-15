@@ -21,7 +21,9 @@ struct CardExpiryDate {
     }
 
     /// Creates a `CardExpiryDate` struct from a 4 digit string in `MMyy` format.
-    init?(_ string: String?) {
+    init?(
+        _ string: String?
+    ) {
         guard
             let string = string,
             string.count == 4,
@@ -43,7 +45,10 @@ struct CardExpiryDate {
     /// - Parameters:
     ///   - month: Month.
     ///   - year: Year.
-    init(month: Int, year: Int) {
+    init(
+        month: Int,
+        year: Int
+    ) {
         self.month = month
         self.year = Self.normalizeYear(year)
     }
@@ -69,9 +74,6 @@ struct CardExpiryDate {
 
 extension CardExpiryDate: Equatable {
     static func == (lhs: Self, rhs: Self) -> Bool {
-        return (
-            lhs.month == rhs.month &&
-            lhs.year == rhs.year
-        )
+        return (lhs.month == rhs.month && lhs.year == rhs.year)
     }
 }

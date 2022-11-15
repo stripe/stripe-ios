@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)
@@ -26,7 +26,10 @@ final class PayWithLinkController {
     let intent: Intent
     let configuration: PaymentSheet.Configuration
 
-    init(intent: Intent, configuration: PaymentSheet.Configuration) {
+    init(
+        intent: Intent,
+        configuration: PaymentSheet.Configuration
+    ) {
         self.intent = intent
         self.configuration = configuration
         self.paymentHandler = .init(apiClient: configuration.apiClient)
@@ -53,9 +56,13 @@ final class PayWithLinkController {
         self.selfRetainer = self
         self.completion = completion
 
-        let payWithLinkViewController = PayWithLinkViewController(intent: intent, configuration: configuration)
+        let payWithLinkViewController = PayWithLinkViewController(
+            intent: intent,
+            configuration: configuration
+        )
         payWithLinkViewController.payWithLinkDelegate = self
-        payWithLinkViewController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
+        payWithLinkViewController.modalPresentationStyle =
+            UIDevice.current.userInterfaceIdiom == .pad
             ? .formSheet
             : .overFullScreen
 
@@ -84,13 +91,17 @@ extension PayWithLinkController: PayWithLinkViewControllerDelegate {
         )
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
+    {
         payWithLinkViewController.dismiss(animated: true)
         completion?(.canceled)
         selfRetainer = nil
     }
 
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult
+    ) {
         payWithLinkViewController.dismiss(animated: true)
         completion?(result)
         selfRetainer = nil

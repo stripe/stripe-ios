@@ -6,17 +6,16 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import PassKit
 import SafariServices
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension PayWithLinkViewController {
 
     final class WalletViewController: BaseViewController {
-        struct  Constants {
+        struct Constants {
             static let applePayButtonHeight: CGFloat = 48
         }
 
@@ -54,12 +53,17 @@ extension PayWithLinkViewController {
         private lazy var separator = SeparatorLabel(text: String.Localized.or)
 
         private lazy var applePayButton: PKPaymentButton = {
-            let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
+            let button = PKPaymentButton(
+                paymentButtonType: .plain,
+                paymentButtonStyle: .compatibleAutomatic
+            )
             button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
             button.cornerRadius = LinkUI.cornerRadius
 
             NSLayoutConstraint.activate([
-                button.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.applePayButtonHeight)
+                button.heightAnchor.constraint(
+                    greaterThanOrEqualToConstant: Constants.applePayButtonHeight
+                )
             ])
 
             return button
@@ -68,15 +72,21 @@ extension PayWithLinkViewController {
         private lazy var cvcElement: TextFieldElement = {
             let configuration = TextFieldElement.CVCConfiguration(cardBrandProvider: {
                 [weak self] in
-                    return self?.viewModel.cardBrand ?? .unknown
+                return self?.viewModel.cardBrand ?? .unknown
             })
 
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(
+                configuration: configuration,
+                theme: LinkUI.appearance.asElementsTheme
+            )
         }()
 
         private lazy var expiryDateElement: TextFieldElement = {
             let configuration = TextFieldElement.ExpiryDateConfiguration()
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(
+                configuration: configuration,
+                theme: LinkUI.appearance.asElementsTheme
+            )
         }()
 
         private lazy var expiredCardNoticeView: LinkNoticeView = {
@@ -88,8 +98,12 @@ extension PayWithLinkViewController {
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
-                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: LinkUI.appearance.asElementsTheme)
-                ], theme: LinkUI.appearance.asElementsTheme
+                    SectionElement.MultiElementRow(
+                        [expiryDateElement, cvcElement],
+                        theme: LinkUI.appearance.asElementsTheme
+                    )
+                ],
+                theme: LinkUI.appearance.asElementsTheme
             )
             sectionElement.delegate = self
             return sectionElement
@@ -99,7 +113,7 @@ extension PayWithLinkViewController {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPicker,
                 instantDebitMandateView,
-                expiredCardNoticeView
+                expiredCardNoticeView,
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -118,12 +132,18 @@ extension PayWithLinkViewController {
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
                 errorLabel,
-                confirmButton
+                confirmButton,
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPickerContainerView)
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: cardDetailsRecollectionSection.view)
+            stackView.setCustomSpacing(
+                LinkUI.extraLargeContentSpacing,
+                after: paymentPickerContainerView
+            )
+            stackView.setCustomSpacing(
+                LinkUI.extraLargeContentSpacing,
+                after: cardDetailsRecollectionSection.view
+            )
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = preferredContentMargins
             return stackView
@@ -137,11 +157,17 @@ extension PayWithLinkViewController {
             paymentMethods: [ConsumerPaymentDetails]
         ) {
             self.linkAccount = linkAccount
-            self.viewModel = WalletViewModel(linkAccount: linkAccount, context: context, paymentMethods: paymentMethods)
+            self.viewModel = WalletViewModel(
+                linkAccount: linkAccount,
+                context: context,
+                paymentMethods: paymentMethods
+            )
             super.init(context: context)
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -197,7 +223,9 @@ extension PayWithLinkViewController {
             )
 
             UIView.performWithoutAnimation {
-                expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
+                expiryDateElement.view.setHiddenIfNecessary(
+                    !viewModel.shouldRecollectCardExpiryDate
+                )
                 cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
                 cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
@@ -210,7 +238,11 @@ extension PayWithLinkViewController {
 
         func updateErrorLabel(for error: Error?) {
             errorLabel.text = error?.nonGenericDescription
-            containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
+            containerView.toggleArrangedSubview(
+                errorLabel,
+                shouldShow: error != nil,
+                animated: true
+            )
         }
 
         func confirm() {
@@ -219,9 +251,10 @@ extension PayWithLinkViewController {
                 return
             }
 
-            let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { [self] paymentDetails in
+            let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = {
+                [self] paymentDetails in
                 if viewModel.shouldRecollectCardCVC {
-                    if case let .card(card) = paymentDetails.details {
+                    if case .card(let card) = paymentDetails.details {
                         card.cvc = viewModel.cvc
                     }
                 }
@@ -242,7 +275,9 @@ extension PayWithLinkViewController {
                             message: error.localizedDescription,
                             preferredStyle: .alert
                         )
-                        alertController.addAction(.init(title: String.Localized.ok, style: .default))
+                        alertController.addAction(
+                            .init(title: String.Localized.ok, style: .default)
+                        )
                         self?.present(alertController, animated: true)
                         self?.confirmButton.update(state: .enabled)
                     }
@@ -259,7 +294,8 @@ extension PayWithLinkViewController {
             updateErrorLabel(for: nil)
             confirmButton.update(state: .processing)
 
-            coordinator?.confirm(with: linkAccount, paymentDetails: paymentDetails) { [weak self] result in
+            coordinator?.confirm(with: linkAccount, paymentDetails: paymentDetails) {
+                [weak self] result in
                 switch result {
                 case .completed:
                     self?.feedbackGenerator.notificationOccurred(.success)
@@ -290,9 +326,9 @@ extension PayWithLinkViewController {
 
 }
 
-private extension PayWithLinkViewController.WalletViewController {
+extension PayWithLinkViewController.WalletViewController {
 
-    func removePaymentMethod(at index: Int) {
+    fileprivate func removePaymentMethod(at index: Int) {
         let paymentMethod = viewModel.paymentMethods[index]
 
         let alertTitle: String = {
@@ -316,34 +352,38 @@ private extension PayWithLinkViewController.WalletViewController {
             preferredStyle: .alert
         )
 
-        alertController.addAction(UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel
-        ))
+        alertController.addAction(
+            UIAlertAction(
+                title: String.Localized.cancel,
+                style: .cancel
+            )
+        )
 
-        alertController.addAction(UIAlertAction(
-            title: String.Localized.remove,
-            style: .destructive,
-            handler: { _ in
-                self.paymentPicker.showLoader(at: index)
+        alertController.addAction(
+            UIAlertAction(
+                title: String.Localized.remove,
+                style: .destructive,
+                handler: { _ in
+                    self.paymentPicker.showLoader(at: index)
 
-                self.viewModel.deletePaymentMethod(at: index) { result in
-                    switch result {
-                    case .success:
-                        self.paymentPicker.removePaymentMethod(at: index, animated: true)
-                    case .failure(_):
-                        break
+                    self.viewModel.deletePaymentMethod(at: index) { result in
+                        switch result {
+                        case .success:
+                            self.paymentPicker.removePaymentMethod(at: index, animated: true)
+                        case .failure(_):
+                            break
+                        }
+
+                        self.paymentPicker.hideLoader(at: index)
                     }
-
-                    self.paymentPicker.hideLoader(at: index)
                 }
-            }
-        ))
+            )
+        )
 
         present(alertController, animated: true)
     }
-    
-    func updatePaymentMethod(at index: Int) {
+
+    fileprivate func updatePaymentMethod(at index: Int) {
         let paymentMethod = viewModel.paymentMethods[index]
         let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
             linkAccount: linkAccount,
@@ -351,7 +391,7 @@ private extension PayWithLinkViewController.WalletViewController {
             paymentMethod: paymentMethod
         )
         updatePaymentMethodVC.delegate = self
-        
+
         navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
     }
 
@@ -400,7 +440,10 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         return viewModel.paymentMethods.count
     }
 
-    func paymentPicker(_ picker: LinkPaymentMethodPicker, paymentMethodAt index: Int) -> ConsumerPaymentDetails {
+    func paymentPicker(
+        _ picker: LinkPaymentMethodPicker,
+        paymentMethodAt index: Int
+    ) -> ConsumerPaymentDetails {
         return viewModel.paymentMethods[index]
     }
 
@@ -424,35 +467,43 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     ) {
         let paymentMethod = viewModel.paymentMethods[index]
 
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
         alertController.popoverPresentationController?.sourceView = pickerView
         alertController.popoverPresentationController?.sourceRect = sourceRect
 
         if !paymentMethod.isDefault {
-            alertController.addAction(UIAlertAction(
-                title: STPLocalizedString(
-                    "Set as default",
-                    "Label for a button or menu item that sets a payment method as default when tapped."
-                ),
-                style: .default,
-                handler: { [self] _ in
-                    paymentPicker.showLoader(at: index)
-                    viewModel.setDefaultPaymentMethod(at: index) { [weak self] _ in
-                        self?.paymentPicker.hideLoader(at: index)
-                        self?.paymentPicker.reloadData()
+            alertController.addAction(
+                UIAlertAction(
+                    title: STPLocalizedString(
+                        "Set as default",
+                        "Label for a button or menu item that sets a payment method as default when tapped."
+                    ),
+                    style: .default,
+                    handler: { [self] _ in
+                        paymentPicker.showLoader(at: index)
+                        viewModel.setDefaultPaymentMethod(at: index) { [weak self] _ in
+                            self?.paymentPicker.hideLoader(at: index)
+                            self?.paymentPicker.reloadData()
+                        }
                     }
-                }
-            ))
+                )
+            )
         }
 
         if case ConsumerPaymentDetails.Details.card(_) = paymentMethod.details {
-            alertController.addAction(UIAlertAction(
-                title: String.Localized.update_card,
-                style: .default,
-                handler: { _ in
-                    self.updatePaymentMethod(at: index)
-                }
-            ))
+            alertController.addAction(
+                UIAlertAction(
+                    title: String.Localized.update_card,
+                    style: .default,
+                    handler: { _ in
+                        self.updatePaymentMethod(at: index)
+                    }
+                )
+            )
         }
 
         let removeTitle: String = {
@@ -469,18 +520,22 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                 )
             }
         }()
-        alertController.addAction(UIAlertAction(
-            title: removeTitle,
-            style: .destructive,
-            handler: { _ in
-                self.removePaymentMethod(at: index)
-            }
-        ))
+        alertController.addAction(
+            UIAlertAction(
+                title: removeTitle,
+                style: .destructive,
+                handler: { _ in
+                    self.removePaymentMethod(at: index)
+                }
+            )
+        )
 
-        alertController.addAction(UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel
-        ))
+        alertController.addAction(
+            UIAlertAction(
+                title: String.Localized.cancel,
+                style: .cancel
+            )
+        )
 
         present(alertController, animated: true)
     }
@@ -501,7 +556,10 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
 extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandateViewDelegate {
 
-    func instantDebitMandateView(_ mandateView: LinkInstantDebitMandateView, didTapOnLinkWithURL url: URL) {
+    func instantDebitMandateView(
+        _ mandateView: LinkInstantDebitMandateView,
+        didTapOnLinkWithURL url: URL
+    ) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .close
         safariVC.modalPresentationStyle = .overFullScreen
@@ -513,7 +571,7 @@ extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandat
 // MARK: - UpdatePaymentViewControllerDelegate
 
 extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewControllerDelegate {
-    
+
     func didUpdate(paymentMethod: ConsumerPaymentDetails) {
         if let index = viewModel.updatePaymentMethod(paymentMethod) {
             self.paymentPicker.selectedIndex = index

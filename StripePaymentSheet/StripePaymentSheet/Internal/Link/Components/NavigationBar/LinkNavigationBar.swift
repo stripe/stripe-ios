@@ -6,12 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkNavigationBar)
@@ -99,7 +98,8 @@ final class LinkNavigationBar: UIView {
     }()
 
     override var intrinsicContentSize: CGSize {
-        let baseHeight: CGFloat = isLarge
+        let baseHeight: CGFloat =
+            isLarge
             ? Constants.largeHeight
             : Constants.defaultHeight
         return CGSize(
@@ -135,7 +135,10 @@ final class LinkNavigationBar: UIView {
             closeButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             closeButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
             // Logo
-            logoView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.logoVerticalOffset),
+            logoView.topAnchor.constraint(
+                equalTo: safeAreaLayoutGuide.topAnchor,
+                constant: Constants.logoVerticalOffset
+            ),
             logoView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             logoView.bottomAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor),
             // Email label
@@ -159,7 +162,9 @@ final class LinkNavigationBar: UIView {
         update()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 

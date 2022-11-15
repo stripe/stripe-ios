@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkInlineSignupView {
 
@@ -48,14 +48,21 @@ extension LinkInlineSignupView {
                 merchantDisplayName: merchantName
             )
 
-            let checkbox = CheckboxButton(text: text, description: description, theme: appearanceCopy.asElementsTheme)
+            let checkbox = CheckboxButton(
+                text: text,
+                description: description,
+                theme: appearanceCopy.asElementsTheme
+            )
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
             checkbox.isSelected = false
 
             return checkbox
         }()
 
-        init(merchantName: String, appearance: PaymentSheet.Appearance) {
+        init(
+            merchantName: String,
+            appearance: PaymentSheet.Appearance
+        ) {
             self.merchantName = merchantName
             self.appearance = appearance
         }

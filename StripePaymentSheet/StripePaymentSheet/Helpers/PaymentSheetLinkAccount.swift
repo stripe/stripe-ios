@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
@@ -38,11 +38,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
-    
+
     var redactedPhoneNumber: String? {
         return currentSession?.redactedPhoneNumber
     }
-    
+
     var isRegistered: Bool {
         return currentSession != nil
     }
@@ -54,7 +54,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     var sessionState: SessionState {
         if let currentSession = currentSession {
             // sms verification is not required if we are in the signup flow
-            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup ? .verified : .requiresVerification
+            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup
+                ? .verified : .requiresVerification
         } else {
             return .requiresSignUp
         }
@@ -94,7 +95,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             completion: completion
         )
     }
-    
+
     func signUp(
         with phoneNumber: String,
         legalName: String?,
@@ -105,9 +106,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         guard case .requiresSignUp = sessionState else {
             assertionFailure()
             DispatchQueue.main.async {
-                completion(.failure(
-                    PaymentSheetError.unknown(debugDescription: "Don't call sign up if not needed")
-                ))
+                completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Don't call sign up if not needed"
+                        )
+                    )
+                )
             }
             return
         }
@@ -132,7 +137,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
         }
     }
-    
+
     func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
         guard case .requiresVerification = sessionState else {
             DispatchQueue.main.async {
@@ -144,9 +149,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         guard let session = currentSession else {
             assertionFailure()
             DispatchQueue.main.async {
-                completion(.failure(
-                    PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
-                ))
+                completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Don't call verify if not needed"
+                        )
+                    )
+                )
             }
             return
         }
@@ -165,16 +174,21 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
         }
     }
-    
+
     func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard case .requiresVerification = sessionState,
-              hasStartedSMSVerification,
-              let session = currentSession else {
+            hasStartedSMSVerification,
+            let session = currentSession
+        else {
             assertionFailure()
             DispatchQueue.main.async {
-                completion(.failure(
-                    PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
-                ))
+                completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Don't call verify if not needed"
+                        )
+                    )
+                )
             }
             return
         }
@@ -194,15 +208,19 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
         }
     }
-    
+
     func createLinkAccountSession(
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            completion(.failure(
-                PaymentSheetError.unknown(debugDescription: "Linking account session without valid consumer session")
-            ))
+            completion(
+                .failure(
+                    PaymentSheetError.unknown(
+                        debugDescription: "Linking account session without valid consumer session"
+                    )
+                )
+            )
             return
         }
 
@@ -221,12 +239,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         guard let session = currentSession else {
             assertionFailure()
             completion(
-                .failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session"))
+                .failure(
+                    PaymentSheetError.unknown(
+                        debugDescription: "Saving to Link without valid session"
+                    )
+                )
             )
             return
         }
 
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) {
+            [apiClient, publishableKey] completionWrapper in
             session.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
                 with: apiClient,
@@ -235,14 +258,20 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
-    
+
     func createPaymentDetails(
         linkedAccountId: String,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
+            completion(
+                .failure(
+                    PaymentSheetError.unknown(
+                        debugDescription: "Saving to Link without valid session"
+                    )
+                )
+            )
             return
         }
         retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
@@ -253,17 +282,24 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
-    
+
     func listPaymentDetails(
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
+            completion(
+                .failure(
+                    PaymentSheetError.unknown(
+                        debugDescription: "Paying with Link without valid session"
+                    )
+                )
+            )
             return
         }
 
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) {
+            [apiClient, publishableKey] completionWrapper in
             session.listPaymentDetails(
                 with: apiClient,
                 consumerAccountPublishableKey: publishableKey,
@@ -275,12 +311,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let session = currentSession else {
             assertionFailure()
-            return completion(.failure(PaymentSheetError.unknown(
-                debugDescription: "Deleting Link payment details without valid session")
-            ))
+            return completion(
+                .failure(
+                    PaymentSheetError.unknown(
+                        debugDescription: "Deleting Link payment details without valid session"
+                    )
+                )
+            )
         }
 
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) {
+            [apiClient, publishableKey] completionWrapper in
             session.deletePaymentDetails(
                 with: apiClient,
                 id: id,
@@ -297,12 +338,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            return completion(.failure(PaymentSheetError.unknown(
-                debugDescription: "Updating Link payment details without valid session")
-            ))
+            return completion(
+                .failure(
+                    PaymentSheetError.unknown(
+                        debugDescription: "Updating Link payment details without valid session"
+                    )
+                )
+            )
         }
 
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) {
+            [apiClient, publishableKey] completionWrapper in
             session.updatePaymentDetails(
                 with: apiClient,
                 id: id,
@@ -330,9 +376,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
         // Delete cookie.
         cookieStore.delete(key: .session)
-        
+
         markEmailAsLoggedOut()
-        
+
         // Forget current session.
         self.currentSession = nil
     }
@@ -352,34 +398,31 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 extension PaymentSheetLinkAccount: Equatable {
 
     static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
-        return (
-            lhs.email == rhs.email &&
-            lhs.currentSession == rhs.currentSession &&
-            lhs.publishableKey == rhs.publishableKey
-        )
+        return
+            (lhs.email == rhs.email && lhs.currentSession == rhs.currentSession
+            && lhs.publishableKey == rhs.publishableKey)
     }
 
 }
 
 // MARK: - Session refresh
 
-private extension PaymentSheetLinkAccount {
+extension PaymentSheetLinkAccount {
 
-    typealias CompletionBlock<T> = (Result<T, Error>) -> Void
+    fileprivate typealias CompletionBlock<T> = (Result<T, Error>) -> Void
 
-    func retryingOnAuthError<T>(
+    fileprivate func retryingOnAuthError<T>(
         completion: @escaping CompletionBlock<T>,
         apiCall: @escaping (@escaping CompletionBlock<T>) -> Void
     ) {
-        apiCall() { [weak self] result in
+        apiCall { [weak self] result in
             switch result {
             case .success(_):
                 completion(result)
             case .failure(let error as NSError):
-                let isAuthError = (
-                    error.domain == STPError.stripeDomain &&
-                    error.code == STPErrorCode.authenticationError.rawValue
-                )
+                let isAuthError =
+                    (error.domain == STPError.stripeDomain
+                        && error.code == STPErrorCode.authenticationError.rawValue)
 
                 if isAuthError {
                     self?.refreshSession { refreshSessionResult in
@@ -397,14 +440,14 @@ private extension PaymentSheetLinkAccount {
         }
     }
 
-    func refreshSession(
+    fileprivate func refreshSession(
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         // The consumer session lookup endpoint currently serves as our endpoint for
         // refreshing the session. To refresh the session, we need to call this endpoint
         // without providing an email address.
         ConsumerSession.lookupSession(
-            for: nil, // No email address
+            for: nil,  // No email address
             with: apiClient,
             cookieStore: cookieStore
         ) { [weak self] result in
@@ -421,7 +464,11 @@ private extension PaymentSheetLinkAccount {
                     )
                 case .noAvailableLookupParams:
                     completion(
-                        .failure(PaymentSheetError.unknown(debugDescription: "The client secret is missing"))
+                        .failure(
+                            PaymentSheetError.unknown(
+                                debugDescription: "The client secret is missing"
+                            )
+                        )
                     )
                 }
             case .failure(let error):
@@ -443,7 +490,9 @@ extension PaymentSheetLinkAccount {
     ///
     /// - Parameter paymentDetails: Payment details
     /// - Returns: Payment method params for paying with Link.
-    func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails) -> STPPaymentMethodParams? {
+    func makePaymentMethodParams(
+        from paymentDetails: ConsumerPaymentDetails
+    ) -> STPPaymentMethodParams? {
         guard let currentSession = currentSession else {
             assertionFailure("Cannot make payment method params without an active session.")
             return nil
@@ -471,8 +520,10 @@ extension PaymentSheetLinkAccount {
     /// Returns a set containing the Payment Details types that the user is able to use for confirming the given `intent`.
     /// - Parameter intent: The Intent that the user is trying to confirm.
     /// - Returns: A set containing the supported Payment Details types.
-    func supportedPaymentDetailsTypes(for intent: Intent) -> Set<ConsumerPaymentDetails.DetailsType> {
-        guard let currentSession = currentSession, let fundingSources = intent.linkFundingSources else {
+    func supportedPaymentDetailsTypes(for intent: Intent) -> Set<ConsumerPaymentDetails.DetailsType>
+    {
+        guard let currentSession = currentSession, let fundingSources = intent.linkFundingSources
+        else {
             return []
         }
 
@@ -516,21 +567,21 @@ extension PaymentSheetLinkAccount {
 
 // MARK: - Helpers
 
-private extension PaymentSheetLinkAccount {
+extension PaymentSheetLinkAccount {
 
     /// On *testmode* we use special email addresses for testing multiple funding sources. This method returns `true`
     /// if the given `email` is one of such email addresses.
     ///
     /// - Parameter email: Email.
     /// - Returns: Whether or not should enable multiple funding sources on test mode.
-    static func emailSupportsMultipleFundingSourcesOnTestMode(_ email: String) -> Bool {
+    fileprivate static func emailSupportsMultipleFundingSourcesOnTestMode(_ email: String) -> Bool {
         return email.contains("+multiple_funding_sources@")
     }
 
 }
 
-private extension LinkSettings.FundingSource {
-    var detailsType: ConsumerPaymentDetails.DetailsType? {
+extension LinkSettings.FundingSource {
+    fileprivate var detailsType: ConsumerPaymentDetails.DetailsType? {
         switch self {
         case .card:
             return .card

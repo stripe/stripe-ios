@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkVerificationView {
 
@@ -35,21 +35,28 @@ extension LinkVerificationView {
         }()
 
         private(set) lazy var button: Button = {
-            let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
-                "Change email",
-                "Title for a button that allows the user to use a different email in the signup flow."
-            ))
+            let button = Button(
+                configuration: .linkPlain(),
+                title: STPLocalizedString(
+                    "Change email",
+                    "Title for a button that allows the user to use a different email in the signup flow."
+                )
+            )
             button.configuration.font = font
             return button
         }()
 
-        init(linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+        init(
+            linkAccount: PaymentSheetLinkAccountInfoProtocol
+        ) {
             self.linkAccount = linkAccount
             super.init(frame: .zero)
             setupUI()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 

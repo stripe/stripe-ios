@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// The shadowed rounded rectangle that our cells use to display content
 /// For internal SDK use only
@@ -47,7 +47,9 @@ class ShadowedRoundedRectangle: UIView {
         }
     }
 
-    required init(appearance: PaymentSheet.Appearance) {
+    required init(
+        appearance: PaymentSheet.Appearance
+    ) {
         self.appearance = appearance
         roundedRectangle = UIView()
         roundedRectangle.layer.cornerRadius = appearance.cornerRadius
@@ -83,7 +85,9 @@ class ShadowedRoundedRectangle: UIView {
         setNeedsLayout()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 }

@@ -8,10 +8,9 @@
 
 import Foundation
 import PassKit
-import UIKit
-
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol WalletHeaderViewDelegate: AnyObject {
     func walletHeaderViewApplePayButtonTapped(
@@ -59,7 +58,7 @@ extension PaymentSheetViewController {
         private let appearance: PaymentSheet.Appearance
         private let applePayButtonType: PKPaymentButtonType
         private var stackView = UIStackView()
-        
+
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
             button.cornerRadius = appearance.cornerRadius
@@ -76,11 +75,13 @@ extension PaymentSheetViewController {
         private var supportsPayWithLink: Bool {
             return options.contains(.link)
         }
-        
-        init(options: WalletOptions,
-             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
-             applePayButtonType: PKPaymentButtonType = .plain,
-             delegate: WalletHeaderViewDelegate?) {
+
+        init(
+            options: WalletOptions,
+            appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+            applePayButtonType: PKPaymentButtonType = .plain,
+            delegate: WalletHeaderViewDelegate?
+        ) {
             self.options = options
             self.appearance = appearance
             self.applePayButtonType = applePayButtonType
@@ -92,45 +93,51 @@ extension PaymentSheetViewController {
             updateSeparatorLabel()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
         @objc func handleTapApplePay() {
             delegate?.walletHeaderViewApplePayButtonTapped(self)
         }
-        
+
         @objc func handleTapPayWithLink() {
             delegate?.walletHeaderViewPayWithLinkTapped(self)
         }
-        
+
         private func buildAndPinStackView() {
             stackView.removeFromSuperview()
 
             var buttons: [UIView] = []
-            
+
             if supportsApplePay {
                 buttons.append(buildApplePayButton())
             }
-            
+
             if supportsPayWithLink {
                 buttons.append(payWithLinkButton)
             }
-            
+
             stackView = UIStackView(arrangedSubviews: buttons + [separatorLabel])
             stackView.axis = .vertical
             stackView.spacing = Constants.buttonSpacing
-            
+
             if let lastButton = buttons.last {
                 stackView.setCustomSpacing(Constants.labelSpacing, after: lastButton)
             }
-            
+
             addAndPinSubview(stackView)
         }
-        
+
         private func buildApplePayButton() -> PKPaymentButton {
-            let buttonStyle: PKPaymentButtonStyle = appearance.colors.background.contrastingColor == .black ? .black : .white
-            let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: buttonStyle)
+            let buttonStyle: PKPaymentButtonStyle =
+                appearance.colors.background.contrastingColor == .black ? .black : .white
+            let button = PKPaymentButton(
+                paymentButtonType: applePayButtonType,
+                paymentButtonStyle: buttonStyle
+            )
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
 
             NSLayoutConstraint.activate([
@@ -144,8 +151,13 @@ extension PaymentSheetViewController {
 
         private func updateSeparatorLabel() {
             separatorLabel.textColor = appearance.colors.textSecondary
-            separatorLabel.separatorColor = appearance.colors.background.contrastingColor.withAlphaComponent(0.2)
-            separatorLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 21)
+            separatorLabel.separatorColor = appearance.colors.background.contrastingColor
+                .withAlphaComponent(0.2)
+            separatorLabel.font = appearance.scaledFont(
+                for: appearance.font.base.regular,
+                style: .subheadline,
+                maximumPointSize: 21
+            )
 
             if showsCardPaymentMessage {
                 separatorLabel.text = STPLocalizedString(
@@ -159,11 +171,11 @@ extension PaymentSheetViewController {
                 )
             }
         }
-        
+
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             buildAndPinStackView()
             updateSeparatorLabel()
-            
+
         }
     }
 }

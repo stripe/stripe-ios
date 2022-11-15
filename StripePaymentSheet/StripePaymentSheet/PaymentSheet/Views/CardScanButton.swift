@@ -6,11 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 import CloudKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension UIButton {
     @available(iOS 13, macCatalyst 14, *)
@@ -22,7 +22,10 @@ extension UIButton {
 
         let scanButton = UIButton(type: .system)
         scanButton.setTitle(String.Localized.scan_card, for: .normal)
-        scanButton.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
+        scanButton.setImage(
+            UIImage(systemName: "camera.fill", withConfiguration: iconConfig),
+            for: .normal
+        )
         scanButton.setContentSpacing(4, withEdgeInsets: .zero)
         scanButton.tintColor = theme.colors.primary
         scanButton.titleLabel?.font = theme.fonts.sectionHeader

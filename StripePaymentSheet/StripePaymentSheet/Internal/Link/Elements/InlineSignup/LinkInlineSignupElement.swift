@@ -6,15 +6,21 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class LinkInlineSignupElement: Element {
 
     private let signupView: LinkInlineSignupView
 
     lazy var view: UIView = {
-        return FormView(viewModel: .init(elements: [signupView], bordered: true, theme: viewModel.configuration.appearance.asElementsTheme))
+        return FormView(
+            viewModel: .init(
+                elements: [signupView],
+                bordered: true,
+                theme: viewModel.configuration.appearance.asElementsTheme
+            )
+        )
     }()
 
     var viewModel: LinkInlineSignupViewModel {
@@ -36,15 +42,19 @@ final class LinkInlineSignupElement: Element {
         linkAccount: PaymentSheetLinkAccount?,
         country: String?
     ) {
-        self.init(viewModel: LinkInlineSignupViewModel(
-            configuration: configuration,
-            accountService: LinkAccountService(apiClient: configuration.apiClient),
-            linkAccount: linkAccount,
-            country: country
-        ))
+        self.init(
+            viewModel: LinkInlineSignupViewModel(
+                configuration: configuration,
+                accountService: LinkAccountService(apiClient: configuration.apiClient),
+                linkAccount: linkAccount,
+                country: country
+            )
+        )
     }
 
-    init(viewModel: LinkInlineSignupViewModel) {
+    init(
+        viewModel: LinkInlineSignupViewModel
+    ) {
         self.signupView = LinkInlineSignupView(viewModel: viewModel)
         self.signupView.delegate = self
     }

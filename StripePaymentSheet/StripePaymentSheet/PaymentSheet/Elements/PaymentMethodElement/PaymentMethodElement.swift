@@ -9,17 +9,13 @@
 @_spi(STP) import StripeUICore
 
 // MARK: - PaymentMethodElement protocol
-/**
- This allows a user of an Element to collect all fields in the Element hierarchy into an instance of `IntentConfirmParams`.
- 
- - Remark:In practice, only "leaf" Elements - text fields, drop downs, etc. - have any user data to update params with. These elements can be wrapped in `PaymentMethodElementWrapper`.
- Other elements can rely on the default implementation provided in this file.
- */
+/// This allows a user of an Element to collect all fields in the Element hierarchy into an instance of `IntentConfirmParams`.
+///
+/// - Remark:In practice, only "leaf" Elements - text fields, drop downs, etc. - have any user data to update params with. These elements can be wrapped in `PaymentMethodElementWrapper`.
+/// Other elements can rely on the default implementation provided in this file.
 protocol PaymentMethodElement: Element {
-    /**
-     Modify the params according to your input, or return nil if invalid.
-     - Note: This is called on the Element hierarchy in depth-first search order.
-     */
+    /// Modify the params according to your input, or return nil if invalid.
+    /// - Note: This is called on the Element hierarchy in depth-first search order.
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams?
 }
 

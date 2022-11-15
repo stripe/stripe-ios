@@ -7,17 +7,19 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
     func choosePaymentOptionViewControllerShouldClose(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
+        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController
+    )
     func choosePaymentOptionViewControllerDidUpdateSelection(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
+        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController
+    )
 }
 
 /// For internal SDK use only
@@ -48,7 +50,7 @@ class ChoosePaymentOptionViewController: UIViewController {
             guard let selectedPaymentOption = selectedPaymentOption else {
                 return .dynamic("")
             }
-            if case let .saved(paymentMethod) = selectedPaymentOption {
+            if case .saved(let paymentMethod) = selectedPaymentOption {
                 return paymentMethod.paymentSheetPaymentMethodType()
             } else if case .applePay = selectedPaymentOption {
                 return .card
@@ -61,8 +63,10 @@ class ChoosePaymentOptionViewController: UIViewController {
     }
     weak var delegate: ChoosePaymentOptionViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(
+            isTestMode: configuration.apiClient.isTestmode,
+            appearance: configuration.appearance
+        )
         navBar.delegate = self
         return navBar
     }()
@@ -86,7 +90,8 @@ class ChoosePaymentOptionViewController: UIViewController {
         return AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
-            delegate: self)
+            delegate: self
+        )
     }()
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
@@ -98,7 +103,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     private lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
-    private lazy var confirmButton: ConfirmButton = {        
+    private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
             appearance: configuration.appearance,
@@ -115,7 +120,9 @@ class ChoosePaymentOptionViewController: UIViewController {
 
     // MARK: - Init
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -130,14 +137,15 @@ class ChoosePaymentOptionViewController: UIViewController {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
-        
+
         self.configuration = configuration
         self.delegate = delegate
 
         // Default to payment selection, as long as we have saved PMs or Apple Pay or Link is enabled.
-        self.mode = savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled
-                ? .selectingSaved
-                : .addingNew
+        self.mode =
+            savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled
+            ? .selectingSaved
+            : .addingNew
 
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: savedPaymentMethods,
@@ -194,12 +202,14 @@ class ChoosePaymentOptionViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+                equalTo: view.bottomAnchor,
+                constant: -PaymentSheetUI.defaultSheetMargins.bottom
+            ),
         ])
 
         updateUI()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
@@ -222,18 +232,23 @@ class ChoosePaymentOptionViewController: UIViewController {
                         return .close(showAdditionalButton: true)
                     } else {
                         self.navigationBar.additionalButton.removeTarget(
-                            self, action: #selector(didSelectEditSavedPaymentMethodsButton),
-                            for: .touchUpInside)
+                            self,
+                            action: #selector(didSelectEditSavedPaymentMethodsButton),
+                            for: .touchUpInside
+                        )
                         return .close(showAdditionalButton: false)
                     }
                 case .addingNew:
                     self.navigationBar.additionalButton.removeTarget(
-                        self, action: #selector(didSelectEditSavedPaymentMethodsButton),
-                        for: .touchUpInside)
+                        self,
+                        action: #selector(didSelectEditSavedPaymentMethodsButton),
+                        for: .touchUpInside
+                    )
                     return savedPaymentOptionsViewController.hasPaymentOptions
                         ? .back : .close(showAdditionalButton: false)
                 }
-            }())
+            }()
+        )
     }
 
     // state -> view
@@ -242,8 +257,8 @@ class ChoosePaymentOptionViewController: UIViewController {
         let shouldEnableUserInteraction = !isSavingInProgress && !isVerificationInProgress
         if shouldEnableUserInteraction != view.isUserInteractionEnabled {
             sendEventToSubviews(
-                shouldEnableUserInteraction ?
-                    .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+                shouldEnableUserInteraction
+                    ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
                 from: view
             )
         }
@@ -256,10 +271,14 @@ class ChoosePaymentOptionViewController: UIViewController {
         case .selectingSaved:
             headerLabel.text = STPLocalizedString(
                 "Select your payment method",
-                "Title shown above a carousel containing the customer's payment methods")
+                "Title shown above a carousel containing the customer's payment methods"
+            )
         case .addingNew:
             if addPaymentMethodViewController.paymentMethodTypes == [.card] {
-                headerLabel.text = STPLocalizedString("Add a card", "Title shown above a card entry form")
+                headerLabel.text = STPLocalizedString(
+                    "Add a card",
+                    "Title shown above a card entry form"
+                )
             } else {
                 headerLabel.text = STPLocalizedString("Choose a payment method", "TODO")
             }
@@ -311,8 +330,12 @@ class ChoosePaymentOptionViewController: UIViewController {
                         self.view.layoutIfNeeded()
                     }
                 }
-                confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
-                                     callToAction: .customWithLock(title: String.Localized.continue), animated: true)
+                confirmButton.update(
+                    state: savedPaymentOptionsViewController.isRemovingPaymentMethods
+                        ? .disabled : .enabled,
+                    callToAction: .customWithLock(title: String.Localized.continue),
+                    animated: true
+                )
             } else {
                 if !confirmButton.isHidden {
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -346,10 +369,14 @@ class ChoosePaymentOptionViewController: UIViewController {
                 }
             }()
 
-            var callToAction: ConfirmButton.CallToActionType = .add(paymentMethodType: selectedPaymentMethodType)
+            var callToAction: ConfirmButton.CallToActionType = .add(
+                paymentMethodType: selectedPaymentMethodType
+            )
             if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
                 callToAction = overrideCallToAction
-                confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+                confirmButtonState =
+                    addPaymentMethodViewController.overrideCallToActionShouldEnable
+                    ? .enabled : .disabled
             }
 
             confirmButton.update(
@@ -364,15 +391,19 @@ class ChoosePaymentOptionViewController: UIViewController {
         switch mode {
         case .selectingSaved:
             if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
-                self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
+                self.bottomNoticeTextField.attributedText =
+                    savedPaymentOptionsViewController.bottomNoticeAttributedString
             } else {
                 self.bottomNoticeTextField.attributedText = nil
             }
         case .addingNew:
-            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+            self.bottomNoticeTextField.attributedText =
+                addPaymentMethodViewController.bottomNoticeAttributedString
         }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
+            self.bottomNoticeTextField.setHiddenIfNecessary(
+                self.bottomNoticeTextField.attributedText?.length == 0
+            )
         }
     }
 
@@ -382,8 +413,13 @@ class ChoosePaymentOptionViewController: UIViewController {
         case .selectingSaved:
             self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
         case .addingNew:
-            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
-                addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
+            if let buyButtonOverrideBehavior = addPaymentMethodViewController
+                .overrideBuyButtonBehavior
+            {
+                addPaymentMethodViewController.didTapCallToActionButton(
+                    behavior: buyButtonOverrideBehavior,
+                    from: self
+                )
             } else {
                 self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
             }
@@ -427,7 +463,10 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: paymentMethodSelection.analyticsValue)
+        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(
+            isCustom: true,
+            paymentMethod: paymentMethodSelection.analyticsValue
+        )
         guard case Mode.selectingSaved = mode else {
             assertionFailure()
             return
@@ -435,7 +474,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         switch paymentMethodSelection {
         case .add:
             mode = .addingNew
-            error = nil // Clear any errors
+            error = nil  // Clear any errors
             updateUI()
         case .applePay, .link, .saved:
             delegate?.choosePaymentOptionViewControllerDidUpdateSelection(self)
@@ -456,7 +495,8 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
             return
         }
         configuration.apiClient.detachPaymentMethod(
-            paymentMethod.stripeId, fromCustomerUsing: ephemeralKey
+            paymentMethod.stripeId,
+            fromCustomerUsing: ephemeralKey
         ) { (_) in
             // no-op
         }
@@ -483,7 +523,10 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         navigationBar.additionalButton.titleLabel?.font = configuration.appearance.font.base.medium
         navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
         navigationBar.additionalButton.addTarget(
-            self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
+            self,
+            action: #selector(didSelectEditSavedPaymentMethodsButton),
+            for: .touchUpInside
+        )
     }
 
     @objc
@@ -501,19 +544,26 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
         error = nil  // clear error
 
         if case .link(let linkOption) = selectedPaymentOption,
-           let linkAccount = linkOption.account,
-           linkAccount.sessionState == .requiresVerification {
+            let linkAccount = linkOption.account,
+            linkAccount.sessionState == .requiresVerification
+        {
             isVerificationInProgress = true
             updateUI()
 
-            let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
-            verificationController.present(from: self, completion: { [weak self] _ in
-                // Verification result is ignored here on purpose. If verification is canceled or fails,
-                // we will simply don't block the payment. This will be revised after we redesign the inline
-                // signup UI to include verification status.
-                self?.isVerificationInProgress = false
-                self?.updateUI()
-            })
+            let verificationController = LinkVerificationController(
+                mode: .inlineLogin,
+                linkAccount: linkAccount
+            )
+            verificationController.present(
+                from: self,
+                completion: { [weak self] _ in
+                    // Verification result is ignored here on purpose. If verification is canceled or fails,
+                    // we will simply don't block the payment. This will be revised after we redesign the inline
+                    // signup UI to include verification status.
+                    self?.isVerificationInProgress = false
+                    self?.updateUI()
+                }
+            )
         } else {
             updateUI()
         }

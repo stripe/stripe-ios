@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_CircularButton)
@@ -36,13 +36,19 @@ class CircularButton: UIControl {
         case remove
     }
 
-    required init(style: Style, iconColor: UIColor = .secondaryLabel, dangerColor: UIColor = .systemRed) {
+    required init(
+        style: Style,
+        iconColor: UIColor = .secondaryLabel,
+        dangerColor: UIColor = .systemRed
+    ) {
         self.style = style
         self.iconColor = iconColor
         super.init(frame: .zero)
 
         backgroundColor = UIColor.dynamic(
-            light: .systemBackground, dark: .systemGray2)
+            light: .systemBackground,
+            dark: .systemGray2
+        )
         layer.cornerRadius = radius
         layer.masksToBounds = false
         isAccessibilityElement = true
@@ -53,10 +59,12 @@ class CircularButton: UIControl {
         layer.shadowColor = UIColor.systemGray2.cgColor
         layer.shadowOpacity = shadowOpacity
         let path = UIBezierPath(
-            arcCenter: CGPoint(x: radius, y: radius), radius: radius,
+            arcCenter: CGPoint(x: radius, y: radius),
+            radius: radius,
             startAngle: 0,
             endAngle: CGFloat.pi * 2,
-            clockwise: true)
+            clockwise: true
+        )
         layer.shadowPath = path.cgPath
 
         addSubview(imageView)
@@ -75,7 +83,8 @@ class CircularButton: UIControl {
         case .remove:
             backgroundColor = UIColor.dynamic(
                 light: .systemBackground,
-                dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
+                dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1)
+            )
             imageView.image = Image.icon_x.makeImage(template: true)
             imageView.tintColor = dangerColor
             accessibilityLabel = String.Localized.remove
@@ -84,7 +93,9 @@ class CircularButton: UIControl {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(
-                equalTo: centerXAnchor, constant: style == .back ? -0.5 : 0),
+                equalTo: centerXAnchor,
+                constant: style == .back ? -0.5 : 0
+            ),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
@@ -95,7 +106,8 @@ class CircularButton: UIControl {
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let newArea = bounds.insetBy(
             dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
+            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2
+        )
         return newArea.contains(point)
     }
 
@@ -135,7 +147,9 @@ class CircularButton: UIControl {
         }
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 

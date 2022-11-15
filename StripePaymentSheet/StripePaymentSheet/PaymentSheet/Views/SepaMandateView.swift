@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_SepaMandateView)
@@ -20,8 +20,11 @@ class SepaMandateView: UIView {
         label.numberOfLines = 0
         return label
     }()
-    
-    init(merchantDisplayName: String, theme: ElementsUITheme = .default) {
+
+    init(
+        merchantDisplayName: String,
+        theme: ElementsUITheme = .default
+    ) {
         self.theme = theme
         super.init(frame: .zero)
         let localized = STPLocalizedString(
@@ -31,11 +34,13 @@ class SepaMandateView: UIView {
         label.text = String(format: localized, merchantDisplayName)
         installConstraints()
     }
-    
-    required init?(coder: NSCoder) {
+
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     fileprivate func installConstraints() {
         addAndPinSubview(label)
     }

@@ -5,9 +5,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol BankAccountInfoViewDelegate {
     func didTapXIcon()
@@ -21,7 +21,7 @@ class BankAccountInfoView: UIView {
     }
 
     private let theme: ElementsUITheme
-    
+
     lazy var bankNameLabel: UILabel = {
         let label = UILabel()
         label.font = theme.fonts.subheadline
@@ -69,14 +69,19 @@ class BankAccountInfoView: UIView {
         }
     }
 
-    init(frame: CGRect, theme: ElementsUITheme = .default) {
+    init(
+        frame: CGRect,
+        theme: ElementsUITheme = .default
+    ) {
         self.theme = theme
         super.init(frame: frame)
         addViewComponents()
         addTouchCallbackForX()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -95,25 +100,52 @@ class BankAccountInfoView: UIView {
 
         NSLayoutConstraint.activate([
             bankIconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            bankIconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.spacing),
+            bankIconImageView.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: Constants.spacing
+            ),
 
-            bankNameLabel.leadingAnchor.constraint(equalTo: bankIconImageView.trailingAnchor, constant: Constants.spacing),
+            bankNameLabel.leadingAnchor.constraint(
+                equalTo: bankIconImageView.trailingAnchor,
+                constant: Constants.spacing
+            ),
             bankNameLabel.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 0.5),
             bankNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
-            bankNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
+            bankNameLabel.bottomAnchor.constraint(
+                equalTo: bottomAnchor,
+                constant: -Constants.spacing
+            ),
 
-            bankAccountNumberLabel.leadingAnchor.constraint(equalTo: bankNameLabel.trailingAnchor, constant: Constants.spacing),
-            bankAccountNumberLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
-            bankAccountNumberLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
+            bankAccountNumberLabel.leadingAnchor.constraint(
+                equalTo: bankNameLabel.trailingAnchor,
+                constant: Constants.spacing
+            ),
+            bankAccountNumberLabel.topAnchor.constraint(
+                equalTo: topAnchor,
+                constant: Constants.spacing
+            ),
+            bankAccountNumberLabel.bottomAnchor.constraint(
+                equalTo: bottomAnchor,
+                constant: -Constants.spacing
+            ),
 
-            xIconTappableArea.leadingAnchor.constraint(greaterThanOrEqualTo: bankAccountNumberLabel.trailingAnchor, constant: Constants.spacing),
+            xIconTappableArea.leadingAnchor.constraint(
+                greaterThanOrEqualTo: bankAccountNumberLabel.trailingAnchor,
+                constant: Constants.spacing
+            ),
             xIconTappableArea.trailingAnchor.constraint(equalTo: trailingAnchor),
             xIconTappableArea.widthAnchor.constraint(equalToConstant: 44.0),
             xIconTappableArea.topAnchor.constraint(equalTo: topAnchor),
             xIconTappableArea.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            xIcon.leadingAnchor.constraint(greaterThanOrEqualTo: xIconTappableArea.leadingAnchor, constant: Constants.spacing),
-            xIcon.trailingAnchor.constraint(equalTo: xIconTappableArea.trailingAnchor, constant: -Constants.spacing),
+            xIcon.leadingAnchor.constraint(
+                greaterThanOrEqualTo: xIconTappableArea.leadingAnchor,
+                constant: Constants.spacing
+            ),
+            xIcon.trailingAnchor.constraint(
+                equalTo: xIconTappableArea.trailingAnchor,
+                constant: -Constants.spacing
+            ),
             xIcon.centerYAnchor.constraint(equalTo: xIconTappableArea.centerYAnchor),
             xIcon.heightAnchor.constraint(equalToConstant: Constants.spacing),
             xIcon.widthAnchor.constraint(equalToConstant: Constants.spacing),
@@ -131,7 +163,9 @@ class BankAccountInfoView: UIView {
 
     func setBankName(text: String) {
         self.bankNameLabel.text = text
-        bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: text))
+        bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(
+            for: PaymentSheetImageLibrary.bankIconCode(for: text)
+        )
     }
 
     func setLastFourOfBank(text: String) {
@@ -139,8 +173,10 @@ class BankAccountInfoView: UIView {
     }
 
     func updateUI() {
-        bankNameLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
-        bankAccountNumberLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
+        bankNameLabel.textColor =
+            isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
+        bankAccountNumberLabel.textColor =
+            isUserInteractionEnabled ? theme.colors.textFieldText : .tertiaryLabel
         bankIconImageView.alpha = isUserInteractionEnabled ? 1.0 : 0.5
         xIcon.alpha = isUserInteractionEnabled ? 1.0 : 0.5
     }

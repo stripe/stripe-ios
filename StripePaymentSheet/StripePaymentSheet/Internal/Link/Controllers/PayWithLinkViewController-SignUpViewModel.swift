@@ -7,10 +7,9 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 protocol PayWithLinkSignUpViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.SignUpViewModel)
@@ -111,7 +110,7 @@ extension PayWithLinkViewController {
 
         var shouldEnableSignUpButton: Bool {
             guard let linkAccount = linkAccount,
-                  let phoneNumber = phoneNumber
+                let phoneNumber = phoneNumber
             else {
                 return false
             }
@@ -131,7 +130,9 @@ extension PayWithLinkViewController {
 
         private let accountService: LinkAccountServiceProtocol
 
-        private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
+        private let accountLookupDebouncer = OperationDebouncer(
+            debounceTime: LinkUI.accountLookupDebounceTime
+        )
 
         private let configuration: PaymentSheet.Configuration
 
@@ -157,7 +158,8 @@ extension PayWithLinkViewController {
 
         func signUp(completion: @escaping (Result<PaymentSheetLinkAccount, Error>) -> Void) {
             guard let linkAccount = linkAccount,
-                  let phoneNumber = phoneNumber else {
+                let phoneNumber = phoneNumber
+            else {
                 assertionFailure("`signUp()` called without a link account or phone number")
                 return
             }
@@ -181,9 +183,9 @@ extension PayWithLinkViewController {
 
 }
 
-private extension PayWithLinkViewController.SignUpViewModel {
+extension PayWithLinkViewController.SignUpViewModel {
 
-    func onEmailUpdate() {
+    fileprivate func onEmailUpdate() {
         linkAccount = nil
         errorMessage = nil
 
@@ -220,7 +222,7 @@ private extension PayWithLinkViewController.SignUpViewModel {
         }
     }
 
-    func notifyUpdate() {
+    fileprivate func notifyUpdate() {
         delegate?.viewModelDidChange(self)
     }
 

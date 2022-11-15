@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A UIScrollView subclass that actively prevents its content from being covered by the software keyboard.
 /// For internal SDK use only
@@ -17,10 +17,12 @@ final class LinkKeyboardAvoidingScrollView: UIScrollView {
     init() {
         super.init(frame: .zero)
 
-        NotificationCenter.default.addObserver(self,
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(keyboardFrameChanged(_:)),
             name: UIResponder.keyboardWillChangeFrameNotification,
-            object: nil)
+            object: nil
+        )
     }
 
     /// Creates a new keyboard-avoiding scrollview with the given view configured as content view.
@@ -28,7 +30,9 @@ final class LinkKeyboardAvoidingScrollView: UIScrollView {
     /// This initializer adds the content view as a subview and installs the appropriate set of constraints.
     ///
     /// - Parameter contentView: The view to be used as content view.
-    convenience init(contentView: UIView) {
+    convenience init(
+        contentView: UIView
+    ) {
         self.init()
 
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,11 +43,13 @@ final class LinkKeyboardAvoidingScrollView: UIScrollView {
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentView.widthAnchor.constraint(equalTo: widthAnchor)
+            contentView.widthAnchor.constraint(equalTo: widthAnchor),
         ])
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -54,12 +60,13 @@ final class LinkKeyboardAvoidingScrollView: UIScrollView {
 
 // MARK: - Event Handling
 
-private extension LinkKeyboardAvoidingScrollView {
+extension LinkKeyboardAvoidingScrollView {
 
-    @objc func keyboardFrameChanged(_ notification: Notification) {
+    @objc fileprivate func keyboardFrameChanged(_ notification: Notification) {
         let userInfo = notification.userInfo
 
-        guard let keyboardFrame = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+        guard let keyboardFrame = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+        else {
             return
         }
 
@@ -68,7 +75,12 @@ private extension LinkKeyboardAvoidingScrollView {
 
         UIView.animateAlongsideKeyboard(notification) {
             self.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: intersection.height, right: 0)
-            self.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: intersection.height, right: 0)
+            self.scrollIndicatorInsets = UIEdgeInsets(
+                top: 0,
+                left: 0,
+                bottom: intersection.height,
+                right: 0
+            )
         }
     }
 

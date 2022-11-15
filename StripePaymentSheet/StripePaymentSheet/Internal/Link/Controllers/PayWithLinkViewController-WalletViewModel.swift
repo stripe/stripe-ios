@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 protocol PayWithLinkWalletViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel)
@@ -98,17 +98,11 @@ extension PayWithLinkViewController {
         }
 
         var shouldShowRecollectionSection: Bool {
-            return (
-                shouldRecollectCardCVC ||
-                shouldRecollectCardExpiryDate
-            )
+            return (shouldRecollectCardCVC || shouldRecollectCardExpiryDate)
         }
 
         var shouldShowApplePayButton: Bool {
-            return (
-                context.shouldOfferApplePay &&
-                context.configuration.isApplePayEnabled
-            )
+            return (context.shouldOfferApplePay && context.configuration.isApplePayEnabled)
         }
 
         var shouldUseCompactConfirmButton: Bool {
@@ -198,7 +192,8 @@ extension PayWithLinkViewController {
             )
         }
 
-        func deletePaymentMethod(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+        func deletePaymentMethod(at index: Int, completion: @escaping (Result<Void, Error>) -> Void)
+        {
             let paymentMethod = paymentMethods[index]
 
             linkAccount.deletePaymentDetails(id: paymentMethod.stripeID) { [self] result in
@@ -224,7 +219,7 @@ extension PayWithLinkViewController {
                 id: paymentMethod.stripeID,
                 updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil)
             ) { [self] result in
-                if case let .success(updatedPaymentDetails) = result {
+                if case .success(let updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
                     paymentMethods[index] = updatedPaymentDetails
                 }
@@ -234,7 +229,11 @@ extension PayWithLinkViewController {
         }
 
         func updatePaymentMethod(_ paymentMethod: ConsumerPaymentDetails) -> Int? {
-            guard let index = paymentMethods.firstIndex(where: {$0.stripeID == paymentMethod.stripeID}) else {
+            guard
+                let index = paymentMethods.firstIndex(where: {
+                    $0.stripeID == paymentMethod.stripeID
+                })
+            else {
                 return nil
             }
 
@@ -249,7 +248,8 @@ extension PayWithLinkViewController {
             return index
         }
 
-        func updateExpiryDate(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void) {
+        func updateExpiryDate(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void)
+        {
             guard
                 let id = selectedPaymentMethod?.stripeID,
                 let expiryDate = self.expiryDate
@@ -268,9 +268,9 @@ extension PayWithLinkViewController {
 
 }
 
-private extension PayWithLinkViewController.WalletViewModel {
+extension PayWithLinkViewController.WalletViewModel {
 
-    static func determineInitiallySelectedPaymentMethod(
+    fileprivate static func determineInitiallySelectedPaymentMethod(
         context: PayWithLinkViewController.Context,
         paymentMethods: [ConsumerPaymentDetails]
     ) -> Int {
@@ -292,8 +292,8 @@ private extension PayWithLinkViewController.WalletViewModel {
 }
 
 /// Helper functions for ConsumerPaymentDetails
-private extension ConsumerPaymentDetails {
-    var paymentMethodType: PaymentSheet.PaymentMethodType {
+extension ConsumerPaymentDetails {
+    fileprivate var paymentMethodType: PaymentSheet.PaymentMethodType {
         switch details {
         case .card:
             return .card

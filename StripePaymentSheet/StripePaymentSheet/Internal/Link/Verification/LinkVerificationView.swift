@@ -6,10 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// :nodoc:
 protocol LinkVerificationViewDelegate: AnyObject {
@@ -81,7 +80,11 @@ final class LinkVerificationView: UIView {
 
     private(set) lazy var codeField: OneTimeCodeTextField = {
         let codeField = OneTimeCodeTextField(numberOfDigits: 6)
-        codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
+        codeField.addTarget(
+            self,
+            action: #selector(oneTimeCodeFieldChanged(_:)),
+            for: .valueChanged
+        )
         return codeField
     }()
 
@@ -103,28 +106,40 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkBordered(), title: STPLocalizedString(
-            "Resend code",
-            "Label for a button that re-sends the a login code when tapped"
-        ))
+        let button = Button(
+            configuration: .linkBordered(),
+            title: STPLocalizedString(
+                "Resend code",
+                "Label for a button that re-sends the a login code when tapped"
+            )
+        )
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
     }()
 
     private lazy var logoutView: LogoutView = {
         let logoutView = LogoutView(linkAccount: linkAccount)
-        logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
+        logoutView.button.addTarget(
+            self,
+            action: #selector(didTapOnLogout(_:)),
+            for: .touchUpInside
+        )
         return logoutView
     }()
 
-    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+    required init(
+        mode: Mode,
+        linkAccount: PaymentSheetLinkAccountInfoProtocol
+    ) {
         self.mode = mode
         self.linkAccount = linkAccount
         super.init(frame: .zero)
         setupUI()
     }
-    
-    required init?(coder: NSCoder) {
+
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -154,9 +169,9 @@ final class LinkVerificationView: UIView {
     }
 }
 
-private extension LinkVerificationView {
+extension LinkVerificationView {
 
-    var arrangedSubViews: [UIView] {
+    fileprivate var arrangedSubViews: [UIView] {
         switch mode {
         case .modal, .inlineLogin:
             return [
@@ -164,7 +179,7 @@ private extension LinkVerificationView {
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                resendCodeButton
+                resendCodeButton,
             ]
         case .embedded:
             return [
@@ -172,12 +187,12 @@ private extension LinkVerificationView {
                 bodyLabel,
                 codeFieldContainer,
                 logoutView,
-                resendCodeButton
+                resendCodeButton,
             ]
         }
     }
 
-    func setupUI() {
+    fileprivate func setupUI() {
         directionalLayoutMargins = .insets(amount: Constants.edgeMargin)
 
         let stackView = UIStackView(arrangedSubviews: arrangedSubViews)

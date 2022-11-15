@@ -7,22 +7,26 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension PaymentSheetFormFactory {
-    
+
     func makeUPI() -> FormElement {
         return FormElement(autoSectioningElements: [makeUPIHeader(), makeVPAField()], theme: theme)
     }
-    
+
     private func makeUPIHeader() -> StaticElement {
-        return makeSectionTitleLabelWith(text: STPLocalizedString("Buy using a UPI ID",
-                                                                  "Header text shown above a UPI ID text field"))
+        return makeSectionTitleLabelWith(
+            text: STPLocalizedString(
+                "Buy using a UPI ID",
+                "Header text shown above a UPI ID text field"
+            )
+        )
     }
-    
+
     private func makeVPAField() -> PaymentMethodElementWrapper<TextFieldElement> {
         return PaymentMethodElementWrapper(TextFieldElement.makeVPA(theme: theme)) { vpa, params in
             let upi = params.paymentMethodParams.upi ?? STPPaymentMethodUPIParams()

@@ -6,15 +6,15 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 // TODO(ramont): Remove after migrating to modern bindings
-fileprivate extension ConsumerPaymentDetails {
-    var cardDetails: Details.Card? {
+extension ConsumerPaymentDetails {
+    fileprivate var cardDetails: Details.Card? {
         switch details {
         case .card(let details):
             return details
@@ -48,7 +48,8 @@ final class LinkCardEditElement: Element {
 
     var params: Params? {
         guard validationState.isValid,
-              let expiryDate = CardExpiryDate(expiryDateElement.text) else {
+            let expiryDate = CardExpiryDate(expiryDateElement.text)
+        else {
             return nil
         }
 
@@ -109,7 +110,7 @@ final class LinkCardEditElement: Element {
             elements: [
                 cardSection,
                 billingAddressSection,
-                checkboxElement
+                checkboxElement,
             ],
             theme: theme
         )
@@ -121,7 +122,7 @@ final class LinkCardEditElement: Element {
         title: String.Localized.card_information,
         elements: [
             panElement,
-            SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
+            SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ],
         theme: theme
     )
@@ -132,7 +133,9 @@ final class LinkCardEditElement: Element {
         theme: theme
     )
 
-    init(paymentMethod: ConsumerPaymentDetails) {
+    init(
+        paymentMethod: ConsumerPaymentDetails
+    ) {
         self.paymentMethod = paymentMethod
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
@@ -156,9 +159,9 @@ extension LinkCardEditElement: ElementDelegate {
 
 }
 
-private extension LinkCardEditElement {
+extension LinkCardEditElement {
 
-    struct PANConfiguration: TextFieldElementConfiguration {
+    fileprivate struct PANConfiguration: TextFieldElementConfiguration {
         let paymentMethod: ConsumerPaymentDetails
 
         var label: String {

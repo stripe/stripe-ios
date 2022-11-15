@@ -6,9 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A view for displaying text notices.
 ///
@@ -53,25 +52,32 @@ final class LinkNoticeView: UIView {
         return label
     }()
 
-    convenience init(type: NoticeType, text: String) {
+    convenience init(
+        type: NoticeType,
+        text: String
+    ) {
         self.init(type: type)
         self.text = text
     }
 
-    init(type: NoticeType) {
+    init(
+        type: NoticeType
+    ) {
         self.type = type
         super.init(frame: .zero)
         setupUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
     private func setupUI() {
         let stackView = UIStackView(arrangedSubviews: [
             iconView,
-            textLabel
+            textLabel,
         ])
 
         stackView.axis = .horizontal
@@ -87,23 +93,23 @@ final class LinkNoticeView: UIView {
 
 }
 
-private extension LinkNoticeView.NoticeType {
+extension LinkNoticeView.NoticeType {
 
-    var icon: UIImage {
+    fileprivate var icon: UIImage {
         switch self {
         case .error:
             return Image.icon_link_error.makeImage(template: true)
         }
     }
 
-    var backgroundColor: UIColor {
+    fileprivate var backgroundColor: UIColor {
         switch self {
         case .error:
             return .linkDangerBackground
         }
     }
 
-    var foregroundColor: UIColor {
+    fileprivate var foregroundColor: UIColor {
         switch self {
         case .error:
             return .linkDangerForeground

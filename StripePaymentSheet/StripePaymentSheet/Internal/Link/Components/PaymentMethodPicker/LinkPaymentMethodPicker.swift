@@ -6,9 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkPaymentMethodPickerDelegate: AnyObject {
     func paymentMethodPickerDidChange(_ picker: LinkPaymentMethodPicker)
@@ -66,7 +65,7 @@ final class LinkPaymentMethodPicker: UIView {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             headerView,
-            listView
+            listView,
         ])
 
         stackView.axis = .vertical
@@ -94,13 +93,17 @@ final class LinkPaymentMethodPicker: UIView {
 
     private let addPaymentMethodButton = AddButton()
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: .zero)
         addAndPinSubview(stackView)
         setup()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -120,7 +123,11 @@ final class LinkPaymentMethodPicker: UIView {
         listView.isHidden = true
         listView.layer.zPosition = 0
 
-        addPaymentMethodButton.addTarget(self, action: #selector(onAddPaymentButtonTapped(_:)), for: .touchUpInside)
+        addPaymentMethodButton.addTarget(
+            self,
+            action: #selector(onAddPaymentButtonTapped(_:)),
+            for: .touchUpInside
+        )
     }
 
     override func layoutSubviews() {
@@ -158,14 +165,14 @@ final class LinkPaymentMethodPicker: UIView {
 
 }
 
-private extension LinkPaymentMethodPicker {
+extension LinkPaymentMethodPicker {
 
-    @objc func onHeaderTapped(_ sender: Header) {
+    @objc fileprivate func onHeaderTapped(_ sender: Header) {
         setExpanded(!sender.isExpanded, animated: true)
         impactFeedbackGenerator.impactOccurred()
     }
 
-    @objc func onAddPaymentButtonTapped(_ sender: AddButton) {
+    @objc fileprivate func onAddPaymentButtonTapped(_ sender: AddButton) {
         delegate?.paymentDetailsPickerDidTapOnAddPayment(self)
     }
 

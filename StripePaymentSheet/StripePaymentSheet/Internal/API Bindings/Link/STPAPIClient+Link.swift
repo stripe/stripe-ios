@@ -7,13 +7,12 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
 extension STPAPIClient {
-    
+
     func lookupConsumerSession(
         for email: String?,
         cookieStore: LinkCookieStore,
@@ -21,7 +20,7 @@ extension STPAPIClient {
     ) {
         let endpoint: String = "consumers/sessions/lookup"
         var parameters: [String: Any] = [
-            "request_surface": "ios_payment_element",
+            "request_surface": "ios_payment_element"
         ]
         if let email = email {
             parameters["email_address"] = email.lowercased()
@@ -31,13 +30,19 @@ extension STPAPIClient {
         if let cookies = cookies {
             parameters["cookies"] = cookies
         }
-        
-        guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies") else {
+
+        guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies")
+        else {
             // no request to make if we don't have an email or cookies
             DispatchQueue.main.async {
-                completion(.success(
-                    ConsumerSession.LookupResponse(.noAvailableLookupParams, allResponseFields: [:])
-                ))
+                completion(
+                    .success(
+                        ConsumerSession.LookupResponse(
+                            .noAvailableLookupParams,
+                            allResponseFields: [:]
+                        )
+                    )
+                )
             }
             return
         }
@@ -48,7 +53,7 @@ extension STPAPIClient {
             additionalHeaders: authorizationHeader(using: publishableKey),
             parameters: parameters
         ) { result in
-            if case let .success(lookupResponse) = result {
+            if case .success(let lookupResponse) = result {
                 switch lookupResponse.responseType {
                 case .found(let consumerSession, _):
                     consumerSession.updateCookie(withStore: cookieStore)
@@ -80,7 +85,7 @@ extension STPAPIClient {
             "request_surface": "ios_payment_element",
             "email_address": email.lowercased(),
             "phone_number": phoneNumber,
-            "locale": locale.toLanguageTag()
+            "locale": locale.toLanguageTag(),
         ]
 
         if let legalName = legalName {
@@ -124,8 +129,9 @@ extension STPAPIClient {
         let billingParams = billingDetails.consumersAPIParams
 
         var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
-        card?["cvc"] = nil // payment_details doesn't store cvc
+        card?["cvc"] = nil  // payment_details doesn't store cvc
 
+        // card details are created with active false so we don't save them until the intent confirmation succeeds
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
@@ -133,9 +139,9 @@ extension STPAPIClient {
             "card": card as Any,
             "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
-            "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
+            "active": false,
         ]
-        
+
         APIRequest<ConsumerPaymentDetails>.post(
             with: self,
             endpoint: endpoint,
@@ -157,10 +163,10 @@ extension STPAPIClient {
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
             "bank_account": [
-                "account": linkedAccountId,
+                "account": linkedAccountId
             ],
             "type": "bank_account",
-            "is_default": true
+            "is_default": true,
         ]
 
         APIRequest<ConsumerPaymentDetails>.post(
@@ -180,7 +186,7 @@ extension STPAPIClient {
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        
+
         let typeString: String = {
             switch type {
             case .sms:
@@ -191,16 +197,16 @@ extension STPAPIClient {
             }
         }()
         let endpoint: String = "consumers/sessions/start_verification"
-        
+
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
-            "locale": locale.toLanguageTag()
+            "locale": locale.toLanguageTag(),
         ]
         if let cookies = cookieStore.formattedSessionCookies() {
             parameters["cookies"] = cookies
         }
-        
+
         APIRequest<ConsumerSession>.post(
             with: self,
             endpoint: endpoint,
@@ -214,16 +220,16 @@ extension STPAPIClient {
             completion(result)
         }
     }
-    
+
     func confirmSMSVerification(
         for consumerSessionClientSecret: String,
         with code: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
-        completion:  @escaping (Result<ConsumerSession, Error>) -> Void
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
-        
+
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": "SMS",
@@ -234,7 +240,7 @@ extension STPAPIClient {
         if let cookies = cookieStore.formattedSessionCookies() {
             parameters["cookies"] = cookies
         }
-        
+
         APIRequest<ConsumerSession>.post(
             with: self,
             endpoint: endpoint,
@@ -271,20 +277,20 @@ extension STPAPIClient {
             completion: completion
         )
     }
-    
+
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/list"
-        
+
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
-            "types": ["card", "bank_account"]
+            "types": ["card", "bank_account"],
         ]
-        
+
         APIRequest<ConsumerPaymentDetails.ListDeserializer>.post(
             with: self,
             endpoint: endpoint,
@@ -314,7 +320,7 @@ extension STPAPIClient {
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { result in
-            completion(result.map { _ in () } )
+            completion(result.map { _ in () })
         }
     }
 
@@ -332,7 +338,9 @@ extension STPAPIClient {
             "request_surface": "ios_payment_element",
         ]
 
-        if let details = updateParams.details, case .card(let expiryDate, let billingDetails) = details {
+        if let details = updateParams.details,
+            case .card(let expiryDate, let billingDetails) = details
+        {
             parameters["exp_month"] = expiryDate.month
             parameters["exp_year"] = expiryDate.year
 
@@ -340,7 +348,7 @@ extension STPAPIClient {
                 parameters["billing_address"] = billingDetails.consumersAPIParams
             }
         }
-        
+
         if let isDefault = updateParams.isDefault {
             parameters["is_default"] = isDefault
         }
@@ -389,9 +397,9 @@ extension STPAPIClient {
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.
-private extension APIRequest {
+extension APIRequest {
 
-    class func post(
+    fileprivate class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -407,14 +415,16 @@ private extension APIRequest {
             if let responseObject = responseObject {
                 completion(.success(responseObject))
             } else {
-                completion(.failure(
-                    error ?? NSError.stp_genericFailedToParseResponseError()
-                ))
+                completion(
+                    .failure(
+                        error ?? NSError.stp_genericFailedToParseResponseError()
+                    )
+                )
             }
         }
     }
 
-    class func delete(
+    fileprivate class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -430,40 +440,39 @@ private extension APIRequest {
             if let responseObject = responseObject {
                 completion(.success(responseObject))
             } else {
-                completion(.failure(
-                    error ?? NSError.stp_genericFailedToParseResponseError()
-                ))
+                completion(
+                    .failure(
+                        error ?? NSError.stp_genericFailedToParseResponseError()
+                    )
+                )
             }
         }
     }
 
 }
 
-
 // MARK: - /v1/consumers Support
 extension STPPaymentMethodBillingDetails {
-    
+
     var consumersAPIParams: [String: Any] {
         var params = STPFormEncoder.dictionary(forObject: self)
         if let addressParams = address?.consumersAPIParams {
             params["address"] = nil
-            params.merge(addressParams) { (_, new)  in new }
+            params.merge(addressParams) { (_, new) in new }
         }
         return params
     }
-    
+
 }
-
-
 
 // MARK: - /v1/consumers Support
 extension STPPaymentMethodAddress {
-    
+
     var consumersAPIParams: [String: Any] {
         var params = STPFormEncoder.dictionary(forObject: self)
         params["country_code"] = params["country"]
         params["country"] = nil
         return params
     }
-    
+
 }

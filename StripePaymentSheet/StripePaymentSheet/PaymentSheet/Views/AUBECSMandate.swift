@@ -6,14 +6,14 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 import Foundation
-import UIKit
 import SafariServices
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 @objc(STP_Internal_AUBECSLegalTermsView)
 final class AUBECSLegalTermsView: UIView {
-    
+
     private let links: [String: URL] = [
         "terms": URL(string: "https://stripe.com/au-becs-dd-service-agreement/legal")!
     ]
@@ -22,7 +22,7 @@ final class AUBECSLegalTermsView: UIView {
     private var theme: ElementsUITheme {
         return configuration.appearance.asElementsTheme
     }
-    
+
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.isScrollEnabled = false
@@ -38,14 +38,19 @@ final class AUBECSLegalTermsView: UIView {
         return textView
     }()
 
-    init(configuration: PaymentSheet.Configuration, textAlignment: NSTextAlignment = .left) {
+    init(
+        configuration: PaymentSheet.Configuration,
+        textAlignment: NSTextAlignment = .left
+    ) {
         self.configuration = configuration
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         addAndPinSubview(textView)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -63,7 +68,9 @@ final class AUBECSLegalTermsView: UIView {
 
         let formattedString = NSMutableAttributedString()
 
-        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
+        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) {
+            string,
+            matches in
             formattedString.append(NSAttributedString(string: string))
 
             for (tag, range) in matches {
@@ -83,8 +90,8 @@ final class AUBECSLegalTermsView: UIView {
 
 }
 
-private extension UIResponder {
-    var parentViewController: UIViewController? {
+extension UIResponder {
+    fileprivate var parentViewController: UIViewController? {
         return next as? UIViewController ?? next?.parentViewController
     }
 }

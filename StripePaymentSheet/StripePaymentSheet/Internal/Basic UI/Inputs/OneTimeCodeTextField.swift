@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A field for collecting one-time codes (OTCs).
 /// For internal SDK use only
@@ -71,7 +71,9 @@ final class OneTimeCodeTextField: UIControl {
 
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 
-    init(numberOfDigits: Int = 6) {
+    init(
+        numberOfDigits: Int = 6
+    ) {
         self.numberOfDigits = numberOfDigits
         self.textStorage = TextStorage(capacity: numberOfDigits)
         super.init(frame: .zero)
@@ -97,7 +99,9 @@ final class OneTimeCodeTextField: UIControl {
         )
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -132,7 +136,8 @@ final class OneTimeCodeTextField: UIControl {
         super.touchesEnded(touches, with: event)
 
         guard let point = touches.first?.location(in: self),
-              bounds.contains(point) else {
+            bounds.contains(point)
+        else {
             return
         }
 
@@ -147,9 +152,9 @@ final class OneTimeCodeTextField: UIControl {
 
 // MARK: - Private methods
 
-private extension OneTimeCodeTextField {
+extension OneTimeCodeTextField {
 
-    func setupUI() {
+    fileprivate func setupUI() {
         let stackView = UIStackView(arrangedSubviews: arrangedDigitViews())
         stackView.spacing = shouldGroupDigits ? Constants.groupSpacing : Constants.itemSpacing
         stackView.alignment = .center
@@ -158,7 +163,7 @@ private extension OneTimeCodeTextField {
         addAndPinSubview(stackView)
     }
 
-    func arrangedDigitViews() -> [UIView] {
+    fileprivate func arrangedDigitViews() -> [UIView] {
         guard shouldGroupDigits else {
             // No grouping, simply return all the digit views.
             return digitViews
@@ -180,12 +185,12 @@ private extension OneTimeCodeTextField {
         }
     }
 
-    func update() {
+    fileprivate func update() {
         updateDigitViews()
         updateAccessibilityProperties()
     }
 
-    func updateDigitViews() {
+    fileprivate func updateDigitViews() {
         let digits: [Character] = .init(value)
 
         let selectedRange = selectedTextRange as? TextRange
@@ -196,15 +201,16 @@ private extension OneTimeCodeTextField {
         }
     }
 
-    func updateAccessibilityProperties() {
+    fileprivate func updateAccessibilityProperties() {
         accessibilityValue = value
 
-        accessibilityHint = isFirstResponder
+        accessibilityHint =
+            isFirstResponder
             ? nil
             : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
-    func toggleMenu() {
+    fileprivate func toggleMenu() {
         if UIMenuController.shared.isMenuVisible {
             hideMenu()
         } else {
@@ -212,7 +218,7 @@ private extension OneTimeCodeTextField {
         }
     }
 
-    func showMenu() {
+    fileprivate func showMenu() {
         let menuRect: CGRect = {
             guard let activeDigitView = digitViews.first(where: { $0.isActive }) else {
                 return bounds
@@ -224,11 +230,11 @@ private extension OneTimeCodeTextField {
         UIMenuController.shared.showMenu(from: self, rect: menuRect)
     }
 
-    func hideMenu() {
+    fileprivate func hideMenu() {
         UIMenuController.shared.hideMenu()
     }
 
-    @objc func applicationWillEnterForeground(_ notification: Notification) {
+    @objc fileprivate func applicationWillEnterForeground(_ notification: Notification) {
         // Forcing an update when the application enters foreground ensures that
         // the caret resumes blinking. This is something that iOS currently does for
         // long-running animation such as caret blinking on UITextField and
@@ -276,7 +282,9 @@ extension OneTimeCodeTextField {
             jumpAnimation.duration = duration
             jumpAnimation.values = [0, -8, 2, 0]
             jumpAnimation.keyTimes = [0.0, 0.33, 0.66, 1.0]
-            jumpAnimation.timingFunctions = [timingFunction, timingFunction, timingFunction, timingFunction]
+            jumpAnimation.timingFunctions = [
+                timingFunction, timingFunction, timingFunction, timingFunction,
+            ]
 
             let borderColorAnimation = CABasicAnimation(keyPath: "borderColor")
             borderColorAnimation.beginTime = beginTime + (CFTimeInterval(index) * staggerDelay)
@@ -366,7 +374,7 @@ extension OneTimeCodeTextField: UITextInput {
         return nil
     }
 
-    var markedTextStyle: [NSAttributedString.Key : Any]? {
+    var markedTextStyle: [NSAttributedString.Key: Any]? {
         get {
             return nil
         }
@@ -403,7 +411,8 @@ extension OneTimeCodeTextField: UITextInput {
         // We don't support marked text
     }
 
-    func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
+    func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange?
+    {
         guard
             let fromPosition = fromPosition as? TextPosition,
             let toPosition = toPosition as? TextPosition
@@ -470,7 +479,10 @@ extension OneTimeCodeTextField: UITextInput {
         return toPosition.index - from.index
     }
 
-    func position(within range: UITextRange, farthestIn direction: UITextLayoutDirection) -> UITextPosition? {
+    func position(
+        within range: UITextRange,
+        farthestIn direction: UITextLayoutDirection
+    ) -> UITextPosition? {
         guard let range = range as? TextRange else {
             return nil
         }
@@ -582,9 +594,9 @@ extension OneTimeCodeTextField: UITextInput {
 
 // MARK: - Digit View
 
-private extension OneTimeCodeTextField {
+extension OneTimeCodeTextField {
 
-    final class DigitView: UIView {
+    fileprivate final class DigitView: UIView {
         struct Constants {
             static let dotSize: CGFloat = 8
             static let borderWidth: CGFloat = 1
@@ -668,7 +680,9 @@ private extension OneTimeCodeTextField {
             updateColors()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -725,7 +739,9 @@ private extension OneTimeCodeTextField {
 
             let blinkingAnimation = CAKeyframeAnimation(keyPath: "opacity")
             // Matches caret animation of iOS >= 13
-            blinkingAnimation.keyTimes = [0, 0.5, 0.5375, 0.575, 0.6125, 0.65, 0.85, 0.8875, 0.925, 0.9625, 1]
+            blinkingAnimation.keyTimes = [
+                0, 0.5, 0.5375, 0.575, 0.6125, 0.65, 0.85, 0.8875, 0.925, 0.9625, 1,
+            ]
             blinkingAnimation.values = [1, 1, 0.75, 0.5, 0.25, 0, 0, 0.25, 0.5, 0.75, 1]
             blinkingAnimation.duration = 1
             blinkingAnimation.repeatCount = .infinity

@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkVerificationViewController {
 
@@ -86,7 +86,10 @@ extension LinkVerificationViewController {
 
             return CGRect(
                 x: (containerSize.width - actualSize.width) / 2,
-                y: max((containerSize.height - actualSize.height - bottomInset) / 2, Constants.padding),
+                y: max(
+                    (containerSize.height - actualSize.height - bottomInset) / 2,
+                    Constants.padding
+                ),
                 width: actualSize.width,
                 height: actualSize.height
             ).integral
@@ -107,7 +110,8 @@ extension LinkVerificationViewController {
             super.presentationTransitionWillBegin()
 
             guard let containerView = containerView,
-                  let transitionCoordinator = presentedViewController.transitionCoordinator else {
+                let transitionCoordinator = presentedViewController.transitionCoordinator
+            else {
                 return
             }
 
@@ -136,7 +140,10 @@ extension LinkVerificationViewController {
             )
         }
 
-        override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        override func viewWillTransition(
+            to size: CGSize,
+            with coordinator: UIViewControllerTransitionCoordinator
+        ) {
             super.viewWillTransition(to: size, with: coordinator)
 
             coordinator.animate { context in
@@ -146,9 +153,12 @@ extension LinkVerificationViewController {
             }
         }
 
-        override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        override func willTransition(
+            to newCollection: UITraitCollection,
+            with coordinator: UIViewControllerTransitionCoordinator
+        ) {
             super.willTransition(to: newCollection, with: coordinator)
-            
+
             coordinator.animate { context in
                 self.presentedView?.frame = self.calculateModalFrame(
                     forContainerSize: context.containerView.bounds.size
@@ -160,17 +170,24 @@ extension LinkVerificationViewController {
             presentedViewController: UIViewController,
             presenting presentingViewController: UIViewController?
         ) {
-            super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+            super.init(
+                presentedViewController: presentedViewController,
+                presenting: presentingViewController
+            )
 
-            NotificationCenter.default.addObserver(self,
+            NotificationCenter.default.addObserver(
+                self,
                 selector: #selector(keyboardFrameChanged(_:)),
                 name: UIResponder.keyboardWillChangeFrameNotification,
-                object: nil)
+                object: nil
+            )
 
-            NotificationCenter.default.addObserver(self,
+            NotificationCenter.default.addObserver(
+                self,
                 selector: #selector(keyboardWillHide(_:)),
                 name: UIResponder.keyboardWillHideNotification,
-                object: nil)
+                object: nil
+            )
         }
 
         deinit {
@@ -188,7 +205,8 @@ extension LinkVerificationViewController.PresentationController {
         let userInfo = notification.userInfo
 
         guard let keyboardFrame = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-              let containerView = containerView else {
+            let containerView = containerView
+        else {
             return
         }
 

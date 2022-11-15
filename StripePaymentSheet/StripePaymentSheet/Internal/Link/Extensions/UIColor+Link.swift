@@ -6,9 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeUICore
+import UIKit
 
 // MARK: - Custom colors
 
@@ -72,13 +71,23 @@ extension UIColor {
     )
 
     /// Background color of the toast component.
-    static let linkToastBackground: UIColor = UIColor(red: 0.19, green: 0.19, blue: 0.24, alpha: 1.0)
+    static let linkToastBackground: UIColor = UIColor(
+        red: 0.19,
+        green: 0.19,
+        blue: 0.24,
+        alpha: 1.0
+    )
 
     /// Foreground color of the toast component.
     static let linkToastForeground: UIColor = .white
 
     /// Foreground color of the primary button.
-    static let linkPrimaryButtonForeground: UIColor = UIColor(red: 0.012, green: 0.141, blue: 0.149, alpha: 1.0)
+    static let linkPrimaryButtonForeground: UIColor = UIColor(
+        red: 0.012,
+        green: 0.141,
+        blue: 0.149,
+        alpha: 1.0
+    )
 
     /// Foreground color of the secondary button.
     static let linkSecondaryButtonForeground: UIColor = .dynamic(
@@ -155,15 +164,19 @@ extension UIColor {
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current
     ) -> UIColor {
-        let resolvedLightModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .light)
-        ]))
+        let resolvedLightModeColor = resolvedColor(
+            with: UITraitCollection(traitsFrom: [
+                traitCollection,
+                UITraitCollection(userInterfaceStyle: .light),
+            ])
+        )
 
-        let resolvedDarkModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .dark)
-        ]))
+        let resolvedDarkModeColor = resolvedColor(
+            with: UITraitCollection(traitsFrom: [
+                traitCollection,
+                UITraitCollection(userInterfaceStyle: .dark),
+            ])
+        )
 
         let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
 

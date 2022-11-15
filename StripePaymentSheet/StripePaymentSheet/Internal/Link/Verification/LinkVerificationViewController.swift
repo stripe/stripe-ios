@@ -6,10 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkVerificationViewControllerDelegate: AnyObject {
     func verificationController(
@@ -70,7 +69,9 @@ final class LinkVerificationViewController: UIViewController {
         }
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -96,7 +97,7 @@ final class LinkVerificationViewController: UIViewController {
             verificationView.widthAnchor.constraint(equalTo: view.widthAnchor),
             // Activity indicator
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
         if mode.requiresModalPresentation {
@@ -186,10 +187,12 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
                     preferredStyle: .alert
                 )
 
-                alertController.addAction(UIAlertAction(
-                    title: String.Localized.ok,
-                    style: .default
-                ))
+                alertController.addAction(
+                    UIAlertAction(
+                        title: String.Localized.ok,
+                        style: .default
+                    )
+                )
 
                 self?.present(alertController, animated: true)
             }
@@ -236,11 +239,15 @@ extension LinkVerificationViewController {
     final class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
         static let sharedDelegate: TransitioningDelegate = TransitioningDelegate()
 
-        func presentationController(forPresented presented: UIViewController,
-                                    presenting: UIViewController?,
-                                    source: UIViewController) -> UIPresentationController? {
-            return PresentationController(presentedViewController: presented,
-                                          presenting: presenting)
+        func presentationController(
+            forPresented presented: UIViewController,
+            presenting: UIViewController?,
+            source: UIViewController
+        ) -> UIPresentationController? {
+            return PresentationController(
+                presentedViewController: presented,
+                presenting: presenting
+            )
         }
     }
 

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
 
 /// Provides a method for looking up Link accounts by email.
@@ -28,7 +27,7 @@ protocol LinkAccountServiceProtocol {
         withEmail email: String?,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
-    
+
     /// Checks if we have seen this email log out before
     /// - Parameter email: true if this email has logged out before, false otherwise
     func hasEmailLoggedOut(email: String) -> Bool
@@ -68,26 +67,30 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(let consumerSession, let preferences):
-                    completion(.success(
-                        PaymentSheetLinkAccount(
-                            email: consumerSession.emailAddress,
-                            session: consumerSession,
-                            publishableKey: preferences.publishableKey,
-                            apiClient: apiClient,
-                            cookieStore: cookieStore
+                    completion(
+                        .success(
+                            PaymentSheetLinkAccount(
+                                email: consumerSession.emailAddress,
+                                session: consumerSession,
+                                publishableKey: preferences.publishableKey,
+                                apiClient: apiClient,
+                                cookieStore: cookieStore
+                            )
                         )
-                    ))
+                    )
                 case .notFound(_):
                     if let email = email {
-                        completion(.success(
-                            PaymentSheetLinkAccount(
-                                email: email,
-                                session: nil,
-                                publishableKey: nil,
-                                apiClient: self.apiClient,
-                                cookieStore: self.cookieStore
+                        completion(
+                            .success(
+                                PaymentSheetLinkAccount(
+                                    email: email,
+                                    session: nil,
+                                    publishableKey: nil,
+                                    apiClient: self.apiClient,
+                                    cookieStore: self.cookieStore
+                                )
                             )
-                        ))
+                        )
                     } else {
                         completion(.success(nil))
                     }
@@ -100,7 +103,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             }
         }
     }
-    
+
     func hasEmailLoggedOut(email: String) -> Bool {
         guard let hashedEmail = email.lowercased().sha256 else {
             return false

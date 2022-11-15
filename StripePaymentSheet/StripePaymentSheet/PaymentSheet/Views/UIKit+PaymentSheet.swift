@@ -8,17 +8,22 @@
 
 import Foundation
 import PassKit
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
     static let defaultPadding: CGFloat = 20
     static let defaultMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, trailing: defaultPadding)
+        leading: defaultPadding,
+        trailing: defaultPadding
+    )
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, bottom: 36, trailing: defaultPadding)
+        leading: defaultPadding,
+        bottom: 36,
+        trailing: defaultPadding
+    )
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
     static let defaultAnimationDuration: TimeInterval = 0.2
     static let quickAnimationDuration: TimeInterval = 0.1
@@ -31,7 +36,11 @@ enum PaymentSheetUI {
         let header = UILabel()
         header.textColor = appearance.colors.text
         header.numberOfLines = 2
-        header.font = appearance.scaledFont(for: appearance.font.base.bold, style: .title3, maximumPointSize: 35)
+        header.font = appearance.scaledFont(
+            for: appearance.font.base.bold,
+            style: .title3,
+            maximumPointSize: 35
+        )
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
         header.adjustsFontForContentSizeCategory = true
@@ -51,7 +60,8 @@ extension PKPaymentButtonStyle {
 
 extension UIViewController {
     func switchContentIfNecessary(
-        to toVC: UIViewController, containerView: DynamicHeightContainerView
+        to toVC: UIViewController,
+        containerView: DynamicHeightContainerView
     ) {
         assert(children.count <= 1)
         // Swap out child view controllers if necessary
@@ -64,12 +74,13 @@ extension UIViewController {
             self.addChild(toVC)
             toVC.view.alpha = 0
             containerView.addPinnedSubview(toVC.view)
-            containerView.layoutIfNeeded()  // Lay the view out now or it animates layout from a zero size
+            // Lay the view out now or it animates layout from a zero size
+            containerView.layoutIfNeeded()
 
             // Remove the child view controller, but don't remove its view yet - keep it on screen so we can fade it out
             fromVC.willMove(toParent: nil)
             fromVC.removeFromParent()
-            
+
             animateHeightChange(
                 {
                     containerView.updateHeight()
@@ -111,7 +122,8 @@ extension UIFont {
 
         traits[.weight] = weight
 
-        attributes[.name] = nil // nil out name so we fallback on the font family to compute the correct weight
+        // nil out name so we fallback on the font family to compute the correct weight
+        attributes[.name] = nil
         attributes[.traits] = traits
         attributes[.family] = familyName
 

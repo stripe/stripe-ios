@@ -6,10 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import AuthenticationServices
-
 @_spi(STP) import StripeCore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkFinancialConnectionsAuthManager)
@@ -49,7 +48,10 @@ final class LinkFinancialConnectionsAuthManager: NSObject {
     let linkAccount: PaymentSheetLinkAccount
     let window: UIWindow?
 
-    init(linkAccount: PaymentSheetLinkAccount, window: UIWindow?) {
+    init(
+        linkAccount: PaymentSheetLinkAccount,
+        window: UIWindow?
+    ) {
         self.linkAccount = linkAccount
         self.window = window
     }
@@ -78,7 +80,7 @@ extension LinkFinancialConnectionsAuthManager {
             parameters: [
                 "client_secret": clientSecret,
                 "fullscreen": true,
-                "hide_close_button": true
+                "hide_close_button": true,
             ],
             ephemeralKeySecret: linkAccount.publishableKey
         )
@@ -107,9 +109,11 @@ extension LinkFinancialConnectionsAuthManager {
                 }
 
                 guard let url = url else {
-                    completion(.failure(
-                        AuthenticationError.unknown("Unexpected `nil` URL")
-                    ))
+                    completion(
+                        .failure(
+                            AuthenticationError.unknown("Unexpected `nil` URL")
+                        )
+                    )
                     return
                 }
 
@@ -117,16 +121,20 @@ extension LinkFinancialConnectionsAuthManager {
                     if let linkedAccountID = Self.extractLinkedAccountID(from: url) {
                         completion(.success(linkedAccountID: linkedAccountID))
                     } else {
-                        completion(.failure(
-                            AuthenticationError.unknown("URL is missing the linked account ID")
-                        ))
+                        completion(
+                            .failure(
+                                AuthenticationError.unknown("URL is missing the linked account ID")
+                            )
+                        )
                     }
                 } else if url.matchesSchemeHostAndPath(of: manifest.cancelURL) {
                     completion(.canceled)
                 } else {
-                    completion(.failure(
-                        AuthenticationError.unknown("Unexpected URL")
-                    ))
+                    completion(
+                        .failure(
+                            AuthenticationError.unknown("Unexpected URL")
+                        )
+                    )
                 }
             }
         )
@@ -136,9 +144,11 @@ extension LinkFinancialConnectionsAuthManager {
 
         if #available(iOS 13.4, *) {
             guard authSession.canStart else {
-                completion(.failure(
-                    AuthenticationError.unknown("Failed to start session")
-                ))
+                completion(
+                    .failure(
+                        AuthenticationError.unknown("Failed to start session")
+                    )
+                )
                 return
             }
         }
@@ -177,14 +187,12 @@ extension LinkFinancialConnectionsAuthManager {
 
 }
 
-private extension URL {
+extension URL {
 
-    func matchesSchemeHostAndPath(of otherURL: URL) -> Bool {
-        return (
-            self.scheme == otherURL.scheme &&
-            self.host == otherURL.host &&
-            self.path == otherURL.path
-        )
+    fileprivate func matchesSchemeHostAndPath(of otherURL: URL) -> Bool {
+        return
+            (self.scheme == otherURL.scheme && self.host == otherURL.host
+            && self.path == otherURL.path)
     }
 
 }

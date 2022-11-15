@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 // TODO(ramont): Graduate to StripeUICore.
 
@@ -40,7 +40,10 @@ extension FormElement {
 
         if animated {
             child.view.alpha = 0
-            child.view.transform = CGAffineTransform(scaleX: 0.98, y: 0.98).translatedBy(x: 0, y: -10)
+            child.view.transform = CGAffineTransform(scaleX: 0.98, y: 0.98).translatedBy(
+                x: 0,
+                y: -10
+            )
             child.view.superview?.sendSubviewToBack(child.view)
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
                 child.view.alpha = 1
@@ -74,7 +77,10 @@ extension FormElement {
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
                 child.view.alpha = 0
                 child.view.isHidden = true
-                child.view.transform = CGAffineTransform(scaleX: 0.98, y: 0.98).translatedBy(x: 0, y: -10)
+                child.view.transform = CGAffineTransform(scaleX: 0.98, y: 0.98).translatedBy(
+                    x: 0,
+                    y: -10
+                )
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
             } completion: { _ in

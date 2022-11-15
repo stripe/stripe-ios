@@ -6,16 +6,20 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkBadgeView)
 final class LinkBadgeView: UIView {
     struct Constants {
         static let spacing: CGFloat = 4
-        static let margins: NSDirectionalEdgeInsets = .insets(top: 2, leading: 4, bottom: 2, trailing: 4)
+        static let margins: NSDirectionalEdgeInsets = .insets(
+            top: 2,
+            leading: 4,
+            bottom: 2,
+            trailing: 4
+        )
         static let iconSize: CGSize = .init(width: 12, height: 12)
         static let maxFontSize: CGFloat = 16
     }
@@ -49,7 +53,7 @@ final class LinkBadgeView: UIView {
 
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
-            imageView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height)
+            imageView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
         ])
 
         return imageView
@@ -58,7 +62,10 @@ final class LinkBadgeView: UIView {
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.textColor = type.foregroundColor
-        label.font = LinkUI.font(forTextStyle: .captionEmphasized, maximumPointSize: Constants.maxFontSize)
+        label.font = LinkUI.font(
+            forTextStyle: .captionEmphasized,
+            maximumPointSize: Constants.maxFontSize
+        )
         label.adjustsFontForContentSizeCategory = true
         return label
     }()
@@ -67,18 +74,25 @@ final class LinkBadgeView: UIView {
         return CGSize(width: UIView.noIntrinsicMetric, height: 20)
     }
 
-    convenience init(type: BadgeType, text: String) {
+    convenience init(
+        type: BadgeType,
+        text: String
+    ) {
         self.init(type: type)
         self.text = text
     }
 
-    init(type: BadgeType) {
+    init(
+        type: BadgeType
+    ) {
         self.type = type
         super.init(frame: .zero)
         setupUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -101,9 +115,9 @@ final class LinkBadgeView: UIView {
 
 }
 
-private extension LinkBadgeView.BadgeType {
+extension LinkBadgeView.BadgeType {
 
-    var icon: UIImage? {
+    fileprivate var icon: UIImage? {
         switch self {
         case .neutral:
             return nil
@@ -112,7 +126,7 @@ private extension LinkBadgeView.BadgeType {
         }
     }
 
-    var backgroundColor: UIColor {
+    fileprivate var backgroundColor: UIColor {
         switch self {
         case .neutral:
             return .linkNeutralBackground
@@ -121,7 +135,7 @@ private extension LinkBadgeView.BadgeType {
         }
     }
 
-    var foregroundColor: UIColor {
+    fileprivate var foregroundColor: UIColor {
         switch self {
         case .neutral:
             return .linkNeutralForeground

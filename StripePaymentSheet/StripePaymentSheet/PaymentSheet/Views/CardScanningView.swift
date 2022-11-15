@@ -7,17 +7,18 @@
 //
 
 import Foundation
-import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripeCore
+import UIKit
 
 private class CardScanningEasilyTappableButton: UIButton {
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let newArea = bounds.insetBy(
             dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
+            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2
+        )
         return newArea.contains(point)
     }
 }
@@ -26,7 +27,9 @@ private class CardScanningEasilyTappableButton: UIButton {
 @available(iOS 13, macCatalyst 14, *)
 @objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
     func cardScanningView(
-        _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
+        _ cardScanningView: CardScanningView,
+        didFinishWith cardParams: STPPaymentMethodCardParams?
+    )
 }
 
 /// For internal SDK use only
@@ -50,7 +53,8 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     }
 
     func cardScanner(
-        _ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?,
+        _ scanner: STPCardScanner,
+        didFinishWith cardParams: STPPaymentMethodCardParams?,
         error: Error?
     ) {
         if error != nil {
@@ -113,7 +117,9 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         // TODO(porter): Customize card scanning view?
         let button = CircularButton(style: .close)
         button.accessibilityLabel = STPLocalizedString(
-            "Close card scanner", "Accessibility label for the button to close the card scanner.")
+            "Close card scanner",
+            "Accessibility label for the button to close the card scanner."
+        )
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -128,20 +134,32 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
         cardOuterBlurView.addConstraints([
             vibrancyEffectView.bottomAnchor.constraint(
-                equalTo: cardOuterBlurView.bottomAnchor, constant: 0),
+                equalTo: cardOuterBlurView.bottomAnchor,
+                constant: 0
+            ),
             vibrancyEffectView.leftAnchor.constraint(
-                equalTo: cardOuterBlurView.leftAnchor, constant: 0),
+                equalTo: cardOuterBlurView.leftAnchor,
+                constant: 0
+            ),
             vibrancyEffectView.rightAnchor.constraint(
-                equalTo: cardOuterBlurView.rightAnchor, constant: 0),
+                equalTo: cardOuterBlurView.rightAnchor,
+                constant: 0
+            ),
             vibrancyEffectView.topAnchor.constraint(
-                equalTo: cardOuterBlurView.topAnchor, constant: 0),
+                equalTo: cardOuterBlurView.topAnchor,
+                constant: 0
+            ),
         ])
 
         vibrancyEffectView.addConstraints([
             instructionsLabel.leftAnchor.constraint(
-                equalTo: vibrancyEffectView.leftAnchor, constant: 0),
+                equalTo: vibrancyEffectView.leftAnchor,
+                constant: 0
+            ),
             instructionsLabel.rightAnchor.constraint(
-                equalTo: vibrancyEffectView.rightAnchor, constant: 0),
+                equalTo: vibrancyEffectView.rightAnchor,
+                constant: 0
+            ),
         ])
     }
 
@@ -160,14 +178,18 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         self.stop()
     }
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
         self.setupBlurView()
 
         let cameraView = STPCameraView(frame: bounds)
         cameraView.isAccessibilityElement = true
         cameraView.accessibilityLabel = STPLocalizedString(
-            "Point the camera at your card.", "Accessibility instructions for card scanning.")
+            "Point the camera at your card.",
+            "Accessibility instructions for card scanning."
+        )
         let cardScanner = STPCardScanner(delegate: self)
         cardScanner.cameraView = cameraView
         self.cardScanner = cardScanner
@@ -201,23 +223,34 @@ class CardScanningView: UIView, STPCardScannerDelegate {
                 errorLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0),
                 errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: 8),
                 errorLabel.rightAnchor.constraint(
-                    equalTo: cardOutlineView.rightAnchor, constant: -8),
+                    equalTo: cardOutlineView.rightAnchor,
+                    constant: -8
+                ),
 
                 closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
                 closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8),
 
                 cardOutlineView.heightAnchor.constraint(
-                    equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio
+                    equalTo: cardOutlineView.widthAnchor,
+                    multiplier: CardScanningView.cardSizeRatio
                 ),
 
                 cardOutlineView.topAnchor.constraint(
-                    equalTo: self.topAnchor, constant: CardScanningView.cardInset),
+                    equalTo: self.topAnchor,
+                    constant: CardScanningView.cardInset
+                ),
                 cardOutlineView.leftAnchor.constraint(
-                    equalTo: self.leftAnchor, constant: CardScanningView.cardInset),
+                    equalTo: self.leftAnchor,
+                    constant: CardScanningView.cardInset
+                ),
                 cardOutlineView.rightAnchor.constraint(
-                    equalTo: self.rightAnchor, constant: -CardScanningView.cardInset),
+                    equalTo: self.rightAnchor,
+                    constant: -CardScanningView.cardInset
+                ),
                 cardOutlineView.bottomAnchor.constraint(
-                    equalTo: self.bottomAnchor, constant: -CardScanningView.cardInset),
+                    equalTo: self.bottomAnchor,
+                    constant: -CardScanningView.cardInset
+                ),
             ])
     }
 
@@ -230,8 +263,13 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
         let outerPath = UIBezierPath(
             roundedRect: CGRect(
-                x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height),
-            cornerRadius: CardScanningView.cornerRadius)
+                x: 0,
+                y: 0,
+                width: self.bounds.size.width,
+                height: self.bounds.size.height
+            ),
+            cornerRadius: CardScanningView.cornerRadius
+        )
         let innerPath = UIBezierPath(roundedRect: cardOutlineView.frame, cornerRadius: cornerRadius)
 
         outerPath.append(innerPath)
@@ -244,7 +282,9 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         cardOuterBlurView.layer.mask = maskLayer
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 

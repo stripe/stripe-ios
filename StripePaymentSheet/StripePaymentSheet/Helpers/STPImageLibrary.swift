@@ -7,33 +7,32 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+import UIKit
 
 class PaymentSheetImageLibrary {
-    
+
     /// An icon representing Afterpay.
     @objc
     public class func afterpayLogo(locale: Locale = Locale.current) -> UIImage {
         switch (locale.languageCode, locale.regionCode) {
-            case ("en", "GB"):
-                return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
-            default:
-               return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
+        case ("en", "GB"):
+            return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
+        default:
+            return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
         }
     }
-    
+
     /// This returns the appropriate icon for the affirm logo
     @objc
     public class func affirmLogo() -> UIImage {
-        if isDarkMode(){
+        if isDarkMode() {
             return Image.affirm_copy_dark.makeImage()
         }
         return Image.affirm_copy.makeImage()
     }
-    
-    
+
     static let BankIconCodeRegexes: [String: [String]] = [
         "boa": [#"Bank of America"#],
         "capitalone": [#"Capital One"#],
@@ -49,7 +48,7 @@ class PaymentSheetImageLibrary {
         "usaa": [#"USAA FEDERAL SAVINGS BANK"#, #"USAA Bank"#],
         "usbank": [#"U\.?S\.? BANK"#, #"US Bank"#],
         "wellsfargo": [#"Wells Fargo"#],
-    ];
+    ]
 
     class func bankIconCode(for bankName: String?) -> String {
         guard let bankName = bankName else {
@@ -57,26 +56,27 @@ class PaymentSheetImageLibrary {
         }
         for (iconCode, regexes) in BankIconCodeRegexes {
             for pattern in regexes {
-                if bankName.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil {
+                if bankName.range(of: pattern, options: [.regularExpression, .caseInsensitive])
+                    != nil
+                {
                     return iconCode
                 }
             }
         }
         return "default"
     }
-    
+
     class func bankIcon(for bank: String?) -> UIImage {
         guard let bank = bank else {
             return STPImageLibrary.bankIcon()
         }
         let icon = safeImageNamed("bank_icon_\(bank.lowercased())")
         if icon.size == .zero {
-            return STPImageLibrary.bankIcon() // use generic
+            return STPImageLibrary.bankIcon()  // use generic
         }
         return icon
     }
 }
-
 
 // MARK: - v2 Images
 

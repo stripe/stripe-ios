@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
 
 final class LinkUtils {
@@ -40,8 +39,11 @@ final class LinkUtils {
     }
 
     static func getLocalizedErrorMessage(from error: Error) -> String {
-        guard let errorCodeString = (error as NSError).userInfo[STPError.stripeErrorCodeKey] as? String,
-              let errorCode = ConsumerErrorCode(rawValue: errorCodeString) else {
+        guard
+            let errorCodeString = (error as NSError).userInfo[STPError.stripeErrorCodeKey]
+                as? String,
+            let errorCode = ConsumerErrorCode(rawValue: errorCodeString)
+        else {
             return error.localizedDescription
         }
 

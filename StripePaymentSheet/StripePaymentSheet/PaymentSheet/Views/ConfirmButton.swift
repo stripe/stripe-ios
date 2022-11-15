@@ -8,11 +8,11 @@
 
 import Foundation
 import PassKit
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
@@ -22,7 +22,7 @@ private let checkmarkStrokeDuration = 0.2
 @objc(STP_Internal_ConfirmButton)
 class ConfirmButton: UIView {
     let applePayButtonType: PKPaymentButtonType
-    
+
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -43,7 +43,9 @@ class ConfirmButton: UIView {
 
     }
 
-    lazy var cornerRadius: CGFloat = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius {
+    lazy var cornerRadius: CGFloat =
+        appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
+    {
         didSet {
             applyCornerRadius()
         }
@@ -79,7 +81,9 @@ class ConfirmButton: UIView {
     }()
     private lazy var applePayButton: PKPaymentButton = {
         let button = PKPaymentButton(
-            paymentButtonType: applePayButtonType, paymentButtonStyle: .compatibleAutomatic)
+            paymentButtonType: applePayButtonType,
+            paymentButtonStyle: .compatibleAutomatic
+        )
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         button.preservesSuperviewLayoutMargins = false
         return button
@@ -105,11 +109,25 @@ class ConfirmButton: UIView {
         self.didTap = didTap
         super.init(frame: .zero)
 
-        directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+        directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 10,
+            leading: 16,
+            bottom: 10,
+            trailing: 16
+        )
         // primaryButton.backgroundColor takes priority over appearance.colors.primary
         tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
-        layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
-        font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
+        layer.applyShadow(
+            shadow: appearance.primaryButton.shadow?.asElementThemeShadow
+                ?? appearance.shadow.asElementThemeShadow
+        )
+        font =
+            appearance.primaryButton.font
+            ?? appearance.scaledFont(
+                for: appearance.font.base.medium,
+                style: .callout,
+                maximumPointSize: 25
+            )
         buyButton.titleLabel.sizeToFit()
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)
@@ -118,7 +136,9 @@ class ConfirmButton: UIView {
         update()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -145,7 +165,8 @@ class ConfirmButton: UIView {
             style: style ?? self.style,
             callToAction: callToAction ?? self.callToAction,
             animated: animated,
-            completion: completion)
+            completion: completion
+        )
     }
 
     func update(
@@ -221,9 +242,10 @@ class ConfirmButton: UIView {
         private static let minimumButtonHeight: CGFloat = 44
         private var status: Status = .enabled
         private let appearance: PaymentSheet.Appearance
-        
+
         override var intrinsicContentSize: CGSize {
-            let height = Self.minimumLabelHeight
+            let height =
+                Self.minimumLabelHeight
                 + directionalLayoutMargins.top
                 + directionalLayoutMargins.bottom
 
@@ -243,25 +265,35 @@ class ConfirmButton: UIView {
                 highlightDimView.frame = bounds
                 if self.isHighlighted {
                     UIView.animate(
-                        withDuration: PaymentSheetUI.defaultAnimationDuration, delay: 0.2,
+                        withDuration: PaymentSheetUI.defaultAnimationDuration,
+                        delay: 0.2,
                         options: [.beginFromCurrentState],
                         animations: {
                             self.highlightDimView.alpha = 1
-                        }, completion: nil)
+                        },
+                        completion: nil
+                    )
                 } else {
                     UIView.animate(
-                        withDuration: PaymentSheetUI.quickAnimationDuration, delay: 0,
+                        withDuration: PaymentSheetUI.quickAnimationDuration,
+                        delay: 0,
                         options: [.beginFromCurrentState],
                         animations: {
                             self.highlightDimView.alpha = 0
-                        }, completion: nil)
+                        },
+                        completion: nil
+                    )
                 }
             }
         }
         lazy var titleLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
-            label.font = .preferredFont(forTextStyle: .callout, weight: .medium, maximumPointSize: 25)
+            label.font = .preferredFont(
+                forTextStyle: .callout,
+                weight: .medium,
+                maximumPointSize: 25
+            )
             label.textColor = .white
             label.adjustsFontForContentSizeCategory = true
             return label
@@ -294,10 +326,12 @@ class ConfirmButton: UIView {
                 foregroundColorDidChange()
             }
         }
-        
+
         var overriddenForegroundColor: UIColor?
 
-        init(appearance: PaymentSheet.Appearance = .default) {
+        init(
+            appearance: PaymentSheet.Appearance = .default
+        ) {
             self.appearance = appearance
             super.init(frame: .zero)
             preservesSuperviewLayoutMargins = true
@@ -307,7 +341,10 @@ class ConfirmButton: UIView {
             isAccessibilityElement = true
 
             // Add views
-            let views = ["titleLabel": titleLabel, "lockIcon": lockIcon, "spinnyView": spinner, "addIcon": addIcon]
+            let views = [
+                "titleLabel": titleLabel, "lockIcon": lockIcon, "spinnyView": spinner,
+                "addIcon": addIcon,
+            ]
             views.values.forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 addSubview($0)
@@ -317,20 +354,24 @@ class ConfirmButton: UIView {
             highlightDimView.alpha = 0
 
             let titleLabelCenterXConstraint = titleLabel.centerXAnchor.constraint(
-                equalTo: centerXAnchor)
+                equalTo: centerXAnchor
+            )
             titleLabelCenterXConstraint.priority = .defaultLow
             NSLayoutConstraint.activate([
                 // Add icon
                 addIcon.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
                 addIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-                
+
                 // Label
                 titleLabelCenterXConstraint,
                 titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
                 titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: addIcon.trailingAnchor),
 
                 // Lock icon
-                lockIcon.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: 8),
+                lockIcon.leadingAnchor.constraint(
+                    greaterThanOrEqualTo: titleLabel.trailingAnchor,
+                    constant: 8
+                ),
                 lockIcon.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
                 lockIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
 
@@ -338,7 +379,7 @@ class ConfirmButton: UIView {
                 spinnerCenteredToLockConstraint,
                 spinner.centerYAnchor.constraint(equalTo: lockIcon.centerYAnchor),
                 spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width),
-                spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height)
+                spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height),
             ])
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
             overriddenForegroundColor = appearance.primaryButton.textColor
@@ -354,7 +395,9 @@ class ConfirmButton: UIView {
             updateColors()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -368,13 +411,18 @@ class ConfirmButton: UIView {
                     switch callToAction {
                     case .add(let paymentMethodType):
                         if paymentMethodType == .linkInstantDebit {
-                            return STPLocalizedString("Add bank account", "Button prompt to add a bank account as a payment method.")
+                            return STPLocalizedString(
+                                "Add bank account",
+                                "Button prompt to add a bank account as a payment method."
+                            )
                         } else {
                             return String.Localized.continue
                         }
-                    case let .pay(amount, currency):
+                    case .pay(let amount, let currency):
                         let localizedAmount = String.localizedAmountDisplayString(
-                            for: amount, currency: currency)
+                            for: amount,
+                            currency: currency
+                        )
                         let localized = STPLocalizedString(
                             "Pay %@",
                             "Label of a button that initiates payment when tapped"
@@ -385,9 +433,9 @@ class ConfirmButton: UIView {
                             "Set up",
                             "Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use"
                         )
-                    case let .custom(title):
+                    case .custom(let title):
                         return title
-                    case let .customWithLock(title):
+                    case .customWithLock(let title):
                         return title
                     }
                 case .processing:
@@ -399,20 +447,20 @@ class ConfirmButton: UIView {
                     return nil
                 }
             }()
-            
+
             // Show/hide lock and add icons
             switch callToAction {
-              case .add(let paymentMethodType):
+            case .add(let paymentMethodType):
                 lockIcon.isHidden = true
                 addIcon.isHidden = paymentMethodType != .linkInstantDebit
-              case .custom:
+            case .custom:
                 lockIcon.isHidden = true
                 addIcon.isHidden = true
             case .customWithLock:
                 lockIcon.isHidden = false
                 addIcon.isHidden = true
-              case .pay,
-                   .setup:
+            case .pay,
+                .setup:
                 lockIcon.isHidden = false
                 addIcon.isHidden = true
             }
@@ -446,7 +494,9 @@ class ConfirmButton: UIView {
                                 .underlineStyle: NSUnderlineStyle.single.rawValue,
                             ]
                             self.titleLabel.attributedText = NSAttributedString(
-                                string: text, attributes: attributes)
+                                string: text,
+                                attributes: attributes
+                            )
                         }
                     }
                 }
@@ -499,7 +549,9 @@ class ConfirmButton: UIView {
             spinnerCenteredConstraint.isActive = true
             setNeedsLayout()
             UIView.animate(
-                withDuration: spinnerMoveToCenterAnimationDuration, delay: 0, options: .curveEaseOut
+                withDuration: spinnerMoveToCenterAnimationDuration,
+                delay: 0,
+                options: .curveEaseOut
             ) {
                 self.layoutIfNeeded()
             } completion: { (_) in
@@ -517,7 +569,7 @@ class ConfirmButton: UIView {
                 return succeededBackgroundColor
             }
         }
-        
+
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
@@ -525,7 +577,7 @@ class ConfirmButton: UIView {
                 // always use hardcoded color for foreground color when in success state
                 return background.contrastingColor
             }
-            
+
             // if foreground is set prefer that over a dynamic constrasting color in all othe states
             return overriddenForegroundColor ?? background.contrastingColor
         }
@@ -555,18 +607,26 @@ class ConfirmButton: UIView {
             }
         }
 
-        override init(frame: CGRect) {
+        override init(
+            frame: CGRect
+        ) {
             // Circle
             let circlePath = UIBezierPath(
                 arcCenter: CGPoint(
                     x: frame.size.width / 2,
-                    y: frame.size.height / 2),
+                    y: frame.size.height / 2
+                ),
                 radius: (frame.size.width) / 2,
                 startAngle: 0.0,
                 endAngle: CGFloat.pi * 2,
-                clockwise: false)
+                clockwise: false
+            )
             circleLayer.bounds = CGRect(
-                x: 0, y: 0, width: frame.size.width, height: frame.size.width)
+                x: 0,
+                y: 0,
+                width: frame.size.width,
+                height: frame.size.width
+            )
             circleLayer.path = circlePath.cgPath
             circleLayer.fillColor = UIColor.clear.cgColor
             circleLayer.lineCap = .round
@@ -583,7 +643,11 @@ class ConfirmButton: UIView {
             checkmarkPath.addLine(to: checkPoint2)
 
             checkmarkLayer.bounds = CGRect(
-                x: 0, y: 0, width: frame.size.width, height: frame.size.width)
+                x: 0,
+                y: 0,
+                width: frame.size.width,
+                height: frame.size.width
+            )
             checkmarkLayer.path = checkmarkPath.cgPath
             checkmarkLayer.lineCap = .round
             checkmarkLayer.fillColor = UIColor.clear.cgColor
@@ -602,7 +666,9 @@ class ConfirmButton: UIView {
             colorDidChange()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError()
         }
 
@@ -613,7 +679,8 @@ class ConfirmButton: UIView {
             animation.fromValue = 0
             animation.toValue = 0.8
             animation.timingFunction = CAMediaTimingFunction(
-                name: CAMediaTimingFunctionName.easeOut)
+                name: CAMediaTimingFunctionName.easeOut
+            )
             circleLayer.strokeEnd = 0.8
             circleLayer.add(animation, forKey: "animateCircle")
             let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation")
@@ -632,13 +699,15 @@ class ConfirmButton: UIView {
             circleAnimation.fromValue = 0.8
             circleAnimation.toValue = 1
             circleAnimation.timingFunction = CAMediaTimingFunction(
-                name: CAMediaTimingFunctionName.easeIn)
+                name: CAMediaTimingFunctionName.easeIn
+            )
             circleLayer.strokeEnd = 1.0
             circleLayer.add(circleAnimation, forKey: "animateDone")
 
             // Check the mark
             let animation = CABasicAnimation(keyPath: "strokeEnd")
-            animation.beginTime = CACurrentMediaTime() + circleAnimation.duration + 0.15  // Start after the circle closes
+            // Start after the circle closes
+            animation.beginTime = CACurrentMediaTime() + circleAnimation.duration + 0.15
             animation.fillMode = .backwards
             animation.duration = checkmarkStrokeDuration
             animation.fromValue = 0.0

@@ -6,13 +6,14 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+import UIKit
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(
-        _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController)
+        _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController
+    )
 }
 
 /// For internal SDK use only
@@ -22,8 +23,10 @@ class BottomSheet3DS2ViewController: UIViewController {
     weak var delegate: BottomSheet3DS2ViewControllerDelegate? = nil
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: isTestMode,
-                                        appearance: appearance)
+        let navBar = SheetNavigationBar(
+            isTestMode: isTestMode,
+            appearance: appearance
+        )
         navBar.setStyle(.back)
         navBar.delegate = self
         return navBar
@@ -33,14 +36,20 @@ class BottomSheet3DS2ViewController: UIViewController {
     let appearance: PaymentSheet.Appearance
     let isTestMode: Bool
 
-    required init(challengeViewController: UIViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool) {
+    required init(
+        challengeViewController: UIViewController,
+        appearance: PaymentSheet.Appearance,
+        isTestMode: Bool
+    ) {
         self.challengeViewController = challengeViewController
         self.appearance = appearance
         self.isTestMode = isTestMode
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 

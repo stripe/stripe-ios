@@ -22,7 +22,9 @@ final class AnalyticsHelper {
 
     private var startTimes: [TimeMeasurement: Date] = [:]
 
-    init(timeProvider: @escaping () -> Date = Date.init) {
+    init(
+        timeProvider: @escaping () -> Date = Date.init
+    ) {
         self.timeProvider = timeProvider
     }
 

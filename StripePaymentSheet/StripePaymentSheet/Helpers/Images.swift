@@ -56,11 +56,11 @@ enum Image: String, CaseIterable, ImageMaker {
     case icon_link_success = "icon_link_success"
     case icon_link_error = "icon_link_error"
     case link_carousel_logo = "link_carousel_logo"
-    
+
     // Affirm Images
     case affirm_copy = "affirm_mark"
     case affirm_copy_dark = "affirm_mark_dark"
-    
+
     // Polling / UPI
     case polling_error = "polling_error_icon"
 }

@@ -10,7 +10,9 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension STPPaymentIntentShippingDetailsParams {
-    convenience init?(paymentSheetConfiguration: PaymentSheet.Configuration) {
+    convenience init?(
+        paymentSheetConfiguration: PaymentSheet.Configuration
+    ) {
         guard let shippingDetails = paymentSheetConfiguration.shippingDetails() else {
             return nil
         }
@@ -24,7 +26,7 @@ extension STPPaymentIntentShippingDetailsParams {
         addressParams.state = address.state
         addressParams.postalCode = address.postalCode
         addressParams.country = address.country
-        
+
         self.init(address: addressParams, name: name)
         phone = shippingDetails.phone
     }

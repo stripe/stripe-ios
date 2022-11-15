@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkPaymentMethodPicker {
 
@@ -15,8 +15,18 @@ extension LinkPaymentMethodPicker {
         struct Constants {
             static let contentSpacing: CGFloat = 16
             static let chevronSize: CGSize = .init(width: 24, height: 24)
-            static let collapsedInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
-            static let expandedInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 4, trailing: 20)
+            static let collapsedInsets = NSDirectionalEdgeInsets(
+                top: 20,
+                leading: 20,
+                bottom: 20,
+                trailing: 20
+            )
+            static let expandedInsets = NSDirectionalEdgeInsets(
+                top: 20,
+                leading: 20,
+                bottom: 4,
+                trailing: 20
+            )
         }
 
         /// The selected payment method.
@@ -49,7 +59,10 @@ extension LinkPaymentMethodPicker {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
             label.textColor = .linkSecondaryText
-            label.text = STPLocalizedString("Payment", "Label for a section displaying payment details.")
+            label.text = STPLocalizedString(
+                "Payment",
+                "Label for a section displaying payment details."
+            )
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
@@ -76,12 +89,14 @@ extension LinkPaymentMethodPicker {
         }()
 
         private lazy var chevron: UIImageView = {
-            let chevron = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage(template: true))
+            let chevron = UIImageView(
+                image: StripeUICore.Image.icon_chevron_down.makeImage(template: true)
+            )
             chevron.contentMode = .center
 
             NSLayoutConstraint.activate([
                 chevron.widthAnchor.constraint(equalToConstant: Constants.chevronSize.width),
-                chevron.heightAnchor.constraint(equalToConstant: Constants.chevronSize.height)
+                chevron.heightAnchor.constraint(equalToConstant: Constants.chevronSize.height),
             ])
 
             return chevron
@@ -90,7 +105,7 @@ extension LinkPaymentMethodPicker {
         private lazy var paymentInfoStackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 payWithLabel,
-                contentView
+                contentView,
             ])
 
             stackView.alignment = .center
@@ -104,7 +119,7 @@ extension LinkPaymentMethodPicker {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentInfoStackView,
                 headingLabel,
-                chevron
+                chevron,
             ])
 
             stackView.axis = .horizontal
@@ -117,7 +132,9 @@ extension LinkPaymentMethodPicker {
             return stackView
         }()
 
-        override init(frame: CGRect) {
+        override init(
+            frame: CGRect
+        ) {
             super.init(frame: .zero)
 
             addSubview(stackView)
@@ -137,7 +154,9 @@ extension LinkPaymentMethodPicker {
             updateAccessibilityContent()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 

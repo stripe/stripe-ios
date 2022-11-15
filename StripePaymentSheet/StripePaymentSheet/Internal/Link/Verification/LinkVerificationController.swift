@@ -18,8 +18,14 @@ final class LinkVerificationController {
     private var selfRetainer: LinkVerificationController?
     private let verificationViewController: LinkVerificationViewController
 
-    init(mode: LinkVerificationView.Mode = .modal, linkAccount: PaymentSheetLinkAccount) {
-        self.verificationViewController = LinkVerificationViewController(mode: mode, linkAccount: linkAccount)
+    init(
+        mode: LinkVerificationView.Mode = .modal,
+        linkAccount: PaymentSheetLinkAccount
+    ) {
+        self.verificationViewController = LinkVerificationViewController(
+            mode: mode,
+            linkAccount: linkAccount
+        )
         verificationViewController.delegate = self
     }
 

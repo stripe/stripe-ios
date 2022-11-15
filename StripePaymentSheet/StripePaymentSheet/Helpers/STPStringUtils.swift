@@ -49,11 +49,14 @@ extension STPStringUtils {
 
         if let endingTagRange = endingTagRange {
             finalString = (finalString as NSString?)?.replacingCharacters(
-                in: endingTagRange, with: "")
+                in: endingTagRange,
+                with: ""
+            )
         }
         let finalTagRange = NSRange(
             location: startingTagRange?.location ?? 0,
-            length: (endingTagRange?.location ?? 0) - (startingTagRange?.location ?? 0))
+            length: (endingTagRange?.location ?? 0) - (startingTagRange?.location ?? 0)
+        )
 
         completion(finalString, finalTagRange)
     }
@@ -89,7 +92,8 @@ extension STPStringUtils {
                 } else {
                     let interiorRange = NSRange(
                         location: tagRange.location + tag.count + 2,
-                        length: tagRange.length)
+                        length: tagRange.length
+                    )
                     interiorRangesToTags[NSValue(range: interiorRange)] = tag
                 }
             }
@@ -113,7 +117,8 @@ extension STPStringUtils {
                 let beginningTagLength = (tag?.count ?? 0) + 2
                 let beginningTagRange = NSRange(
                     location: interiorTagRange.location - beginningTagLength,
-                    length: beginningTagLength)
+                    length: beginningTagLength
+                )
 
                 if let subRange = Range<String.Index>(beginningTagRange, in: modifiedString) {
                     modifiedString.removeSubrange(subRange)
@@ -124,7 +129,8 @@ extension STPStringUtils {
                 let endingTagLength = beginningTagLength + 1
                 let endingTagRange = NSRange(
                     location: interiorTagRange.location + interiorTagRange.length,
-                    length: endingTagLength)
+                    length: endingTagLength
+                )
 
                 if let subRange = Range<String.Index>(endingTagRange, in: modifiedString) {
                     modifiedString.removeSubrange(subRange)

@@ -22,12 +22,12 @@ extension STPAPIClient {
         var shared_allPaymentMethods = [STPPaymentMethod]()
         var shared_lastError: Error? = nil
         let group = DispatchGroup()
-        
+
         for type in types {
             group.enter()
             let params = [
                 "customer": customerID,
-                "type": STPPaymentMethod.string(from: type)
+                "type": STPPaymentMethod.string(from: type),
             ]
             APIRequest<STPPaymentMethodListDeserializer>.getWith(
                 self,
@@ -47,14 +47,15 @@ extension STPAPIClient {
                 }
             }
         }
-        
+
         group.notify(queue: DispatchQueue.main) {
             completion(shared_allPaymentMethods, shared_lastError)
         }
     }
-    
+
     internal func detachPaymentMethod(
-        _ paymentMethodID: String, fromCustomerUsing ephemeralKeySecret: String,
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
         completion: @escaping STPErrorBlock
     ) {
         let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
@@ -67,11 +68,13 @@ extension STPAPIClient {
             completion(error)
         }
     }
-    
+
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    func retrieveCustomer(_ customerID: String,
-        using ephemeralKey: String, completion: @escaping STPCustomerCompletionBlock
+    func retrieveCustomer(
+        _ customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPCustomerCompletionBlock
     ) {
         let endpoint = "\(APIEndpointCustomers)/\(customerID)"
         APIRequest<STPCustomer>.getWith(
@@ -86,8 +89,12 @@ extension STPAPIClient {
 }
 
 extension STPAPIClient {
-    typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
-    typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
+    typealias STPPaymentIntentWithPreferencesCompletionBlock = (
+        (Result<STPPaymentIntent, Error>) -> Void
+    )
+    typealias STPSetupIntentWithPreferencesCompletionBlock = (
+        (Result<STPSetupIntent, Error>) -> Void
+    )
 
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
@@ -109,9 +116,11 @@ extension STPAPIClient {
         }
         parameters["locale"] = Locale.current.toLanguageTag()
 
-        APIRequest<STPPaymentIntent>.getWith(self,
-                                             endpoint: APIEndpointIntentWithPreferences,
-                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
+        APIRequest<STPPaymentIntent>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { paymentIntentWithPreferences, _, error in
             guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
@@ -127,7 +136,8 @@ extension STPAPIClient {
     ) {
         var parameters: [String: Any] = [:]
 
-        guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
+        guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey
+        else {
             completion(.failure(NSError.stp_clientSecretError()))
             return
         }
@@ -137,9 +147,11 @@ extension STPAPIClient {
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
 
-        APIRequest<STPSetupIntent>.getWith(self,
-                                           endpoint: APIEndpointIntentWithPreferences,
-                                           parameters: parameters) { setupIntentWithPreferences, _, error in
+        APIRequest<STPSetupIntent>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { setupIntentWithPreferences, _, error in
 
             guard let setupIntentWithPreferences = setupIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))

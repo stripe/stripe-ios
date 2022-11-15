@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import StripePaymentSheet
 
 class StripePaymentSheetTests: XCTestCase {

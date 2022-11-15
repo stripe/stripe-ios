@@ -6,17 +6,15 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-import SwiftUI
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import SwiftUI
+import UIKit
 
-/**
- This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
- `IntentConfirmParams`.
- */
+/// This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
+/// `IntentConfirmParams`.
 class PaymentSheetFormFactory {
     enum SaveMode {
         /// We can't save the PaymentMethod. e.g., Payment mode without a customer
@@ -35,11 +33,7 @@ class PaymentSheetFormFactory {
     let linkAccount: PaymentSheetLinkAccount?
 
     var canSaveToLink: Bool {
-        return (
-            intent.supportsLink &&
-            paymentMethod == .card &&
-            saveMode != .merchantRequired
-        )
+        return (intent.supportsLink && paymentMethod == .card && saveMode != .merchantRequired)
     }
 
     var theme: ElementsUITheme {
@@ -55,18 +49,20 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil
     ) {
         switch intent {
-        case let .paymentIntent(paymentIntent):
+        case .paymentIntent(let paymentIntent):
             let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
             let hasCustomer = configuration.customer != nil
-            let isPaymentMethodSaveable = PaymentSheet.PaymentMethodType.supportsSaveAndReuse(paymentMethod: paymentMethod, configuration: configuration, intent: intent)
+            let isPaymentMethodSaveable = PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
+                paymentMethod: paymentMethod,
+                configuration: configuration,
+                intent: intent
+            )
             switch (merchantRequiresSave, hasCustomer, isPaymentMethodSaveable) {
             case (true, _, _):
                 saveMode = .merchantRequired
             case (false, true, true):
                 saveMode = .userSelectable
-            case (false, true, false):
-                fallthrough
-            case (false, false, _):
+            case (false, true, false), (false, false, _):
                 saveMode = .none
             }
         case .setupIntent:
@@ -79,7 +75,7 @@ class PaymentSheetFormFactory {
         self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
         self.linkAccount = linkAccount
     }
-    
+
     func make() -> PaymentMethodElement {
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
@@ -103,9 +99,16 @@ class PaymentSheetFormFactory {
 
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
-    
-    func makeName(label: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.makeName(label: label, defaultValue: configuration.defaultBillingDetails.name, theme: theme)
+
+    func makeName(
+        label: String? = nil,
+        apiPath: String? = nil
+    ) -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.makeName(
+            label: label,
+            defaultValue: configuration.defaultBillingDetails.name,
+            theme: theme
+        )
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -116,8 +119,11 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeEmail(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement>  {
-        let element = TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
+    func makeEmail(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.makeEmail(
+            defaultValue: configuration.defaultBillingDetails.email,
+            theme: theme
+        )
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -141,8 +147,13 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAUBECSAccountNumber(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.Account.makeAUBECSAccountNumber(defaultValue: nil, theme: theme)
+    func makeAUBECSAccountNumber(
+        apiPath: String? = nil
+    ) -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.Account.makeAUBECSAccountNumber(
+            defaultValue: nil,
+            theme: theme
+        )
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -158,12 +169,17 @@ extension PaymentSheetFormFactory {
     }
 
     func makeSepaMandate() -> StaticElement {
-        return StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme))
+        return StaticElement(
+            view: SepaMandateView(
+                merchantDisplayName: configuration.merchantDisplayName,
+                theme: theme
+            )
+        )
     }
-    
+
     func makeSaveCheckbox(
         label: String = String.Localized.save_for_future_payments,
-        didToggle: ((Bool) -> ())? = nil
+        didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
@@ -178,7 +194,7 @@ extension PaymentSheetFormFactory {
             return params
         }
     }
-    
+
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .all,
         countries: [String]?
@@ -188,7 +204,10 @@ extension PaymentSheetFormFactory {
         if let shippingDetails = configuration.shippingDetails() {
             // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
             displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init()
-            defaultAddress = displayBillingSameAsShippingCheckbox ? .init(shippingDetails) : configuration.defaultBillingDetails.address.addressSectionDefaults
+            defaultAddress =
+                displayBillingSameAsShippingCheckbox
+                ? .init(shippingDetails)
+                : configuration.defaultBillingDetails.address.addressSectionDefaults
         } else {
             displayBillingSameAsShippingCheckbox = false
             defaultAddress = configuration.defaultBillingDetails.address.addressSectionDefaults
@@ -199,7 +218,10 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             collectionMode: collectionMode,
-            additionalFields: .init(billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox ? .enabled(isOptional: false) : .disabled),
+            additionalFields: .init(
+                billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox
+                    ? .enabled(isOptional: false) : .disabled
+            ),
             theme: theme
         )
         return PaymentMethodElementWrapper(section) { section, params in
@@ -216,12 +238,15 @@ extension PaymentSheetFormFactory {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.city = city.text
             }
             if let state = section.state {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.rawData
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state =
+                    state.rawData
             }
             if let postalCode = section.postalCode {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.postalCode = postalCode.text
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.postalCode =
+                    postalCode.text
             }
-            params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = section.selectedCountryCode
+            params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country =
+                section.selectedCountryCode
 
             return params
         }
@@ -232,34 +257,50 @@ extension PaymentSheetFormFactory {
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
         let saveCheckbox = makeSaveCheckbox(
-            label: String(format: STPLocalizedString("Save this account for future %@ payments", "Prompt next to checkbox to save bank account."), merchantName)) { value in
-                isSaving.value = value
-            }
+            label: String(
+                format: STPLocalizedString(
+                    "Save this account for future %@ payments",
+                    "Prompt next to checkbox to save bank account."
+                ),
+                merchantName
+            )
+        ) { value in
+            isSaving.value = value
+        }
         let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
-        isSaving.value = shouldDisplaySaveCheckbox ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMode == .merchantRequired
-        return USBankAccountPaymentMethodElement(titleElement: makeUSBankAccountCopyLabel(),
-                                                 nameElement: makeName(),
-                                                 emailElement: makeEmail(),
-                                                 checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
-                                                 savingAccount: isSaving,
-                                                 merchantName: merchantName,
-                                                 theme: theme)
+        isSaving.value =
+            shouldDisplaySaveCheckbox
+            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
+            : saveMode == .merchantRequired
+        return USBankAccountPaymentMethodElement(
+            titleElement: makeUSBankAccountCopyLabel(),
+            nameElement: makeName(),
+            emailElement: makeEmail(),
+            checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            savingAccount: isSaving,
+            merchantName: merchantName,
+            theme: theme
+        )
     }
 
     func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
         let locale = Locale.current
         let resolvedCountryCodes = countryCodes ?? addressSpecProvider.countries
-        let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
-            label: String.Localized.country,
-            countryCodes: resolvedCountryCodes,
-            theme: theme,
-            defaultCountry: configuration.defaultBillingDetails.address.country,
-            locale: locale
-        )) { dropdown, params in
+        let country = PaymentMethodElementWrapper(
+            DropdownFieldElement.Address.makeCountry(
+                label: String.Localized.country,
+                countryCodes: resolvedCountryCodes,
+                theme: theme,
+                defaultCountry: configuration.defaultBillingDetails.address.country,
+                locale: locale
+            )
+        ) { dropdown, params in
             if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] = resolvedCountryCodes[dropdown.selectedIndex]
+                params.paymentMethodParams.additionalAPIParameters[apiPath] =
+                    resolvedCountryCodes[dropdown.selectedIndex]
             } else {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = resolvedCountryCodes[dropdown.selectedIndex]
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country =
+                    resolvedCountryCodes[dropdown.selectedIndex]
             }
             return params
         }
@@ -267,8 +308,10 @@ extension PaymentSheetFormFactory {
     }
 
     func makeIban(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        return PaymentMethodElementWrapper(TextFieldElement.makeIBAN(theme: theme)) { iban, params in
-            if let apiPath = apiPath  {
+        return PaymentMethodElementWrapper(TextFieldElement.makeIBAN(theme: theme)) {
+            iban,
+            params in
+            if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = iban.text
             } else {
                 let sepa = params.paymentMethodParams.sepaDebit ?? STPPaymentMethodSEPADebitParams()
@@ -280,17 +323,21 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        guard case let .paymentIntent(paymentIntent) = intent else {
+        guard case .paymentIntent(let paymentIntent) = intent else {
             assertionFailure()
             return nil
         }
         return StaticElement(
-            view: AfterpayPriceBreakdownView(amount: paymentIntent.amount, currency: paymentIntent.currency, theme: theme)
+            view: AfterpayPriceBreakdownView(
+                amount: paymentIntent.amount,
+                currency: paymentIntent.currency,
+                theme: theme
+            )
         )
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        guard case let .paymentIntent(paymentIntent) = intent else {
+        guard case .paymentIntent(let paymentIntent) = intent else {
             assertionFailure("Klarna only be used with a PaymentIntent")
             return nil
         }
@@ -298,13 +345,15 @@ extension PaymentSheetFormFactory {
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(
             KlarnaHelper.availableCountries(currency: paymentIntent.currency)
         )
-        let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
-            label: String.Localized.country,
-            countryCodes: countryCodes,
-            theme: theme,
-            defaultCountry: configuration.defaultBillingDetails.address.country,
-            locale: Locale.current
-        )) { dropdown, params in
+        let country = PaymentMethodElementWrapper(
+            DropdownFieldElement.Address.makeCountry(
+                label: String.Localized.country,
+                countryCodes: countryCodes,
+                theme: theme,
+                defaultCountry: configuration.defaultBillingDetails.address.country,
+                locale: Locale.current
+            )
+        ) { dropdown, params in
             let countryCode = countryCodes[dropdown.selectedIndex]
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCode
@@ -319,15 +368,23 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCopyLabel() -> StaticElement {
-        let text = KlarnaHelper.canBuyNow()
-        ? STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
-        : STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
+        let text =
+            KlarnaHelper.canBuyNow()
+            ? STPLocalizedString(
+                "Buy now or pay later with Klarna.",
+                "Klarna buy now or pay later copy"
+            )
+            : STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
         return makeSectionTitleLabelWith(text: text)
     }
 
     private func makeUSBankAccountCopyLabel() -> StaticElement {
-        return makeSectionTitleLabelWith(text: STPLocalizedString("Pay with your bank account in just a few steps.",
-                                                                  "US Bank Account copy title for Mobile payment element form"))
+        return makeSectionTitleLabelWith(
+            text: STPLocalizedString(
+                "Pay with your bank account in just a few steps.",
+                "US Bank Account copy title for Mobile payment element form"
+            )
+        )
     }
 
     func makeSectionTitleLabelWith(text: String) -> StaticElement {
@@ -344,9 +401,14 @@ extension PaymentSheetFormFactory {
 
 extension FormElement {
     /// Conveniently nests single TextField and DropdownFields in a Section
-    convenience init(autoSectioningElements: [Element], theme: ElementsUITheme = .default) {
+    convenience init(
+        autoSectioningElements: [Element],
+        theme: ElementsUITheme = .default
+    ) {
         let elements: [Element] = autoSectioningElements.map {
-            if $0 is PaymentMethodElementWrapper<TextFieldElement> || $0 is PaymentMethodElementWrapper<DropdownFieldElement> {
+            if $0 is PaymentMethodElementWrapper<TextFieldElement>
+                || $0 is PaymentMethodElementWrapper<DropdownFieldElement>
+            {
                 return SectionElement($0, theme: theme)
             }
             return $0
@@ -367,13 +429,21 @@ extension STPPaymentMethodBillingDetails {
 }
 
 extension AddressSectionElement.AddressDetails {
-    init(_ addressDetails: AddressViewController.AddressDetails) {
-        self.init(name: addressDetails.name, phone: addressDetails.phone, address: .init(addressDetails.address))
+    init(
+        _ addressDetails: AddressViewController.AddressDetails
+    ) {
+        self.init(
+            name: addressDetails.name,
+            phone: addressDetails.phone,
+            address: .init(addressDetails.address)
+        )
     }
 }
 
 extension AddressSectionElement.AddressDetails.Address {
-    init(_ address: AddressViewController.AddressDetails.Address) {
+    init(
+        _ address: AddressViewController.AddressDetails.Address
+    ) {
         self.init(
             city: address.city,
             country: address.country,
@@ -385,17 +455,18 @@ extension AddressSectionElement.AddressDetails.Address {
     }
 }
 
-
-private extension PaymentSheet.Address {
-    var addressSectionDefaults: AddressSectionElement.AddressDetails {
-        return .init(address: .init(
-            city: city,
-            country: country,
-            line1: line1,
-            line2: line2,
-            postalCode: postalCode,
-            state: state
-        ))
+extension PaymentSheet.Address {
+    fileprivate var addressSectionDefaults: AddressSectionElement.AddressDetails {
+        return .init(
+            address: .init(
+                city: city,
+                country: country,
+                line1: line1,
+                line2: line2,
+                postalCode: postalCode,
+                state: state
+            )
+        )
     }
 }
 
@@ -422,12 +493,28 @@ extension PaymentSheet.Appearance {
         theme.shadow = shadow.asElementThemeShadow
 
         var fonts = ElementsUITheme.Font()
-        fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
-        fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
-        fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
+        fonts.subheadline = scaledFont(
+            for: font.base.regular,
+            style: .subheadline,
+            maximumPointSize: 20
+        )
+        fonts.subheadlineBold = scaledFont(
+            for: font.base.bold,
+            style: .subheadline,
+            maximumPointSize: 20
+        )
+        fonts.sectionHeader = scaledFont(
+            for: font.base.medium,
+            style: .footnote,
+            maximumPointSize: 18
+        )
         fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
         fonts.footnote = scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
-        fonts.footnoteEmphasis = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
+        fonts.footnoteEmphasis = scaledFont(
+            for: font.base.medium,
+            style: .footnote,
+            maximumPointSize: 20
+        )
 
         theme.colors = colors
         theme.fonts = fonts
@@ -440,10 +527,17 @@ extension PaymentSheet.Appearance.Shadow {
 
     /// Creates an `ElementsUITheme.Shadow` based on this PaymentSheet appearance shadow
     var asElementThemeShadow: ElementsUITheme.Shadow? {
-        return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset, radius: radius)
+        return ElementsUITheme.Shadow(
+            color: color,
+            opacity: opacity,
+            offset: offset,
+            radius: radius
+        )
     }
 
-    init(elementShadow: ElementsUITheme.Shadow) {
+    init(
+        elementShadow: ElementsUITheme.Shadow
+    ) {
         self.color = elementShadow.color
         self.opacity = elementShadow.opacity
         self.offset = elementShadow.offset

@@ -25,7 +25,9 @@ final class DefaultPaymentMethodStore {
             }
         }
 
-        init(value: String) {
+        init(
+            value: String
+        ) {
             switch value {
             case "apple_pay":
                 self = .applePay
@@ -41,8 +43,12 @@ final class DefaultPaymentMethodStore {
     /// - Parameters:
     ///   - identifier: Payment method identifier.
     ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
-    static func setDefaultPaymentMethod(_ identifier: PaymentMethodIdentifier, forCustomer customerID: String?) {
-        var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
+    static func setDefaultPaymentMethod(
+        _ identifier: PaymentMethodIdentifier,
+        forCustomer customerID: String?
+    ) {
+        var customerToDefaultPaymentMethodID =
+            UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
         customerToDefaultPaymentMethodID[key] = identifier.value

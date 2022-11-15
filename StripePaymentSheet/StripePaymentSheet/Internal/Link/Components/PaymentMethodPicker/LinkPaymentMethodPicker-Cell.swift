@@ -6,20 +6,28 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkPaymentMethodPickerCellDelegate: AnyObject {
     func savedPaymentPickerCellDidSelect(_ cell: LinkPaymentMethodPicker.Cell)
-    func savedPaymentPickerCell(_ cell: LinkPaymentMethodPicker.Cell, didTapMenuButton button: UIButton)
+    func savedPaymentPickerCell(
+        _ cell: LinkPaymentMethodPicker.Cell,
+        didTapMenuButton button: UIButton
+    )
 }
 
 extension LinkPaymentMethodPicker {
 
     final class Cell: UIControl {
         struct Constants {
-            static let margins = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
+            static let margins = NSDirectionalEdgeInsets(
+                top: 16,
+                leading: 20,
+                bottom: 16,
+                trailing: 20
+            )
             static let contentSpacing: CGFloat = 12
             static let contentIndentation: CGFloat = 34
             static let menuSpacing: CGFloat = 8
@@ -84,10 +92,13 @@ extension LinkPaymentMethodPicker {
             return iconView
         }()
 
-        private let unavailableBadge = LinkBadgeView(type: .error, text: STPLocalizedString(
-            "Unavailable for this purchase",
-            "Label shown when a payment method cannot be used for the current transaction."
-        ))
+        private let unavailableBadge = LinkBadgeView(
+            type: .error,
+            text: STPLocalizedString(
+                "Unavailable for this purchase",
+                "Label shown when a payment method cannot be used for the current transaction."
+            )
+        )
 
         private lazy var menuButton: UIButton = {
             let button = UIButton(type: .system)
@@ -118,7 +129,9 @@ extension LinkPaymentMethodPicker {
             return separator
         }()
 
-        override init(frame: CGRect) {
+        override init(
+            frame: CGRect
+        ) {
             super.init(frame: frame)
 
             isAccessibilityElement = true
@@ -127,12 +140,16 @@ extension LinkPaymentMethodPicker {
             setupUI()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
         private func setupUI() {
-            let rightStackView = UIStackView(arrangedSubviews: [defaultBadge, alertIconView, activityIndicator, menuButton])
+            let rightStackView = UIStackView(arrangedSubviews: [
+                defaultBadge, alertIconView, activityIndicator, menuButton,
+            ])
             rightStackView.spacing = LinkUI.smallContentSpacing
             rightStackView.distribution = .equalSpacing
             rightStackView.alignment = .center
@@ -162,20 +179,31 @@ extension LinkPaymentMethodPicker {
 
                 // Menu button
                 menuButton.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
-                menuButton.heightAnchor.constraint(equalToConstant: Constants.menuButtonSize.height),
+                menuButton.heightAnchor.constraint(
+                    equalToConstant: Constants.menuButtonSize.height
+                ),
 
                 // Loader
-                activityIndicator.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
-                activityIndicator.heightAnchor.constraint(equalToConstant: Constants.menuButtonSize.height),
+                activityIndicator.widthAnchor.constraint(
+                    equalToConstant: Constants.menuButtonSize.width
+                ),
+                activityIndicator.heightAnchor.constraint(
+                    equalToConstant: Constants.menuButtonSize.height
+                ),
 
                 // Icon
                 alertIconView.widthAnchor.constraint(equalToConstant: Constants.iconViewSize.width),
-                alertIconView.heightAnchor.constraint(equalToConstant: Constants.iconViewSize.height),
+                alertIconView.heightAnchor.constraint(
+                    equalToConstant: Constants.iconViewSize.height
+                ),
 
                 // Container
                 container.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
                 container.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-                container.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: Constants.contentIndentation),
+                container.leadingAnchor.constraint(
+                    equalTo: layoutMarginsGuide.leadingAnchor,
+                    constant: Constants.contentIndentation
+                ),
                 container.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
                 // Make stackView fill the container
                 stackView.trailingAnchor.constraint(equalTo: container.trailingAnchor),

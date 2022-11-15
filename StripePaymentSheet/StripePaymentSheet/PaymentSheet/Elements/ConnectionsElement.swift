@@ -6,13 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Intentionally empty placeholder for Connections Element
 class ConnectionsElement: Element {
     var delegate: ElementDelegate? = nil
-    
+
     var view: UIView = UIView()
 }
 

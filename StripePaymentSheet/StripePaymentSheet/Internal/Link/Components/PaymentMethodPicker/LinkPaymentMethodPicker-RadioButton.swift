@@ -49,7 +49,12 @@ extension LinkPaymentMethodPicker {
             let innerCircle = CALayer()
             innerCircle.backgroundColor = UIColor.white.cgColor
             innerCircle.cornerRadius = Constants.innerDiameter / 2
-            innerCircle.bounds = CGRect(x: 0, y: 0, width: Constants.innerDiameter, height: Constants.innerDiameter)
+            innerCircle.bounds = CGRect(
+                x: 0,
+                y: 0,
+                width: Constants.innerDiameter,
+                height: Constants.innerDiameter
+            )
             innerCircle.anchorPoint = CGPoint(x: 0.5, y: 0.5)
 
             // Add and center inner circle
@@ -71,7 +76,9 @@ extension LinkPaymentMethodPicker {
             applyStyling()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             super.init(coder: coder)
             applyStyling()
         }

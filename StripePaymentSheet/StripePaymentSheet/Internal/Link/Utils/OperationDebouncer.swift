@@ -25,7 +25,10 @@ final class OperationDebouncer {
     /// - Parameters:
     ///   - debounceTime: Time to wait before executing the enqueued operation.
     ///   - dispatchQueue: The target queue on which to execute blocks.
-    init(debounceTime: DispatchTimeInterval, dispatchQueue: DispatchQueue = .main) {
+    init(
+        debounceTime: DispatchTimeInterval,
+        dispatchQueue: DispatchQueue = .main
+    ) {
         self.debounceTime = debounceTime
         self.dispatchQueue = dispatchQueue
     }

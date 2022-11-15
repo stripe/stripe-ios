@@ -1,3 +1,4 @@
+@_spi(STP) import StripeUICore
 //
 //  LinkUI.swift
 //  StripePaymentSheet
@@ -6,7 +7,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 import UIKit
-@_spi(STP) import StripeUICore
 
 enum LinkUI {
 
@@ -35,11 +35,26 @@ enum LinkUI {
 
     static let buttonMargins: NSDirectionalEdgeInsets = .insets(amount: 16)
 
-    static let compactButtonMargins: NSDirectionalEdgeInsets = .insets(top: 12, leading: 16, bottom: 12, trailing: 16)
+    static let compactButtonMargins: NSDirectionalEdgeInsets = .insets(
+        top: 12,
+        leading: 16,
+        bottom: 12,
+        trailing: 16
+    )
 
-    static let contentMargins: NSDirectionalEdgeInsets = .insets(top: 22, leading: 20, bottom: 20, trailing: 20)
+    static let contentMargins: NSDirectionalEdgeInsets = .insets(
+        top: 22,
+        leading: 20,
+        bottom: 20,
+        trailing: 20
+    )
 
-    static let contentMarginsWithLargeNav: NSDirectionalEdgeInsets = .insets(top: 32, leading: 20, bottom: 20, trailing: 20)
+    static let contentMarginsWithLargeNav: NSDirectionalEdgeInsets = .insets(
+        top: 32,
+        leading: 20,
+        bottom: 20,
+        trailing: 20
+    )
 
     // MARK: - Content spacing
 
@@ -138,7 +153,8 @@ extension LinkUI {
         }
     }
 
-    static func lineSpacing(fromRelativeHeight lineHeight: CGFloat, textStyle: TextStyle) -> CGFloat {
+    static func lineSpacing(fromRelativeHeight lineHeight: CGFloat, textStyle: TextStyle) -> CGFloat
+    {
         let font = self.font(forTextStyle: textStyle)
         return (font.pointSize * lineHeight) - font.pointSize
     }

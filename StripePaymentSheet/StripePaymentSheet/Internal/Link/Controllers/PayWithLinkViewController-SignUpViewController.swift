@@ -6,11 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import SafariServices
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension PayWithLinkViewController {
 
@@ -47,7 +46,10 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: LinkUI.appearance.asElementsTheme)
+        private lazy var emailElement = LinkEmailElement(
+            defaultValue: viewModel.emailAddress,
+            theme: LinkUI.appearance.asElementsTheme
+        )
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
@@ -63,11 +65,20 @@ extension PayWithLinkViewController {
             theme: LinkUI.appearance.asElementsTheme
         )
 
-        private lazy var emailSection = SectionElement(elements: [emailElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var emailSection = SectionElement(
+            elements: [emailElement],
+            theme: LinkUI.appearance.asElementsTheme
+        )
 
-        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var phoneNumberSection = SectionElement(
+            elements: [phoneNumberElement],
+            theme: LinkUI.appearance.asElementsTheme
+        )
 
-        private lazy var nameSection = SectionElement(elements: [nameElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var nameSection = SectionElement(
+            elements: [nameElement],
+            theme: LinkUI.appearance.asElementsTheme
+        )
 
         private lazy var legalTermsView: LinkLegalTermsView = {
             let legalTermsView = LinkLegalTermsView(textAlignment: .center)
@@ -105,7 +116,7 @@ extension PayWithLinkViewController {
                 nameSection.view,
                 legalTermsView,
                 errorLabel,
-                signUpButton
+                signUpButton,
             ])
 
             stackView.axis = .vertical
@@ -132,7 +143,9 @@ extension PayWithLinkViewController {
             super.init(context: context)
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -299,7 +312,8 @@ extension PayWithLinkViewController.SignUpViewController: UITextViewDelegate {
 
 extension PayWithLinkViewController.SignUpViewController: LinkLegalTermsViewDelegate {
 
-    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool
+    {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .close
         safariVC.modalPresentationStyle = .overFullScreen

@@ -22,10 +22,17 @@ extension STPApplePayContext {
         let completion: PaymentSheetResultCompletionBlock
         /// Retain this class until Apple Pay completes
         var selfRetainer: ApplePayContextClosureDelegate?
-        let authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+        let authorizationResultHandler:
+            ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
         let clientSecret: String
 
-        init(clientSecret: String, authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?, completion: @escaping PaymentSheetResultCompletionBlock) {
+        init(
+            clientSecret: String,
+            authorizationResultHandler: (
+                (PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void
+            )?,
+            completion: @escaping PaymentSheetResultCompletionBlock
+        ) {
             self.completion = completion
             self.authorizationResultHandler = authorizationResultHandler
             self.clientSecret = clientSecret
@@ -33,14 +40,20 @@ extension STPApplePayContext {
             self.selfRetainer = self
         }
 
-        func applePayContext(_ context: STPApplePayContext,
-                             didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-                             paymentInformation: PKPayment,
-                             completion: @escaping STPIntentClientSecretCompletionBlock) {
+        func applePayContext(
+            _ context: STPApplePayContext,
+            didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
+            paymentInformation: PKPayment,
+            completion: @escaping STPIntentClientSecretCompletionBlock
+        ) {
             completion(clientSecret, nil)
         }
 
-        func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
+        func applePayContext(
+            _ context: STPApplePayContext,
+            didCompleteWith status: STPApplePayContext.PaymentStatus,
+            error: Error?
+        ) {
             switch status {
             case .success:
                 completion(.completed)
@@ -52,7 +65,11 @@ extension STPApplePayContext {
             selfRetainer = nil
         }
 
-        func applePayContext(_ context: STPApplePayContext, willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult, handler: @escaping (PKPaymentAuthorizationResult) -> Void) {
+        func applePayContext(
+            _ context: STPApplePayContext,
+            willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult,
+            handler: @escaping (PKPaymentAuthorizationResult) -> Void
+        ) {
             if let authorizationResultHandler = authorizationResultHandler {
                 authorizationResultHandler(authorizationResult) { result in
                     handler(result)
@@ -62,7 +79,7 @@ extension STPApplePayContext {
             }
         }
     }
-    
+
     static func create(
         intent: Intent,
         configuration: PaymentSheet.Configuration,
@@ -84,16 +101,23 @@ extension STPApplePayContext {
                 paymentRequest.paymentSummaryItems = paymentSummaryItems
             } else {
                 // Automatically configure paymentSummaryItems
-                let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: paymentIntent.amount, currency: paymentIntent.currency)
+                let decimalAmount = NSDecimalNumber.stp_decimalNumber(
+                    withAmount: paymentIntent.amount,
+                    currency: paymentIntent.currency
+                )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: configuration.merchantDisplayName, amount: decimalAmount, type: .final),
+                    PKPaymentSummaryItem(
+                        label: configuration.merchantDisplayName,
+                        amount: decimalAmount,
+                        type: .final
+                    )
                 ]
             }
         case .setupIntent:
             paymentRequest = StripeAPI.paymentRequest(
                 withMerchantIdentifier: applePay.merchantId,
                 country: applePay.merchantCountryCode,
-                currency: "USD" // currency is required but unused
+                currency: "USD"  // currency is required but unused
             )
             if let paymentSummaryItems = applePay.paymentSummaryItems {
                 // Use the merchant supplied paymentSummaryItems
@@ -101,15 +125,28 @@ extension STPApplePayContext {
             } else {
                 // Automatically configure paymentSummaryItems.
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: "\(configuration.merchantDisplayName)", amount: .one, type: .pending)
+                    PKPaymentSummaryItem(
+                        label: "\(configuration.merchantDisplayName)",
+                        amount: .one,
+                        type: .pending
+                    )
                 ]
             }
         }
-        if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
+        if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler
+        {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
-        let delegate = ApplePayContextClosureDelegate(clientSecret: intent.clientSecret, authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler, completion: completion)
-        if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
+        let delegate = ApplePayContextClosureDelegate(
+            clientSecret: intent.clientSecret,
+            authorizationResultHandler: configuration.applePay?.customHandlers?
+                .authorizationResultHandler,
+            completion: completion
+        )
+        if let applePayContext = STPApplePayContext(
+            paymentRequest: paymentRequest,
+            delegate: delegate
+        ) {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
             return applePayContext
@@ -122,8 +159,11 @@ extension STPApplePayContext {
     }
 }
 
-private func makeShippingDetails(from configuration: PaymentSheet.Configuration) -> StripeAPI.ShippingDetails? {
-    guard let shippingDetails = configuration.shippingDetails(), let name = shippingDetails.name else {
+private func makeShippingDetails(
+    from configuration: PaymentSheet.Configuration
+) -> StripeAPI.ShippingDetails? {
+    guard let shippingDetails = configuration.shippingDetails(), let name = shippingDetails.name
+    else {
         return nil
     }
     let address = shippingDetails.address

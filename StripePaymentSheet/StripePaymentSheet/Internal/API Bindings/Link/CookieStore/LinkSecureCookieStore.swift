@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import Security
 import Foundation
+import Security
 
 /// A secure cookie store backed by Keychain.
 final class LinkSecureCookieStore: LinkCookieStore {
@@ -21,10 +21,14 @@ final class LinkSecureCookieStore: LinkCookieStore {
             return
         }
 
-        let query = queryForKey(key, additionalParams: [
-            kSecValueData as String: data,
-            kSecAttrSynchronizable as String: allowSync ? kCFBooleanTrue as Any : kCFBooleanFalse as Any
-        ])
+        let query = queryForKey(
+            key,
+            additionalParams: [
+                kSecValueData as String: data,
+                kSecAttrSynchronizable as String: allowSync
+                    ? kCFBooleanTrue as Any : kCFBooleanFalse as Any,
+            ]
+        )
 
         delete(key: key)
         let status = SecItemAdd(query as CFDictionary, nil)
@@ -42,22 +46,24 @@ final class LinkSecureCookieStore: LinkCookieStore {
     }
 
     func read(key: LinkCookieKey) -> String? {
-        let query = queryForKey(key, additionalParams: [
-            kSecReturnData as String: kCFBooleanTrue as Any,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
-        ])
+        let query = queryForKey(
+            key,
+            additionalParams: [
+                kSecReturnData as String: kCFBooleanTrue as Any,
+                kSecMatchLimit as String: kSecMatchLimitOne,
+                kSecAttrSynchronizable as String: kSecAttrSynchronizableAny,
+            ]
+        )
 
         var result: AnyObject?
 
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         // Disable this check for UI tests
-        
+
         assert(
             status == noErr || status == errSecItemNotFound,
             "Unexpected status code \(status)"
         )
-        
 
         guard
             status == noErr,
@@ -70,9 +76,12 @@ final class LinkSecureCookieStore: LinkCookieStore {
     }
 
     func delete(key: LinkCookieKey) {
-        let query = queryForKey(key, additionalParams: [
-            kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
-        ])
+        let query = queryForKey(
+            key,
+            additionalParams: [
+                kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
+            ]
+        )
 
         let status = SecItemDelete(query as CFDictionary)
         assert(
@@ -85,10 +94,11 @@ final class LinkSecureCookieStore: LinkCookieStore {
         _ key: LinkCookieKey,
         additionalParams: [String: Any]? = nil
     ) -> [String: Any] {
-        var query = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key.rawValue
-        ] as [String : Any]
+        var query =
+            [
+                kSecClass as String: kSecClassGenericPassword,
+                kSecAttrAccount as String: key.rawValue,
+            ] as [String: Any]
 
         additionalParams?.forEach({ (key, value) in
             query[key] = value

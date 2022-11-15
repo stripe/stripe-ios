@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkInstantDebitMandateViewDelegate: AnyObject {
     /// Called when the user taps on a link.
@@ -16,7 +16,10 @@ protocol LinkInstantDebitMandateViewDelegate: AnyObject {
     /// - Parameters:
     ///   - mandateView: The view that the user interacted with.
     ///   - url: URL of the link.
-    func instantDebitMandateView(_ mandateView: LinkInstantDebitMandateView, didTapOnLinkWithURL url: URL)
+    func instantDebitMandateView(
+        _ mandateView: LinkInstantDebitMandateView,
+        didTapOnLinkWithURL url: URL
+    )
 }
 
 // TODO(ramont): extract common code with `LinkLegalTermsView`.
@@ -55,13 +58,17 @@ final class LinkInstantDebitMandateView: UIView {
         return textView
     }()
 
-    init(delegate: LinkInstantDebitMandateViewDelegate? = nil) {
+    init(
+        delegate: LinkInstantDebitMandateViewDelegate? = nil
+    ) {
         super.init(frame: .zero)
         self.delegate = delegate
         addAndPinSubview(textView)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -73,7 +80,9 @@ final class LinkInstantDebitMandateView: UIView {
 
         let formattedString = NSMutableAttributedString()
 
-        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
+        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) {
+            string,
+            matches in
             formattedString.append(NSAttributedString(string: string))
 
             for (tag, range) in matches {
@@ -94,7 +103,10 @@ final class LinkInstantDebitMandateView: UIView {
             textStyle: .caption
         )
 
-        formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: formattedString.extent)
+        formattedString.addAttributes(
+            [.paragraphStyle: paragraphStyle],
+            range: formattedString.extent
+        )
 
         return formattedString
     }

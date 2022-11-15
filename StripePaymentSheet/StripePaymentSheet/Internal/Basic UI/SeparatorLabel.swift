@@ -34,7 +34,7 @@ final class SeparatorLabel: UIView {
             label.font = newValue
         }
     }
-    
+
     var textColor: UIColor {
         get {
             return label.textColor
@@ -52,7 +52,7 @@ final class SeparatorLabel: UIView {
             label.adjustsFontForContentSizeCategory = newValue
         }
     }
-    
+
     var separatorColor: UIColor? {
         get {
             return leftLineView.backgroundColor
@@ -86,17 +86,23 @@ final class SeparatorLabel: UIView {
         return view
     }()
 
-    convenience init(text: String) {
+    convenience init(
+        text: String
+    ) {
         self.init(frame: .zero)
         self.text = text
     }
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
         setup()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         super.init(coder: coder)
         setup()
     }
@@ -117,9 +123,13 @@ final class SeparatorLabel: UIView {
             label.bottomAnchor.constraint(equalTo: bottomAnchor),
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
             label.leadingAnchor.constraint(
-                equalTo: leftLineView.trailingAnchor, constant: Constants.spacing),
+                equalTo: leftLineView.trailingAnchor,
+                constant: Constants.spacing
+            ),
             label.trailingAnchor.constraint(
-                equalTo: rightLineView.leadingAnchor, constant: -Constants.spacing),
+                equalTo: rightLineView.leadingAnchor,
+                constant: -Constants.spacing
+            ),
 
             // Right line
             rightLineView.heightAnchor.constraint(equalToConstant: 1),

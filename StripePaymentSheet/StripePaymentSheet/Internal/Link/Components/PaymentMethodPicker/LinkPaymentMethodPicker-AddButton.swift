@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkPaymentMethodPicker {
 
@@ -17,7 +17,9 @@ extension LinkPaymentMethodPicker {
             static let iconSize: CGSize = .init(width: 24, height: 24)
         }
 
-        private let iconView: UIImageView = UIImageView(image: Image.icon_add_bordered.makeImage(template: true))
+        private let iconView: UIImageView = UIImageView(
+            image: Image.icon_add_bordered.makeImage(template: true)
+        )
 
         private lazy var textLabel: UILabel = {
             let label = UILabel()
@@ -47,7 +49,9 @@ extension LinkPaymentMethodPicker {
             update()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -78,7 +82,7 @@ extension LinkPaymentMethodPicker {
                 stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
                 stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
                 stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+                stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             ])
         }
 

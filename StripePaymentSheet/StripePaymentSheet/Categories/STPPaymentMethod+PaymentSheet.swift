@@ -7,9 +7,9 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeCore
 
 extension STPPaymentMethod {
     var paymentSheetLabel: String {
@@ -24,7 +24,7 @@ extension STPPaymentMethod {
             return type.displayName
         }
     }
-    
+
     public override var accessibilityLabel: String? {
         get {
             switch type {
@@ -34,14 +34,18 @@ extension STPPaymentMethod {
                 }
                 let brand = STPCardBrandUtilities.stringFrom(card.brand) ?? ""
                 let last4 = card.last4 ?? ""
-                let last4Spaced = last4.map{ String($0) }.joined(separator: " ")
+                let last4Spaced = last4.map { String($0) }.joined(separator: " ")
                 let localized = String.Localized.card_brand_ending_in_last_4
                 return String(format: localized, brand, last4Spaced)
             case .USBankAccount:
                 guard let usBankAccount = self.usBankAccount else {
                     return nil
                 }
-                return String(format: String.Localized.bank_name_account_ending_in_last_4, usBankAccount.bankName, usBankAccount.last4)
+                return String(
+                    format: String.Localized.bank_name_account_ending_in_last_4,
+                    usBankAccount.bankName,
+                    usBankAccount.last4
+                )
             default:
                 return nil
             }

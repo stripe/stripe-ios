@@ -6,11 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol PayWithLinkViewControllerDelegate: AnyObject {
 
@@ -110,7 +109,9 @@ final class PayWithLinkViewController: UINavigationController {
         )
     }
 
-    private init(context: Context) {
+    private init(
+        context: Context
+    ) {
         self.context = context
         super.init(nibName: nil, bundle: nil)
 
@@ -118,7 +119,9 @@ final class PayWithLinkViewController: UINavigationController {
         setRootViewController(LoaderViewController(context: context), animated: false)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -141,7 +144,7 @@ final class PayWithLinkViewController: UINavigationController {
         // to restore the functionality.
         interactivePopGestureRecognizer?.delegate = self
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
@@ -174,7 +177,9 @@ final class PayWithLinkViewController: UINavigationController {
                 )
             }
         case .requiresVerification:
-            setRootViewController(VerifyAccountViewController(linkAccount: linkAccount, context: context))
+            setRootViewController(
+                VerifyAccountViewController(linkAccount: linkAccount, context: context)
+            )
         case .verified:
             loadAndPresentWallet()
         }
@@ -192,9 +197,9 @@ extension PayWithLinkViewController: UIGestureRecognizerDelegate {
 
 // MARK: - Utils
 
-private extension PayWithLinkViewController {
+extension PayWithLinkViewController {
 
-    func loadAndPresentWallet() {
+    fileprivate func loadAndPresentWallet() {
         setRootViewController(LoaderViewController(context: context))
 
         guard let linkAccount = linkAccount else {
@@ -224,13 +229,14 @@ private extension PayWithLinkViewController {
                 }
             case .failure(let error):
                 self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
-                    self, result: PaymentSheetResult.failed(error: error)
+                    self,
+                    result: PaymentSheetResult.failed(error: error)
                 )
             }
         }
     }
 
-    func updateSupportedPaymentMethods() {
+    fileprivate func updateSupportedPaymentMethods() {
         PaymentSheet.supportedLinkPaymentMethods =
             linkAccount?.supportedPaymentMethodTypes(for: context.intent) ?? []
     }
@@ -239,13 +245,16 @@ private extension PayWithLinkViewController {
 
 // MARK: - Navigation
 
-private extension PayWithLinkViewController {
+extension PayWithLinkViewController {
 
-    var rootViewController: UIViewController? {
+    fileprivate var rootViewController: UIViewController? {
         return viewControllers.first
     }
 
-    func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
+    fileprivate func setRootViewController(
+        _ viewController: UIViewController,
+        animated: Bool = true
+    ) {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
             viewController.customNavigationBar.linkAccount = linkAccount

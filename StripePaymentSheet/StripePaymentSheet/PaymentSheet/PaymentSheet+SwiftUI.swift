@@ -75,7 +75,8 @@ extension View {
 
     /// :nodoc:
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         renamed: "paymentConfirmationSheet(isConfirming:paymentSheetFlowController:onCompletion:)"
     )
     public func paymentConfirmationSheet(
@@ -126,7 +127,8 @@ extension PaymentSheet {
             }.paymentSheet(
                 isPresented: $showingPaymentSheet,
                 paymentSheet: paymentSheet,
-                onCompletion: onCompletion)
+                onCompletion: onCompletion
+            )
         }
     }
 }
@@ -166,7 +168,8 @@ extension PaymentSheet.FlowController {
             }.paymentOptionsSheet(
                 isPresented: $showingPaymentSheet,
                 paymentSheetFlowController: paymentSheetFlowController,
-                onSheetDismissed: onSheetDismissed)
+                onSheetDismissed: onSheetDismissed
+            )
         }
     }
 
@@ -205,7 +208,8 @@ extension PaymentSheet.FlowController {
             }.paymentConfirmationSheet(
                 isConfirming: $showingPaymentSheet,
                 paymentSheetFlowController: paymentSheetFlowController,
-                onCompletion: onCompletion)
+                onCompletion: onCompletion
+            )
         }
     }
 }
@@ -259,7 +263,9 @@ extension PaymentSheet {
                 }
             }
 
-            init(parent: PaymentSheetPresenter) {
+            init(
+                parent: PaymentSheetPresenter
+            ) {
                 self.parent = parent
                 self.presented = parent.presented
             }
@@ -301,11 +307,10 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
-
         class Coordinator {
             var parent: PaymentSheetFlowControllerPresenter
             let view = UIView()
-            
+
             var presented: Bool {
                 didSet {
                     switch (oldValue, presented) {
@@ -328,8 +333,10 @@ extension PaymentSheet {
                     }
                 }
             }
-            
-            init(parent: PaymentSheetFlowControllerPresenter) {
+
+            init(
+                parent: PaymentSheetFlowControllerPresenter
+            ) {
                 self.parent = parent
                 self.presented = parent.presented
             }

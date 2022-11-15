@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkMoreInfoView)
@@ -27,10 +27,12 @@ final class LinkMoreInfoView: UIView {
         imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
         return imageView
     }()
-    
+
     private let theme: ElementsUITheme
 
-    init(theme: ElementsUITheme = .default) {
+    init(
+        theme: ElementsUITheme = .default
+    ) {
         self.theme = theme
         super.init(frame: .zero)
         let stackView = UIStackView(arrangedSubviews: [logoView])
@@ -48,7 +50,9 @@ final class LinkMoreInfoView: UIView {
         ])
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 }

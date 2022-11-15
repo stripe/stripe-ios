@@ -9,11 +9,10 @@
 //
 
 import Foundation
-import UIKit
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 // MARK: - Intent
 
@@ -39,7 +38,7 @@ enum Intent {
             return si.clientSecret
         }
     }
-    
+
     var unactivatedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
@@ -48,7 +47,7 @@ enum Intent {
             return si.unactivatedPaymentMethodTypes
         }
     }
-    
+
     /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
     var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
@@ -78,7 +77,7 @@ enum Intent {
 enum IntentClientSecret {
     /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     case paymentIntent(clientSecret: String)
-    
+
     /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     case setupIntent(clientSecret: String)
 }
@@ -91,7 +90,7 @@ class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
-    
+
     /// True if the customer opts to save their payment method for future payments.
     /// - Note: PaymentIntent-only
     var shouldSavePaymentMethod: Bool = false
@@ -102,7 +101,8 @@ class IntentConfirmParams {
 
     var paymentSheetLabel: String {
         if let linkedBank = linkedBank,
-           let last4 = linkedBank.last4 {
+            let last4 = linkedBank.last4
+        {
             return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
@@ -111,17 +111,22 @@ class IntentConfirmParams {
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let linkedBank = linkedBank,
-           let bankName = linkedBank.bankName {
-            return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
+            let bankName = linkedBank.bankName
+        {
+            return PaymentSheetImageLibrary.bankIcon(
+                for: PaymentSheetImageLibrary.bankIconCode(for: bankName)
+            )
         } else {
             return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)
         }
     }
-    
-    convenience init(type: PaymentSheet.PaymentMethodType) {
+
+    convenience init(
+        type: PaymentSheet.PaymentMethodType
+    ) {
         if let paymentType = type.stpPaymentMethodType {
             let params = STPPaymentMethodParams(type: paymentType)
-            self.init(params:params, type: type)
+            self.init(params: params, type: type)
         } else {
             let params = STPPaymentMethodParams(type: .unknown)
             params.rawTypeString = PaymentSheet.PaymentMethodType.string(from: type)
@@ -129,11 +134,14 @@ class IntentConfirmParams {
         }
     }
 
-    init(params: STPPaymentMethodParams, type: PaymentSheet.PaymentMethodType) {
+    init(
+        params: STPPaymentMethodParams,
+        type: PaymentSheet.PaymentMethodType
+    ) {
         self.paymentMethodType = type
         self.paymentMethodParams = params
     }
-    
+
     func makeParams(
         paymentIntentClientSecret: String,
         configuration: PaymentSheet.Configuration
@@ -150,13 +158,13 @@ class IntentConfirmParams {
 
         return params
     }
-    
+
     func makeParams(setupIntentClientSecret: String) -> STPSetupIntentConfirmParams {
         let params = STPSetupIntentConfirmParams(clientSecret: setupIntentClientSecret)
         params.paymentMethodParams = paymentMethodParams
         return params
     }
-    
+
     func makeDashboardParams(
         paymentIntentClientSecret: String,
         paymentMethodID: String,
@@ -164,7 +172,7 @@ class IntentConfirmParams {
     ) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         params.paymentMethodId = paymentMethodID
-        
+
         // Dashboard only supports a specific payment flow today
         assert(paymentMethodOptions == nil)
         let options = STPConfirmPaymentMethodOptions()
@@ -182,13 +190,11 @@ class IntentConfirmParams {
 }
 
 extension STPConfirmPaymentMethodOptions {
-    /**
-     Sets `payment_method_options[card][setup_future_usage]`
-     
-     - Note: PaymentSheet uses this `setup_future_usage` (SFU) value very differently from the top-level one:
-        We read the top-level SFU to know the merchant’s desired save behavior
-        We write payment method options SFU to set the customer’s desired save behavior
-     */
+    /// Sets `payment_method_options[card][setup_future_usage]`
+    ///
+    /// - Note: PaymentSheet uses this `setup_future_usage` (SFU) value very differently from the top-level one:
+    ///    We read the top-level SFU to know the merchant’s desired save behavior
+    ///    We write payment method options SFU to set the customer’s desired save behavior
     func setSetupFutureUsageIfNecessary(
         _ shouldSave: Bool,
         paymentMethodType: STPPaymentMethodType,

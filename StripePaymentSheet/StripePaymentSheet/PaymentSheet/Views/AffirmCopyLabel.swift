@@ -1,3 +1,5 @@
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 //
 //  AffirmCopyLabel.swift
 //  StripePaymentSheet
@@ -6,8 +8,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 import UIKit
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 
 /// For internal SDK use only
 @objc(STP_Internal_AffirmCopyLabel)
@@ -15,11 +15,15 @@ class AffirmCopyLabel: UIView {
 
     let logo = NSTextAttachment()
 
-    convenience init(theme: ElementsUITheme = .default) {
+    convenience init(
+        theme: ElementsUITheme = .default
+    ) {
         self.init(frame: .zero)
         let affirmLabel = UILabel()
 
-        let message = NSMutableAttributedString(string: STPLocalizedString("Pay over time with %@", "Pay over time with Affirm copy"))
+        let message = NSMutableAttributedString(
+            string: STPLocalizedString("Pay over time with %@", "Pay over time with Affirm copy")
+        )
         logo.image = PaymentSheetImageLibrary.affirmLogo()
         message.replaceOccurrences(of: "%@", with: logo)
         affirmLabel.attributedText = message
@@ -29,17 +33,21 @@ class AffirmCopyLabel: UIView {
         affirmLabel.sizeToFit()
         addAndPinSubview(affirmLabel)
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         logo.image = PaymentSheetImageLibrary.affirmLogo()
     }
-    
-    override init(frame: CGRect) {
+
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
     }
-    
-    required init?(coder: NSCoder) {
+
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 }

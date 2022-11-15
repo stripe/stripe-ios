@@ -7,36 +7,39 @@
 //
 
 import Foundation
-import UIKit
-
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection
+    )
     func didSelectRemove(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection
+    )
 }
 
 /// For internal SDK use only
 @objc(STP_Internal_SavedPaymentOptionsViewController)
 class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - Types
-    /**
-     Represents the payment method the user has selected
-     */
+
     // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
+    /// Represents the payment method the user has selected
     enum Selection {
         case applePay
         case link
         case saved(paymentMethod: STPPaymentMethod)
         case add
 
-        static func ==(lhs: Selection, rhs: DefaultPaymentMethodStore.PaymentMethodIdentifier?) -> Bool {
+        static func == (
+            lhs: Selection,
+            rhs: DefaultPaymentMethodStore.PaymentMethodIdentifier?
+        ) -> Bool {
             switch lhs {
             case .link:
                 return rhs == .link
@@ -54,7 +57,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
-        
+
         enum AutoSelectDefaultBehavior {
             /// will only autoselect default has been stored locally
             case onlyIfMatched
@@ -63,15 +66,12 @@ class SavedPaymentOptionsViewController: UIViewController {
             /// No auto selection
             case none
         }
-        
+
         let autoSelectDefaultBehavior: AutoSelectDefaultBehavior
     }
 
     var hasRemovablePaymentMethods: Bool {
-        return (
-            configuration.customerID != nil &&
-            !savedPaymentMethods.isEmpty
-        )
+        return (configuration.customerID != nil && !savedPaymentMethods.isEmpty)
     }
 
     var isRemovingPaymentMethods: Bool {
@@ -94,7 +94,9 @@ class SavedPaymentOptionsViewController: UIViewController {
     var bottomNoticeAttributedString: NSAttributedString? {
         if case .saved(let paymentMethod) = selectedPaymentOption {
             if let _ = paymentMethod.usBankAccount {
-                return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(theme: appearance.asElementsTheme)
+                return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(
+                    theme: appearance.asElementsTheme
+                )
             }
         }
         return nil
@@ -115,7 +117,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return .applePay
         case .link:
             return .link(option: .wallet)
-        case let .saved(paymentMethod):
+        case .saved(let paymentMethod):
             return .saved(paymentMethod: paymentMethod)
         }
     }
@@ -176,7 +178,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         updateUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -200,7 +204,9 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Private methods
     private func updateUI() {
-        let defaultPaymentMethod = DefaultPaymentMethodStore.defaultPaymentMethod(for: configuration.customerID)
+        let defaultPaymentMethod = DefaultPaymentMethodStore.defaultPaymentMethod(
+            for: configuration.customerID
+        )
 
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
@@ -224,7 +230,8 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         if configuration.autoSelectDefaultBehavior != .none {
             // Select default
-            selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
+            selectedViewModelIndex =
+                viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
                 ?? (configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
         }
 
@@ -241,7 +248,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         // For some reason, the selected cell loses its selected appearance
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
-    
+
     func unselectPaymentMethod() {
         guard let selectedIndexPath = selectedIndexPath else {
             return
@@ -256,9 +263,16 @@ class SavedPaymentOptionsViewController: UIViewController {
             return
         }
 
-        DefaultPaymentMethodStore.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+        DefaultPaymentMethodStore.setDefaultPaymentMethod(
+            .link,
+            forCustomer: configuration.customerID
+        )
         selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
-        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
+        collectionView.selectItem(
+            at: selectedIndexPath,
+            animated: false,
+            scrollPosition: .centeredHorizontally
+        )
     }
 }
 
@@ -267,20 +281,28 @@ class SavedPaymentOptionsViewController: UIViewController {
 extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UICollectionViewDelegate,
     UICollectionViewDelegateFlowLayout
 {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    )
         -> Int
     {
         return viewModels.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    )
         -> UICollectionViewCell
     {
         let viewModel = viewModels[indexPath.item]
         guard
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: SavedPaymentMethodCollectionView.PaymentOptionCell
-                    .reuseIdentifier, for: indexPath)
+                    .reuseIdentifier,
+                for: indexPath
+            )
                 as? SavedPaymentMethodCollectionView.PaymentOptionCell
         else {
             assertionFailure()
@@ -290,11 +312,14 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
-        
+
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath)
+    func collectionView(
+        _ collectionView: UICollectionView,
+        shouldSelectItemAt indexPath: IndexPath
+    )
         -> Bool
     {
         guard !self.collectionView.isRemovingPaymentMethods else {
@@ -318,9 +343,15 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             assertionFailure()
             break
         case .applePay:
-            DefaultPaymentMethodStore.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
+            DefaultPaymentMethodStore.setDefaultPaymentMethod(
+                .applePay,
+                forCustomer: configuration.customerID
+            )
         case .link:
-            DefaultPaymentMethodStore.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+            DefaultPaymentMethodStore.setDefaultPaymentMethod(
+                .link,
+                forCustomer: configuration.customerID
+            )
         case .saved(let paymentMethod):
             DefaultPaymentMethodStore.setDefaultPaymentMethod(
                 .stripe(id: paymentMethod.stripeId),
@@ -339,14 +370,15 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     ) {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[indexPath.row]
+            case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
             assertionFailure()
             return
         }
         let viewModel = viewModels[indexPath.row]
         let alert = UIAlertAction(
-            title: String.Localized.remove, style: .destructive
+            title: String.Localized.remove,
+            style: .destructive
         ) { (_) in
             self.viewModels.remove(at: indexPath.row)
             // the deletion needs to be in a performBatchUpdates so we make sure it is completed
@@ -375,15 +407,16 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         }
         let cancel = UIAlertAction(
             title: String.Localized.cancel,
-            style: .cancel, handler: nil
+            style: .cancel,
+            handler: nil
         )
-        
+
         let alertController = UIAlertController(
             title: paymentMethod.removalMessage.title,
             message: paymentMethod.removalMessage.message,
             preferredStyle: .alert
         )
-        
+
         alertController.addAction(cancel)
         alertController.addAction(alert)
         present(alertController, animated: true, completion: nil)

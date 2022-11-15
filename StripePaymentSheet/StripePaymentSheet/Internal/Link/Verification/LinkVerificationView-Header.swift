@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkVerificationView {
 
@@ -21,7 +21,7 @@ extension LinkVerificationView {
         private let logoView: UIImageView = {
             let logoView = UIImageView(image: Image.link_logo.makeImage(template: true))
             logoView.translatesAutoresizingMaskIntoConstraints = false
-            logoView.isAccessibilityElement = true  
+            logoView.isAccessibilityElement = true
             logoView.accessibilityTraits = .header
             logoView.accessibilityLabel = STPPaymentMethodType.link.displayName
             return logoView
@@ -54,14 +54,16 @@ extension LinkVerificationView {
                 // Button
                 closeButton.topAnchor.constraint(equalTo: topAnchor),
                 closeButton.rightAnchor.constraint(equalTo: rightAnchor),
-                closeButton.bottomAnchor.constraint(equalTo: bottomAnchor)
+                closeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             ])
 
             tintColor = .linkNavTint
             logoView.tintColor = .linkNavLogo
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
     }

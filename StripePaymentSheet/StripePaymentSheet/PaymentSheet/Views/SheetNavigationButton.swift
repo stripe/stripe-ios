@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A simple button that increases the tap target for small buttons used in the navigation bar of PaymentSheet
 /// For internal SDK use only
@@ -26,11 +26,15 @@ class SheetNavigationButton: UIButton {
         return largerFrame.contains(point)
     }
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 }

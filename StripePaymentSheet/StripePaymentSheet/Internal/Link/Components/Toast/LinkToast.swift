@@ -6,10 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A view for displaying a brief message to the user.
 /// For internal SDK use only
@@ -47,14 +46,19 @@ final class LinkToast: UIView {
     /// - Parameters:
     ///   - type: Toast type.
     ///   - text: Text to show.
-    init(type: ToastType, text: String) {
+    init(
+        type: ToastType,
+        text: String
+    ) {
         self.toastType = type
         self.text = text
         super.init(frame: .zero)
         setup()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -79,7 +83,7 @@ final class LinkToast: UIView {
             stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
     }
 
@@ -110,8 +114,12 @@ extension LinkToast {
 
             // Pin edges
             topAnchor.constraint(equalTo: presentingView.safeAreaLayoutGuide.topAnchor),
-            leadingAnchor.constraint(greaterThanOrEqualTo: presentingView.layoutMarginsGuide.leadingAnchor),
-            trailingAnchor.constraint(lessThanOrEqualTo: presentingView.layoutMarginsGuide.trailingAnchor)
+            leadingAnchor.constraint(
+                greaterThanOrEqualTo: presentingView.layoutMarginsGuide.leadingAnchor
+            ),
+            trailingAnchor.constraint(
+                lessThanOrEqualTo: presentingView.layoutMarginsGuide.trailingAnchor
+            ),
         ])
 
         alpha = 0
@@ -148,7 +156,10 @@ extension LinkToast {
             options: .curveEaseOut
         ) {
             self.alpha = 0
-            self.transform = CGAffineTransform(translationX: 0, y: -Constants.animationTravelDistance)
+            self.transform = CGAffineTransform(
+                translationX: 0,
+                y: -Constants.animationTravelDistance
+            )
         } completion: { _ in
             self.removeFromSuperview()
         }

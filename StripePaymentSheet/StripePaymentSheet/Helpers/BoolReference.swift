@@ -16,5 +16,5 @@ final class BoolReference {
         }
     }
 
-    var didUpdate: ((Bool)->Void)? = nil
+    var didUpdate: ((Bool) -> Void)? = nil
 }

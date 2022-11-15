@@ -30,9 +30,14 @@ class STPCameraView: UIView {
         CATransaction.begin()
         CATransaction.setValue(
             kCFBooleanTrue,
-            forKey: kCATransactionDisableActions)
+            forKey: kCATransactionDisableActions
+        )
         flashLayer?.frame = CGRect(
-            x: 0, y: 0, width: layer.bounds.size.width, height: layer.bounds.size.height)
+            x: 0,
+            y: 0,
+            width: layer.bounds.size.width,
+            height: layer.bounds.size.height
+        )
         flashLayer?.opacity = 1.0
         CATransaction.commit()
         DispatchQueue.main.async(execute: {
@@ -45,7 +50,9 @@ class STPCameraView: UIView {
         })
     }
 
-    override init(frame: CGRect) {
+    override init(
+        frame: CGRect
+    ) {
         super.init(frame: frame)
         flashLayer = CALayer()
         if let flashLayer = flashLayer {
@@ -62,7 +69,9 @@ class STPCameraView: UIView {
         return AVCaptureVideoPreviewLayer.self
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

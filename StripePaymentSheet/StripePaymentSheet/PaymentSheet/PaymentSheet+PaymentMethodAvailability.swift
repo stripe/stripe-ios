@@ -12,21 +12,21 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 
 extension PaymentSheet {
-    
+
     /// An unordered list of paymentMethod types that can be used with PaymentSheet
     /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [
+    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [
         .card, .payPal,
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
         .AUBECSDebit,
-        .UPI
+        .UPI,
     ]
-    
+
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
     /// - Note: This is a var because it depends on the authenticated Link user
     ///
@@ -50,10 +50,14 @@ extension PaymentSheet {
             switch paymentMethod {
             case .blik, .card, .cardPresent, .UPI, .weChatPay:
                 return []
-            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit:
+            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24,
+                .klarna, .linkInstantDebit:
                 return [.returnURL]
             case .USBankAccount:
-                return [.userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod]
+                return [
+                    .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
+                    .validUSBankVerificationMethod,
+                ]
             case .OXXO, .boleto:
                 return [.userSupportsDelayedPaymentMethods]
             case .AUBECSDebit:
@@ -74,7 +78,7 @@ extension PaymentSheet {
                 return [.unavailable]
             }
         }()
-        
+
         return supports(
             paymentMethod: paymentMethod,
             requirements: requirements,
@@ -83,7 +87,7 @@ extension PaymentSheet {
             supportedPaymentMethods: supportedPaymentMethods
         )
     }
-    
+
     /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use, set up, and reuse
     /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent or saved payment method
     /// - Parameters:
@@ -114,14 +118,16 @@ extension PaymentSheet {
                 return [.userSupportsDelayedPaymentMethods, .unavailable]
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
-            case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .unknown:
+            case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay,
+                .przelewy24, .EPS,
+                .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link,
+                .linkInstantDebit, .affirm, .unknown:
                 return [.unavailable]
             @unknown default:
                 return [.unavailable]
             }
         }()
-        
+
         return supports(
             paymentMethod: paymentMethod,
             requirements: requirements,
@@ -130,7 +136,7 @@ extension PaymentSheet {
             supportedPaymentMethods: supportedPaymentMethods
         )
     }
-    
+
     /// DRY helper method
     static func supports(
         paymentMethod: STPPaymentMethodType,
@@ -142,21 +148,29 @@ extension PaymentSheet {
         guard supportedPaymentMethods.contains(paymentMethod) else {
             return false
         }
-        
+
         // Hide a payment method type if we are in live mode and it is unactivated
-        if !configuration.apiClient.isTestmode && intent.unactivatedPaymentMethodTypes.contains(paymentMethod) {
+        if !configuration.apiClient.isTestmode
+            && intent.unactivatedPaymentMethodTypes.contains(paymentMethod)
+        {
             return false
         }
-        
+
         let fulfilledRequirements = [configuration, intent].reduce([]) {
-            (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
+            (
+                accumulator: [PaymentMethodTypeRequirement],
+                element: PaymentMethodRequirementProvider
+            )
+            in
             return accumulator + element.fulfilledRequirements
         }
-        
+
         let supports = Set(requirements).isSubset(of: fulfilledRequirements)
         if paymentMethod == .USBankAccount {
             if !fulfilledRequirements.contains(.financialConnectionsSDK) {
-                print("[Stripe SDK] Warning: us_bank_account requires the StripeConnections SDK. See https://stripe.com/docs/payments/ach-debit/accept-a-payment?platform=ios")
+                print(
+                    "[Stripe SDK] Warning: us_bank_account requires the StripeConnections SDK. See https://stripe.com/docs/payments/ach-debit/accept-a-payment?platform=ios"
+                )
             }
         }
 
@@ -168,11 +182,10 @@ extension PaymentSheet {
 
 /// Defines an instance type who provides a set of `PaymentMethodTypeRequirement` it satisfies
 protocol PaymentMethodRequirementProvider {
-    
+
     /// The set of payment requirements provided by this instance
     var fulfilledRequirements: [PaymentMethodTypeRequirement] { get }
 }
-
 
 extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
@@ -190,18 +203,19 @@ extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
 extension Intent: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
-        case let .paymentIntent(paymentIntent):
+        case .paymentIntent(let paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {
                 if shippingInfo.name != nil,
-                   shippingInfo.address?.line1 != nil,
-                   shippingInfo.address?.country != nil,
-                   shippingInfo.address?.postalCode != nil {
+                    shippingInfo.address?.line1 != nil,
+                    shippingInfo.address?.country != nil,
+                    shippingInfo.address?.postalCode != nil
+                {
                     reqs.append(.shippingAddress)
                 }
             }
-            
+
             // Not setting up
             if paymentIntent.setupFutureUsage == .none {
                 reqs.append(.notSettingUp)
@@ -209,17 +223,19 @@ extension Intent: PaymentMethodRequirementProvider {
 
             // valid us bank verification method
             if let usBankOptions = paymentIntent.paymentMethodOptions?.usBankAccount,
-               usBankOptions.verificationMethod.isValidForPaymentSheet {
+                usBankOptions.verificationMethod.isValidForPaymentSheet
+            {
                 reqs.append(.validUSBankVerificationMethod)
             }
 
             return reqs
-        case let .setupIntent(setupIntent):
+        case .setupIntent(let setupIntent):
             var reqs = [PaymentMethodTypeRequirement]()
 
             // valid us bank verification method
             if let usBankOptions = setupIntent.paymentMethodOptions?.usBankAccount,
-               usBankOptions.verificationMethod.isValidForPaymentSheet {
+                usBankOptions.verificationMethod.isValidForPaymentSheet
+            {
                 reqs.append(.validUSBankVerificationMethod)
             }
             return reqs
@@ -242,19 +258,19 @@ typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequireme
 
 extension PaymentSheet {
     enum PaymentMethodTypeRequirement {
-        
+
         /// A special case that indicates the payment method is unavailable
         case unavailable
-        
+
         /// Indicates that a payment method requires a return URL
         case returnURL
-        
+
         /// Indicates that a payment method requires shipping information
         case shippingAddress
-        
+
         /// Requires that we are not using a PaymentIntent+setupFutureUsage or SetupIntent with this PaymentMethod
         case notSettingUp
-        
+
         /// Requires that the user declare support for asynchronous payment methods
         case userSupportsDelayedPaymentMethods
 

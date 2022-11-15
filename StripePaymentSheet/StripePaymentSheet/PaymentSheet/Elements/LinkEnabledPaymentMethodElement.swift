@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class LinkEnabledPaymentMethodElement: Element {
     struct Constants {
@@ -23,7 +23,7 @@ final class LinkEnabledPaymentMethodElement: Element {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             paymentMethodElement.view,
-            inlineSignupElement.view
+            inlineSignupElement.view,
         ])
         stackView.axis = .vertical
         stackView.spacing = Constants.spacing

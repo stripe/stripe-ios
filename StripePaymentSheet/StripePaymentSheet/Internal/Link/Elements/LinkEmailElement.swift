@@ -6,14 +6,14 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 class LinkEmailElement: Element {
     weak var delegate: ElementDelegate? = nil
-    
+
     private let emailAddressElement: TextFieldElement
-    
+
     private let activityIndicator: ActivityIndicator = {
         // TODO: Consider adding the activity indicator to TextFieldView
         let activityIndicator = ActivityIndicator(size: .medium)
@@ -39,15 +39,15 @@ class LinkEmailElement: Element {
     var view: UIView {
         return stackView
     }
-    
+
     public var emailAddressString: String? {
         return emailAddressElement.text
     }
-    
+
     public var validationState: ElementValidationState {
         return emailAddressElement.validationState
     }
-    
+
     public var indicatorTintColor: UIColor {
         get {
             return activityIndicator.color
@@ -57,7 +57,7 @@ class LinkEmailElement: Element {
             activityIndicator.color = newValue
         }
     }
-    
+
     public func startAnimating() {
         UIView.performWithoutAnimation {
             activityIndicator.startAnimating()
@@ -65,7 +65,7 @@ class LinkEmailElement: Element {
             stackView.layoutSubviews()
         }
     }
-    
+
     public func stopAnimating() {
         UIView.performWithoutAnimation {
             activityIndicator.stopAnimating()
@@ -73,8 +73,11 @@ class LinkEmailElement: Element {
             stackView.layoutSubviews()
         }
     }
-    
-    public init(defaultValue: String? = nil, theme: ElementsUITheme = .default) {
+
+    public init(
+        defaultValue: String? = nil,
+        theme: ElementsUITheme = .default
+    ) {
         emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
         emailAddressElement.delegate = self
     }
@@ -89,7 +92,7 @@ extension LinkEmailElement: ElementDelegate {
     func didUpdate(element: Element) {
         delegate?.didUpdate(element: self)
     }
-    
+
     func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
     }

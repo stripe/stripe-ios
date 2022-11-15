@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension PayWithLinkViewController {
 
@@ -23,7 +23,10 @@ extension PayWithLinkViewController {
             return vc
         }()
 
-        init(linkAccount: PaymentSheetLinkAccount, context: Context) {
+        init(
+            linkAccount: PaymentSheetLinkAccount,
+            context: Context
+        ) {
             self.linkAccount = linkAccount
             super.init(context: context)
 
@@ -31,7 +34,9 @@ extension PayWithLinkViewController {
             contentView.addAndPinSubview(verificationVC.view, insets: .zero)
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -43,7 +48,9 @@ extension PayWithLinkViewController {
 
 }
 
-extension PayWithLinkViewController.VerifyAccountViewController: LinkVerificationViewControllerDelegate {
+extension PayWithLinkViewController.VerifyAccountViewController:
+    LinkVerificationViewControllerDelegate
+{
 
     func verificationController(
         _ controller: LinkVerificationViewController,
@@ -61,13 +68,15 @@ extension PayWithLinkViewController.VerifyAccountViewController: LinkVerificatio
                 preferredStyle: .alert
             )
 
-            alertController.addAction(UIAlertAction(
-                title: String.Localized.ok,
-                style: .default,
-                handler: { [weak self] _ in
-                    self?.coordinator?.logout(cancel: false)
-                }
-            ))
+            alertController.addAction(
+                UIAlertAction(
+                    title: String.Localized.ok,
+                    style: .default,
+                    handler: { [weak self] _ in
+                        self?.coordinator?.logout(cancel: false)
+                    }
+                )
+            )
 
             navigationController?.present(alertController, animated: true)
         }

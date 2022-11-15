@@ -16,7 +16,7 @@ import Foundation
 public enum PaymentSheetError: Error {
     /// An unknown error.
     case unknown(debugDescription: String)
-    
+
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable
 
@@ -32,7 +32,7 @@ extension PaymentSheetError {
         // TODO: Expired ephemeral key
         return false
     }
-    
+
     var debugDescription: String {
         switch self {
         case .noPaymentMethodTypesAvailable:

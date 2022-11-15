@@ -7,14 +7,14 @@
 //
 
 import SafariServices
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol BottomSheetContentViewController: UIViewController {
-    
+
     /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
     var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
@@ -57,7 +57,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     func popContentViewController() -> BottomSheetContentViewController? {
         guard contentStack.count > 1,
-              let toVC = contentStack.stp_boundSafeObject(at: 1)
+            let toVC = contentStack.stp_boundSafeObject(at: 1)
         else {
             return nil
         }
@@ -66,7 +66,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentViewController = toVC
         return popped
     }
-    
+
     let isTestMode: Bool
     let appearance: PaymentSheet.Appearance
 
@@ -94,18 +94,18 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
         }
     }
-    
+
     var contentRequiresFullScreen: Bool {
         return contentViewController.requiresFullScreen
     }
 
-    let didCancelNative3DS2: () -> ()
-    
+    let didCancelNative3DS2: () -> Void
+
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
         isTestMode: Bool,
-        didCancelNative3DS2: @escaping () -> ()
+        didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
@@ -123,7 +123,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.view.backgroundColor = appearance.colors.background
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -136,12 +138,15 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
         view.backgroundColor = .systemBackground
         registerForKeyboardNotifications()
-        [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
+        // Note: Order important here, navigation bar should be on top
+        [scrollView, navigationBarContainerView].forEach({
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
         NSLayoutConstraint.activate([
-            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
+            // For unknown reasons, safeAreaLayoutGuide can have incorrect padding;
+            // we'll rely on our superview instead
+            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
@@ -157,25 +162,33 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
         // Give the scroll view a desired height
         let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
-            equalTo: scrollView.contentLayoutGuide.heightAnchor)
+            equalTo: scrollView.contentLayoutGuide.heightAnchor
+        )
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+                equalTo: scrollView.contentLayoutGuide.leadingAnchor
+            ),
             contentContainerView.trailingAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+                equalTo: scrollView.contentLayoutGuide.trailingAnchor
+            ),
             contentContainerView.topAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.topAnchor),
+                equalTo: scrollView.contentLayoutGuide.topAnchor
+            ),
             contentContainerView.bottomAnchor.constraint(
-                equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+                equalTo: scrollView.contentLayoutGuide.bottomAnchor
+            ),
             contentContainerView.widthAnchor.constraint(
-                equalTo: scrollView.frameLayoutGuide.widthAnchor),
+                equalTo: scrollView.frameLayoutGuide.widthAnchor
+            ),
             scrollViewHeightConstraint,
         ])
         let hideKeyboardGesture = UITapGestureRecognizer(
-            target: self, action: #selector(didTapAnywhere))
+            target: self,
+            action: #selector(didTapAnywhere)
+        )
         hideKeyboardGesture.cancelsTouchesInView = false
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
@@ -183,11 +196,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardDidHide),
-            name: UIResponder.keyboardWillHideNotification, object: nil)
+            self,
+            selector: #selector(keyboardDidHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
         NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardDidShow),
-            name: UIResponder.keyboardWillShowNotification, object: nil)
+            self,
+            selector: #selector(keyboardDidShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
     }
 
     @objc
@@ -196,24 +215,34 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         let landscape = UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height
         // Handle iPad landscape edge case where `scrollRectToVisible` isn't sufficient
         if UIDevice.current.userInterfaceIdiom == .pad && landscape {
-            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-            scrollView.contentInset.bottom = view.convert(keyboardFrame.cgRectValue, from: nil).size.height
+            guard
+                let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
+                    as? NSValue
+            else { return }
+            scrollView.contentInset.bottom =
+                view.convert(keyboardFrame.cgRectValue, from: nil).size.height
             return
         }
-        
+
         if let firstResponder = view.firstResponder() {
-            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
+            let firstResponderFrame = scrollView.convert(
+                firstResponder.bounds,
+                from: firstResponder
+            ).insetBy(
                 dx: -Constants.keyboardAvoidanceEdgePadding,
                 dy: -Constants.keyboardAvoidanceEdgePadding
             )
             scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
         }
     }
-    
+
     @objc
     private func keyboardDidHide(notification: Notification) {
         if let firstResponder = view.firstResponder() {
-            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
+            let firstResponderFrame = scrollView.convert(
+                firstResponder.bounds,
+                from: firstResponder
+            ).insetBy(
                 dx: -Constants.keyboardAvoidanceEdgePadding,
                 dy: -Constants.keyboardAvoidanceEdgePadding
             )
@@ -235,7 +264,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 }
 
 extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
-    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+    func presentationControllerShouldDismiss(
+        _ presentationController: UIPresentationController
+    ) -> Bool {
         // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
         didTapOrSwipeToDismiss()
         return false
@@ -257,7 +288,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
-    
+
     func authenticationPresentingViewController() -> UIViewController {
         return findTopMostPresentedViewController() ?? self
     }
@@ -272,23 +303,32 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     }
 
     func present(
-        _ authenticationViewController: UIViewController, completion: @escaping () -> Void
+        _ authenticationViewController: UIViewController,
+        completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
+            challengeViewController: authenticationViewController,
+            appearance: appearance,
+            isTestMode: isTestMode
+        )
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         completion()
     }
-    
+
     func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams) {
-        let pollingVC = PollingViewController(currentAction: action,
-                                                      appearance: self.appearance)
+        let pollingVC = PollingViewController(
+            currentAction: action,
+            appearance: self.appearance
+        )
         pushContentViewController(pollingVC)
     }
 
     func dismiss(_ authenticationViewController: UIViewController) {
-        guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
+        guard
+            contentViewController is BottomSheet3DS2ViewController
+                || contentViewController is PollingViewController
+        else {
             return
         }
         _ = popContentViewController()
@@ -307,7 +347,10 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
         return true
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    )
         -> Bool
     {
         // I can't find another way to allow custom UIControl subclasses to receive touches

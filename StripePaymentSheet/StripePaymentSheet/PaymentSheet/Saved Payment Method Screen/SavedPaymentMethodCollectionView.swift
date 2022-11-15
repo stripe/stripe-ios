@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 // MARK: - Constants
 /// Entire cell size
@@ -24,12 +24,17 @@ private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 /// For internal SDK use only
 @objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
-    init(appearance: PaymentSheet.Appearance) {
+    init(
+        appearance: PaymentSheet.Appearance
+    ) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
-            top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0,
-            right: PaymentSheetUI.defaultPadding)
+            top: 0,
+            left: PaymentSheetUI.defaultPadding,
+            bottom: 0,
+            right: PaymentSheetUI.defaultPadding
+        )
         layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 12
         super.init(frame: .zero, collectionViewLayout: layout)
@@ -38,12 +43,16 @@ class SavedPaymentMethodCollectionView: UICollectionView {
         backgroundColor = appearance.colors.background
 
         register(
-            PaymentOptionCell.self, forCellWithReuseIdentifier: PaymentOptionCell.reuseIdentifier)
+            PaymentOptionCell.self,
+            forCellWithReuseIdentifier: PaymentOptionCell.reuseIdentifier
+        )
     }
 
     var isRemovingPaymentMethods: Bool = false
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -56,7 +65,8 @@ class SavedPaymentMethodCollectionView: UICollectionView {
 
 protocol PaymentOptionCellDelegate: AnyObject {
     func paymentOptionCellDidSelectRemove(
-        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
+        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
+    )
 }
 
 extension SavedPaymentMethodCollectionView {
@@ -68,25 +78,42 @@ extension SavedPaymentMethodCollectionView {
 
         lazy var label: UILabel = {
             let label = UILabel()
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.font = appearance.scaledFont(
+                for: appearance.font.base.medium,
+                style: .footnote,
+                maximumPointSize: 20
+            )
             label.textColor = appearance.colors.text
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
         let paymentMethodLogo: UIImageView = UIImageView()
-        let plus: CircleIconView = CircleIconView(icon: .icon_plus,
-                                                  fillColor: UIColor.dynamic(
-            light: .systemGray5, dark: .tertiaryLabel))
-        lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
+        let plus: CircleIconView = CircleIconView(
+            icon: .icon_plus,
+            fillColor: UIColor.dynamic(
+                light: .systemGray5,
+                dark: .tertiaryLabel
+            )
+        )
+        lazy var selectedIcon: CircleIconView = CircleIconView(
+            icon: .icon_checkmark,
+            fillColor: appearance.colors.primary
+        )
         lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
             shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
-                top: 15, left: 24, bottom: 15, right: 24)
+                top: 15,
+                left: 24,
+                bottom: 15,
+                right: 24
+            )
             return shadowRoundedRectangle
         }()
         lazy var deleteButton: CircularButton = {
-            let button = CircularButton(style: .remove,
-                                        dangerColor: appearance.colors.danger)
+            let button = CircularButton(
+                style: .remove,
+                dangerColor: appearance.colors.danger
+            )
             button.backgroundColor = appearance.colors.danger
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.remove
@@ -112,7 +139,9 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - UICollectionViewCell
 
-        override init(frame: CGRect) {
+        override init(
+            frame: CGRect
+        ) {
             super.init(frame: frame)
 
             [paymentMethodLogo, plus, selectedIcon].forEach {
@@ -140,26 +169,36 @@ extension SavedPaymentMethodCollectionView {
             NSLayoutConstraint.activate([
                 shadowRoundedRectangle.topAnchor.constraint(equalTo: contentView.topAnchor),
                 shadowRoundedRectangle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-                shadowRoundedRectangle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                shadowRoundedRectangle.trailingAnchor.constraint(
+                    equalTo: contentView.trailingAnchor
+                ),
                 shadowRoundedRectangle.widthAnchor.constraint(
-                    equalToConstant: roundedRectangleSize.width),
+                    equalToConstant: roundedRectangleSize.width
+                ),
                 shadowRoundedRectangle.heightAnchor.constraint(
-                    equalToConstant: roundedRectangleSize.height),
+                    equalToConstant: roundedRectangleSize.height
+                ),
 
                 label.topAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.bottomAnchor, constant: 4),
+                    equalTo: shadowRoundedRectangle.bottomAnchor,
+                    constant: 4
+                ),
                 label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
                 label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
                 paymentMethodLogo.centerXAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.centerXAnchor),
+                    equalTo: shadowRoundedRectangle.centerXAnchor
+                ),
                 paymentMethodLogo.centerYAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.centerYAnchor),
+                    equalTo: shadowRoundedRectangle.centerYAnchor
+                ),
                 paymentMethodLogo.widthAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.width),
+                    equalToConstant: paymentMethodLogoSize.width
+                ),
                 paymentMethodLogo.heightAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.height),
+                    equalToConstant: paymentMethodLogoSize.height
+                ),
 
                 plus.centerXAnchor.constraint(equalTo: shadowRoundedRectangle.centerXAnchor),
                 plus.centerYAnchor.constraint(equalTo: shadowRoundedRectangle.centerYAnchor),
@@ -169,14 +208,22 @@ extension SavedPaymentMethodCollectionView {
                 selectedIcon.widthAnchor.constraint(equalToConstant: 26),
                 selectedIcon.heightAnchor.constraint(equalToConstant: 26),
                 selectedIcon.trailingAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.trailingAnchor, constant: 6),
+                    equalTo: shadowRoundedRectangle.trailingAnchor,
+                    constant: 6
+                ),
                 selectedIcon.bottomAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.bottomAnchor, constant: 6),
+                    equalTo: shadowRoundedRectangle.bottomAnchor,
+                    constant: 6
+                ),
 
                 deleteButton.trailingAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.trailingAnchor, constant: 6),
+                    equalTo: shadowRoundedRectangle.trailingAnchor,
+                    constant: 6
+                ),
                 deleteButton.topAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.topAnchor, constant: -6),
+                    equalTo: shadowRoundedRectangle.topAnchor,
+                    constant: -6
+                ),
             ])
         }
 
@@ -184,7 +231,9 @@ extension SavedPaymentMethodCollectionView {
             super.layoutSubviews()
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 
@@ -198,15 +247,15 @@ extension SavedPaymentMethodCollectionView {
                 update()
             }
         }
-        
+
         override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
             let translatedPoint = deleteButton.convert(point, from: self)
-            
+
             // Ensures taps on the delete button are handled properly as it lives outside its cells' bounds
-            if (deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden) {
+            if deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden {
                 return deleteButton.hitTest(translatedPoint, with: event)
             }
-            
+
             return super.hitTest(point, with: event)
         }
 
@@ -239,7 +288,9 @@ extension SavedPaymentMethodCollectionView {
 
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
             if case .USBankAccount = paymentMethod.type {
-                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(.secondaryLabel)
+                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(
+                    .secondaryLabel
+                )
                 let iconImageAttachment = NSTextAttachment()
                 // Inspiration from:
                 // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
@@ -247,10 +298,12 @@ extension SavedPaymentMethodCollectionView {
                 let iconHeight = iconImage.size.height * ratio
                 let iconWidth = iconImage.size.width * ratio
 
-                iconImageAttachment.bounds = CGRect(x: 0,
-                                                    y: (label.font.capHeight - iconHeight).rounded() / 2,
-                                                    width: iconWidth,
-                                                    height: iconHeight)
+                iconImageAttachment.bounds = CGRect(
+                    x: 0,
+                    y: (label.font.capHeight - iconHeight).rounded() / 2,
+                    width: iconWidth,
+                    height: iconHeight
+                )
                 iconImageAttachment.image = iconImage
                 let result = NSMutableAttributedString(string: "")
 
@@ -287,7 +340,9 @@ extension SavedPaymentMethodCollectionView {
                     label.text = STPPaymentMethodType.link.displayName
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeCarouselImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeCarouselImage(
+                        for: self
+                    )
                     paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
                         forBackgroundColor: appearance.colors.componentBackground
                     )
@@ -296,7 +351,8 @@ extension SavedPaymentMethodCollectionView {
                         "+ Add",
                         "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
                     )
-                    shadowRoundedRectangle.accessibilityLabel = String.Localized.add_new_payment_method
+                    shadowRoundedRectangle.accessibilityLabel =
+                        String.Localized.add_new_payment_method
                     shadowRoundedRectangle.accessibilityIdentifier = "+ Add"
                     paymentMethodLogo.isHidden = true
                     plus.isHidden = false
@@ -331,7 +387,8 @@ extension SavedPaymentMethodCollectionView {
                     plus.alpha = 0.6
                     label.textColor = appearance.colors.text.disabledColor
                     shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
-                    shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
+                    shadowRoundedRectangle.layer.borderColor =
+                        appearance.colors.componentBorder.cgColor
                 }
 
             } else if isSelected {
@@ -353,8 +410,13 @@ extension SavedPaymentMethodCollectionView {
                 applyDefaultStyle()
             }
             deleteButton.isAccessibilityElement = !deleteButton.isHidden
-            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
-            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            shadowRoundedRectangle.roundedRectangle.backgroundColor =
+                appearance.colors.componentBackground
+            label.font = appearance.scaledFont(
+                for: appearance.font.base.medium,
+                style: .footnote,
+                maximumPointSize: 20
+            )
 
             shadowRoundedRectangle.accessibilityTraits = {
                 if isRemovingPaymentMethods {
@@ -374,14 +436,17 @@ extension SavedPaymentMethodCollectionView {
     // A circle with an image in the middle
     class CircleIconView: UIView {
         let imageView: UIImageView
-        
+
         override var backgroundColor: UIColor? {
             didSet {
                 imageView.tintColor = backgroundColor?.contrastingColor
             }
         }
 
-        required init(icon: Image, fillColor: UIColor) {
+        required init(
+            icon: Image,
+            fillColor: UIColor
+        ) {
             imageView = UIImageView(image: icon.makeImage(template: true))
             super.init(frame: .zero)
             backgroundColor = fillColor
@@ -405,7 +470,9 @@ extension SavedPaymentMethodCollectionView {
             layer.masksToBounds = true
         }
 
-        required init?(coder: NSCoder) {
+        required init?(
+            coder: NSCoder
+        ) {
             fatalError("init(coder:) has not been implemented")
         }
 

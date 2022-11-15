@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripePayments
+import UIKit
 
 extension OneTimeCodeTextField {
     final class TextStorage {
@@ -42,7 +42,9 @@ extension OneTimeCodeTextField {
 
         private let allowedCharacters: CharacterSet = .init(charactersIn: "0123456789")
 
-        init(capacity: Int) {
+        init(
+            capacity: Int
+        ) {
             self.capacity = capacity
         }
 
@@ -107,14 +109,16 @@ extension OneTimeCodeTextField {
     final class TextPosition: UITextPosition {
         let index: Int
 
-        init(_ index: Int) {
+        init(
+            _ index: Int
+        ) {
             self.index = index
         }
 
         override var description: String {
             let props: [String] = [
                 String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
-                "index = \(String(describing: index))"
+                "index = \(String(describing: index))",
             ]
             return "<\(props.joined(separator: "; "))>"
         }
@@ -165,7 +169,10 @@ extension OneTimeCodeTextField {
             return _end
         }
 
-        convenience init?(start: UITextPosition, end: UITextPosition) {
+        convenience init?(
+            start: UITextPosition,
+            end: UITextPosition
+        ) {
             guard
                 let start = start as? TextPosition,
                 let end = end as? TextPosition
@@ -176,7 +183,10 @@ extension OneTimeCodeTextField {
             self.init(start: start, end: end)
         }
 
-        init(start: TextPosition, end: TextPosition) {
+        init(
+            start: TextPosition,
+            end: TextPosition
+        ) {
             self._start = start
             self._end = end
         }
@@ -185,7 +195,7 @@ extension OneTimeCodeTextField {
             let props: [String] = [
                 String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
                 "start = \(String(describing: start))",
-                "end = \(String(describing: end))"
+                "end = \(String(describing: end))",
             ]
             return "<\(props.joined(separator: "; "))>"
         }
@@ -208,7 +218,10 @@ extension OneTimeCodeTextField {
             let lowerBound = min(_start.index, _end.index)
             let upperBound = max(_start.index, _end.index)
 
-            let beginIndex = string.index(string.startIndex, offsetBy: min(lowerBound, string.count))
+            let beginIndex = string.index(
+                string.startIndex,
+                offsetBy: min(lowerBound, string.count)
+            )
             let endIndex = string.index(string.startIndex, offsetBy: min(upperBound, string.count))
 
             return beginIndex..<endIndex

@@ -8,8 +8,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
@@ -18,7 +18,11 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
         case pay(account: PaymentSheetLinkAccount)
-        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
+        case signupAndPay(
+            account: PaymentSheetLinkAccount,
+            phoneNumber: PhoneNumber,
+            legalName: String?
+        )
         case continueWithoutLink
     }
 
@@ -26,7 +30,9 @@ final class LinkInlineSignupViewModel {
 
     private let accountService: LinkAccountServiceProtocol
 
-    private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
+    private let accountLookupDebouncer = OperationDebouncer(
+        debounceTime: LinkUI.accountLookupDebounceTime
+    )
 
     private let country: String?
 
@@ -74,7 +80,8 @@ final class LinkInlineSignupViewModel {
                 notifyUpdate()
 
                 if let linkAccount = linkAccount,
-                   !linkAccount.isRegistered {
+                    !linkAccount.isRegistered
+                {
                     STPAnalyticsClient.sharedClient.logLinkSignupStart()
                 }
             }
@@ -88,7 +95,7 @@ final class LinkInlineSignupViewModel {
             }
         }
     }
-    
+
     private(set) var lookupFailed: Bool = false {
         didSet {
             if lookupFailed != oldValue {
@@ -127,7 +134,8 @@ final class LinkInlineSignupViewModel {
 
     var shouldShowNameField: Bool {
         guard saveCheckboxChecked,
-              let linkAccount = linkAccount else {
+            let linkAccount = linkAccount
+        else {
             return false
         }
 
@@ -136,7 +144,7 @@ final class LinkInlineSignupViewModel {
 
     var shouldShowPhoneField: Bool {
         guard saveCheckboxChecked,
-              let linkAccount = linkAccount
+            let linkAccount = linkAccount
         else {
             return false
         }
@@ -150,7 +158,7 @@ final class LinkInlineSignupViewModel {
 
     var action: Action? {
         guard saveCheckboxChecked,
-              !lookupFailed
+            !lookupFailed
         else {
             return .continueWithoutLink
         }
@@ -162,7 +170,8 @@ final class LinkInlineSignupViewModel {
         switch linkAccount.sessionState {
         case .requiresSignUp:
             guard let phoneNumber = phoneNumber,
-                  phoneNumber.isComplete else {
+                phoneNumber.isComplete
+            else {
                 return nil
             }
 
@@ -196,16 +205,16 @@ final class LinkInlineSignupViewModel {
 
 }
 
-private extension LinkInlineSignupViewModel {
+extension LinkInlineSignupViewModel {
 
-    func notifyUpdate() {
+    fileprivate func notifyUpdate() {
         delegate?.signupViewModelDidUpdate(self)
     }
 
-    func onEmailUpdate() {
+    fileprivate func onEmailUpdate() {
         linkAccount = nil
         lookupFailed = false
-        
+
         guard let emailAddress = emailAddress else {
             accountLookupDebouncer.cancel()
             isLookingUpLinkAccount = false

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LoadingViewControllerDelegate: AnyObject {
     func shouldDismiss(_ loadingViewController: LoadingViewController)
@@ -19,12 +19,14 @@ protocol LoadingViewControllerDelegate: AnyObject {
 @objc(STP_Internal_LoadingViewController)
 class LoadingViewController: UIViewController, BottomSheetContentViewController {
     lazy var navigationBar: SheetNavigationBar = {
-        let navigationBar = SheetNavigationBar(isTestMode: isTestMode,
-                                               appearance: appearance)
+        let navigationBar = SheetNavigationBar(
+            isTestMode: isTestMode,
+            appearance: appearance
+        )
         navigationBar.delegate = self
         return navigationBar
     }()
-    
+
     let appearance: PaymentSheet.Appearance
     let isTestMode: Bool
 
@@ -40,20 +42,26 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
     let activityIndicator = UIActivityIndicatorView(style: .medium)
     weak var delegate: LoadingViewControllerDelegate?
 
-    init(delegate: LoadingViewControllerDelegate, appearance: PaymentSheet.Appearance, isTestMode: Bool) {
+    init(
+        delegate: LoadingViewControllerDelegate,
+        appearance: PaymentSheet.Appearance,
+        isTestMode: Bool
+    ) {
         self.delegate = delegate
         self.appearance = appearance
         self.isTestMode = isTestMode
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         activityIndicator.color = appearance.colors.background.contrastingColor
         [activityIndicator].forEach {
             view.addSubview($0)
@@ -61,9 +69,11 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         }
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+                equalTo: view.safeAreaLayoutGuide.centerXAnchor
+            ),
             activityIndicator.centerYAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+                equalTo: view.safeAreaLayoutGuide.centerYAnchor
+            ),
             view.heightAnchor.constraint(equalToConstant: loadingViewHeight),
         ])
         activityIndicator.startAnimating()

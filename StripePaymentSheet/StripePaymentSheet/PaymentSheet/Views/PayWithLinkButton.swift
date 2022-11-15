@@ -6,12 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// A button for paying with Link.
 /// For internal SDK use only
@@ -21,7 +20,12 @@ final class PayWithLinkButton: UIControl {
     struct Constants {
         static let defaultSize: CGSize = .init(width: 200, height: 44)
         static let logoSize: CGSize = .init(width: 35, height: 16)
-        static let margins: NSDirectionalEdgeInsets = .init(top: 7, leading: 16, bottom: 7, trailing: 10)
+        static let margins: NSDirectionalEdgeInsets = .init(
+            top: 7,
+            leading: 16,
+            bottom: 7,
+            trailing: 10
+        )
         static let emailContainerMinimumCornerRadius: CGFloat = 3
         static let emailContainerInsets: NSDirectionalEdgeInsets = .insets(amount: 6)
     }
@@ -80,7 +84,7 @@ final class PayWithLinkButton: UIControl {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             Self.makeLogoView(),
-            emailLabelContainer
+            emailLabelContainer,
         ])
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +116,9 @@ final class PayWithLinkButton: UIControl {
         LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -141,22 +147,22 @@ final class PayWithLinkButton: UIControl {
 
 // MARK: - UI
 
-private extension PayWithLinkButton {
+extension PayWithLinkButton {
 
-    static func makeLogoView() -> UIImageView {
+    fileprivate static func makeLogoView() -> UIImageView {
         let logoView = UIImageView(image: Image.link_logo.makeImage(template: true))
         logoView.translatesAutoresizingMaskIntoConstraints = false
         logoView.contentMode = .scaleAspectFill
 
         NSLayoutConstraint.activate([
             logoView.widthAnchor.constraint(equalToConstant: Constants.logoSize.width),
-            logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height)
+            logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
         ])
 
         return logoView
     }
 
-    func setupUI() {
+    fileprivate func setupUI() {
         directionalLayoutMargins = Constants.margins
 
         addSubview(logoView)
@@ -169,11 +175,11 @@ private extension PayWithLinkButton {
             stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
     }
 
-    func updateUI() {
+    fileprivate func updateUI() {
         emailLabel.text = linkAccount?.email
         logoView.isHidden = hasValidLinkAccount
         stackView.isHidden = !hasValidLinkAccount
@@ -184,9 +190,9 @@ private extension PayWithLinkButton {
 
 // MARK: - Styling
 
-private extension PayWithLinkButton {
+extension PayWithLinkButton {
 
-    var effectiveCornerRadius: CGFloat {
+    fileprivate var effectiveCornerRadius: CGFloat {
         // Matches the formula used by `PKPaymentButton` for calculating
         // the effective corner radius. The effective corner radius is snapped
         // to half the button's height if the corner radius is
@@ -198,7 +204,7 @@ private extension PayWithLinkButton {
             : cornerRadius
     }
 
-    var effectiveEmailContainerRadius: CGFloat {
+    fileprivate var effectiveEmailContainerRadius: CGFloat {
         guard cornerRadius >= 1 else {
             // No round the container corners if `cornerRadius` is less than 1.
             return 0.0
@@ -212,7 +218,7 @@ private extension PayWithLinkButton {
         )
     }
 
-    func applyStyle() {
+    fileprivate func applyStyle() {
         // Foreground
         let foregroundColor = self.foregroundColor(for: state)
         titleLabel.textColor = foregroundColor
@@ -225,7 +231,7 @@ private extension PayWithLinkButton {
         backgroundColor = backgroundColor(for: state)
     }
 
-    func applyCornerRadius() {
+    fileprivate func applyCornerRadius() {
         if #available(iOS 13.0, *) {
             layer.cornerCurve = .continuous
             emailLabelContainer.layer.cornerCurve = .continuous
@@ -235,7 +241,7 @@ private extension PayWithLinkButton {
         emailLabelContainer.layer.cornerRadius = effectiveEmailContainerRadius
     }
 
-    func foregroundColor(for state: State) -> UIColor {
+    fileprivate func foregroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
             return UIColor.linkPrimaryButtonForeground.withAlphaComponent(0.8)
@@ -244,7 +250,7 @@ private extension PayWithLinkButton {
         }
     }
 
-    func backgroundColor(for state: State) -> UIColor {
+    fileprivate func backgroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
             return UIColor.linkBrand.darken(by: 0.2)
@@ -259,9 +265,9 @@ private extension PayWithLinkButton {
 
 // MARK: - Accessibility
 
-private extension PayWithLinkButton {
+extension PayWithLinkButton {
 
-    func updateAccessibilityContent() {
+    fileprivate func updateAccessibilityContent() {
         if isEnabled {
             accessibilityTraits = [.button]
         } else {
