@@ -21,9 +21,7 @@ extension AddressSectionElement {
                 attributedText: configuration.makeDisplayText(for: text),
                 keyboardProperties: configuration.keyboardProperties(for: text),
                 validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
-                accessoryViewBuilder: { () -> UIView? in
-                    configuration.accessoryView(for: text, theme: self.theme)
-                },
+                accessoryView: configuration.accessoryView(for: text, theme: theme),
                 shouldShowClearButton: configuration.shouldShowClearButton,
                 theme: theme
             )

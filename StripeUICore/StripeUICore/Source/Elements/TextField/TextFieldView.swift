@@ -12,6 +12,17 @@ import UIKit
 protocol TextFieldViewDelegate: AnyObject {
     func textFieldViewDidUpdate(view: TextFieldView)
     func textFieldViewContinueToNextField(view: TextFieldView)
+    func traitCollectionDidChangeForTextField(
+        view: TextFieldView,
+        traitCollection: UITraitCollection
+    )
+}
+
+extension TextFieldViewDelegate {
+    public func traitCollectionDidChangeForTextField(
+        view: TextFieldView,
+        traitCollection: UITraitCollection
+    ) {}
 }
 
 /**
@@ -204,7 +215,7 @@ class TextFieldView: UIView {
         }
 
         // Update accessory view
-        accessoryView = viewModel.accessoryViewBuilder()
+        accessoryView = viewModel.accessoryView
         // Manually call layoutIfNeeded to avoid unintentional animations
         // in next layout pass
         layoutIfNeeded()
@@ -212,7 +223,11 @@ class TextFieldView: UIView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        updateUI(with: viewModel)
+        // This call will update the UI.
+        delegate?.traitCollectionDidChangeForTextField(
+            view: self,
+            traitCollection: traitCollection
+        )
     }
     
     // Note: Overriden because this value changes when the text field is interacted with.

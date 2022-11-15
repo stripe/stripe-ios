@@ -70,7 +70,7 @@ import UIKit
         let attributedText: NSAttributedString
         let keyboardProperties: KeyboardProperties
         let validationState: ValidationState
-        let accessoryViewBuilder: () -> UIView?
+        let accessoryView: UIView?
         let shouldShowClearButton: Bool
         let theme: ElementsUITheme
     }
@@ -90,9 +90,7 @@ import UIKit
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
-            accessoryViewBuilder: { () -> UIView? in
-                self.configuration.accessoryView(for: self.text, theme: self.theme)
-            },
+            accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
             theme: theme
         )
@@ -177,5 +175,13 @@ extension TextFieldElement: TextFieldViewDelegate {
     func textFieldViewContinueToNextField(view: TextFieldView) {
         isEditing = view.isEditing
         delegate?.continueToNextField(element: self)
+    }
+
+    func traitCollectionDidChangeForTextField(
+        view: TextFieldView,
+        traitCollection: UITraitCollection
+    ) {
+        view.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
     }
 }
