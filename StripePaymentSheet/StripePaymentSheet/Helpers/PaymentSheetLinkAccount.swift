@@ -472,7 +472,7 @@ extension PaymentSheetLinkAccount {
     /// - Parameter intent: The Intent that the user is trying to confirm.
     /// - Returns: A set containing the supported Payment Details types.
     func supportedPaymentDetailsTypes(for intent: Intent) -> Set<ConsumerPaymentDetails.DetailsType> {
-        guard let currentSession = currentSession else {
+        guard let currentSession = currentSession, let fundingSources = intent.linkFundingSources else {
             return []
         }
 
@@ -480,10 +480,12 @@ extension PaymentSheetLinkAccount {
             currentSession.supportedPaymentDetailsTypes ?? []
         )
 
-        if !intent.linkBankOnboardingEnabled {
-            supportedPaymentDetailsTypes.remove(.bankAccount)
-        }
+        // Take the intersection of the consumer session types and the merchant-provided Link funding sources
+        let fundingSourceDetailsTypes = Set(fundingSources.compactMap { $0.detailsType })
 
+        supportedPaymentDetailsTypes.formIntersection(fundingSourceDetailsTypes)
+
+        // Special testmode handling
         if !intent.livemode && Self.emailSupportsMultipleFundingSourcesOnTestMode(email) {
             supportedPaymentDetailsTypes.insert(.bankAccount)
         }
@@ -525,4 +527,15 @@ private extension PaymentSheetLinkAccount {
         return email.contains("+multiple_funding_sources@")
     }
 
+}
+
+private extension LinkSettings.FundingSource {
+    var detailsType: ConsumerPaymentDetails.DetailsType? {
+        switch self {
+        case .card:
+            return .card
+        case .bankAccount:
+            return .bankAccount
+        }
+    }
 }

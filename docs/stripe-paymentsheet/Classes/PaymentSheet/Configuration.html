@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../../index.html">
-          Stripe iOS SDKs 23.1.1
+          Stripe iOS SDKs 23.2.0
         </a>
         
       </p>
@@ -55,6 +55,15 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/AddressViewController.html">AddressViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/AddressViewController/AddressDetails.html">– AddressDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/AddressViewController/Configuration.html">– Configuration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../../Classes/PaymentSheet.html">PaymentSheet</a>
               </li>
@@ -130,6 +139,14 @@
               </li>
             </ul>
           </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/AddressViewControllerDelegate.html">AddressViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </nav>
       <article class="main-content">
@@ -147,7 +164,7 @@
             <p>Configuration for PaymentSheet</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L75-L166">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L75-L165">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -189,7 +206,43 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L80">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet0bC0C13ConfigurationV06allowsB31MethodsRequiringShippingAddressSbvp"></a>
+                    <a name="//apple_ref/swift/Property/allowsPaymentMethodsRequiringShippingAddress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet0bC0C13ConfigurationV06allowsB31MethodsRequiringShippingAddressSbvp">allowsPaymentMethodsRequiringShippingAddress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If <code>true</code>, allows payment methods that require a shipping address, like Afterpay and Affirm. Defaults to <code>false</code>.
+Set this to <code>true</code> if you collect shipping addresses and set <code><a href="../../Classes/PaymentSheet/Configuration.html#/s:18StripePaymentSheet0bC0C13ConfigurationV15shippingDetailsAA21AddressViewControllerC0gF0VSgycvp">Configuration.shippingDetails</a></code> or set <code>shipping</code> details directly on the PaymentIntent.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    PaymentSheet considers this property <code>true</code> and allows payment methods that require a shipping address if <code>shipping</code> details are present on the PaymentIntent when PaymentSheet loads.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">allowsPaymentMethodsRequiringShippingAddress</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L85">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -219,7 +272,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L88">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L88">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -250,7 +303,7 @@ If set, PaymentSheet displays Apple Pay as a payment option</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L92">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L92">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -280,7 +333,7 @@ If set, PaymentSheet displays Apple Pay as a payment option</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L95-L103">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L95-L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -313,7 +366,7 @@ for payment and setup intents.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L110">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L110">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -346,7 +399,7 @@ Default value is SheetStyle.automatic
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L117-L124">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L117-L124">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -377,7 +430,7 @@ If set, the customer can select a previously saved payment method within Payment
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L128">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L128">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -409,7 +462,7 @@ The default value is the name of your app, using CFBundleDisplayName or CFBundle
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L133">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L133">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -440,7 +493,7 @@ web views used for additional authentication, e.g. 3DS2</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L137">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L137">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -470,7 +523,7 @@ web views used for additional authentication, e.g. 3DS2</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L140">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L140">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -502,7 +555,7 @@ Default value is .automatic
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L145">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L145">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -532,7 +585,39 @@ Default value is .automatic
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L148">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L148">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet0bC0C13ConfigurationV15shippingDetailsAA21AddressViewControllerC0gF0VSgycvp"></a>
+                    <a name="//apple_ref/swift/Property/shippingDetails" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet0bC0C13ConfigurationV15shippingDetailsAA21AddressViewControllerC0gF0VSgycvp">shippingDetails</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A closure that returns the customer&rsquo;s shipping details.
+This is used to display a &ldquo;Billing address is same as shipping&rdquo; checkbox if <code><a href="../../Classes/PaymentSheet/Configuration.html#/s:18StripePaymentSheet0bC0C13ConfigurationV21defaultBillingDetailsAC0fG0Vvp">defaultBillingDetails</a></code> is not provided
+If <code>name</code> and <code>line1</code> are populated, it&rsquo;s also <a href="https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping">attached to the PaymentIntent</a> during payment.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">shippingDetails</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/AddressViewController.html">AddressViewController</a></span><span class="o">.</span><span class="kt">AddressDetails</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L153">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -562,7 +647,7 @@ Default value is .automatic
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L157">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/PaymentSheetConfiguration.swift#L156">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -575,7 +660,7 @@ Default value is .automatic
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-11-07)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-11-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

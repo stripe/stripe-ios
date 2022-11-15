@@ -11,16 +11,20 @@ import Foundation
 /// For internal SDK use only
 @objc(STP_Internal_LinkSettings)
 @_spi(STP) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
+    @_spi(STP) @frozen public enum FundingSource: String {
+        case card = "CARD"
+        case bankAccount = "BANK_ACCOUNT"
+    }
 
-    @_spi(STP) public let bankOnboardingEnabled: Bool
+    @_spi(STP) public let fundingSources: Set<FundingSource>
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
     @_spi(STP) public init(
-        bankOnboardingEnabled: Bool,
+        fundingSources: Set<FundingSource>,
         allResponseFields: [AnyHashable: Any]
     ) {
-        self.bankOnboardingEnabled = bankOnboardingEnabled
+        self.fundingSources = fundingSources
         self.allResponseFields = allResponseFields
     }
 
@@ -29,13 +33,16 @@ import Foundation
     ) -> Self? {
         guard
             let response = response,
-            let bankOnboardingEnabled = response["link_bank_onboarding_enabled"] as? Bool
+            let fundingSourcesStrings = response["link_funding_sources"] as? [String]
         else {
             return nil
         }
 
+        // Server may send down funding sources we haven't implemented yet, so we'll just ignore any unknown sources
+        let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
+
         return LinkSettings(
-            bankOnboardingEnabled: bankOnboardingEnabled,
+            fundingSources: validFundingSources,
             allResponseFields: response
         ) as? Self
     }
