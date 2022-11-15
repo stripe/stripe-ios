@@ -36,7 +36,7 @@ class PaymentSheetFormFactory {
 
     var canSaveToLink: Bool {
         return (
-            intent.supportsLink &&
+            intent.supportsLinkCard &&
             paymentMethod == .card &&
             saveMode != .merchantRequired
         )
