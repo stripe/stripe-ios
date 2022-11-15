@@ -133,7 +133,7 @@ extension FinancialConnectionsNavigationController {
     static func configureNavigationItemForNative(
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
-        isFirstViewController: Bool
+        shouldLeftAlignStripeLogo: Bool
     ) {
         let stripeLogoView: UIView = {
             let stripeLogoImageView = UIImageView(image: Image.stripe_logo.makeImage(template: true))
@@ -156,7 +156,7 @@ extension FinancialConnectionsNavigationController {
             stripeLogoImageView.center = containerView.center
             return containerView
         }()
-        if isFirstViewController {
+        if shouldLeftAlignStripeLogo {
             navigationItem?.leftBarButtonItem = UIBarButtonItem(customView: stripeLogoView)
         } else {
             navigationItem?.titleView = stripeLogoView
