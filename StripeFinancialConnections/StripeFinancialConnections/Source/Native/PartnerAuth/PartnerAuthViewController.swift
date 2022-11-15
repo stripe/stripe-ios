@@ -31,6 +31,7 @@ final class PartnerAuthViewController: UIViewController {
         return dataSource.institution
     }
     private var webAuthenticationSession: ASWebAuthenticationSession?
+    private var lastHandledAuthenticationSessionReturnUrl: URL? = nil
     weak var delegate: PartnerAuthViewControllerDelegate?
     
     private lazy var establishingConnectionLoadingView: UIView = {
@@ -201,6 +202,7 @@ final class PartnerAuthViewController: UIViewController {
             return
         }
         
+        lastHandledAuthenticationSessionReturnUrl = nil
         let webAuthenticationSession = ASWebAuthenticationSession(
             url: url,
             callbackURLScheme: "stripe",
@@ -208,6 +210,15 @@ final class PartnerAuthViewController: UIViewController {
             // sending errors, it's only related to `ASWebAuthenticationSession`
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
+                if self.lastHandledAuthenticationSessionReturnUrl != nil && self.lastHandledAuthenticationSessionReturnUrl == returnUrl {
+                    // for unknown reason, `ASWebAuthenticationSession` can _sometimes_
+                    // call the `completionHandler` twice
+                    //
+                    // we use `returnUrl`, instead of a `Bool`, in the case that
+                    // this completion handler can sometimes return different URL's
+                    return
+                }
+                self.lastHandledAuthenticationSessionReturnUrl = returnUrl
                 if
                     let returnUrl = returnUrl,
                     returnUrl.scheme == "stripe",
@@ -349,7 +360,18 @@ final class PartnerAuthViewController: UIViewController {
                 switch result {
                 case .success(let authorizationSession):
                     self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
-                    self.showEstablishingConnectionLoadingView(false)
+                    
+                    // hide the loading view after a delay to prevent
+                    // the screen from flashing _while_ the transition
+                    // to the next screen takes place
+                    //
+                    // note that it should be impossible to view this screen
+                    // after a successful `authorizeAuthSession`, so
+                    // calling `showEstablishingConnectionLoadingView(false)` is
+                    // defensive programming anyway
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                        self?.showEstablishingConnectionLoadingView(false)
+                    }
                 case .failure(let error):
                     self.showEstablishingConnectionLoadingView(false) // important to come BEFORE showing error view so we avoid showing back button
                     self.showErrorView(error)
