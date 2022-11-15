@@ -64,7 +64,6 @@ final class AccountPickerFooterView: UIView {
     
     func didSelectAccounts(count numberOfAccountsSelected: Int) {
         linkAccountsButton.isEnabled = (numberOfAccountsSelected > 0)
-        linkAccountsButton.alpha = linkAccountsButton.isEnabled ? 1.0 : 0.5
     }
 }
 
