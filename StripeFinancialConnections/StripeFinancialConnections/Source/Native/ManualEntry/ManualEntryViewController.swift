@@ -110,7 +110,6 @@ final class ManualEntryViewController: UIViewController {
     
     private func adjustContinueButtonStateIfNeeded() {
         footerView.continueButton.isEnabled = (manualEntryFormView.routingAndAccountNumber != nil)
-        footerView.continueButton.alpha = footerView.continueButton.isEnabled ? 1.0 : 0.5
     }
 }
 
