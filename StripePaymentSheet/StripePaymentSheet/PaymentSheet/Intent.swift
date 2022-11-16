@@ -66,10 +66,6 @@ enum Intent {
 
         return false
     }
-
-    var supportsLink: Bool {
-        return recommendedPaymentMethodTypes.contains(.link)
-    }
 }
 
 // MARK: - IntentClientSecret

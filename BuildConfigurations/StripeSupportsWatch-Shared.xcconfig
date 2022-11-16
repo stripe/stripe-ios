@@ -1,7 +1,0 @@
-//
-// StripeSupportsWatch-Shared.xcconfig
-//
-
-TARGETED_DEVICE_FAMILY = 1,2,4
-WATCHOS_DEPLOYMENT_TARGET = 6.2
-SUPPORTED_PLATFORMS = iphoneos iphonesimulator watchos watchsimulator
