@@ -206,7 +206,8 @@ class ChoosePaymentOptionViewController: UIViewController {
             isCustom: true,
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
-            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
+            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+            currency: intent.currency
         )
     }
 

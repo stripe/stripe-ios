@@ -42,9 +42,7 @@ extension STPAnalyticsClient {
             success = true
         }
 
-        let logParams =  ["payment_method": paymentOption.name.lowercased(),
-                          "locale": Locale.autoupdatingCurrent.identifier,
-                          "currency": currency]
+        let logParams =  ["payment_method": paymentOption.name.lowercased()]
         
         logPaymentSheetEvent(
             event: paymentSheetPaymentEventValue(
@@ -55,7 +53,7 @@ extension STPAnalyticsClient {
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
-            params: logParams as [String : Any]
+            currency: currency, params: logParams as [String : Any]
         )
     }
 
@@ -63,13 +61,15 @@ extension STPAnalyticsClient {
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
         linkEnabled: Bool,
-        activeLinkSession: Bool
+        activeLinkSession: Bool,
+        currency: String?
     ) {
         AnalyticsHelper.shared.startTimeMeasurement(.checkout)
         logPaymentSheetEvent(
             event: paymentSheetShowEventValue(isCustom: isCustom, paymentMethod: paymentMethod),
             linkEnabled: linkEnabled,
-            activeLinkSession: activeLinkSession
+            activeLinkSession: activeLinkSession,
+            currency: currency
         )
     }
     
@@ -223,6 +223,7 @@ extension STPAnalyticsClient {
         linkEnabled: Bool? = nil,
         activeLinkSession: Bool? = nil,
         configuration: PaymentSheet.Configuration? = nil,
+        currency: String? = nil,
         params: [String: Any] = [:]
     ) {
         var additionalParams = [:] as [String: Any]
@@ -235,6 +236,8 @@ extension STPAnalyticsClient {
         additionalParams["active_link_session"] = activeLinkSession
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
+        additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
+        additionalParams["currency"] = currency
         for (param, param_value) in params {
             additionalParams[param] = param_value
         }
