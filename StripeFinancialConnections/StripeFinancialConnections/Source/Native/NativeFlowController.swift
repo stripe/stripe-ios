@@ -33,6 +33,7 @@ class NativeFlowController {
             action: #selector(didSelectNavigationBarCloseButton)
         )
         item.tintColor = .textDisabled
+        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
