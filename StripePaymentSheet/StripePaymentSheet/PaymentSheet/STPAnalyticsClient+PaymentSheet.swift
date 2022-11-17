@@ -41,8 +41,6 @@ extension STPAnalyticsClient {
         case .completed:
             success = true
         }
-
-        let logParams =  ["payment_method": paymentOption.name.lowercased()]
         
         logPaymentSheetEvent(
             event: paymentSheetPaymentEventValue(
@@ -53,7 +51,8 @@ extension STPAnalyticsClient {
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
-            currency: currency, params: logParams as [String : Any]
+            currency: currency,
+            params: ["payment_method": paymentOption.name.lowercased()]
         )
     }
 
