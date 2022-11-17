@@ -22,13 +22,6 @@ import UIKit
             : lightImage ?? darkImage
     }
 
-    public override var image: UIImage? {
-        get { currentImage }
-        set {
-            // No-op.
-        }
-    }
-
     /// Initializes a `DynamicImageView`.
     ///
     /// - Parameters:
@@ -47,11 +40,17 @@ import UIKit
         self.darkImage = darkImage
         self.pairedColor = pairedColor
         // init(frame:) doesn't work for some reason and we cannot access `currentImage` yet,
-        // but we can just init with a nil image since it will always use `currentImage` anyway.
+        // so call init with a nil image and then set the right image.
         super.init(image: nil)
+        image = currentImage
     }
 
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        image = currentImage
     }
 }
