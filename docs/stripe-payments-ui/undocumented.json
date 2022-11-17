@@ -1,68 +1,68 @@
 {
   "warnings": [
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
       "line": 90,
       "symbol": "STPAPIClient.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 112,
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 115,
       "symbol": "AnalyticsClientV2Protocol.makeCommonPayload()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 141,
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 144,
       "symbol": "AnalyticsClientV2Protocol.payload(withEventName:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
       "line": 127,
       "symbol": "STPAnalyticsClient",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
       "line": 77,
       "symbol": "StripeJSONEncoder",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 71,
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 72,
       "symbol": "DownloadManager.downloadImage(url:updateHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 221,
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 222,
       "symbol": "DownloadManager.imagePlaceHolder()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
       "line": 32,
       "symbol": "BundleLocatorProtocol",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/eurias/stripe/stripe-ios/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift",
+      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift",
       "line": 873,
       "symbol": "STPPaymentCardTextField.traitCollectionDidChange(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/eurias/stripe/stripe-ios"
+  "source_directory": "/Users/yuki/Documents/repos/stripe-ios"
 }

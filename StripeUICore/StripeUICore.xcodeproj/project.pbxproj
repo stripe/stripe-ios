@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		313AA5302915937400324A8B /* UIActivityIndicatorView+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313AA52F2915937400324A8B /* UIActivityIndicatorView+Stripe.swift */; };
 		36397F622714FDEF0059DED7 /* PhoneNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F612714FDEF0059DED7 /* PhoneNumberTests.swift */; };
 		363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */; };
 		36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */; };
@@ -144,7 +143,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		313AA52F2915937400324A8B /* UIActivityIndicatorView+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIActivityIndicatorView+Stripe.swift"; sourceTree = "<group>"; };
 		36397F612714FDEF0059DED7 /* PhoneNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTests.swift; sourceTree = "<group>"; };
 		363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCodeProvider.swift; sourceTree = "<group>"; };
@@ -448,7 +446,6 @@
 				363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */,
 				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
-				313AA52F2915937400324A8B /* UIActivityIndicatorView+Stripe.swift */,
 				D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
 				D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */,
@@ -898,7 +895,6 @@
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
 				E6B0DDD22714C49400CE86DC /* UIKeyboardType+StripeUICore.swift in Sources */,
-				313AA5302915937400324A8B /* UIActivityIndicatorView+Stripe.swift in Sources */,
 				E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */,
 				E61ADA8C2707DBBD004ED998 /* DateFieldElement.swift in Sources */,
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,

@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 23.1.1
+          Stripe iOS SDKs 23.2.0
         </a>
         
       </p>
@@ -890,7 +890,7 @@
 <code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and modifying the customer.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L18-L1069">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L18-L1128">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -923,7 +923,9 @@ theme:STPTheme.defaultTheme</code>.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -952,7 +954,7 @@ and modify its Stripe customer. - seealso: STPCustomerContext.h</p>
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L29-L31">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L29-L33">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1036,7 +1038,7 @@ lets you set your Stripe publishable API key, required billing address fields, e
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L46-L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L48-L58">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1066,12 +1068,14 @@ This is a convenience initializer; it is equivalent to calling
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L63-L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L66-L74">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1159,7 +1163,7 @@ you set your Stripe publishable API key, required billing address fields, etc.</
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L87-L103">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L93-L109">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1199,7 +1203,7 @@ You need to make a class conforming to this protocol that talks to your server.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L111">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1230,7 +1234,7 @@ You need to make a class conforming to this protocol that talks to your server.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L113">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1261,7 +1265,7 @@ You need to make a class conforming to this protocol that talks to your server.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L115">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1292,7 +1296,7 @@ You need to make a class conforming to this protocol that talks to your server.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L119-L130">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L125-L136">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1323,7 +1327,7 @@ You need to make a class conforming to this protocol that talks to your server.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L134-L152">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L140-L158">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1354,7 +1358,7 @@ You need to make a class conforming to this protocol that talks to your server.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L156-L166">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L162-L172">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1385,7 +1389,7 @@ You need to make a class conforming to this protocol that talks to your server.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L169-L171">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L175-L177">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1420,7 +1424,7 @@ The Stripe ID of a payment method to display as the default pre-selected option.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L183">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1451,7 +1455,7 @@ The Stripe ID of a payment method to display as the default pre-selected option.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L181-L203">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L187-L209">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1482,7 +1486,7 @@ The Stripe ID of a payment method to display as the default pre-selected option.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L207-L226">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L213-L232">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1513,7 +1517,7 @@ The Stripe ID of a payment method to display as the default pre-selected option.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L229">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L235">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1544,7 +1548,7 @@ The Stripe ID of a payment method to display as the default pre-selected option.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L233-L249">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L239-L255">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1592,7 +1596,7 @@ shipping address. To change this behavior, you can set
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L269">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L275">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1629,7 +1633,7 @@ The other will be automatically calculated on demand using your <code><a href=".
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L278-L287">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L284-L294">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1663,7 +1667,7 @@ or <code><a href="../Classes/STPPaymentContext.html#/c:@M@Stripe@objc(cs)STPPaym
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L292">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L299">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1702,7 +1706,7 @@ payment requests.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L298">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L305">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1744,7 +1748,7 @@ The other will be automatically calculated on demand using your <code><a href=".
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L308-L319">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L315-L328">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1778,7 +1782,7 @@ The default value is <code>UIModalPresentationFullScreen</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L324">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L333">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1817,7 +1821,7 @@ If the view controller is presented modally, <code>automatic</code> and
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L334">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L343">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1852,7 +1856,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L340">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L349">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1886,7 +1890,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L345">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L354">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1917,7 +1921,7 @@ Defaults to STPAPIClient.shared</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L348">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L357">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1951,7 +1955,7 @@ will be called again (and you can again call this to keep retrying, etc).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L355-L446">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L364-L462">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1986,7 +1990,7 @@ already showing a view controller or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L454-L456">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L470-L472">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2021,7 +2025,7 @@ already showing a view controller or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L464-L497">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L480-L514">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2057,7 +2061,7 @@ already showing a view controller or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L506-L508">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L523-L525">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2093,7 +2097,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L517-L541">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L534-L559">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2133,7 +2137,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L554-L683">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L572-L721">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2179,7 +2183,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L758-L763">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L799-L804">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2211,7 +2215,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L766-L777">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L807-L818">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2243,7 +2247,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L780-L792">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L821-L834">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2276,7 +2280,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L795-L800">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L837-L842">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2321,7 +2325,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L856-L868">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L900-L913">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2355,7 +2359,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L871-L889">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L916-L938">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2389,7 +2393,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L892-L916">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L941-L965">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2432,7 +2436,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L1053-L1055">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L1112-L1114">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2462,7 +2466,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/23.1.1/Stripe/STPPaymentContext.swift#L1058-L1068">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.2.0/Stripe/STPPaymentContext.swift#L1117-L1127">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2475,7 +2479,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-11-07)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-11-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
