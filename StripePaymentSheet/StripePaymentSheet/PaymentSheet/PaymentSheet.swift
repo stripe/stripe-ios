@@ -361,7 +361,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
                 result: result,
                 linkEnabled: intent.supportsLink,
                 activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                paymentOption: paymentOption
+                paymentOption: paymentOption,
+                currency: intent.currency
             )
 
             completion(result)

@@ -28,7 +28,8 @@ extension STPAnalyticsClient {
         result: PaymentSheetResult,
         linkEnabled: Bool,
         activeLinkSession: Bool,
-        paymentOption: PaymentOption
+        paymentOption: PaymentOption,
+        currency: String?
     ) {
         var success = false
         switch result {
@@ -41,6 +42,10 @@ extension STPAnalyticsClient {
             success = true
         }
 
+        let logParams =  ["payment_method": paymentOption.name.lowercased(),
+                          "locale": Locale.autoupdatingCurrent.identifier,
+                          "currency": currency]
+        
         logPaymentSheetEvent(
             event: paymentSheetPaymentEventValue(
                 isCustom: isCustom,
@@ -50,7 +55,7 @@ extension STPAnalyticsClient {
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
-            params: ["selected_lpm": paymentOption.name.lowercased()]
+            params: logParams as [String : Any]
         )
     }
 

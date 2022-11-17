@@ -286,7 +286,8 @@ extension PaymentSheet {
                     result: result,
                     linkEnabled: intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    paymentOption: paymentOption
+                    paymentOption: paymentOption,
+                    currency: intent.currency
                 )
 
                 if case .completed = result, case .link = paymentOption {
