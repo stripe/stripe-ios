@@ -47,7 +47,7 @@ final class ManualEntryFormView: UIView {
             title: STPLocalizedString("Routing number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."),
             placeholder: "123456789"
         )
-        routingNumberTextField.textField.delegate = self
+        routingNumberTextField.delegate = self
         routingNumberTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
         return routingNumberTextField
     }()
@@ -59,7 +59,7 @@ final class ManualEntryFormView: UIView {
             footerText: STPLocalizedString("Your account can be checkings or savings.", "A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings.")
         )
         accountNumberTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
-        accountNumberTextField.textField.delegate = self
+        accountNumberTextField.delegate = self
         return accountNumberTextField
     }()
     private lazy var accountNumberConfirmationTextField: ManualEntryTextField = {
@@ -68,7 +68,7 @@ final class ManualEntryFormView: UIView {
             placeholder: "000123456789"
         )
         accountNumberConfirmationTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
-        accountNumberConfirmationTextField.textField.delegate = self
+        accountNumberConfirmationTextField.delegate = self
         return accountNumberConfirmationTextField
     }()
     
@@ -149,21 +149,25 @@ final class ManualEntryFormView: UIView {
     }
 }
 
-// MARK: - UITextFieldDelegate
+// MARK: - ManualEntryTextFieldDelegate
 
-extension ManualEntryFormView: UITextFieldDelegate {
+extension ManualEntryFormView: ManualEntryTextFieldDelegate {
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
+    func manualEntryTextField(
+        _ manualEntryTextField: ManualEntryTextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        let currentText = manualEntryTextField.textField.text ?? ""
         guard let currentTextChangeRange = Range(range, in: currentText) else {
             return false
         }
         let updatedText = currentText.replacingCharacters(in: currentTextChangeRange, with: string)
         
         // don't allow the user to type more characters than possible
-        if textField === routingNumberTextField.textField {
+        if manualEntryTextField === routingNumberTextField {
             return updatedText.count <= ManualEntryValidator.routingNumberLength
-        } else if textField === accountNumberTextField.textField || textField === accountNumberConfirmationTextField.textField {
+        } else if manualEntryTextField === accountNumberTextField || manualEntryTextField === accountNumberConfirmationTextField {
             return updatedText.count <= ManualEntryValidator.accountNumberMaxLength
         }
         
@@ -171,16 +175,16 @@ extension ManualEntryFormView: UITextFieldDelegate {
         return true
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func manualEntryTextFieldDidBeginEditing(_ textField: ManualEntryTextField) {
         updateCheckViewState()
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField === routingNumberTextField.textField {
+    func manualEntryTextFieldDidEndEditing(_ manualEntryTextField: ManualEntryTextField) {
+        if manualEntryTextField === routingNumberTextField {
             didEndEditingOnceRoutingNumberTextField = true
-        } else if textField === accountNumberTextField.textField {
+        } else if manualEntryTextField === accountNumberTextField {
             didEndEditingOnceAccountNumberTextField = true
-        } else if textField === accountNumberConfirmationTextField.textField {
+        } else if manualEntryTextField === accountNumberConfirmationTextField {
             didEndEditingOnceAccountNumberConfirmationTextField = true
         } else {
             assertionFailure("we should always be able to reference a textfield")

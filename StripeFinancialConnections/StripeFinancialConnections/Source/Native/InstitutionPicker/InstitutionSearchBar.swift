@@ -32,7 +32,7 @@ final class InstitutionSearchBar: UIView {
     }
     
     private lazy var textField: UITextField = {
-        let textField = UITextField()
+        let textField = IncreasedHitTestTextField()
         textField.textColor = .textPrimary
         textField.font = .stripeFont(forTextStyle: .body)
         // this removes the `searchTextField` background color.
@@ -167,6 +167,14 @@ private func CreateSearchIconView() -> UIView {
         searchIconImageView.heightAnchor.constraint(equalToConstant: 16),
     ])
     return searchIconImageView
+}
+
+private class IncreasedHitTestTextField: UITextField {
+    // increase the area of TextField taps
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let largerBounds = bounds.insetBy(dx: 0, dy: -16)
+        return largerBounds.contains(point)
+    }
 }
 
 #if DEBUG

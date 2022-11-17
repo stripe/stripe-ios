@@ -9,6 +9,16 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 
+protocol ManualEntryTextFieldDelegate: AnyObject {
+    func manualEntryTextField(
+        _ textField: ManualEntryTextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool
+    func manualEntryTextFieldDidBeginEditing(_ textField: ManualEntryTextField)
+    func manualEntryTextFieldDidEndEditing(_ textField: ManualEntryTextField)
+}
+
 final class ManualEntryTextField: UIView {
     
     private lazy var verticalStackView: UIStackView = {
@@ -37,19 +47,20 @@ final class ManualEntryTextField: UIView {
         )
         textFieldStackView.isLayoutMarginsRelativeArrangement = true
         textFieldStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 8,
-            leading: 12,
-            bottom: 8,
-            trailing: 12
+            top: 16,
+            leading: 16,
+            bottom: 16,
+            trailing: 16
         )
-        textFieldStackView.layer.cornerRadius = 4
+        textFieldStackView.layer.cornerRadius = 8
         return textFieldStackView
     }()
     private(set) lazy var textField: UITextField = {
-        let textField = UITextField()
+        let textField = IncreasedHitTestTextField()
         textField.font = .stripeFont(forTextStyle: .body)
         textField.textColor = .textPrimary
         textField.keyboardType = .numberPad
+        textField.delegate = self
         return textField
     }()
     private var currentFooterView: UIView?
@@ -72,6 +83,7 @@ final class ManualEntryTextField: UIView {
             didUpdateFooterText()
         }
     }
+    weak var delegate: ManualEntryTextFieldDelegate?
     
     init(title: String, placeholder: String, footerText: String? = nil) {
         super.init(frame: .zero)
@@ -86,7 +98,7 @@ final class ManualEntryTextField: UIView {
         )
         self.footerText = footerText
         didUpdateFooterText() // simulate `didSet`. it not get called in `init`
-        updateBorder()
+        updateBorder(highlighted: false)
     }
     
     required init?(coder: NSCoder) {
@@ -116,17 +128,59 @@ final class ManualEntryTextField: UIView {
             currentFooterView = footerTextLabel
         }
         
-        updateBorder()
+        updateBorder(highlighted: textField.isFirstResponder)
     }
     
-    private func updateBorder() {
-        if errorText != nil {
+    private func updateBorder(highlighted: Bool) {
+        let highlighted = textField.isFirstResponder
+        
+        if errorText != nil && !highlighted {
             textFieldContainerView.layer.borderColor = UIColor.borderCritical.cgColor
-            textFieldContainerView.layer.borderWidth = 2.0 / UIScreen.main.nativeScale
+            textFieldContainerView.layer.borderWidth = 1.0
         } else {
-            textFieldContainerView.layer.borderColor = UIColor.borderNeutral.cgColor
-            textFieldContainerView.layer.borderWidth = 2.0 / UIScreen.main.nativeScale
+            if highlighted {
+                textFieldContainerView.layer.borderColor = UIColor.textBrand.cgColor
+                textFieldContainerView.layer.borderWidth = 2.0
+            } else {
+                textFieldContainerView.layer.borderColor = UIColor.borderNeutral.cgColor
+                textFieldContainerView.layer.borderWidth = 1.0
+            }
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension ManualEntryTextField: UITextFieldDelegate {
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        return delegate?.manualEntryTextField(
+            self,
+            shouldChangeCharactersIn: range,
+            replacementString: string
+        ) ?? true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateBorder(highlighted: true)
+        delegate?.manualEntryTextFieldDidBeginEditing(self)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        updateBorder(highlighted: false)
+        delegate?.manualEntryTextFieldDidEndEditing(self)
+    }
+}
+
+private class IncreasedHitTestTextField: UITextField {
+    // increase the area of TextField taps
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let largerBounds = bounds.insetBy(dx: -16, dy: -16)
+        return largerBounds.contains(point)
     }
 }
 
