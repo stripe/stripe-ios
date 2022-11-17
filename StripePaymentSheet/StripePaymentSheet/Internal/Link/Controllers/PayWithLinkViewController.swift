@@ -37,6 +37,7 @@ protocol PayWithLinkCoordinating: AnyObject {
         completion: @escaping (PaymentSheetResult) -> Void
     )
     func confirmWithApplePay()
+    func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void)
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func finish(withResult result: PaymentSheetResult)
@@ -49,6 +50,14 @@ protocol PayWithLinkCoordinating: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkViewController)
 final class PayWithLinkViewController: UINavigationController {
+
+    enum LinkAccountError: Error {
+        case noLinkAccount
+
+        var localizedDescription: String {
+            "No Link account is set"
+        }
+    }
 
     final class Context {
         let intent: Intent
@@ -83,6 +92,13 @@ final class PayWithLinkViewController: UINavigationController {
         get { accountContext.account }
         set { accountContext.account = newValue }
     }
+
+    private lazy var connectionsAuthManager: LinkFinancialConnectionsAuthManager? = {
+        guard let linkAccount = linkAccount else {
+            return nil
+        }
+        return LinkFinancialConnectionsAuthManager(linkAccount: linkAccount, window: view.window)
+    }()
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
@@ -195,10 +211,11 @@ extension PayWithLinkViewController: UIGestureRecognizerDelegate {
 private extension PayWithLinkViewController {
 
     func loadAndPresentWallet() {
-        setRootViewController(LoaderViewController(context: context))
+        let shouldAnimate = !(rootViewController is WalletViewController)
+        setRootViewController(LoaderViewController(context: context), animated: shouldAnimate)
 
         guard let linkAccount = linkAccount else {
-            assertionFailure("No link account is set")
+            assertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
             return
         }
 
@@ -296,12 +313,50 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
     }
 
+    @MainActor
+    func startInstantDebits() async throws -> ConsumerPaymentDetails {
+        guard let linkAccount = linkAccount, let connectionsAuthManager = connectionsAuthManager else {
+            throw LinkAccountError.noLinkAccount
+        }
+
+        let linkAccountSession = try await withCheckedThrowingContinuation { continuation in
+            linkAccount.createLinkAccountSession() { result in
+                continuation.resume(with: result)
+            }
+        }
+
+        let linkedAccountID = try await connectionsAuthManager.start(clientSecret: linkAccountSession.clientSecret)
+
+        let paymentDetails = try await withCheckedThrowingContinuation { continuation in
+            linkAccount.createPaymentDetails(linkedAccountId: linkedAccountID) { result in
+                continuation.resume(with: result)
+            }
+        }
+
+        // Store last added payment details so we can automatically select it on wallet
+        context.lastAddedPaymentDetails = paymentDetails
+        accountUpdated(linkAccount)
+        return paymentDetails
+    }
+
+    func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void) {
+        Task {
+            do {
+                let paymentDetails = try await startInstantDebits()
+                await MainActor.run { completion(.success(paymentDetails)) }
+            } catch {
+                await MainActor.run { completion(.failure(error)) }
+            }
+        }
+    }
+
     func cancel() {
         payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
     }
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
+        connectionsAuthManager = LinkFinancialConnectionsAuthManager(linkAccount: linkAccount, window: view.window)
         updateSupportedPaymentMethods()
         updateUI()
     }
@@ -314,6 +369,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     func logout(cancel: Bool) {
         linkAccount?.logout()
         linkAccount = nil
+        connectionsAuthManager = nil
 
         if cancel {
             self.cancel()
