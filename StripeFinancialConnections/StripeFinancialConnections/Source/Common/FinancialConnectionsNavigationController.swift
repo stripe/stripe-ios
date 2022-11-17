@@ -116,7 +116,10 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 extension FinancialConnectionsNavigationController {
     
     func configureAppearanceForNative() {
-        let backButtonImage = Image.back_arrow.makeImage(template: false)
+        let backButtonImage = Image
+            .back_arrow
+            .makeImage(template: false)
+            .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
         let appearance = UINavigationBarAppearance()
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
         appearance.backgroundColor = .customBackgroundColor
@@ -136,7 +139,20 @@ extension FinancialConnectionsNavigationController {
         shouldLeftAlignStripeLogo: Bool
     ) {
         let stripeLogoView: UIView = {
-            let stripeLogoImageView = UIImageView(image: Image.stripe_logo.makeImage(template: true))
+            let stripeLogoImageView = UIImageView(
+                image: {
+                    if shouldLeftAlignStripeLogo {
+                        return Image
+                            .stripe_logo
+                            .makeImage(template: true)
+                            .withInsets(UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0))
+                    } else {
+                        return Image
+                            .stripe_logo
+                            .makeImage(template: true)
+                    }
+                }()
+            )
             stripeLogoImageView.tintColor = UIColor.textBrand
             stripeLogoImageView.contentMode = .scaleAspectFit
             stripeLogoImageView.sizeToFit()
