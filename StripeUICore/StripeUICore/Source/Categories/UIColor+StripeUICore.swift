@@ -138,6 +138,8 @@ import UIKit
     }
 
     var isBright: Bool { perceivedBrightness > 0.3 }
+
+    var isDark: Bool { !isBright }
 }
 
 // MARK: - Helpers

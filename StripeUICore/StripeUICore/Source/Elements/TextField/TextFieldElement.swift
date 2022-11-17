@@ -176,12 +176,4 @@ extension TextFieldElement: TextFieldViewDelegate {
         isEditing = view.isEditing
         delegate?.continueToNextField(element: self)
     }
-
-    func traitCollectionDidChangeForTextField(
-        view: TextFieldView,
-        traitCollection: UITraitCollection
-    ) {
-        view.updateUI(with: viewModel)
-        delegate?.didUpdate(element: self)
-    }
 }

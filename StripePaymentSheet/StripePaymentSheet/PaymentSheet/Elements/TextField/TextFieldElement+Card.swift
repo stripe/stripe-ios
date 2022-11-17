@@ -26,11 +26,16 @@ extension TextFieldElement {
 
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
-                    return UIImageView(
-                        icon: STPImageLibrary.safeImageNamed(
+                    return DynamicImageView(
+                        lightImage: STPImageLibrary.safeImageNamed(
                             "card_unknown_updated_icon",
-                            darkMode: theme.isDark
-                        )
+                            darkMode: true
+                        ),
+                        darkImage: STPImageLibrary.safeImageNamed(
+                            "card_unknown_updated_icon",
+                            darkMode: false
+                        ),
+                        pairedColor: theme.colors.textFieldText
                     )
                 } else {
                     // display all available card brands
@@ -175,9 +180,19 @@ extension TextFieldElement {
             return .valid
         }
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            let logoName = cardBrandProvider() == .amex ? "card_cvc_amex_updated_icon" : "card_cvc_updated_icon"
-            return UIImageView(
-                icon: STPImageLibrary.safeImageNamed(logoName, darkMode: theme.isDark)
+            let logoName = cardBrandProvider() == .amex
+                ? "card_cvc_amex_updated_icon"
+                : "card_cvc_updated_icon"
+            return DynamicImageView(
+                lightImage: STPImageLibrary.safeImageNamed(
+                    logoName,
+                    darkMode: true
+                ),
+                darkImage: STPImageLibrary.safeImageNamed(
+                    logoName,
+                    darkMode: false
+                ),
+                pairedColor: theme.colors.textFieldText
             )
         }
     }
