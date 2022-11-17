@@ -12,7 +12,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
-final class MerchantDataAccessView: UIView {
+final class MerchantDataAccessView: HitTestView {
     
     init(
         isStripeDirect: Bool,

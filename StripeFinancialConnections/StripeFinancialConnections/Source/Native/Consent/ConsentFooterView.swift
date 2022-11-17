@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
-class ConsentFooterView: UIView {
+class ConsentFooterView: HitTestView {
     
     private let agreeButtonText: String
     private let didSelectAgree: () -> Void
@@ -51,7 +51,7 @@ class ConsentFooterView: UIView {
             action: didSelectURL
         )
         
-        let verticalStackView = UIStackView(
+        let verticalStackView = HitTestStackView(
             arrangedSubviews: [
                 termsAndPrivacyPolicyLabel,
                 agreeButton,
