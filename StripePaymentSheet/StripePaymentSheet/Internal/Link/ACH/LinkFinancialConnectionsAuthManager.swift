@@ -10,7 +10,6 @@ import UIKit
 import AuthenticationServices
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkFinancialConnectionsAuthManager)
