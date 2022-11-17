@@ -16,7 +16,7 @@ import SafariServices
 extension PayWithLinkViewController {
 
     final class WalletViewController: BaseViewController {
-        struct  Constants {
+        struct Constants {
             static let applePayButtonHeight: CGFloat = 48
         }
 
@@ -486,13 +486,35 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
-        let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
-            linkAccount: linkAccount,
-            context: context,
-            isAddingFirstPaymentMethod: false
-        )
+        if context.intent.onlySupportsLinkBank {
+            // If this business is bank-only, bypass the new payment method flow and go straight to connections
+            confirmButton.update(state: .processing)
+            pickerView.setAddPaymentMethodButtonEnabled(false)
+            coordinator?.startInstantDebits() { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let paymentDetails):
+                    self.didUpdate(paymentMethod: paymentDetails)
+                case .failure(let error):
+                    switch error {
+                    case LinkFinancialConnectionsAuthManager.Error.canceled:
+                        break
+                    default:
+                        self.updateErrorLabel(for: error)
+                    }
+                }
+                self.paymentPicker.setAddPaymentMethodButtonEnabled(true)
+                self.updateUI(animated: false)
+            }
+        } else {
+            let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
+                linkAccount: linkAccount,
+                context: context,
+                isAddingFirstPaymentMethod: false
+            )
 
-        navigationController?.pushViewController(newPaymentVC, animated: true)
+            navigationController?.pushViewController(newPaymentVC, animated: true)
+        }
     }
 
 }
