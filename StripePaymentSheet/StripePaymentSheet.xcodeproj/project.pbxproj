@@ -162,7 +162,6 @@
 		3122720D28762D1D0007ED5E /* StripePaymentSheetBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122720C28762D1D0007ED5E /* StripePaymentSheetBundleLocator.swift */; };
 		3122720F287630B80007ED5E /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122720E287630B80007ED5E /* Images.swift */; };
 		312272152876336E0007ED5E /* NSAttributedString+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312272142876336E0007ED5E /* NSAttributedString+Stripe.swift */; };
-		31227217287633CB0007ED5E /* UIView+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227216287633CB0007ED5E /* UIView+StripePaymentSheet.swift */; };
 		31227219287637C00007ED5E /* Data+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31227218287637C00007ED5E /* Data+SHA256.swift */; };
 		3122721B28763A760007ED5E /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3122721A28763A760007ED5E /* StripeUICore.framework */; };
 		3122721F28763A7B0007ED5E /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3122721E28763A7B0007ED5E /* StripeCore.framework */; };
@@ -237,6 +236,7 @@
 		31DCB12928F62B07002EF128 /* polling_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31DCB12828F62B07002EF128 /* polling_error_icon@3x.png */; };
 		31DCB12B28F75531002EF128 /* PaymentSheetFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB12A28F75531002EF128 /* PaymentSheetFlowController.swift */; };
 		D06C829B28FEFEC600832267 /* LinkCardEditElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06C829A28FEFEC600832267 /* LinkCardEditElement.swift */; };
+		E237938F291B286900C63FDD /* RotatingCardBrandsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E237938E291B286900C63FDD /* RotatingCardBrandsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -416,7 +416,6 @@
 		3122720C28762D1D0007ED5E /* StripePaymentSheetBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentSheetBundleLocator.swift; sourceTree = "<group>"; };
 		3122720E287630B80007ED5E /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		312272142876336E0007ED5E /* NSAttributedString+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Stripe.swift"; sourceTree = "<group>"; };
-		31227216287633CB0007ED5E /* UIView+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripePaymentSheet.swift"; sourceTree = "<group>"; };
 		31227218287637C00007ED5E /* Data+SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+SHA256.swift"; sourceTree = "<group>"; };
 		3122721A28763A760007ED5E /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3122721E28763A7B0007ED5E /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -533,6 +532,7 @@
 		31DCB12828F62B07002EF128 /* polling_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "polling_error_icon@3x.png"; sourceTree = "<group>"; };
 		31DCB12A28F75531002EF128 /* PaymentSheetFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSheetFlowController.swift; sourceTree = "<group>"; };
 		D06C829A28FEFEC600832267 /* LinkCardEditElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCardEditElement.swift; sourceTree = "<group>"; };
+		E237938E291B286900C63FDD /* RotatingCardBrandsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingCardBrandsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -736,6 +736,7 @@
 				3122700F286E3B2B0007ED5E /* TestModeView.swift */,
 				31227009286E3B2A0007ED5E /* UIKit+PaymentSheet.swift */,
 				31227004286E3B2A0007ED5E /* ManualEntryButton.swift */,
+				E237938E291B286900C63FDD /* RotatingCardBrandsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1012,7 +1013,6 @@
 				3122720828762CD30007ED5E /* String+Localized.swift */,
 				31227218287637C00007ED5E /* Data+SHA256.swift */,
 				31DCB12228F6256D002EF128 /* Date+Distance.swift */,
-				31227216287633CB0007ED5E /* UIView+StripePaymentSheet.swift */,
 				3122722A28763B590007ED5E /* UserDefaults+Stripe.swift */,
 				312272142876336E0007ED5E /* NSAttributedString+Stripe.swift */,
 				312271A0286E62F20007ED5E /* STPPaymentMethod+PaymentSheet.swift */,
@@ -1554,6 +1554,7 @@
 				31138E8428DCDEAC008AF554 /* FormSpecPaymentHandler.swift in Sources */,
 				3122724628763FF90007ED5E /* StripePaymentSheet+Exports.swift in Sources */,
 				312271A82874EAC10007ED5E /* OneTimeCodeTextField.swift in Sources */,
+				E237938F291B286900C63FDD /* RotatingCardBrandsView.swift in Sources */,
 				31226FFA286E3B100007ED5E /* BottomSheet3DS2ViewController.swift in Sources */,
 				312270D6286E3D8A0007ED5E /* PayWithLinkViewController.swift in Sources */,
 				31227098286E3D120007ED5E /* LinkAccountService.swift in Sources */,
@@ -1571,7 +1572,6 @@
 				312270A1286E3D1A0007ED5E /* FormElement+Link.swift in Sources */,
 				312270A7286E3D1A0007ED5E /* Button+Link.swift in Sources */,
 				310F6FE328D4FAE700C9580D /* STPAnalyticsClient+LUXE.swift in Sources */,
-				31227217287633CB0007ED5E /* UIView+StripePaymentSheet.swift in Sources */,
 				312270C8286E3D770007ED5E /* LinkNavigationBar.swift in Sources */,
 				31226FA6286E3A2F0007ED5E /* LinkEnabledPaymentMethodElement.swift in Sources */,
 				31226FA9286E3A3C0007ED5E /* CardSectionWithScannerView.swift in Sources */,

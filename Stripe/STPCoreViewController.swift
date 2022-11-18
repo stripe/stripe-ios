@@ -6,6 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// This is the base class for all Stripe view controllers. It is intended for use
@@ -131,7 +132,7 @@ public class STPCoreViewController: UIViewController {
     /// :nodoc:
     @objc public override var preferredStatusBarStyle: UIStatusBarStyle {
         let navBarTheme = navigationController?.navigationBar.stp_theme ?? theme
-        return STPColorUtils.colorIsBright(navBarTheme.secondaryBackgroundColor)
+        return navBarTheme.secondaryBackgroundColor.isBright
             ? .default
             : .lightContent
     }

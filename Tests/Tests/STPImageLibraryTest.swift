@@ -55,7 +55,7 @@ class STPImageLibraryTestSwift: XCTestCase {
         )
         STPAssertEqualImages(
             STPImageLibrary.unionPayCardImage(),
-            STPImageLibrary.safeImageNamed("stp_card_unionpay_en", templateIfAvailable: false)
+            STPImageLibrary.safeImageNamed("stp_card_unionpay", templateIfAvailable: false)
         )
         STPAssertEqualImages(
             STPImageLibrary.visaCardImage(),
@@ -108,10 +108,7 @@ class STPImageLibraryTestSwift: XCTestCase {
             case .unionPay:
                 STPAssertEqualImages(
                     image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_unionpay_en",
-                        templateIfAvailable: false
-                    )
+                    STPImageLibrary.safeImageNamed("stp_card_unionpay", templateIfAvailable: false)
                 )
             case .unknown:
                 STPAssertEqualImages(
@@ -179,7 +176,7 @@ class STPImageLibraryTestSwift: XCTestCase {
                 STPAssertEqualImages(
                     image,
                     STPImageLibrary.safeImageNamed(
-                        "stp_card_unionpay_template_en",
+                        "stp_card_unionpay_template",
                         templateIfAvailable: true
                     )
                 )
@@ -191,28 +188,7 @@ class STPImageLibraryTestSwift: XCTestCase {
             }
         }
     }
-
-    func testBrandImageForCardBrand_zh() {
-        let zh = Locale(identifier: "zh-Hans")
-        let image = STPImageLibrary.brandImage(for: .unionPay, template: false, locale: zh)
-        let templateImage = STPImageLibrary.brandImage(for: .unionPay, template: true, locale: zh)
-        STPAssertEqualImages(
-            image,
-            STPImageLibrary.safeImageNamed("stp_card_unionpay_zh", templateIfAvailable: false)
-        )
-        STPAssertEqualImages(
-            templateImage,
-            STPImageLibrary.safeImageNamed(
-                "stp_card_unionpay_template_zh",
-                templateIfAvailable: true
-            )
-        )
-    }
-
-    func testTemplatedBrandImageForCardBrand_zh() {
-        // TODO: Replace this with a screenshot test, it isn't straightforward to mock the Locale
-    }
-
+    
     func testCVCImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.cvcImage(for: brand)
