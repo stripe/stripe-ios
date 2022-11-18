@@ -54,8 +54,6 @@ static const NSTimeInterval kTimeoutInterval = 10;
 }
 
 - (void)submitChallengeRequest:(STDSChallengeRequestParameters *)request withCompletion:(void (^)(id<STDSChallengeResponse> _Nullable, NSError * _Nullable))completion {
-
-    NSAssert(_currentTask == nil, @"%@ is not intended to handle multiple concurrent tasks.", NSStringFromClass([self class]));
     if (_currentTask != nil) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(nil, [NSError errorWithDomain:STDSStripe3DS2ErrorDomain
