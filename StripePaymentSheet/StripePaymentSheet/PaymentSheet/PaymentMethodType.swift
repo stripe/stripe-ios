@@ -175,8 +175,10 @@ extension PaymentSheet {
             if configuration.linkPaymentMethodsOnly {
                 // If we're in the Link modal, manually add Link payment methods
                 // and let the support calls decide if they're allowed
-                recommendedPaymentMethodTypes.append(.card) // Link Card
-                recommendedPaymentMethodTypes.append(.linkInstantDebit) // Link Bank
+                let allLinkPaymentMethods: [PaymentMethodType] = [.card, .linkInstantDebit]
+                for method in allLinkPaymentMethods where !recommendedPaymentMethodTypes.contains(method) {
+                    recommendedPaymentMethodTypes.append(method)
+                }
             }
 
             let paymentTypes = recommendedPaymentMethodTypes.filter {
