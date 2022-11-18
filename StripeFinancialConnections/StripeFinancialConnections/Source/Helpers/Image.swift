@@ -31,4 +31,5 @@ enum Image: String, ImageMaker {
     case warning_triangle = "warning_triangle"
     case mx = "mx"
     case finicity = "finicity"
+    case bullet = "bullet"
 }

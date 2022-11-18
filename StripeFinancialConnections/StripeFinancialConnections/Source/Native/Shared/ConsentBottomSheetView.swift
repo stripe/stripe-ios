@@ -151,9 +151,14 @@ private func CreateBulletinView(
     iconUrl: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
-    let imageView = AlwaysTemplateImageView(tintColor: .textSuccess)
+    let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.setImage(with: iconUrl)
+    if let iconUrl = iconUrl {
+        imageView.setImage(with: iconUrl)
+    } else {
+        imageView.image = Image.bullet.makeImage().withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = .textPrimary
+    }
     imageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         imageView.widthAnchor.constraint(equalToConstant: 16),
