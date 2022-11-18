@@ -33,8 +33,8 @@ final class PrepaneView: UIView {
                 institutionIconView.setImageUrl(institutionImageUrl)
                 return institutionIconView
             }()),
-            title: String(format: STPLocalizedString("Link with %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
-            subtitle: String(format: STPLocalizedString("A new window will open for you to log in and select the %@ account(s) you want to link.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName),
+            title: String(format: STPLocalizedString("Log in to %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
+            subtitle: String(format: STPLocalizedString("Next, you’ll be prompted to log in and select a %@ bank account to link via Stripe.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName),
             contentView: {
                 let clearView = UIView()
                 clearView.backgroundColor = .clear
