@@ -145,6 +145,23 @@ class ConsentViewController: UIViewController {
                         self?.didSelectURL(url)
                     }
                 )
+            } else if url.host == "legal-details-notice" {
+                let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
+                let consentBottomSheetModel = ConsentBottomSheetModel(
+                    title: legalDetailsNoticeModel.title,
+                    body: ConsentBottomSheetModel.Body(
+                        bullets: legalDetailsNoticeModel.body.bullets
+                    ),
+                    extraNotice: nil,
+                    learnMore: legalDetailsNoticeModel.learnMore,
+                    cta: legalDetailsNoticeModel.cta
+                )
+                PresentConsentBottomSheet(
+                    withModel: consentBottomSheetModel,
+                    didSelectUrl: { [weak self] url in
+                        self?.didSelectURL(url)
+                    }
+                )
             }
         } else {
             SFSafariViewController.present(url: url)

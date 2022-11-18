@@ -26,6 +26,7 @@ struct FinancialConnectionsConsent: Decodable {
     let belowCta: String?
     
     let dataAccessNotice: FinancialConnectionsDataAccessNotice
+    let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice
     
     struct Body: Decodable {
         let bullets: [FinancialConnectionsBulletPoint]
@@ -36,6 +37,17 @@ struct FinancialConnectionsDataAccessNotice: Decodable {
     let title: String
     let body: Body
     let connectedAccountNotice: String?
+    let learnMore: String
+    let cta: String
+    
+    struct Body: Decodable {
+        let bullets: [FinancialConnectionsBulletPoint]
+    }
+}
+
+struct FinancialConnectionsLegalDetailsNotice: Decodable {
+    let title: String
+    let body: Body
     let learnMore: String
     let cta: String
     
