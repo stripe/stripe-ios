@@ -54,10 +54,10 @@ final class MerchantDataAccessView: UIView {
         
         let finalString: String
         if isStripeDirect {
+            finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
+        } else {
             let localizedPermissionFullString = String(format: STPLocalizedString("%@ through Stripe.", "A sentence that describes what users banking data is accessible to Stripe. For example, the full sentence may say 'Account details, transactions, balances through Stripe.'"), permissionString)
             finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
-        } else {
-            finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         }
         
         let label = ClickableLabel(
