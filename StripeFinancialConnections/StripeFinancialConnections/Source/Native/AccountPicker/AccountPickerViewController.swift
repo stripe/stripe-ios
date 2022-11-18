@@ -31,6 +31,10 @@ final class AccountPickerViewController: UIViewController {
     
     private let dataSource: AccountPickerDataSource
     private let accountPickerType: AccountPickerType
+    // a special case where some institutions have an
+    // account picker as part of their bank auth
+    // flow, so we give special treatment
+    private let institutionHasAccountPicker: Bool
     weak var delegate: AccountPickerViewControllerDelegate?
     private weak var accountPickerSelectionView: AccountPickerSelectionView?
     private var businessName: String? {
@@ -65,6 +69,8 @@ final class AccountPickerViewController: UIViewController {
             isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
             businessName: businessName,
             permissions: dataSource.manifest.permissions,
+            singleAccount: dataSource.manifest.singleAccount,
+            institutionHasAccountPicker: institutionHasAccountPicker,
             didSelectLinkAccounts: { [weak self] in
                 guard let self = self else {
                     return
@@ -90,6 +96,7 @@ final class AccountPickerViewController: UIViewController {
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
+        self.institutionHasAccountPicker = (dataSource.authorizationSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.isOauth)
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -234,14 +241,18 @@ final class AccountPickerViewController: UIViewController {
         self.accountPickerSelectionView = accountPickerSelectionView
         let paneLayoutView = PaneWithHeaderLayoutView(
             title: {
-                if dataSource.manifest.singleAccount {
+                if self.institutionHasAccountPicker {
                     return STPLocalizedString("Confirm your account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
                 } else {
-                    return STPLocalizedString("Confirm your accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                    if dataSource.manifest.singleAccount {
+                        return STPLocalizedString("Select an account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                    } else {
+                        return STPLocalizedString("Select accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                    }
                 }
             }(),
             subtitle: {
-                if accountPickerType == .radioButton {
+                if institutionHasAccountPicker {
                     return STPLocalizedString("Select the account you'd like to link.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
                 } else {
                     return nil // no subtitle
