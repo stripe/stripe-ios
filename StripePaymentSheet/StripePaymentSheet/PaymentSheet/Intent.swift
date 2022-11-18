@@ -66,6 +66,15 @@ enum Intent {
 
         return false
     }
+    
+    var currency: String? {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.currency
+        case .setupIntent:
+            return nil
+        }
+    }
 }
 
 // MARK: - IntentClientSecret
