@@ -330,7 +330,7 @@ class FormSpecProviderTest: XCTestCase {
             .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
         )
         guard
-            case .redirect_to_url = eps.nextActionSpec?.confirmResponseStatusSpecs[
+            case .redirect_to_url(let redirectToURLDetails) = eps.nextActionSpec?.confirmResponseStatusSpecs[
                 "requires_action"
             ]?.type,
             case .finished = eps.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["succeeded"]?
@@ -342,6 +342,9 @@ class FormSpecProviderTest: XCTestCase {
             XCTFail()
             return
         }
+        XCTAssertEqual(redirectToURLDetails.redirectStrategy, .none)
+        XCTAssertEqual(redirectToURLDetails.urlPath, "next_action[redirect_to_url][url]")
+        XCTAssertEqual(redirectToURLDetails.returnUrlPath, "next_action[redirect_to_url][return_url]")
 
         let updatedSpecJsonWithUnsupportedNextAction =
             """
@@ -498,5 +501,41 @@ class FormSpecProviderTest: XCTestCase {
 
         let sut = FormSpecProvider()
         XCTAssert(sut.containsUnknownNextActions(formSpecs: decodedFormSpecs))
+    }
+    func testRedirectToURLWithRedirectStrategy() throws {
+        let formSpec =
+            """
+            [{
+                "type": "eps",
+                "async": false,
+                "fields": [
+                ],
+                "next_action_spec": {
+                    "confirm_response_status_specs": {
+                        "requires_action": {
+                            "type": "redirect_to_url",
+                            "native_mobile_redirect_strategy": "external_browser"
+                        }
+                    },
+                    "post_confirm_handling_pi_status_specs": {
+                        "succeeded": {
+                            "type": "finished"
+                        }
+                    }
+                }
+            }]
+            """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let eps = try decoder.decode([FormSpec].self, from: formSpec).first
+
+        guard case let .redirect_to_url(redirectToURL) = eps?.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type else {
+            XCTFail("Unable to parse requires_action")
+            return
+        }
+        XCTAssertEqual(redirectToURL.redirectStrategy, .external_browser)
+        XCTAssertEqual(redirectToURL.urlPath, "next_action[redirect_to_url][url]")
+        XCTAssertEqual(redirectToURL.returnUrlPath, "next_action[redirect_to_url][return_url]")
     }
 }
