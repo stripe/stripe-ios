@@ -16,8 +16,8 @@ import UIKit
     private let darkImage: UIImage?
     private let lightImage: UIImage?
 
-    private var currentImage: UIImage? {
-        pairedColor.resolvedColor(with: traitCollection).isDark
+    private func makeImage(for traitCollection: UITraitCollection) -> UIImage? {
+        return pairedColor.resolvedColor(with: traitCollection).isDark
             ? darkImage ?? lightImage
             : lightImage ?? darkImage
     }
@@ -42,7 +42,7 @@ import UIKit
         // init(frame:) doesn't work for some reason and we cannot access `currentImage` yet,
         // so call init with a nil image and then set the right image.
         super.init(image: nil)
-        image = currentImage
+        image = makeImage(for: traitCollection)
     }
 
     public required init?(coder: NSCoder) {
@@ -51,6 +51,6 @@ import UIKit
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        image = currentImage
+        image = makeImage(for: traitCollection)
     }
 }
