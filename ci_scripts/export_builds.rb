@@ -32,6 +32,9 @@ script_dir = __dir__
 root_dir = File.expand_path(File.join_if_safe(script_dir, '..'), Dir.getwd)
 modules = YAML.load_file('modules.yaml')['modules']
 
+# Package up 3DS2 too
+modules.append({ 'scheme' => 'Stripe3DS2', 'framework_name' => 'Stripe3DS2', 'supports_catalyst' => true })
+
 # Clean build directory
 build_dir = File.join_if_safe(root_dir, 'build')
 
@@ -39,9 +42,6 @@ info 'Cleaning build directory...'
 
 FileUtils.rm_rf(build_dir)
 Dir.mkdir(build_dir)
-
-# Compile and package dynamic framework
-info 'Compiling and packaging dynamic framework...'
 
 Dir.chdir(root_dir) do
   info 'Building all frameworks...'
@@ -94,7 +94,7 @@ Dir.chdir(root_dir) do
   puts `xcodebuild clean archive \
       -quiet \
       -workspace "Stripe.xcworkspace" \
-      -scheme "AllStripeFrameworks" \
+      -scheme "AllStripeFrameworksCatalyst" \
       -configuration "Release" \
       -archivePath "#{build_dir}/StripeFrameworks-mac.xcarchive" \
       -sdk macosx \
@@ -132,13 +132,6 @@ Dir.chdir(root_dir) do
 end # Dir.chdir
 
 Zip::File.open(File.join_if_safe(build_dir, 'Stripe.xcframework.zip'), create: true) do |zipfile|
-  # Add Stripe3DS2.xcframework to zip
-  stripe3ds2_build_build_dir = File.join_if_safe(root_dir, 'build-3ds2')
-  Dir.glob("#{stripe3ds2_build_build_dir}/Stripe3DS2.xcframework/**/*").each do |file|
-    file_name = Pathname.new(file).relative_path_from(Pathname.new(stripe3ds2_build_build_dir))
-    zipfile.add(file_name, file)
-  end
-
   # Add module framework directories to zip
   modules.each do |m|
     framework_name = m['framework_name']
