@@ -1,5 +1,5 @@
 //
-//  DataAccessNoticeViewController.swift
+//  ConsentBottomSheetViewController.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 7/13/22.
@@ -9,16 +9,16 @@ import Foundation
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-final class DataAccessNoticeViewController: UIViewController {
+final class ConsentBottomSheetViewController: UIViewController {
     
-    private let model: FinancialConnectionsDataAccessNotice
+    private let model: ConsentBottomSheetModel
     private let didSelectURL: (URL) -> Void
     
     private var openContraint: NSLayoutConstraint?
     private var closeContraint: NSLayoutConstraint?
 
     init(
-        model: FinancialConnectionsDataAccessNotice,
+        model: ConsentBottomSheetModel,
         didSelectURL: @escaping (URL) -> Void
     ) {
         self.model = model
@@ -37,7 +37,7 @@ final class DataAccessNoticeViewController: UIViewController {
         tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
         
-        let dataAccessNoticeView = DataAccessNoticeView(
+        let dataAccessNoticeView = ConsentBottomSheetView(
             model: model,
             didSelectOK: { [weak self] in
                 self?.dismiss(animated: true)
@@ -112,7 +112,7 @@ final class DataAccessNoticeViewController: UIViewController {
 // MARK: - <UIGestureRecognizerDelegate>
 
 @available(iOSApplicationExtension, unavailable)
-extension DataAccessNoticeViewController: UIGestureRecognizerDelegate {
+extension ConsentBottomSheetViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // only consider touches on the dark overlay area

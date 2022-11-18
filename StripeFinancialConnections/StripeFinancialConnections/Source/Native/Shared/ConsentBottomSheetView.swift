@@ -1,5 +1,5 @@
 //
-//  DataAccessNoticeView.swift
+//  ConsentBottomSheetView.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 7/13/22.
@@ -11,12 +11,12 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
-final class DataAccessNoticeView: UIView {
+final class ConsentBottomSheetView: UIView {
     
     private let didSelectOKAction: () -> Void
     
     init(
-        model: FinancialConnectionsDataAccessNotice,
+        model: ConsentBottomSheetModel,
         didSelectOK: @escaping () -> Void,
         didSelectURL: @escaping (URL) -> Void
     ) {
@@ -30,7 +30,7 @@ final class DataAccessNoticeView: UIView {
                 CreateContentView(
                     headerTitle: model.title,
                     bulletItems: model.body.bullets,
-                    connectedAccountNotice: model.connectedAccountNotice,
+                    extraNotice: model.extraNotice,
                     learnMoreText: model.learnMore,
                     didSelectURL: didSelectURL
                 ),
@@ -82,7 +82,7 @@ final class DataAccessNoticeView: UIView {
 private func CreateContentView(
     headerTitle: String,
     bulletItems: [FinancialConnectionsBulletPoint],
-    connectedAccountNotice: String?,
+    extraNotice: String?,
     learnMoreText: String,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
@@ -105,15 +105,15 @@ private func CreateContentView(
                     )
                 )
             }
-            if let connectedAccountNotice = connectedAccountNotice {
-                let connectedAccountNoticeLabel = ClickableLabel(
+            if let extraNotice = extraNotice {
+                let extraNoticeLabel = ClickableLabel(
                     font: .stripeFont(forTextStyle: .detail),
                     boldFont: .stripeFont(forTextStyle: .detailEmphasized),
                     linkFont: .stripeFont(forTextStyle: .detailEmphasized),
                     textColor: .textSecondary
                 )
-                connectedAccountNoticeLabel.setText(connectedAccountNotice, action: didSelectURL)
-                subviews.append(connectedAccountNoticeLabel)
+                extraNoticeLabel.setText(extraNotice, action: didSelectURL)
+                subviews.append(extraNoticeLabel)
             }
             subviews.append(
                 CreateLearnMoreLabel(
@@ -212,11 +212,11 @@ private func CreateLearnMoreLabel(
 @available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
     cta: String,
-    actionTarget: DataAccessNoticeView
+    actionTarget: ConsentBottomSheetView
 ) -> UIView {
     let okButton = Button(configuration: .financialConnectionsPrimary)
     okButton.title = cta
-    okButton.addTarget(actionTarget, action: #selector(DataAccessNoticeView.didSelectOK), for: .touchUpInside)
+    okButton.addTarget(actionTarget, action: #selector(ConsentBottomSheetView.didSelectOK), for: .touchUpInside)
     okButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         okButton.heightAnchor.constraint(equalToConstant: 56),
@@ -229,13 +229,13 @@ private func CreateFooterView(
 import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
-private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
+private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
     
-    func makeUIView(context: Context) -> DataAccessNoticeView {
-        DataAccessNoticeView(
-            model: FinancialConnectionsDataAccessNotice(
+    func makeUIView(context: Context) -> ConsentBottomSheetView {
+        ConsentBottomSheetView(
+            model: ConsentBottomSheetModel(
                 title: "",
-                body: FinancialConnectionsDataAccessNotice.Body(
+                body: ConsentBottomSheetModel.Body(
                     bullets: [
                         FinancialConnectionsBulletPoint(
                             icon: FinancialConnectionsImage(default: nil),
@@ -244,7 +244,7 @@ private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
                         )
                     ]
                 ),
-                connectedAccountNotice: nil,
+                extraNotice: nil,
                 learnMore: "...",
                 cta: "..."
             ),
@@ -253,17 +253,17 @@ private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
         )
     }
     
-    func updateUIView(_ uiView: DataAccessNoticeView, context: Context) {
+    func updateUIView(_ uiView: ConsentBottomSheetView, context: Context) {
         uiView.sizeToFit()
     }
 }
 
 @available(iOSApplicationExtension, unavailable)
-struct DataAccessNoticeView_Previews: PreviewProvider {
+struct ConsentBottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack {
-                    DataAccessNoticeViewUIViewRepresentable()
+                    ConsentBottomSheetViewUIViewRepresentable()
                         .frame(width: 320)
                         .frame(height: 350)
                 

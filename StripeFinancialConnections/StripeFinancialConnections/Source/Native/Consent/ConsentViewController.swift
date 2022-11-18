@@ -129,21 +129,42 @@ class ConsentViewController: UIViewController {
             if url.host == "manual-entry" {
                 delegate?.consentViewControllerDidSelectManuallyVerify(self)
             } else if url.host == "data-access-notice" {
-                let dataAccessNoticeViewController = DataAccessNoticeViewController(
-                    model: dataSource.consent.dataAccessNotice,
-                    didSelectURL: { [weak self] url in
+                let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
+                let consentBottomSheetModel = ConsentBottomSheetModel(
+                    title: dataAccessNoticeModel.title,
+                    body: ConsentBottomSheetModel.Body(
+                        bullets: dataAccessNoticeModel.body.bullets
+                    ),
+                    extraNotice: dataAccessNoticeModel.connectedAccountNotice,
+                    learnMore: dataAccessNoticeModel.learnMore,
+                    cta: dataAccessNoticeModel.cta
+                )
+                PresentConsentBottomSheet(
+                    withModel: consentBottomSheetModel,
+                    didSelectUrl: { [weak self] url in
                         self?.didSelectURL(url)
                     }
                 )
-                dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
-                dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
-                // `false` for animations because we do a custom animation inside VC logic
-                UIViewController
-                    .topMostViewController()?
-                    .present(dataAccessNoticeViewController, animated: false, completion: nil)
             }
         } else {
             SFSafariViewController.present(url: url)
         }
     }
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func PresentConsentBottomSheet(
+    withModel model: ConsentBottomSheetModel,
+    didSelectUrl: @escaping (URL) -> Void
+) {
+    let consentBottomSheetViewController = ConsentBottomSheetViewController(
+        model: model,
+        didSelectURL: didSelectUrl
+    )
+    consentBottomSheetViewController.modalTransitionStyle = .crossDissolve
+    consentBottomSheetViewController.modalPresentationStyle = .overCurrentContext
+    // `false` for animations because we do a custom animation inside VC logic
+    UIViewController
+        .topMostViewController()?
+        .present(consentBottomSheetViewController, animated: false, completion: nil)
 }
