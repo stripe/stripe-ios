@@ -23,7 +23,7 @@ class ConsentBodyView: UIView {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
         
-        let verticalStackView = UIStackView()
+        let verticalStackView = HitTestStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         bulletItems.forEach { bulletItem in
@@ -66,7 +66,7 @@ private func CreateLabelView(
     )
     label.setText(text, action: action)
 
-    let horizontalStackView = UIStackView(
+    let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
             imageView,
             label,

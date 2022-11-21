@@ -25,7 +25,7 @@ final class DataAccessNoticeView: UIView {
         backgroundColor = .customBackgroundColor
         
         let padding: CGFloat = 24
-        let verticalStackView = UIStackView(
+        let verticalStackView = HitTestStackView(
             arrangedSubviews: [
                 CreateContentView(
                     headerTitle: model.title,
@@ -86,7 +86,7 @@ private func CreateContentView(
     learnMoreText: String,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
-    let verticalStackView = UIStackView(
+    let verticalStackView = HitTestStackView(
         arrangedSubviews: {
             var subviews: [UIView] = []
             subviews.append(
@@ -160,7 +160,7 @@ private func CreateBulletinView(
         imageView.heightAnchor.constraint(equalToConstant: 16),
     ])
     
-    let verticalLabelStackView = UIStackView()
+    let verticalLabelStackView = HitTestStackView()
     verticalLabelStackView.axis = .vertical
     verticalLabelStackView.spacing = 2
     if let title = title {
@@ -182,7 +182,7 @@ private func CreateBulletinView(
     subtitleLabel.setText(subtitle, action: didSelectURL)
     verticalLabelStackView.addArrangedSubview(subtitleLabel)
     
-    let horizontalStackView = UIStackView(
+    let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
             imageView,
             verticalLabelStackView,

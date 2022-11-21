@@ -40,7 +40,7 @@ final class AccountPickerFooterView: UIView {
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
         
-        let verticalStackView = UIStackView(
+        let verticalStackView = HitTestStackView(
             arrangedSubviews: [
                 CreateDataAccessDisclosureView(
                     isStripeDirect: isStripeDirect,
@@ -98,7 +98,7 @@ private func CreateDataAccessDisclosureView(
     permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
     didSelectLearnMore: @escaping () -> Void
 ) -> UIView {
-    let stackView = UIStackView(
+    let stackView = HitTestStackView(
         arrangedSubviews: [
             MerchantDataAccessView(
                 isStripeDirect: isStripeDirect,

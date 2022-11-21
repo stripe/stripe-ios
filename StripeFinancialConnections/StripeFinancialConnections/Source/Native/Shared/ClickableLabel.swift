@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-final class ClickableLabel: UIView {
+final class ClickableLabel: HitTestView {
     
     struct Link {
         let range: NSRange
@@ -24,7 +24,7 @@ final class ClickableLabel: UIView {
     private let linkFont: UIFont
     private let textColor: UIColor
     private let alignCenter: Bool
-    private let textView = UITextView()
+    private let textView = IncreasedHitTestTextView()
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
     
     init(
@@ -41,6 +41,7 @@ final class ClickableLabel: UIView {
         self.alignCenter = alignCenter
         super.init(frame: .zero)
         textView.isScrollEnabled = false
+        textView.delaysContentTouches = false
         textView.isEditable = false
         textView.isSelectable = true
         textView.backgroundColor = UIColor.clear
@@ -53,6 +54,21 @@ final class ClickableLabel: UIView {
         textView.delegate = self
         
         addAndPinSubview(textView)
+        
+        // enable faster tap recognizing
+        if let gestureRecognizers = textView.gestureRecognizers {
+            for gestureRecognizer in gestureRecognizers {
+                if
+                    let tapGestureRecognizer = gestureRecognizer as? UITapGestureRecognizer,
+                    tapGestureRecognizer.numberOfTapsRequired == 2
+                {
+                    // double-tap gesture recognizer causes a delay
+                    // to single-tap gesture recognizer so we
+                    // disable it
+                    tapGestureRecognizer.isEnabled = false
+                }
+            }
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -131,5 +147,19 @@ extension ClickableLabel: UITextViewDelegate {
     func textViewDidChangeSelection(_ textView: UITextView) {
         // disable the ability to select/copy the text as a way to improve UX
         textView.selectedTextRange = nil
+    }
+}
+
+private class IncreasedHitTestTextView: UITextView {
+    
+    // increase the area of NSAttributedString taps
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        // Note that increasing size here does NOT help to
+        // increase NSAttributedString implementation of how
+        // large a tap area is. As a result, this function
+        // can return `true` and the link-tap may still
+        // not happen.
+        let largerBounds = bounds.insetBy(dx: -20, dy: -20)
+        return largerBounds.contains(point)
     }
 }

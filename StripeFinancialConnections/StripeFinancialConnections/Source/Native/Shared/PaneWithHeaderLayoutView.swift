@@ -52,7 +52,7 @@ private func CreateHeaderView(
     title: String,
     subtitle: String?
 ) -> UIView {
-    let headerStackView = UIStackView()
+    let headerStackView = HitTestStackView()
     headerStackView.axis = .vertical
     headerStackView.spacing = 16
     headerStackView.alignment = .leading
@@ -78,7 +78,7 @@ private func CreateIconView(iconType: PaneWithHeaderLayoutView.Icon) -> UIView {
 }
 
 private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIView {
-    let labelStackView = UIStackView()
+    let labelStackView = HitTestStackView()
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
     

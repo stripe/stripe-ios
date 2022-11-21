@@ -28,7 +28,7 @@ final class PaneLayoutView {
         self.scrollView = scrollView
         scrollView.addAndPinSubview(contentView)
         
-        let verticalStackView = UIStackView(
+        let verticalStackView = HitTestStackView(
             arrangedSubviews: [
                 scrollView,
             ]

@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
-final class SuccessBodyView: UIView {
+final class SuccessBodyView: HitTestView {
     
     init(
         institution: FinancialConnectionsInstitution,
@@ -26,7 +26,7 @@ final class SuccessBodyView: UIView {
         didSelectMerchantDataAccessLearnMore: @escaping () -> Void
     ) {
         super.init(frame: .zero)
-        let verticalStackView = UIStackView()
+        let verticalStackView = HitTestStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 12
         
@@ -68,7 +68,7 @@ private func CreateInformationBoxView(
     accountsListView: UIView,
     dataDisclosureView: UIView
 ) -> UIView {
-    let informationBoxVerticalStackView = UIStackView(
+    let informationBoxVerticalStackView = HitTestStackView(
         arrangedSubviews: [
             accountsListView,
             dataDisclosureView,
@@ -102,7 +102,7 @@ private func CreateDataAccessDisclosureView(
         separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.nativeScale),
     ])
     
-    let verticalStackView = UIStackView(
+    let verticalStackView = HitTestStackView(
         arrangedSubviews: [
             separatorView,
             MerchantDataAccessView(

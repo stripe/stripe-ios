@@ -31,7 +31,7 @@ final class PaneWithCustomHeaderLayoutView {
     ) {
         self.paneLayoutView = PaneLayoutView(
             contentView: {
-                let verticalStackView = UIStackView(
+                let verticalStackView = HitTestStackView(
                     arrangedSubviews: [
                         headerView,
                         contentView,
@@ -50,8 +50,8 @@ final class PaneWithCustomHeaderLayoutView {
             }(),
             footerView: {
                 if let footerView = footerView {
-                    // This is only a `UIStackView` to add margins
-                    let verticalStackView = UIStackView(
+                    // This is only a `HitTestStackView` to add margins
+                    let verticalStackView = HitTestStackView(
                         arrangedSubviews: [
                             footerView,
                         ]
