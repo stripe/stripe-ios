@@ -29,7 +29,8 @@ class ConsentBodyView: UIView {
         bulletItems.forEach { bulletItem in
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
-                    text: bulletItem.content,
+                    title: bulletItem.title,
+                    content: bulletItem.content,
                     iconUrl: bulletItem.icon?.default,
                     action: didSelectURL
                 )
@@ -45,11 +46,12 @@ class ConsentBodyView: UIView {
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateLabelView(
-    text: String,
+    title: String?,
+    content: String?,
     iconUrl: String?,
     action: @escaping (URL) -> Void
 ) -> UIView {
-    let imageView = AlwaysTemplateImageView(tintColor: .textSecondary)
+    let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,18 +60,16 @@ private func CreateLabelView(
         imageView.heightAnchor.constraint(equalToConstant: 16),
     ])
     
-    let label = ClickableLabel(
-        font: UIFont.stripeFont(forTextStyle: .body),
-        boldFont: UIFont.stripeFont(forTextStyle: .bodyEmphasized),
-        linkFont: UIFont.stripeFont(forTextStyle: .bodyEmphasized),
-        textColor: .textSecondary
+    let labelView = BulletPointLabelView(
+        title: title,
+        content: content,
+        didSelectURL: action
     )
-    label.setText(text, action: action)
 
     let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
             imageView,
-            label,
+            labelView,
         ]
     )
     horizontalStackView.axis = .horizontal

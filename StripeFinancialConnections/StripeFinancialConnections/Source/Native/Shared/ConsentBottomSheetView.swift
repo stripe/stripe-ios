@@ -147,7 +147,7 @@ private func CreateHeaderView(
 @available(iOSApplicationExtension, unavailable)
 private func CreateBulletinView(
     title: String?,
-    subtitle: String,
+    subtitle: String?,
     iconUrl: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
@@ -165,32 +165,14 @@ private func CreateBulletinView(
         imageView.heightAnchor.constraint(equalToConstant: 16),
     ])
     
-    let verticalLabelStackView = HitTestStackView()
-    verticalLabelStackView.axis = .vertical
-    verticalLabelStackView.spacing = 2
-    if let title = title {
-        let primaryLabel = ClickableLabel(
-            font: .stripeFont(forTextStyle: .bodyEmphasized),
-            boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-            linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
-            textColor: .textPrimary
-        )
-        primaryLabel.setText(title, action: didSelectURL)
-        verticalLabelStackView.addArrangedSubview(primaryLabel)
-    }
-    let subtitleLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .detail),
-        boldFont: .stripeFont(forTextStyle: .detailEmphasized),
-        linkFont: .stripeFont(forTextStyle: .detailEmphasized),
-        textColor: .textSecondary
-    )
-    subtitleLabel.setText(subtitle, action: didSelectURL)
-    verticalLabelStackView.addArrangedSubview(subtitleLabel)
-    
     let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
             imageView,
-            verticalLabelStackView,
+            BulletPointLabelView(
+                title: title,
+                content: subtitle,
+                didSelectURL: didSelectURL
+            ),
         ]
     )
     horizontalStackView.axis = .horizontal

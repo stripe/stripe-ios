@@ -59,9 +59,9 @@ struct FinancialConnectionsLegalDetailsNotice: Decodable {
 struct FinancialConnectionsBulletPoint: Decodable {
     let icon: FinancialConnectionsImage?
     let title: String?
-    let content: String
+    let content: String?
     
-    init(icon: FinancialConnectionsImage, title: String? = nil, content: String) {
+    init(icon: FinancialConnectionsImage, title: String? = nil, content: String? = nil) {
         self.icon = icon
         self.title = title
         self.content = content
