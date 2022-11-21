@@ -26,6 +26,7 @@ struct FinancialConnectionsConsent: Decodable {
     let belowCta: String?
     
     let dataAccessNotice: FinancialConnectionsDataAccessNotice
+    let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice
     
     struct Body: Decodable {
         let bullets: [FinancialConnectionsBulletPoint]
@@ -44,12 +45,23 @@ struct FinancialConnectionsDataAccessNotice: Decodable {
     }
 }
 
+struct FinancialConnectionsLegalDetailsNotice: Decodable {
+    let title: String
+    let body: Body
+    let learnMore: String
+    let cta: String
+    
+    struct Body: Decodable {
+        let bullets: [FinancialConnectionsBulletPoint]
+    }
+}
+
 struct FinancialConnectionsBulletPoint: Decodable {
     let icon: FinancialConnectionsImage?
     let title: String?
-    let content: String
+    let content: String?
     
-    init(icon: FinancialConnectionsImage, title: String? = nil, content: String) {
+    init(icon: FinancialConnectionsImage, title: String? = nil, content: String? = nil) {
         self.icon = icon
         self.title = title
         self.content = content

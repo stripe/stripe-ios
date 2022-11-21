@@ -52,7 +52,9 @@ final class ClickableLabel: HitTestView {
             .foregroundColor: UIColor.textBrand,
         ]
         textView.delegate = self
-        
+        // remove clipping so when user selects an attributed
+        // link, the selection area does not get clipped
+        textView.clipsToBounds = false
         addAndPinSubview(textView)
         
         // enable faster tap recognizing
