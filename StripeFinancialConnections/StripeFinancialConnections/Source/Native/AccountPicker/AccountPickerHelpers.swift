@@ -33,21 +33,21 @@ final class AccountPickerHelpers {
         let numberFormatter = NumberFormatter()
         numberFormatter.currencyCode = currency
         numberFormatter.numberStyle = .currency
-        return numberFormatter.string(for: NSDecimalNumber.stp_decimalNumber(withAmount: Int(balanceAmount), currency: currency))
+        return numberFormatter.string(for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: Int(balanceAmount), currency: currency))
     }
 }
 
 // TODO(kgaidis): move this to StripeCore
 
 extension NSDecimalNumber {
-    @objc class func stp_decimalNumber(
+    @objc class func stp_fn_decimalNumber(
         withAmount amount: Int,
         currency: String?
     ) -> NSDecimalNumber {
         let isAmountNegative = amount < 0
         let amount = abs(amount)
         
-        let noDecimalCurrencies = self.stp_currenciesWithNoDecimal()
+        let noDecimalCurrencies = self.stp_fn_currenciesWithNoDecimal()
         let number = self.init(mantissa: UInt64(amount), exponent: 0, isNegative: isAmountNegative)
         if noDecimalCurrencies.contains(currency?.lowercased() ?? "") {
             return number
@@ -55,8 +55,8 @@ extension NSDecimalNumber {
         return number.multiplying(byPowerOf10: -2)
     }
 
-    @objc func stp_amount(withCurrency currency: String?) -> Int {
-        let noDecimalCurrencies = NSDecimalNumber.stp_currenciesWithNoDecimal()
+    @objc func stp_fn_amount(withCurrency currency: String?) -> Int {
+        let noDecimalCurrencies = NSDecimalNumber.stp_fn_currenciesWithNoDecimal()
 
         var ourNumber = self
         if !(noDecimalCurrencies.contains(currency?.lowercased() ?? "")) {
@@ -65,7 +65,7 @@ extension NSDecimalNumber {
         return Int(ourNumber.doubleValue)
     }
 
-    class func stp_currenciesWithNoDecimal() -> [String] {
+    class func stp_fn_currenciesWithNoDecimal() -> [String] {
         return [
             "bif",
             "clp",

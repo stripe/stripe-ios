@@ -28,7 +28,7 @@ class HostController {
     private let returnURL: String?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
 
-    private var authFlowController: NativeFlowController?
+    private var nativeFlowController: NativeFlowController?
     lazy var hostViewController = HostViewController(clientSecret: clientSecret, returnURL: returnURL, apiClient: api, delegate: self)
     lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
 
@@ -97,12 +97,12 @@ extension HostController: HostViewControllerDelegate {
             clientSecret: clientSecret,
             analyticsClient: analyticsClient
         )
-        authFlowController = NativeFlowController(
+        nativeFlowController = NativeFlowController(
             dataManager: dataManager,
             navigationController: navigationController
         )
-        authFlowController?.delegate = self
-        authFlowController?.startFlow()
+        nativeFlowController?.delegate = self
+        nativeFlowController?.startFlow()
     }
 }
 

@@ -274,7 +274,7 @@ final class PartnerAuthViewController: UIViewController {
                         self.dataSource.recordAuthSessionEvent(
                             eventName: "failure",
                             authSessionId: authorizationSession.id
-                        ) // TODO(kgaidis): we maybe need to send error_message and error_code here...
+                        )
                         
                         // cancel current auth session
                         self.dataSource.cancelPendingAuthSessionIfNeeded()
