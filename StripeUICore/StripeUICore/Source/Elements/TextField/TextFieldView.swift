@@ -68,8 +68,6 @@ class TextFieldView: UIView {
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
             }
-            // For some reason, the stackview chooses to stretch accessoryContainerView if its content is nil instead of the text field, so we hide it.
-            accessoryContainerView.setHiddenIfNecessary(accessoryView == nil)
         }
     }
 
@@ -205,6 +203,10 @@ class TextFieldView: UIView {
 
         // Update accessory view
         accessoryView = viewModel.accessoryView
+        // For some reason, the stackview chooses to stretch accessoryContainerView if its
+        // content is nil instead of the text field, so we hide it.
+        accessoryContainerView.setHiddenIfNecessary(accessoryView == nil)
+
         // Manually call layoutIfNeeded to avoid unintentional animations
         // in next layout pass
         layoutIfNeeded()
