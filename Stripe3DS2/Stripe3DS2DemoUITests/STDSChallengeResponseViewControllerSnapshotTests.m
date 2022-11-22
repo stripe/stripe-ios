@@ -6,11 +6,20 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-@import FBSnapshotTestCase;
+@import iOSSnapshotTestCaseCore;
+
 #import <XCTest/XCTest.h>
 
 #import "STDSChallengeResponseViewController.h"
 #import "STDSChallengeResponseObject+TestObjects.h"
+
+/**
+ Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
+ @param view The view to snapshot.
+ @param identifier An optional identifier, used if there are multiple snapshot tests in a given -test method.
+ */
+#define STPSnapshotVerifyView(view__, identifier__) \
+FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0.02, 0)
 
 @interface STDSChallengeResponseViewControllerSnapshotTests: FBSnapshotTestCase
 
@@ -21,8 +30,8 @@
 - (void)setUp {
     [super setUp];
     
-    /// Recorded on an iPhone XR running iOS 12.1
-    self.recordMode = NO;
+    /// Recorded on an iPhone 12 Mini running iOS 15.4
+//    self.recordMode = YES;
 }
 
 - (void)testVerifyTextChallengeDesign {
@@ -30,7 +39,7 @@
     [challengeResponseViewController view];
     
     [self waitForChallengeResponseTimer];
-    
+
     STPSnapshotVerifyView(challengeResponseViewController.view, @"TextChallengeResponse");
 }
 

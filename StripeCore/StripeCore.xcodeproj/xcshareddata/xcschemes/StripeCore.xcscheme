@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1400"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E69D63FA26855B250090B43D"
+               BlueprintIdentifier = "7877B31445857B119EA45445"
                BuildableName = "StripeCore.framework"
                BlueprintName = "StripeCore"
                ReferencedContainer = "container:StripeCore.xcodeproj">
@@ -27,12 +27,21 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7877B31445857B119EA45445"
+            BuildableName = "StripeCore.framework"
+            BlueprintName = "StripeCore"
+            ReferencedContainer = "container:StripeCore.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E69D640326855B260090B43D"
+               BlueprintIdentifier = "03B50F59824D1D18AA073D57"
                BuildableName = "StripeCoreTests.xctest"
                BlueprintName = "StripeCoreTests"
                ReferencedContainer = "container:StripeCore.xcodeproj">
@@ -50,6 +59,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7877B31445857B119EA45445"
+            BuildableName = "StripeCore.framework"
+            BlueprintName = "StripeCore"
+            ReferencedContainer = "container:StripeCore.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -60,7 +78,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E69D63FA26855B250090B43D"
+            BlueprintIdentifier = "7877B31445857B119EA45445"
             BuildableName = "StripeCore.framework"
             BlueprintName = "StripeCore"
             ReferencedContainer = "container:StripeCore.xcodeproj">
