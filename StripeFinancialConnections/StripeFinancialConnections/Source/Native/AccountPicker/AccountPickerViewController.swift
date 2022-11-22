@@ -96,7 +96,7 @@ final class AccountPickerViewController: UIViewController {
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
-        self.institutionHasAccountPicker = (dataSource.authorizationSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.isOauth)
+        self.institutionHasAccountPicker = (dataSource.authSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authSession.isOauth)
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -138,7 +138,7 @@ final class AccountPickerViewController: UIViewController {
                                 eventName: "polling.accounts.success",
                                 parameters: [
                                     "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
-                                    "authSessionId": self.dataSource.authorizationSession.id,
+                                    "authSessionId": self.dataSource.authSession.id,
                                 ]
                             )
                     }
@@ -154,14 +154,14 @@ final class AccountPickerViewController: UIViewController {
                                 debugDescription: "API returned an empty list of accounts"
                             )
                         )
-                    } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
+                    } else if self.dataSource.authSession.skipAccountSelection ?? false {
                         self.delegate?.accountPickerViewController(
                             self,
                             didSelectAccounts: accounts
                         )
                     } else if
                         self.dataSource.manifest.singleAccount,
-                        self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
+                        self.dataSource.authSession.institutionSkipAccountSelection ?? false,
                         accounts.count == 1
                     {
                         // the user saw an OAuth account selection screen and selected
@@ -203,7 +203,7 @@ final class AccountPickerViewController: UIViewController {
                         let errorView = AccountPickerNoAccountEligibleErrorView(
                             institution: self.dataSource.institution,
                             bussinessName: self.businessName,
-                            institutionSkipAccountSelection: self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
+                            institutionSkipAccountSelection: self.dataSource.authSession.institutionSkipAccountSelection ?? false,
                             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
                             paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
                             didSelectAnotherBank: self.didSelectAnotherBank,

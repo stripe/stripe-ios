@@ -13,8 +13,8 @@ protocol PartnerAuthDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
-    func createAuthSession() -> Future<FinancialConnectionsAuthorizationSession>
-    func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Future<FinancialConnectionsAuthorizationSession>
+    func createAuthSession() -> Future<FinancialConnectionsAuthSession>
+    func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
     func cancelPendingAuthSessionIfNeeded()
     func recordAuthSessionEvent(eventName: String, authSessionId: String)
 }
@@ -32,7 +32,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     //
     // in other words, a `pendingAuthSession` is up for being
     // cancelled unless the user successfully authorizes
-    private var pendingAuthSession: FinancialConnectionsAuthorizationSession?
+    private var pendingAuthSession: FinancialConnectionsAuthSession?
     
     init(
         institution: FinancialConnectionsInstitution,
@@ -48,11 +48,11 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         self.analyticsClient = analyticsClient
     }
     
-    func createAuthSession() -> Future<FinancialConnectionsAuthorizationSession> {
-        return apiClient.createAuthorizationSession(
+    func createAuthSession() -> Future<FinancialConnectionsAuthSession> {
+        return apiClient.createAuthSession(
             clientSecret: clientSecret,
             institutionId: institution.id
-        ).chained { [weak self] (authSession: FinancialConnectionsAuthorizationSession) in
+        ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
             self?.pendingAuthSession = authSession
             return Promise(value: authSession)
         }
@@ -69,14 +69,14 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             }
     }
     
-    private func cancelAuthSession(_ authSession: FinancialConnectionsAuthorizationSession) -> Future<FinancialConnectionsAuthorizationSession> {
+    private func cancelAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
         return apiClient.cancelAuthSession(
             clientSecret: clientSecret,
             authSessionId: authSession.id
         )
     }
     
-    func authorizeAuthSession(_ authSession: FinancialConnectionsAuthorizationSession) -> Future<FinancialConnectionsAuthorizationSession> {
+    func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
         return apiClient.fetchAuthSessionOAuthResults(
             clientSecret: clientSecret,
             authSessionId: authSession.id

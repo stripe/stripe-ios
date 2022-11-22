@@ -33,7 +33,7 @@ struct FinancialConnectionsDisabledPartnerAccount {
     let disableReason: String
 }
 
-struct FinancialConnectionsAuthorizationSessionAccounts: Decodable {
+struct FinancialConnectionsAuthSessionAccounts: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let nextPane: FinancialConnectionsSessionManifest.NextPane
 }

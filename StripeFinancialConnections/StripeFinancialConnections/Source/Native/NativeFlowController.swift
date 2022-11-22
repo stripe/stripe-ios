@@ -337,9 +337,9 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
     
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
-        didCompleteWithAuthSession authSession: FinancialConnectionsAuthorizationSession
+        didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
     ) {
-        dataManager.authorizationSession = authSession
+        dataManager.authSession = authSession
         
         let accountPickerViewController = CreatePaneViewController(
             pane: .accountPicker,
@@ -544,11 +544,11 @@ private func CreatePaneViewController(
     let viewController: UIViewController?
     switch pane {
     case .accountPicker:
-        if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
+        if let authSession = dataManager.authSession, let institution = dataManager.institution {
             let accountPickerDataSource = AccountPickerDataSourceImplementation(
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
-                authorizationSession: authorizationSession,
+                authSession: authSession,
                 manifest: dataManager.manifest,
                 institution: institution,
                 analyticsClient: dataManager.analyticsClient
@@ -569,7 +569,7 @@ private func CreatePaneViewController(
                 institution: institution,
                 linkedAccountId: linkedAccountId,
                 analyticsClient: dataManager.analyticsClient,
-                authSessionId: dataManager.authorizationSession?.id
+                authSessionId: dataManager.authSession?.id
             )
             let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
                 dataSource: dataSource

@@ -78,32 +78,32 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsInstitutionList>()
     }
     
-    func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
-        return Promise<FinancialConnectionsAuthorizationSession>()
+    func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
+        return Promise<FinancialConnectionsAuthSession>()
     }
     
-    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
-        return Promise<FinancialConnectionsAuthorizationSession>()
+    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
+        return Promise<FinancialConnectionsAuthSession>()
     }
     
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
         return Promise<FinancialConnectionsMixedOAuthParams>()
     }
     
-    func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession> {
-        return Promise<FinancialConnectionsAuthorizationSession>()
+    func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthSession> {
+        return Promise<FinancialConnectionsAuthSession>()
     }
     
     func fetchAuthSessionAccounts(
         clientSecret: String,
         authSessionId: String,
         initialPollDelay: TimeInterval
-    ) -> Future<FinancialConnectionsAuthorizationSessionAccounts> {
-        return Promise<FinancialConnectionsAuthorizationSessionAccounts>()
+    ) -> Future<FinancialConnectionsAuthSessionAccounts> {
+        return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
     
-    func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
-        return Promise<FinancialConnectionsAuthorizationSessionAccounts>()
+    func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
+        return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
     
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
