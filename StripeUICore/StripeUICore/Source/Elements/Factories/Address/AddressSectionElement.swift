@@ -63,11 +63,13 @@ import UIKit
     
     /// Describes which address fields to collect
     public enum CollectionMode: Equatable {
-        case all
+        /// The default collection mode.
+        /// - Parameter autocompletableCountries: If non-empty, the line1 field displays an autocomplete accessory button if the current country is in this list. Set the `didTapAutocompleteButton` property to be notified when the button is tapped.
+        case all(autocompletableCountries: [String] = [])
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
-        
+        /// Replaces the address line 1 field with `self.autoCompleteLine`
         case autoCompletable
     }
     /// Fields that this section can collect in addition to the address
@@ -134,6 +136,7 @@ import UIKit
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsUITheme
     private(set) var defaults: AddressDetails
+    public var didTapAutocompleteButton: () -> () = { }
     
     // MARK: - Implementation
     /**
@@ -152,7 +155,7 @@ import UIKit
         locale: Locale = .current,
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: AddressDetails = .empty,
-        collectionMode: CollectionMode = .all,
+        collectionMode: CollectionMode = .all(),
         additionalFields: AdditionalFields = .init(),
         theme: ElementsUITheme = .default
     ) {
@@ -297,8 +300,17 @@ import UIKit
             autoCompleteLine = nil
         }
         // Re-create the address fields
-        line1 = fieldOrdering.contains(.line) ?
-            TextFieldElement.Address.makeLine1(defaultValue: address.line1, theme: theme) : nil
+        if fieldOrdering.contains(.line) {
+            if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
+                line1 = TextFieldElement.Address.LineConfiguration(
+                    lineType: .line1Autocompletable(didTapAutocomplete: didTapAutocompleteButton),
+                    defaultValue: address.line1
+                ).makeElement(theme: theme)
+            } else {
+                line1 = TextFieldElement.Address.makeLine1(defaultValue: address.line1, theme: theme)
+            }
+        }
+//        TextFieldElement.Address.LineConfiguration(lineType: .line1Autocompletable(didTapAutocomplete: {}), defaultValue: address.line1).makeElement(theme: theme) : nil
         line2 = fieldOrdering.contains(.line) ?
             TextFieldElement.Address.makeLine2(defaultValue: address.line2, theme: theme) : nil
         city = fieldOrdering.contains(.city) ?

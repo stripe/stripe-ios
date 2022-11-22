@@ -261,8 +261,8 @@ extension AddressViewController {
     private func expandAddressSectionIfNeeded() {
         // If we're in autocomplete mode and the country is not supported by autocomplete, switch to normal address collection
         if let addressSection = addressSection, addressSection.collectionMode == .autoCompletable,
-           !configuration.autocompleteCountries.map({ $0.lowercased() }).contains(addressSection.selectedCountryCode.lowercased()) {
-            addressSection.collectionMode = .all
+           !configuration.autocompleteCountries.caseInsensitiveContains(addressSection.selectedCountryCode) {
+            addressSection.collectionMode = .all(autocompletableCountries: configuration.autocompleteCountries)
         }
     }
     
@@ -276,10 +276,13 @@ extension AddressViewController {
             countries: allowedCountries.isEmpty ? nil : allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: configuration.defaultValues.address != .init() ? .all : .autoCompletable,
+            collectionMode: configuration.defaultValues.address != .init() ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
             additionalFields: .init(from: additionalFields),
             theme: configuration.appearance.asElementsTheme
         )
+        addressSection?.didTapAutocompleteButton = { [weak self] in
+            self?.didTapAutoCompleteLine()
+        }
         addressSection?.autoCompleteLine?.didTap = { [weak self] in
             self?.didTapAutoCompleteLine()
         }
@@ -374,7 +377,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
     func didSelectManualEntry(_ line1: String) {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
-        addressSection.collectionMode = .all
+        addressSection.collectionMode = .all(autocompletableCountries: configuration.autocompleteCountries)
         addressSection.line1?.setText(line1)
     }
     
@@ -382,7 +385,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
         // Disable auto complete after address is selected
-        addressSection.collectionMode = .all
+        addressSection.collectionMode = .all(autocompletableCountries: configuration.autocompleteCountries)
         guard let address = address else {
             return
         }
@@ -457,3 +460,4 @@ extension AddressSectionElement.AdditionalFields {
 @_spi(STP) extension AddressViewController: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
 }
+
