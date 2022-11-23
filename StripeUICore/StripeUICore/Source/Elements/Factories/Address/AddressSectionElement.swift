@@ -94,7 +94,7 @@ import UIKit
     
     // MARK: Element protocol
     public let elements: [Element]
-    public var delegate: ElementDelegate?
+    public weak var delegate: ElementDelegate?
     public lazy var view: UIView = {
         let vStack = UIStackView(arrangedSubviews: [addressSection.view, sameAsCheckbox.view].compactMap { $0 })
         vStack.axis = .vertical

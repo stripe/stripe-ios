@@ -523,7 +523,7 @@ class ConfirmButton: UIView {
 
             if status == .succeeded {
                 // always use hardcoded color for foreground color when in success state
-                return background.contrastingColor
+                return .white
             }
             
             // if foreground is set prefer that over a dynamic constrasting color in all othe states

@@ -60,26 +60,26 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         promise.observe { result in
             switch result {
             case .success(let response):
-                XCTAssertEqual(response?.expectedCard?.last4, "4242")
-                XCTAssertEqual(response?.expectedCard?.issuer, "Visa")
+                XCTAssertEqual(response.expectedCard.last4, "4242")
+                XCTAssertEqual(response.expectedCard.issuer, "Visa")
 
-                XCTAssertNotNil(response?.acceptedImageConfigs)
+                XCTAssertNotNil(response.acceptedImageConfigs)
 
                 XCTAssertEqual(
-                    response?.acceptedImageConfigs?.preferredFormats,
+                    response.acceptedImageConfigs?.preferredFormats,
                     [.heic, .webp, .jpeg]
                 )
 
                 XCTAssertEqual(
-                    response?.acceptedImageConfigs?.defaultSettings?.compressionRatio,
+                    response.acceptedImageConfigs?.defaultSettings?.compressionRatio,
                     0.8
                 )
                 XCTAssertEqual(
-                    response?.acceptedImageConfigs?.defaultSettings?.imageSize,
+                    response.acceptedImageConfigs?.defaultSettings?.imageSize,
                     [1080.0, 1920.0]
                 )
 
-                if let formatSettings = response?.acceptedImageConfigs?.formatSettings {
+                if let formatSettings = response.acceptedImageConfigs?.formatSettings {
                     let webpSettings = formatSettings[.webp]
                     XCTAssertEqual(webpSettings??.compressionRatio, 0.7)
                     XCTAssertEqual(webpSettings??.imageSize, [2160.0, 1920.0])
@@ -145,7 +145,8 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         promise.observe { result in
             switch result {
             case .success(let response):
-                XCTAssertNil(response?.expectedCard)
+                XCTAssertNil(response.expectedCard.last4)
+                XCTAssertNil(response.expectedCard.issuer)
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
             }

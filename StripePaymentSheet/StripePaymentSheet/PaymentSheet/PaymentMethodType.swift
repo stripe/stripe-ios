@@ -173,9 +173,12 @@ extension PaymentSheet {
         static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration) -> [PaymentMethodType] {
             var recommendedPaymentMethodTypes = Self.recommendedPaymentMethodTypes(from: intent)
             if configuration.linkPaymentMethodsOnly {
-                // If we're in the Link modal, manually add instant debit
-                // as an option and let the support calls decide if it's allowed
-                recommendedPaymentMethodTypes.append(.linkInstantDebit)
+                // If we're in the Link modal, manually add Link payment methods
+                // and let the support calls decide if they're allowed
+                let allLinkPaymentMethods: [PaymentMethodType] = [.card, .linkInstantDebit]
+                for method in allLinkPaymentMethods where !recommendedPaymentMethodTypes.contains(method) {
+                    recommendedPaymentMethodTypes.append(method)
+                }
             }
 
             let paymentTypes = recommendedPaymentMethodTypes.filter {

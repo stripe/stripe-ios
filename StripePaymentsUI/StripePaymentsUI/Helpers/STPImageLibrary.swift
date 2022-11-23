@@ -120,13 +120,7 @@ public class STPImageLibrary: NSObject {
         case .mastercard:
             imageName = shouldUseTemplate ? "stp_card_mastercard_template" : "stp_card_mastercard"
         case .unionPay:
-            if locale.identifier.lowercased().hasPrefix("zh") {
-                imageName =
-                    shouldUseTemplate ? "stp_card_unionpay_template_zh" : "stp_card_unionpay_zh"
-            } else {
-                imageName =
-                    shouldUseTemplate ? "stp_card_unionpay_template_en" : "stp_card_unionpay_en"
-            }
+            imageName = shouldUseTemplate ? "stp_card_unionpay_template" : "stp_card_unionpay"
         case .unknown:
             shouldUseTemplate = true
             imageName = "stp_card_unknown"

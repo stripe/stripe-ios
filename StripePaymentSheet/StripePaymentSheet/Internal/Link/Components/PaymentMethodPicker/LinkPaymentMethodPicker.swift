@@ -224,6 +224,10 @@ extension LinkPaymentMethodPicker {
         cell.isLoading = false
     }
 
+    func setAddPaymentMethodButtonEnabled(_ enabled: Bool) {
+        addPaymentMethodButton.isEnabled = enabled
+    }
+
     private func reloadDataIfNeeded() {
         if needsDataReload {
             reloadData()

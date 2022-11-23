@@ -167,7 +167,7 @@ class BasicIntegrationUITests: XCTestCase {
         let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Add a Card"]
             .buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
         addcardviewcontrollernavbardonebuttonidentifierButton.tapWhenHittableInTestCase(self)
-        app.alerts["Your card has expired"].buttons["OK"].tapWhenHittableInTestCase(self)
+        app.alerts["Your card has expired."].buttons["OK"].tapWhenHittableInTestCase(self)
         cardNumberField.tapWhenHittableInTestCase(self)
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4)
         cardNumberField.typeText(deleteString)
@@ -407,7 +407,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
             "Ajouter une carte"
         ].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
         addcardviewcontrollernavbardonebuttonidentifierButton.tapWhenHittableInTestCase(self)
-        app.alerts["Votre carte est arrivée à expiration."].buttons["OK"].tapWhenHittableInTestCase(self)
+        app.alerts["Votre carte a expiré."].buttons["OK"].tapWhenHittableInTestCase(self)
         cardNumberField.tapWhenHittableInTestCase(self)
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4)
         cardNumberField.typeText(deleteString)

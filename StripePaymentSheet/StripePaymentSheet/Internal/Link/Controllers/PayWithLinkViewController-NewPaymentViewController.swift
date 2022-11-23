@@ -100,8 +100,6 @@ extension PayWithLinkViewController {
             )
         }()
 
-        private var connectionsAuthManager: LinkFinancialConnectionsAuthManager?
-
         private let feedbackGenerator = UINotificationFeedbackGenerator()
 
         private var shouldShowApplePayButton: Bool {
@@ -190,7 +188,7 @@ extension PayWithLinkViewController {
             view.endEditing(true)
 
             if addPaymentMethodVC.selectedPaymentMethodType == .linkInstantDebit {
-                didSelectAddBankAccount(addPaymentMethodVC)
+                didSelectAddBankAccount()
                 return
             }
             
@@ -244,49 +242,23 @@ extension PayWithLinkViewController {
             }
         }
 
-        func didSelectAddBankAccount(_ viewController: AddPaymentMethodViewController) {
+        func didSelectAddBankAccount() {
             confirmButton.update(state: .processing)
 
-            connectionsAuthManager = LinkFinancialConnectionsAuthManager(
-                linkAccount: linkAccount,
-                window: view.window
-            )
-
-            linkAccount.createLinkAccountSession() { [weak self] result in
+            coordinator?.startInstantDebits() { [weak self] result in
                 guard let self = self else { return }
 
                 switch result {
-                case .success(let linkAccountSession):
-                    self.connectionsAuthManager?.start(
-                        clientSecret: linkAccountSession.clientSecret
-                    ) { [weak self] result in
-                        guard let self = self else { return }
-
-                        switch result {
-                        case .success(let linkedAccountID):
-                            self.linkAccount.createPaymentDetails(
-                                linkedAccountId: linkedAccountID
-                            ) { result in
-                                switch result {
-                                case .success(let paymentDetails):
-                                    // Store last added payment details so we can automatically select it on wallet
-                                    self.context.lastAddedPaymentDetails = paymentDetails
-                                    self.coordinator?.accountUpdated(self.linkAccount)
-                                    // Do not update confirmButton -- leave in processing while coordinator updates
-                                case .failure(let error):
-                                    self.updateErrorLabel(for: error)
-                                    self.confirmButton.update(state: .enabled)
-                                }
-                            }
-                        case.canceled:
-                            self.confirmButton.update(state: .enabled)
-                        case .failure(let error):
-                            self.updateErrorLabel(for: error)
-                            self.confirmButton.update(state: .enabled)
-                        }
-                    }
+                case .success:
+                    break
                 case .failure(let error):
-                    self.updateErrorLabel(for: error)
+                    switch error {
+                    case LinkFinancialConnectionsAuthManager.Error.canceled:
+                        self.confirmButton.update(state: .enabled)
+                    default:
+                        self.updateErrorLabel(for: error)
+                        self.confirmButton.update(state: .enabled)
+                    }
                 }
             }
         }

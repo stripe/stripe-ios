@@ -9,6 +9,18 @@
 @_spi(STP) import StripePayments
 
 extension Intent {
+    var supportsLink: Bool {
+        return recommendedPaymentMethodTypes.contains(.link)
+    }
+
+    var supportsLinkCard: Bool {
+        return supportsLink && (linkFundingSources?.contains(.card) ?? false)
+    }
+
+    var onlySupportsLinkBank: Bool {
+        return supportsLink && (linkFundingSources == [.bankAccount])
+    }
+
     var callToAction: ConfirmButton.CallToActionType {
         switch self {
         case .paymentIntent(let paymentIntent):

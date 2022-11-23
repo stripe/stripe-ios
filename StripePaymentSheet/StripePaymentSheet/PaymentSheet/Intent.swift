@@ -66,9 +66,14 @@ enum Intent {
 
         return false
     }
-
-    var supportsLink: Bool {
-        return recommendedPaymentMethodTypes.contains(.link)
+    
+    var currency: String? {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.currency
+        case .setupIntent:
+            return nil
+        }
     }
 }
 

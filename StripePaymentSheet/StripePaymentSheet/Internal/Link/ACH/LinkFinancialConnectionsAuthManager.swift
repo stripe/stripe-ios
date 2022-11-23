@@ -18,14 +18,12 @@ final class LinkFinancialConnectionsAuthManager: NSObject {
         static let linkedAccountIDQueryParameterName = "linked_account"
     }
 
-    enum AuthenticationResult {
-        case success(linkedAccountID: String)
+    enum Error: Swift.Error, LocalizedError {
         case canceled
-        case failure(Error)
-    }
-
-    enum AuthenticationError: Error, LocalizedError {
-        case unknown(_ debugDescription: String)
+        case failedToStart
+        case noLinkedAccountID
+        case noURL
+        case unexpectedURL
 
         var errorDescription: String? {
             return NSError.stp_unexpectedErrorMessage()
@@ -44,8 +42,6 @@ final class LinkFinancialConnectionsAuthManager: NSObject {
         }
     }
 
-    typealias CompletionBlock = (AuthenticationResult) -> Void
-
     let linkAccount: PaymentSheetLinkAccount
     let window: UIWindow?
 
@@ -54,96 +50,79 @@ final class LinkFinancialConnectionsAuthManager: NSObject {
         self.window = window
     }
 
-    func start(
-        clientSecret: String,
-        completion: @escaping CompletionBlock
-    ) {
-        generateHostedURL(withClientSecret: clientSecret).observe { [weak self] result in
-            switch result {
-            case .success(let manifest):
-                self?.authenticate(withManifest: manifest, completion: completion)
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+    /// Initiate a Financial Connections session for Link Instant Debits.
+    /// - Parameter clientSecret: The client secret of the consumer's Link account session.
+    /// - Returns: The ID for the newly linked account.
+    /// - Throws: Either `Error.canceled`, meaning the user canceled the flow, or an error describing what went wrong.
+    func start(clientSecret: String) async throws -> String {
+        let manifest = try await generateHostedURL(withClientSecret: clientSecret)
+        return try await authenticate(withManifest: manifest)
     }
 
 }
 
 extension LinkFinancialConnectionsAuthManager {
 
-    private func generateHostedURL(withClientSecret clientSecret: String) -> Promise<Manifest> {
-        return linkAccount.apiClient.post(
-            resource: "link_account_sessions/generate_hosted_url",
-            parameters: [
-                "client_secret": clientSecret,
-                "fullscreen": true,
-                "hide_close_button": true
-            ],
-            ephemeralKeySecret: linkAccount.publishableKey
-        )
-    }
-
-    private func authenticate(
-        withManifest manifest: Manifest,
-        completion: @escaping CompletionBlock
-    ) {
-        let authSession = ASWebAuthenticationSession(
-            url: manifest.hostedAuthURL,
-            callbackURLScheme: manifest.successURL.scheme,
-            completionHandler: { url, error in
-                if let error = error {
-                    if let authenticationSessionError = error as? ASWebAuthenticationSessionError {
-                        switch authenticationSessionError.code {
-                        case .canceledLogin:
-                            completion(.canceled)
-                        default:
-                            completion(.failure(authenticationSessionError))
-                        }
-                    } else {
-                        completion(.failure(error))
-                    }
-                    return
-                }
-
-                guard let url = url else {
-                    completion(.failure(
-                        AuthenticationError.unknown("Unexpected `nil` URL")
-                    ))
-                    return
-                }
-
-                if url.matchesSchemeHostAndPath(of: manifest.successURL) {
-                    if let linkedAccountID = Self.extractLinkedAccountID(from: url) {
-                        completion(.success(linkedAccountID: linkedAccountID))
-                    } else {
-                        completion(.failure(
-                            AuthenticationError.unknown("URL is missing the linked account ID")
-                        ))
-                    }
-                } else if url.matchesSchemeHostAndPath(of: manifest.cancelURL) {
-                    completion(.canceled)
-                } else {
-                    completion(.failure(
-                        AuthenticationError.unknown("Unexpected URL")
-                    ))
-                }
-            }
-        )
-
-        authSession.presentationContextProvider = self
-        authSession.prefersEphemeralWebBrowserSession = true
-
-        if #available(iOS 13.4, *) {
-            guard authSession.canStart else {
-                completion(.failure(
-                    AuthenticationError.unknown("Failed to start session")
-                ))
-                return
+    private func generateHostedURL(withClientSecret clientSecret: String) async throws -> Manifest {
+        return try await withCheckedThrowingContinuation { continuation in
+            linkAccount.apiClient.post(
+                resource: "link_account_sessions/generate_hosted_url",
+                parameters: [
+                    "client_secret": clientSecret,
+                    "fullscreen": true,
+                    "hide_close_button": true
+                ],
+                ephemeralKeySecret: linkAccount.publishableKey
+            ).observe { result in
+                continuation.resume(with: result)
             }
         }
+    }
 
-        authSession.start()
+    private func authenticate(withManifest manifest: Manifest) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            let authSession = ASWebAuthenticationSession(
+                url: manifest.hostedAuthURL,
+                callbackURLScheme: manifest.successURL.scheme,
+                completionHandler: { url, error in
+                    if let error = error {
+                        if let authenticationSessionError = error as? ASWebAuthenticationSessionError,
+                            authenticationSessionError.code == .canceledLogin
+                        {
+                            return continuation.resume(throwing: Error.canceled)
+                        }
+                        return continuation.resume(throwing: error)
+                    }
+
+                    guard let url = url else {
+                        return continuation.resume(throwing: Error.noURL)
+                    }
+
+                    if url.matchesSchemeHostAndPath(of: manifest.successURL) {
+                        if let linkedAccountID = Self.extractLinkedAccountID(from: url) {
+                            return continuation.resume(returning: linkedAccountID)
+                        } else {
+                            return continuation.resume(throwing: Error.noLinkedAccountID)
+                        }
+                    } else if url.matchesSchemeHostAndPath(of: manifest.cancelURL) {
+                        return continuation.resume(throwing: Error.canceled)
+                    } else {
+                        return continuation.resume(throwing: Error.unexpectedURL)
+                    }
+                }
+            )
+
+            authSession.presentationContextProvider = self
+            authSession.prefersEphemeralWebBrowserSession = true
+
+            if #available(iOS 13.4, *) {
+                guard authSession.canStart else {
+                    return continuation.resume(throwing: Error.failedToStart)
+                }
+            }
+
+            authSession.start()
+        }
     }
 
 }

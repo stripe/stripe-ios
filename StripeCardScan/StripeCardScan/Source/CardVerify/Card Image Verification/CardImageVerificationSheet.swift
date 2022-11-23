@@ -77,8 +77,8 @@ final public class CardImageVerificationSheet {
 
                 /// Present the verify view controller
                 cardImageVerificationController.present(
-                    with: response?.expectedCard,
-                    and: response?.acceptedImageConfigs,
+                    with: response.expectedCard,
+                    and: response.acceptedImageConfigs,
                     from: presentingViewController,
                     animated: animated
                 )
@@ -102,7 +102,7 @@ extension CardImageVerificationSheet {
     fileprivate func load(
         civId: String,
         civSecret: String,
-        completion: @escaping ((Result<CardImageVerificationDetailsResponse?, Error>) -> Void)
+        completion: @escaping ((Result<CardImageVerificationDetailsResponse, Error>) -> Void)
     ) {
         /// Clear the scan analytics manager since it is the beginning of a new session
         ScanAnalyticsManager.shared.reset()
