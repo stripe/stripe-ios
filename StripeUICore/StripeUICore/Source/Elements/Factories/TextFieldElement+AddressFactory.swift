@@ -60,6 +60,7 @@ import UIKit
                 if case .line1Autocompletable(let didTapAutocomplete) = lineType {
                     let autocompleteIconButton = UIButton.make(type: .system, didTap: didTapAutocomplete)
                     autocompleteIconButton.setImage(Image.icon_autocomplete_search.makeImage(), for: .normal)
+                    autocompleteIconButton.accessibilityIdentifier = "autocomplete_affordance"
                     return autocompleteIconButton
                 }
                 return nil

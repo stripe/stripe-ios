@@ -38,6 +38,13 @@ class PaymentSheet_AddressTests: XCTestCase {
         // Tapping the address line 1 field should now just let us enter the field manually
         app.textFields["Address line 1"].waitForExistenceAndTap()
         app.typeText("510 Townsend St")
+        
+        // Tapping autocomplete button in line 1 field should take us to autocomplete with the line 1 already entered in the search field
+        app.buttons["autocomplete_affordance"].tap()
+        XCTAssertEqual(app.textFields["Address"].value as! String, "510 Townsend St")
+        app.buttons["Enter address manually"].waitForExistenceAndTap()
+        
+        // Continue entering address manually...
         app.textFields["Address line 2"].tap()
         app.typeText("Apt 152")
         app.textFields["City"].tap()
@@ -95,14 +102,14 @@ class PaymentSheet_AddressTests: XCTestCase {
         let shippingButton = app.buttons["Shipping address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
-        
+                
         // The Save address button should be disabled
         let saveAddressButton = app.buttons["Save address"]
         XCTAssertFalse(saveAddressButton.isEnabled)
         
         // Tapping the address field should go to autocomplete
         app.textFields["Address"].waitForExistenceAndTap()
-        
+                
         // Enter partial address and tap first result
         app.typeText("4 Pennsylvania Plaza")
         let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "4 Pennsylvania Plaza")).element
@@ -150,6 +157,9 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇳🇿 New Zealand")
         app.toolbars.buttons["Done"].tap()
+        
+        // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support New Zealand
+        XCTAssertNil(app.buttons["autocomplete_affordance"])
         
         // Tapping the address line 1 field...
         app.textFields["Address line 1"].tap()
