@@ -51,7 +51,7 @@ class NativeFlowController {
         guard
             let viewController = CreatePaneViewController(
                 pane: dataManager.manifest.nextPane,
-                authFlowController: self,
+                nativeFlowController: self,
                 dataManager: dataManager
             )
         else {
@@ -121,7 +121,7 @@ extension NativeFlowController {
     private func pushManualEntry() {
         let manualEntryViewController = CreatePaneViewController(
             pane: .manualEntry,
-            authFlowController: self,
+            nativeFlowController: self,
             dataManager: dataManager
         )
         pushViewController(manualEntryViewController, animated: true)
@@ -139,7 +139,7 @@ extension NativeFlowController {
         guard
             let resetFlowViewController = CreatePaneViewController(
                 pane: .resetFlow,
-                authFlowController: self,
+                nativeFlowController: self,
                 dataManager: dataManager
             )
         else {
@@ -171,7 +171,7 @@ extension NativeFlowController {
         guard
             let terminalErrorViewController = CreatePaneViewController(
                 pane: .terminalError,
-                authFlowController: self,
+                nativeFlowController: self,
                 dataManager: dataManager
             )
         else {
@@ -286,7 +286,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
         
         let viewController = CreatePaneViewController(
             pane: manifest.nextPane,
-            authFlowController: self,
+            nativeFlowController: self,
             dataManager: dataManager
         )
         pushViewController(viewController, animated: true)
@@ -307,7 +307,7 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
         
         let partnerAuthViewController = CreatePaneViewController(
             pane: .partnerAuth,
-            authFlowController: self,
+            nativeFlowController: self,
             dataManager: dataManager
         )
         pushViewController(partnerAuthViewController, animated: true)
@@ -343,7 +343,7 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         
         let accountPickerViewController = CreatePaneViewController(
             pane: .accountPicker,
-            authFlowController: self,
+            nativeFlowController: self,
             dataManager: dataManager
         )
         pushViewController(accountPickerViewController, animated: true)
@@ -372,7 +372,7 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
         if shouldAttachLinkedPaymentAccount {
             let attachLinkedPaymentMethodViewController = CreatePaneViewController(
                 pane: .attachLinkedPaymentAccount,
-                authFlowController: self,
+                nativeFlowController: self,
                 dataManager: dataManager
             )
             // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
@@ -383,7 +383,7 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
         } else {
             let successViewController = CreatePaneViewController(
                 pane: .success,
-                authFlowController: self,
+                nativeFlowController: self,
                 dataManager: dataManager
             )
             pushViewController(successViewController, animated: true)
@@ -433,7 +433,7 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         if dataManager.manifest.manualEntryUsesMicrodeposits {
             let manualEntrySuccessViewController = CreatePaneViewController(
                 pane: .manualEntrySuccess,
-                authFlowController: self,
+                nativeFlowController: self,
                 dataManager: dataManager
             )
             pushViewController(manualEntrySuccessViewController, animated: true)
@@ -475,7 +475,7 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
         // go to the next pane (likely `institutionPicker`)
         let nextViewController = CreatePaneViewController(
             pane: manifest.nextPane,
-            authFlowController: self,
+            nativeFlowController: self,
             dataManager: dataManager
         )
         pushViewController(nextViewController, animated: false)
@@ -517,7 +517,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
     ) {
         let viewController = CreatePaneViewController(
             pane: paymentAccountResource.nextPane,
-            authFlowController: self,
+            nativeFlowController: self,
             dataManager: dataManager
         )
         // the next pane is likely `success`
@@ -538,7 +538,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 @available(iOSApplicationExtension, unavailable)
 private func CreatePaneViewController(
     pane: FinancialConnectionsSessionManifest.NextPane,
-    authFlowController: NativeFlowController,
+    nativeFlowController: NativeFlowController,
     dataManager: NativeFlowDataManager
 ) -> UIViewController? {
     let viewController: UIViewController?
@@ -554,7 +554,7 @@ private func CreatePaneViewController(
                 analyticsClient: dataManager.analyticsClient
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
-            accountPickerViewController.delegate = authFlowController
+            accountPickerViewController.delegate = nativeFlowController
             viewController = accountPickerViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
@@ -574,7 +574,7 @@ private func CreatePaneViewController(
             let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
                 dataSource: dataSource
             )
-            attachedLinkedPaymentAccountViewController.delegate = authFlowController
+            attachedLinkedPaymentAccountViewController.delegate = nativeFlowController
             viewController = attachedLinkedPaymentAccountViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
@@ -589,7 +589,7 @@ private func CreatePaneViewController(
             analyticsClient: dataManager.analyticsClient
         )
         let consentViewController = ConsentViewController(dataSource: consentDataSource)
-        consentViewController.delegate = authFlowController
+        consentViewController.delegate = nativeFlowController
         viewController = consentViewController
     case .institutionPicker:
         let dataSource = InstitutionAPIDataSource(
@@ -599,7 +599,7 @@ private func CreatePaneViewController(
             analyticsClient: dataManager.analyticsClient
         )
         let picker = InstitutionPickerViewController(dataSource: dataSource)
-        picker.delegate = authFlowController
+        picker.delegate = nativeFlowController
         viewController = picker
     case .linkConsent:
         assertionFailure("Not supported")
@@ -615,7 +615,7 @@ private func CreatePaneViewController(
             analyticsClient: dataManager.analyticsClient
         )
         let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
-        manualEntryViewController.delegate = authFlowController
+        manualEntryViewController.delegate = nativeFlowController
         viewController = manualEntryViewController
     case .manualEntrySuccess:
         if let paymentAccountResource = dataManager.paymentAccountResource, let accountNumberLast4 = dataManager.accountNumberLast4 {
@@ -624,7 +624,7 @@ private func CreatePaneViewController(
                 accountNumberLast4: accountNumberLast4,
                 analyticsClient: dataManager.analyticsClient
             )
-            manualEntrySuccessViewController.delegate = authFlowController
+            manualEntrySuccessViewController.delegate = nativeFlowController
             viewController = manualEntrySuccessViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
@@ -646,7 +646,7 @@ private func CreatePaneViewController(
                 analyticsClient: dataManager.analyticsClient
             )
             let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
-            partnerAuthViewController.delegate = authFlowController
+            partnerAuthViewController.delegate = nativeFlowController
             viewController = partnerAuthViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
@@ -663,7 +663,7 @@ private func CreatePaneViewController(
                 analyticsClient: dataManager.analyticsClient
             )
             let successViewController = SuccessViewController(dataSource: successDataSource)
-            successViewController.delegate = authFlowController
+            successViewController.delegate = nativeFlowController
             viewController = successViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
@@ -688,7 +688,7 @@ private func CreatePaneViewController(
         let resetFlowViewController = ResetFlowViewController(
             dataSource: resetFlowDataSource
         )
-        resetFlowViewController.delegate = authFlowController
+        resetFlowViewController.delegate = nativeFlowController
         viewController = resetFlowViewController
     case .terminalError:
         if let terminalError = dataManager.terminalError {
@@ -696,7 +696,7 @@ private func CreatePaneViewController(
                 error: terminalError,
                 allowManualEntry: dataManager.manifest.allowManualEntry
             )
-            terminalErrorViewController.delegate = authFlowController
+            terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
