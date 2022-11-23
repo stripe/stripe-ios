@@ -33,6 +33,7 @@ final class AccountPickerLabelRowView: UIView {
         let leadingTitleLabel = UILabel()
         leadingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
         leadingTitleLabel.textColor = .textPrimary
+        leadingTitleLabel.lineBreakMode = .byCharWrapping
         leadingTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         leadingTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return leadingTitleLabel
