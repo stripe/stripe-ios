@@ -99,8 +99,8 @@ class TextFieldView: UIView {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(frame: .zero)
-        isAccessibilityElement = true
         translatesAutoresizingMaskIntoConstraints = false
+        isAccessibilityElement = false // false b/c we use `accessibilityElements`
         installConstraints()
         updateUI(with: viewModel)
     }
@@ -195,12 +195,12 @@ class TextFieldView: UIView {
             layer.borderColor = viewModel.theme.colors.danger.cgColor
             textField.textColor = viewModel.theme.colors.danger
             errorIconView.alpha = 1
-            accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
+            textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
             textField.textColor = isUserInteractionEnabled ? viewModel.theme.colors.textFieldText : .tertiaryLabel
             errorIconView.alpha = 0
-            accessibilityValue = viewModel.attributedText.string
+            textField.accessibilityValue = viewModel.attributedText.string
         }
         if frame != .zero {
             textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.
@@ -208,7 +208,8 @@ class TextFieldView: UIView {
 
         // Update accessory view
         accessoryView = viewModel.accessoryView
-
+        
+        accessibilityElements = [textFieldView, accessoryView].compactMap { $0 }
         // Manually call layoutIfNeeded to avoid unintentional animations
         // in next layout pass
         layoutIfNeeded()
@@ -217,12 +218,6 @@ class TextFieldView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
-    }
-    
-    // Note: Overriden because this value changes when the text field is interacted with.
-    override var accessibilityTraits: UIAccessibilityTraits {
-        set { textField.accessibilityTraits = newValue }
-        get { return textField.accessibilityTraits }
     }
 }
 
