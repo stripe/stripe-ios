@@ -364,22 +364,30 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
     
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: FinancialConnectionsAuthorizationSessionAccounts
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
-        dataManager.linkedAccounts = selectedAccounts.data
+        dataManager.linkedAccounts = selectedAccounts
         
-        let nextPane = selectedAccounts.nextPane
-        let viewController = CreatePaneViewController(
-            pane: nextPane,
-            authFlowController: self,
-            dataManager: dataManager
-        )
-        // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
-        //
-        // `attachLinkedPaymentAccount` looks the same as the last step of `accountPicker`
-        // so navigating to a "Linking account" loading screen can look buggy to the user
-        let nextPaneIsNotAttachLinkedPaymentAccount = nextPane != .attachLinkedPaymentAccount
-        pushViewController(viewController, animated: nextPaneIsNotAttachLinkedPaymentAccount)
+        let shouldAttachLinkedPaymentAccount = (dataManager.manifest.paymentMethodType != nil)
+        if shouldAttachLinkedPaymentAccount {
+            let attachLinkedPaymentMethodViewController = CreatePaneViewController(
+                pane: .attachLinkedPaymentAccount,
+                authFlowController: self,
+                dataManager: dataManager
+            )
+            // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
+            //
+            // `attachLinkedPaymentAccount` looks the same as the last step of `accountPicker`
+            // so navigating to a "Linking account" loading screen can look buggy to the user
+            pushViewController(attachLinkedPaymentMethodViewController, animated: false)
+        } else {
+            let successViewController = CreatePaneViewController(
+                pane: .success,
+                authFlowController: self,
+                dataManager: dataManager
+            )
+            pushViewController(successViewController, animated: true)
+        }
     }
     
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController) {

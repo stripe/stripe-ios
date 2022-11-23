@@ -14,7 +14,7 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: FinancialConnectionsAuthorizationSessionAccounts
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -155,8 +155,10 @@ final class AccountPickerViewController: UIViewController {
                             )
                         )
                     } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
-                        self.dataSource.updateSelectedAccounts(accounts)
-                        self.didSelectLinkAccounts()
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didSelectAccounts: accounts
+                        )
                     } else if
                         self.dataSource.manifest.singleAccount,
                         self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
@@ -321,7 +323,7 @@ final class AccountPickerViewController: UIViewController {
                 case .success(let linkedAccounts):
                     self.delegate?.accountPickerViewController(
                         self,
-                        didSelectAccounts: linkedAccounts
+                        didSelectAccounts: linkedAccounts.data
                     )
                 case .failure(let error):
                     self.dataSource
