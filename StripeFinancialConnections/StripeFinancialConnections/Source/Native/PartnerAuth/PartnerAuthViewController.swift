@@ -248,6 +248,10 @@ final class PartnerAuthViewController: UIViewController {
                     //
                     // we use `returnUrl`, instead of a `Bool`, in the case that
                     // this completion handler can sometimes return different URL's
+                    self.dataSource.recordAuthSessionEvent(
+                        eventName: "ios_double_return",
+                        authSessionId: authSession.id
+                    )
                     return
                 }
                 self.lastHandledAuthenticationSessionReturnUrl = returnUrl
@@ -302,25 +306,18 @@ final class PartnerAuthViewController: UIViewController {
                 // we did NOT get a `status` back from the backend,
                 // so assume a "cancel"
                 else {
-                    // `error` is usually NOT null when user closes
-                    // the browser by pressing 'Cancel' button
-                    //
-                    // the `error` may not always be set because of
-                    // a cancellation, but we still treat it as one
-                    if error != nil {
-                        if authSession.isOauth {
-                            // on "manual cancels" (for OAuth) we log retry event:
-                            self.dataSource.recordAuthSessionEvent(
-                                eventName: "retry",
-                                authSessionId: authSession.id
-                            )
-                        } else {
-                            // on "manual cancels" (for Legacy) we log cancel event:
-                            self.dataSource.recordAuthSessionEvent(
-                                eventName: "cancel",
-                                authSessionId: authSession.id
-                            )
-                        }
+                    if authSession.isOauth {
+                        // on "manual cancels" (for OAuth) we log retry event:
+                        self.dataSource.recordAuthSessionEvent(
+                            eventName: "retry",
+                            authSessionId: authSession.id
+                        )
+                    } else {
+                        // on "manual cancels" (for Legacy) we log cancel event:
+                        self.dataSource.recordAuthSessionEvent(
+                            eventName: "cancel",
+                            authSessionId: authSession.id
+                        )
                     }
                     
                     if let error = error {
