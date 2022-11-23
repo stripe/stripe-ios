@@ -36,7 +36,7 @@ class FeaturedInstitutionGridView: UIView {
         collectionView.contentInset = UIEdgeInsets(
             top: 0,
             left: horizontalPadding,
-            bottom: 0,
+            bottom: 16,
             right: horizontalPadding
         )
         collectionView.keyboardDismissMode = .onDrag
