@@ -16,7 +16,7 @@ protocol NativeFlowDataManager: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     var institution: FinancialConnectionsInstitution? { get set }
-    var authorizationSession: FinancialConnectionsAuthorizationSession? { get set }
+    var authSession: FinancialConnectionsAuthSession? { get set }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
     var terminalError: Error? { get set }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get set }
@@ -39,7 +39,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     let analyticsClient: FinancialConnectionsAnalyticsClient
     
     var institution: FinancialConnectionsInstitution?
-    var authorizationSession: FinancialConnectionsAuthorizationSession?
+    var authSession: FinancialConnectionsAuthSession?
     var linkedAccounts: [FinancialConnectionsPartnerAccount]?
     var terminalError: Error?
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
@@ -65,7 +65,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
 
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest) {
-        authorizationSession = nil
+        authSession = nil
         institution = nil
         paymentAccountResource = nil
         accountNumberLast4 = nil

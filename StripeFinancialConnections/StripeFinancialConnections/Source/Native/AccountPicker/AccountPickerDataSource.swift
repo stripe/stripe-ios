@@ -19,21 +19,21 @@ protocol AccountPickerDataSource: AnyObject {
     
     var delegate: AccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
-    var authorizationSession: FinancialConnectionsAuthorizationSession { get }
+    var authSession: FinancialConnectionsAuthSession { get }
     var institution: FinancialConnectionsInstitution { get }
     var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
-    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthorizationSessionAccounts>
+    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
-    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
+    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts>
 }
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
-    let authorizationSession: FinancialConnectionsAuthorizationSession
+    let authSession: FinancialConnectionsAuthSession
     let manifest: FinancialConnectionsSessionManifest
     let institution: FinancialConnectionsInstitution
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -48,24 +48,24 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     init(
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        authorizationSession: FinancialConnectionsAuthorizationSession,
+        authSession: FinancialConnectionsAuthSession,
         manifest: FinancialConnectionsSessionManifest,
         institution: FinancialConnectionsInstitution,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
-        self.authorizationSession = authorizationSession
+        self.authSession = authSession
         self.manifest = manifest
         self.institution = institution
         self.analyticsClient = analyticsClient
     }
     
-    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthorizationSessionAccounts> {
+    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts> {
         return apiClient.fetchAuthSessionAccounts(
             clientSecret: clientSecret,
-            authSessionId: authorizationSession.id,
-            initialPollDelay: AuthSessionAccountsInitialPollDelay(forFlow: authorizationSession.flow)
+            authSessionId: authSession.id,
+            initialPollDelay: AuthSessionAccountsInitialPollDelay(forFlow: authSession.flow)
         )
     }
     
@@ -73,17 +73,17 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.selectedAccounts = selectedAccounts
     }
     
-    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts> {
         return apiClient.selectAuthSessionAccounts(
             clientSecret: clientSecret,
-            authSessionId: authorizationSession.id,
+            authSessionId: authSession.id,
             selectedAccountIds: selectedAccounts.map({ $0.id })
         )
     }
 }
 
 private func AuthSessionAccountsInitialPollDelay(
-    forFlow flow: FinancialConnectionsAuthorizationSession.Flow?
+    forFlow flow: FinancialConnectionsAuthSession.Flow?
 ) -> TimeInterval {
     let defaultInitialPollDelay: TimeInterval = 1.75
     guard let flow = flow else {

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 
-struct FinancialConnectionsAuthorizationSession: Decodable {
+struct FinancialConnectionsAuthSession: Decodable {
     enum Flow: String, SafeEnumCodable, Equatable {
         case directWebview = "direct_webview"
         case finicityConnectV2Lite = "finicity_connect_v2_lite"

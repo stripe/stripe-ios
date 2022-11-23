@@ -23,25 +23,25 @@ protocol FinancialConnectionsAPIClient {
     
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList>
     
-    func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
+    func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession>
     
-    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
+    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
     
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams>
     
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
-                              publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession>
+                              publicToken: String?) -> Promise<FinancialConnectionsAuthSession>
     
     func fetchAuthSessionAccounts(
         clientSecret: String,
         authSessionId: String,
         initialPollDelay: TimeInterval
-    ) -> Future<FinancialConnectionsAuthorizationSessionAccounts>
+    ) -> Future<FinancialConnectionsAuthSessionAccounts>
     
     func selectAuthSessionAccounts(clientSecret: String,
                                    authSessionId: String,
-                                   selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
+                                   selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts>
     
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
     
@@ -134,7 +134,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         parameters: parameters)
     }
     
-    func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+    func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
         let body: [String:Any] = [
             "client_secret": clientSecret,
             "institution": institutionId,
@@ -142,15 +142,15 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "use_abstract_flow": true,
             "return_url": "ios",
         ]
-        return self.post(resource: APIEndpointAuthorizationSessions, parameters: body)
+        return self.post(resource: APIEndpointAuthSessions, parameters: body)
     }
     
-    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
         let body = [
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        return self.post(resource: APIEndpointAuthorizationSessionsCancel, object: body)
+        return self.post(resource: APIEndpointAuthSessionsCancel, object: body)
     }
     
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
@@ -163,7 +163,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 guard let self = self else {
                     return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
                 }
-                return self.post(resource: APIEndpointAuthorizationSessionsOAuthResults, object: body)
+                return self.post(resource: APIEndpointAuthSessionsOAuthResults, object: body)
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsMixedOAuthParams>.PollTimingOptions(
                 initialPollDelay: 0,
@@ -176,20 +176,20 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
-                              publicToken: String? = nil) -> Promise<FinancialConnectionsAuthorizationSession> {
+                              publicToken: String? = nil) -> Promise<FinancialConnectionsAuthSession> {
         var body = [
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
         body["public_token"] = publicToken // not all integrations require public_token
-        return self.post(resource: APIEndpointAuthorizationSessionsAuthorized, object: body)
+        return self.post(resource: APIEndpointAuthSessionsAuthorized, object: body)
     }
     
     func fetchAuthSessionAccounts(
         clientSecret: String,
         authSessionId: String,
         initialPollDelay: TimeInterval
-    ) -> Future<FinancialConnectionsAuthorizationSessionAccounts> {
+    ) -> Future<FinancialConnectionsAuthSessionAccounts> {
         let body = [
             "client_secret": clientSecret,
             "id": authSessionId,
@@ -199,9 +199,9 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 guard let self = self else {
                     return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
                 }
-                return self.post(resource: APIEndpointAuthorizationSessionsAccounts, object: body)
+                return self.post(resource: APIEndpointAuthSessionsAccounts, object: body)
             },
-            pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthorizationSessionAccounts>.PollTimingOptions(
+            pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSessionAccounts>.PollTimingOptions(
                 initialPollDelay: initialPollDelay
             )
         )
@@ -210,13 +210,13 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     
     func selectAuthSessionAccounts(clientSecret: String,
                                    authSessionId: String,
-                                   selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+                                   selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
         let body: [String: Any] = [
             "client_secret": clientSecret,
             "id": authSessionId,
             "selected_accounts": selectedAccountIds,
         ]
-        return self.post(resource: APIEndpointAuthorizationSessionsSelectedAccounts, parameters: body)
+        return self.post(resource: APIEndpointAuthSessionsSelectedAccounts, parameters: body)
     }
     
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
@@ -354,7 +354,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         body["key"] = publishableKey
         return self.post(
-            resource: APIEndpointAuthorizationSessionsEvents,
+            resource: APIEndpointAuthSessionsEvents,
             parameters: body
         )
     }
@@ -369,10 +369,10 @@ private let APIEndpointLinkMoreAccounts = "link_account_sessions/link_more_accou
 private let APIEndpointComplete = "link_account_sessions/complete"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
-private let APIEndpointAuthorizationSessions = "connections/auth_sessions"
-private let APIEndpointAuthorizationSessionsCancel = "connections/auth_sessions/cancel"
-private let APIEndpointAuthorizationSessionsOAuthResults = "connections/auth_sessions/oauth_results"
-private let APIEndpointAuthorizationSessionsAuthorized = "connections/auth_sessions/authorized"
-private let APIEndpointAuthorizationSessionsAccounts = "connections/auth_sessions/accounts"
-private let APIEndpointAuthorizationSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
-private let APIEndpointAuthorizationSessionsEvents = "connections/auth_sessions/events"
+private let APIEndpointAuthSessions = "connections/auth_sessions"
+private let APIEndpointAuthSessionsCancel = "connections/auth_sessions/cancel"
+private let APIEndpointAuthSessionsOAuthResults = "connections/auth_sessions/oauth_results"
+private let APIEndpointAuthSessionsAuthorized = "connections/auth_sessions/authorized"
+private let APIEndpointAuthSessionsAccounts = "connections/auth_sessions/accounts"
+private let APIEndpointAuthSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
+private let APIEndpointAuthSessionsEvents = "connections/auth_sessions/events"

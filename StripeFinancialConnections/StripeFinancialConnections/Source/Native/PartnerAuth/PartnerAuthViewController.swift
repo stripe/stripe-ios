@@ -19,7 +19,7 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewController(_ viewController: PartnerAuthViewController, didReceiveTerminalError error: Error)
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
-        didCompleteWithAuthSession authSession: FinancialConnectionsAuthorizationSession
+        didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
     )
 }
 
@@ -71,35 +71,35 @@ final class PartnerAuthViewController: UIViewController {
                 // order is important so be careful of moving
                 self.showEstablishingConnectionLoadingView(false)
                 switch result {
-                case .success(let authorizationSession):
-                    self.createdAuthSession(authorizationSession)
+                case .success(let authSession):
+                    self.createdAuthSession(authSession)
                 case .failure(let error):
                     self.showErrorView(error)
                 }
             }
     }
     
-    private func createdAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+    private func createdAuthSession(_ authSession: FinancialConnectionsAuthSession) {
         dataSource.recordAuthSessionEvent(
             eventName: "launched",
-            authSessionId: authorizationSession.id
+            authSessionId: authSession.id
         )
         
-        if authorizationSession.isOauth {
+        if authSession.isOauth {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 institutionImageUrl: institution.icon?.default,
-                partner: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toPartner() : nil,
+                partner: (authSession.showPartnerDisclosure ?? false) ? authSession.flow?.toPartner() : nil,
                 isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
                 didSelectContinue: { [weak self] in
-                    self?.openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
+                    self?.openInstitutionAuthenticationWebView(authSession: authSession)
                 }
             )
             view.addAndPinSubview(prepaneView)
             
             dataSource.recordAuthSessionEvent(
                 eventName: "loaded",
-                authSessionId: authorizationSession.id
+                authSessionId: authSession.id
             )
         } else {
             // a legacy (non-oauth) institution will have a blank background
@@ -111,7 +111,7 @@ final class PartnerAuthViewController: UIViewController {
             activityIndicator.startAnimating()
             view.addAndPinSubview(activityIndicator)
             
-            openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
+            openInstitutionAuthenticationWebView(authSession: authSession)
         }
     }
     
@@ -228,8 +228,8 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
     
-    private func openInstitutionAuthenticationWebView(authorizationSession: FinancialConnectionsAuthorizationSession) {
-        guard let urlString =  authorizationSession.url, let url = URL(string: urlString) else {
+    private func openInstitutionAuthenticationWebView(authSession: FinancialConnectionsAuthSession) {
+        guard let urlString =  authSession.url, let url = URL(string: urlString) else {
             assertionFailure("Expected to get a URL back from authorization session.")
             return
         }
@@ -260,20 +260,20 @@ final class PartnerAuthViewController: UIViewController {
                     if status == "success" {
                         self.dataSource.recordAuthSessionEvent(
                             eventName: "success",
-                            authSessionId: authorizationSession.id
+                            authSessionId: authSession.id
                         )
                         
-                        if authorizationSession.isOauth {
+                        if authSession.isOauth {
                             // for OAuth flows, we need to fetch OAuth results
-                            self.authorizeAuthSession(authorizationSession)
+                            self.authorizeAuthSession(authSession)
                         } else {
                             // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
-                            self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
+                            self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
                         }
                     } else if status == "failure" {
                         self.dataSource.recordAuthSessionEvent(
                             eventName: "failure",
-                            authSessionId: authorizationSession.id
+                            authSessionId: authSession.id
                         )
                         
                         // cancel current auth session
@@ -288,7 +288,7 @@ final class PartnerAuthViewController: UIViewController {
                     } else { // assume `status == cancel`
                         self.dataSource.recordAuthSessionEvent(
                             eventName: "cancel",
-                            authSessionId: authorizationSession.id
+                            authSessionId: authSession.id
                         )
                         
                         // cancel current auth session
@@ -308,17 +308,17 @@ final class PartnerAuthViewController: UIViewController {
                     // the `error` may not always be set because of
                     // a cancellation, but we still treat it as one
                     if error != nil {
-                        if authorizationSession.isOauth {
+                        if authSession.isOauth {
                             // on "manual cancels" (for OAuth) we log retry event:
                             self.dataSource.recordAuthSessionEvent(
                                 eventName: "retry",
-                                authSessionId: authorizationSession.id
+                                authSessionId: authSession.id
                             )
                         } else {
                             // on "manual cancels" (for Legacy) we log cancel event:
                             self.dataSource.recordAuthSessionEvent(
                                 eventName: "cancel",
-                                authSessionId: authorizationSession.id
+                                authSessionId: authSession.id
                             )
                         }
                     }
@@ -336,7 +336,7 @@ final class PartnerAuthViewController: UIViewController {
                     // cancel current auth session because something went wrong
                     self.dataSource.cancelPendingAuthSessionIfNeeded()
                     
-                    if authorizationSession.isOauth {
+                    if authSession.isOauth {
                         // for OAuth institutions, we remain on the pre-pane,
                         // but create a brand new auth session
                         self.createAuthSession()
@@ -374,24 +374,24 @@ final class PartnerAuthViewController: UIViewController {
             navigateBack()
         } else {
             // we successfully launched the secure web browser
-            if authorizationSession.isOauth {
+            if authSession.isOauth {
                 dataSource.recordAuthSessionEvent(
                     eventName: "oauth-launched",
-                    authSessionId: authorizationSession.id
+                    authSessionId: authSession.id
                 )
             }
         }
     }
     
-    private func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+    private func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) {
         showEstablishingConnectionLoadingView(true)
         dataSource
-            .authorizeAuthSession(authorizationSession)
+            .authorizeAuthSession(authSession)
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let authorizationSession):
-                    self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
+                case .success(let authSession):
+                    self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
                     
                     // hide the loading view after a delay to prevent
                     // the screen from flashing _while_ the transition
