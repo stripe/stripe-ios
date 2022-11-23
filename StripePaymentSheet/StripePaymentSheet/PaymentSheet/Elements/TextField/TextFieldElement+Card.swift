@@ -19,20 +19,36 @@ extension TextFieldElement {
         var label: String = String.Localized.card_number
         var binController = STPBINController.shared
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
-        
-        func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
+        let rotatingCardBrandsView = RotatingCardBrandsView()
+
+        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             let cardBrand = STPCardValidator.brand(forNumber: text)
-            
+
             if cardBrand == .unknown {
-                return (
-                    STPImageLibrary.safeImageNamed("card_unknown_updated_icon", darkMode: false),
-                    STPImageLibrary.safeImageNamed("card_unknown_updated_icon", darkMode: true)
-                )
+                if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
+                    return DynamicImageView(
+                        lightImage: STPImageLibrary.safeImageNamed(
+                            "card_unknown_updated_icon",
+                            darkMode: true
+                        ),
+                        darkImage: STPImageLibrary.safeImageNamed(
+                            "card_unknown_updated_icon",
+                            darkMode: false
+                        ),
+                        pairedColor: theme.colors.textFieldText
+                    )
+                } else {
+                    // display all available card brands
+                    rotatingCardBrandsView.cardBrands =
+                        RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)
+                    return rotatingCardBrandsView
+                }
+            } else {
+                rotatingCardBrandsView.cardBrands = [cardBrand]
+                return rotatingCardBrandsView
             }
-            
-            return (STPImageLibrary.cardBrandImage(for: cardBrand), STPImageLibrary.cardBrandImage(for: cardBrand))
         }
-        
+
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: .creditCardNumber, autocapitalization: .none)
         }
@@ -163,13 +179,20 @@ extension TextFieldElement {
             
             return .valid
         }
-        func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
-            let logoName = cardBrandProvider() == .amex ? "card_cvc_amex_updated_icon" : "card_cvc_updated_icon"
-            return (
-                STPImageLibrary.safeImageNamed(
-                    logoName, darkMode: false),
-                STPImageLibrary.safeImageNamed(
-                    logoName, darkMode: true)
+        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+            let logoName = cardBrandProvider() == .amex
+                ? "card_cvc_amex_updated_icon"
+                : "card_cvc_updated_icon"
+            return DynamicImageView(
+                lightImage: STPImageLibrary.safeImageNamed(
+                    logoName,
+                    darkMode: true
+                ),
+                darkImage: STPImageLibrary.safeImageNamed(
+                    logoName,
+                    darkMode: false
+                ),
+                pairedColor: theme.colors.textFieldText
             )
         }
     }

@@ -239,7 +239,8 @@ class PaymentSheetViewController: UIViewController {
             isCustom: false,
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
-            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
+            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+            currency: intent.currency
         )
     }
     
@@ -448,7 +449,9 @@ class PaymentSheetViewController: UIViewController {
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
                     linkEnabled: self.intent.supportsLink,
-                    activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
+                    activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+                    paymentOption: paymentOption,
+                    currency: self.intent.currency
                 )
 
                 self.isPaymentInFlight = false

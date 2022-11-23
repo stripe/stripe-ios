@@ -81,11 +81,16 @@ private extension VerificationExplanationViewController {
         /// Disable button until card image verification sheet is set
         updateButtonState(isLoading: true)
 
-        let requestJson = [
-            "expected_card[iin]": expectedCardViewModel?.iin ?? "424242",
-            "expected_card[last4]": expectedCardViewModel?.last4 ?? "4242"
-        ]
+        /// Add expected card fields when available
+        var requestJson: [String: Any] = [:]
+        if let last4 = expectedCardViewModel?.last4, !last4.isEmpty {
+            requestJson["expected_card[last4]"] = last4
+        }
         
+        if let iin = expectedCardViewModel?.iin, !iin.isEmpty {
+            requestJson["expected_card[iin]"] = iin
+        }
+
         /// Make request to our verification endpoint
         APIClient.jsonRequest(
             url: URLHelper.cardSet.verifyURL,

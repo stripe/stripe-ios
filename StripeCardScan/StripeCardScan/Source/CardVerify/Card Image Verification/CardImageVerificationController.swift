@@ -31,7 +31,7 @@ class CardImageVerificationController {
     }
 
     func present(
-        with expectedCard: CardImageVerificationExpectedCard?,
+        with expectedCard: CardImageVerificationExpectedCard,
         and acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
         from presentingViewController: UIViewController,
         animated: Bool = true
@@ -50,12 +50,13 @@ class CardImageVerificationController {
         }
 
         // TODO(jaimepark): Create controller that has configurable view and handles coordination / business logic
-        if let expectedCard = expectedCard {
+        if let expectedCardLast4 = expectedCard.last4 {
             /// Create the view controller for card-set-verification with expected card's last4 and issuer
             let vc = VerifyCardViewController(
-                expectedCard: expectedCard,
                 acceptedImageConfigs: acceptedImageConfigs,
-                configuration: configuration
+                configuration: configuration,
+                expectedCardLast4: expectedCardLast4,
+                expectedCardIssuer: expectedCard.issuer
             )
             vc.verifyDelegate = self
             presentingViewController.present(vc, animated: animated)

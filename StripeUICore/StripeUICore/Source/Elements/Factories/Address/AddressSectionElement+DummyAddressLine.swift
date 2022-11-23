@@ -21,7 +21,7 @@ extension AddressSectionElement {
                 attributedText: configuration.makeDisplayText(for: text),
                 keyboardProperties: configuration.keyboardProperties(for: text),
                 validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
-                logo: configuration.logo(for: text),
+                accessoryView: configuration.accessoryView(for: text, theme: theme),
                 shouldShowClearButton: configuration.shouldShowClearButton,
                 theme: theme
             )

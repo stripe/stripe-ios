@@ -28,7 +28,7 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 ### Example
 
-- [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
+- [Non-Card Payment Examples](/Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
 ## Manual linking

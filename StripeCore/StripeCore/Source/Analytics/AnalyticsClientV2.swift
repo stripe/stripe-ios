@@ -8,9 +8,6 @@
 
 import Foundation
 import UIKit
-#if os(watchOS)
-import WatchKit
-#endif
 
 /// Dependency-injectable protocol for `AnalyticsClientV2`.
 @_spi(STP) public protocol AnalyticsClientV2Protocol {
@@ -121,7 +118,7 @@ extension AnalyticsClientV2Protocol {
         payload["created"] = Date().timeIntervalSince1970
 
         // Common payload
-        let version = SystemInformation.version
+        let version = UIDevice.current.systemVersion
         if !version.isEmpty {
             payload["os_version"] = version
         }

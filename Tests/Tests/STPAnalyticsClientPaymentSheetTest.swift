@@ -110,7 +110,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             isCustom: true,
             paymentMethod: .newPM,
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            currency: "USD"
         )
 
         let event2 = XCTestExpectation(description: "mc_complete_sheet_savedpm_show")
@@ -119,7 +120,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             isCustom: false,
             paymentMethod: .savedPM,
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            currency: "USD"
         )
 
         let event3 = XCTestExpectation(description: "mc_complete_payment_savedpm_success")
@@ -129,7 +131,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .savedPM,
             result: .completed,
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            paymentOption: .applePay,
+            currency: "USD"
         )
 
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
@@ -139,7 +143,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .applePay,
             result: .failed(error: PaymentSheetError.unknown(debugDescription: "Error")),
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            paymentOption: .applePay,
+            currency: "USD"
         )
 
         let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
@@ -209,7 +215,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             isCustom: false,
             paymentMethod: .newPM,
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            currency: "USD"
         )
 
         client.logPaymentSheetPayment(
@@ -217,7 +224,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .savedPM,
             result: .completed,
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            paymentOption: .applePay,
+            currency: "USD"
         )
 
         let duration = client.lastPayload?["duration"] as? TimeInterval

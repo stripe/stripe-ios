@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// This is the base class for all Stripe scroll view controllers. It is intended
@@ -52,7 +53,7 @@ public class STPCoreScrollViewController: STPCoreViewController {
         scrollView.backgroundColor = theme.primaryBackgroundColor
         scrollView.tintColor = theme.accentColor
 
-        if STPColorUtils.colorIsBright(theme.primaryBackgroundColor) {
+        if theme.primaryBackgroundColor.isBright {
             scrollView.indicatorStyle = .black
         } else {
             scrollView.indicatorStyle = .white
