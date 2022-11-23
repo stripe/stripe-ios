@@ -203,53 +203,45 @@ extension NativeFlowController {
                 .completeFinancialConnectionsSession()
                 .observe(on: .main) { [weak self] result in
                     guard let self = self else { return }
-                    let completeEventName = "complete"
                     switch result {
                     case .success(let session):
-                        self.dataManager
-                            .analyticsClient
-                            .log(
-                                eventName: completeEventName,
-                                parameters: [
-                                    "type": "object",
-                                    "num_linked_accounts": session.accounts.data.count,
-                                ]
-                            )
-                        
+                        let eventType = "object"
                         if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
+                            self.logCompleteEvent(
+                                type: eventType,
+                                status: "completed",
+                                numberOfLinkedAccounts: session.accounts.data.count
+                            )
                             finishAuthSession(.completed(session: session))
                         } else if let closeAuthFlowError = closeAuthFlowError {
+                            self.logCompleteEvent(
+                                type: eventType,
+                                status: "failed",
+                                error: closeAuthFlowError
+                            )
                             finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
                             if let terminalError = self.dataManager.terminalError {
+                                self.logCompleteEvent(
+                                    type: eventType,
+                                    status: "failed",
+                                    error: terminalError
+                                )
                                 finishAuthSession(.failed(error: terminalError))
                             } else {
+                                self.logCompleteEvent(
+                                    type: eventType,
+                                    status: "canceled"
+                                )
                                 finishAuthSession(.canceled)
                             }
                         }
                     case .failure(let completeFinancialConnectionsSessionError):
-                        self.dataManager
-                            .analyticsClient
-                            .log(
-                                eventName: completeEventName,
-                                parameters: {
-                                    var parameters: [String:Any] = [:]
-                                    parameters["type"] = "error"
-                                    if
-                                        let stripeError = completeFinancialConnectionsSessionError as? StripeError,
-                                        case .apiError(let apiError) = stripeError
-                                    {
-                                        parameters["error_type"] = apiError.type.rawValue
-                                        parameters["error_message"] = apiError.message
-                                        parameters["code"] = apiError.code
-                                    } else {
-                                        parameters["error_type"] = (completeFinancialConnectionsSessionError as NSError).domain
-                                        parameters["error_message"] = (completeFinancialConnectionsSessionError as NSError).localizedDescription
-                                        parameters["code"] = (completeFinancialConnectionsSessionError as NSError).code
-                                    }
-                                    return parameters
-                                }()
-                            )
+                        self.logCompleteEvent(
+                            type: "error",
+                            status: "failed",
+                            error: completeFinancialConnectionsSessionError
+                        )
                         
                         if let closeAuthFlowError = closeAuthFlowError {
                             finishAuthSession(.failed(error: closeAuthFlowError))
@@ -270,6 +262,36 @@ extension NativeFlowController {
         } else {
             completeFinancialConnectionsSession()
         }
+    }
+    
+    private func logCompleteEvent(
+        type: String,
+        status: String,
+        numberOfLinkedAccounts: Int? = nil,
+        error: Error? = nil
+    ) {
+        var parameters: [String:Any] = [
+            "type": type,
+            "status": status,
+        ]
+        parameters["num_linked_accounts"] = numberOfLinkedAccounts
+        if let error = error {
+            if
+                let stripeError = error as? StripeError,
+                case .apiError(let apiError) = stripeError
+            {
+                parameters["error_type"] = apiError.type.rawValue
+                parameters["error_message"] = apiError.message
+                parameters["code"] = apiError.code
+            } else {
+                parameters["error_type"] = (error as NSError).domain
+                parameters["error_message"] = (error as NSError).localizedDescription
+                parameters["code"] = (error as NSError).code
+            }
+        }
+        dataManager
+            .analyticsClient
+            .log(eventName: "complete", parameters: parameters)
     }
 }
 
