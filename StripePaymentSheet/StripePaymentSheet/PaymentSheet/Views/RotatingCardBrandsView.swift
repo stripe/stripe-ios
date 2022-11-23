@@ -17,7 +17,6 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_RotatingCardBrandsView)
 class RotatingCardBrandsView: UIView {
-
     static let MaxStaticBrands: Int = 3
     static let LogoSpacing: CGFloat = 3
 
@@ -179,7 +178,16 @@ class RotatingCardBrandsView: UIView {
             self.stackView = stackView
         }
     }
-
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = false
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didMoveToWindow() {
         super.didMoveToWindow()
         if window != nil {
