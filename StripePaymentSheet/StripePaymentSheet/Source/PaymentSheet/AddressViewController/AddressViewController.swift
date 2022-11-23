@@ -243,9 +243,9 @@ extension AddressViewController {
         view.endEditing(false)
     }
     
-    @objc func didTapAutoCompleteLine() {
+    @objc func presentAutocomplete() {
         assert(navigationController != nil)
-        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration)
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, addressSpecProvider: addressSpecProvider)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
@@ -281,10 +281,10 @@ extension AddressViewController {
             theme: configuration.appearance.asElementsTheme
         )
         addressSection?.didTapAutocompleteButton = { [weak self] in
-            self?.didTapAutoCompleteLine()
+            self?.presentAutocomplete()
         }
         addressSection?.autoCompleteLine?.didTap = { [weak self] in
-            self?.didTapAutoCompleteLine()
+            self?.presentAutocomplete()
         }
     }
     

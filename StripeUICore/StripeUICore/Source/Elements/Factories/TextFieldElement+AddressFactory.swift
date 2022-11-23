@@ -22,7 +22,7 @@ import UIKit
                 case line2
                 // Label is "Address" and shows a clear button
                 case autoComplete
-                // Same as .line1, but shows a 📍 autocomplete button accessory view
+                // Same as .line1, but shows a 􀊫 autocomplete button accessory view
                 case line1Autocompletable(didTapAutocomplete: () -> ())
             }
             let lineType: LineType
@@ -79,9 +79,9 @@ import UIKit
             return line2
         }
         
-        public static func makeAutoCompleteLine(theme: ElementsUITheme) -> TextFieldElement {
+        public static func makeAutoCompleteLine(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
             return TextFieldElement(
-                configuration: LineConfiguration(lineType: .autoComplete, defaultValue: nil), theme: theme
+                configuration: LineConfiguration(lineType: .autoComplete, defaultValue: defaultValue), theme: theme
             )
         }
         

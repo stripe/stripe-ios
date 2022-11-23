@@ -310,7 +310,6 @@ import UIKit
                 line1 = TextFieldElement.Address.makeLine1(defaultValue: address.line1, theme: theme)
             }
         }
-//        TextFieldElement.Address.LineConfiguration(lineType: .line1Autocompletable(didTapAutocomplete: {}), defaultValue: address.line1).makeElement(theme: theme) : nil
         line2 = fieldOrdering.contains(.line) ?
             TextFieldElement.Address.makeLine2(defaultValue: address.line2, theme: theme) : nil
         city = fieldOrdering.contains(.city) ?
