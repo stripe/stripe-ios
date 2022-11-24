@@ -272,6 +272,10 @@ import Foundation
     static var remove: String {
         STPLocalizedString("Remove", "Button title for confirmation alert to remove a saved payment method")
     }
+    
+    static var search: String {
+        STPLocalizedString("Search", "Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped")
+    }
 
     static var useRotorToAccessLinks: String {
         STPLocalizedString(
@@ -280,7 +284,7 @@ import Foundation
         )
     }
     
-    // MARK: UPI
+    // MARK: - UPI
     
     static var upi_id: String {
         STPLocalizedString("UPI ID", "Label for UPI ID number field on form")
