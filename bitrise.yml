@@ -12,7 +12,7 @@ app:
       is_expand: false
     FASTLANE_LANE: ios integration_all
 trigger_map:
-- push_branch: "*"
+- push_branch: master
   workflow: trigger
 - pull_request_source_branch: "*"
   workflow: trigger
