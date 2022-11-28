@@ -96,7 +96,7 @@ final class AccountPickerViewController: UIViewController {
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
-        self.institutionHasAccountPicker = (dataSource.authSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authSession.isOauth)
+        self.institutionHasAccountPicker = (dataSource.authSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authSession.isOauthNonOptional)
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -174,7 +174,7 @@ final class AccountPickerViewController: UIViewController {
                             .reduce(
                                 ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsPartnerAccount]())
                             ) { accountsTuple, account in
-                                if !account.allowSelection {
+                                if !account.allowSelectionNonOptional {
                                     return (
                                         accountsTuple.0,
                                         accountsTuple.1 + [account]

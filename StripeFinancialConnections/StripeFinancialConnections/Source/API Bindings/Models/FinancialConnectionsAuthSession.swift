@@ -72,7 +72,11 @@ struct FinancialConnectionsAuthSession: Decodable {
     let showPartnerDisclosure: Bool?
     let skipAccountSelection: Bool?
     let url: String?
-    let isOauth: Bool
+    let isOauth: Bool?
+    
+    var isOauthNonOptional: Bool {
+        return isOauth ?? false
+    }
 }
 
 // this is a client-side enum (doesn't come from server)

@@ -29,6 +29,4 @@ struct FinancialConnectionsInstitution: Decodable, Hashable, Equatable {
 
 struct FinancialConnectionsInstitutionList: Decodable {
     let data: [FinancialConnectionsInstitution]
-    let hasMore: Bool
-    let count: Int
 }

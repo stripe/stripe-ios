@@ -85,7 +85,7 @@ final class PartnerAuthViewController: UIViewController {
             authSessionId: authSession.id
         )
         
-        if authSession.isOauth {
+        if authSession.isOauthNonOptional {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 institutionImageUrl: institution.icon?.default,
@@ -267,7 +267,7 @@ final class PartnerAuthViewController: UIViewController {
                             authSessionId: authSession.id
                         )
                         
-                        if authSession.isOauth {
+                        if authSession.isOauthNonOptional {
                             // for OAuth flows, we need to fetch OAuth results
                             self.authorizeAuthSession(authSession)
                         } else {
@@ -306,7 +306,7 @@ final class PartnerAuthViewController: UIViewController {
                 // we did NOT get a `status` back from the backend,
                 // so assume a "cancel"
                 else {
-                    if authSession.isOauth {
+                    if authSession.isOauthNonOptional {
                         // on "manual cancels" (for OAuth) we log retry event:
                         self.dataSource.recordAuthSessionEvent(
                             eventName: "retry",
@@ -333,7 +333,7 @@ final class PartnerAuthViewController: UIViewController {
                     // cancel current auth session because something went wrong
                     self.dataSource.cancelPendingAuthSessionIfNeeded()
                     
-                    if authSession.isOauth {
+                    if authSession.isOauthNonOptional {
                         // for OAuth institutions, we remain on the pre-pane,
                         // but create a brand new auth session
                         self.createAuthSession()
@@ -371,7 +371,7 @@ final class PartnerAuthViewController: UIViewController {
             navigateBack()
         } else {
             // we successfully launched the secure web browser
-            if authSession.isOauth {
+            if authSession.isOauthNonOptional {
                 dataSource.recordAuthSessionEvent(
                     eventName: "oauth-launched",
                     authSessionId: authSession.id

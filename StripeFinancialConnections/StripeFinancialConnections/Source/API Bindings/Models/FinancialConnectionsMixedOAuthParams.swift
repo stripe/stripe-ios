@@ -9,10 +9,5 @@
 import Foundation
 
 struct FinancialConnectionsMixedOAuthParams: Decodable {
-    let state: String
-    let code: String?
-    let status: String?
-    let memberGuid: String?
-    let error: String?
     let publicToken: String?
 }
