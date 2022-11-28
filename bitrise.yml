@@ -270,7 +270,7 @@ workflows:
             SourcePackages
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/push_dt.rb "$CIRCLE_BRANCH" "$DT_UPLOAD_API_KEY"
+        - content: bundle exec ./ci_scripts/push_dt.rb "$BITRISE_GIT_BRANCH" "$DT_UPLOAD_API_KEY"
         title: Submit app to Data Theorem for SAST
     after_run:
       - notify_ci
