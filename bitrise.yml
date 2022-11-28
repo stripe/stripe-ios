@@ -285,7 +285,7 @@ workflows:
             lint-tests
             ui-tests
             size-report
-        - wait_for_builds: 'false'
+        - wait_for_builds: 'true'
         - abort_on_fail: 'yes'
         - access_token: "$BITRISE_ACCESS_TOKEN"
     meta:
