@@ -100,6 +100,7 @@ class TextFieldView: UIView {
         self.delegate = delegate
         super.init(frame: .zero)
         isAccessibilityElement = true
+        translatesAutoresizingMaskIntoConstraints = false
         installConstraints()
         updateUI(with: viewModel)
     }
@@ -207,6 +208,10 @@ class TextFieldView: UIView {
 
         // Update accessory view
         accessoryView = viewModel.accessoryView
+
+        // Manually call layoutIfNeeded to avoid unintentional animations
+        // in next layout pass
+        layoutIfNeeded()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
