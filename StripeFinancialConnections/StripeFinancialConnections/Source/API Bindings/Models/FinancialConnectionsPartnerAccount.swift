@@ -13,13 +13,16 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let name: String
     let displayableAccountNumbers: String?
     let linkedAccountId: String? // determines whether we show a "Linked" label
-    let balanceAmount: Double?
+    let balanceAmount: Int?
     let currency: String?
     let supportedPaymentMethodTypes: [FinancialConnectionsPaymentMethodType]
-    let allowSelection: Bool
+    let allowSelection: Bool? 
     let allowSelectionMessage: String?
     
-    var balanceInfo: (balanceAmount: Double, currency: String)? {
+    var allowSelectionNonOptional: Bool {
+        return allowSelection ?? true
+    }
+    var balanceInfo: (balanceAmount: Int, currency: String)? {
         if let balanceAmount = balanceAmount, let currency = currency {
             return (balanceAmount, currency)
         } else {

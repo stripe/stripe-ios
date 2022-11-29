@@ -538,7 +538,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
     ) {
         let viewController = CreatePaneViewController(
-            pane: paymentAccountResource.nextPane,
+            pane: paymentAccountResource.nextPane ?? .success,
             nativeFlowController: self,
             dataManager: dataManager
         )

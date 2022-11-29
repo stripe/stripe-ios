@@ -48,17 +48,15 @@ struct FinancialConnectionsSessionManifest: Decodable {
     // MARK: - Properties
     
     let accountholderIsLinkConsumer: Bool?
-    let activeAuthSession: FinancialConnectionsAuthSession?
     let activeInstitution: FinancialConnectionsInstitution?
     let allowManualEntry: Bool
     let businessName: String?
-    let connectPlatformName: String?
     let consentRequired: Bool
     let customManualEntryHandling: Bool
     let disableLinkMoreAccounts: Bool
-    let hostedAuthUrl: String
-    let successUrl: String
-    let cancelUrl: String
+    let hostedAuthUrl: String?
+    let successUrl: String?
+    let cancelUrl: String?
     let initialInstitution: FinancialConnectionsInstitution?
     let instantVerificationDisabled: Bool
     let institutionSearchDisabled: Bool

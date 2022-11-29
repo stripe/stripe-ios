@@ -29,11 +29,11 @@ final class AccountPickerHelpers {
         }
     }
     
-    static func currencyString(currency: String, balanceAmount: Double) -> String? {
+    static func currencyString(currency: String, balanceAmount: Int) -> String? {
         let numberFormatter = NumberFormatter()
         numberFormatter.currencyCode = currency
         numberFormatter.numberStyle = .currency
-        return numberFormatter.string(for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: Int(balanceAmount), currency: currency))
+        return numberFormatter.string(for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: balanceAmount, currency: currency))
     }
 }
 
