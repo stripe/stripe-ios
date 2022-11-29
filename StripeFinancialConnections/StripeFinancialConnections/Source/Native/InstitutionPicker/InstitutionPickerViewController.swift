@@ -337,7 +337,6 @@ private func CreateHeaderView(
         bottom: 0,
         trailing: 24
     )
-    verticalStackView.distribution = .fillProportionally
     return verticalStackView
 }
 
