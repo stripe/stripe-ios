@@ -13,8 +13,9 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
+import StripeCoreTestUtils
 
-final class STPGenericInputPickerFieldSnapshotTests: FBSnapshotTestCase {
+final class STPGenericInputPickerFieldSnapshotTests: STPSnapshotTestCase {
 
     private var field: STPGenericInputPickerField!
 

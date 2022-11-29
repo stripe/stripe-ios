@@ -11,7 +11,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
+final class SuccessViewControllerSnapshotTest: STPSnapshotTestCase {
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
 
     override func setUp() {

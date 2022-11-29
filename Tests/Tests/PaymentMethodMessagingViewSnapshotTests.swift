@@ -12,7 +12,7 @@ import UIKit
 import iOSSnapshotTestCase
 
 @MainActor
-class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
+class PaymentMethodMessagingViewSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

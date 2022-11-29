@@ -13,8 +13,9 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
+import StripeCoreTestUtils
 
-class AfterpayPriceBreakdownViewSnapshotTests: FBSnapshotTestCase {
+class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
         //        recordMode = true

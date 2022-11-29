@@ -12,7 +12,7 @@ import StripeCoreTestUtils
 
 @testable @_spi(STP) import StripeUICore
 
-class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
+class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
 
     let attributedLinkText: NSAttributedString = {
         let attributedText = NSMutableAttributedString(string: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum auctor justo sit amet luctus egestas. Sed id urna dolor.")

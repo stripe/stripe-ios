@@ -14,7 +14,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-final class LinkCardEditElementSnapshotTests: FBSnapshotTestCase {
+final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

@@ -12,7 +12,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class ListItemViewSnapshotTest: FBSnapshotTestCase {
+final class ListItemViewSnapshotTest: STPSnapshotTestCase {
 
     let listItemView = ListItemView()
 

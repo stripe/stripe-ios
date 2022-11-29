@@ -16,7 +16,7 @@ import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePaymentSheet
 
-class PaymentSheetSnapshotTests: FBSnapshotTestCase {
+class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
     

@@ -14,7 +14,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 @testable import Stripe
 
-class RotatingCardBrandsViewSnapshotTests: FBSnapshotTestCase {
+class RotatingCardBrandsViewSnapshotTests: STPSnapshotTestCase {
 
 
     override func setUp() {

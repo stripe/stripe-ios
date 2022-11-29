@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
-final class DropdownFieldElementSnapshotTest: FBSnapshotTestCase {
+final class DropdownFieldElementSnapshotTest: STPSnapshotTestCase {
     let items = ["A", "B", "C", "D"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0, rawData: $0) }
 
     override func setUp() {

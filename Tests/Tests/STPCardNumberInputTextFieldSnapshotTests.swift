@@ -13,8 +13,9 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
+import StripeCoreTestUtils
 
-class STPCardNumberInputTextFieldSnapshotTests: FBSnapshotTestCase {
+class STPCardNumberInputTextFieldSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

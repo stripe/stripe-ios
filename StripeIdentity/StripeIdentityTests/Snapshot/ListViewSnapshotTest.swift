@@ -11,7 +11,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class ListViewSnapshotTest: FBSnapshotTestCase {
+final class ListViewSnapshotTest: STPSnapshotTestCase {
     let listView = ListView()
 
     static let longText = "Some very long text that should wrap to multiple lines"

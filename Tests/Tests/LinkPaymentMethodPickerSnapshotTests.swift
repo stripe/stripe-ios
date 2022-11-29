@@ -16,7 +16,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
 
-class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
+class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
-class AddressSectionElementSnapshotTest: FBSnapshotTestCase {
+class AddressSectionElementSnapshotTest: STPSnapshotTestCase {
     let dummyAddressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [

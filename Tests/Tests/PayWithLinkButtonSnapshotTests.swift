@@ -16,7 +16,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
 
-class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
+class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
 
     private let emailAddress = "customer@example.com"
     private let longEmailAddress = "long.customer.name@example.com"

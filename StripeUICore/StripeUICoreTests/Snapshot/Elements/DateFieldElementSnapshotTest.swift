@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
-final class DateFieldElementSnapshotTest: FBSnapshotTestCase {
+final class DateFieldElementSnapshotTest: STPSnapshotTestCase {
 
     // Use consistent locale and timezone for consistent test results
     let locale_enUS = Locale(identifier: "en_US")

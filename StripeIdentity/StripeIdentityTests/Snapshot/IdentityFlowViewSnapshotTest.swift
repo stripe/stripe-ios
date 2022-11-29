@@ -13,7 +13,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-class IdentityFlowViewSnapshotTest: FBSnapshotTestCase {
+class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
     let idFlowView = IdentityFlowView()
 
     let headerViewModel: HeaderView.ViewModel = .init(

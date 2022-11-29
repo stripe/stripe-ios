@@ -13,7 +13,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class SelfieCaptureViewSnapshotTest: FBSnapshotTestCase {
+final class SelfieCaptureViewSnapshotTest: STPSnapshotTestCase {
 
     let view = SelfieCaptureView()
 

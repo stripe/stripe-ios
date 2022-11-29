@@ -16,7 +16,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
 
-class OneTimeCodeTextFieldSnapshotTests: FBSnapshotTestCase {
+class OneTimeCodeTextFieldSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

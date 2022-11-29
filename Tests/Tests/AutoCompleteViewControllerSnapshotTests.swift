@@ -15,8 +15,9 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
+import StripeCoreTestUtils
 
-class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
+class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
 
     private var configuration: AddressViewController.Configuration {
         return AddressViewController.Configuration()

@@ -13,7 +13,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-class ErrorViewSnapshotTest: FBSnapshotTestCase {
+class ErrorViewSnapshotTest: STPSnapshotTestCase {
     let errorView = ErrorView()
 
     override func setUp() {

@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
-class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
+class PhoneNumberElementSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
