@@ -17,11 +17,17 @@ class ExampleListViewController: UITableViewController {
 
     // MARK: - Properties
 
-    private let examples: [Example] = [
-        Example(title: "Connect Account", viewControllerIdentifier: "ConnectAccountViewController"),
-        Example(title: "Collect Bank Account Token", viewControllerIdentifier: "CollectBankAccountTokenViewController"),
-        Example(title: "Playground", viewControllerIdentifier: "PlaygroundViewController"),
-    ]
+    private let examples: [Example] = {
+        var examples = [
+            Example(title: "Connect Account", viewControllerIdentifier: "ConnectAccountViewController"),
+            Example(title: "Collect Bank Account Token", viewControllerIdentifier: "CollectBankAccountTokenViewController"),
+        ]
+        if #available(iOS 14.0, *) {
+            // iOS 13 example/playground crashes due to SwiftUI
+            examples.append(Example(title: "Playground", viewControllerIdentifier: "PlaygroundViewController"))
+        }
+        return examples
+    }()
 
     // MARK: - UIViewController
 
