@@ -115,14 +115,14 @@ class TextFieldView: UIView {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
-        
-        // Check if the clear button was tapped, if so foward hit to the view
-        let convertedPoint = clearButton.convert(point, from: self)
-        if let hitView = clearButton.hitTest(convertedPoint, with: event) {
-            return hitView
+        // We override hitTest to forward all events within our bounds to the textfield
+        // ...except for these subviews:
+        for interactableSubview in [clearButton, accessoryView].compactMap({ $0 }) {
+            let convertedPoint = interactableSubview.convert(point, from: self)
+            if let hitView = interactableSubview.hitTest(convertedPoint, with: event) {
+                return hitView
+            }
         }
-        
-        // Forward all events within our bounds to the textfield
         return textField
     }
     
