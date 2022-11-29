@@ -60,6 +60,10 @@ class TextFieldView: UIView {
     /// This could contain the logos of networks, banks, etc.
     var accessoryView: UIView? {
         didSet {
+            // For some reason, the stackview chooses to stretch accessoryContainerView if its
+            // content is nil instead of the text field, so we hide it.
+            accessoryContainerView.setHiddenIfNecessary(accessoryView == nil)
+
             guard oldValue != accessoryView else {
                 return
             }
@@ -68,8 +72,6 @@ class TextFieldView: UIView {
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
             }
-            // For some reason, the stackview chooses to stretch accessoryContainerView if its content is nil instead of the text field, so we hide it.
-            accessoryContainerView.setHiddenIfNecessary(accessoryView == nil)
         }
     }
 
@@ -98,6 +100,7 @@ class TextFieldView: UIView {
         self.delegate = delegate
         super.init(frame: .zero)
         isAccessibilityElement = true
+        translatesAutoresizingMaskIntoConstraints = false
         installConstraints()
         updateUI(with: viewModel)
     }
@@ -205,6 +208,7 @@ class TextFieldView: UIView {
 
         // Update accessory view
         accessoryView = viewModel.accessoryView
+
         // Manually call layoutIfNeeded to avoid unintentional animations
         // in next layout pass
         layoutIfNeeded()
