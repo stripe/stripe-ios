@@ -1,6 +1,7 @@
 ## X.Y.Z 2022-xx-xx
 ### PaymentSheet
 * [Added] Added logos of accepted card brands on Card input field.
+* [Fixed] Fixed erroneously displaying the card scan button when card scanning is not available.
 
 ## 23.2.0 2022-11-14
 ### PaymentSheet
