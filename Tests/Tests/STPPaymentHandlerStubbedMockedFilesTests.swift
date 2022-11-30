@@ -6,12 +6,16 @@
 //
 
 import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthenticationContext {
     override func setUp() {
@@ -252,7 +256,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }]
             """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
-        FormSpecProvider.shared.load(from: formSpec)
+        FormSpecProvider.shared.loadFrom(formSpec)
         guard let affirmUpdated = FormSpecProvider.shared.formSpec(for: "affirm") else {
             XCTFail()
             return
