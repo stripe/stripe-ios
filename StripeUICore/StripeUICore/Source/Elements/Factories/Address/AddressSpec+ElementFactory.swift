@@ -31,7 +31,7 @@ extension AddressSpec {
         // Otherwise create a dropdown with the provided states
         let items = stateDict.map({DropdownFieldElement.DropdownItem(pickerDisplayName: $0.value,
                                                                      labelDisplayName: $0.value,
-                                                                     accessibilityLabel: $0.value,
+                                                                     accessibilityValue: $0.value,
                                                                      rawData: $0.key)}).sorted {$0.pickerDisplayName < $1.pickerDisplayName}
         
         let defaultIndex = items.firstIndex(where: {$0.rawData.lowercased() == defaultValue?.lowercased()

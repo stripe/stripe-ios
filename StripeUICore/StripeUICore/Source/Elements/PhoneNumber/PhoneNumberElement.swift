@@ -143,7 +143,7 @@ extension DropdownFieldElement {
             return .init(
                 pickerDisplayName: "\(flagEmoji) \(name) \(prefix)",            // 🇺🇸 United States +1
                 labelDisplayName: "\(flagEmoji) \(prefix)",
-                accessibilityLabel: "\(name) \(prefix)",
+                accessibilityValue: "\(name) \(prefix)",
                 rawData: $0
             )
         }

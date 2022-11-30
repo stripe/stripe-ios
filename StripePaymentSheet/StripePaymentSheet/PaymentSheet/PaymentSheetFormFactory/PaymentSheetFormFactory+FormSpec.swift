@@ -41,7 +41,7 @@ extension PaymentSheetFormFactory {
             return makeEmail(apiPath: spec.apiPath?["v1"])
         case .selector(let selectorSpec):
             let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {
-                .init(pickerDisplayName: $0.displayText, labelDisplayName: $0.displayText, accessibilityLabel: $0.displayText, rawData: $0.apiValue ?? $0.displayText)
+                .init(pickerDisplayName: $0.displayText, labelDisplayName: $0.displayText, accessibilityValue: $0.displayText, rawData: $0.apiValue ?? $0.displayText)
             }
             let dropdownField = DropdownFieldElement(
                 items: dropdownItems,

@@ -28,7 +28,7 @@ import Foundation
                 let countryName = locale.localizedString(forRegionCode: $0) ?? $0   // United States
                 return DropdownItem(pickerDisplayName: "\(flagEmoji) \(countryName)",
                                     labelDisplayName: countryName,
-                                    accessibilityLabel: countryName,
+                                    accessibilityValue: countryName,
                                     rawData: $0)
             }
             let defaultCountry = defaultCountry ?? locale.regionCode ?? ""
