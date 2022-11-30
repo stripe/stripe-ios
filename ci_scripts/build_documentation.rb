@@ -115,19 +115,20 @@ end
 # Runs SourceKitten and returns the absolute paths to the generated files.
 def run_sourcekitten(sdk_module)
   schemes = []
-  schemes << sdk_module['scheme']
+  schemes << { module: sdk_module['framework_name'], scheme: sdk_module['scheme'] }
 
   if sdk_module['docs'].key?('include')
-    schemes << sdk_module['docs']['include']
-    schemes.flatten!
+    sdk_module['docs']['include'].each do |included|
+      schemes << { module: included, scheme: included }
+    end
   end
 
   sourcekitten_files = []
 
   schemes.each do |s|
-    output_file = File.join_if_safe($TEMP_DIR, "#{s}.json")
+    output_file = File.join_if_safe($TEMP_DIR, "#{s[:scheme]}.json")
 
-    `sourcekitten doc --module-name #{sdk_module['framework_name']} -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s} > #{output_file}`
+    `sourcekitten doc --module-name #{s[:module]} -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
 
     sourcekitten_files << output_file
   end
