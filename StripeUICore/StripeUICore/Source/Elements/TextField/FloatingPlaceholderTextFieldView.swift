@@ -65,7 +65,7 @@ class FloatingPlaceholderTextFieldView: UIView {
     
     override var accessibilityLabel: String? {
         set { assertionFailure() }
-        get { return placeholderLabel.text }
+        get { return textField.accessibilityLabel ?? placeholderLabel.text }
     }
     
     override var accessibilityTraits: UIAccessibilityTraits {

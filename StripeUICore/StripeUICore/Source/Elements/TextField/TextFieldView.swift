@@ -162,7 +162,7 @@ class TextFieldView: UIView {
         self.viewModel = viewModel
         
         // Update accessibility
-        accessibilityLabel = viewModel.accessibilityLabel
+        textField.accessibilityLabel = viewModel.accessibilityLabel
         
         // Update placeholder, text
         textFieldView.placeholder = viewModel.placeholder
