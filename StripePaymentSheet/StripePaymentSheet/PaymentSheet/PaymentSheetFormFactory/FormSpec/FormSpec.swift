@@ -111,12 +111,15 @@ struct FormSpec: Decodable {
                     switch(redirectStrategy) {
                     case "external_browser":
                         self.redirectStrategy = .external_browser
+                    case "follow_redirects":
+                        self.redirectStrategy = .follow_redirects
                     default:
                         self.redirectStrategy = .none
                     }
                 }
                 enum RedirectStrategy: Decodable, Equatable {
                     case external_browser
+                    case follow_redirects
                     case none
                 }
             }

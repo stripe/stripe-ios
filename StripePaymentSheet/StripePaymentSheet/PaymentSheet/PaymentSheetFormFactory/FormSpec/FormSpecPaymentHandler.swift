@@ -9,7 +9,12 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-class PaymentSheetFormSpecPaymentHandler {}
+class PaymentSheetFormSpecPaymentHandler {
+    let urlSession: URLSession
+    init(urlSession: URLSession? = nil) {
+        self.urlSession = urlSession ?? URLSession(configuration: .default, delegate: STPPaymentHandlerURLSessionDelegate(), delegateQueue: nil)
+    }
+}
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -31,7 +36,7 @@ extension PaymentSheetFormSpecPaymentHandler : FormSpecPaymentHandler {
     
     func handleNextActionSpec(for paymentIntent: STPPaymentIntent, action: STPPaymentHandlerPaymentIntentActionParams, paymentHandler: STPPaymentHandler) -> Bool {
         if let paymentIntentStatusSpec = paymentHandler._specForConfirmResponse(paymentIntent: paymentIntent) {
-            paymentHandler._handleNextActionSpec(forAction: action, paymentIntentStatusSpec: paymentIntentStatusSpec)
+            paymentHandler._handleNextActionSpec(forAction: action, paymentIntentStatusSpec: paymentIntentStatusSpec, urlSession: self.urlSession)
             return true
         }
         return false
@@ -54,7 +59,7 @@ extension STPPaymentHandler {
 
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    func _handleNextActionSpec(forAction action: STPPaymentHandlerPaymentIntentActionParams, paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs) {
+    func _handleNextActionSpec(forAction action: STPPaymentHandlerPaymentIntentActionParams, paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs, urlSession: URLSession) {
 
         guard let paymentIntent = action.paymentIntent else {
             assert(false, "Calling _handleNextActionStateSpec without a paymentIntent")
@@ -70,9 +75,13 @@ extension STPPaymentHandler {
                 if let returnString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath) as? String {
                     returnUrl = URL(string: returnString)
                 }
-                if case .external_browser = redirectToUrl.redirectStrategy {
+                switch(redirectToUrl.redirectStrategy) {
+                case .external_browser:
                     self._handleRedirectToExternalBrowser(to: url, withReturn: returnUrl)
-                } else {
+                case .follow_redirects:
+                    let resultingRedirectURL = self.followRedirects(to: url, urlSession: urlSession)
+                    self._handleRedirect(to: resultingRedirectURL, withReturn: returnUrl)
+                default:
                     self._handleRedirect(to: url, withReturn: returnUrl)
                 }
             } else {
@@ -119,6 +128,34 @@ extension STPPaymentHandler {
     }
     func _isPIStatusSpecFinished(paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs) -> Bool {
         return paymentIntentStatusSpec.type == .finished
+    }
+
+    func followRedirects(to url: URL, urlSession: URLSession) -> URL {
+        let urlRequest = URLRequest(url: url)
+        let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
+
+        var resultingUrl = url
+        let task = urlSession.dataTask(with: urlRequest) { data, response, error in
+            guard error == nil,
+                  let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode),
+                    let responseURL = response?.url else {
+                blockingDataTaskSemaphore.signal()
+                return
+            }
+            resultingUrl = responseURL
+            blockingDataTaskSemaphore.signal()
+            return
+        }
+        task.resume()
+        blockingDataTaskSemaphore.wait()
+        return resultingUrl
+    }
+}
+
+class STPPaymentHandlerURLSessionDelegate: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+        completionHandler(request)
     }
 }
 

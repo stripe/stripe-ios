@@ -36,8 +36,8 @@ class FormSpecProviderTest: XCTestCase {
 
         // ...and iDEAL has the correct dropdown spec
         guard let ideal = sut.formSpec(for: "ideal"),
-            case .name = ideal.fields[0],
-            case .selector(let selector) = ideal.fields[1]
+              case .name = ideal.fields[0],
+              case .selector(let selector) = ideal.fields[1]
         else {
             XCTFail()
             return
@@ -304,10 +304,10 @@ class FormSpecProviderTest: XCTestCase {
         XCTAssert(result)
 
         guard let affirmUpdated = sut.formSpec(for: paymentMethodType),
-            affirmUpdated.fields.count == 1,
-            affirmUpdated.fields.first
+              affirmUpdated.fields.count == 1,
+              affirmUpdated.fields.first
                 == .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil)),
-            affirmUpdated.nextActionSpec == nil
+              affirmUpdated.nextActionSpec == nil
         else {
             XCTFail()
             return
@@ -377,8 +377,8 @@ class FormSpecProviderTest: XCTestCase {
             }]
             """.data(using: .utf8)!
         let formSpec =
-            try! JSONSerialization.jsonObject(with: updatedSpecJsonWithUnsupportedNextAction)
-            as! [NSDictionary]
+        try! JSONSerialization.jsonObject(with: updatedSpecJsonWithUnsupportedNextAction)
+        as! [NSDictionary]
         let result = sut.loadFrom(formSpec)
         XCTAssertFalse(result)
 
@@ -502,7 +502,7 @@ class FormSpecProviderTest: XCTestCase {
         let sut = FormSpecProvider()
         XCTAssert(sut.containsUnknownNextActions(formSpecs: decodedFormSpecs))
     }
-    func testRedirectToURLWithRedirectStrategy() throws {
+    func testRedirectToURLWithExternalBrowserStrategy() throws {
         let formSpec =
             """
             [{
@@ -535,6 +535,42 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(redirectToURL.redirectStrategy, .external_browser)
+        XCTAssertEqual(redirectToURL.urlPath, "next_action[redirect_to_url][url]")
+        XCTAssertEqual(redirectToURL.returnUrlPath, "next_action[redirect_to_url][return_url]")
+    }
+    func testRedirectToURLWithFollowRedirectsStrategy() throws {
+        let formSpec =
+            """
+            [{
+                "type": "eps",
+                "async": false,
+                "fields": [
+                ],
+                "next_action_spec": {
+                    "confirm_response_status_specs": {
+                        "requires_action": {
+                            "type": "redirect_to_url",
+                            "native_mobile_redirect_strategy": "follow_redirects"
+                        }
+                    },
+                    "post_confirm_handling_pi_status_specs": {
+                        "succeeded": {
+                            "type": "finished"
+                        }
+                    }
+                }
+            }]
+            """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let eps = try decoder.decode([FormSpec].self, from: formSpec).first
+
+        guard case let .redirect_to_url(redirectToURL) = eps?.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type else {
+            XCTFail("Unable to parse requires_action")
+            return
+        }
+        XCTAssertEqual(redirectToURL.redirectStrategy, .follow_redirects)
         XCTAssertEqual(redirectToURL.urlPath, "next_action[redirect_to_url][url]")
         XCTAssertEqual(redirectToURL.returnUrlPath, "next_action[redirect_to_url][return_url]")
     }
