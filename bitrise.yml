@@ -37,7 +37,8 @@ stages:
     workflows:
     - basic-integration-tests: {}
     - ui-tests: {}
-    - legacy-tests: {}
+    - legacy-tests-13: {}
+    - legacy-tests-14: {}
     - carthage-install-test: {}
     - data-theorem-sast: {}
     - deploy-dry-run: {}
@@ -222,12 +223,18 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  legacy-tests:
+  legacy-tests-13:
     steps:
     - fastlane@3:
         inputs:
         - lane: legacy_tests_13
         title: fastlane legacy_tests_13
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
+  legacy-tests-14:
+    steps:
     - fastlane@3:
         inputs:
         - lane: legacy_tests_14
