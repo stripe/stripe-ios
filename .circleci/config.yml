@@ -362,29 +362,3 @@ workflows:
             branches:
               only:
                 - /releases\/.*/
-    jobs:
-      - integration-all:
-          context:
-            - E2EEndpoint
-      - basic-integration-tests:
-          context:
-            - E2EEndpoint
-      - deploy-dry-run:
-          context:
-            - E2EEndpoint
-      - legacy-tests-13:
-          context:
-            - E2EEndpoint
-      - legacy-tests-14:
-          context:
-            - E2EEndpoint
-      - xcode-132-install-tests:
-          context:
-            - E2EEndpoint
-      - export-builds:
-          context:
-            - E2EEndpoint
-      - data-theorem-sast:
-          context:
-            - DT
-            - E2EEndpoint
