@@ -362,26 +362,6 @@ workflows:
             branches:
               only:
                 - /releases\/.*/
-  e2e-only:
-    triggers:
-      - schedule:
-          cron: "56 8 * * *" # at 8:56 every day
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - e2e-only:
-          context:
-            - E2EEndpoint
-  integration-all:
-    triggers:
-      - schedule:
-          cron: "51 10 * * *" # at 10:51 every day
-          filters:
-            branches:
-              only:
-                - master
     jobs:
       - integration-all:
           context:
