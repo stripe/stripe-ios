@@ -15,9 +15,8 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
-import StripeCoreTestUtils
 
-class LinkLegalTermsViewSnapshotTests: STPSnapshotTestCase {
+class LinkLegalTermsViewSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

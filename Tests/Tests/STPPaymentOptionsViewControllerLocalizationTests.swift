@@ -13,7 +13,6 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
-import StripeCoreTestUtils
 
 class MockSTPPaymentOptionsViewControllerDelegate: NSObject, STPPaymentOptionsViewControllerDelegate
 {
@@ -36,7 +35,7 @@ class MockSTPPaymentOptionsViewControllerDelegate: NSObject, STPPaymentOptionsVi
 }
 
 @available(iOS 13.0, *)
-class STPPaymentOptionsViewControllerLocalizationTests: STPSnapshotTestCase {
+class STPPaymentOptionsViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 

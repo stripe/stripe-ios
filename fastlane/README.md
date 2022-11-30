@@ -135,10 +135,10 @@ Generate new localized screenshots
 
 
 
-### ios paymentsheet_ui_tests
+### ios paymentsheet_tests
 
 ```sh
-[bundle exec] fastlane ios paymentsheet_ui_tests
+[bundle exec] fastlane ios paymentsheet_tests
 ```
 
 

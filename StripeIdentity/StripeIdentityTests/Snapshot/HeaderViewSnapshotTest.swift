@@ -13,7 +13,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-class HeaderViewSnapshotTest: STPSnapshotTestCase {
+class HeaderViewSnapshotTest: FBSnapshotTestCase {
     typealias IconViewModel = HeaderIconView.ViewModel
 
     let headerView = HeaderView()

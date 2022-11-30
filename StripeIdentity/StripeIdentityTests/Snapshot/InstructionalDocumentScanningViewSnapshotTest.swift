@@ -11,7 +11,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class InstructionalDocumentScanningViewSnapshotTest: STPSnapshotTestCase {
+final class InstructionalDocumentScanningViewSnapshotTest: FBSnapshotTestCase {
     let view = InstructionalDocumentScanningView()
 
     override func setUp() {

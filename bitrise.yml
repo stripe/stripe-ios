@@ -5,8 +5,6 @@ project_type: ios
 app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: '120'
-  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 13 mini,OS=15.4
-  - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - opts:
       is_expand: false
     FASTLANE_WORK_DIR: "."
@@ -21,21 +19,21 @@ trigger_map:
 workflows:
   basic-integration-tests:
     steps:
-    - xcode-test@4:
+    - fastlane@3:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: Basic Integration
-    - deploy-to-bitrise-io@2: {}
+        - lane: basic_integration_tests
+        title: fastlane basic_integration_tests
     before_run:
     - prep_all
     after_run:
+    - upload_logs
     - notify_ci
-  carthage-install-test:
+  integration-all:
     steps:
     - fastlane@3:
         inputs:
-        - lane: installation_carthage
-        title: fastlane installation_carthage
+        - lane: integration_all
+        title: fastlane integration_all
     before_run:
     - prep_all
     after_run:
@@ -54,32 +52,6 @@ workflows:
         title: fastlane check_docs
     before_run:
     - prep_all
-  data-theorem-sast:
-    steps:
-    - script@1:
-        inputs:
-        - content: bundle config set path 'vendor/bundle'
-        is_always_run: true
-        title: Set Bundler to use local vendor directory
-    - script@1:
-        inputs:
-        - content: bundle config set without 'development'
-        title: Set bundler to ignore development and test gems
-    - git-clone@6: {}
-    - cache-pull@2: {}
-    - bundler@0: {}
-    - cache-push@2:
-        inputs:
-        - compress_archive: 'true'
-        - cache_paths: |
-            vendor
-            SourcePackages
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/push_dt.rb "$BITRISE_GIT_BRANCH" "$DT_UPLOAD_API_KEY"
-        title: Submit app to Data Theorem for SAST
-    after_run:
-    - notify_ci
   deploy-dry-run:
     steps:
     - script@1:
@@ -105,66 +77,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
-  framework-tests:
-    steps:
-    - fastlane@3:
-        inputs:
-        - lane: preflight
-        title: fastlane preflight
-    - fastlane@3:
-        inputs:
-        - lane: threeds2_tests
-        title: fastlane threeds2_tests
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeiOS
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripePayments
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripePaymentsUI
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripePaymentSheet
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeCameraCore
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeCore
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeIdentity
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeFinancialConnections
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeCardScan
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeApplePay
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: StripeUICore
-    - deploy-to-bitrise-io@2: {}
-    - save-spm-cache@1: {}
-    before_run:
-    - prep_all
-    after_run: []
-  install-tests-non-carthage:
+  install-tests:
     steps:
     - fastlane@3:
         inputs:
@@ -186,37 +99,32 @@ workflows:
         inputs:
         - lane: installation_spm_swift
         title: fastlane installation_spm_swift
-    before_run:
-    - prep_all
-  integration-all:
-    steps:
-    - xcode-test@4:
+    - fastlane@3:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: IntegrationTester
-    - deploy-to-bitrise-io@2: {}
+        - lane: installation_carthage
+        title: fastlane installation_carthage
     before_run:
     - prep_all
-    after_run:
-    - notify_ci
   legacy-tests-13:
     steps:
-    - set-env-var@0:
+    - fastlane@3:
         inputs:
-        - destination_keys: DEFAULT_TEST_DEVICE
-        - value: platform=iOS Simulator,name=iPhone 8,OS=13.7
-        title: Set test device to 13.7 simulator
+        - lane: legacy_tests_13
+        title: fastlane legacy_tests_13
+    before_run:
+    - prep_all
     after_run:
-    - framework-tests
+    - upload_logs
   legacy-tests-14:
     steps:
-    - set-env-var@0:
+    - fastlane@3:
         inputs:
-        - destination_keys: DEFAULT_TEST_DEVICE
-        - value: platform=iOS Simulator,name=iPhone 8,OS=14.5
-        title: Set test device to 14.5 simulator
+        - lane: legacy_tests_14
+        title: fastlane legacy_tests_14
+    before_run:
+    - prep_all
     after_run:
-    - framework-tests
+    - upload_logs    
   lint-tests:
     steps:
     - fastlane@3:
@@ -233,14 +141,6 @@ workflows:
         title: fastlane objc_symbol_check
     before_run:
     - prep_all
-  notify_ci:
-    steps:
-    - script@1:
-        inputs:
-        - content: "./ci_scripts/notify_ci.rb"
-        title: Send notification if failed
-        is_always_run: true
-        run_if: ".IsBuildFailed"
   prep_all:
     steps:
     - set-env-var@0:
@@ -266,10 +166,67 @@ workflows:
     - cache-push@2:
         inputs:
         - compress_archive: 'true'
-        - cache_paths: 'vendor
-
-            '
-    - restore-spm-cache@1: {}
+        - cache_paths: |
+            vendor
+            SourcePackages
+  framework-tests:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: preflight
+        title: fastlane preflight
+    - fastlane@3:
+        inputs:
+        - lane: threeds2_tests
+        title: fastlane threeds2_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripeios_tests
+        title: fastlane stripeios_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripeios_tests
+        title: fastlane stripepayments_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripeios_tests
+        title: fastlane stripepaymentsui_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripeios_tests
+        title: fastlane stripepaymentsheet_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripecameracore_tests
+        title: fastlane stripecameracore_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripecore_tests
+        title: fastlane stripecore_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripeidentity_tests
+        title: fastlane stripeidentity_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripefinancialconnections_tests
+        title: fastlane stripefinancialconnections_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripecardscan_tests
+        title: fastlane stripecardscan_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripeapplepay_tests
+        title: fastlane stripeapplepay_tests
+    - fastlane@3:
+        inputs:
+        - lane: stripeuicore_tests
+        title: fastlane stripeuicore_tests
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
   size-report:
     steps:
     - script@1:
@@ -291,6 +248,32 @@ workflows:
         - content: bundle exec ruby Tests/installation_tests/size_test/size_report.rb
             master $BITRISE_GIT_BRANCH
         title: Generate size report
+  data-theorem-sast:
+    steps:
+    - script@1:
+        inputs:
+        - content: bundle config set path 'vendor/bundle'
+        is_always_run: true
+        title: Set Bundler to use local vendor directory
+    - script@1:
+        inputs:
+        - content: bundle config set without 'development'
+        title: Set bundler to ignore development and test gems
+    - git-clone@6: {}
+    - cache-pull@2: {}
+    - bundler@0: {}
+    - cache-push@2:
+        inputs:
+        - compress_archive: 'true'
+        - cache_paths: |
+            vendor
+            SourcePackages
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/push_dt.rb "$BITRISE_GIT_BRANCH" "$DT_UPLOAD_API_KEY"
+        title: Submit app to Data Theorem for SAST
+    after_run:
+      - notify_ci
   trigger:
     steps:
     - build-router-start@0:
@@ -298,8 +281,9 @@ workflows:
         - workflows: |-
             framework-tests
             check-docs
-            install-tests-non-carthage
+            install-tests
             lint-tests
+            ui-tests
             size-report
         - wait_for_builds: 'true'
         - abort_on_fail: 'yes'
@@ -310,19 +294,18 @@ workflows:
         machine_type_id: standard
   ui-tests:
     steps:
-    - xcode-test@4:
+    - fastlane@3:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: LocalizationTester
-    - xcode-test@4:
+        - lane: ui_tests
+        title: fastlane ui_tests
+    - fastlane@3:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - scheme: PaymentSheet Example
-    - deploy-to-bitrise-io@2: {}
+        - lane: paymentsheet_tests
+        title: fastlane paymentsheet_tests
     before_run:
     - prep_all
     after_run:
-    - notify_ci
+    - upload_logs
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
@@ -332,6 +315,14 @@ workflows:
         - deploy_path: build-ci-tests/Logs/Test
         - is_enable_public_page: 'false'
         title: Deploy test log artifacts
+  notify_ci:
+    steps:
+    - script@1:
+        inputs:
+        - content: ./ci_scripts/notify_ci.rb
+        title: Send notification if failed
+        is_always_run: true
+        run_if: .IsBuildFailed
   xcode-132-install-tests:
     steps:
     - fastlane@3:

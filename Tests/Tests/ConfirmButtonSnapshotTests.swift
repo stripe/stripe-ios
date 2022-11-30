@@ -15,7 +15,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 
-class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
+class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

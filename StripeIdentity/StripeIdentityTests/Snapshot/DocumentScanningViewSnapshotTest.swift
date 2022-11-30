@@ -13,7 +13,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class DocumentScanningViewSnapshotTest: STPSnapshotTestCase {
+final class DocumentScanningViewSnapshotTest: FBSnapshotTestCase {
     // NOTE(mludowise): Snapshot tests don't seem to respect setting the overlay
     // layer's `compositingFilter` to "multiplyBlendMode". The result is the
     // resulting snapshot images all have a solid-opaque color for the overlay.

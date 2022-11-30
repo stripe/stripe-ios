@@ -13,7 +13,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-class HeaderIconViewSnapshotTest: STPSnapshotTestCase {
+class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
     let iconView = HeaderIconView()
     let iconImage = SnapshotTestMockData.uiImage(image: .headerIcon)
 

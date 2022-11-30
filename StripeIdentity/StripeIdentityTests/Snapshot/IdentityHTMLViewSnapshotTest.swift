@@ -12,7 +12,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class IdentityHTMLViewSnapshotTest: STPSnapshotTestCase {
+final class IdentityHTMLViewSnapshotTest: FBSnapshotTestCase {
 
     let view = HTMLViewWithIconLabels()
 

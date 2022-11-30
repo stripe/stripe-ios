@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 
-final class ButtonSnapshotTest: STPSnapshotTestCase {
+final class ButtonSnapshotTest: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

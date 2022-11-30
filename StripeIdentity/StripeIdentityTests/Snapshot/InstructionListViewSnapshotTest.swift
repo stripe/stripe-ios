@@ -12,7 +12,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class InstructionListViewSnapshotTest: STPSnapshotTestCase {
+final class InstructionListViewSnapshotTest: FBSnapshotTestCase {
 
     let multiLineText =
         "Here's a string that spans multiple lines of text\nAnother line!\nAnother line!"

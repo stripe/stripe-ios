@@ -13,9 +13,8 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
-import StripeCoreTestUtils
 
-class STPShippingMethodsViewControllerLocalizationTests: STPSnapshotTestCase {
+class STPShippingMethodsViewControllerLocalizationTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()

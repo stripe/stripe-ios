@@ -16,7 +16,7 @@ import iOSSnapshotTestCase
 //
 // Solid lines represent the region of interest (ROI) and dotted lines
 // represent the expected crop area that includes padding.
-final class CGImage_StripeIdentitySnapshotTest: STPSnapshotTestCase {
+final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
 
     // Image dimensions are 3024 × 4032
     let image: CGImage = SnapshotTestMockData.cgImage(image: .cgImage)

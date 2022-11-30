@@ -11,7 +11,7 @@ import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 
-final class AnimatedBorderViewSnapshotTest: STPSnapshotTestCase {
+final class AnimatedBorderViewSnapshotTest: FBSnapshotTestCase {
 
     let view: AnimatedBorderView = {
         let view = AnimatedBorderView()

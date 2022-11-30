@@ -13,7 +13,7 @@ import iOSSnapshotTestCase
 @testable import StripeIdentity
 
 @available(iOS 14.3, *)
-final class VerificationFlowWebViewSnapshotTests: STPSnapshotTestCase {
+final class VerificationFlowWebViewSnapshotTests: FBSnapshotTestCase {
 
     private var verificationWebView: VerificationFlowWebView!
     private var didFinishLoadingExpectation: XCTestExpectation!

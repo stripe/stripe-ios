@@ -30,13 +30,3 @@ extension FBSnapshotTestCase {
         )
     }
 }
-
-@objc open class STPSnapshotTestCase: FBSnapshotTestCase {
-    open override func setUp() {
-        super.setUp()
-        fileNameOptions = [
-            .OS,
-            .device
-        ]
-    }
-}
