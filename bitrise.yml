@@ -305,7 +305,7 @@ workflows:
         title: Set Bundler to use local vendor directory
     - git-clone@6:
         inputs:
-        - clone_depth: '100'
+        - merge_pr: 'no'
         - fetch_tags: 'yes'
     - cache-pull@2: {}
     - bundler@0: {}
