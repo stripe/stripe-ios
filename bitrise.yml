@@ -317,6 +317,10 @@ workflows:
             SourcePackages
     - script@1:
         inputs:
+        - content: git fetch origin
+        title: Fetch full branch history
+    - script@1:
+        inputs:
         - content: bundle exec ruby Tests/installation_tests/size_test/size_report.rb
             master $BITRISE_GIT_BRANCH
         title: Generate size report
