@@ -89,13 +89,13 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         paymentIntentParams.paymentMethodParams?.afterpayClearpay =
             STPPaymentMethodAfterpayClearpayParams()
         let didRedirect = expectation(description: "didRedirect")
-        paymentHandler._redirectShim = { redirectTo, returnToURL, callingContext in
+        paymentHandler._redirectShim = { redirectTo, returnToURL, isStandardRedirect in
             XCTAssertEqual(
                 redirectTo.absoluteString,
                 "https://hooks.stripe.com/afterpay_clearpay/acct_123/pa_nonce_321/redirect"
             )
             XCTAssertEqual(returnToURL?.absoluteString, "payments-example://stripe-redirect")
-            XCTAssert(callingContext.starts(with: "_handleRedirect("))
+            XCTAssert(isStandardRedirect)
             didRedirect.fulfill()
         }
         let expectConfirmWasCanceled = expectation(description: "didCancel")
@@ -188,13 +188,13 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         paymentIntentParams.paymentMethodParams?.afterpayClearpay =
             STPPaymentMethodAfterpayClearpayParams()
         let didRedirect = expectation(description: "didRedirect")
-        paymentHandler._redirectShim = { redirectTo, returnToURL, callingContext in
+        paymentHandler._redirectShim = { redirectTo, returnToURL, isStandardRedirect in
             XCTAssertEqual(
                 redirectTo.absoluteString,
                 "https://hooks.stripe.com/afterpay_clearpay/acct_123/pa_nonce_321/redirect"
             )
             XCTAssertEqual(returnToURL?.absoluteString, "payments-example://stripe-redirect")
-            XCTAssert(callingContext.starts(with: "_handleRedirect("))
+            XCTAssert(isStandardRedirect)
             didRedirect.fulfill()
         }
         let expectConfirmSucceeded = expectation(description: "didSucceed")
@@ -269,13 +269,13 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(affirm: STPPaymentMethodAffirmParams(),
                                                                          metadata: nil)
         let didRedirect = expectation(description: "didRedirect")
-        paymentHandler._redirectShim = { redirectTo, returnToURL, callingContext in
+        paymentHandler._redirectShim = { redirectTo, returnToURL, isStandardRedirect in
             XCTAssertEqual(
                 redirectTo.absoluteString,
                 "https://hooks.stripe.com/affirm/acct_123/pa_nonce_321/redirect"
             )
             XCTAssertEqual(returnToURL?.absoluteString, "payments-example://stripe-redirect")
-            XCTAssert(callingContext.starts(with: "_handleRedirectToExternalBrowser("))
+            XCTAssertFalse(isStandardRedirect)
             didRedirect.fulfill()
         }
         paymentHandler.confirmPayment(paymentIntentParams, with: self) {
@@ -339,10 +339,10 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(affirm: STPPaymentMethodAffirmParams(),
                                                                          metadata: nil)
         let didRedirect = expectation(description: "didRedirect")
-        paymentHandler._redirectShim = { redirectTo, returnToURL, callingContext in
+        paymentHandler._redirectShim = { redirectTo, returnToURL, isStandardRedirect in
             XCTAssertEqual(redirectTo.absoluteString, "https://www.financial-partner.com/")
             XCTAssertEqual(returnToURL?.absoluteString, "payments-example://stripe-redirect")
-            XCTAssert(callingContext.starts(with: "_handleRedirect("))
+            XCTAssert(isStandardRedirect)
             didRedirect.fulfill()
         }
         paymentHandler.confirmPayment(paymentIntentParams, with: self) {
@@ -449,13 +449,13 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         paymentIntentParams.paymentMethodParams?.afterpayClearpay =
             STPPaymentMethodAfterpayClearpayParams()
         let didRedirect = expectation(description: "didRedirect")
-        paymentHandler._redirectShim = { redirectTo, returnToURL, callingContext in
+        paymentHandler._redirectShim = { redirectTo, returnToURL, isStandardRedirect in
             XCTAssertEqual(
                 redirectTo.absoluteString,
                 "https://hooks.stripe.com/affirm/acct_123/pa_nonce_321/redirect"
             )
             XCTAssertEqual(returnToURL?.absoluteString, "payments-example://stripe-redirect")
-            XCTAssert(callingContext.starts(with: "_handleRedirect("))
+            XCTAssert(isStandardRedirect)
             didRedirect.fulfill()
         }
         let expectConfirmSucceeded = expectation(description: "didSucceed")
