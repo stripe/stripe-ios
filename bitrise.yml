@@ -1,22 +1,22 @@
 ---
 format_version: '11'
-default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+default_step_lib_source: 'https://github.com/bitrise-io/bitrise-steplib.git'
 project_type: ios
 app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: '120'
-  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.4
+  - DEFAULT_TEST_DEVICE: 'platform=iOS Simulator,name=iPhone 12 mini,OS=15.4'
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - opts:
       is_expand: false
-    FASTLANE_WORK_DIR: "."
+    FASTLANE_WORK_DIR: .
   - opts:
       is_expand: false
     FASTLANE_LANE: ios integration_all
 trigger_map:
 - push_branch: master
   pipeline: main-trigger-pipeline
-- pull_request_source_branch: "*"
+- pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
@@ -48,7 +48,7 @@ workflows:
     steps:
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: Basic Integration
     - deploy-to-bitrise-io@2: {}
     before_run:
@@ -100,7 +100,9 @@ workflows:
             SourcePackages
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/push_dt.rb "$BITRISE_GIT_BRANCH" "$DT_UPLOAD_API_KEY"
+        - content: >-
+            bundle exec ./ci_scripts/push_dt.rb "$BITRISE_GIT_BRANCH"
+            "$DT_UPLOAD_API_KEY"
         title: Submit app to Data Theorem for SAST
     after_run:
     - notify_ci
@@ -113,7 +115,9 @@ workflows:
         title: Install Sourcekitten
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/create_release.rb --version 99.99.99 --dry-run
+        - content: >-
+            bundle exec ./ci_scripts/create_release.rb --version 99.99.99
+            --dry-run
         is_always_run: true
         title: Create release
     - script@1:
@@ -141,47 +145,47 @@ workflows:
         title: fastlane threeds2_tests
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeiOS
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripePayments
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripePaymentsUI
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripePaymentSheet
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeCameraCore
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeCore
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeIdentity
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeFinancialConnections
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeCardScan
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeApplePay
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: StripeUICore
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
@@ -216,7 +220,7 @@ workflows:
     steps:
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: IntegrationTester
     - deploy-to-bitrise-io@2: {}
     before_run:
@@ -263,21 +267,21 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: "./ci_scripts/notify_ci.rb"
+        - content: ./ci_scripts/notify_ci.rb
         title: Send notification if failed
         is_always_run: true
-        run_if: ".IsBuildFailed"
+        run_if: .IsBuildFailed
   prep_all:
     steps:
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
-        - value: "$BITRISE_SOURCE_DIR/stpbuild/products"
+        - value: $BITRISE_SOURCE_DIR/stpbuild/products
         title: Set CONFIGURATION_BUILD_DIR
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_TEMP_DIR
-        - value: "$BITRISE_SOURCE_DIR/stpbuild/intermediates"
+        - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
         title: Set CONFIGURATION_TEMP_DIR
     - script@1:
         inputs:
@@ -292,9 +296,8 @@ workflows:
     - cache-push@2:
         inputs:
         - compress_archive: 'true'
-        - cache_paths: 'vendor
-
-            '
+        - cache_paths: |
+            vendor
     - restore-spm-cache@1: {}
   size-report:
     steps:
@@ -306,6 +309,7 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: '100'
+        - merge_pr: 'no'
         - fetch_tags: 'yes'
     - cache-pull@2: {}
     - bundler@0: {}
@@ -317,18 +321,19 @@ workflows:
             SourcePackages
     - script@1:
         inputs:
-        - content: bundle exec ruby Tests/installation_tests/size_test/size_report.rb
+        - content: >-
+            bundle exec ruby Tests/installation_tests/size_test/size_report.rb
             master $BITRISE_GIT_BRANCH
         title: Generate size report
   ui-tests:
     steps:
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: LocalizationTester
     - xcode-test@4:
         inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
+        - destination: $DEFAULT_TEST_DEVICE
         - scheme: PaymentSheet Example
     - deploy-to-bitrise-io@2: {}
     before_run:
