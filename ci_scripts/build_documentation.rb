@@ -17,7 +17,7 @@ define_method :'`' do |*args|
   exit $?.exitstatus unless $?.success?
   return output
 end
-  
+
 def info(string)
   puts "[#{File.basename(__FILE__)}] [INFO] #{string}"
 end
@@ -32,17 +32,17 @@ def File.join_if_safe(arg1, *otherArgs)
 
   # Check for empty or nil strings
   args.each do |arg|
-    raise "Cannot join nil or empty string." if arg.nil? || arg.empty?
+    raise 'Cannot join nil or empty string.' if arg.nil? || arg.empty?
   end
 
-  return File.join(args)
+  File.join(args)
 end
 
 # MARK: - constants
 
 $SCRIPT_DIR = __dir__
-$ROOT_DIR = File.expand_path("..", $SCRIPT_DIR)
-$JAZZY_CONFIG_FILE = File.join_if_safe($ROOT_DIR, ".jazzy.yaml")
+$ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
+$JAZZY_CONFIG_FILE = File.join_if_safe($ROOT_DIR, '.jazzy.yaml')
 $JAZZY_CONFIG = YAML.load_file($JAZZY_CONFIG_FILE)
 $TEMP_DIR = Dir.mktmpdir('stripe-docs')
 
@@ -58,16 +58,16 @@ def get_docs_root_directory
   docs_root_directory = $ROOT_DIR
 
   OptionParser.new do |opts|
-    opts.on("--docs-root-dir DIRECTORY", "Generate docs to this directory instead of the repo's root directory.") do |dir|
+    opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
       docs_root_directory = File.expand_path(dir, Dir.getwd)
     end
   end.parse!
 
-  return docs_root_directory
+  docs_root_directory
 end
 
 def docs_title(release_version)
- return "Stripe iOS SDKs #{release_version}"
+  "Stripe iOS SDKs #{release_version}"
 end
 
 # Relative links in markdown files are broken when they're displayed in our
@@ -95,39 +95,40 @@ def copy_readme_and_fix_relative_links(readme_file, github_file_prefix, github_r
 
   # Prepend markdown links with the `url_prefix` that don't start with
   # "http://", "https://", "mailto:", or "#"
-  new_contents = text.gsub(/\]\(((?!https\:\/\/)(?!http\:\/\/)(?!mailto\:)[^#].*?)\)/, "](#{url_prefix}/\\1)")
+  new_contents = text.gsub(%r{\]\(((?!https\://)(?!http\://)(?!mailto\:)[^#].*?)\)}, "](#{url_prefix}/\\1)")
 
   # Prepend `<a/>` tag 'href' attributes with the `url_prefix` that don't start
   # with "http://", "https://", "mailto:", or "#"
-  new_contents = new_contents.gsub(/<a\s+(.+\s)*?href=("|')((?!https\:\/\/)(?!http\:\/\/)(?!mailto\:)[^#].*?)("|')/, "<a \\href='#{url_prefix}/\\3'")
+  new_contents = new_contents.gsub(%r{<a\s+(.+\s)*?href=("|')((?!https\://)(?!http\://)(?!mailto\:)[^#].*?)("|')}, "<a \\href='#{url_prefix}/\\3'")
 
   # Prepend `<img/>` tag 'src' attributes with the `url_prefix` that don't start
   # with "http://" or "https://"
-  new_contents = new_contents.gsub(/<img\s+(.+\s)*?src=("|')((?!https\:\/\/)(?!http\:\/\/).*?)("|')/, "<img \\1src='#{url_raw_prefix}/\\3'")
+  new_contents = new_contents.gsub(%r{<img\s+(.+\s)*?src=("|')((?!https\://)(?!http\://).*?)("|')}, "<img \\1src='#{url_raw_prefix}/\\3'")
 
   # Create temp file & write updated contents to it
   new_file = Tempfile.new('README.md')
-  File.open(new_file.path, "w") { |file| file.puts new_contents }
+  File.open(new_file.path, 'w') { |file| file.puts new_contents }
 
-  return new_file.path
+  new_file.path
 end
 
 # Runs SourceKitten and returns the absolute paths to the generated files.
 def run_sourcekitten(sdk_module)
   schemes = []
-  schemes << sdk_module['scheme']
+  schemes << { module: sdk_module['framework_name'], scheme: sdk_module['scheme'] }
 
   if sdk_module['docs'].key?('include')
-    schemes << sdk_module['docs']['include']
-    schemes.flatten!
+    sdk_module['docs']['include'].each do |included|
+      schemes << { module: included, scheme: included }
+    end
   end
 
   sourcekitten_files = []
 
   schemes.each do |s|
-    output_file = File.join_if_safe($TEMP_DIR, "#{s}.json")
+    output_file = File.join_if_safe($TEMP_DIR, "#{s[:scheme]}.json")
 
-    `sourcekitten doc -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s} > #{output_file}`
+    `sourcekitten doc --module-name #{s[:module]} -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
 
     sourcekitten_files << output_file
   end
@@ -145,9 +146,7 @@ def build_module_docs(modules, release_version, docs_root_directory)
     # Note: If we don't check for empty string/nil, then jazzy will silently
     # overwrite the entire git repo directory.
     output = m['docs']['output'].to_s
-    if output.empty?
-      die "Missing required docs config \`output\`. Update modules.yaml."
-    end
+    die "Missing required docs config \`output\`. Update modules.yaml." if output.empty?
 
     sourcekitten_files = run_sourcekitten(m)
 
@@ -156,7 +155,7 @@ def build_module_docs(modules, release_version, docs_root_directory)
 
     # If no readme was specified in modules.yaml, let jazzy do it's default thing
     readme = m['docs']['readme'].to_s
-    readme_args = ""
+    readme_args = ''
     readme_temp_file = nil
     unless readme.empty?
       readme_temp_file = copy_readme_and_fix_relative_links(File.expand_path(readme, "#{$SCRIPT_DIR}/..").to_s, github_file_prefix, github_raw_file_prefix)
@@ -175,16 +174,12 @@ def build_module_docs(modules, release_version, docs_root_directory)
       --xcodebuild-arguments -destination,'generic/platform=iOS'`
 
     # Delete temp readme file
-    unless readme_temp_file.nil? || !File.exist?(readme_temp_file)
-      File.delete(readme_temp_file)
-    end
+    File.delete(readme_temp_file) unless readme_temp_file.nil? || !File.exist?(readme_temp_file)
 
     # Verify jazzy exit code
-    jazzy_exit_code=$?.exitstatus
+    jazzy_exit_code = $?.exitstatus
 
-    if jazzy_exit_code != 0
-      die "Executing jazzy failed with status code: #{jazzy_exit_code}"
-    end
+    die "Executing jazzy failed with status code: #{jazzy_exit_code}" if jazzy_exit_code != 0
   end
 end
 
@@ -192,7 +187,7 @@ end
 # directory. The descriptions of the modules are from their podspec summaries.
 def index_page_content(modules)
   view = Mustache.new
-  view.template_file = File.join_if_safe($ROOT_DIR, $JAZZY_CONFIG['theme'], "templates", "index.mustache")
+  view.template_file = File.join_if_safe($ROOT_DIR, $JAZZY_CONFIG['theme'], 'templates', 'index.mustache')
 
   view[:modules] = modules.map do |m|
     # Get get module's docs output relative to `docs` folder
@@ -201,28 +196,28 @@ def index_page_content(modules)
     # Load podspec to get module name and summary
     podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
 
-    props={}
+    props = {}
     props[:name] = podspec.name
     props[:summary] = podspec.summary
     props[:directory] = relative_path.to_s
     props
   end
 
-  return view.render
+  view.render
 end
 
 # Builds the `/docs/index.html` page
 def build_index_page(modules, release_version, docs_root_directory)
-  info "Building index page..."
+  info 'Building index page...'
 
   # Reuse Jazzy theme so it's visually consistent with the reset of the docs
   view = Mustache.new
-  view.template_name = "doc"
-  view.template_path = File.join_if_safe($ROOT_DIR, $JAZZY_CONFIG['theme'], "templates")
+  view.template_name = 'doc'
+  view.template_path = File.join_if_safe($ROOT_DIR, $JAZZY_CONFIG['theme'], 'templates')
 
   # Add properties expected by template
   # Copied & modified from https://github.com/realm/jazzy
-  config = YAML.load_file(File.join_if_safe($ROOT_DIR, ".jazzy.yaml"))
+  config = YAML.load_file(File.join_if_safe($ROOT_DIR, '.jazzy.yaml'))
   view[:copyright] = (
     date = DateTime.now.strftime('%Y-%m-%d')
     year = date[0..3]
@@ -249,7 +244,7 @@ def build_index_page(modules, release_version, docs_root_directory)
   view[:overview] = index_page_content(modules)
 
   # Write to docs/index.html
-  output_file = File.join_if_safe(docs_root_directory, "docs", "index.html")
+  output_file = File.join_if_safe(docs_root_directory, 'docs', 'index.html')
   File.open(output_file, 'w') { |file| file.write(view.render) }
 end
 
@@ -262,7 +257,7 @@ def fix_assets(modules, docs_root_directory)
   docs_dir = File.expand_path('docs', docs_root_directory)
 
   # Get list of assets used by theme (js, img, css, etc)
-  Dir.glob(File.join_if_safe($ROOT_DIR, $JAZZY_CONFIG['theme'], "assets", "*")).each do |asset_file|
+  Dir.glob(File.join_if_safe($ROOT_DIR, $JAZZY_CONFIG['theme'], 'assets', '*')).each do |asset_file|
     asset_base_name = File.basename(asset_file)
 
     # Delete old asset copies from /docs directory
@@ -285,19 +280,19 @@ def fix_assets(modules, docs_root_directory)
       relative_asset_path = Pathname.new(module_asset_path).relative_path_from(Pathname.new(module_docs_dir))
 
       # Symlink so each module's docs folder can use root `/docs` folder's assets
-      Dir.chdir(module_docs_dir) {
+      Dir.chdir(module_docs_dir) do
         File.symlink(relative_asset_path, asset_base_name)
-      }
+      end
     end
   end
 end
 
 # MARK: - main
 
-docs_root_directory = get_docs_root_directory()
+docs_root_directory = get_docs_root_directory
 
 # Load modules from yaml and filter out any which don't have docs configured
-modules = YAML.load_file(File.join_if_safe($ROOT_DIR, "modules.yaml"))['modules'].select { |m| !m['docs'].nil? }
+modules = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules'].select { |m| !m['docs'].nil? }
 release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
 build_module_docs(modules, release_version, docs_root_directory)
 build_index_page(modules, release_version, docs_root_directory)
