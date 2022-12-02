@@ -138,16 +138,16 @@ extension STPPaymentHandler {
 
         var resultingUrl = url
         let task = urlSession.dataTask(with: urlRequest) { data, response, error in
+            defer {
+                blockingDataTaskSemaphore.signal()
+            }
             guard error == nil,
                   let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode),
                     let responseURL = response?.url else {
-                blockingDataTaskSemaphore.signal()
                 return
             }
             resultingUrl = responseURL
-            blockingDataTaskSemaphore.signal()
-            return
         }
         task.resume()
         blockingDataTaskSemaphore.wait()
