@@ -1,0 +1,7 @@
+//
+// Stripe-Debug.xcconfig
+//
+
+#include "../../BuildConfigurations/StripeiOS-Debug.xcconfig"
+
+MODULEMAP_FILE = StripeiOS/Stripe.modulemap

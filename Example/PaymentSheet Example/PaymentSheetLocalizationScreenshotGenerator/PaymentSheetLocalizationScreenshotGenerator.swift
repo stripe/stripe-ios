@@ -8,7 +8,7 @@
 
 import XCTest
 
-@testable import PaymentSheet_Example
+@testable import PaymentSheetExample
 
 class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
     var app: XCUIApplication!

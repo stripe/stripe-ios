@@ -5,17 +5,50 @@ extension Project {
     public struct TestOptions {
         public var resources: ResourceFileElements? = nil
         public var dependencies: [TargetDependency] = []
+        public var settings: Settings = .settings(
+            configurations: [
+                .debug(
+                    name: "Debug",
+                    xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
+                ),
+                .release(
+                    name: "Release",
+                    xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+                ),
+            ],
+            defaultSettings: .none
+        )
         public var includesSnapshots: Bool = false
+        public var usesMocks: Bool = false
+        public var usesStubs: Bool = false
 
         public static func testOptions(
             resources: ResourceFileElements? = nil,
             dependencies: [TargetDependency] = [],
-            includesSnapshots: Bool = false
+            settings: Settings = .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            ),
+            includesSnapshots: Bool = false,
+            usesMocks: Bool = false,
+            usesStubs: Bool = false
         ) -> TestOptions {
             return TestOptions(
                 resources: resources,
                 dependencies: dependencies,
-                includesSnapshots: includesSnapshots
+                settings: settings,
+                includesSnapshots: includesSnapshots,
+                usesMocks: usesMocks,
+                usesStubs: usesStubs
             )
         }
     }
@@ -23,52 +56,111 @@ extension Project {
     public static func stripeFramework(
         name: String,
         packages: [Package] = [],
-        targetSettingsOverride: Settings? = nil,
+        projectSettings: Settings = .settings(
+            configurations: [
+                .debug(
+                    name: "Debug",
+                    xcconfig: "//BuildConfigurations/Project-Debug.xcconfig"
+                ),
+                .release(
+                    name: "Release",
+                    xcconfig: "//BuildConfigurations/Project-Release.xcconfig"
+                ),
+            ],
+            defaultSettings: .none
+        ),
+        targetSettings: Settings = .settings(
+            configurations: [
+                .debug(
+                    name: "Debug",
+                    xcconfig: "//BuildConfigurations/StripeiOS-Debug.xcconfig"
+                ),
+                .release(
+                    name: "Release",
+                    xcconfig: "//BuildConfigurations/StripeiOS-Release.xcconfig"
+                ),
+            ],
+            defaultSettings: .none
+        ),
         resources: ResourceFileElements? = nil,
         dependencies: [TargetDependency] = [],
-        additionalTargets: [Target] = [],
-        additionalSchemes: [Scheme] = [],
+        testUtilsOptions: TestOptions? = nil,
         unitTestOptions: TestOptions? = nil,
         uiTestOptions: TestOptions? = nil
     ) -> Project {
         return Project(
             name: name,
             options: .options(automaticSchemesOptions: .disabled),
-            packages: packages,
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "//BuildConfigurations/Project-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "//BuildConfigurations/Project-Release.xcconfig"
-                    ),
-                ]
-            ),
+            packages: makePackages(
+                testUtilsOptions: testUtilsOptions,
+                unitTestOptions: unitTestOptions,
+                uiTestOptions: uiTestOptions
+            ) + packages,
+            settings: projectSettings,
             targets: makeTargets(
                 name: name,
-                targetSettingsOverride: targetSettingsOverride,
+                targetSettings: targetSettings,
                 dependencies: dependencies,
                 resources: resources,
+                testUtilsOptions: testUtilsOptions,
                 unitTestOptions: unitTestOptions,
                 uiTestOptions: uiTestOptions
-            ) + additionalTargets,
+            ),
             schemes: makeSchemes(
                 name: name,
+                testUtilsOptions: testUtilsOptions,
                 unitTestOptions: unitTestOptions,
                 uiTestOptions: uiTestOptions
-            ) + additionalSchemes,
+            ),
             resourceSynthesizers: []
         )
     }
 
+    private static func makePackages(
+        testUtilsOptions: TestOptions?,
+        unitTestOptions: TestOptions?,
+        uiTestOptions: TestOptions?
+    ) -> [Package] {
+        var packages = [Package]()
+        if testUtilsOptions?.includesSnapshots ?? false
+            || unitTestOptions?.includesSnapshots ?? false
+            || uiTestOptions?.includesSnapshots ?? false
+        {
+            packages.append(
+                .remote(
+                    url: "https://github.com/uber/ios-snapshot-test-case",
+                    requirement: .upToNextMajor(from: "8.0.0")
+                )
+            )
+        }
+        if testUtilsOptions?.usesMocks ?? false
+            || unitTestOptions?.usesMocks ?? false
+            || uiTestOptions?.usesMocks ?? false
+        {
+            packages.append(
+                .remote(url: "https://github.com/erikdoe/ocmock", requirement: .branch("master"))
+            )
+        }
+        if testUtilsOptions?.usesStubs ?? false
+            || unitTestOptions?.usesStubs ?? false
+            || uiTestOptions?.usesStubs ?? false
+        {
+            packages.append(
+                .remote(
+                    url: "https://github.com/eurias-stripe/OHHTTPStubs",
+                    requirement: .branch("master")
+                )
+            )
+        }
+        return packages
+    }
+
     private static func makeTargets(
         name: String,
-        targetSettingsOverride: Settings?,
+        targetSettings: Settings,
         dependencies: [TargetDependency],
         resources: ResourceFileElements?,
+        testUtilsOptions: TestOptions?,
         unitTestOptions: TestOptions?,
         uiTestOptions: TestOptions?
     ) -> [Target] {
@@ -86,21 +178,27 @@ extension Project {
                     public: "\(name)/\(name).h"
                 ),
                 dependencies: dependencies,
-                settings: targetSettingsOverride
-                    ?? .settings(
-                        configurations: [
-                            .debug(
-                                name: "Debug",
-                                xcconfig: "//BuildConfigurations/StripeiOS-Debug.xcconfig"
-                            ),
-                            .release(
-                                name: "Release",
-                                xcconfig: "//BuildConfigurations/StripeiOS-Release.xcconfig"
-                            ),
-                        ]
-                    )
+                settings: targetSettings
             )
         )
+        if let testUtilsOptions = testUtilsOptions {
+            targets.append(
+                Target(
+                    name: "\(name)TestUtils",
+                    platform: .iOS,
+                    product: .framework,
+                    bundleId: "com.stripe.\(name)TestUtils",
+                    infoPlist: "\(name)TestUtils/Info.plist",
+                    sources: "\(name)TestUtils/**/*.swift",
+                    resources: testUtilsOptions.resources,
+                    headers: .headers(
+                        public: "\(name)TestUtils/\(name)TestUtils.h"
+                    ),
+                    dependencies: makeTestDependencies(name: name, testOptions: testUtilsOptions),
+                    settings: testUtilsOptions.settings
+                )
+            )
+        }
         if let unitTestOptions = unitTestOptions {
             targets.append(
                 Target(
@@ -114,21 +212,12 @@ extension Project {
                     headers: .headers(
                         public: "\(name)Tests/\(name)Tests.h"
                     ),
-                    dependencies: [
-                        .xctest,
-                        .target(name: name),
-                    ] + unitTestOptions.dependencies,
-                    settings: .settings(configurations: [
-                        .debug(
-                            name: "Debug",
-                            xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
-                        ),
-                        .release(
-                            name: "Release",
-                            xcconfig:
-                                "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
-                        ),
-                    ])
+                    dependencies: makeTestDependencies(
+                        name: name,
+                        includeUtils: testUtilsOptions != nil,
+                        testOptions: unitTestOptions
+                    ),
+                    settings: unitTestOptions.settings
                 )
             )
         }
@@ -145,33 +234,54 @@ extension Project {
                     headers: .headers(
                         public: "\(name)UITests/\(name)UITests.h"
                     ),
-                    dependencies: [
-                        .xctest,
-                        .target(name: name),
-                    ] + uiTestOptions.dependencies,
-                    settings: .settings(configurations: [
-                        .debug(
-                            name: "Debug",
-                            xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
-                        ),
-                        .release(
-                            name: "Release",
-                            xcconfig:
-                                "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
-                        ),
-                    ])
+                    dependencies: makeTestDependencies(
+                        name: name,
+                        includeUtils: testUtilsOptions != nil,
+                        testOptions: uiTestOptions
+                    ),
+                    settings: uiTestOptions.settings
                 )
             )
         }
         return targets
     }
 
+    private static func makeTestDependencies(
+        name: String,
+        includeUtils: Bool = false,
+        testOptions: TestOptions
+    ) -> [TargetDependency] {
+        var dependencies: [TargetDependency] = [
+            .xctest,
+            .target(name: name),
+        ]
+
+        if includeUtils {
+            dependencies.append(.target(name: "\(name)TestUtils"))
+        }
+        if testOptions.includesSnapshots {
+            dependencies.append(.package(product: "iOSSnapshotTestCase"))
+        }
+        if testOptions.usesMocks {
+            dependencies.append(.package(product: "OCMock"))
+        }
+        if testOptions.usesStubs {
+            dependencies += [
+                .package(product: "OHHTTPStubs"),
+                .package(product: "OHHTTPStubsSwift"),
+            ]
+        }
+        return dependencies + testOptions.dependencies
+    }
+
     private static func makeSchemes(
         name: String,
+        testUtilsOptions: TestOptions?,
         unitTestOptions: TestOptions?,
         uiTestOptions: TestOptions?
     ) -> [Scheme] {
-        return [
+        var schemes = [Scheme]()
+        schemes.append(
             Scheme(
                 name: name,
                 buildAction: .buildAction(targets: ["\(name)"]),
@@ -192,7 +302,16 @@ extension Project {
                     expandVariableFromTarget: "\(name)"
                 )
             )
-        ]
+        )
+        if testUtilsOptions != nil {
+            schemes.append(
+                Scheme(
+                    name: "\(name)TestUtils",
+                    buildAction: .buildAction(targets: ["\(name)TestUtils"])
+                )
+            )
+        }
+        return schemes
     }
 
     private static func makeTestActionTargets(
@@ -230,6 +349,19 @@ extension String {
             options: [],
             range: range,
             withTemplate: "$1-$2"
+        )
+    }
+}
+
+extension CopyFilesAction {
+    public static func appClips(
+        name: String,
+        files: [FileElement]
+    ) -> CopyFilesAction {
+        return .productsDirectory(
+            name: name,
+            subpath: "$(CONTENTS_FOLDER_PATH)/AppClips",
+            files: files
         )
     }
 }

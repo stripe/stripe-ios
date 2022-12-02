@@ -30,6 +30,7 @@ CLANG_WARN_ASSIGN_ENUM = YES
 CLANG_WARN_DOCUMENTATION_COMMENTS = YES
 CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 
+
 // Code Signing Identity
 // 
 // The name ("common name") of a valid code-signing certificate in a keychain within your
@@ -37,7 +38,6 @@ CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 
 CODE_SIGN_IDENTITY[sdk=iphoneos*] =
 CODE_SIGN_STYLE = Automatic
-DEVELOPMENT_TEAM = Y28TH9SHX7
 
 // Defines Module
 // 

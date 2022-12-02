@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <Group
+      location = "group:Example"
+      name = "Example">
+      <FileRef
+         location = "group:AppClipExample/AppClipExample.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Basic Integration/Basic Integration.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:CardImageVerification Example/CardImageVerification Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:FinancialConnections Example/FinancialConnections Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:IdentityVerification Example/IdentityVerification Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Non-Card Payment Examples/Non-Card Payment Examples.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:PaymentSheet Example/PaymentSheet Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:UI Examples/UI Examples.xcodeproj">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:Stripe/Stripe.xcodeproj">
+   </FileRef>
    <FileRef
       location = "group:Stripe3DS2/Stripe3DS2.xcodeproj">
    </FileRef>
@@ -17,6 +48,31 @@
       location = "group:StripeCore/StripeCore.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:StripeFinancialConnections/StripeFinancialConnections.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripeIdentity/StripeIdentity.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripePaymentSheet/StripePaymentSheet.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripePayments/StripePayments.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripePaymentsUI/StripePaymentsUI.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:StripeUICore/StripeUICore.xcodeproj">
    </FileRef>
+   <Group
+      location = "group:Testers"
+      name = "Testers">
+      <FileRef
+         location = "group:IntegrationTester/IntegrationTester.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:LocalizationTester/LocalizationTester.xcodeproj">
+      </FileRef>
+   </Group>
 </Workspace>

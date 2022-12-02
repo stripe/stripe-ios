@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1400"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,23 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "31FBFDF92789135600AB706D"
+               BlueprintIdentifier = "5172E870AD36F11AEEE0C2B2"
                BuildableName = "AppClipExample.app"
-               BlueprintName = "AppClipExample (iOS)"
+               BlueprintName = "AppClipExample"
                ReferencedContainer = "container:AppClipExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "31FBFE062789135600AB706D"
-               BuildableName = "Tests iOS.xctest"
-               BlueprintName = "Tests iOS"
+               BlueprintIdentifier = "F2EAC263F068AD2E112F7309"
+               BuildableName = "AppClipExampleTestsiOS.xctest"
+               BlueprintName = "AppClipExampleTests iOS"
                ReferencedContainer = "container:AppClipExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,12 +42,23 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F2EAC263F068AD2E112F7309"
+               BuildableName = "AppClipExampleTestsiOS.xctest"
+               BlueprintName = "AppClipExampleTests iOS"
+               ReferencedContainer = "container:AppClipExample.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      disablePerformanceAntipatternChecker = "YES"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -58,9 +69,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "31FBFDF92789135600AB706D"
+            BlueprintIdentifier = "5172E870AD36F11AEEE0C2B2"
             BuildableName = "AppClipExample.app"
-            BlueprintName = "AppClipExample (iOS)"
+            BlueprintName = "AppClipExample"
             ReferencedContainer = "container:AppClipExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -75,9 +86,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "31FBFDF92789135600AB706D"
+            BlueprintIdentifier = "5172E870AD36F11AEEE0C2B2"
             BuildableName = "AppClipExample.app"
-            BlueprintName = "AppClipExample (iOS)"
+            BlueprintName = "AppClipExample"
             ReferencedContainer = "container:AppClipExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

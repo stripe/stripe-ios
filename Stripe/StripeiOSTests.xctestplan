@@ -1,0 +1,42 @@
+{
+  "configurations" : [
+    {
+      "id" : "E4E61B3B-0FEC-4C2A-BE82-E8558946FFBC",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "environmentVariableEntries" : [
+      {
+        "key" : "FB_REFERENCE_IMAGE_DIR",
+        "value" : "$(SOURCE_ROOT)\/..\/Tests\/ReferenceImages"
+      }
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Stripe.xcodeproj",
+      "identifier" : "ADF894AA8F6022D9BED17346",
+      "name" : "StripeiOS"
+    }
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "AfterpayPriceBreakdownViewSnapshotTests",
+        "STPCardBINMetadataTests",
+        "STPPaymentIntentFunctionalTest\/testConfirmPaymentIntentWithBLIK",
+        "STPSourceFunctionalTest\/testCreateSource_wechatPay",
+        "TextFieldElementCardTest\/testBINRangeThatRequiresNetworkCallToValidate()"
+      ],
+      "target" : {
+        "containerPath" : "container:Stripe.xcodeproj",
+        "identifier" : "8BE23AD5D9A3D939AF46F31E",
+        "name" : "StripeiOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

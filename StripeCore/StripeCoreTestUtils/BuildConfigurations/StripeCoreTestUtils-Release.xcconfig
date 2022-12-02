@@ -1,0 +1,7 @@
+//
+// StripeCoreTestUtils-Release.xcconfig
+//
+
+#include "../../../BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+
+DEFINES_MODULE = YES
