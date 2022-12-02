@@ -11,8 +11,10 @@ import Foundation
 
 class PaymentSheetFormSpecPaymentHandler {
     let urlSession: URLSession
-    init(urlSession: URLSession? = nil) {
+    let formSpecProvider: FormSpecProvider
+    init(urlSession: URLSession? = nil, formSpecProvider: FormSpecProvider? = nil) {
         self.urlSession = urlSession ?? URLSession(configuration: .default, delegate: STPPaymentHandlerURLSessionDelegate(), delegateQueue: nil)
+        self.formSpecProvider = formSpecProvider ?? FormSpecProvider.shared
     }
 }
 
@@ -20,7 +22,7 @@ class PaymentSheetFormSpecPaymentHandler {
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheetFormSpecPaymentHandler : FormSpecPaymentHandler {
     func handlePostConfirmPIStatusSpec(for paymentIntent: StripePayments.STPPaymentIntent?, action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, paymentHandler: StripePayments.STPPaymentHandler) -> Bool {
-        if let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent) {
+        if let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) {
             paymentHandler._handlePostConfirmPIStatusSpec(forAction: action, paymentIntentStatusSpec: spec)
             return true
         }
@@ -28,14 +30,14 @@ extension PaymentSheetFormSpecPaymentHandler : FormSpecPaymentHandler {
     }
     
     func isPIStatusSpecFinishedForPostConfirmPIStatus(paymentIntent: StripePayments.STPPaymentIntent?, paymentHandler: STPPaymentHandler) -> Bool {
-        guard let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent) else {
+        guard let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) else {
             return false
         }
         return paymentHandler._isPIStatusSpecFinished(paymentIntentStatusSpec: spec)
     }
     
     func handleNextActionSpec(for paymentIntent: STPPaymentIntent, action: STPPaymentHandlerPaymentIntentActionParams, paymentHandler: STPPaymentHandler) -> Bool {
-        if let paymentIntentStatusSpec = paymentHandler._specForConfirmResponse(paymentIntent: paymentIntent) {
+        if let paymentIntentStatusSpec = paymentHandler._specForConfirmResponse(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) {
             paymentHandler._handleNextActionSpec(forAction: action, paymentIntentStatusSpec: paymentIntentStatusSpec, urlSession: self.urlSession)
             return true
         }
@@ -45,8 +47,8 @@ extension PaymentSheetFormSpecPaymentHandler : FormSpecPaymentHandler {
 }
 
 extension STPPaymentHandler {
-    func _specForConfirmResponse(paymentIntent: STPPaymentIntent) -> FormSpec.NextActionSpec.ConfirmResponseStatusSpecs? {
-        guard let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent) else {
+    func _specForConfirmResponse(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec.ConfirmResponseStatusSpecs? {
+        guard let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) else {
             return nil
         }
 
@@ -103,9 +105,9 @@ extension STPPaymentHandler {
         }
     }
 
-    func _specForPostConfirmPIStatus(paymentIntent: STPPaymentIntent?) -> FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs? {
+    func _specForPostConfirmPIStatus(paymentIntent: STPPaymentIntent?, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs? {
         guard let paymentIntent = paymentIntent,
-              let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent),
+              let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider),
               let responseSpec = nextActionSpec.postConfirmHandlingPiStatusSpecs,
               !responseSpec.isEmpty else {
             return nil

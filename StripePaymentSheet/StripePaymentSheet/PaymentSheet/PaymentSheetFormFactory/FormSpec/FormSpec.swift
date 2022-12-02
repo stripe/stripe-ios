@@ -180,11 +180,11 @@ struct FormSpec: Decodable {
     }
 }
 extension FormSpec {
-    static func nextActionSpec(paymentIntent: STPPaymentIntent) -> FormSpec.NextActionSpec? {
+    static func nextActionSpec(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec? {
         var nextActionSpec: FormSpec.NextActionSpec? = nil
         if let paymentMethod = paymentIntent.paymentMethod?.paymentSheetPaymentMethodType(),
            let paymentMethodString = PaymentSheet.PaymentMethodType.string(from: paymentMethod) {
-            nextActionSpec = FormSpecProvider.shared.nextActionSpec(for: paymentMethodString)
+            nextActionSpec = formSpecProvider.nextActionSpec(for: paymentMethodString)
         }
         return nextActionSpec
     }
