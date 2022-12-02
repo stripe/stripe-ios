@@ -1,0 +1,7 @@
+//
+// Stripe-Release.xcconfig
+//
+
+#include "../../BuildConfigurations/StripeiOS-Release.xcconfig"
+
+MODULEMAP_FILE = StripeiOS/Stripe.modulemap

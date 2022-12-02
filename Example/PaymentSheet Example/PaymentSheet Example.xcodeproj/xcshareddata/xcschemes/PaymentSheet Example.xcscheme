@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1400"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,37 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B6370755251057890094499F"
-               BuildableName = "PaymentSheet Example.app"
+               BlueprintIdentifier = "D017784615929C0DD3717FE8"
+               BuildableName = "PaymentSheetExample.app"
                BlueprintName = "PaymentSheet Example"
+               ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AAF1424C7F0424C3506712E6"
+               BuildableName = "PaymentSheetUITest.xctest"
+               BlueprintName = "PaymentSheetUITest"
+               ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5BBB41069612B9B628C5E65D"
+               BuildableName = "PaymentSheetLocalizationScreenshotGenerator.xctest"
+               BlueprintName = "PaymentSheetLocalizationScreenshotGenerator"
                ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,46 +54,53 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "NO">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "D017784615929C0DD3717FE8"
+            BuildableName = "PaymentSheetExample.app"
+            BlueprintName = "PaymentSheet Example"
+            ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B64BF127253BC12900EB5BDC"
-               BuildableName = "PaymentModalUITests.xctest"
-               BlueprintName = "PaymentModalUITests"
-               ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "31D8F79425BA0200004502D9"
+               BlueprintIdentifier = "AAF1424C7F0424C3506712E6"
                BuildableName = "PaymentSheetUITest.xctest"
                BlueprintName = "PaymentSheetUITest"
                ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO"
-            testExecutionOrdering = "random">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "36595AE226B1F3C100634850"
+               BlueprintIdentifier = "5BBB41069612B9B628C5E65D"
                BuildableName = "PaymentSheetLocalizationScreenshotGenerator.xctest"
                BlueprintName = "PaymentSheetLocalizationScreenshotGenerator"
                ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FB_REFERENCE_IMAGE_DIR"
+            value = "$(SRCROOT)/../Tests/ReferenceImages"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      disablePerformanceAntipatternChecker = "YES"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -76,19 +111,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B6370755251057890094499F"
-            BuildableName = "PaymentSheet Example.app"
+            BlueprintIdentifier = "D017784615929C0DD3717FE8"
+            BuildableName = "PaymentSheetExample.app"
             BlueprintName = "PaymentSheet Example"
             ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "FB_REFERENCE_IMAGE_DIR"
-            value = "$(SOURCE_ROOT)/../../Tests/ReferenceImages"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -100,8 +128,8 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B6370755251057890094499F"
-            BuildableName = "PaymentSheet Example.app"
+            BlueprintIdentifier = "D017784615929C0DD3717FE8"
+            BuildableName = "PaymentSheetExample.app"
             BlueprintName = "PaymentSheet Example"
             ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
          </BuildableReference>

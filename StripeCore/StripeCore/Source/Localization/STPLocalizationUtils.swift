@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public final class STPLocalizationUtils {
+public final class STPLocalizationUtils {
     /// Acts like NSLocalizedString but tries to find the string in the Stripe
     /// bundle first if possible.
     ///

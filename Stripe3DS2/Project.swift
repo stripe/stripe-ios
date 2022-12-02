@@ -9,17 +9,18 @@ let project = Project(
             requirement: .upToNextMajor(from: "8.0.0")
         )
     ],
-    settings: Settings.settings(
+    settings: .settings(
         configurations: [
-            Configuration.debug(
+            .debug(
                 name: "Debug",
                 xcconfig: "//BuildConfigurations/Project-Debug.xcconfig"
             ),
-            Configuration.release(
+            .release(
                 name: "Release",
                 xcconfig: "//BuildConfigurations/Project-Release.xcconfig"
             ),
-        ]
+        ],
+        defaultSettings: .none
     ),
     targets: [
         Target(
@@ -30,19 +31,22 @@ let project = Project(
             infoPlist: "Stripe3DS2/Info.plist",
             sources: "Stripe3DS2/**/*.m",
             resources: "Stripe3DS2/Resources/**",
-            headers: Headers.headers(
+            headers: .headers(
                 public: [
                     "Stripe3DS2/Stripe3DS2.h",
-                    "Stripe3DS2/Stripe3DS2-Bridging-Header.h",
                     "Stripe3DS2/Stripe3DS2-Prefix.pch",
                     "Stripe3DS2/Public/**/*.h",
                 ],
                 project: "Stripe3DS2/Internal/**/*.h"
             ),
-            settings: Settings.settings(
+            settings: .settings(
                 base: [
+                    "CLANG_ENABLE_MODULES": true,
+                    "BUILD_LIBRARY_FOR_DISTRIBUTION": true,
                     "GCC_PREFIX_HEADER": "$(SRCROOT)/Stripe3DS2/Stripe3DS2-Prefix.pch",
-                ]
+                    "DEFINES_MODULE": true,
+                ],
+                defaultSettings: .none
             )
         ),
         Target(
@@ -53,13 +57,20 @@ let project = Project(
             infoPlist: "Stripe3DS2Tests/Info.plist",
             sources: "Stripe3DS2Tests/**/*.m",
             resources: "Stripe3DS2Tests/JSON/**",
-            headers: Headers.headers(
+            headers: .headers(
                 project: "Stripe3DS2/**/*.h"
             ),
             dependencies: [
                 .xctest,
                 .target(name: "Stripe3DS2"),
-            ]
+            ],
+            settings: .settings(
+                base: [
+                    "CLANG_ENABLE_MODULES": true,
+                    "DEFINES_MODULE": true,
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "Stripe3DS2DemoUI",
@@ -69,12 +80,19 @@ let project = Project(
             infoPlist: "Stripe3DS2DemoUI/Info.plist",
             sources: "Stripe3DS2DemoUI/Sources/**/*.m",
             resources: "Stripe3DS2DemoUI/Resources/**",
-            headers: Headers.headers(
+            headers: .headers(
                 project: "Stripe3DS2DemoUI/Sources/**/*.h"
             ),
             dependencies: [
                 .target(name: "Stripe3DS2"),
-            ]
+            ],
+            settings: .settings(
+                base: [
+                    "CLANG_ENABLE_MODULES": true,
+                    "DEFINES_MODULE": true,
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "Stripe3DS2DemoUITests",
@@ -88,7 +106,14 @@ let project = Project(
                 .target(name: "Stripe3DS2"),
                 .target(name: "Stripe3DS2DemoUI"),
                 .package(product: "iOSSnapshotTestCase"),
-            ]
+            ],
+            settings: .settings(
+                base: [
+                    "CLANG_ENABLE_MODULES": true,
+                    "DEFINES_MODULE": true,
+                ],
+                defaultSettings: .none
+            )
         ),
     ],
     schemes: [

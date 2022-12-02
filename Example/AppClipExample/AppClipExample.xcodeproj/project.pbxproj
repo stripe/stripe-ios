@@ -3,102 +3,137 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3168992B279A093F00FEBDE3 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992A279A093F00FEBDE3 /* ApplePayModel.swift */; };
-		3168992D279A09A000FEBDE3 /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992C279A09A000FEBDE3 /* BackendModel.swift */; };
-		3168992F279A0C1200FEBDE3 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992E279A0C1200FEBDE3 /* PaymentButton.swift */; };
-		31689943279A123E00FEBDE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31689942279A123E00FEBDE3 /* Assets.xcassets */; };
-		31689946279A123E00FEBDE3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31689945279A123E00FEBDE3 /* Preview Assets.xcassets */; };
-		31689952279A123E00FEBDE3 /* AppClipExampleClipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31689951279A123E00FEBDE3 /* AppClipExampleClipTests.swift */; };
-		3168995C279A123E00FEBDE3 /* AppClipExampleClipUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168995B279A123E00FEBDE3 /* AppClipExampleClipUITests.swift */; };
-		3168995E279A123F00FEBDE3 /* AppClipExampleClipUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168995D279A123F00FEBDE3 /* AppClipExampleClipUITestsLaunchTests.swift */; };
-		31689961279A123F00FEBDE3 /* AppClipExampleClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 3168993C279A123D00FEBDE3 /* AppClipExampleClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		3168996C279A125700FEBDE3 /* AppClipExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFDF32789135400AB706D /* AppClipExampleApp.swift */; };
-		3168996D279A125700FEBDE3 /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992C279A09A000FEBDE3 /* BackendModel.swift */; };
-		3168996E279A125700FEBDE3 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992A279A093F00FEBDE3 /* ApplePayModel.swift */; };
-		3168996F279A125700FEBDE3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFDF42789135400AB706D /* ContentView.swift */; };
-		31689970279A125700FEBDE3 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168992E279A0C1200FEBDE3 /* PaymentButton.swift */; };
-		31689976279A16AD00FEBDE3 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31689975279A16AD00FEBDE3 /* StripeCore.framework */; };
-		31689977279A16AD00FEBDE3 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31689975279A16AD00FEBDE3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		31689979279A16B200FEBDE3 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31689978279A16B200FEBDE3 /* StripeApplePay.framework */; };
-		3168997A279A16B200FEBDE3 /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31689978279A16B200FEBDE3 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3168997C279A16B900FEBDE3 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3168997B279A16B900FEBDE3 /* StripeApplePay.framework */; };
-		3168997D279A16B900FEBDE3 /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3168997B279A16B900FEBDE3 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		31689980279A16BD00FEBDE3 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3168997F279A16BD00FEBDE3 /* StripeCore.framework */; };
-		31689981279A16BD00FEBDE3 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3168997F279A16BD00FEBDE3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		31FBFE0C2789135600AB706D /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFE0B2789135600AB706D /* Tests_iOS.swift */; };
-		31FBFE0E2789135600AB706D /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFE0D2789135600AB706D /* Tests_iOSLaunchTests.swift */; };
-		31FBFE1B2789135600AB706D /* AppClipExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFDF32789135400AB706D /* AppClipExampleApp.swift */; };
-		31FBFE1D2789135700AB706D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFDF42789135400AB706D /* ContentView.swift */; };
-		31FBFE1F2789135700AB706D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31FBFDF52789135600AB706D /* Assets.xcassets */; };
+		002AB37F1CEB2A671FE25987 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		00E0FE05F9D357167517FCEC /* TuistBundle+AppClipExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C587E00A7E1EAE51F6DCCCDF /* TuistBundle+AppClipExample.swift */; };
+		067981249D7400430A96025A /* TuistAssets+AppClipExampleClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E835A0F7C9DEFC379AAC584 /* TuistAssets+AppClipExampleClip.swift */; };
+		07B25EDF1B807A9AFE1F7AEB /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F704B5A25E6D5269C95964 /* BackendModel.swift */; };
+		0CFBEED684F12B0096153EF9 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1D58D3A6F04B068A53B27F73 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */; };
+		3350F74B167F6DF265840E14 /* TuistBundle+AppClipExampleClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F2B578C129DB1040B7164B /* TuistBundle+AppClipExampleClip.swift */; };
+		33BB12A5897E5783DC05DEFD /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; };
+		3A2EE294E127268841000FCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3932D439D7C2F9F7D1C5812A /* Assets.xcassets */; };
+		543195F43BC3FEF740FB44DF /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		76C66F7C0BF0D79C8F23C529 /* AppClipExampleClipUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5777F48E701AE091F2B900 /* AppClipExampleClipUITestsLaunchTests.swift */; };
+		78B3861C50B56331151BCE15 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */; };
+		78BF7D6B95206CBE599040D1 /* TuistAssets+AppClipExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB872FCB253B710200539E3A /* TuistAssets+AppClipExample.swift */; };
+		7A29727534280B91C0B9BDF7 /* AppClipExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */; };
+		80A0A95E55A4364ACD8BCDFB /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8CFEDE40D5937726D3558808 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; };
+		92F2B9E0E01686BAC7805F4F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF973233C9E71C139B25674 /* ContentView.swift */; };
+		9DA0A61B181DE220C293A5A0 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */; };
+		A867EF1F2FE7DCAFA1C6CBB0 /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F704B5A25E6D5269C95964 /* BackendModel.swift */; };
+		AC41799891BB47F756B5C829 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */; };
+		B77C70C4B8EA26C28D8B8DBE /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174AE0B73025B92CD1D17085 /* Tests_iOSLaunchTests.swift */; };
+		B8593CFDCA6E095EA1786716 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C949F341568BABE45F694DC /* Tests_iOS.swift */; };
+		BCDBDA39BBF54392CF758AE9 /* AppClipExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */; };
+		BFC82EC4ED5C824458015B96 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7785865DF939EC7FE00923B3 /* Preview Assets.xcassets */; };
+		C25C8C8EFF4AD32716D7D98D /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; };
+		D6AFCBC52FF21AA8B3E2AA78 /* AppClipExampleClipUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FEBDF48B4B01D5AF51C46E /* AppClipExampleClipUITests.swift */; };
+		D9F9006AAA76C41F44315600 /* AppClipExampleClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 8FDB2A87374049BA75496715 /* AppClipExampleClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E1F51EB51C34EDDF0CE0F005 /* AppClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73241689160B1EC3894FDD6 /* AppClip.framework */; };
+		E31EBD365B001C9C59401F55 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; };
+		E86C959646005CCBD250D387 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF973233C9E71C139B25674 /* ContentView.swift */; };
+		EF281549070AAC9F91526610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51480E1BF51E8CB6C70CA5F1 /* Assets.xcassets */; };
+		FAB902F53ADC1707B33712EF /* AppClipExampleClipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1536CDE13696BD54096A3AC7 /* AppClipExampleClipTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3168994E279A123E00FEBDE3 /* PBXContainerItemProxy */ = {
+		174E3AE2B4F090D0BE74A66A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3168993B279A123D00FEBDE3;
+			remoteGlobalIDString = EA48939682BA660D1EF1D35D;
 			remoteInfo = AppClipExampleClip;
 		};
-		31689958279A123E00FEBDE3 /* PBXContainerItemProxy */ = {
+		796A6CE57C07EF00DE01B050 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3168993B279A123D00FEBDE3;
+			remoteGlobalIDString = 5172E870AD36F11AEEE0C2B2;
+			remoteInfo = AppClipExample;
+		};
+		B3173E1A9EE52D3CFB896048 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA48939682BA660D1EF1D35D;
 			remoteInfo = AppClipExampleClip;
 		};
-		3168995F279A123F00FEBDE3 /* PBXContainerItemProxy */ = {
+		E32B8A95E89CA9A069B92998 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3168993B279A123D00FEBDE3;
+			remoteGlobalIDString = EA48939682BA660D1EF1D35D;
 			remoteInfo = AppClipExampleClip;
-		};
-		31FBFE082789135600AB706D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 31FBFDEE2789135400AB706D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 31FBFDF92789135600AB706D;
-			remoteInfo = "AppClipExample (iOS)";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		31689934279A0EA200FEBDE3 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				31689977279A16AD00FEBDE3 /* StripeCore.framework in Embed Frameworks */,
-				3168997A279A16B200FEBDE3 /* StripeApplePay.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		31689965279A123F00FEBDE3 /* Embed App Clips */ = {
+		2ACD435BD524FB2FD99BDD80 /* Embed App Clips */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
 			dstSubfolderSpec = 16;
 			files = (
-				31689961279A123F00FEBDE3 /* AppClipExampleClip.app in Embed App Clips */,
+				D9F9006AAA76C41F44315600 /* AppClipExampleClip.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3168997E279A16B900FEBDE3 /* Embed Frameworks */ = {
+		59705D5537236979178F004A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				31689981279A16BD00FEBDE3 /* StripeCore.framework in Embed Frameworks */,
-				3168997D279A16B900FEBDE3 /* StripeApplePay.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCA489AC35B86F942D620A1B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C42089162A0F570E200D861D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4C5952DE2B62C4594DD0580 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				543195F43BC3FEF740FB44DF /* StripeApplePay.framework in Embed Frameworks */,
+				0CFBEED684F12B0096153EF9 /* StripeCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F78305C7B13BADF74B632714 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				80A0A95E55A4364ACD8BCDFB /* StripeApplePay.framework in Embed Frameworks */,
+				002AB37F1CEB2A671FE25987 /* StripeCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,69 +141,72 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3168992A279A093F00FEBDE3 /* ApplePayModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplePayModel.swift; sourceTree = "<group>"; };
-		3168992C279A09A000FEBDE3 /* BackendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendModel.swift; sourceTree = "<group>"; };
-		3168992E279A0C1200FEBDE3 /* PaymentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButton.swift; sourceTree = "<group>"; };
-		3168993C279A123D00FEBDE3 /* AppClipExampleClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExampleClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		31689942279A123E00FEBDE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		31689945279A123E00FEBDE3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		31689947279A123E00FEBDE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		31689948279A123E00FEBDE3 /* AppClipExampleClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppClipExampleClip.entitlements; sourceTree = "<group>"; };
-		3168994D279A123E00FEBDE3 /* AppClipExampleClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		31689951279A123E00FEBDE3 /* AppClipExampleClipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipTests.swift; sourceTree = "<group>"; };
-		31689957279A123E00FEBDE3 /* AppClipExampleClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3168995B279A123E00FEBDE3 /* AppClipExampleClipUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipUITests.swift; sourceTree = "<group>"; };
-		3168995D279A123F00FEBDE3 /* AppClipExampleClipUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		31689975279A16AD00FEBDE3 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		31689978279A16B200FEBDE3 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3168997B279A16B900FEBDE3 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3168997F279A16BD00FEBDE3 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		31689982279A170100FEBDE3 /* AppClipExample (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppClipExample (iOS).entitlements"; sourceTree = "<group>"; };
-		31FBFDF32789135400AB706D /* AppClipExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleApp.swift; sourceTree = "<group>"; };
-		31FBFDF42789135400AB706D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		31FBFDF52789135600AB706D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		31FBFDFA2789135600AB706D /* AppClipExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		31FBFE072789135600AB706D /* Tests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		31FBFE0B2789135600AB706D /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
-		31FBFE0D2789135600AB706D /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
-		31FBFE172789135600AB706D /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
-		31FBFE192789135600AB706D /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
+		1536CDE13696BD54096A3AC7 /* AppClipExampleClipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipTests.swift; sourceTree = "<group>"; };
+		174AE0B73025B92CD1D17085 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
+		17F704B5A25E6D5269C95964 /* BackendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendModel.swift; sourceTree = "<group>"; };
+		36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleApp.swift; sourceTree = "<group>"; };
+		3932D439D7C2F9F7D1C5812A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		51480E1BF51E8CB6C70CA5F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5F447775F516EDF85E4EEC0E /* AppClipExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E835A0F7C9DEFC379AAC584 /* TuistAssets+AppClipExampleClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+AppClipExampleClip.swift"; sourceTree = "<group>"; };
+		756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7785865DF939EC7FE00923B3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButton.swift; sourceTree = "<group>"; };
+		7B21218CBEB7B215C997B44C /* AppClipExampleTestsiOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleTestsiOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayModel.swift; sourceTree = "<group>"; };
+		86F2B578C129DB1040B7164B /* TuistBundle+AppClipExampleClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+AppClipExampleClip.swift"; sourceTree = "<group>"; };
+		8724AD2252297C4EFF084A7E /* AppClipExampleClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C949F341568BABE45F694DC /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
+		8FDB2A87374049BA75496715 /* AppClipExampleClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExampleClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5FEBDF48B4B01D5AF51C46E /* AppClipExampleClipUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipUITests.swift; sourceTree = "<group>"; };
+		AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		BB872FCB253B710200539E3A /* TuistAssets+AppClipExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+AppClipExample.swift"; sourceTree = "<group>"; };
+		BCE8F6EBFD3B9A5C29F4B9B0 /* AppClipExampleClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD5777F48E701AE091F2B900 /* AppClipExampleClipUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		BEBA7304F30731960BFED590 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C587E00A7E1EAE51F6DCCCDF /* TuistBundle+AppClipExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+AppClipExample.swift"; sourceTree = "<group>"; };
+		CE6C5CDB954EA154B893DF04 /* AppClipExampleClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppClipExampleClip.entitlements; sourceTree = "<group>"; };
+		D0E86BA32430563BF29E96BC /* AppClipExample (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppClipExample (iOS).entitlements"; sourceTree = "<group>"; };
+		D73241689160B1EC3894FDD6 /* AppClip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppClip.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AppClip.framework; sourceTree = DEVELOPER_DIR; };
+		DEF973233C9E71C139B25674 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		31689939279A123D00FEBDE3 /* Frameworks */ = {
+		3F5FA91DDAD84264F2E9DBE1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31689980279A16BD00FEBDE3 /* StripeCore.framework in Frameworks */,
-				3168997C279A16B900FEBDE3 /* StripeApplePay.framework in Frameworks */,
+				C25C8C8EFF4AD32716D7D98D /* StripeApplePay.framework in Frameworks */,
+				8CFEDE40D5937726D3558808 /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3168994A279A123E00FEBDE3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		31689954279A123E00FEBDE3 /* Frameworks */ = {
+		CB112237D66DA2CEDA56DA7E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31FBFDF72789135600AB706D /* Frameworks */ = {
+		DE4348528B24A29FECA19670 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31689976279A16AD00FEBDE3 /* StripeCore.framework in Frameworks */,
-				31689979279A16B200FEBDE3 /* StripeApplePay.framework in Frameworks */,
+				E1F51EB51C34EDDF0CE0F005 /* AppClip.framework in Frameworks */,
+				E31EBD365B001C9C59401F55 /* StripeApplePay.framework in Frameworks */,
+				33BB12A5897E5783DC05DEFD /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31FBFE042789135600AB706D /* Frameworks */ = {
+		F475340F78A3B48A0F7D5E33 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC9D4BE2265C79B886243377 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -178,122 +216,207 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		31689930279A0EA100FEBDE3 /* Frameworks */ = {
+		147102A5DFEB955422AA2EE6 = {
 			isa = PBXGroup;
 			children = (
-				3168997F279A16BD00FEBDE3 /* StripeCore.framework */,
-				3168997B279A16B900FEBDE3 /* StripeApplePay.framework */,
-				31689978279A16B200FEBDE3 /* StripeApplePay.framework */,
-				31689975279A16AD00FEBDE3 /* StripeCore.framework */,
+				4B185B1F44EE5F4D5BC5EFD5 /* Project */,
+				A39ABB2C7FB01B17AA563E7C /* Frameworks */,
+				B6570EB574B6F847FEABCEB7 /* Products */,
 			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3168993D279A123D00FEBDE3 /* AppClipExampleClip */ = {
+		2B6415E0B774FA8AA69E4E13 /* AppClipExampleClipUITests */ = {
 			isa = PBXGroup;
 			children = (
-				31689942279A123E00FEBDE3 /* Assets.xcassets */,
-				31689947279A123E00FEBDE3 /* Info.plist */,
-				31689948279A123E00FEBDE3 /* AppClipExampleClip.entitlements */,
-				31689944279A123E00FEBDE3 /* Preview Content */,
-			);
-			path = AppClipExampleClip;
-			sourceTree = "<group>";
-		};
-		31689944279A123E00FEBDE3 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				31689945279A123E00FEBDE3 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		31689950279A123E00FEBDE3 /* AppClipExampleClipTests */ = {
-			isa = PBXGroup;
-			children = (
-				31689951279A123E00FEBDE3 /* AppClipExampleClipTests.swift */,
-			);
-			path = AppClipExampleClipTests;
-			sourceTree = "<group>";
-		};
-		3168995A279A123E00FEBDE3 /* AppClipExampleClipUITests */ = {
-			isa = PBXGroup;
-			children = (
-				3168995B279A123E00FEBDE3 /* AppClipExampleClipUITests.swift */,
-				3168995D279A123F00FEBDE3 /* AppClipExampleClipUITestsLaunchTests.swift */,
+				A5FEBDF48B4B01D5AF51C46E /* AppClipExampleClipUITests.swift */,
+				BD5777F48E701AE091F2B900 /* AppClipExampleClipUITestsLaunchTests.swift */,
 			);
 			path = AppClipExampleClipUITests;
 			sourceTree = "<group>";
 		};
-		31FBFDED2789135400AB706D = {
+		2F785AAB04AFD3153B98C9E0 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				31689982279A170100FEBDE3 /* AppClipExample (iOS).entitlements */,
-				31FBFDF22789135400AB706D /* Shared */,
-				31FBFE0A2789135600AB706D /* Tests iOS */,
-				31FBFE162789135600AB706D /* Tests macOS */,
-				3168993D279A123D00FEBDE3 /* AppClipExampleClip */,
-				31689950279A123E00FEBDE3 /* AppClipExampleClipTests */,
-				3168995A279A123E00FEBDE3 /* AppClipExampleClipUITests */,
-				31FBFDFB2789135600AB706D /* Products */,
-				31689930279A0EA100FEBDE3 /* Frameworks */,
+				AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */,
+				BEBA7304F30731960BFED590 /* Project-Release.xcconfig */,
 			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
 			sourceTree = "<group>";
 		};
-		31FBFDF22789135400AB706D /* Shared */ = {
+		475CC7E90D6C2087E66B8054 /* Derived */ = {
 			isa = PBXGroup;
 			children = (
-				31FBFDF32789135400AB706D /* AppClipExampleApp.swift */,
-				3168992C279A09A000FEBDE3 /* BackendModel.swift */,
-				3168992A279A093F00FEBDE3 /* ApplePayModel.swift */,
-				31FBFDF42789135400AB706D /* ContentView.swift */,
-				3168992E279A0C1200FEBDE3 /* PaymentButton.swift */,
-				31FBFDF52789135600AB706D /* Assets.xcassets */,
+				C016BAE9F0AC735B58923622 /* Sources */,
+			);
+			path = Derived;
+			sourceTree = "<group>";
+		};
+		4B185B1F44EE5F4D5BC5EFD5 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				9D49AB58947EF99352A2E37C /* AppClipExampleClip */,
+				CFA793D11B793A3A11EDE704 /* AppClipExampleClipTests */,
+				2B6415E0B774FA8AA69E4E13 /* AppClipExampleClipUITests */,
+				2F785AAB04AFD3153B98C9E0 /* BuildConfigurations */,
+				475CC7E90D6C2087E66B8054 /* Derived */,
+				B5FD68C638102AE2EC771448 /* Shared */,
+				FF5254A15D574D3330F91F6D /* Tests iOS */,
+				D0E86BA32430563BF29E96BC /* AppClipExample (iOS).entitlements */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		9D49AB58947EF99352A2E37C /* AppClipExampleClip */ = {
+			isa = PBXGroup;
+			children = (
+				A2AB7D7B714456D04346E2AD /* Preview Content */,
+				CE6C5CDB954EA154B893DF04 /* AppClipExampleClip.entitlements */,
+				51480E1BF51E8CB6C70CA5F1 /* Assets.xcassets */,
+			);
+			path = AppClipExampleClip;
+			sourceTree = "<group>";
+		};
+		A2AB7D7B714456D04346E2AD /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				7785865DF939EC7FE00923B3 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A39ABB2C7FB01B17AA563E7C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D73241689160B1EC3894FDD6 /* AppClip.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B5FD68C638102AE2EC771448 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */,
+				86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */,
+				3932D439D7C2F9F7D1C5812A /* Assets.xcassets */,
+				17F704B5A25E6D5269C95964 /* BackendModel.swift */,
+				DEF973233C9E71C139B25674 /* ContentView.swift */,
+				79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		31FBFDFB2789135600AB706D /* Products */ = {
+		B6570EB574B6F847FEABCEB7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				31FBFDFA2789135600AB706D /* AppClipExample.app */,
-				31FBFE072789135600AB706D /* Tests iOS.xctest */,
-				3168993C279A123D00FEBDE3 /* AppClipExampleClip.app */,
-				3168994D279A123E00FEBDE3 /* AppClipExampleClipTests.xctest */,
-				31689957279A123E00FEBDE3 /* AppClipExampleClipUITests.xctest */,
+				5F447775F516EDF85E4EEC0E /* AppClipExample.app */,
+				8FDB2A87374049BA75496715 /* AppClipExampleClip.app */,
+				8724AD2252297C4EFF084A7E /* AppClipExampleClipTests.xctest */,
+				BCE8F6EBFD3B9A5C29F4B9B0 /* AppClipExampleClipUITests.xctest */,
+				7B21218CBEB7B215C997B44C /* AppClipExampleTestsiOS.xctest */,
+				C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */,
+				756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		31FBFE0A2789135600AB706D /* Tests iOS */ = {
+		C016BAE9F0AC735B58923622 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				31FBFE0B2789135600AB706D /* Tests_iOS.swift */,
-				31FBFE0D2789135600AB706D /* Tests_iOSLaunchTests.swift */,
+				BB872FCB253B710200539E3A /* TuistAssets+AppClipExample.swift */,
+				6E835A0F7C9DEFC379AAC584 /* TuistAssets+AppClipExampleClip.swift */,
+				C587E00A7E1EAE51F6DCCCDF /* TuistBundle+AppClipExample.swift */,
+				86F2B578C129DB1040B7164B /* TuistBundle+AppClipExampleClip.swift */,
 			);
-			path = "Tests iOS";
+			path = Sources;
 			sourceTree = "<group>";
 		};
-		31FBFE162789135600AB706D /* Tests macOS */ = {
+		CFA793D11B793A3A11EDE704 /* AppClipExampleClipTests */ = {
 			isa = PBXGroup;
 			children = (
-				31FBFE172789135600AB706D /* Tests_macOS.swift */,
-				31FBFE192789135600AB706D /* Tests_macOSLaunchTests.swift */,
+				1536CDE13696BD54096A3AC7 /* AppClipExampleClipTests.swift */,
 			);
-			path = "Tests macOS";
+			path = AppClipExampleClipTests;
+			sourceTree = "<group>";
+		};
+		FF5254A15D574D3330F91F6D /* Tests iOS */ = {
+			isa = PBXGroup;
+			children = (
+				8C949F341568BABE45F694DC /* Tests_iOS.swift */,
+				174AE0B73025B92CD1D17085 /* Tests_iOSLaunchTests.swift */,
+			);
+			path = "Tests iOS";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3168993B279A123D00FEBDE3 /* AppClipExampleClip */ = {
+		5172E870AD36F11AEEE0C2B2 /* AppClipExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 31689962279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */;
+			buildConfigurationList = 4DBCFF14216A2ECF03A62354 /* Build configuration list for PBXNativeTarget "AppClipExample" */;
 			buildPhases = (
-				31689938279A123D00FEBDE3 /* Sources */,
-				31689939279A123D00FEBDE3 /* Frameworks */,
-				3168993A279A123D00FEBDE3 /* Resources */,
-				3168997E279A16B900FEBDE3 /* Embed Frameworks */,
+				B1B2BF0A585E1BC896A077EC /* Sources */,
+				C3B3D6248DAD2847B4E560C4 /* Resources */,
+				2ACD435BD524FB2FD99BDD80 /* Embed App Clips */,
+				F78305C7B13BADF74B632714 /* Embed Frameworks */,
+				3F5FA91DDAD84264F2E9DBE1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9FD5650323F0DA6DEAA326F4 /* PBXTargetDependency */,
+			);
+			name = AppClipExample;
+			productName = AppClipExample;
+			productReference = 5F447775F516EDF85E4EEC0E /* AppClipExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BD8DCEDEBC31D1D4301EC40D /* AppClipExampleClipTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F87DF68DA89D981D56AA445 /* Build configuration list for PBXNativeTarget "AppClipExampleClipTests" */;
+			buildPhases = (
+				F81164E6F39A6E1E11D35C26 /* Sources */,
+				4CD184CBBA68CDB6D89539EE /* Resources */,
+				59705D5537236979178F004A /* Embed Frameworks */,
+				FC9D4BE2265C79B886243377 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7D4E5F6796A701178C04DC74 /* PBXTargetDependency */,
+			);
+			name = AppClipExampleClipTests;
+			productName = AppClipExampleClipTests;
+			productReference = 8724AD2252297C4EFF084A7E /* AppClipExampleClipTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CBC19CEADF0880F5CA6B9A7F /* AppClipExampleClipUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 974A2D2C20EFB8201F0C43A0 /* Build configuration list for PBXNativeTarget "AppClipExampleClipUITests" */;
+			buildPhases = (
+				6C1E0A45C4B30C7200C6B2F0 /* Sources */,
+				7C823DC59EE6D1F36D908B87 /* Resources */,
+				BCA489AC35B86F942D620A1B /* Embed Frameworks */,
+				F475340F78A3B48A0F7D5E33 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5CD043C1E3DC493D40501124 /* PBXTargetDependency */,
+			);
+			name = AppClipExampleClipUITests;
+			productName = AppClipExampleClipUITests;
+			productReference = BCE8F6EBFD3B9A5C29F4B9B0 /* AppClipExampleClipUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		EA48939682BA660D1EF1D35D /* AppClipExampleClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D6A4EFA9A9595789940DB992 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */;
+			buildPhases = (
+				858E0B6058F9DA70F79517AA /* Sources */,
+				53F66C206AB5BAB3A60602F1 /* Resources */,
+				F4C5952DE2B62C4594DD0580 /* Embed Frameworks */,
+				DE4348528B24A29FECA19670 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -301,169 +424,101 @@
 			);
 			name = AppClipExampleClip;
 			productName = AppClipExampleClip;
-			productReference = 3168993C279A123D00FEBDE3 /* AppClipExampleClip.app */;
+			productReference = 8FDB2A87374049BA75496715 /* AppClipExampleClip.app */;
 			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
-		3168994C279A123E00FEBDE3 /* AppClipExampleClipTests */ = {
+		F2EAC263F068AD2E112F7309 /* AppClipExampleTests iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 31689966279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClipTests" */;
+			buildConfigurationList = 02099519327A276EE9AFFFB3 /* Build configuration list for PBXNativeTarget "AppClipExampleTests iOS" */;
 			buildPhases = (
-				31689949279A123E00FEBDE3 /* Sources */,
-				3168994A279A123E00FEBDE3 /* Frameworks */,
-				3168994B279A123E00FEBDE3 /* Resources */,
+				5582A106C30DF855FA343D1B /* Sources */,
+				CE04CB4C005142B53121F0D2 /* Resources */,
+				C42089162A0F570E200D861D /* Embed Frameworks */,
+				CB112237D66DA2CEDA56DA7E /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				3168994F279A123E00FEBDE3 /* PBXTargetDependency */,
+				7FAEF71D184BCE6EB37670F7 /* PBXTargetDependency */,
 			);
-			name = AppClipExampleClipTests;
-			productName = AppClipExampleClipTests;
-			productReference = 3168994D279A123E00FEBDE3 /* AppClipExampleClipTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		31689956279A123E00FEBDE3 /* AppClipExampleClipUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 31689969279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClipUITests" */;
-			buildPhases = (
-				31689953279A123E00FEBDE3 /* Sources */,
-				31689954279A123E00FEBDE3 /* Frameworks */,
-				31689955279A123E00FEBDE3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				31689959279A123E00FEBDE3 /* PBXTargetDependency */,
-			);
-			name = AppClipExampleClipUITests;
-			productName = AppClipExampleClipUITests;
-			productReference = 31689957279A123E00FEBDE3 /* AppClipExampleClipUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
-		31FBFDF92789135600AB706D /* AppClipExample (iOS) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 31FBFE232789135700AB706D /* Build configuration list for PBXNativeTarget "AppClipExample (iOS)" */;
-			buildPhases = (
-				31FBFDF62789135600AB706D /* Sources */,
-				31FBFDF72789135600AB706D /* Frameworks */,
-				31FBFDF82789135600AB706D /* Resources */,
-				31689934279A0EA200FEBDE3 /* Embed Frameworks */,
-				31689965279A123F00FEBDE3 /* Embed App Clips */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				31689960279A123F00FEBDE3 /* PBXTargetDependency */,
-			);
-			name = "AppClipExample (iOS)";
-			productName = "AppClipExample (iOS)";
-			productReference = 31FBFDFA2789135600AB706D /* AppClipExample.app */;
-			productType = "com.apple.product-type.application";
-		};
-		31FBFE062789135600AB706D /* Tests iOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 31FBFE292789135700AB706D /* Build configuration list for PBXNativeTarget "Tests iOS" */;
-			buildPhases = (
-				31FBFE032789135600AB706D /* Sources */,
-				31FBFE042789135600AB706D /* Frameworks */,
-				31FBFE052789135600AB706D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				31FBFE092789135600AB706D /* PBXTargetDependency */,
-			);
-			name = "Tests iOS";
-			productName = "Tests iOS";
-			productReference = 31FBFE072789135600AB706D /* Tests iOS.xctest */;
+			name = "AppClipExampleTests iOS";
+			productName = AppClipExampleTestsiOS;
+			productReference = 7B21218CBEB7B215C997B44C /* AppClipExampleTestsiOS.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		31FBFDEE2789135400AB706D /* Project object */ = {
+		DADA3A7DA56C705A650B25A1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1320;
-				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
-					3168993B279A123D00FEBDE3 = {
-						CreatedOnToolsVersion = 13.2.1;
+					BD8DCEDEBC31D1D4301EC40D = {
+						TestTargetID = EA48939682BA660D1EF1D35D;
 					};
-					3168994C279A123E00FEBDE3 = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 3168993B279A123D00FEBDE3;
+					CBC19CEADF0880F5CA6B9A7F = {
+						TestTargetID = EA48939682BA660D1EF1D35D;
 					};
-					31689956279A123E00FEBDE3 = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 3168993B279A123D00FEBDE3;
-					};
-					31FBFDF92789135600AB706D = {
-						CreatedOnToolsVersion = 13.2.1;
-					};
-					31FBFE062789135600AB706D = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 31FBFDF92789135600AB706D;
+					F2EAC263F068AD2E112F7309 = {
+						TestTargetID = 5172E870AD36F11AEEE0C2B2;
 					};
 				};
 			};
-			buildConfigurationList = 31FBFDF12789135400AB706D /* Build configuration list for PBXProject "AppClipExample" */;
-			compatibilityVersion = "Xcode 12.0";
+			buildConfigurationList = 97FD91B7B7DB944745270C85 /* Build configuration list for PBXProject "AppClipExample" */;
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
-			mainGroup = 31FBFDED2789135400AB706D;
-			productRefGroup = 31FBFDFB2789135600AB706D /* Products */;
+			mainGroup = 147102A5DFEB955422AA2EE6;
+			productRefGroup = B6570EB574B6F847FEABCEB7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				31FBFDF92789135600AB706D /* AppClipExample (iOS) */,
-				31FBFE062789135600AB706D /* Tests iOS */,
-				3168993B279A123D00FEBDE3 /* AppClipExampleClip */,
-				3168994C279A123E00FEBDE3 /* AppClipExampleClipTests */,
-				31689956279A123E00FEBDE3 /* AppClipExampleClipUITests */,
+				5172E870AD36F11AEEE0C2B2 /* AppClipExample */,
+				F2EAC263F068AD2E112F7309 /* AppClipExampleTests iOS */,
+				EA48939682BA660D1EF1D35D /* AppClipExampleClip */,
+				BD8DCEDEBC31D1D4301EC40D /* AppClipExampleClipTests */,
+				CBC19CEADF0880F5CA6B9A7F /* AppClipExampleClipUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3168993A279A123D00FEBDE3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				31689946279A123E00FEBDE3 /* Preview Assets.xcassets in Resources */,
-				31689943279A123E00FEBDE3 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3168994B279A123E00FEBDE3 /* Resources */ = {
+		4CD184CBBA68CDB6D89539EE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31689955279A123E00FEBDE3 /* Resources */ = {
+		53F66C206AB5BAB3A60602F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF281549070AAC9F91526610 /* Assets.xcassets in Resources */,
+				BFC82EC4ED5C824458015B96 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C823DC59EE6D1F36D908B87 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31FBFDF82789135600AB706D /* Resources */ = {
+		C3B3D6248DAD2847B4E560C4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31FBFE1F2789135700AB706D /* Assets.xcassets in Resources */,
+				3A2EE294E127268841000FCB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31FBFE052789135600AB706D /* Resources */ = {
+		CE04CB4C005142B53121F0D2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -473,361 +528,245 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		31689938279A123D00FEBDE3 /* Sources */ = {
+		5582A106C30DF855FA343D1B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3168996C279A125700FEBDE3 /* AppClipExampleApp.swift in Sources */,
-				3168996D279A125700FEBDE3 /* BackendModel.swift in Sources */,
-				3168996E279A125700FEBDE3 /* ApplePayModel.swift in Sources */,
-				3168996F279A125700FEBDE3 /* ContentView.swift in Sources */,
-				31689970279A125700FEBDE3 /* PaymentButton.swift in Sources */,
+				B8593CFDCA6E095EA1786716 /* Tests_iOS.swift in Sources */,
+				B77C70C4B8EA26C28D8B8DBE /* Tests_iOSLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31689949279A123E00FEBDE3 /* Sources */ = {
+		6C1E0A45C4B30C7200C6B2F0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31689952279A123E00FEBDE3 /* AppClipExampleClipTests.swift in Sources */,
+				D6AFCBC52FF21AA8B3E2AA78 /* AppClipExampleClipUITests.swift in Sources */,
+				76C66F7C0BF0D79C8F23C529 /* AppClipExampleClipUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31689953279A123E00FEBDE3 /* Sources */ = {
+		858E0B6058F9DA70F79517AA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3168995C279A123E00FEBDE3 /* AppClipExampleClipUITests.swift in Sources */,
-				3168995E279A123F00FEBDE3 /* AppClipExampleClipUITestsLaunchTests.swift in Sources */,
+				067981249D7400430A96025A /* TuistAssets+AppClipExampleClip.swift in Sources */,
+				3350F74B167F6DF265840E14 /* TuistBundle+AppClipExampleClip.swift in Sources */,
+				BCDBDA39BBF54392CF758AE9 /* AppClipExampleApp.swift in Sources */,
+				1D58D3A6F04B068A53B27F73 /* ApplePayModel.swift in Sources */,
+				07B25EDF1B807A9AFE1F7AEB /* BackendModel.swift in Sources */,
+				E86C959646005CCBD250D387 /* ContentView.swift in Sources */,
+				9DA0A61B181DE220C293A5A0 /* PaymentButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31FBFDF62789135600AB706D /* Sources */ = {
+		B1B2BF0A585E1BC896A077EC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31FBFE1D2789135700AB706D /* ContentView.swift in Sources */,
-				31FBFE1B2789135600AB706D /* AppClipExampleApp.swift in Sources */,
-				3168992D279A09A000FEBDE3 /* BackendModel.swift in Sources */,
-				3168992B279A093F00FEBDE3 /* ApplePayModel.swift in Sources */,
-				3168992F279A0C1200FEBDE3 /* PaymentButton.swift in Sources */,
+				78BF7D6B95206CBE599040D1 /* TuistAssets+AppClipExample.swift in Sources */,
+				00E0FE05F9D357167517FCEC /* TuistBundle+AppClipExample.swift in Sources */,
+				7A29727534280B91C0B9BDF7 /* AppClipExampleApp.swift in Sources */,
+				78B3861C50B56331151BCE15 /* ApplePayModel.swift in Sources */,
+				A867EF1F2FE7DCAFA1C6CBB0 /* BackendModel.swift in Sources */,
+				92F2B9E0E01686BAC7805F4F /* ContentView.swift in Sources */,
+				AC41799891BB47F756B5C829 /* PaymentButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		31FBFE032789135600AB706D /* Sources */ = {
+		F81164E6F39A6E1E11D35C26 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31FBFE0E2789135600AB706D /* Tests_iOSLaunchTests.swift in Sources */,
-				31FBFE0C2789135600AB706D /* Tests_iOS.swift in Sources */,
+				FAB902F53ADC1707B33712EF /* AppClipExampleClipTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3168994F279A123E00FEBDE3 /* PBXTargetDependency */ = {
+		5CD043C1E3DC493D40501124 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3168993B279A123D00FEBDE3 /* AppClipExampleClip */;
-			targetProxy = 3168994E279A123E00FEBDE3 /* PBXContainerItemProxy */;
+			name = AppClipExampleClip;
+			target = EA48939682BA660D1EF1D35D /* AppClipExampleClip */;
+			targetProxy = 174E3AE2B4F090D0BE74A66A /* PBXContainerItemProxy */;
 		};
-		31689959279A123E00FEBDE3 /* PBXTargetDependency */ = {
+		7D4E5F6796A701178C04DC74 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3168993B279A123D00FEBDE3 /* AppClipExampleClip */;
-			targetProxy = 31689958279A123E00FEBDE3 /* PBXContainerItemProxy */;
+			name = AppClipExampleClip;
+			target = EA48939682BA660D1EF1D35D /* AppClipExampleClip */;
+			targetProxy = E32B8A95E89CA9A069B92998 /* PBXContainerItemProxy */;
 		};
-		31689960279A123F00FEBDE3 /* PBXTargetDependency */ = {
+		7FAEF71D184BCE6EB37670F7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3168993B279A123D00FEBDE3 /* AppClipExampleClip */;
-			targetProxy = 3168995F279A123F00FEBDE3 /* PBXContainerItemProxy */;
+			name = AppClipExample;
+			target = 5172E870AD36F11AEEE0C2B2 /* AppClipExample */;
+			targetProxy = 796A6CE57C07EF00DE01B050 /* PBXContainerItemProxy */;
 		};
-		31FBFE092789135600AB706D /* PBXTargetDependency */ = {
+		9FD5650323F0DA6DEAA326F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 31FBFDF92789135600AB706D /* AppClipExample (iOS) */;
-			targetProxy = 31FBFE082789135600AB706D /* PBXContainerItemProxy */;
+			name = AppClipExampleClip;
+			target = EA48939682BA660D1EF1D35D /* AppClipExampleClip */;
+			targetProxy = B3173E1A9EE52D3CFB896048 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		31689963279A123F00FEBDE3 /* Debug */ = {
+		0ED58EAF316CD792CC803378 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = AppClipExampleClip/AppClipExampleClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClipExampleClip/Preview Content\"";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AppClipExampleClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppClipExample;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
+				PRODUCT_NAME = AppClipExampleTestsiOS;
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		31689964279A123F00FEBDE3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = AppClipExampleClip/AppClipExampleClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClipExampleClip/Preview Content\"";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AppClipExampleClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppClipExample;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		31689967279A123F00FEBDE3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
-			};
-			name = Debug;
-		};
-		31689968279A123F00FEBDE3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		3168996A279A123F00FEBDE3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AppClipExampleClip;
-			};
-			name = Debug;
-		};
-		3168996B279A123F00FEBDE3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AppClipExampleClip;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		31FBFE212789135700AB706D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_CODE_COVERAGE = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET = AppClipExample;
+				TEST_TARGET_NAME = AppClipExample;
 			};
 			name = Debug;
 		};
-		31FBFE222789135700AB706D /* Release */ = {
+		23245D2CA3740C808FDC8F4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_CODE_COVERAGE = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AppClipExampleClip/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
+				PRODUCT_NAME = AppClipExampleClip;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET = AppClipExample;
+			};
+			name = Debug;
+		};
+		68DC98EF24E45819B1842DCE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
+				PRODUCT_NAME = AppClipExample;
+				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		31FBFE242789135700AB706D /* Debug */ = {
+		77931DBE2C5F85195651C039 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "AppClipExample (iOS).entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_ASSET_PATHS = "\"AppClipExampleClip/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
+				PRODUCT_NAME = AppClipExampleClip;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET = AppClipExample;
+			};
+			name = Release;
+		};
+		7F201C18ECC0D268147BD2C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
+				PRODUCT_NAME = AppClipExampleClipTests;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
+				TEST_TARGET = AppClipExampleClip;
+				TEST_TARGET_NAME = AppClipExampleClip;
+			};
+			name = Debug;
+		};
+		8DF489E5B5371EA7586021F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -837,142 +776,197 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
 				PRODUCT_NAME = AppClipExample;
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		31FBFE252789135700AB706D /* Release */ = {
+		B7FB46363406913E975AAAB3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "AppClipExample (iOS).entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
-				PRODUCT_NAME = AppClipExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
+				PRODUCT_NAME = AppClipExampleClipUITests;
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
+				TEST_TARGET = AppClipExampleClipUITests;
+				TEST_TARGET_NAME = AppClipExampleClip;
 			};
 			name = Release;
 		};
-		31FBFE2A2789135700AB706D /* Debug */ = {
+		C019DE1B92D9298B0D6F9EA5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.Tests-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
+				PRODUCT_NAME = AppClipExampleClipTests;
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "AppClipExample (iOS)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
+				TEST_TARGET = AppClipExampleClip;
+				TEST_TARGET_NAME = AppClipExampleClip;
+			};
+			name = Release;
+		};
+		D4BD43E3E58D45A214635965 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEBA7304F30731960BFED590 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		E22368A713173FC0671925DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */;
+			buildSettings = {
 			};
 			name = Debug;
 		};
-		31FBFE2B2789135700AB706D /* Release */ = {
+		E505F83F7904A5E64CD2F3BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.Tests-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
+				PRODUCT_NAME = AppClipExampleClipUITests;
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "AppClipExample (iOS)";
-				VALIDATE_PRODUCT = YES;
+				TEST_TARGET = AppClipExampleClipUITests;
+				TEST_TARGET_NAME = AppClipExampleClip;
+			};
+			name = Debug;
+		};
+		E896108FF9FBFFC70FAE0F86 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
+				PRODUCT_NAME = AppClipExampleTestsiOS;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET = AppClipExample;
+				TEST_TARGET_NAME = AppClipExample;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		31689962279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */ = {
+		02099519327A276EE9AFFFB3 /* Build configuration list for PBXNativeTarget "AppClipExampleTests iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				31689963279A123F00FEBDE3 /* Debug */,
-				31689964279A123F00FEBDE3 /* Release */,
+				0ED58EAF316CD792CC803378 /* Debug */,
+				E896108FF9FBFFC70FAE0F86 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		31689966279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClipTests" */ = {
+		3F87DF68DA89D981D56AA445 /* Build configuration list for PBXNativeTarget "AppClipExampleClipTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				31689967279A123F00FEBDE3 /* Debug */,
-				31689968279A123F00FEBDE3 /* Release */,
+				7F201C18ECC0D268147BD2C2 /* Debug */,
+				C019DE1B92D9298B0D6F9EA5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		31689969279A123F00FEBDE3 /* Build configuration list for PBXNativeTarget "AppClipExampleClipUITests" */ = {
+		4DBCFF14216A2ECF03A62354 /* Build configuration list for PBXNativeTarget "AppClipExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3168996A279A123F00FEBDE3 /* Debug */,
-				3168996B279A123F00FEBDE3 /* Release */,
+				8DF489E5B5371EA7586021F6 /* Debug */,
+				68DC98EF24E45819B1842DCE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		31FBFDF12789135400AB706D /* Build configuration list for PBXProject "AppClipExample" */ = {
+		974A2D2C20EFB8201F0C43A0 /* Build configuration list for PBXNativeTarget "AppClipExampleClipUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				31FBFE212789135700AB706D /* Debug */,
-				31FBFE222789135700AB706D /* Release */,
+				E505F83F7904A5E64CD2F3BA /* Debug */,
+				B7FB46363406913E975AAAB3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		31FBFE232789135700AB706D /* Build configuration list for PBXNativeTarget "AppClipExample (iOS)" */ = {
+		97FD91B7B7DB944745270C85 /* Build configuration list for PBXProject "AppClipExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				31FBFE242789135700AB706D /* Debug */,
-				31FBFE252789135700AB706D /* Release */,
+				E22368A713173FC0671925DC /* Debug */,
+				D4BD43E3E58D45A214635965 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		31FBFE292789135700AB706D /* Build configuration list for PBXNativeTarget "Tests iOS" */ = {
+		D6A4EFA9A9595789940DB992 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				31FBFE2A2789135700AB706D /* Debug */,
-				31FBFE2B2789135700AB706D /* Release */,
+				23245D2CA3740C808FDC8F4E /* Debug */,
+				77931DBE2C5F85195651C039 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 31FBFDEE2789135400AB706D /* Project object */;
+	rootObject = DADA3A7DA56C705A650B25A1 /* Project object */;
 }

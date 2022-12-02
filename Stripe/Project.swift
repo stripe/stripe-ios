@@ -1,0 +1,181 @@
+import ProjectDescription
+
+let project = Project(
+    name: "Stripe",
+    options: .options(automaticSchemesOptions: .disabled),
+    packages: [
+        .remote(
+            url: "https://github.com/uber/ios-snapshot-test-case",
+            requirement: .upToNextMajor(from: "8.0.0")
+        ),
+        .remote(
+            url: "https://github.com/eurias-stripe/OHHTTPStubs",
+            requirement: .branch("master")
+        ),
+        .remote(url: "https://github.com/erikdoe/ocmock", requirement: .branch("master")),
+    ],
+    settings: .settings(
+        configurations: [
+            .debug(
+                name: "Debug",
+                xcconfig: "//BuildConfigurations/Project-Debug.xcconfig"
+            ),
+            .release(
+                name: "Release",
+                xcconfig: "//BuildConfigurations/Project-Release.xcconfig"
+            ),
+        ],
+        defaultSettings: .none
+    ),
+    targets: [
+        Target(
+            name: "StripeiOS",
+            platform: .iOS,
+            product: .framework,
+            productName: "Stripe",
+            bundleId: "com.stripe.stripe-ios",
+            infoPlist: "StripeiOS/Info.plist",
+            sources: "StripeiOS/Source/**/*.swift",
+            resources: "StripeiOS/Resources/**",
+            headers: .headers(
+                public: "StripeiOS/Stripe-umbrella.h"
+            ),
+            dependencies: [
+                .sdk(name: "Contacts", type: .framework),
+                .sdk(name: "CoreLocation", type: .framework),
+                .sdk(name: "Foundation", type: .framework),
+                .sdk(name: "PassKit", type: .framework),
+                .sdk(name: "Security", type: .framework),
+                .sdk(name: "WebKit", type: .framework),
+                .project(target: "Stripe3DS2", path: "//Stripe3DS2"),
+                .project(target: "StripeCore", path: "//StripeCore"),
+                .project(target: "StripeUICore", path: "//StripeUICore"),
+                .project(target: "StripeApplePay", path: "//StripeApplePay"),
+                .project(target: "StripePayments", path: "//StripePayments"),
+                .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
+            ],
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/Stripe-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/Stripe-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
+        ),
+        Target(
+            name: "StripeiOSTests",
+            platform: .iOS,
+            product: .unitTests,
+            productName: "StripeiOS_Tests",
+            bundleId: "com.stripe.StripeiOSTests",
+            infoPlist: "StripeiOSTests/Info.plist",
+            sources: [
+                "StripeiOSTests/**/*.swift",
+                "StripeiOSTests/**/*.m",
+            ],
+            resources: .init(resources: [
+                "StripeiOSTests/Resources/MockFiles/**",
+                "StripeiOSTests/Resources/*.*",
+                "StripeiOSTests/Resources/Images.xcassets",
+                .folderReference(path: "StripeiOSTests/Resources/recorded_network_traffic"),
+            ]),
+            headers: .headers(
+                project: "StripeiOSTests/*.h"
+            ),
+            dependencies: [
+                .xctest,
+                .target(name: "StripeiOS"),
+                .package(product: "OHHTTPStubs"),
+                .package(product: "OHHTTPStubsSwift"),
+                .package(product: "OCMock"),
+                .package(product: "iOSSnapshotTestCase"),
+                .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
+                .project(target: "StripePayments", path: "//StripePayments"),
+                .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
+                .project(target: "StripePaymentSheet", path: "//StripePaymentSheet"),
+            ],
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/Stripe Tests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/Stripe Tests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
+        ),
+        Target(
+            name: "StripeiOSTestHostApp",
+            platform: .iOS,
+            product: .app,
+            bundleId: "com.stripe.StripeiOSTestHostApp",
+            infoPlist: "StripeiOSTestHostApp/Info.plist",
+            sources: "StripeiOSTestHostApp/*.swift",
+            resources: "StripeiOSTestHostApp/Resources/**",
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
+        ),
+        Target(
+            name: "StripeiOSAppHostedTests",
+            platform: .iOS,
+            product: .unitTests,
+            bundleId: "com.stripe.StripeiOSAppHostedTests",
+            infoPlist: "StripeiOSAppHostedTests/Info.plist",
+            sources: "StripeiOSAppHostedTests/*.swift",
+            dependencies: [
+                .xctest,
+                .target(name: "StripeiOS"),
+                .target(name: "StripeiOSTestHostApp"),
+                .project(target: "StripePaymentSheet", path: "//StripePaymentSheet"),
+            ],
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
+        ),
+    ],
+    schemes: [
+        Scheme(
+            name: "StripeiOS",
+            buildAction: .buildAction(targets: ["StripeiOS"]),
+            testAction: .testPlans(["StripeiOSTests.xctestplan"])
+        ),
+        Scheme(
+            name: "StripeiOSTestHostApp",
+            buildAction: .buildAction(targets: ["StripeiOS"]),
+            testAction: .targets(["StripeiOSAppHostedTests"]),
+            runAction: .runAction(executable: "StripeiOSTestHostApp")
+        ),
+    ],
+    resourceSynthesizers: []
+)

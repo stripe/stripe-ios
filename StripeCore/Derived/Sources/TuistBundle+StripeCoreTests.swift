@@ -9,18 +9,16 @@ private class BundleFinder {}
 
 extension Foundation.Bundle {
     /// Since StripeCoreTests is a unit tests, the bundle for classes within this module can be used directly.
-    static var module: Bundle = {
-        return Bundle(for: BundleFinder.self)
-    }()
+    static let module = Bundle(for: BundleFinder.self)
 }
 
 // MARK: - Objective-C Bundle Accessor
 
 @objc
 public class StripeCoreTestsResources: NSObject {
-   @objc public class var bundle: Bundle {
-         return .module
-   }
+    @objc public class var bundle: Bundle {
+        return .module
+    }
 }
 // swiftlint:enable all
 // swiftformat:enable all

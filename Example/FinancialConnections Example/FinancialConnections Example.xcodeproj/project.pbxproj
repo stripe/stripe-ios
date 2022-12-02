@@ -3,41 +3,37 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C37D6DB274C10910041F1BE /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6DA274C10910041F1BE /* StripeUICore.framework */; };
-		3C37D6DC274C10910041F1BE /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6DA274C10910041F1BE /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3C37D6DE274C109B0041F1BE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6DD274C109B0041F1BE /* StripeCore.framework */; };
-		3C37D6DF274C109B0041F1BE /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6DD274C109B0041F1BE /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3C808457280F945000DF9D30 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C808456280F945000DF9D30 /* StripeFinancialConnections.framework */; };
-		3C808458280F945000DF9D30 /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C808456280F945000DF9D30 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3CD1DD05280711B400A3A5CD /* ExampleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD1DD04280711B400A3A5CD /* ExampleListViewController.swift */; };
-		3CD1DD072807218200A3A5CD /* CollectBankAccountTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD1DD062807218200A3A5CD /* CollectBankAccountTokenViewController.swift */; };
-		3CEB0CB9273EFEF5009680F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEB0CB8273EFEF5009680F8 /* AppDelegate.swift */; };
-		3CEB0CBD273EFEF5009680F8 /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEB0CBC273EFEF5009680F8 /* ConnectAccountViewController.swift */; };
-		3CEB0CC0273EFEF5009680F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CBE273EFEF5009680F8 /* Main.storyboard */; };
-		3CEB0CC2273EFEF7009680F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */; };
-		3CEB0CC5273EFEF7009680F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CC3273EFEF7009680F8 /* LaunchScreen.storyboard */; };
-		6A01988629117D5F00418064 /* PlaygroundMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A01988529117D5F00418064 /* PlaygroundMainView.swift */; };
-		6A0198902916BD8D00418064 /* PlaygroundMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A01988F2916BD8D00418064 /* PlaygroundMainViewModel.swift */; };
-		6A0198932916C97A00418064 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0198922916C97A00418064 /* UIViewController+Extensions.swift */; };
-		6A0198952916D1E300418064 /* PlaygroundUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0198942916D1E300418064 /* PlaygroundUserDefaults.swift */; };
-		6A0198972916EA6600418064 /* UIAlertController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0198962916EA6600418064 /* UIAlertController+Extensions.swift */; };
-		6AE674A02908879F001854B2 /* PlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */; };
+		0A6632AC245E8AD86850685A /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 03E7365D673694C8D7EDFB20 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B647212C7B1C5DC253193E0 /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		20411B3862CCE7CB93F129E6 /* TuistAssets+FinancialConnectionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E33DAD89E3D0E1A452D286 /* TuistAssets+FinancialConnectionsExample.swift */; };
+		2FFB7D24916B79615F334BD4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 936C5935D51A54BE9F183ECA /* Main.storyboard */; };
+		307E63F1F0E10D8B419C3DAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF678252EB811ACE4D0EC296 /* LaunchScreen.storyboard */; };
+		597C7552115D87218591934C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DA32DE3842C0AD47047104 /* AppDelegate.swift */; };
+		5B38135D1C37FC1812F4203A /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADFEE494187576194F8B46BB /* StripeUICore.framework */; };
+		5C1B372D1660E856988156DA /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = ADFEE494187576194F8B46BB /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6AF9C66D47F81DD9B103FB64 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03E7365D673694C8D7EDFB20 /* StripeCore.framework */; };
+		8A2D4CA47FB7B68B6D7BCB19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DACDB8126F851C25D6A14A8 /* Assets.xcassets */; };
+		C0495B99B568EE4ED5E4F44A /* CollectBankAccountTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E192850895613723B1E4AEA6 /* CollectBankAccountTokenViewController.swift */; };
+		C2D21072C2E0187FD065BB3C /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EA925F32466BF115E6419F /* ConnectAccountViewController.swift */; };
+		DA6FA2C369E10A2B4663B434 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */; };
+		ED5A8887B8DFA5AF2DA85C5A /* TuistBundle+FinancialConnectionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C233C6110A6362BA20C0C492 /* TuistBundle+FinancialConnectionsExample.swift */; };
+		F75FA2EBFB3A08D31E7A8D4D /* ExampleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092E132F7DB46E518F2F1B21 /* ExampleListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3C5430C52745794000B1E488 /* Embed Frameworks */ = {
+		329899B6E55083CD405D20EC /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3C808458280F945000DF9D30 /* StripeFinancialConnections.framework in Embed Frameworks */,
-				3C37D6DC274C10910041F1BE /* StripeUICore.framework in Embed Frameworks */,
-				3C37D6DF274C109B0041F1BE /* StripeCore.framework in Embed Frameworks */,
+				0A6632AC245E8AD86850685A /* StripeCore.framework in Embed Frameworks */,
+				0B647212C7B1C5DC253193E0 /* StripeFinancialConnections.framework in Embed Frameworks */,
+				5C1B372D1660E856988156DA /* StripeUICore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -45,204 +41,207 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3C37D6DA274C10910041F1BE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C37D6DD274C109B0041F1BE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C808456280F945000DF9D30 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3CD1DD04280711B400A3A5CD /* ExampleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleListViewController.swift; sourceTree = "<group>"; };
-		3CD1DD062807218200A3A5CD /* CollectBankAccountTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectBankAccountTokenViewController.swift; sourceTree = "<group>"; };
-		3CEB0CB5273EFEF5009680F8 /* FinancialConnections Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FinancialConnections Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3CEB0CB8273EFEF5009680F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3CEB0CBC273EFEF5009680F8 /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
-		3CEB0CBF273EFEF5009680F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		3CEB0CC4273EFEF7009680F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		3CEB0CC6273EFEF7009680F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6A01988529117D5F00418064 /* PlaygroundMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundMainView.swift; sourceTree = "<group>"; };
-		6A01988F2916BD8D00418064 /* PlaygroundMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundMainViewModel.swift; sourceTree = "<group>"; };
-		6A0198922916C97A00418064 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
-		6A0198942916D1E300418064 /* PlaygroundUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundUserDefaults.swift; sourceTree = "<group>"; };
-		6A0198962916EA6600418064 /* UIAlertController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Extensions.swift"; sourceTree = "<group>"; };
-		6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundViewController.swift; sourceTree = "<group>"; };
+		03E33DAD89E3D0E1A452D286 /* TuistAssets+FinancialConnectionsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+FinancialConnectionsExample.swift"; sourceTree = "<group>"; };
+		03E7365D673694C8D7EDFB20 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		07DA32DE3842C0AD47047104 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		092E132F7DB46E518F2F1B21 /* ExampleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleListViewController.swift; sourceTree = "<group>"; };
+		25EA925F32466BF115E6419F /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
+		2F3BF228321CA7FCBEA669CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3E18F0765C9C715F64080DD3 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B675DEF4776CDFF8309DEB8 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		5C02DB1648E15A6591FD56E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		76B43732FE4180268DAA8355 /* FinancialConnectionsExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinancialConnectionsExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DACDB8126F851C25D6A14A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		ADFEE494187576194F8B46BB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C233C6110A6362BA20C0C492 /* TuistBundle+FinancialConnectionsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+FinancialConnectionsExample.swift"; sourceTree = "<group>"; };
+		DCDA61A23BDB5ED4D9676E62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E192850895613723B1E4AEA6 /* CollectBankAccountTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectBankAccountTokenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3CEB0CB2273EFEF5009680F8 /* Frameworks */ = {
+		91A13976310467FF5FFCB4FB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C808457280F945000DF9D30 /* StripeFinancialConnections.framework in Frameworks */,
-				3C37D6DB274C10910041F1BE /* StripeUICore.framework in Frameworks */,
-				3C37D6DE274C109B0041F1BE /* StripeCore.framework in Frameworks */,
+				6AF9C66D47F81DD9B103FB64 /* StripeCore.framework in Frameworks */,
+				DA6FA2C369E10A2B4663B434 /* StripeFinancialConnections.framework in Frameworks */,
+				5B38135D1C37FC1812F4203A /* StripeUICore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3C5430C12745794000B1E488 /* Frameworks */ = {
+		08699B52A213AE177E94F864 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				3C808456280F945000DF9D30 /* StripeFinancialConnections.framework */,
-				3C37D6DD274C109B0041F1BE /* StripeCore.framework */,
-				3C37D6DA274C10910041F1BE /* StripeUICore.framework */,
+				5B675DEF4776CDFF8309DEB8 /* Project-Debug.xcconfig */,
+				3E18F0765C9C715F64080DD3 /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		16B505A9E0578F89DFF3F7BC = {
+			isa = PBXGroup;
+			children = (
+				50C2BF2068C431D89BFF6E11 /* Project */,
+				35967318CD64200FCEDF41E7 /* Frameworks */,
+				EDE09A27F1A22ECA0F4D45B4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		35967318CD64200FCEDF41E7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3CEB0CAC273EFEF5009680F8 = {
+		4A256CDD47BAA021FF65892E /* Derived */ = {
 			isa = PBXGroup;
 			children = (
-				3CEB0CB7273EFEF5009680F8 /* FinancialConnections Example */,
-				3CEB0CB6273EFEF5009680F8 /* Products */,
-				3C5430C12745794000B1E488 /* Frameworks */,
+				8EED7CE598081C3F56D6DB87 /* Sources */,
 			);
+			path = Derived;
 			sourceTree = "<group>";
 		};
-		3CEB0CB6273EFEF5009680F8 /* Products */ = {
+		4C86E7995C2BF4E2E9E42971 /* FinancialConnections Example */ = {
 			isa = PBXGroup;
 			children = (
-				3CEB0CB5273EFEF5009680F8 /* FinancialConnections Example.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		3CEB0CB7273EFEF5009680F8 /* FinancialConnections Example */ = {
-			isa = PBXGroup;
-			children = (
-				3CD1DD04280711B400A3A5CD /* ExampleListViewController.swift */,
-				3CEB0CBC273EFEF5009680F8 /* ConnectAccountViewController.swift */,
-				3CD1DD062807218200A3A5CD /* CollectBankAccountTokenViewController.swift */,
-				6AE6749E29088784001854B2 /* Playground */,
-				3CEB0CB8273EFEF5009680F8 /* AppDelegate.swift */,
-				3CEB0CBE273EFEF5009680F8 /* Main.storyboard */,
-				3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */,
-				3CEB0CC3273EFEF7009680F8 /* LaunchScreen.storyboard */,
-				3CEB0CC6273EFEF7009680F8 /* Info.plist */,
+				FF678252EB811ACE4D0EC296 /* LaunchScreen.storyboard */,
+				936C5935D51A54BE9F183ECA /* Main.storyboard */,
+				07DA32DE3842C0AD47047104 /* AppDelegate.swift */,
+				8DACDB8126F851C25D6A14A8 /* Assets.xcassets */,
+				E192850895613723B1E4AEA6 /* CollectBankAccountTokenViewController.swift */,
+				25EA925F32466BF115E6419F /* ConnectAccountViewController.swift */,
+				092E132F7DB46E518F2F1B21 /* ExampleListViewController.swift */,
+				DCDA61A23BDB5ED4D9676E62 /* Info.plist */,
 			);
 			path = "FinancialConnections Example";
 			sourceTree = "<group>";
 		};
-		6A0198912916C97000418064 /* helpers */ = {
+		50C2BF2068C431D89BFF6E11 /* Project */ = {
 			isa = PBXGroup;
 			children = (
-				6A0198922916C97A00418064 /* UIViewController+Extensions.swift */,
-				6A0198942916D1E300418064 /* PlaygroundUserDefaults.swift */,
-				6A0198962916EA6600418064 /* UIAlertController+Extensions.swift */,
+				08699B52A213AE177E94F864 /* BuildConfigurations */,
+				4A256CDD47BAA021FF65892E /* Derived */,
+				4C86E7995C2BF4E2E9E42971 /* FinancialConnections Example */,
 			);
-			path = helpers;
+			name = Project;
 			sourceTree = "<group>";
 		};
-		6AE6749E29088784001854B2 /* Playground */ = {
+		8EED7CE598081C3F56D6DB87 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				6A0198912916C97000418064 /* helpers */,
-				6AE6749F2908879F001854B2 /* PlaygroundViewController.swift */,
-				6A01988529117D5F00418064 /* PlaygroundMainView.swift */,
-				6A01988F2916BD8D00418064 /* PlaygroundMainViewModel.swift */,
+				03E33DAD89E3D0E1A452D286 /* TuistAssets+FinancialConnectionsExample.swift */,
+				C233C6110A6362BA20C0C492 /* TuistBundle+FinancialConnectionsExample.swift */,
 			);
-			path = Playground;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		EDE09A27F1A22ECA0F4D45B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				76B43732FE4180268DAA8355 /* FinancialConnectionsExample.app */,
+				03E7365D673694C8D7EDFB20 /* StripeCore.framework */,
+				5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */,
+				ADFEE494187576194F8B46BB /* StripeUICore.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3CEB0CB4273EFEF5009680F8 /* FinancialConnections Example */ = {
+		C218162D3F33797EA8502346 /* FinancialConnections Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3CEB0CC9273EFEF7009680F8 /* Build configuration list for PBXNativeTarget "FinancialConnections Example" */;
+			buildConfigurationList = E6DED659BF39F106D4AF0C05 /* Build configuration list for PBXNativeTarget "FinancialConnections Example" */;
 			buildPhases = (
-				3CEB0CB1273EFEF5009680F8 /* Sources */,
-				3CEB0CB2273EFEF5009680F8 /* Frameworks */,
-				3CEB0CB3273EFEF5009680F8 /* Resources */,
-				3C5430C52745794000B1E488 /* Embed Frameworks */,
+				5777C8C603592B6D2A9C0A77 /* Sources */,
+				D852CE2290EE4327ADFD07E0 /* Resources */,
+				329899B6E55083CD405D20EC /* Embed Frameworks */,
+				91A13976310467FF5FFCB4FB /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "FinancialConnections Example";
-			productName = "FinancialConnections Example";
-			productReference = 3CEB0CB5273EFEF5009680F8 /* FinancialConnections Example.app */;
+			productName = FinancialConnectionsExample;
+			productReference = 76B43732FE4180268DAA8355 /* FinancialConnectionsExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		3CEB0CAD273EFEF5009680F8 /* Project object */ = {
+		82CFE995323E51B8859FE080 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1220;
-				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
-					3CEB0CB4273EFEF5009680F8 = {
-						CreatedOnToolsVersion = 12.2;
-					};
 				};
 			};
-			buildConfigurationList = 3CEB0CB0273EFEF5009680F8 /* Build configuration list for PBXProject "FinancialConnections Example" */;
-			compatibilityVersion = "Xcode 9.3";
+			buildConfigurationList = B18411BA4D3BBD8A3720B1B3 /* Build configuration list for PBXProject "FinancialConnections Example" */;
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
-			mainGroup = 3CEB0CAC273EFEF5009680F8;
-			productRefGroup = 3CEB0CB6273EFEF5009680F8 /* Products */;
+			mainGroup = 16B505A9E0578F89DFF3F7BC;
+			productRefGroup = EDE09A27F1A22ECA0F4D45B4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3CEB0CB4273EFEF5009680F8 /* FinancialConnections Example */,
+				C218162D3F33797EA8502346 /* FinancialConnections Example */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3CEB0CB3273EFEF5009680F8 /* Resources */ = {
+		D852CE2290EE4327ADFD07E0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3CEB0CC5273EFEF7009680F8 /* LaunchScreen.storyboard in Resources */,
-				3CEB0CC2273EFEF7009680F8 /* Assets.xcassets in Resources */,
-				3CEB0CC0273EFEF5009680F8 /* Main.storyboard in Resources */,
+				8A2D4CA47FB7B68B6D7BCB19 /* Assets.xcassets in Resources */,
+				307E63F1F0E10D8B419C3DAB /* LaunchScreen.storyboard in Resources */,
+				2FFB7D24916B79615F334BD4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		3CEB0CB1273EFEF5009680F8 /* Sources */ = {
+		5777C8C603592B6D2A9C0A77 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6A0198972916EA6600418064 /* UIAlertController+Extensions.swift in Sources */,
-				3CD1DD05280711B400A3A5CD /* ExampleListViewController.swift in Sources */,
-				3CD1DD072807218200A3A5CD /* CollectBankAccountTokenViewController.swift in Sources */,
-				3CEB0CBD273EFEF5009680F8 /* ConnectAccountViewController.swift in Sources */,
-				6AE674A02908879F001854B2 /* PlaygroundViewController.swift in Sources */,
-				6A0198932916C97A00418064 /* UIViewController+Extensions.swift in Sources */,
-				6A01988629117D5F00418064 /* PlaygroundMainView.swift in Sources */,
-				3CEB0CB9273EFEF5009680F8 /* AppDelegate.swift in Sources */,
-				6A0198952916D1E300418064 /* PlaygroundUserDefaults.swift in Sources */,
-				6A0198902916BD8D00418064 /* PlaygroundMainViewModel.swift in Sources */,
+				20411B3862CCE7CB93F129E6 /* TuistAssets+FinancialConnectionsExample.swift in Sources */,
+				ED5A8887B8DFA5AF2DA85C5A /* TuistBundle+FinancialConnectionsExample.swift in Sources */,
+				597C7552115D87218591934C /* AppDelegate.swift in Sources */,
+				C0495B99B568EE4ED5E4F44A /* CollectBankAccountTokenViewController.swift in Sources */,
+				C2D21072C2E0187FD065BB3C /* ConnectAccountViewController.swift in Sources */,
+				F75FA2EBFB3A08D31E7A8D4D /* ExampleListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		3CEB0CBE273EFEF5009680F8 /* Main.storyboard */ = {
+		936C5935D51A54BE9F183ECA /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3CEB0CBF273EFEF5009680F8 /* Base */,
+				5C02DB1648E15A6591FD56E1 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		3CEB0CC3273EFEF7009680F8 /* LaunchScreen.storyboard */ = {
+		FF678252EB811ACE4D0EC296 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3CEB0CC4273EFEF7009680F8 /* Base */,
+				2F3BF228321CA7FCBEA669CC /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -250,160 +249,65 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		3CEB0CC7273EFEF7009680F8 /* Debug */ = {
+		0229FB766BEC2CFC02626D93 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5B675DEF4776CDFF8309DEB8 /* Project-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		3CEB0CC8273EFEF7009680F8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		3CEB0CCA273EFEF7009680F8 /* Debug */ = {
+		29F488554B9E9389E602C8C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1.1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FinancialConnectionsExample;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
-		3CEB0CCB273EFEF7009680F8 /* Release */ = {
+		62A0FC5CC8A0870CEAF1755A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3E18F0765C9C715F64080DD3 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		B90DB72906BF1E7AA2F0B70F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1.1;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FinancialConnectionsExample;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -413,25 +317,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3CEB0CB0273EFEF5009680F8 /* Build configuration list for PBXProject "FinancialConnections Example" */ = {
+		B18411BA4D3BBD8A3720B1B3 /* Build configuration list for PBXProject "FinancialConnections Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3CEB0CC7273EFEF7009680F8 /* Debug */,
-				3CEB0CC8273EFEF7009680F8 /* Release */,
+				0229FB766BEC2CFC02626D93 /* Debug */,
+				62A0FC5CC8A0870CEAF1755A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3CEB0CC9273EFEF7009680F8 /* Build configuration list for PBXNativeTarget "FinancialConnections Example" */ = {
+		E6DED659BF39F106D4AF0C05 /* Build configuration list for PBXNativeTarget "FinancialConnections Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3CEB0CCA273EFEF7009680F8 /* Debug */,
-				3CEB0CCB273EFEF7009680F8 /* Release */,
+				29F488554B9E9389E602C8C3 /* Debug */,
+				B90DB72906BF1E7AA2F0B70F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 3CEB0CAD273EFEF5009680F8 /* Project object */;
+	rootObject = 82CFE995323E51B8859FE080 /* Project object */;
 }
