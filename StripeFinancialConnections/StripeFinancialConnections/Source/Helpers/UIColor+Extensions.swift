@@ -9,8 +9,8 @@ import UIKit
 
 extension UIColor {
     
-    // TODO: the background color we use
-    // across many screens. added for future support around dark mode
+    // The background color we use across across many screens.
+    // Added for future support around dark mode.
     static var customBackgroundColor: UIColor {
         return .white
     }

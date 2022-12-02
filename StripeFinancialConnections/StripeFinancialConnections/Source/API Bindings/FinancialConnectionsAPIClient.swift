@@ -89,10 +89,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "mobile": {
                 var mobileParameters: [String:Any] = [
-                    "sdk_type": "ios",
                     "fullscreen": true,
                     "hide_close_button": true,
-                    "sdk_version": APIVersion.apiVersion,
                 ]
                 mobileParameters["app_return_url"] = returnURL
                 return mobileParameters
