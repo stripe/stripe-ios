@@ -23,7 +23,7 @@ final class CardSection: ContainerElement {
     
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
-        if #available(iOS 13.0, macCatalyst 14, *) {
+        if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
             return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme)
         } else {
             return cardSection.view
