@@ -46,12 +46,10 @@ class InstitutionPickerViewController: UIViewController {
         return featuredInstitutionGridView
     }()
     private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
+        let institutionSearchTableView = InstitutionSearchTableView(frame: view.bounds, allowManualEntry: dataSource.manifest.allowManualEntry)
         institutionSearchTableView.delegate = self
         return institutionSearchTableView
     }()
-    // Only used for iOS12 fallback where we don't ahve the diffable datasource
-    private lazy var institutions: [FinancialConnectionsInstitution]? = nil
     
     // MARK: - Debouncing Support
     

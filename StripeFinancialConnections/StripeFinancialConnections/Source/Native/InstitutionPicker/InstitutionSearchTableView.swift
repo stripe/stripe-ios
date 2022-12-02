@@ -24,7 +24,7 @@ protocol InstitutionSearchTableViewDelegate: AnyObject {
 final class InstitutionSearchTableView: UIView {
     
     private let allowManualEntry: Bool
-    private let tableView = UITableView()
+    private let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     private lazy var didSelectManualEntry: (() -> Void)? = {
         return allowManualEntry ? { [weak self] in
@@ -63,9 +63,10 @@ final class InstitutionSearchTableView: UIView {
         return activityIndicator
     }()
     
-    init(allowManualEntry: Bool) {
+    init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
         let cellIdentifier = "\(InstitutionSearchTableViewCell.self)"
+        tableView = UITableView(frame: frame)
         self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, institution in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? InstitutionSearchTableViewCell else {
                 fatalError("Unable to dequeue cell \(InstitutionSearchTableViewCell.self) with cell identifier \(cellIdentifier)")
@@ -73,7 +74,7 @@ final class InstitutionSearchTableView: UIView {
             cell.customize(with: institution)
             return cell
         }
-        super.init(frame: .zero)
+        super.init(frame: frame)
         tableView.backgroundColor = .customBackgroundColor
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none
@@ -169,24 +170,22 @@ final class InstitutionSearchTableView: UIView {
     
     func showNoResultsNotice(query: String?) {
         if let query = query {
-            tableView.tableHeaderView = {
-                let noResultsLabel = UILabel()
-                noResultsLabel.text = String(format: STPLocalizedString("No results for \"%@\".", "A message that tells the user that we found no search results for the bank name they typed. '%@' will be replaced by the text they typed - for example, 'Bank of America'."), query)
-                noResultsLabel.font = .stripeFont(forTextStyle: .caption)
-                noResultsLabel.textColor = .textSecondary
-                noResultsLabel.textAlignment = .center
-                // we use `UIStackView` even if its just a single view
-                // because it allows for automatic resizing + easy margins
-                let stackView = UIStackView(arrangedSubviews: [noResultsLabel])
-                stackView.isLayoutMarginsRelativeArrangement = true
-                stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: 0,
-                    leading: 24,
-                    bottom: 16,
-                    trailing: 24
-                )
-                return stackView
-            }()
+            let noResultsLabel = UILabel()
+            noResultsLabel.text = String(format: STPLocalizedString("No results for \"%@\".", "A message that tells the user that we found no search results for the bank name they typed. '%@' will be replaced by the text they typed - for example, 'Bank of America'."), query)
+            noResultsLabel.font = .stripeFont(forTextStyle: .caption)
+            noResultsLabel.textColor = .textSecondary
+            noResultsLabel.textAlignment = .center
+            // we use `UIStackView` even if its just a single view
+            // because it allows for automatic resizing + easy margins
+            let stackView = UIStackView(arrangedSubviews: [noResultsLabel])
+            stackView.isLayoutMarginsRelativeArrangement = true
+            stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                top: 0,
+                leading: 24,
+                bottom: 16,
+                trailing: 24
+            )
+            tableView.setTableHeaderViewWithCompressedFrameSize(stackView)
         } else {
             tableView.tableHeaderView = nil
         }
@@ -194,9 +193,9 @@ final class InstitutionSearchTableView: UIView {
     
     func showError(_ show: Bool) {
         if show {
-            tableView.tableHeaderView = InstitutionSearchErrorView(
+            tableView.setTableHeaderViewWithCompressedFrameSize(InstitutionSearchErrorView(
                 didSelectEnterYourBankDetailsManually: didSelectManualEntry
-            )
+            ))
         } else {
             tableView.tableHeaderView = nil
         }
@@ -206,7 +205,7 @@ final class InstitutionSearchTableView: UIView {
     // the footer is always shown, except for when there is an error searching
     private func showTableFooterView(_ show: Bool) {
         if show {
-            tableView.tableFooterView = tableFooterView
+            tableView.setTableFooterViewWithCompressedFrameSize(tableFooterView)
         } else {
             tableView.tableFooterView = nil
         }
