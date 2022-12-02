@@ -7,52 +7,170 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01C820ECDBFC041A741A5499 /* FlowRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1407DD9E95ADFE143FA046E4 /* FlowRouter.swift */; };
+		04EB48BB849D29C7C8349DBC /* AccountPickerSelectionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F95EA3D421BE335087E05DB /* AccountPickerSelectionRowView.swift */; };
+		05D03C32FC5F108E6B6B227B /* ClickableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C74C5F4B60F472AC1D6CF /* ClickableLabel.swift */; };
 		06445472B3008395FCA92FEC /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C650E82A4195A7566AA54298 /* StripeCore.framework */; };
+		07712610C7D2F484AAB96982 /* FinancialConnectionsInstitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE8BCF5A9FF2B9392A755EA /* FinancialConnectionsInstitution.swift */; };
+		07A86CEB6B4F6BEB524EFE37 /* ManualEntryValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F897F5AA6A684D0A370EA7BC /* ManualEntryValidator.swift */; };
 		07BFA34C5643A79E1E35A159 /* FinancialConnectionsSession_only_accounts.json in Resources */ = {isa = PBXBuildFile; fileRef = 4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */; };
 		0AF88791C01102CDCC31F419 /* AccountFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A71EBB1B98CD285DD17D5F /* AccountFetcherTests.swift */; };
 		11FB97AC840FEB5B5BF85BF9 /* FinancialConnectionsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2EAD7059FF8358E674774A /* FinancialConnectionsAPIClient.swift */; };
+		136B704C025F6F69D55A625C /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C163A50C423B593C7F620630 /* PlaceholderViewController.swift */; };
+		152B480EA85D541CC64451A1 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D5A45DB15DF6148F1C85A /* RadioButtonView.swift */; };
+		1599A235CE57409AA2F678E1 /* LinkingAccountsLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */; };
+		15EC9F36187C341800164428 /* FinancialConnectionsAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBF5CEE2C9030B2D374BC76 /* FinancialConnectionsAnalyticsClient.swift */; };
+		163E387D567068E4A64A4C13 /* AccountPickerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DEDE8871A732D603E96E2B /* AccountPickerSelectionView.swift */; };
+		16F2968DC3B2FC4558821970 /* chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC561AF0993C02AD68472D11 /* chevron_down@3x.png */; };
+		1889ECB24D40EF331974C288 /* AccountPickerNoAccountEligibleErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912E3AA36B68492A69019AEA /* AccountPickerNoAccountEligibleErrorView.swift */; };
+		19D1548A5A4034D349DB0947 /* ManualEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8301F7BA1FF90D131AE96E10 /* ManualEntryViewController.swift */; };
 		1C043C73281C0856D2C979C6 /* FinancialConnectionsSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEF0BAF1A5BBA3061C15A09 /* FinancialConnectionsSession.swift */; };
+		1C5D953684456368EEF4C622 /* ManualEntryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6516BB12D029D1DDCBA1534D /* ManualEntryTextField.swift */; };
+		1CE588CD44D6591B95A9B281 /* AlwaysTemplateImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2284A0556400DEAEB279BE /* AlwaysTemplateImageView.swift */; };
+		21C0B56B34EACFDAC06ED97D /* InstitutionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735101D3516EE679A29AE6D0 /* InstitutionSearchTableViewCell.swift */; };
+		2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */; };
+		23DBA4240ED1727C47937A6B /* AccountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */; };
+		2554BE48E61032CCD4565E7E /* ManualEntrySuccessTransactionTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35882B0B77DB22CEEDDA8C3C /* ManualEntrySuccessTransactionTableView.swift */; };
+		2AA0942F22A323B33CA6B7CA /* PartnerAuthDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC8B933341AF86D9AFF5979 /* PartnerAuthDataSource.swift */; };
+		2CE89100448F26DDA831F455 /* NativeFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F856808B78F4F1975959805 /* NativeFlowController.swift */; };
 		2D14461B27B3DEE2CC19B090 /* FinancialConnectionsAccountFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1BC95816DAD5AE9680662 /* FinancialConnectionsAccountFetcher.swift */; };
+		2E29C0A30C137791D357F4C1 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E53077F6CE2AF59B9BCB4EF /* SuccessBodyView.swift */; };
+		313E6E37B4D48022F03ED2C7 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74512F0599D8AEEA0BB1DA5F /* UIFont+Extensions.swift */; };
+		33FA1684CE79F21271D14F23 /* HitTestStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */; };
+		3446145FCA3278D51A9D4B80 /* AttachLinkedPaymentAccountDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518F1F230FD4DF68E683C728 /* AttachLinkedPaymentAccountDataSource.swift */; };
+		368DFF9D68F1F8D6A4353961 /* AuthFlowHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B31B3A45DD8AAFD6F08820 /* AuthFlowHelpers.swift */; };
+		3AE1C7A78FB5B220F5200F49 /* search@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF0111A8932418631FFA1663 /* search@3x.png */; };
 		3BF4BBF7E722B961E037286C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94869BACB486153419B30DE5 /* XCTest.framework */; };
+		3BFED24B6DF835A0F2FB4939 /* TerminalErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83A2749140B4E129CEF39C4 /* TerminalErrorViewController.swift */; };
 		3ECA346F75060BD954376EBF /* StripeFinancialConnectionsBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */; };
+		3FE4DEFAD6FF77B8D9EE68D3 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B47C10B77812660F7B01A /* String+Localized.swift */; };
 		432463EBF562CDDC6D3DC252 /* BankAccountToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = D890BD770F4E33D23ABA37EA /* BankAccountToken.swift */; };
+		43B6B0358EDD34A8AB39B53C /* bank_check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6D18A6D99669DFF1E91A0705 /* bank_check@2x.png */; };
+		444884F264D13FF654EA7471 /* PaneLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */; };
+		44B67A553B5B53C34547CCDE /* edit@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C82EDE35EB6404444E10108 /* edit@3x.png */; };
+		460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C837C27C2577391B91FF0E5 /* FinancialConnectionsAuthSession.swift */; };
+		465AE8A58AD2183E1E2042FE /* ConsentDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81304AD5BE5CCA10D1A866E0 /* ConsentDataSource.swift */; };
+		486E50E6CB90208AB98C031E /* UIImageView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC3AC48492FAB61E5B66D94 /* UIImageView+Extensions.swift */; };
+		48E093CC2FB4A619A9E2C20E /* ManualEntryCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A22DBD7D336381FEB3AB00 /* ManualEntryCheckView.swift */; };
+		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
+		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
+		4AADAA347EF70ECB8BE28E84 /* SuccessIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455C145AEAE3D5F87532187 /* SuccessIconView.swift */; };
 		4C6B6AB6213B1E6304CC88DC /* TuistBundle+StripeFinancialConnectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6107A7B240FFECC1EE6D /* TuistBundle+StripeFinancialConnectionsTests.swift */; };
+		4CEE364A07B91B51B3D00F05 /* ConsentBottomSheetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */; };
+		58CD76A6379A04566684D2AC /* InstitutionSearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71BC4222E1986338BCB9587 /* InstitutionSearchTableView.swift */; };
+		5E5C480AB5F0B2DBDA7B61B1 /* email@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EA1FC49D47073CD333D2EEA /* email@3x.png */; };
+		62F9AC317C04285853345A0C /* SpinnerIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723996D53965EC2286267A01 /* SpinnerIconView.swift */; };
+		645D6FF67167263F9A1C2BB0 /* bullet@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07BCA9D23511A3494C82B632 /* bullet@3x.png */; };
+		648FA50974B14CC861B08ECB /* APIPollingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF54EDA6123C7E4E78D9D56B /* APIPollingHelper.swift */; };
+		6744CB1B182C5F7220B0B804 /* AuthFlowHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC0D3ED86914DC4216CCCA /* AuthFlowHelpersTests.swift */; };
+		691619AE9A989548ABA36535 /* HitTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669BB8F3DA862C425897705 /* HitTestView.swift */; };
+		693FBB1373098550A32A1D94 /* mx@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BDE174FB82FF2D359B048029 /* mx@3x.png */; };
+		6944E131D351784058C7D734 /* FinancialConnectionsPaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */; };
+		69508BFAF474855B05347CE4 /* ConsentBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */; };
+		6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */; };
+		6D29E55F6A3864ED52799169 /* InstitutionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3BF292FD82A198752A82EB /* InstitutionPickerViewController.swift */; };
+		6E6E30D01D4E9629DB07E97B /* FinancialConnectionsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA6A57067FB5EF86FEBD5B3 /* FinancialConnectionsNavigationController.swift */; };
+		700B745FEF43088D9E34C0E4 /* AccountPickerHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED33E6BADC0893C3F6B22D2 /* AccountPickerHelpersTests.swift */; };
+		707C265C4179A8FEC98913FE /* ConsentBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA941D5F7178E89DE70076F /* ConsentBodyView.swift */; };
+		716E12A9AC0B790F14FB72C6 /* AccountNumberRetrievalErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6224E799E667DF223757D493 /* AccountNumberRetrievalErrorView.swift */; };
+		74CC216C8A71AD357B8AA544 /* NativeFlowDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780BC432329228B042DA97D8 /* NativeFlowDataManager.swift */; };
+		755140DEEE50DCD6E939E528 /* check@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B77DE6D7A86CC847977396A /* check@3x.png */; };
+		76C466DE26B6646D9B25E9B1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4BABB6C871FE97868767E7 /* FeaturedInstitutionGridCell.swift */; };
 		76FB143918C5463B587091BB /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2D765AC793D89D26B74FC4 /* STPLocalizedString.swift */; };
+		779C729BB49FD4B99DCD517B /* MarkdownBoldAttributedStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7D318EE807701AB3FCA17D /* MarkdownBoldAttributedStringTests.swift */; };
+		77C7F9A1DD0461FA2B1B4328 /* FinancialConnectionsPartnerAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452989E2D269784006EFD18C /* FinancialConnectionsPartnerAccount.swift */; };
 		77D3B375B9DBF80BA209BC99 /* FinancialConnectionsSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05C2C5CDAA55CE700662040 /* FinancialConnectionsSessionTests.swift */; };
+		7AC3A12D50FA995882473C8A /* MerchantDataAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A97EEE12DA8FB77D13C527 /* MerchantDataAccessView.swift */; };
 		7AE7474B7AFF416B6072721C /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CF67A1F497E6CC73029CF0 /* StripeCore+Import.swift */; };
 		82FD3CEE526DE8B6519F666E /* FinancialConnectionsSessionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A872C2B500306F775622F904 /* FinancialConnectionsSessionFetcher.swift */; };
 		846D1D7429B9E414744DEC99 /* FinancialConnectionsSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E7725EF317C3BD62ADF845 /* FinancialConnectionsSheetTests.swift */; };
 		864C5159C62C562C655B53F7 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E37D8CE9CD73443A9AAF2AE8 /* StripeFinancialConnections.framework */; };
+		87E22AF1E35FB63C20AEE9DF /* warning_triangle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D555DB0657A602274596428 /* warning_triangle@3x.png */; };
+		8A424D8F321E80945AD42B1A /* ReusableInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1C8781095363382A0F7BE5 /* ReusableInformationView.swift */; };
 		8C985491C17431278097D0FF /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2710EA52082B4A983294567 /* Placeholder.swift */; };
+		8EDCAA40D5ACE4D4CCC67695 /* CloseConfirmationAlertHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4BBD3A262039B34C2DDCCB /* CloseConfirmationAlertHandler.swift */; };
+		91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */; };
 		933F9DFE970FAB4715369086 /* HostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C4ECB724BD75320A999C42 /* HostController.swift */; };
+		97032B101B54E6A98178FD73 /* stripe_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F56BF50DBF4A353D2526A6 /* stripe_logo@3x.png */; };
 		971E6F5E78BC3265CD80D0C6 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652EBE38C47B36962AD370A /* StripeUICore.framework */; };
+		97C528CE821C6A55D58F68A4 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E58AE51252DA4597DC82988 /* ConsentFooterView.swift */; };
+		99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D38B3C816EAB38AD242B064 /* SFSafariViewController+Extensions.swift */; };
+		9AF6EC34D666BEB3C1397092 /* BulletPointLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */; };
 		9CE29EA549C4BFA447AB82E0 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C650E82A4195A7566AA54298 /* StripeCore.framework */; };
+		9DEE4DE72A7FEDD9D3902C16 /* InstitutionSearchFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F560A66FD9A35762F884F2D4 /* InstitutionSearchFooterView.swift */; };
 		9E0044ABEC04E2A8C50E3658 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */; };
+		A10B5A3E5E8AE8767CF09C15 /* AccountPickerSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */; };
 		A156FACA60231988F247F6F4 /* FinancialConnectionsSession_only_both_missing.json in Resources */ = {isa = PBXBuildFile; fileRef = 1DF07A1AAD6B39033F0B86FD /* FinancialConnectionsSession_only_both_missing.json */; };
+		A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */; };
+		A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */; };
 		A573468B2800DABF384CAB43 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCC4356AE3295B4A2F4A28 /* Image.swift */; };
+		A6DB232AD8CB25B0C9F4C79C /* PaneWithHeaderLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */; };
+		A79D6A26EE9FF96D24F4AC5C /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */; };
+		A9F9E63FD6B72F5552A8A850 /* ResetFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA81F9910A88A7DEB0F0BFD /* ResetFlowViewController.swift */; };
+		AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E813BE6B34901E4E050FFE13 /* TimeInterval+Extensions.swift */; };
 		AB7C9A26484953762FFBB4A5 /* FinancialConnectionsWebFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD07CE6F99D7FAE83FC5CCC /* FinancialConnectionsWebFlowViewController.swift */; };
+		ABB28C3F6604C2BA2FCA079D /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3A660CB2E9651947FE6D0A /* String+Extensions.swift */; };
 		ACD21F21C6E42706A882A1AE /* FinancialConnectionsSession_only_la.json in Resources */ = {isa = PBXBuildFile; fileRef = AA01BC4016BF8788633CCAD9 /* FinancialConnectionsSession_only_la.json */; };
+		B271AAF41C9FE6AE392B88D3 /* FinancialConnectionsMixedOAuthParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BF4CD26CEAE792AC2A7313 /* FinancialConnectionsMixedOAuthParams.swift */; };
+		B2970FE2753A4D79E428BA73 /* SuccessDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */; };
+		B45B8DC3DAACDD5F04B1B1BE /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3F67BE6E46ED018EB8C3FD /* SuccessViewController.swift */; };
 		B5EEF34D158C08A1745FA150 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA55452373FD735983F3690B /* ContinueStateView.swift */; };
+		B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */; };
+		BAA72FE13406CAF5FA4BBDC8 /* SuccessAccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4EDFBDA8D9C0CEA30B51F2 /* SuccessAccountListView.swift */; };
+		BC991D917034CCF5149403CA /* FeaturedInstitutionGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F7F2C282A37EC4AB119E0 /* FeaturedInstitutionGridView.swift */; };
 		BCEA321423DF0E7674C2544C /* APIVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D95E5F34BDEE0237F52DA0A /* APIVersion.swift */; };
+		BD3C87E03EB44F7D1C11664C /* spinner@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 57B289E803B7A53B000D7919 /* spinner@3x.png */; };
 		BF5F964E1CA6312755D4161E /* SessionFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */; };
+		BFF222008EEEDC3FACE342D9 /* AccountPickerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */; };
+		C0831318A33A32BF2EAB641A /* AccountPickerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1362591D12A04CA663A69A47 /* AccountPickerHelpers.swift */; };
+		C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C7FDF59D906EA5C6B7A514 /* ManualEntryValidatorTests.swift */; };
+		C1A079E8E76A02EBCB2588DA /* AccountPickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D715516C6703A780913E66EB /* AccountPickerDataSource.swift */; };
+		C23A55F7C98103222B159D73 /* bank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA3F36F0BED21F607C546B6D /* bank@3x.png */; };
 		C258E0D849083BCC8A9B5068 /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0863AF9E2F9BD7C026FE59E /* HostViewController.swift */; };
+		C3338FA5019EC8E99E2BA62F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064D0E3A3AC71FAA60B54FC5 /* Helpers.swift */; };
+		C38BEDD99477C83C91B105DD /* AccountPickerAccountLoadErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463549CECD379484842033E3 /* AccountPickerAccountLoadErrorView.swift */; };
+		C39214EA5995D85B847406BE /* SuccessFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD828AB80DE41DE11D38AF5C /* SuccessFooterView.swift */; };
 		C59DBA5A86A3331113D6ED7E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B7CFC14964440E8AA670A9 /* LoadingView.swift */; };
 		C61D5957D3276991795F7D16 /* FinancialConnectionsSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6038978C79785C18257CD74 /* FinancialConnectionsSheetAnalytics.swift */; };
+		C6B99A1C34886D3B5E1AF1A2 /* InstitutionSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA1C1B311E06C1165C6F6A2 /* InstitutionSearchBar.swift */; };
 		C747113C75AC92643B283CBD /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1C7A2FE53419CB29CBB6C08 /* close@3x.png */; };
-		C87EB461D694C9DBAF712D30 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5C7037762D0ED8C9A1059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */; };
+		C906FC4DE38F16032B787607 /* ResetFlowDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1C78684DD0B2D168C86229 /* ResetFlowDataSource.swift */; };
+		CA5825059866BD3416BF8240 /* ManualEntrySuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A7913F446F111887F1FA01 /* ManualEntrySuccessViewController.swift */; };
 		CB734C25A19D38A87876FB2B /* FinancialConnectionsAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AB8A480620B5C3567F453C /* FinancialConnectionsAnalyticsTest.swift */; };
-		CB9B3D33BCEED08CC0E5E656 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F166EE14B5D4D94FEBC64BEB /* Extensions.swift */; };
+		CBEAB081DD7353928F485071 /* APIPollingHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */; };
+		CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */; };
+		CF8152B40B6CA74FD15602BF /* warning_circle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 956668158B27ACD34A6B2657 /* warning_circle@3x.png */; };
 		D0C1EF46A418A8F8774B7418 /* FinancialConnectionsSession_both_accounts_la.json in Resources */ = {isa = PBXBuildFile; fileRef = F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */; };
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
 		D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */; };
 		D50E771043434AD80EA28628 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652EBE38C47B36962AD370A /* StripeUICore.framework */; };
 		D682CAE1EF3CA74781556B15 /* TuistBundle+StripeFinancialConnections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B50E573EBBD5F78267BCFB /* TuistBundle+StripeFinancialConnections.swift */; };
+		D926228B6C7601AE4C806C93 /* FinancialConnectionsPaymentAccountResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF9E2D4C9D7684B02AD6037A /* FinancialConnectionsPaymentAccountResource.swift */; };
+		D936C8A9F6E018DB144A5B0A /* FinancialConnectionsSynchronize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */; };
 		D949AE695F3288F84258BACD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BF6810BAADB14ACB95216C2B /* Localizable.strings */; };
+		D9D84D6FF624CF4363D87CEB /* InstitutionDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED1CF95D441821773EA68EE /* InstitutionDataSource.swift */; };
+		D9F35B3B31CA2E52055D6B1D /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF731140836AE438C7F4F6AB /* StringExtensionsTests.swift */; };
 		DC4DFC847378AC9E9112B443 /* AuthenticationSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 596A401ABA089532A5006584 /* AuthenticationSessionManager.swift */; };
+		E1D538A71C3370D534EA479B /* finicity@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9868B0E4CF3C0098AA2E989 /* finicity@3x.png */; };
+		E3F62D2F9C344A1178030E8E /* AttachLinkedPaymentAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA62F9B77C6A1D1B12F02CF5 /* AttachLinkedPaymentAccountViewController.swift */; };
+		E4D00DB842047E595DD85BEF /* CheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */; };
+		E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EA7801B85973F10F65DDB6 /* UIImage+Extensions.swift */; };
+		E760C94B619A8934D1D5E1D0 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */; };
 		E85DCFCA61299EF27B3201CF /* FinancialConnectionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D8397DB43DEC09BDF66E8A /* FinancialConnectionsSheet.swift */; };
+		E942BC70AEBC91537B4628DF /* InstitutionSearchErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F400E7EB544BF34DDD468BE /* InstitutionSearchErrorView.swift */; };
+		E9866D5CA186A242BBEA69E1 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AAB10AEE7A8EC5C9C53FFA /* ConsentViewController.swift */; };
+		E9E6775FE1FB4E13B284C8E3 /* AccountPickerLabelRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2323E76B1B9C295DC5EAD53E /* AccountPickerLabelRowView.swift */; };
 		EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359BF8ACFB35A16EBD96C4F0 /* FinancialConnectionsAccount.swift */; };
 		ED818E10F37230678B9B73CC /* SoftLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A06A97D714450321A5D76D /* SoftLinkTests.swift */; };
+		EDB22A11E058269784090A51 /* ConsentBottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8199AF9CE999D21ED5871D96 /* ConsentBottomSheetView.swift */; };
+		F0397F4E1D6A91416897F45E /* brandicon_default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */; };
+		F03F840B9E896F1B09742191 /* PartnerAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BDE722D8A827955C3182E8 /* PartnerAuthViewController.swift */; };
+		F0FB346A0F86C3561CD3C048 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F27D0FACAE9D4F4D15A73 /* UITableView+Extensions.swift */; };
+		F10147CF75C2A09D66CB5C14 /* cancel_circle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A4CC00446B086B2987114099 /* cancel_circle@3x.png */; };
 		F22DE4B785D51B318A1A3D08 /* FinancialConnectionsSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0737DE86515E172909366F /* FinancialConnectionsSheetError.swift */; };
+		F419E86FC441B6C58B3F0D00 /* PrepaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5309724F4B9531EBBB03FD54 /* PrepaneView.swift */; };
+		F65E8D16DE691EB6C99C4521 /* Button+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4A84F0646AD673029CB6FC /* Button+Extensions.swift */; };
+		F67624595BD2CD7B6793BFDA /* FinancialConnectionsImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F7139E9BFB044902962D0 /* FinancialConnectionsImage.swift */; };
 		FCC5A360E0064887DB28F5C6 /* StripeFinancialConnections.h in Headers */ = {isa = PBXBuildFile; fileRef = F96A3BA5CCB8DCCFA3126974 /* StripeFinancialConnections.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FE268512851E63E4E111DECD /* FinancialConnectionsSDKImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248D51F7AADE404E49957DDA /* FinancialConnectionsSDKImplementation.swift */; };
 /* End PBXBuildFile section */
@@ -91,101 +209,219 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		064D0E3A3AC71FAA60B54FC5 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		07BCA9D23511A3494C82B632 /* bullet@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bullet@3x.png"; sourceTree = "<group>"; };
 		0DA7868C9DD47582244B47C8 /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		0E0C74C5F4B60F472AC1D6CF /* ClickableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableLabel.swift; sourceTree = "<group>"; };
 		0F4FC108D8C162EEE1EEA97E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		106427315CD279EAAD7D1B74 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		1362591D12A04CA663A69A47 /* AccountPickerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpers.swift; sourceTree = "<group>"; };
+		13A97EEE12DA8FB77D13C527 /* MerchantDataAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantDataAccessView.swift; sourceTree = "<group>"; };
+		13AAB10AEE7A8EC5C9C53FFA /* ConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
+		1407DD9E95ADFE143FA046E4 /* FlowRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowRouter.swift; sourceTree = "<group>"; };
 		14CED33665ED3D8EE8D5D7B7 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPaymentMethodType.swift; sourceTree = "<group>"; };
+		1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBottomSheetModel.swift; sourceTree = "<group>"; };
 		1CD19E0601599AE89976DB4D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		1CE32B7E492EFD8143F687F2 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1CFE14532C10471EC61BB05A /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		1D38B3C816EAB38AD242B064 /* SFSafariViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SFSafariViewController+Extensions.swift"; sourceTree = "<group>"; };
 		1DF07A1AAD6B39033F0B86FD /* FinancialConnectionsSession_only_both_missing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_both_missing.json; sourceTree = "<group>"; };
+		1E58AE51252DA4597DC82988 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
 		1E80DD2D042B327D9756E083 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaneWithHeaderLayoutView.swift; sourceTree = "<group>"; };
 		20E7725EF317C3BD62ADF845 /* FinancialConnectionsSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSheetTests.swift; sourceTree = "<group>"; };
+		2323E76B1B9C295DC5EAD53E /* AccountPickerLabelRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerLabelRowView.swift; sourceTree = "<group>"; };
 		24701CABF53C21DD7BCF3E48 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		248D51F7AADE404E49957DDA /* FinancialConnectionsSDKImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSDKImplementation.swift; sourceTree = "<group>"; };
 		24D4A72B4CCA677F45C29A5C /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		25BDE722D8A827955C3182E8 /* PartnerAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthViewController.swift; sourceTree = "<group>"; };
+		263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaneWithCustomHeaderLayoutView.swift; sourceTree = "<group>"; };
+		267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
+		283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionListView.swift; sourceTree = "<group>"; };
 		2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsBundleLocator.swift; sourceTree = "<group>"; };
 		2C10E841FF9EBFEA8C2E30AF /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		2C82EDE35EB6404444E10108 /* edit@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "edit@3x.png"; sourceTree = "<group>"; };
 		2D95E5F34BDEE0237F52DA0A /* APIVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIVersion.swift; sourceTree = "<group>"; };
 		314462DF7856349FF9775598 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		33B1E2861FA7CA86FF79236C /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaneLayoutView.swift; sourceTree = "<group>"; };
+		35882B0B77DB22CEEDDA8C3C /* ManualEntrySuccessTransactionTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntrySuccessTransactionTableView.swift; sourceTree = "<group>"; };
 		359BF8ACFB35A16EBD96C4F0 /* FinancialConnectionsAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAccount.swift; sourceTree = "<group>"; };
 		3BD07CE6F99D7FAE83FC5CCC /* FinancialConnectionsWebFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsWebFlowViewController.swift; sourceTree = "<group>"; };
+		3EA1FC49D47073CD333D2EEA /* email@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "email@3x.png"; sourceTree = "<group>"; };
+		3ED33E6BADC0893C3F6B22D2 /* AccountPickerHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpersTests.swift; sourceTree = "<group>"; };
 		429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionManifest.swift; sourceTree = "<group>"; };
+		43A7913F446F111887F1FA01 /* ManualEntrySuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntrySuccessViewController.swift; sourceTree = "<group>"; };
+		452989E2D269784006EFD18C /* FinancialConnectionsPartnerAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPartnerAccount.swift; sourceTree = "<group>"; };
+		463549CECD379484842033E3 /* AccountPickerAccountLoadErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerAccountLoadErrorView.swift; sourceTree = "<group>"; };
+		4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSynchronize.swift; sourceTree = "<group>"; };
 		4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
 		4BFCD9C339634B71FC8F85E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessDataSource.swift; sourceTree = "<group>"; };
+		4C4EDFBDA8D9C0CEA30B51F2 /* SuccessAccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessAccountListView.swift; sourceTree = "<group>"; };
+		4DA1C1B311E06C1165C6F6A2 /* InstitutionSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchBar.swift; sourceTree = "<group>"; };
 		4E2EAD7059FF8358E674774A /* FinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
+		4E4A84F0646AD673029CB6FC /* Button+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Extensions.swift"; sourceTree = "<group>"; };
+		4E7D318EE807701AB3FCA17D /* MarkdownBoldAttributedStringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBoldAttributedStringTests.swift; sourceTree = "<group>"; };
+		4F95EA3D421BE335087E05DB /* AccountPickerSelectionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionRowView.swift; sourceTree = "<group>"; };
 		50B4E948868910ADA557F50D /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		518F1F230FD4DF68E683C728 /* AttachLinkedPaymentAccountDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountDataSource.swift; sourceTree = "<group>"; };
 		51D8397DB43DEC09BDF66E8A /* FinancialConnectionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSheet.swift; sourceTree = "<group>"; };
 		51EEC3A9E3BC863ED054B1DC /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5309724F4B9531EBBB03FD54 /* PrepaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepaneView.swift; sourceTree = "<group>"; };
 		54CF67A1F497E6CC73029CF0 /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
+		57B289E803B7A53B000D7919 /* spinner@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spinner@3x.png"; sourceTree = "<group>"; };
+		591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletPointLabelView.swift; sourceTree = "<group>"; };
 		596A401ABA089532A5006584 /* AuthenticationSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationSessionManager.swift; sourceTree = "<group>"; };
 		5AC5D8EE52FE5D305F78E3A0 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		5B65388786D25271A87D34CE /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5B77DE6D7A86CC847977396A /* check@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@3x.png"; sourceTree = "<group>"; };
 		5C0737DE86515E172909366F /* FinancialConnectionsSheetError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSheetError.swift; sourceTree = "<group>"; };
 		5C09425306344278C7B55089 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5C837C27C2577391B91FF0E5 /* FinancialConnectionsAuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAuthSession.swift; sourceTree = "<group>"; };
+		5D1C78684DD0B2D168C86229 /* ResetFlowDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetFlowDataSource.swift; sourceTree = "<group>"; };
+		5D555DB0657A602274596428 /* warning_triangle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_triangle@3x.png"; sourceTree = "<group>"; };
 		5E48DB3155C1546B196DF97B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5E53077F6CE2AF59B9BCB4EF /* SuccessBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBodyView.swift; sourceTree = "<group>"; };
+		5F856808B78F4F1975959805 /* NativeFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFlowController.swift; sourceTree = "<group>"; };
 		60B7CFC14964440E8AA670A9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		6224E799E667DF223757D493 /* AccountNumberRetrievalErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountNumberRetrievalErrorView.swift; sourceTree = "<group>"; };
+		6516BB12D029D1DDCBA1534D /* ManualEntryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryTextField.swift; sourceTree = "<group>"; };
 		65BCC4356AE3295B4A2F4A28 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		6652EBE38C47B36962AD370A /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66D2857E68EA69AC6F658BEA /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "generic_error@3x.png"; sourceTree = "<group>"; };
 		6B70A0C4DBFE46805549CF8B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6C81D547F6BAD96C62E1E4D3 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6D18A6D99669DFF1E91A0705 /* bank_check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_check@2x.png"; sourceTree = "<group>"; };
+		6DA6A57067FB5EF86FEBD5B3 /* FinancialConnectionsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsNavigationController.swift; sourceTree = "<group>"; };
 		6E2D765AC793D89D26B74FC4 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		6F1C8781095363382A0F7BE5 /* ReusableInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableInformationView.swift; sourceTree = "<group>"; };
+		6FA941D5F7178E89DE70076F /* ConsentBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBodyView.swift; sourceTree = "<group>"; };
+		710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPollingHelperTests.swift; sourceTree = "<group>"; };
+		723996D53965EC2286267A01 /* SpinnerIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerIconView.swift; sourceTree = "<group>"; };
+		72DEDE8871A732D603E96E2B /* AccountPickerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionView.swift; sourceTree = "<group>"; };
+		735101D3516EE679A29AE6D0 /* InstitutionSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableViewCell.swift; sourceTree = "<group>"; };
 		73AB8A480620B5C3567F453C /* FinancialConnectionsAnalyticsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAnalyticsTest.swift; sourceTree = "<group>"; };
+		73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryFormView.swift; sourceTree = "<group>"; };
+		7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brandicon_default@3x.png"; sourceTree = "<group>"; };
 		742D94AC4B2D17F8282A6788 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
+		74512F0599D8AEEA0BB1DA5F /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
+		7455C145AEAE3D5F87532187 /* SuccessIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessIconView.swift; sourceTree = "<group>"; };
 		77A71EBB1B98CD285DD17D5F /* AccountFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountFetcherTests.swift; sourceTree = "<group>"; };
+		780BC432329228B042DA97D8 /* NativeFlowDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFlowDataManager.swift; sourceTree = "<group>"; };
+		7A4D5A45DB15DF6148F1C85A /* RadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonView.swift; sourceTree = "<group>"; };
+		7AFC0D3ED86914DC4216CCCA /* AuthFlowHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowHelpersTests.swift; sourceTree = "<group>"; };
 		7C402C24A15DC6167E2C593F /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7F3A660CB2E9651947FE6D0A /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		81304AD5BE5CCA10D1A866E0 /* ConsentDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentDataSource.swift; sourceTree = "<group>"; };
+		8199AF9CE999D21ED5871D96 /* ConsentBottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBottomSheetView.swift; sourceTree = "<group>"; };
+		8301F7BA1FF90D131AE96E10 /* ManualEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryViewController.swift; sourceTree = "<group>"; };
 		846D9EF58B02C69F9629AE79 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		88F7731972F5FB12FD4FA48B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8B3BF292FD82A198752A82EB /* InstitutionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionPickerViewController.swift; sourceTree = "<group>"; };
+		8F400E7EB544BF34DDD468BE /* InstitutionSearchErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchErrorView.swift; sourceTree = "<group>"; };
+		8FE8BCF5A9FF2B9392A755EA /* FinancialConnectionsInstitution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsInstitution.swift; sourceTree = "<group>"; };
 		90A06A97D714450321A5D76D /* SoftLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftLinkTests.swift; sourceTree = "<group>"; };
+		912E3AA36B68492A69019AEA /* AccountPickerNoAccountEligibleErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerNoAccountEligibleErrorView.swift; sourceTree = "<group>"; };
 		9312AAE1BFF1D9BBEA44E8AA /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionIconView.swift; sourceTree = "<group>"; };
 		93C4ECB724BD75320A999C42 /* HostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostController.swift; sourceTree = "<group>"; };
+		947F7F2C282A37EC4AB119E0 /* FeaturedInstitutionGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridView.swift; sourceTree = "<group>"; };
 		94869BACB486153419B30DE5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		956668158B27ACD34A6B2657 /* warning_circle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_circle@3x.png"; sourceTree = "<group>"; };
 		95B50E573EBBD5F78267BCFB /* TuistBundle+StripeFinancialConnections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeFinancialConnections.swift"; sourceTree = "<group>"; };
 		965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFetcherTests.swift; sourceTree = "<group>"; };
+		97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
+		97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
 		98CC6107A7B240FFECC1EE6D /* TuistBundle+StripeFinancialConnectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeFinancialConnectionsTests.swift"; sourceTree = "<group>"; };
+		9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerFooterView.swift; sourceTree = "<group>"; };
+		9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkingAccountsLoadingView.swift; sourceTree = "<group>"; };
+		9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBottomSheetViewController.swift; sourceTree = "<group>"; };
 		9EA0AA05BC9FC60A06AC1B5E /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		9ED1CF95D441821773EA68EE /* InstitutionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionDataSource.swift; sourceTree = "<group>"; };
+		A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestStackView.swift; sourceTree = "<group>"; };
 		A0863AF9E2F9BD7C026FE59E /* HostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostViewController.swift; sourceTree = "<group>"; };
-		A1D5C7037762D0ED8C9A1059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
 		A37D7E687494FAE048945144 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A3A2815DF2EE9447CE7A3826 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A4CC00446B086B2987114099 /* cancel_circle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_circle@3x.png"; sourceTree = "<group>"; };
 		A6038978C79785C18257CD74 /* FinancialConnectionsSheetAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSheetAnalytics.swift; sourceTree = "<group>"; };
 		A872C2B500306F775622F904 /* FinancialConnectionsSessionFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionFetcher.swift; sourceTree = "<group>"; };
+		A9868B0E4CF3C0098AA2E989 /* finicity@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finicity@3x.png"; sourceTree = "<group>"; };
+		A9B31B3A45DD8AAFD6F08820 /* AuthFlowHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowHelpers.swift; sourceTree = "<group>"; };
 		AA01BC4016BF8788633CCAD9 /* FinancialConnectionsSession_only_la.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_la.json; sourceTree = "<group>"; };
+		AC4BABB6C871FE97868767E7 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
 		AC7FED22D9EAC568EA6B35EB /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		ACEF0BAF1A5BBA3061C15A09 /* FinancialConnectionsSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSession.swift; sourceTree = "<group>"; };
 		B2B74140FCD8F5871F42C881 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B4F56BF50DBF4A353D2526A6 /* stripe_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe_logo@3x.png"; sourceTree = "<group>"; };
+		B52F27D0FACAE9D4F4D15A73 /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
 		B5FFA1B806BC6AD3500B0567 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		B83A2749140B4E129CEF39C4 /* TerminalErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalErrorViewController.swift; sourceTree = "<group>"; };
 		BC4D2368AC577A5233DEC72C /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		BD2284A0556400DEAEB279BE /* AlwaysTemplateImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlwaysTemplateImageView.swift; sourceTree = "<group>"; };
+		BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryDataSource.swift; sourceTree = "<group>"; };
+		BDE174FB82FF2D359B048029 /* mx@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mx@3x.png"; sourceTree = "<group>"; };
+		BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		C0467CE507A92557C72885DF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C163A50C423B593C7F620630 /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
 		C2710EA52082B4A983294567 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
+		C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryFooterView.swift; sourceTree = "<group>"; };
 		C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
 		C650E82A4195A7566AA54298 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C71BC4222E1986338BCB9587 /* InstitutionSearchTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableView.swift; sourceTree = "<group>"; };
+		C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryErrorView.swift; sourceTree = "<group>"; };
 		C8AFA09E86048B4325C36CC8 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		C93F7139E9BFB044902962D0 /* FinancialConnectionsImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsImage.swift; sourceTree = "<group>"; };
+		C9A22DBD7D336381FEB3AB00 /* ManualEntryCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryCheckView.swift; sourceTree = "<group>"; };
 		CA2DA47ECE153F888FA675CE /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+KeyboardAvoiding.swift"; sourceTree = "<group>"; };
 		CE10909F3FC7D60E13B65226 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CEC1BC95816DAD5AE9680662 /* FinancialConnectionsAccountFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAccountFetcher.swift; sourceTree = "<group>"; };
+		CF731140836AE438C7F4F6AB /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		CF80A9614EB3ADA9E81397F8 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CFEEBA73EBBCE02A50B2DB7A /* StripeFinancialConnectionsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeFinancialConnectionsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2C62B6AA6891A4214E0754E /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D2EA7801B85973F10F65DDB6 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		D3BF4CD26CEAE792AC2A7313 /* FinancialConnectionsMixedOAuthParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsMixedOAuthParams.swift; sourceTree = "<group>"; };
+		D715516C6703A780913E66EB /* AccountPickerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerDataSource.swift; sourceTree = "<group>"; };
 		D890BD770F4E33D23ABA37EA /* BankAccountToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountToken.swift; sourceTree = "<group>"; };
+		DBBF5CEE2C9030B2D374BC76 /* FinancialConnectionsAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAnalyticsClient.swift; sourceTree = "<group>"; };
+		DD828AB80DE41DE11D38AF5C /* SuccessFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessFooterView.swift; sourceTree = "<group>"; };
 		DD9E2537472B2ED4AA3ED6A2 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DDC3AC48492FAB61E5B66D94 /* UIImageView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extensions.swift"; sourceTree = "<group>"; };
+		DFA81F9910A88A7DEB0F0BFD /* ResetFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetFlowViewController.swift; sourceTree = "<group>"; };
+		E05B47C10B77812660F7B01A /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		E05C2C5CDAA55CE700662040 /* FinancialConnectionsSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionTests.swift; sourceTree = "<group>"; };
 		E37D8CE9CD73443A9AAF2AE8 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E813BE6B34901E4E050FFE13 /* TimeInterval+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+Extensions.swift"; sourceTree = "<group>"; };
 		E898E7D173685669E31FC58F /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E90CF6AD88E530CE63D57269 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EA3F36F0BED21F607C546B6D /* bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank@3x.png"; sourceTree = "<group>"; };
 		EA55452373FD735983F3690B /* ContinueStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueStateView.swift; sourceTree = "<group>"; };
+		EAC8B933341AF86D9AFF5979 /* PartnerAuthDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthDataSource.swift; sourceTree = "<group>"; };
+		EB3F67BE6E46ED018EB8C3FD /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
+		EC561AF0993C02AD68472D11 /* chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_down@3x.png"; sourceTree = "<group>"; };
+		EF0111A8932418631FFA1663 /* search@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@3x.png"; sourceTree = "<group>"; };
+		EF9E2D4C9D7684B02AD6037A /* FinancialConnectionsPaymentAccountResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPaymentAccountResource.swift; sourceTree = "<group>"; };
 		EFB09DF9C9434032F387E081 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F166EE14B5D4D94FEBC64BEB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F1C7A2FE53419CB29CBB6C08 /* close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@3x.png"; sourceTree = "<group>"; };
 		F25B2AB87C9548245C28D14C /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F2B7ECC6F6A4DA1F5F376467 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F2BA0F04A5A7D3B1DBF34AEE /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		F560A66FD9A35762F884F2D4 /* InstitutionSearchFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchFooterView.swift; sourceTree = "<group>"; };
+		F669BB8F3DA862C425897705 /* HitTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestView.swift; sourceTree = "<group>"; };
 		F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_both_accounts_la.json; sourceTree = "<group>"; };
+		F897F5AA6A684D0A370EA7BC /* ManualEntryValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryValidator.swift; sourceTree = "<group>"; };
+		F8C7FDF59D906EA5C6B7A514 /* ManualEntryValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryValidatorTests.swift; sourceTree = "<group>"; };
 		F96A3BA5CCB8DCCFA3126974 /* StripeFinancialConnections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeFinancialConnections.h; sourceTree = "<group>"; };
 		F9A847D2AAA7271F507DC9F3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA62F9B77C6A1D1B12F02CF5 /* AttachLinkedPaymentAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountViewController.swift; sourceTree = "<group>"; };
+		FB4BBD3A262039B34C2DDCCB /* CloseConfirmationAlertHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationAlertHandler.swift; sourceTree = "<group>"; };
+		FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		FF54EDA6123C7E4E78D9D56B /* APIPollingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPollingHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,7 +453,24 @@
 			isa = PBXGroup;
 			children = (
 				C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */,
+				6D18A6D99669DFF1E91A0705 /* bank_check@2x.png */,
+				EA3F36F0BED21F607C546B6D /* bank@3x.png */,
+				7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */,
+				07BCA9D23511A3494C82B632 /* bullet@3x.png */,
+				A4CC00446B086B2987114099 /* cancel_circle@3x.png */,
+				5B77DE6D7A86CC847977396A /* check@3x.png */,
+				EC561AF0993C02AD68472D11 /* chevron_down@3x.png */,
 				F1C7A2FE53419CB29CBB6C08 /* close@3x.png */,
+				2C82EDE35EB6404444E10108 /* edit@3x.png */,
+				3EA1FC49D47073CD333D2EEA /* email@3x.png */,
+				A9868B0E4CF3C0098AA2E989 /* finicity@3x.png */,
+				6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */,
+				BDE174FB82FF2D359B048029 /* mx@3x.png */,
+				EF0111A8932418631FFA1663 /* search@3x.png */,
+				57B289E803B7A53B000D7919 /* spinner@3x.png */,
+				B4F56BF50DBF4A353D2526A6 /* stripe_logo@3x.png */,
+				956668158B27ACD34A6B2657 /* warning_circle@3x.png */,
+				5D555DB0657A602274596428 /* warning_triangle@3x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -236,6 +489,14 @@
 			path = ../BuildConfigurations;
 			sourceTree = "<group>";
 		};
+		2530BFFBB1E845D2AA698BFC /* Placeholder */ = {
+			isa = PBXGroup;
+			children = (
+				C163A50C423B593C7F620630 /* PlaceholderViewController.swift */,
+			);
+			path = Placeholder;
+			sourceTree = "<group>";
+		};
 		298B4CECCC54664B4997B9D7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,6 +508,7 @@
 		328390D72E3911449BB9FD0B /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
+				DBBF5CEE2C9030B2D374BC76 /* FinancialConnectionsAnalyticsClient.swift */,
 				A6038978C79785C18257CD74 /* FinancialConnectionsSheetAnalytics.swift */,
 			);
 			path = Analytics;
@@ -256,10 +518,23 @@
 			isa = PBXGroup;
 			children = (
 				637114D9B91F9206B6F6709B /* Models */,
+				FF54EDA6123C7E4E78D9D56B /* APIPollingHelper.swift */,
 				2D95E5F34BDEE0237F52DA0A /* APIVersion.swift */,
 				4E2EAD7059FF8358E674774A /* FinancialConnectionsAPIClient.swift */,
 			);
 			path = "API Bindings";
+			sourceTree = "<group>";
+		};
+		3ADD22C8436381E94908DA82 /* Success */ = {
+			isa = PBXGroup;
+			children = (
+				4C4EDFBDA8D9C0CEA30B51F2 /* SuccessAccountListView.swift */,
+				5E53077F6CE2AF59B9BCB4EF /* SuccessBodyView.swift */,
+				4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */,
+				DD828AB80DE41DE11D38AF5C /* SuccessFooterView.swift */,
+				EB3F67BE6E46ED018EB8C3FD /* SuccessViewController.swift */,
+			);
+			path = Success;
 			sourceTree = "<group>";
 		};
 		45F5EA9A9A1DEBC1EC05937F /* FinancialConnectionsSDK */ = {
@@ -273,6 +548,8 @@
 		53C3F536D69FCBC77C3E7D5F /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				6DA6A57067FB5EF86FEBD5B3 /* FinancialConnectionsNavigationController.swift */,
+				1407DD9E95ADFE143FA046E4 /* FlowRouter.swift */,
 				93C4ECB724BD75320A999C42 /* HostController.swift */,
 				A0863AF9E2F9BD7C026FE59E /* HostViewController.swift */,
 				60B7CFC14964440E8AA670A9 /* LoadingView.swift */,
@@ -292,14 +569,57 @@
 			path = Web;
 			sourceTree = "<group>";
 		};
+		5A844A24E4E9F4B7E3802DA9 /* AccountPicker */ = {
+			isa = PBXGroup;
+			children = (
+				463549CECD379484842033E3 /* AccountPickerAccountLoadErrorView.swift */,
+				D715516C6703A780913E66EB /* AccountPickerDataSource.swift */,
+				9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */,
+				1362591D12A04CA663A69A47 /* AccountPickerHelpers.swift */,
+				2323E76B1B9C295DC5EAD53E /* AccountPickerLabelRowView.swift */,
+				912E3AA36B68492A69019AEA /* AccountPickerNoAccountEligibleErrorView.swift */,
+				283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */,
+				4F95EA3D421BE335087E05DB /* AccountPickerSelectionRowView.swift */,
+				72DEDE8871A732D603E96E2B /* AccountPickerSelectionView.swift */,
+				97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */,
+				97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */,
+				9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */,
+				7A4D5A45DB15DF6148F1C85A /* RadioButtonView.swift */,
+			);
+			path = AccountPicker;
+			sourceTree = "<group>";
+		};
+		605E7A0FA65A081265FA6F54 /* InstitutionPicker */ = {
+			isa = PBXGroup;
+			children = (
+				AC4BABB6C871FE97868767E7 /* FeaturedInstitutionGridCell.swift */,
+				947F7F2C282A37EC4AB119E0 /* FeaturedInstitutionGridView.swift */,
+				9ED1CF95D441821773EA68EE /* InstitutionDataSource.swift */,
+				8B3BF292FD82A198752A82EB /* InstitutionPickerViewController.swift */,
+				4DA1C1B311E06C1165C6F6A2 /* InstitutionSearchBar.swift */,
+				8F400E7EB544BF34DDD468BE /* InstitutionSearchErrorView.swift */,
+				F560A66FD9A35762F884F2D4 /* InstitutionSearchFooterView.swift */,
+				C71BC4222E1986338BCB9587 /* InstitutionSearchTableView.swift */,
+				735101D3516EE679A29AE6D0 /* InstitutionSearchTableViewCell.swift */,
+			);
+			path = InstitutionPicker;
+			sourceTree = "<group>";
+		};
 		637114D9B91F9206B6F6709B /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				D890BD770F4E33D23ABA37EA /* BankAccountToken.swift */,
 				359BF8ACFB35A16EBD96C4F0 /* FinancialConnectionsAccount.swift */,
+				5C837C27C2577391B91FF0E5 /* FinancialConnectionsAuthSession.swift */,
+				C93F7139E9BFB044902962D0 /* FinancialConnectionsImage.swift */,
+				8FE8BCF5A9FF2B9392A755EA /* FinancialConnectionsInstitution.swift */,
+				D3BF4CD26CEAE792AC2A7313 /* FinancialConnectionsMixedOAuthParams.swift */,
+				452989E2D269784006EFD18C /* FinancialConnectionsPartnerAccount.swift */,
+				EF9E2D4C9D7684B02AD6037A /* FinancialConnectionsPaymentAccountResource.swift */,
+				191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */,
 				ACEF0BAF1A5BBA3061C15A09 /* FinancialConnectionsSession.swift */,
 				429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */,
-				A1D5C7037762D0ED8C9A1059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */,
+				4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -338,6 +658,7 @@
 				53C3F536D69FCBC77C3E7D5F /* Common */,
 				45F5EA9A9A1DEBC1EC05937F /* FinancialConnectionsSDK */,
 				DEC2827C937247DAA010F3D2 /* Helpers */,
+				BF0B937496C645C3ED6E265E /* Native */,
 				541D32C4B0F1635A97F4FE11 /* Web */,
 				51D8397DB43DEC09BDF66E8A /* FinancialConnectionsSheet.swift */,
 				5C0737DE86515E172909366F /* FinancialConnectionsSheetError.swift */,
@@ -345,6 +666,16 @@
 				54CF67A1F497E6CC73029CF0 /* StripeCore+Import.swift */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		7BFDCD3B61A38A4BA3466780 /* AttachLinkedPaymentAccount */ = {
+			isa = PBXGroup;
+			children = (
+				6224E799E667DF223757D493 /* AccountNumberRetrievalErrorView.swift */,
+				518F1F230FD4DF68E683C728 /* AttachLinkedPaymentAccountDataSource.swift */,
+				FA62F9B77C6A1D1B12F02CF5 /* AttachLinkedPaymentAccountViewController.swift */,
+			);
+			path = AttachLinkedPaymentAccount;
 			sourceTree = "<group>";
 		};
 		7F765C8B9BCB2FA4A3334063 /* Project */ = {
@@ -379,6 +710,21 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		92A9D27306891BBCBC4DBF49 /* ManualEntry */ = {
+			isa = PBXGroup;
+			children = (
+				C9A22DBD7D336381FEB3AB00 /* ManualEntryCheckView.swift */,
+				BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */,
+				C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */,
+				C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */,
+				73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */,
+				6516BB12D029D1DDCBA1534D /* ManualEntryTextField.swift */,
+				F897F5AA6A684D0A370EA7BC /* ManualEntryValidator.swift */,
+				8301F7BA1FF90D131AE96E10 /* ManualEntryViewController.swift */,
+			);
+			path = ManualEntry;
+			sourceTree = "<group>";
+		};
 		9D434FE45EB09749E475FED6 /* MockData */ = {
 			isa = PBXGroup;
 			children = (
@@ -388,6 +734,25 @@
 				AA01BC4016BF8788633CCAD9 /* FinancialConnectionsSession_only_la.json */,
 			);
 			path = MockData;
+			sourceTree = "<group>";
+		};
+		A7767444AAEB7AB6E887A54D /* PartnerAuth */ = {
+			isa = PBXGroup;
+			children = (
+				EAC8B933341AF86D9AFF5979 /* PartnerAuthDataSource.swift */,
+				25BDE722D8A827955C3182E8 /* PartnerAuthViewController.swift */,
+				5309724F4B9531EBBB03FD54 /* PrepaneView.swift */,
+			);
+			path = PartnerAuth;
+			sourceTree = "<group>";
+		};
+		ACC10582EEBD4F7003A8EA2E /* ManualEntrySuccess */ = {
+			isa = PBXGroup;
+			children = (
+				35882B0B77DB22CEEDDA8C3C /* ManualEntrySuccessTransactionTableView.swift */,
+				43A7913F446F111887F1FA01 /* ManualEntrySuccessViewController.swift */,
+			);
+			path = ManualEntrySuccess;
 			sourceTree = "<group>";
 		};
 		B099AE2E516197735F31B3D9 /* StripeFinancialConnections */ = {
@@ -401,13 +766,89 @@
 			path = StripeFinancialConnections;
 			sourceTree = "<group>";
 		};
+		BD42562786EC2FC703C1B28E /* TerminalError */ = {
+			isa = PBXGroup;
+			children = (
+				B83A2749140B4E129CEF39C4 /* TerminalErrorViewController.swift */,
+			);
+			path = TerminalError;
+			sourceTree = "<group>";
+		};
+		BF0B937496C645C3ED6E265E /* Native */ = {
+			isa = PBXGroup;
+			children = (
+				5A844A24E4E9F4B7E3802DA9 /* AccountPicker */,
+				7BFDCD3B61A38A4BA3466780 /* AttachLinkedPaymentAccount */,
+				EB6632ED2E696DA6381326C0 /* Consent */,
+				605E7A0FA65A081265FA6F54 /* InstitutionPicker */,
+				92A9D27306891BBCBC4DBF49 /* ManualEntry */,
+				ACC10582EEBD4F7003A8EA2E /* ManualEntrySuccess */,
+				A7767444AAEB7AB6E887A54D /* PartnerAuth */,
+				2530BFFBB1E845D2AA698BFC /* Placeholder */,
+				C76F2B3F6D5AB3E54CE1C206 /* ResetFlow */,
+				C0C2FC181FFA71CFAA6F3148 /* Shared */,
+				3ADD22C8436381E94908DA82 /* Success */,
+				BD42562786EC2FC703C1B28E /* TerminalError */,
+				5F856808B78F4F1975959805 /* NativeFlowController.swift */,
+				780BC432329228B042DA97D8 /* NativeFlowDataManager.swift */,
+			);
+			path = Native;
+			sourceTree = "<group>";
+		};
+		C0C2FC181FFA71CFAA6F3148 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				BD2284A0556400DEAEB279BE /* AlwaysTemplateImageView.swift */,
+				A9B31B3A45DD8AAFD6F08820 /* AuthFlowHelpers.swift */,
+				591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */,
+				4E4A84F0646AD673029CB6FC /* Button+Extensions.swift */,
+				0E0C74C5F4B60F472AC1D6CF /* ClickableLabel.swift */,
+				FB4BBD3A262039B34C2DDCCB /* CloseConfirmationAlertHandler.swift */,
+				1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */,
+				8199AF9CE999D21ED5871D96 /* ConsentBottomSheetView.swift */,
+				9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */,
+				A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */,
+				F669BB8F3DA862C425897705 /* HitTestView.swift */,
+				939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */,
+				13A97EEE12DA8FB77D13C527 /* MerchantDataAccessView.swift */,
+				34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */,
+				263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */,
+				1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */,
+				6F1C8781095363382A0F7BE5 /* ReusableInformationView.swift */,
+				1D38B3C816EAB38AD242B064 /* SFSafariViewController+Extensions.swift */,
+				723996D53965EC2286267A01 /* SpinnerIconView.swift */,
+				7455C145AEAE3D5F87532187 /* SuccessIconView.swift */,
+				E813BE6B34901E4E050FFE13 /* TimeInterval+Extensions.swift */,
+				D2EA7801B85973F10F65DDB6 /* UIImage+Extensions.swift */,
+				DDC3AC48492FAB61E5B66D94 /* UIImageView+Extensions.swift */,
+				B52F27D0FACAE9D4F4D15A73 /* UITableView+Extensions.swift */,
+				CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		C76F2B3F6D5AB3E54CE1C206 /* ResetFlow */ = {
+			isa = PBXGroup;
+			children = (
+				5D1C78684DD0B2D168C86229 /* ResetFlowDataSource.swift */,
+				DFA81F9910A88A7DEB0F0BFD /* ResetFlowViewController.swift */,
+			);
+			path = ResetFlow;
+			sourceTree = "<group>";
+		};
 		DEC2827C937247DAA010F3D2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				F166EE14B5D4D94FEBC64BEB /* Extensions.swift */,
+				064D0E3A3AC71FAA60B54FC5 /* Helpers.swift */,
 				65BCC4356AE3295B4A2F4A28 /* Image.swift */,
+				267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */,
 				6E2D765AC793D89D26B74FC4 /* STPLocalizedString.swift */,
+				7F3A660CB2E9651947FE6D0A /* String+Extensions.swift */,
+				E05B47C10B77812660F7B01A /* String+Localized.swift */,
 				2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */,
+				FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */,
+				74512F0599D8AEEA0BB1DA5F /* UIFont+Extensions.swift */,
+				BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -417,14 +858,31 @@
 			children = (
 				9D434FE45EB09749E475FED6 /* MockData */,
 				77A71EBB1B98CD285DD17D5F /* AccountFetcherTests.swift */,
+				3ED33E6BADC0893C3F6B22D2 /* AccountPickerHelpersTests.swift */,
+				710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */,
+				7AFC0D3ED86914DC4216CCCA /* AuthFlowHelpersTests.swift */,
 				73AB8A480620B5C3567F453C /* FinancialConnectionsAnalyticsTest.swift */,
 				E05C2C5CDAA55CE700662040 /* FinancialConnectionsSessionTests.swift */,
 				20E7725EF317C3BD62ADF845 /* FinancialConnectionsSheetTests.swift */,
 				4BFCD9C339634B71FC8F85E9 /* Info.plist */,
+				F8C7FDF59D906EA5C6B7A514 /* ManualEntryValidatorTests.swift */,
+				4E7D318EE807701AB3FCA17D /* MarkdownBoldAttributedStringTests.swift */,
 				965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */,
 				90A06A97D714450321A5D76D /* SoftLinkTests.swift */,
+				CF731140836AE438C7F4F6AB /* StringExtensionsTests.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
+			sourceTree = "<group>";
+		};
+		EB6632ED2E696DA6381326C0 /* Consent */ = {
+			isa = PBXGroup;
+			children = (
+				6FA941D5F7178E89DE70076F /* ConsentBodyView.swift */,
+				81304AD5BE5CCA10D1A866E0 /* ConsentDataSource.swift */,
+				1E58AE51252DA4597DC82988 /* ConsentFooterView.swift */,
+				13AAB10AEE7A8EC5C9C53FFA /* ConsentViewController.swift */,
+			);
+			path = Consent;
 			sourceTree = "<group>";
 		};
 		F2CF7FBAD6C8773D6E954126 /* Localizations */ = {
@@ -572,7 +1030,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */,
+				C23A55F7C98103222B159D73 /* bank@3x.png in Resources */,
+				43B6B0358EDD34A8AB39B53C /* bank_check@2x.png in Resources */,
+				F0397F4E1D6A91416897F45E /* brandicon_default@3x.png in Resources */,
+				645D6FF67167263F9A1C2BB0 /* bullet@3x.png in Resources */,
+				F10147CF75C2A09D66CB5C14 /* cancel_circle@3x.png in Resources */,
+				755140DEEE50DCD6E939E528 /* check@3x.png in Resources */,
+				16F2968DC3B2FC4558821970 /* chevron_down@3x.png in Resources */,
 				C747113C75AC92643B283CBD /* close@3x.png in Resources */,
+				44B67A553B5B53C34547CCDE /* edit@3x.png in Resources */,
+				5E5C480AB5F0B2DBDA7B61B1 /* email@3x.png in Resources */,
+				E1D538A71C3370D534EA479B /* finicity@3x.png in Resources */,
+				CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */,
+				693FBB1373098550A32A1D94 /* mx@3x.png in Resources */,
+				3AE1C7A78FB5B220F5200F49 /* search@3x.png in Resources */,
+				BD3C87E03EB44F7D1C11664C /* spinner@3x.png in Resources */,
+				97032B101B54E6A98178FD73 /* stripe_logo@3x.png in Resources */,
+				CF8152B40B6CA74FD15602BF /* warning_circle@3x.png in Resources */,
+				87E22AF1E35FB63C20AEE9DF /* warning_triangle@3x.png in Resources */,
 				D949AE695F3288F84258BACD /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -585,24 +1060,119 @@
 			buildActionMask = 2147483647;
 			files = (
 				D682CAE1EF3CA74781556B15 /* TuistBundle+StripeFinancialConnections.swift in Sources */,
+				648FA50974B14CC861B08ECB /* APIPollingHelper.swift in Sources */,
 				BCEA321423DF0E7674C2544C /* APIVersion.swift in Sources */,
 				11FB97AC840FEB5B5BF85BF9 /* FinancialConnectionsAPIClient.swift in Sources */,
 				432463EBF562CDDC6D3DC252 /* BankAccountToken.swift in Sources */,
 				EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */,
+				460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */,
+				F67624595BD2CD7B6793BFDA /* FinancialConnectionsImage.swift in Sources */,
+				07712610C7D2F484AAB96982 /* FinancialConnectionsInstitution.swift in Sources */,
+				B271AAF41C9FE6AE392B88D3 /* FinancialConnectionsMixedOAuthParams.swift in Sources */,
+				77C7F9A1DD0461FA2B1B4328 /* FinancialConnectionsPartnerAccount.swift in Sources */,
+				D926228B6C7601AE4C806C93 /* FinancialConnectionsPaymentAccountResource.swift in Sources */,
+				6944E131D351784058C7D734 /* FinancialConnectionsPaymentMethodType.swift in Sources */,
 				1C043C73281C0856D2C979C6 /* FinancialConnectionsSession.swift in Sources */,
 				9E0044ABEC04E2A8C50E3658 /* FinancialConnectionsSessionManifest.swift in Sources */,
-				C87EB461D694C9DBAF712D30 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */,
+				D936C8A9F6E018DB144A5B0A /* FinancialConnectionsSynchronize.swift in Sources */,
+				15EC9F36187C341800164428 /* FinancialConnectionsAnalyticsClient.swift in Sources */,
 				C61D5957D3276991795F7D16 /* FinancialConnectionsSheetAnalytics.swift in Sources */,
+				6E6E30D01D4E9629DB07E97B /* FinancialConnectionsNavigationController.swift in Sources */,
+				01C820ECDBFC041A741A5499 /* FlowRouter.swift in Sources */,
 				933F9DFE970FAB4715369086 /* HostController.swift in Sources */,
 				C258E0D849083BCC8A9B5068 /* HostViewController.swift in Sources */,
 				C59DBA5A86A3331113D6ED7E /* LoadingView.swift in Sources */,
 				FE268512851E63E4E111DECD /* FinancialConnectionsSDKImplementation.swift in Sources */,
 				E85DCFCA61299EF27B3201CF /* FinancialConnectionsSheet.swift in Sources */,
 				F22DE4B785D51B318A1A3D08 /* FinancialConnectionsSheetError.swift in Sources */,
-				CB9B3D33BCEED08CC0E5E656 /* Extensions.swift in Sources */,
+				C3338FA5019EC8E99E2BA62F /* Helpers.swift in Sources */,
 				A573468B2800DABF384CAB43 /* Image.swift in Sources */,
+				A79D6A26EE9FF96D24F4AC5C /* NSAttributedString+Extensions.swift in Sources */,
 				76FB143918C5463B587091BB /* STPLocalizedString.swift in Sources */,
+				ABB28C3F6604C2BA2FCA079D /* String+Extensions.swift in Sources */,
+				3FE4DEFAD6FF77B8D9EE68D3 /* String+Localized.swift in Sources */,
 				3ECA346F75060BD954376EBF /* StripeFinancialConnectionsBundleLocator.swift in Sources */,
+				E760C94B619A8934D1D5E1D0 /* UIColor+Extensions.swift in Sources */,
+				313E6E37B4D48022F03ED2C7 /* UIFont+Extensions.swift in Sources */,
+				4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */,
+				C38BEDD99477C83C91B105DD /* AccountPickerAccountLoadErrorView.swift in Sources */,
+				C1A079E8E76A02EBCB2588DA /* AccountPickerDataSource.swift in Sources */,
+				BFF222008EEEDC3FACE342D9 /* AccountPickerFooterView.swift in Sources */,
+				C0831318A33A32BF2EAB641A /* AccountPickerHelpers.swift in Sources */,
+				E9E6775FE1FB4E13B284C8E3 /* AccountPickerLabelRowView.swift in Sources */,
+				1889ECB24D40EF331974C288 /* AccountPickerNoAccountEligibleErrorView.swift in Sources */,
+				A10B5A3E5E8AE8767CF09C15 /* AccountPickerSelectionListView.swift in Sources */,
+				04EB48BB849D29C7C8349DBC /* AccountPickerSelectionRowView.swift in Sources */,
+				163E387D567068E4A64A4C13 /* AccountPickerSelectionView.swift in Sources */,
+				23DBA4240ED1727C47937A6B /* AccountPickerViewController.swift in Sources */,
+				E4D00DB842047E595DD85BEF /* CheckboxView.swift in Sources */,
+				1599A235CE57409AA2F678E1 /* LinkingAccountsLoadingView.swift in Sources */,
+				152B480EA85D541CC64451A1 /* RadioButtonView.swift in Sources */,
+				716E12A9AC0B790F14FB72C6 /* AccountNumberRetrievalErrorView.swift in Sources */,
+				3446145FCA3278D51A9D4B80 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
+				E3F62D2F9C344A1178030E8E /* AttachLinkedPaymentAccountViewController.swift in Sources */,
+				707C265C4179A8FEC98913FE /* ConsentBodyView.swift in Sources */,
+				465AE8A58AD2183E1E2042FE /* ConsentDataSource.swift in Sources */,
+				97C528CE821C6A55D58F68A4 /* ConsentFooterView.swift in Sources */,
+				E9866D5CA186A242BBEA69E1 /* ConsentViewController.swift in Sources */,
+				76C466DE26B6646D9B25E9B1 /* FeaturedInstitutionGridCell.swift in Sources */,
+				BC991D917034CCF5149403CA /* FeaturedInstitutionGridView.swift in Sources */,
+				D9D84D6FF624CF4363D87CEB /* InstitutionDataSource.swift in Sources */,
+				6D29E55F6A3864ED52799169 /* InstitutionPickerViewController.swift in Sources */,
+				C6B99A1C34886D3B5E1AF1A2 /* InstitutionSearchBar.swift in Sources */,
+				E942BC70AEBC91537B4628DF /* InstitutionSearchErrorView.swift in Sources */,
+				9DEE4DE72A7FEDD9D3902C16 /* InstitutionSearchFooterView.swift in Sources */,
+				58CD76A6379A04566684D2AC /* InstitutionSearchTableView.swift in Sources */,
+				21C0B56B34EACFDAC06ED97D /* InstitutionSearchTableViewCell.swift in Sources */,
+				48E093CC2FB4A619A9E2C20E /* ManualEntryCheckView.swift in Sources */,
+				4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */,
+				2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */,
+				A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */,
+				6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */,
+				1C5D953684456368EEF4C622 /* ManualEntryTextField.swift in Sources */,
+				07A86CEB6B4F6BEB524EFE37 /* ManualEntryValidator.swift in Sources */,
+				19D1548A5A4034D349DB0947 /* ManualEntryViewController.swift in Sources */,
+				2554BE48E61032CCD4565E7E /* ManualEntrySuccessTransactionTableView.swift in Sources */,
+				CA5825059866BD3416BF8240 /* ManualEntrySuccessViewController.swift in Sources */,
+				2CE89100448F26DDA831F455 /* NativeFlowController.swift in Sources */,
+				74CC216C8A71AD357B8AA544 /* NativeFlowDataManager.swift in Sources */,
+				2AA0942F22A323B33CA6B7CA /* PartnerAuthDataSource.swift in Sources */,
+				F03F840B9E896F1B09742191 /* PartnerAuthViewController.swift in Sources */,
+				F419E86FC441B6C58B3F0D00 /* PrepaneView.swift in Sources */,
+				136B704C025F6F69D55A625C /* PlaceholderViewController.swift in Sources */,
+				C906FC4DE38F16032B787607 /* ResetFlowDataSource.swift in Sources */,
+				A9F9E63FD6B72F5552A8A850 /* ResetFlowViewController.swift in Sources */,
+				1CE588CD44D6591B95A9B281 /* AlwaysTemplateImageView.swift in Sources */,
+				368DFF9D68F1F8D6A4353961 /* AuthFlowHelpers.swift in Sources */,
+				9AF6EC34D666BEB3C1397092 /* BulletPointLabelView.swift in Sources */,
+				F65E8D16DE691EB6C99C4521 /* Button+Extensions.swift in Sources */,
+				05D03C32FC5F108E6B6B227B /* ClickableLabel.swift in Sources */,
+				8EDCAA40D5ACE4D4CCC67695 /* CloseConfirmationAlertHandler.swift in Sources */,
+				4CEE364A07B91B51B3D00F05 /* ConsentBottomSheetModel.swift in Sources */,
+				EDB22A11E058269784090A51 /* ConsentBottomSheetView.swift in Sources */,
+				69508BFAF474855B05347CE4 /* ConsentBottomSheetViewController.swift in Sources */,
+				33FA1684CE79F21271D14F23 /* HitTestStackView.swift in Sources */,
+				691619AE9A989548ABA36535 /* HitTestView.swift in Sources */,
+				91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */,
+				7AC3A12D50FA995882473C8A /* MerchantDataAccessView.swift in Sources */,
+				444884F264D13FF654EA7471 /* PaneLayoutView.swift in Sources */,
+				B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */,
+				A6DB232AD8CB25B0C9F4C79C /* PaneWithHeaderLayoutView.swift in Sources */,
+				8A424D8F321E80945AD42B1A /* ReusableInformationView.swift in Sources */,
+				99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */,
+				62F9AC317C04285853345A0C /* SpinnerIconView.swift in Sources */,
+				4AADAA347EF70ECB8BE28E84 /* SuccessIconView.swift in Sources */,
+				AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */,
+				E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */,
+				486E50E6CB90208AB98C031E /* UIImageView+Extensions.swift in Sources */,
+				F0FB346A0F86C3561CD3C048 /* UITableView+Extensions.swift in Sources */,
+				A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */,
+				BAA72FE13406CAF5FA4BBDC8 /* SuccessAccountListView.swift in Sources */,
+				2E29C0A30C137791D357F4C1 /* SuccessBodyView.swift in Sources */,
+				B2970FE2753A4D79E428BA73 /* SuccessDataSource.swift in Sources */,
+				C39214EA5995D85B847406BE /* SuccessFooterView.swift in Sources */,
+				B45B8DC3DAACDD5F04B1B1BE /* SuccessViewController.swift in Sources */,
+				3BFED24B6DF835A0F2FB4939 /* TerminalErrorViewController.swift in Sources */,
 				8C985491C17431278097D0FF /* Placeholder.swift in Sources */,
 				7AE7474B7AFF416B6072721C /* StripeCore+Import.swift in Sources */,
 				DC4DFC847378AC9E9112B443 /* AuthenticationSessionManager.swift in Sources */,
@@ -618,12 +1188,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C6B6AB6213B1E6304CC88DC /* TuistBundle+StripeFinancialConnectionsTests.swift in Sources */,
+				CBEAB081DD7353928F485071 /* APIPollingHelperTests.swift in Sources */,
 				0AF88791C01102CDCC31F419 /* AccountFetcherTests.swift in Sources */,
+				700B745FEF43088D9E34C0E4 /* AccountPickerHelpersTests.swift in Sources */,
+				6744CB1B182C5F7220B0B804 /* AuthFlowHelpersTests.swift in Sources */,
 				CB734C25A19D38A87876FB2B /* FinancialConnectionsAnalyticsTest.swift in Sources */,
 				77D3B375B9DBF80BA209BC99 /* FinancialConnectionsSessionTests.swift in Sources */,
 				846D1D7429B9E414744DEC99 /* FinancialConnectionsSheetTests.swift in Sources */,
+				C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */,
+				779C729BB49FD4B99DCD517B /* MarkdownBoldAttributedStringTests.swift in Sources */,
 				BF5F964E1CA6312755D4161E /* SessionFetcherTests.swift in Sources */,
 				ED818E10F37230678B9B73CC /* SoftLinkTests.swift in Sources */,
+				D9F35B3B31CA2E52055D6B1D /* StringExtensionsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
