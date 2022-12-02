@@ -149,7 +149,6 @@ extension InstitutionPickerViewController {
                         .analyticsClient
                         .logPaneLoaded(pane: .institutionPicker)
                 case .failure(let error):
-                    // TODO: add handling for failure (Stripe.js currently shows a terminal error)
                     self.dataSource
                         .analyticsClient
                         .logUnexpectedError(

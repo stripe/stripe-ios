@@ -92,7 +92,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                     if institutionSkipAccountSelection  {
                         return String.Localized.link_another_account
                     } else {
-                        return String.Localized.select_another_bank // TODO: Not sure if correct as Stripe.js flips these
+                        return String.Localized.select_another_bank
                     }
                 }(),
                 action: didSelectAnotherBank
