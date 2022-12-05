@@ -3,6 +3,10 @@
 * [Added] Added logos of accepted card brands on Card input field.
 * [Fixed] Fixed erroneously displaying the card scan button when card scanning is not available.
 
+### Financial Connections
+* [Changed] FinancialConnectionsSheet methods now require to be called from non-extensions. 
+* [Changed] BankAccountToken.bankAccount was changed to an optional.
+
 ## 23.2.0 2022-11-14
 ### PaymentSheet
 * [Added] Added `AddressViewController`, a customizable view controller that collects local and international addresses for your customers. See https://stripe.com/docs/elements/address-element?platform=ios.
