@@ -74,7 +74,7 @@ public extension PaymentSheet {
             public init() {}
             
             /// The primary color used throughout PaymentSheet
-            public var primary: UIColor = .systemBlue
+            public var primary: UIColor = .green
             
             /// The color used for the background of PaymentSheet
             public var background: UIColor = .systemBackground
