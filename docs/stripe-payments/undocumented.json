@@ -1,110 +1,110 @@
 {
   "warnings": [
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
       "line": 90,
       "symbol": "STPAPIClient.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 115,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 112,
       "symbol": "AnalyticsClientV2Protocol.makeCommonPayload()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 144,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 141,
       "symbol": "AnalyticsClientV2Protocol.payload(withEventName:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
       "line": 127,
       "symbol": "STPAnalyticsClient",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
       "line": 77,
       "symbol": "StripeJSONEncoder",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 72,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 71,
       "symbol": "DownloadManager.downloadImage(url:updateHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
-      "line": 222,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 221,
       "symbol": "DownloadManager.imagePlaceHolder()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
       "line": 32,
       "symbol": "BundleLocatorProtocol",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePayments/StripePayments/API Bindings/Models/PaymentIntents/STPPaymentIntentShippingDetailsAddressParams.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePayments/StripePayments/API Bindings/Models/PaymentIntents/STPPaymentIntentShippingDetailsAddressParams.swift",
       "line": 66,
       "symbol": "STPPaymentIntentShippingDetailsAddressParams.isEqual(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePayments/StripePayments/API Bindings/Models/PaymentIntents/STPPaymentIntentShippingDetailsParams.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePayments/StripePayments/API Bindings/Models/PaymentIntents/STPPaymentIntentShippingDetailsParams.swift",
       "line": 65,
       "symbol": "STPPaymentIntentShippingDetailsParams.isEqual(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePayments/StripePayments/API Bindings/Models/PaymentMethods/STPPaymentMethodParams.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePayments/StripePayments/API Bindings/Models/PaymentMethods/STPPaymentMethodParams.swift",
       "line": 1116,
       "symbol": "STPPaymentMethodParams.label",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePayments/StripePayments/API Bindings/Models/Shared/STPIntentActionVerifyWithMicrodeposits.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePayments/StripePayments/API Bindings/Models/Shared/STPIntentActionVerifyWithMicrodeposits.swift",
       "line": 11,
       "symbol": "STPMicrodepositType",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift",
       "line": 40,
       "symbol": "STPBankAccountCollector.init(apiClient:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift",
       "line": 47,
       "symbol": "STPBankAccountCollector.STPCollectBankAccountForPaymentCompletionBlock",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/Documents/repos/stripe-ios/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripePayments/StripePayments/Helpers/STPBankAccountCollector.swift",
       "line": 268,
       "symbol": "STPBankAccountCollector.STPCollectBankAccountForSetupCompletionBlock",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/yuki/Documents/repos/stripe-ios"
+  "source_directory": "/Users/porter/stripe/stripe-ios"
 }
