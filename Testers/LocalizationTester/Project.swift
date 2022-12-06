@@ -7,11 +7,11 @@ let project = Project(
         configurations: [
             .debug(
                 name: "Debug",
-                xcconfig: "//BuildConfigurations/Project-Debug.xcconfig"
+                xcconfig: "BuildConfigurations/Project-Debug.xcconfig"
             ),
             .release(
                 name: "Release",
-                xcconfig: "//BuildConfigurations/Project-Release.xcconfig"
+                xcconfig: "BuildConfigurations/Project-Release.xcconfig"
             ),
         ],
         defaultSettings: .none
@@ -41,11 +41,11 @@ let project = Project(
                 configurations: [
                     .debug(
                         name: "Debug",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
+                        xcconfig: "BuildConfigurations/LocalizationTester-Debug.xcconfig"
                     ),
                     .release(
                         name: "Release",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+                        xcconfig: "BuildConfigurations/LocalizationTester-Release.xcconfig"
                     ),
                 ],
                 defaultSettings: .none
@@ -65,11 +65,11 @@ let project = Project(
                 configurations: [
                     .debug(
                         name: "Debug",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
+                        xcconfig: "BuildConfigurations/LocalizationTesterUITests-Debug.xcconfig"
                     ),
                     .release(
                         name: "Release",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+                        xcconfig: "BuildConfigurations/LocalizationTesterUITests-Release.xcconfig"
                     ),
                 ],
                 defaultSettings: .none

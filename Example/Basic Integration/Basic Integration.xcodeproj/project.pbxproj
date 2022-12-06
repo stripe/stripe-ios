@@ -89,6 +89,7 @@
 		16266620366B4796B76D6704 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
 		178084545BCB7023D506924F /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		19112014D553A866859734E1 /* MyAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
+		279E5BE26140F948375F1E42 /* BasicIntegrationUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BasicIntegrationUITests-Debug.xcconfig"; sourceTree = "<group>"; };
 		304E6D77BFCB74EBD81B2202 /* TuistAssets+BasicIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+BasicIntegration.swift"; sourceTree = "<group>"; };
 		31F97C3EA3F8ACE7A12A3CC5 /* TuistStrings+BasicIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+BasicIntegration.swift"; sourceTree = "<group>"; };
 		3219256F716EA01C1F702B69 /* BasicIntegration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicIntegration.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,12 +98,15 @@
 		4F822D4234D6651081ABEEFB /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		512F713546BED9521785768B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		563C2A3A8DBE67B6E8B0AC56 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F1A208AE2350AA815ADE529 /* BasicIntegrationUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BasicIntegrationUITests-Release.xcconfig"; sourceTree = "<group>"; };
 		66D166D166C755DFCD4724DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6AE285E21325BCEB58A6B5E5 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7161D6D35D73FCCEC90ACC4B /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		76A4520B38C79648CC52074D /* BasicIntegration-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BasicIntegration-Debug.xcconfig"; sourceTree = "<group>"; };
 		7C8E3087C438CC5E1B18E583 /* EmojiCheckoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCheckoutCell.swift; sourceTree = "<group>"; };
 		7D44D5F70C1124245CC1FFB4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		85B15F69FE8043C1B1D39B8A /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		87573787ED54C9F497D1084D /* BasicIntegration-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BasicIntegration-Release.xcconfig"; sourceTree = "<group>"; };
 		89BEDC3C75E33E904368B700 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		94D0F7E1AA9B4F8DEF5E58C4 /* BasicIntegrationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicIntegrationUITests.swift; sourceTree = "<group>"; };
 		96B0F507ADF5EB1ED0A5ACA1 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -194,7 +198,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4920E6C343C613F5A54B52F2 /* BuildConfigurations */ = {
+		3FC85D4D529E39A799ADFD25 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
 				FBBF0420313F7FC3B7B027C1 /* Project-Debug.xcconfig */,
@@ -202,6 +206,17 @@
 			);
 			name = BuildConfigurations;
 			path = ../../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		4920E6C343C613F5A54B52F2 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				76A4520B38C79648CC52074D /* BasicIntegration-Debug.xcconfig */,
+				87573787ED54C9F497D1084D /* BasicIntegration-Release.xcconfig */,
+				279E5BE26140F948375F1E42 /* BasicIntegrationUITests-Debug.xcconfig */,
+				5F1A208AE2350AA815ADE529 /* BasicIntegrationUITests-Release.xcconfig */,
+			);
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		6178DB55CB128E84774EEE94 /* Resources */ = {
@@ -245,6 +260,7 @@
 				08DE5C310F5BCEF3C6FE7D39 /* Basic Integration */,
 				DD88FC2477F40A6339AC582A /* BasicIntegrationUITests */,
 				4920E6C343C613F5A54B52F2 /* BuildConfigurations */,
+				3FC85D4D529E39A799ADFD25 /* BuildConfigurations */,
 				69663AAACD0B9044755E5CEE /* Derived */,
 			);
 			name = Project;
@@ -433,65 +449,35 @@
 /* Begin XCBuildConfiguration section */
 		15129E5F0945E31B0E17FAB7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5F1A208AE2350AA815ADE529 /* BasicIntegrationUITests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = BasicIntegrationUITests;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "Basic Integration";
 			};
 			name = Release;
 		};
 		4902158CA3EC6AF44C4B069D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 87573787ED54C9F497D1084D /* BasicIntegration-Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Basic Integration/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = BasicIntegration;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		6BF63E734E308993632A01DF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 76A4520B38C79648CC52074D /* BasicIntegration-Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Basic Integration/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = BasicIntegration;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -504,22 +490,12 @@
 		};
 		EA47D7CE269E25DBC1C6A768 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 279E5BE26140F948375F1E42 /* BasicIntegrationUITests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = BasicIntegrationUITests;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "Basic Integration";
 			};
 			name = Debug;

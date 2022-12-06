@@ -32,14 +32,19 @@ let project = Project(
                 .project(target: "StripeIdentity", path: "//StripeIdentity"),
                 .project(target: "StripeCameraCore", path: "//StripeCameraCore"),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "CURRENT_PROJECT_VERSION": "1",
-                "MARKETING_VERSION": "2.0",
-                "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
-                "ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS": true,
-                "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/IdentityVerification-Example-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/IdentityVerification-Example-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
     ],
     schemes: [

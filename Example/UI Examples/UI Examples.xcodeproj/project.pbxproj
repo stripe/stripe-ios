@@ -81,11 +81,13 @@
 		976BE22CCA5F11282143698A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		99F3937A761593E1CE522597 /* Stripe UI Examples.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stripe UI Examples.entitlements"; sourceTree = "<group>"; };
 		9A519B43F19D65723990C98A /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "UI-Examples-Release.xcconfig"; sourceTree = "<group>"; };
 		A59691F976A1B6FF14320055 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7973A50BA0AE6BE3911FCE8 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD64AF1BC2F50B9EE9FFDBB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC583C78E4CBAE8D69D529CC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		D0EE0C28786C46F7AD5678C4 /* CardFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardFormViewController.swift; sourceTree = "<group>"; };
+		D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "UI-Examples-Debug.xcconfig"; sourceTree = "<group>"; };
 		D7D4CC026D81D7E26EDA474B /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8BFFBA74634A24020A4E389 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA170C94A00CA0F89463FB70 /* TuistBundle+UIExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+UIExamples.swift"; sourceTree = "<group>"; };
@@ -130,6 +132,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		294EC109746111B350F3536D /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				3E29FB4EC02BA5C29D8A7453 /* Project-Debug.xcconfig */,
+				9A519B43F19D65723990C98A /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
+			sourceTree = "<group>";
+		};
 		3263FCC006C255D157F89B5D /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -157,11 +169,10 @@
 		899A2FD46DC9D58FC8E92B05 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				3E29FB4EC02BA5C29D8A7453 /* Project-Debug.xcconfig */,
-				9A519B43F19D65723990C98A /* Project-Release.xcconfig */,
+				D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */,
+				A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */,
 			);
-			name = BuildConfigurations;
-			path = ../../BuildConfigurations;
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		9F8F8200ECF69E4B42A8E3C5 /* Resources */ = {
@@ -213,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				899A2FD46DC9D58FC8E92B05 /* BuildConfigurations */,
+				294EC109746111B350F3536D /* BuildConfigurations */,
 				5665BC45510A3D98A60F780A /* Derived */,
 				A61F91913361BF3B3D59DD1E /* UI Examples */,
 				6E1B9A78F0BE9BE3D542CB7D /* README.md */,
@@ -356,6 +368,7 @@
 		};
 		B76B6A28424F367DBD89892E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/UI Examples/Stripe UI Examples.entitlements";
 				INFOPLIST_FILE = "UI Examples/Info.plist";
@@ -367,6 +380,7 @@
 		};
 		D50752F336F516F2134375BC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/UI Examples/Stripe UI Examples.entitlements";
 				INFOPLIST_FILE = "UI Examples/Info.plist";

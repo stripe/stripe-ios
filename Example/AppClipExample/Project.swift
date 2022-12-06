@@ -23,7 +23,7 @@ let project = Project(
             platform: .iOS,
             product: .app,
             bundleId: "com.stripe.AppClipExample",
-            infoPlist: .none,
+            infoPlist: "Info.plist",
             sources: "Shared/*.swift",
             resources: "Shared/Assets.xcassets",
             entitlements: "AppClipExample (iOS).entitlements",
@@ -32,15 +32,19 @@ let project = Project(
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeApplePay", path: "//StripeApplePay"),
             ],
-            settings: .settings(base: [
-                "CURRENT_PROJECT_VERSION": "1",
-                "MARKETING_VERSION": "1.0",
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "IPHONEOS_DEPLOYMENT_TARGET": "14.5",
-                "INFOPLIST_KEY_UIApplicationSceneManifest_Generation": true,
-                "INFOPLIST_KEY_UILaunchScreen_Generation": true,
-                "GENERATE_INFOPLIST_FILE": true,
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/AppClipExample-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/AppClipExample-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "AppClipExampleTests iOS",
@@ -48,28 +52,31 @@ let project = Project(
             product: .uiTests,
             productName: "AppClipExampleTestsiOS",
             bundleId: "com.stripe.AppClipExampleTests",
-            infoPlist: .none,
+            infoPlist: "Tests iOS/Info.plist",
             sources: "Tests iOS/*.swift",
             dependencies: [
                 .target(name: "AppClipExample"),
             ],
-            settings: .settings(base: [
-                "CURRENT_PROJECT_VERSION": "1",
-                "MARKETING_VERSION": "1.0",
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "IPHONEOS_DEPLOYMENT_TARGET": "14.5",
-                "INFOPLIST_KEY_UIApplicationSceneManifest_Generation": true,
-                "INFOPLIST_KEY_UILaunchScreen_Generation": true,
-                "GENERATE_INFOPLIST_FILE": true,
-                "TEST_TARGET": "AppClipExample",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/AppClipExampleTests-iOS-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/AppClipExampleTests-iOS-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "AppClipExampleClip",
             platform: .iOS,
             product: .appClip,
             bundleId: "com.stripe.AppClipExample.Clip",
-            infoPlist: .none,
+            infoPlist: "Info.plist",
             sources: "Shared/*.swift",
             resources: [
                 "AppClipExampleClip/Assets.xcassets",
@@ -80,60 +87,67 @@ let project = Project(
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeApplePay", path: "//StripeApplePay"),
             ],
-            settings: .settings(base: [
-                "CURRENT_PROJECT_VERSION": "1",
-                "MARKETING_VERSION": "1.0",
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "IPHONEOS_DEPLOYMENT_TARGET": "14.5",
-                "INFOPLIST_KEY_UIApplicationSceneManifest_Generation": true,
-                "INFOPLIST_KEY_UILaunchScreen_Generation": true,
-                "GENERATE_INFOPLIST_FILE": true,
-                "ENABLE_PREVIEWS": true,
-                "TEST_TARGET": "AppClipExample",
-                "DEVELOPMENT_ASSET_PATHS": "\"AppClipExampleClip/Preview Content\""
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/AppClipExampleClip-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/AppClipExampleClip-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "AppClipExampleClipTests",
             platform: .iOS,
             product: .unitTests,
             bundleId: "com.stripe.AppClipExample.AppClipExampleClipTests",
-            infoPlist: .none,
+            infoPlist: "AppClipExampleClipTests/Info.plist",
             sources: "AppClipExampleClipTests/*.swift",
             dependencies: [
                 .target(name: "AppClipExampleClip"),
             ],
-            settings: .settings(base: [
-                "CURRENT_PROJECT_VERSION": "1",
-                "MARKETING_VERSION": "1.0",
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "IPHONEOS_DEPLOYMENT_TARGET": "14.5",
-                "INFOPLIST_KEY_UIApplicationSceneManifest_Generation": true,
-                "INFOPLIST_KEY_UILaunchScreen_Generation": true,
-                "GENERATE_INFOPLIST_FILE": true,
-                "TEST_TARGET": "AppClipExampleClip",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/AppClipExampleClipTests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/AppClipExampleClipTests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "AppClipExampleClipUITests",
             platform: .iOS,
             product: .uiTests,
             bundleId: "com.stripe.AppClipExample.AppClipExampleClipUITests",
-            infoPlist: .none,
+            infoPlist: "AppClipExampleClipUITests/Info.plist",
             sources: "AppClipExampleClipUITests/*.swift",
             dependencies: [
                 .target(name: "AppClipExampleClip"),
             ],
-            settings: .settings(base: [
-                "CURRENT_PROJECT_VERSION": "1",
-                "MARKETING_VERSION": "1.0",
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "IPHONEOS_DEPLOYMENT_TARGET": "14.5",
-                "INFOPLIST_KEY_UIApplicationSceneManifest_Generation": true,
-                "INFOPLIST_KEY_UILaunchScreen_Generation": true,
-                "GENERATE_INFOPLIST_FILE": true,
-                "TEST_TARGET": "AppClipExampleClipUITests",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/AppClipExampleClipUITests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/AppClipExampleClipUITests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
     ],
     schemes: [

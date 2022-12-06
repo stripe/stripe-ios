@@ -191,7 +191,6 @@
 		2F1BFF01B1EA57F6EA7BFBF1 /* StripeAPIConfiguration+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeAPIConfiguration+Version.swift"; sourceTree = "<group>"; };
 		303695D2ECDFFCA9C1B68E53 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		31402722B97FC2D9A3A74E73 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
-		323A37E418D9F8A7820729DB /* StripeCoreTestUtils-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeCoreTestUtils-Release.xcconfig"; sourceTree = "<group>"; };
 		325E8108336F1178A10D139C /* STPLocalizationUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizationUtils.swift; sourceTree = "<group>"; };
 		32CB3702691056D3404A8C5F /* StripeAPIConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAPIConfiguration.swift; sourceTree = "<group>"; };
 		33A34DF206B0980BA1D2258F /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
@@ -244,7 +243,6 @@
 		80C548FC21ABF10F4E88B0D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		84E70193A9CA42A0C53E48C1 /* STPAPIClient+ErrorResponseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+ErrorResponseTest.swift"; sourceTree = "<group>"; };
 		86C675ABC9D68378DC699DED /* StripeJSONShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeJSONShared.swift; sourceTree = "<group>"; };
-		8863D1B5417061F8328EA98C /* StripeCoreTestUtils-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeCoreTestUtils-Debug.xcconfig"; sourceTree = "<group>"; };
 		8B3D6ADD516777DE13E79792 /* StripeJSONDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeJSONDecoder.swift; sourceTree = "<group>"; };
 		8CB1E5F31B0941D8B096B360 /* test_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test_image.png; sourceTree = "<group>"; };
 		8D54A5C18C898B385629EB3D /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -453,7 +451,6 @@
 		5308E014F5451516D5EF5314 /* StripeCoreTestUtils */ = {
 			isa = PBXGroup;
 			children = (
-				AA9C8E3F2B3BA17F42AFE227 /* BuildConfigurations */,
 				1726B28CF173B9D1D6426896 /* Categories */,
 				B761C6E8D9BC02D59DBE5A38 /* Mock Files */,
 				BECA727F3CB319C263B09720 /* Mocks */,
@@ -638,15 +635,6 @@
 				4D7125C790190CE509BBA3DF /* UI */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		AA9C8E3F2B3BA17F42AFE227 /* BuildConfigurations */ = {
-			isa = PBXGroup;
-			children = (
-				8863D1B5417061F8328EA98C /* StripeCoreTestUtils-Debug.xcconfig */,
-				323A37E418D9F8A7820729DB /* StripeCoreTestUtils-Release.xcconfig */,
-			);
-			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		B761C6E8D9BC02D59DBE5A38 /* Mock Files */ = {
@@ -1110,7 +1098,7 @@
 		};
 		406CE0D780344B0E0C1C3FD3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 323A37E418D9F8A7820729DB /* StripeCoreTestUtils-Release.xcconfig */;
+			baseConfigurationReference = 33A34DF206B0980BA1D2258F /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1169,7 +1157,7 @@
 		};
 		A8FBA9F7BAC07A05CC29D4E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8863D1B5417061F8328EA98C /* StripeCoreTestUtils-Debug.xcconfig */;
+			baseConfigurationReference = 9761FF113E3F940E2B2BEBB1 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

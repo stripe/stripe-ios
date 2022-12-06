@@ -38,6 +38,7 @@ CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 
 CODE_SIGN_IDENTITY[sdk=iphoneos*] =
 CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM =
 
 // Defines Module
 // 

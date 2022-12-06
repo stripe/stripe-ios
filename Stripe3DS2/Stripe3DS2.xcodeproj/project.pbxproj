@@ -337,6 +337,7 @@
 		0DA1EE83D91993BCAF13EC72 /* STDSEllipticCurvePointTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEllipticCurvePointTests.m; sourceTree = "<group>"; };
 		0DE0C407AFDBD26ABDBE7496 /* discover-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "discover-logo.png"; sourceTree = "<group>"; };
 		0E38A775DB9F529427E900CF /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0E3C05BE55CF3086738AA182 /* Stripe3DS2DemoUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUITests-Debug.xcconfig"; sourceTree = "<group>"; };
 		0F024DEAD6628A0229856656 /* Stripe3DS2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe3DS2-Bridging-Header.h"; sourceTree = "<group>"; };
 		1104D5855D28E49E104CA004 /* mastercard.der */ = {isa = PBXFileReference; path = mastercard.der; sourceTree = "<group>"; };
 		130A832A886AF50959BF2F5C /* STDSBrandingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSBrandingView.m; sourceTree = "<group>"; };
@@ -426,6 +427,7 @@
 		4EB746D4E46ABD2452A154AE /* Stripe3DS2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Stripe3DS2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		500DF194C19254059240390A /* STDSACSNetworkingManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSACSNetworkingManager.h; sourceTree = "<group>"; };
 		50D8A12536A47A2C89FF13CB /* STDSSelectionButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSelectionButton.m; sourceTree = "<group>"; };
+		5316D0759F7F2ED0BF1D3B2E /* Stripe3DS2DemoUI-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUI-Debug.xcconfig"; sourceTree = "<group>"; };
 		547FE3AE84FD37A79CC12491 /* STDSRuntimeErrorEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSRuntimeErrorEvent.m; sourceTree = "<group>"; };
 		55F5B5A14CD596E8C36B5E26 /* STDSDeviceInformationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSDeviceInformationManager.h; sourceTree = "<group>"; };
 		56F96A128E3C68E24FBA2FA3 /* STDSChallengeResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeResponse.h; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 		657944BB00ACAC8269D6BDAB /* STDSProtocolErrorEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProtocolErrorEvent.m; sourceTree = "<group>"; };
 		6690476C1BEA59C37576FB36 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		68FCDDC29785D46AEBACFA78 /* STDSAuthenticationResponseObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSAuthenticationResponseObject.m; sourceTree = "<group>"; };
+		6940D75CA36F7DB9FB56196B /* Stripe3DS2DemoUI-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUI-Release.xcconfig"; sourceTree = "<group>"; };
 		694561487C5DA938BD71985D /* NSError+Stripe3DS2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+Stripe3DS2.h"; sourceTree = "<group>"; };
 		694902921ED07FD4E3765DC2 /* STDSWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSWebView.h; sourceTree = "<group>"; };
 		694DF6F47767A651907D55D4 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -525,6 +528,7 @@
 		A8784FAA03B01EFCCDDDDDB9 /* STDSIPAddress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSIPAddress.m; sourceTree = "<group>"; };
 		A9688C90902AEDB299657B8B /* STDSDirectoryServerCertificate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSDirectoryServerCertificate.h; sourceTree = "<group>"; };
 		A990CAB557AFADD795183DBA /* STDSInvalidInputException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSInvalidInputException.h; sourceTree = "<group>"; };
+		A9CD7EC589C5CC6CE5CF9310 /* Stripe3DS2-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2-Debug.xcconfig"; sourceTree = "<group>"; };
 		AA8A113E655E23381CB3BDA4 /* Stripe3DS2DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Stripe3DS2DemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABC04FA6E5FED17E9C0EFB46 /* STDSStripe3DS2Error.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSStripe3DS2Error.m; sourceTree = "<group>"; };
 		ACEC9DD252873587DB6FC42B /* STDSButtonCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSButtonCustomization.m; sourceTree = "<group>"; };
@@ -561,6 +565,7 @@
 		D19751606A743F5E950A652D /* NSString+EmptyChecking.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+EmptyChecking.m"; sourceTree = "<group>"; };
 		D3F5A6D5A680F008C00A2D69 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		D506D7ABB211C307450A0649 /* STDSWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSWebView.m; sourceTree = "<group>"; };
+		D7A9D36FEF7E97CF735D82B8 /* Stripe3DS2DemoUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUITests-Release.xcconfig"; sourceTree = "<group>"; };
 		D8B7EE0F935EF44EB2EF7D45 /* amex.der */ = {isa = PBXFileReference; path = amex.der; sourceTree = "<group>"; };
 		D9848EF315C947D50B47D480 /* STDSDirectoryServerCertificate+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STDSDirectoryServerCertificate+Internal.h"; sourceTree = "<group>"; };
 		DB3E6577C78A5AD30B31CF09 /* UIButton+CustomInitialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+CustomInitialization.h"; sourceTree = "<group>"; };
@@ -589,13 +594,16 @@
 		F139E48FDEFD921FF410892F /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F159A1D525FD98AA10AAB906 /* STDSImageLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSImageLoader.h; sourceTree = "<group>"; };
 		F1E390BB064C601064D82461 /* STDSEllipticCurvePoint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEllipticCurvePoint.m; sourceTree = "<group>"; };
+		F2BC7014D26158AC9D74CC67 /* Stripe3DS2Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		F4065C88B4BAF88D4F2916C9 /* STDSJailbreakChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSJailbreakChecker.h; sourceTree = "<group>"; };
 		F4D6DB90E3D01495C1F9BFE9 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F4E3828D0E7EDD88B10F805A /* STDSWhitelistView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSWhitelistView.m; sourceTree = "<group>"; };
+		F5686FB8EFA3AE3B39F85BBC /* Stripe3DS2Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		F5AEF91D1EF6C80E86267E37 /* STDSRuntimeException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSRuntimeException.h; sourceTree = "<group>"; };
 		F616986B26BA272C67D74144 /* UIViewController+Stripe3DS2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Stripe3DS2.h"; sourceTree = "<group>"; };
 		F7B140555F5B6E294A67E733 /* STDSException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSException.h; sourceTree = "<group>"; };
 		F86F34D1339F7467D0FDAC75 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F8F6FFED1A0966A49B78F252 /* Stripe3DS2-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2-Release.xcconfig"; sourceTree = "<group>"; };
 		F9BC9457FB361022EB034603 /* NSString+JWEHelpers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+JWEHelpers.m"; sourceTree = "<group>"; };
 		FA344DD8A72FA67CCF37F7C5 /* STDSDebuggerChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDebuggerChecker.m; sourceTree = "<group>"; };
 		FC52C3C844BDA981EE34BAB9 /* STDSDeviceInformationParameterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformationParameterTests.m; sourceTree = "<group>"; };
@@ -672,9 +680,16 @@
 			children = (
 				3A8CD68A006F970DDC54469A /* Project-Debug.xcconfig */,
 				4DB91F58CF23E72636C69C41 /* Project-Release.xcconfig */,
+				A9CD7EC589C5CC6CE5CF9310 /* Stripe3DS2-Debug.xcconfig */,
+				F8F6FFED1A0966A49B78F252 /* Stripe3DS2-Release.xcconfig */,
+				5316D0759F7F2ED0BF1D3B2E /* Stripe3DS2DemoUI-Debug.xcconfig */,
+				6940D75CA36F7DB9FB56196B /* Stripe3DS2DemoUI-Release.xcconfig */,
+				0E3C05BE55CF3086738AA182 /* Stripe3DS2DemoUITests-Debug.xcconfig */,
+				D7A9D36FEF7E97CF735D82B8 /* Stripe3DS2DemoUITests-Release.xcconfig */,
+				F2BC7014D26158AC9D74CC67 /* Stripe3DS2Tests-Debug.xcconfig */,
+				F5686FB8EFA3AE3B39F85BBC /* Stripe3DS2Tests-Release.xcconfig */,
 			);
-			name = BuildConfigurations;
-			path = ../BuildConfigurations;
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		24F3257B1AE8ECCCDABBFCF7 /* Category */ = {
@@ -1669,9 +1684,8 @@
 /* Begin XCBuildConfiguration section */
 		03D567A9F86C4B204A11D604 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6940D75CA36F7DB9FB56196B /* Stripe3DS2DemoUI-Release.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = Stripe3DS2DemoUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2DemoUI;
 				PRODUCT_NAME = Stripe3DS2DemoUI;
@@ -1681,9 +1695,8 @@
 		};
 		380615C693D7BF5A8884139A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5316D0759F7F2ED0BF1D3B2E /* Stripe3DS2DemoUI-Debug.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = Stripe3DS2DemoUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2DemoUI;
 				PRODUCT_NAME = Stripe3DS2DemoUI;
@@ -1700,10 +1713,9 @@
 		};
 		7C7BC68E9581B5EDB7602612 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D7A9D36FEF7E97CF735D82B8 /* Stripe3DS2DemoUITests-Release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1719,9 +1731,8 @@
 		};
 		872D92C1EE444AB448EB744C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5686FB8EFA3AE3B39F85BBC /* Stripe3DS2Tests-Release.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1742,9 +1753,8 @@
 		};
 		A084DA5D39CBD41FD4E5294E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F2BC7014D26158AC9D74CC67 /* Stripe3DS2Tests-Debug.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1758,10 +1768,9 @@
 		};
 		C34CBE7C8AA7B8ADB823B098 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0E3C05BE55CF3086738AA182 /* Stripe3DS2DemoUITests-Debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1777,11 +1786,8 @@
 		};
 		D4CD9EDC1DA055683F427D24 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F8F6FFED1A0966A49B78F252 /* Stripe3DS2-Release.xcconfig */;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/Stripe3DS2/Stripe3DS2-Prefix.pch";
 				INFOPLIST_FILE = Stripe3DS2/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
 				PRODUCT_NAME = Stripe3DS2;
@@ -1791,11 +1797,8 @@
 		};
 		FCA19B8EBB1E9578613A65BE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9CD7EC589C5CC6CE5CF9310 /* Stripe3DS2-Debug.xcconfig */;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/Stripe3DS2/Stripe3DS2-Prefix.pch";
 				INFOPLIST_FILE = Stripe3DS2/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
 				PRODUCT_NAME = Stripe3DS2;

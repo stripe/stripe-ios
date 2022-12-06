@@ -49,8 +49,10 @@
 		2F3BF228321CA7FCBEA669CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3E18F0765C9C715F64080DD3 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B50C88219DC0F3F0BFC5CE4 /* FinancialConnections-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FinancialConnections-Example-Release.xcconfig"; sourceTree = "<group>"; };
 		5B675DEF4776CDFF8309DEB8 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		5C02DB1648E15A6591FD56E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FinancialConnections-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		76B43732FE4180268DAA8355 /* FinancialConnectionsExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinancialConnectionsExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DACDB8126F851C25D6A14A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ADFEE494187576194F8B46BB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,11 +78,10 @@
 		08699B52A213AE177E94F864 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				5B675DEF4776CDFF8309DEB8 /* Project-Debug.xcconfig */,
-				3E18F0765C9C715F64080DD3 /* Project-Release.xcconfig */,
+				701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */,
+				5B50C88219DC0F3F0BFC5CE4 /* FinancialConnections-Example-Release.xcconfig */,
 			);
-			name = BuildConfigurations;
-			path = ../../BuildConfigurations;
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		16B505A9E0578F89DFF3F7BC = {
@@ -126,10 +127,21 @@
 			isa = PBXGroup;
 			children = (
 				08699B52A213AE177E94F864 /* BuildConfigurations */,
+				8B31A4C157CED701A95FD892 /* BuildConfigurations */,
 				4A256CDD47BAA021FF65892E /* Derived */,
 				4C86E7995C2BF4E2E9E42971 /* FinancialConnections Example */,
 			);
 			name = Project;
+			sourceTree = "<group>";
+		};
+		8B31A4C157CED701A95FD892 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				5B675DEF4776CDFF8309DEB8 /* Project-Debug.xcconfig */,
+				3E18F0765C9C715F64080DD3 /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		8EED7CE598081C3F56D6DB87 /* Sources */ = {
@@ -258,27 +270,12 @@
 		};
 		29F488554B9E9389E602C8C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1.1;
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
 				PRODUCT_NAME = FinancialConnectionsExample;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -291,26 +288,12 @@
 		};
 		B90DB72906BF1E7AA2F0B70F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5B50C88219DC0F3F0BFC5CE4 /* FinancialConnections-Example-Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1.1;
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
 				PRODUCT_NAME = FinancialConnectionsExample;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};

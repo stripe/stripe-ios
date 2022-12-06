@@ -115,10 +115,12 @@
 		9E64042E04068845964881A8 /* TuistStrings+IdentityVerificationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+IdentityVerificationExample.swift"; sourceTree = "<group>"; };
 		A7661221B10BC87A668E5324 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		A9448885B1DBF7D76A86345B /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Main.strings; sourceTree = "<group>"; };
+		ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IdentityVerification-Example-Release.xcconfig"; sourceTree = "<group>"; };
 		AEF1E1B9F87B967111DE66BD /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
 		AF4C3DAFE74BB148A0FBBD4C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		B6CF999673493048BC71A7DE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6D2827B9053082E715B4A60 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IdentityVerification-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		BC41A29D89A46D88DCA6FFCC /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Main.strings; sourceTree = "<group>"; };
 		BD7771EEEB47D8B3FB649AD0 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		C0970DF49C0FC4916DBC9517 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				D63AB17F796AEA9B4404C0B4 /* BuildConfigurations */,
+				9712D8211A434D4FEC9ABB6A /* BuildConfigurations */,
 				4323911B66C6E678CCF21C46 /* Derived */,
 				FC2358907DA780D67C7C2D61 /* IdentityVerification Example */,
 			);
@@ -218,7 +221,7 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		D63AB17F796AEA9B4404C0B4 /* BuildConfigurations */ = {
+		9712D8211A434D4FEC9ABB6A /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
 				F0C9C4772586EA5972B7154B /* Project-Debug.xcconfig */,
@@ -226,6 +229,15 @@
 			);
 			name = BuildConfigurations;
 			path = ../../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		D63AB17F796AEA9B4404C0B4 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */,
+				ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */,
+			);
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		EFBE3BC5674253803108D51C /* Products */ = {
@@ -484,52 +496,23 @@
 		};
 		2983151C3565943221D5F042 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		5DDA6937DE73FB4AAC70A290 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

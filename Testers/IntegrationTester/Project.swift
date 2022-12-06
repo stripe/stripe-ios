@@ -7,11 +7,11 @@ let project = Project(
         configurations: [
             .debug(
                 name: "Debug",
-                xcconfig: "//BuildConfigurations/Project-Debug.xcconfig"
+                xcconfig: "BuildConfigurations/Project-Debug.xcconfig"
             ),
             .release(
                 name: "Release",
-                xcconfig: "//BuildConfigurations/Project-Release.xcconfig"
+                xcconfig: "BuildConfigurations/Project-Release.xcconfig"
             ),
         ],
         defaultSettings: .none
@@ -23,7 +23,23 @@ let project = Project(
             product: .staticLibrary,
             productName: "IntegrationTesterCommon",
             bundleId: "com.stripe.IntegrationTesterCommon",
-            sources: "Common/**/*.swift"
+            sources: "Common/**/*.swift",
+            dependencies: [
+                .project(target: "StripeiOS", path: "//Stripe"),
+            ],
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/IntegrationTester-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/IntegrationTester-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "IntegrationTester",
@@ -45,15 +61,15 @@ let project = Project(
                 .project(target: "StripeiOS", path: "//Stripe"),
             ],
             settings: .settings(
-                base: [
-                    "ENABLE_PREVIEWS": true,
-                    "DEVELOPMENT_ASSET_PATHS": "\"IntegrationTester/Resources/Preview Content\"",
-                    "TARGETED_DEVICE_FAMILY": "1,2,6",
-                    "IPHONEOS_DEPLOYMENT_TARGET": "14.0",
-                ],
-                debug: [
-                    "ENABLE_TESTABILITY": true,
-                    "DEBUG_INFORMATION_FORMAT": "dwarf",
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/IntegrationTester-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/IntegrationTester-Release.xcconfig"
+                    ),
                 ],
                 defaultSettings: .none
             )
@@ -70,15 +86,15 @@ let project = Project(
                 .target(name: "IntegrationTester"),
             ],
             settings: .settings(
-                base: [
-                    "ENABLE_PREVIEWS": true,
-                    "DEVELOPMENT_ASSET_PATHS": "\"IntegrationTester/Resources/Preview Content\"",
-                    "TARGETED_DEVICE_FAMILY": "1,2,6",
-                    "IPHONEOS_DEPLOYMENT_TARGET": "14.0",
-                ],
-                debug: [
-                    "ENABLE_TESTABILITY": true,
-                    "DEBUG_INFORMATION_FORMAT": "dwarf",
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/IntegrationTesterUITests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/IntegrationTesterUITests-Release.xcconfig"
+                    ),
                 ],
                 defaultSettings: .none
             )

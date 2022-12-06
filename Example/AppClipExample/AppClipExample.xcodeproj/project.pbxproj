@@ -141,18 +141,27 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A6DF2A677294E6EB70CF000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1536CDE13696BD54096A3AC7 /* AppClipExampleClipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipTests.swift; sourceTree = "<group>"; };
 		174AE0B73025B92CD1D17085 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
 		17F704B5A25E6D5269C95964 /* BackendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendModel.swift; sourceTree = "<group>"; };
+		29CCF0C0D077116684FFD209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		30E442F06D23668D501C8C8E /* AppClipExampleTests-iOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleTests-iOS-Release.xcconfig"; sourceTree = "<group>"; };
 		36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleApp.swift; sourceTree = "<group>"; };
 		3932D439D7C2F9F7D1C5812A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		443909E7DA6C80AD83EDABDB /* AppClipExampleClipUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipUITests-Debug.xcconfig"; sourceTree = "<group>"; };
+		4C8F6C7B0D0923B1BA540BC3 /* AppClipExampleClipTests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipTests-Release.xcconfig"; sourceTree = "<group>"; };
 		51480E1BF51E8CB6C70CA5F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5222A08DC440D011B4E85F8C /* AppClipExampleClipUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipUITests-Release.xcconfig"; sourceTree = "<group>"; };
 		5F447775F516EDF85E4EEC0E /* AppClipExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		67DB18A9B2F0B274C7D864D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6E835A0F7C9DEFC379AAC584 /* TuistAssets+AppClipExampleClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+AppClipExampleClip.swift"; sourceTree = "<group>"; };
+		70027B2F6D7A3AEFAC760B32 /* AppClipExampleClipTests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipTests-Debug.xcconfig"; sourceTree = "<group>"; };
 		756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7785865DF939EC7FE00923B3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButton.swift; sourceTree = "<group>"; };
 		7B21218CBEB7B215C997B44C /* AppClipExampleTestsiOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleTestsiOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C0E2F373CE5D7C9FA554911 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayModel.swift; sourceTree = "<group>"; };
 		86F2B578C129DB1040B7164B /* TuistBundle+AppClipExampleClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+AppClipExampleClip.swift"; sourceTree = "<group>"; };
 		8724AD2252297C4EFF084A7E /* AppClipExampleClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,16 +169,21 @@
 		8FDB2A87374049BA75496715 /* AppClipExampleClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExampleClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5FEBDF48B4B01D5AF51C46E /* AppClipExampleClipUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipUITests.swift; sourceTree = "<group>"; };
 		AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		AF4954F9DF7D3F13773F8C09 /* AppClipExampleClip-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClip-Debug.xcconfig"; sourceTree = "<group>"; };
 		BB872FCB253B710200539E3A /* TuistAssets+AppClipExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+AppClipExample.swift"; sourceTree = "<group>"; };
 		BCE8F6EBFD3B9A5C29F4B9B0 /* AppClipExampleClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD5777F48E701AE091F2B900 /* AppClipExampleClipUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleClipUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		BEB85BD9F60559775AA470A2 /* AppClipExampleTests-iOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleTests-iOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		BEBA7304F30731960BFED590 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C587E00A7E1EAE51F6DCCCDF /* TuistBundle+AppClipExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+AppClipExample.swift"; sourceTree = "<group>"; };
 		CE6C5CDB954EA154B893DF04 /* AppClipExampleClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppClipExampleClip.entitlements; sourceTree = "<group>"; };
 		D0E86BA32430563BF29E96BC /* AppClipExample (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppClipExample (iOS).entitlements"; sourceTree = "<group>"; };
 		D73241689160B1EC3894FDD6 /* AppClip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppClip.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AppClip.framework; sourceTree = DEVELOPER_DIR; };
+		DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExample-Debug.xcconfig"; sourceTree = "<group>"; };
 		DEF973233C9E71C139B25674 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExample-Release.xcconfig"; sourceTree = "<group>"; };
+		F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClip-Release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +244,7 @@
 			children = (
 				A5FEBDF48B4B01D5AF51C46E /* AppClipExampleClipUITests.swift */,
 				BD5777F48E701AE091F2B900 /* AppClipExampleClipUITestsLaunchTests.swift */,
+				67DB18A9B2F0B274C7D864D8 /* Info.plist */,
 			);
 			path = AppClipExampleClipUITests;
 			sourceTree = "<group>";
@@ -237,11 +252,18 @@
 		2F785AAB04AFD3153B98C9E0 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */,
-				BEBA7304F30731960BFED590 /* Project-Release.xcconfig */,
+				DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */,
+				E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */,
+				AF4954F9DF7D3F13773F8C09 /* AppClipExampleClip-Debug.xcconfig */,
+				F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */,
+				70027B2F6D7A3AEFAC760B32 /* AppClipExampleClipTests-Debug.xcconfig */,
+				4C8F6C7B0D0923B1BA540BC3 /* AppClipExampleClipTests-Release.xcconfig */,
+				443909E7DA6C80AD83EDABDB /* AppClipExampleClipUITests-Debug.xcconfig */,
+				5222A08DC440D011B4E85F8C /* AppClipExampleClipUITests-Release.xcconfig */,
+				BEB85BD9F60559775AA470A2 /* AppClipExampleTests-iOS-Debug.xcconfig */,
+				30E442F06D23668D501C8C8E /* AppClipExampleTests-iOS-Release.xcconfig */,
 			);
-			name = BuildConfigurations;
-			path = ../../BuildConfigurations;
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		475CC7E90D6C2087E66B8054 /* Derived */ = {
@@ -259,10 +281,12 @@
 				CFA793D11B793A3A11EDE704 /* AppClipExampleClipTests */,
 				2B6415E0B774FA8AA69E4E13 /* AppClipExampleClipUITests */,
 				2F785AAB04AFD3153B98C9E0 /* BuildConfigurations */,
+				D2B6724F7E4D645A6E4791CE /* BuildConfigurations */,
 				475CC7E90D6C2087E66B8054 /* Derived */,
 				B5FD68C638102AE2EC771448 /* Shared */,
 				FF5254A15D574D3330F91F6D /* Tests iOS */,
 				D0E86BA32430563BF29E96BC /* AppClipExample (iOS).entitlements */,
+				29CCF0C0D077116684FFD209 /* Info.plist */,
 			);
 			name = Project;
 			sourceTree = "<group>";
@@ -335,13 +359,25 @@
 			isa = PBXGroup;
 			children = (
 				1536CDE13696BD54096A3AC7 /* AppClipExampleClipTests.swift */,
+				0A6DF2A677294E6EB70CF000 /* Info.plist */,
 			);
 			path = AppClipExampleClipTests;
+			sourceTree = "<group>";
+		};
+		D2B6724F7E4D645A6E4791CE /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */,
+				BEBA7304F30731960BFED590 /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		FF5254A15D574D3330F91F6D /* Tests iOS */ = {
 			isa = PBXGroup;
 			children = (
+				7C0E2F373CE5D7C9FA554911 /* Info.plist */,
 				8C949F341568BABE45F694DC /* Tests_iOS.swift */,
 				174AE0B73025B92CD1D17085 /* Tests_iOSLaunchTests.swift */,
 			);
@@ -614,228 +650,100 @@
 /* Begin XCBuildConfiguration section */
 		0ED58EAF316CD792CC803378 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEB85BD9F60559775AA470A2 /* AppClipExampleTests-iOS-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
 				PRODUCT_NAME = AppClipExampleTestsiOS;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET = AppClipExample;
 				TEST_TARGET_NAME = AppClipExample;
 			};
 			name = Debug;
 		};
 		23245D2CA3740C808FDC8F4E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF4954F9DF7D3F13773F8C09 /* AppClipExampleClip-Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClipExampleClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
 				PRODUCT_NAME = AppClipExampleClip;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET = AppClipExample;
 			};
 			name = Debug;
 		};
 		68DC98EF24E45819B1842DCE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
 				PRODUCT_NAME = AppClipExample;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		77931DBE2C5F85195651C039 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClipExampleClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
 				PRODUCT_NAME = AppClipExampleClip;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET = AppClipExample;
 			};
 			name = Release;
 		};
 		7F201C18ECC0D268147BD2C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 70027B2F6D7A3AEFAC760B32 /* AppClipExampleClipTests-Debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = AppClipExampleClipTests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
 				PRODUCT_NAME = AppClipExampleClipTests;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
-				TEST_TARGET = AppClipExampleClip;
 				TEST_TARGET_NAME = AppClipExampleClip;
 			};
 			name = Debug;
 		};
 		8DF489E5B5371EA7586021F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
 				PRODUCT_NAME = AppClipExample;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		B7FB46363406913E975AAAB3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5222A08DC440D011B4E85F8C /* AppClipExampleClipUITests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = AppClipExampleClipUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
 				PRODUCT_NAME = AppClipExampleClipUITests;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET = AppClipExampleClipUITests;
 				TEST_TARGET_NAME = AppClipExampleClip;
 			};
 			name = Release;
 		};
 		C019DE1B92D9298B0D6F9EA5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C8F6C7B0D0923B1BA540BC3 /* AppClipExampleClipTests-Release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = AppClipExampleClipTests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
 				PRODUCT_NAME = AppClipExampleClipTests;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
-				TEST_TARGET = AppClipExampleClip;
 				TEST_TARGET_NAME = AppClipExampleClip;
 			};
 			name = Release;
@@ -856,55 +764,24 @@
 		};
 		E505F83F7904A5E64CD2F3BA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 443909E7DA6C80AD83EDABDB /* AppClipExampleClipUITests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = AppClipExampleClipUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
 				PRODUCT_NAME = AppClipExampleClipUITests;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET = AppClipExampleClipUITests;
 				TEST_TARGET_NAME = AppClipExampleClip;
 			};
 			name = Debug;
 		};
 		E896108FF9FBFFC70FAE0F86 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 30E442F06D23668D501C8C8E /* AppClipExampleTests-iOS-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
 				PRODUCT_NAME = AppClipExampleTestsiOS;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET = AppClipExample;
 				TEST_TARGET_NAME = AppClipExample;
 			};
 			name = Release;
