@@ -151,7 +151,7 @@ public class STPPaymentHandler: NSObject {
 
     private var formSpecPaymentHandler: FormSpecPaymentHandler?
 
-    internal var _redirectShim: ((URL, URL?) -> Void)? = nil
+    internal var _redirectShim: ((URL, URL?, Bool) -> Void)? = nil
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
@@ -1476,7 +1476,7 @@ public class STPPaymentHandler: NSObject {
     @available(macCatalystApplicationExtension, unavailable)
     @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
         if let redirectShim = _redirectShim {
-            redirectShim(url, returnURL)
+            redirectShim(url, returnURL, true)
         }
         _handleRedirect(to: url, fallbackURL: url, return: returnURL)
     }
@@ -1485,7 +1485,7 @@ public class STPPaymentHandler: NSObject {
     @available(macCatalystApplicationExtension, unavailable)
     @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
         if let redirectShim = _redirectShim {
-            redirectShim(url, returnURL)
+            redirectShim(url, returnURL, false)
         }
         guard let currentAction = currentAction else {
             assert(false, "Calling _handleRedirect without a currentAction")
