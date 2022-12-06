@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly. 
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh 
-  s.version                        = '23.2.0' 
+  s.version                        = '23.3.0' 
 
   s.summary                        = 'StripeApplePay is a lightweight Apple Pay SDK intended for building App Clips '\
                                      'or other size-constrained apps.' 
