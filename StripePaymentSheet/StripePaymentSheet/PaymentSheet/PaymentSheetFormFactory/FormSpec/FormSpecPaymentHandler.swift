@@ -70,7 +70,11 @@ extension STPPaymentHandler {
                 if let returnString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath) as? String {
                     returnUrl = URL(string: returnString)
                 }
-                self._handleRedirect(to: url, withReturn: returnUrl)
+                if case .external_browser = redirectToUrl.redirectStrategy {
+                    self._handleRedirectToExternalBrowser(to: url, withReturn: returnUrl)
+                } else {
+                    self._handleRedirect(to: url, withReturn: returnUrl)
+                }
             } else {
                 action.complete(
                     with: STPPaymentHandlerActionStatus.failed,

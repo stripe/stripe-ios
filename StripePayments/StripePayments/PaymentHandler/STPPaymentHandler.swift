@@ -1481,6 +1481,44 @@ public class STPPaymentHandler: NSObject {
         _handleRedirect(to: url, fallbackURL: url, return: returnURL)
     }
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
+    @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
+        if let redirectShim = _redirectShim {
+            redirectShim(url, returnURL)
+        }
+        guard let currentAction = currentAction else {
+            assert(false, "Calling _handleRedirect without a currentAction")
+            return
+        }
+        if let returnURL = returnURL {
+            STPURLCallbackHandler.shared().register(self, for: returnURL)
+        }
+        STPAnalyticsClient.sharedClient.logURLRedirectNextAction(
+            with: currentAction.apiClient._stored_configuration,
+            intentID: currentAction.intentStripeID ?? ""
+        )
+
+        // Setting universalLinksOnly to false will allow iOS to open https:// urls in an external browser, hopefully Safari.
+        // The links are expected to be either universal links or Stripe owned URLs.
+        // In the case that it is a stripe owned URL, the URL is expected to redirect our financial partners, at which point Safari can
+        // redirect to a native app if the app has been installed.  If Safari is not the default browser, then users not be
+        // automatically navigated to the native app.
+        let options: [UIApplication.OpenExternalURLOptionsKey: Any] = [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false]
+        UIApplication.shared.open(
+            url,
+            options: options,
+            completionHandler: { _ in
+                NotificationCenter.default.addObserver(
+                    self,
+                    selector: #selector(self._handleWillForegroundNotification),
+                    name: UIApplication.willEnterForegroundNotification,
+                    object: nil
+                )
+            }
+        )
+    }
+
     /// This method:
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails

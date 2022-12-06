@@ -97,14 +97,27 @@ struct FormSpec: Decodable {
             struct RedirectToURL: Decodable {
                 let urlPath: String
                 let returnUrlPath: String
+                let redirectStrategy: RedirectStrategy
                 private enum CodingKeys: String, CodingKey {
                     case urlPath
                     case returnUrlPath
+                    case nativeMobileRedirectStrategy
                 }
                 init(from decoder: Decoder) throws {
                     let container = try decoder.container(keyedBy: CodingKeys.self)
                     self.urlPath = try container.decodeIfPresent(String.self, forKey: .urlPath) ?? "next_action[redirect_to_url][url]"
                     self.returnUrlPath = try container.decodeIfPresent(String.self, forKey: .returnUrlPath) ?? "next_action[redirect_to_url][return_url]"
+                    let redirectStrategy = try container.decodeIfPresent(String.self, forKey: .nativeMobileRedirectStrategy) ?? "none"
+                    switch(redirectStrategy) {
+                    case "external_browser":
+                        self.redirectStrategy = .external_browser
+                    default:
+                        self.redirectStrategy = .none
+                    }
+                }
+                enum RedirectStrategy: Decodable, Equatable {
+                    case external_browser
+                    case none
                 }
             }
 
