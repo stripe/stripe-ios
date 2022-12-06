@@ -120,6 +120,7 @@
 		09C26C1E7D82343EBF376E5F /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		0B83BFBF1AF7550D4C3398F1 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		0B8BE18738723FE41AAD4FE1 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Main.strings"; sourceTree = "<group>"; };
+		0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig"; sourceTree = "<group>"; };
 		0F4C1FBB3402C074F4F21E29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BD9252F1B15953FED102F56 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -132,8 +133,10 @@
 		25E171C7F51F4956B38E2D8E /* TuistAssets+PaymentSheetExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+PaymentSheetExample.swift"; sourceTree = "<group>"; };
 		2755F01760456EE134D307D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		27BA81F620FAB6E5505E0B32 /* PaymentSheetTestPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetTestPlayground.swift; sourceTree = "<group>"; };
+		28CE345E1398AF3E28F164EF /* PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig"; sourceTree = "<group>"; };
 		294C411B3283F79D018BD1C1 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2BA4C0DB741C5D8C406F381E /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Main.strings"; sourceTree = "<group>"; };
+		2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Debug.xcconfig"; sourceTree = "<group>"; };
 		31A510FDEA3F1AAED0507251 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		34CCC286E48ADD9F586832D9 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
 		36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+Utilities.swift"; sourceTree = "<group>"; };
@@ -145,6 +148,7 @@
 		42ABA03F697FDC1AEAA3C9FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSwiftUICustomPaymentFlow.swift; sourceTree = "<group>"; };
 		4546705B6D6BCA883F5532B8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheet-Example-Release.xcconfig"; sourceTree = "<group>"; };
 		47F5ABF3CE2F657E0085EBB2 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4A52C114362A90EF8A5BBA1A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		4AD9595F2BD9D48997A44309 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -159,6 +163,7 @@
 		5E4DD63AD5E9B8153E04EF7C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
 		63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6891CC1208EA3F4DE934760E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Release.xcconfig"; sourceTree = "<group>"; };
 		6E4F3FA49534E745C5EDC1C0 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		701B8DEF9958B8EDB3C6E25B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		73DAE0051A928CB1597F8917 /* PaymentSheetExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaymentSheetExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -230,6 +235,7 @@
 		ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCustomCheckoutViewController.swift; sourceTree = "<group>"; };
 		EE5651DA6F3AF63B4C51899B /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		EFD868533089E2ED82F82987 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheet-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		F4D0043CB7BB72616C649C8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F933B0A684D1C36C46A65D6A /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		FC7D694F73564D632588F417 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Main.strings; sourceTree = "<group>"; };
@@ -291,11 +297,14 @@
 		13E32DF0E48E9ED66783B3C2 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				3ED454099B55B5F3BCA1D642 /* Project-Debug.xcconfig */,
-				EAD9EA5E2AB73F145F99B23B /* Project-Release.xcconfig */,
+				EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */,
+				4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */,
+				0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */,
+				28CE345E1398AF3E28F164EF /* PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig */,
+				2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */,
+				6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */,
 			);
-			name = BuildConfigurations;
-			path = ../../BuildConfigurations;
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		3263B2FC73C06F5F4413D183 /* Products */ = {
@@ -335,6 +344,16 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		82D2733E9126398D9714C58F /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				3ED454099B55B5F3BCA1D642 /* Project-Debug.xcconfig */,
+				EAD9EA5E2AB73F145F99B23B /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
+			sourceTree = "<group>";
+		};
 		8370707CD3E47F69FD221747 /* PaymentSheetLocalizationScreenshotGenerator */ = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +367,7 @@
 			isa = PBXGroup;
 			children = (
 				13E32DF0E48E9ED66783B3C2 /* BuildConfigurations */,
+				82D2733E9126398D9714C58F /* BuildConfigurations */,
 				093696853F2FFC6C268F034F /* Derived */,
 				C4BE75A2EECEF0AC9EC24CD8 /* PaymentSheet Example */,
 				8370707CD3E47F69FD221747 /* PaymentSheetLocalizationScreenshotGenerator */,
@@ -725,23 +745,12 @@
 /* Begin XCBuildConfiguration section */
 		04B451E4262EF8B42D36A6AE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -754,111 +763,59 @@
 		};
 		4E900227E99B33992820534A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		5F414BE5696C47524967CAE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
 				PRODUCT_NAME = PaymentSheetUITest;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "PaymentSheet Example";
 			};
 			name = Debug;
 		};
 		7AE8C5589540C4674E7BBC63 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28CE345E1398AF3E28F164EF /* PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = PaymentSheetLocalizationScreenshotGenerator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetLocalizationScreenshotGenerator;
 				PRODUCT_NAME = PaymentSheetLocalizationScreenshotGenerator;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "PaymentSheet Example";
 			};
 			name = Release;
 		};
 		ADEBEA6A93DBAF3002B62BF4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = PaymentSheetLocalizationScreenshotGenerator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetLocalizationScreenshotGenerator;
 				PRODUCT_NAME = PaymentSheetLocalizationScreenshotGenerator;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "PaymentSheet Example";
 			};
 			name = Debug;
 		};
 		CC0F3A04D6F6ADC2C952D7B7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
 				PRODUCT_NAME = PaymentSheetUITest;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "PaymentSheet Example";
 			};
 			name = Release;

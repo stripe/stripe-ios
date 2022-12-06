@@ -37,14 +37,19 @@ let project = Project(
                     path: "//StripeFinancialConnections"
                 ),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "CURRENT_PROJECT_VERSION": "1.1",
-                "VERSIONING_SYSTEM": "apple-generic",
-                "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
-                "ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS": true,
-                "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/FinancialConnections-Example-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/FinancialConnections-Example-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         )
     ],
     schemes: [

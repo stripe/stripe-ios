@@ -47,13 +47,19 @@ let project = Project(
                     path: "//StripeFinancialConnections"
                 ),
             ],
-            settings: .settings(base: [
-                "FRAMEWORK_SEARCH_PATHS": "$(inherited) $(PROJECT_DIR)/**",
-                "HEADER_SEARCH_PATHS": "$(inherited) $(PROJECT_DIR)/**",
-                "CLANG_ENABLE_MODULES": true,
-                "SWIFT_OBJC_BRIDGING_HEADER":
-                    "Non-Card Payment Examples/Non-Card Payment Examples-Bridging-Header.h"
-            ]),
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/Non-Card-Payment-Examples-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/Non-Card-Payment-Examples-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            ),
             additionalFiles: [
                 "Non-Card Payment Examples/*.h",
             ]

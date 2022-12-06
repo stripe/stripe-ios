@@ -30,12 +30,19 @@ let project = Project(
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeCardScan", path: "//StripeCardScan"),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
-                "ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS": true,
-                "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/CardImageVerification-Example-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/CardImageVerification-Example-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "CardImageVerification ExampleUITests",
@@ -62,10 +69,19 @@ let project = Project(
             dependencies: [
                 .target(name: "CardImageVerification Example"),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "TEST_TARGET_NAME": "CardImageVerification Example",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/CardImageVerification-ExampleUITests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/CardImageVerification-ExampleUITests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
     ],
     schemes: [

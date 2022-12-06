@@ -120,12 +120,14 @@
 		64F13592DB0CDD803283B035 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		673900BEF4553912511DBFE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6CA51E7BD0D4D1E0B94075FE /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EB5EE88F3BCE3D52302C896 /* Non-Card-Payment-Examples-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Non-Card-Payment-Examples-Release.xcconfig"; sourceTree = "<group>"; };
 		7F068CC4E3F81CB0E96CED03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7FA81CB0282D03CEE0CCDBD5 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8246202E37E84C97DB160C87 /* EPSExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPSExampleViewController.h; sourceTree = "<group>"; };
 		8362394DC688A6D8AEE1A006 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		86A1A58725F3254624BE3C0B /* GiropayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GiropayExampleViewController.h; sourceTree = "<group>"; };
 		8B425785CB5AE1A15209D100 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8B4FE9E774494C148EBFDD0F /* Non-Card-Payment-Examples-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Non-Card-Payment-Examples-Debug.xcconfig"; sourceTree = "<group>"; };
 		8E672E24890CD3B941069941 /* FPXExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPXExampleViewController.h; sourceTree = "<group>"; };
 		90081BE52D2A12E3C962E386 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		934226D0B321DB46199AF4F2 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				C9918E2A43A3DF3C304A2F2A /* BuildConfigurations */,
+				7991A720EF91B3EAA8C3DFDC /* BuildConfigurations */,
 				D98FE7FDBD0AB02CD6C29B90 /* Derived */,
 				9F4ECD0AE0A14B5FABE7D8E5 /* Non-Card Payment Examples */,
 				295A6C099422195DEA070B92 /* README.md */,
@@ -221,6 +224,16 @@
 				9BDD4885AE1CEEEC3A45EC34 /* StripeUICore.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7991A720EF91B3EAA8C3DFDC /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				AECFE22E44BC2764379FB9C1 /* Project-Debug.xcconfig */,
+				EC269156D60D875784B0E074 /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		9F4ECD0AE0A14B5FABE7D8E5 /* Non-Card Payment Examples */ = {
@@ -307,11 +320,10 @@
 		C9918E2A43A3DF3C304A2F2A /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				AECFE22E44BC2764379FB9C1 /* Project-Debug.xcconfig */,
-				EC269156D60D875784B0E074 /* Project-Release.xcconfig */,
+				8B4FE9E774494C148EBFDD0F /* Non-Card-Payment-Examples-Debug.xcconfig */,
+				7EB5EE88F3BCE3D52302C896 /* Non-Card-Payment-Examples-Release.xcconfig */,
 			);
-			name = BuildConfigurations;
-			path = ../../BuildConfigurations;
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		D98FE7FDBD0AB02CD6C29B90 /* Derived */ = {
@@ -483,54 +495,25 @@
 		};
 		7B85D1A9D6F99D42966DC170 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7EB5EE88F3BCE3D52302C896 /* Non-Card-Payment-Examples-Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Non-Card Payment Examples/Non-Card Payment Examples.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/**";
-				HEADER_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/**";
 				INFOPLIST_FILE = "Non-Card Payment Examples/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = NonCardPaymentExamples;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "Non-Card Payment Examples/Non-Card Payment Examples-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		8EAF8E1552E34C2EE27311A1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B4FE9E774494C148EBFDD0F /* Non-Card-Payment-Examples-Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Non-Card Payment Examples/Non-Card Payment Examples.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/**";
-				HEADER_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/**";
 				INFOPLIST_FILE = "Non-Card Payment Examples/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = NonCardPaymentExamples;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OBJC_BRIDGING_HEADER = "Non-Card Payment Examples/Non-Card Payment Examples-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};

@@ -45,11 +45,19 @@ let project = Project(
                     path: "//StripeFinancialConnections"
                 ),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "SUPPORTS_MACCATALYST": true,
-                "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/PaymentSheet-Example-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/PaymentSheet-Example-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "PaymentSheetUITest",
@@ -67,9 +75,19 @@ let project = Project(
                 .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
                 .package(product: "iOSSnapshotTestCase"),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/PaymentSheetUITest-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/PaymentSheetUITest-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "PaymentSheetLocalizationScreenshotGenerator",
@@ -82,10 +100,19 @@ let project = Project(
             dependencies: [
                 .target(name: "PaymentSheet Example"),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-                "IPHONEOS_DEPLOYMENT_TARGET": "14.5",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
     ],
     schemes: [
@@ -103,7 +130,7 @@ let project = Project(
                 ],
                 arguments: Arguments(
                     environment: [
-                        "FB_REFERENCE_IMAGE_DIR": "$(SRCROOT)/../Tests/ReferenceImages",
+                        "FB_REFERENCE_IMAGE_DIR": "$(SRCROOT)/../../Tests/ReferenceImages",
                     ]
                 ),
                 expandVariableFromTarget: "PaymentSheet Example"

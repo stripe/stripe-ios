@@ -13,11 +13,11 @@ let project = Project(
         configurations: [
             .debug(
                 name: "Debug",
-                xcconfig: "//BuildConfigurations/Project-Debug.xcconfig"
+                xcconfig: "BuildConfigurations/Project-Debug.xcconfig"
             ),
             .release(
                 name: "Release",
-                xcconfig: "//BuildConfigurations/Project-Release.xcconfig"
+                xcconfig: "BuildConfigurations/Project-Release.xcconfig"
             ),
         ],
         defaultSettings: .none
@@ -40,11 +40,15 @@ let project = Project(
                 project: "Stripe3DS2/Internal/**/*.h"
             ),
             settings: .settings(
-                base: [
-                    "CLANG_ENABLE_MODULES": true,
-                    "BUILD_LIBRARY_FOR_DISTRIBUTION": true,
-                    "GCC_PREFIX_HEADER": "$(SRCROOT)/Stripe3DS2/Stripe3DS2-Prefix.pch",
-                    "DEFINES_MODULE": true,
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/Stripe3DS2-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/Stripe3DS2-Release.xcconfig"
+                    ),
                 ],
                 defaultSettings: .none
             )
@@ -65,9 +69,15 @@ let project = Project(
                 .target(name: "Stripe3DS2"),
             ],
             settings: .settings(
-                base: [
-                    "CLANG_ENABLE_MODULES": true,
-                    "DEFINES_MODULE": true,
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/Stripe3DS2Tests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/Stripe3DS2Tests-Release.xcconfig"
+                    ),
                 ],
                 defaultSettings: .none
             )
@@ -87,9 +97,15 @@ let project = Project(
                 .target(name: "Stripe3DS2"),
             ],
             settings: .settings(
-                base: [
-                    "CLANG_ENABLE_MODULES": true,
-                    "DEFINES_MODULE": true,
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUI-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUI-Release.xcconfig"
+                    ),
                 ],
                 defaultSettings: .none
             )
@@ -108,9 +124,15 @@ let project = Project(
                 .package(product: "iOSSnapshotTestCase"),
             ],
             settings: .settings(
-                base: [
-                    "CLANG_ENABLE_MODULES": true,
-                    "DEFINES_MODULE": true,
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUITests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUITests-Release.xcconfig"
+                    ),
                 ],
                 defaultSettings: .none
             )

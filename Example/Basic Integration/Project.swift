@@ -35,9 +35,19 @@ let project = Project(
                 .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
                 .project(target: "StripeiOS", path: "//Stripe"),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/BasicIntegration-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/BasicIntegration-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
         Target(
             name: "BasicIntegrationUITests",
@@ -50,9 +60,19 @@ let project = Project(
             dependencies: [
                 .target(name: "Basic Integration"),
             ],
-            settings: .settings(base: [
-                "TARGETED_DEVICE_FAMILY": "1,2",
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/BasicIntegrationUITests-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/BasicIntegrationUITests-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         ),
     ],
     schemes: [

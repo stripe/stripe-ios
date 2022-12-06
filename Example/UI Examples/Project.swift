@@ -35,7 +35,20 @@ let project = Project(
                 .project(target: "StripePayments", path: "//StripePayments"),
                 .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
                 .project(target: "StripeiOS", path: "//Stripe"),
-            ]
+            ],
+            settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        xcconfig: "BuildConfigurations/UI-Examples-Debug.xcconfig"
+                    ),
+                    .release(
+                        name: "Release",
+                        xcconfig: "BuildConfigurations/UI-Examples-Release.xcconfig"
+                    ),
+                ],
+                defaultSettings: .none
+            )
         )
     ],
     schemes: [

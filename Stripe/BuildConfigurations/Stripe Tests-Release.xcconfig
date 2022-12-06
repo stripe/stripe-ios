@@ -4,6 +4,5 @@
 
 #include "../../BuildConfigurations/StripeiOS Tests-Release.xcconfig"
 
-CLANG_ENABLE_MODULES = YES
 SWIFT_OBJC_BRIDGING_HEADER = StripeiOSTests/StripeiOS Tests-Bridging-Header.h
 GCC_PREFIX_HEADER = StripeiOSTests/StripeTests-Prefix.pch

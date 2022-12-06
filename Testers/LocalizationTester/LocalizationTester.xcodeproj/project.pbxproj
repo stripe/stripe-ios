@@ -74,8 +74,6 @@
 /* Begin PBXFileReference section */
 		01875448C25439F750D8A159 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		026FD4B9EB15E114DF041585 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		02EFD2F111C530FACAAC2865 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
-		0590C4A7BB965E9F403D2718 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		0839B887F692B885307152A5 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		08E5BCEB9520A88695C7FEF0 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		18AD4E2BD8F718111DE84DC7 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,8 +113,10 @@
 		8C9BB121F1BF5D055AFB56FC /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		8DCFF99ADA84E5418A80C100 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		9250CA226C920C7D434931AF /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		93A6BBFA8D674FA3DC95F21E /* LocalizationTesterUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTesterUITests-Release.xcconfig"; sourceTree = "<group>"; };
 		93DACAFA6639E6FD16179B8B /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		96FE2F767A60ED02A3669663 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		9781188AB3CBA7C1626A857A /* LocalizationTesterUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTesterUITests-Debug.xcconfig"; sourceTree = "<group>"; };
 		97964709B9721F6D38ED1172 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		99F5F09C8AE90129AE7130BD /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		9CD164D4B9F3C2E5CD192D2D /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,9 +135,11 @@
 		E54CA622D25CA30C7EA2835C /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		E6CA33ACCF6F25AD28813F3B /* LocalizationTesterUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalizationTesterUITests.m; sourceTree = "<group>"; };
 		E8E8DFFAC491560BEACA5DDE /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E904A99B8B08FEAB06B79043 /* LocalizationTester-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Debug.xcconfig"; sourceTree = "<group>"; };
 		EAF21C6355C72231B45F09C1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		EED66D5107E73250BEFACC61 /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		F19790E598078D353520E6D5 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		FBEBC15127F5903AA54A2E1F /* LocalizationTester-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Release.xcconfig"; sourceTree = "<group>"; };
 		FF6A77E30CF0596E2D8C93AF /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -270,13 +272,14 @@
 		EEBE8448E1DABC58418B69A5 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
+				E904A99B8B08FEAB06B79043 /* LocalizationTester-Debug.xcconfig */,
+				FBEBC15127F5903AA54A2E1F /* LocalizationTester-Release.xcconfig */,
+				9781188AB3CBA7C1626A857A /* LocalizationTesterUITests-Debug.xcconfig */,
+				93A6BBFA8D674FA3DC95F21E /* LocalizationTesterUITests-Release.xcconfig */,
 				71347400817D0A669C5A2FCD /* Project-Debug.xcconfig */,
 				7A9F6DBB4DA41CEDDFBA7AD4 /* Project-Release.xcconfig */,
-				02EFD2F111C530FACAAC2865 /* StripeiOS Tests-Debug.xcconfig */,
-				0590C4A7BB965E9F403D2718 /* StripeiOS Tests-Release.xcconfig */,
 			);
-			name = BuildConfigurations;
-			path = ../../BuildConfigurations;
+			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -496,7 +499,7 @@
 /* Begin XCBuildConfiguration section */
 		2388B90D043F3CA110B256A5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0590C4A7BB965E9F403D2718 /* StripeiOS Tests-Release.xcconfig */;
+			baseConfigurationReference = 93A6BBFA8D674FA3DC95F21E /* LocalizationTesterUITests-Release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = LocalizationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTesterUITests;
@@ -508,7 +511,7 @@
 		};
 		31FB563D07E3E0DC15E67E64 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 02EFD2F111C530FACAAC2865 /* StripeiOS Tests-Debug.xcconfig */;
+			baseConfigurationReference = 9781188AB3CBA7C1626A857A /* LocalizationTesterUITests-Debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = LocalizationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTesterUITests;
@@ -527,7 +530,7 @@
 		};
 		D906835F97E02F2753F96ABE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 02EFD2F111C530FACAAC2865 /* StripeiOS Tests-Debug.xcconfig */;
+			baseConfigurationReference = E904A99B8B08FEAB06B79043 /* LocalizationTester-Debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
@@ -538,7 +541,7 @@
 		};
 		E14D58D3ADABFFA4D55501DE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0590C4A7BB965E9F403D2718 /* StripeiOS Tests-Release.xcconfig */;
+			baseConfigurationReference = FBEBC15127F5903AA54A2E1F /* LocalizationTester-Release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
