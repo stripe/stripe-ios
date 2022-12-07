@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -267,8 +267,6 @@
 		60F7610314405547AB6416E8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 6E231E366F944087F8DD657F /* Build configuration list for PBXProject "UI Examples" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -371,6 +369,7 @@
 			baseConfigurationReference = A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/UI Examples/Stripe UI Examples.entitlements";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;
@@ -383,6 +382,7 @@
 			baseConfigurationReference = D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/UI Examples/Stripe UI Examples.entitlements";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;

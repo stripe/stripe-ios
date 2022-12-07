@@ -26,7 +26,6 @@ let project = Project(
             infoPlist: "UI Examples/Info.plist",
             sources: "UI Examples/Source/**/*.swift",
             resources: "UI Examples/Resources/**",
-            entitlements: "UI Examples/Stripe UI Examples.entitlements",
             dependencies: [
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeUICore", path: "//StripeUICore"),

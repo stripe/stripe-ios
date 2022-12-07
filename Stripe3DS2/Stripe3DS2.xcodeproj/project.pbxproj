@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -329,7 +329,7 @@
 		02D762271DBCC1AE80E0F9D4 /* Stripe3DS2DemoUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stripe3DS2DemoUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03566301BCCCF6D37D16BF24 /* STDSBrandingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSBrandingView.h; sourceTree = "<group>"; };
 		037C294011A01E4B4DCE5BB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		04AB48F014A8D5BA56FEF463 /* discover.der */ = {isa = PBXFileReference; path = discover.der; sourceTree = "<group>"; };
+		04AB48F014A8D5BA56FEF463 /* discover.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = discover.der; sourceTree = "<group>"; };
 		071208B1CD4B7695A32C65FD /* STDSJSONEncoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJSONEncoder.m; sourceTree = "<group>"; };
 		08D577934984712C20C5E903 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		08FA7001B2529FF712242A4B /* STDSImageLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSImageLoader.m; sourceTree = "<group>"; };
@@ -339,7 +339,7 @@
 		0E38A775DB9F529427E900CF /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E3C05BE55CF3086738AA182 /* Stripe3DS2DemoUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUITests-Debug.xcconfig"; sourceTree = "<group>"; };
 		0F024DEAD6628A0229856656 /* Stripe3DS2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe3DS2-Bridging-Header.h"; sourceTree = "<group>"; };
-		1104D5855D28E49E104CA004 /* mastercard.der */ = {isa = PBXFileReference; path = mastercard.der; sourceTree = "<group>"; };
+		1104D5855D28E49E104CA004 /* mastercard.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = mastercard.der; sourceTree = "<group>"; };
 		130A832A886AF50959BF2F5C /* STDSBrandingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSBrandingView.m; sourceTree = "<group>"; };
 		136E1A21582CD1B4D2910ECF /* STDSJSONEncodable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSJSONEncodable.h; sourceTree = "<group>"; };
 		13ED1CC076C6B3FB49C9197A /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -396,7 +396,7 @@
 		3C22D410C297E2C3AFE727A6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3DF50C5AE553273F0B0865A4 /* STDSACSNetworkingManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSACSNetworkingManager.m; sourceTree = "<group>"; };
 		3E1AFBBC3E5FC26970DBC578 /* STDSSwiftTryCatch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSwiftTryCatch.m; sourceTree = "<group>"; };
-		3E4C02D9D6978AD5C3D7E3D2 /* ec_test.der */ = {isa = PBXFileReference; path = ec_test.der; sourceTree = "<group>"; };
+		3E4C02D9D6978AD5C3D7E3D2 /* ec_test.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ec_test.der; sourceTree = "<group>"; };
 		3F017BF6ECE0EBE4E0DFCF9C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3FDD9A5920C508D06A7C6D0B /* UIColor+DefaultColors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+DefaultColors.h"; sourceTree = "<group>"; };
 		405FC02D0698B68ABB5302FD /* STDSJSONWebEncryption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSJSONWebEncryption.h; sourceTree = "<group>"; };
@@ -478,7 +478,7 @@
 		7F3D09EFE33B60512277D417 /* STDSCategoryLinker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCategoryLinker.m; sourceTree = "<group>"; };
 		7FF8ACC073E814B7DEBA7647 /* STDSThreeDS2ServiceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSThreeDS2ServiceTests.m; sourceTree = "<group>"; };
 		823E1F620CE8D81F80D85422 /* STDSAlreadyInitializedException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSAlreadyInitializedException.m; sourceTree = "<group>"; };
-		83838563F29179FB1E9F2E66 /* cartes-bancaires.der */ = {isa = PBXFileReference; path = "cartes-bancaires.der"; sourceTree = "<group>"; };
+		83838563F29179FB1E9F2E66 /* cartes-bancaires.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cartes-bancaires.der"; sourceTree = "<group>"; };
 		83BDD516620860DC08B36B96 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		85807A60E074B8A009C30BE0 /* STDSStackView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSStackView.h; sourceTree = "<group>"; };
 		8614C034F1C2B1823CDBF155 /* Stripe3DS2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stripe3DS2.h; sourceTree = "<group>"; };
@@ -521,7 +521,7 @@
 		A4620559FBB8A42E15044E32 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A488CCBD6C3679DE2A2318BE /* STDSChallengeResponseSelectionInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeResponseSelectionInfo.h; sourceTree = "<group>"; };
 		A4A3CCBE9A2E8C1A73D8214E /* STDSTransactionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSTransactionTest.m; sourceTree = "<group>"; };
-		A70071543985284E0D9DAC64 /* visa.der */ = {isa = PBXFileReference; path = visa.der; sourceTree = "<group>"; };
+		A70071543985284E0D9DAC64 /* visa.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = visa.der; sourceTree = "<group>"; };
 		A7480DF4A13F5CD1BA397272 /* STDSChallengeStatusReceiver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeStatusReceiver.h; sourceTree = "<group>"; };
 		A801B21166F15A6E33A443BB /* STDSException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSException.m; sourceTree = "<group>"; };
 		A877799D79B8BA68B0AC48C6 /* STDSDirectoryServerCertificate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDirectoryServerCertificate.m; sourceTree = "<group>"; };
@@ -536,7 +536,7 @@
 		B15A28583755898593B2E81A /* STDSIntegrityChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSIntegrityChecker.h; sourceTree = "<group>"; };
 		B1A7D41498B79E35BD724681 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B3FC36507C6032DA4FE3F82D /* STDSDebuggerChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSDebuggerChecker.h; sourceTree = "<group>"; };
-		B6275E7099E55F0C04688890 /* ul-test.der */ = {isa = PBXFileReference; path = "ul-test.der"; sourceTree = "<group>"; };
+		B6275E7099E55F0C04688890 /* ul-test.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ul-test.der"; sourceTree = "<group>"; };
 		B68EF5A1185CB62381DFFAE2 /* STDSNavigationBarCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSNavigationBarCustomization.m; sourceTree = "<group>"; };
 		B829789767D3D9875D814B75 /* STDSAuthenticationResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSAuthenticationResponse.h; sourceTree = "<group>"; };
 		B97D91CB54F48F64CAC9E378 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -566,7 +566,7 @@
 		D3F5A6D5A680F008C00A2D69 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		D506D7ABB211C307450A0649 /* STDSWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSWebView.m; sourceTree = "<group>"; };
 		D7A9D36FEF7E97CF735D82B8 /* Stripe3DS2DemoUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUITests-Release.xcconfig"; sourceTree = "<group>"; };
-		D8B7EE0F935EF44EB2EF7D45 /* amex.der */ = {isa = PBXFileReference; path = amex.der; sourceTree = "<group>"; };
+		D8B7EE0F935EF44EB2EF7D45 /* amex.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = amex.der; sourceTree = "<group>"; };
 		D9848EF315C947D50B47D480 /* STDSDirectoryServerCertificate+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STDSDirectoryServerCertificate+Internal.h"; sourceTree = "<group>"; };
 		DB3E6577C78A5AD30B31CF09 /* UIButton+CustomInitialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+CustomInitialization.h"; sourceTree = "<group>"; };
 		DBA4A357A90E478CE779B40D /* STDSLabelCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSLabelCustomization.h; sourceTree = "<group>"; };
@@ -1697,6 +1697,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5316D0759F7F2ED0BF1D3B2E /* Stripe3DS2DemoUI-Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2DemoUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2DemoUI;
 				PRODUCT_NAME = Stripe3DS2DemoUI;

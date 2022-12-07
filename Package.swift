@@ -45,7 +45,7 @@ let package = Package(
         .target(
             name: "Stripe",
             dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore", "StripePayments", "StripePaymentsUI"],
-            path: "Stripe",
+            path: "Stripe/StripeiOS",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
@@ -55,7 +55,7 @@ let package = Package(
         .target(
             name: "Stripe3DS2",
             path: "Stripe3DS2/Stripe3DS2",
-            exclude: ["Info.plist", "Resources/CertificateFiles", "include/Stripe3DS2-Prefix.pch"],
+            exclude: ["Info.plist", "Resources/CertificateFiles", "Stripe3DS2-Prefix.pch"],
             resources: [
                 .process("Info.plist"),
                 .process("Resources")
