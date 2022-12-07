@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -79,7 +79,6 @@
 		833EA2464B7FD282DC0509FB /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		931AF426917A2801C4205F00 /* MockCustomerContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomerContext.swift; sourceTree = "<group>"; };
 		976BE22CCA5F11282143698A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		99F3937A761593E1CE522597 /* Stripe UI Examples.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stripe UI Examples.entitlements"; sourceTree = "<group>"; };
 		9A519B43F19D65723990C98A /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "UI-Examples-Release.xcconfig"; sourceTree = "<group>"; };
 		A59691F976A1B6FF14320055 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,7 +189,6 @@
 				9F8F8200ECF69E4B42A8E3C5 /* Resources */,
 				3263FCC006C255D157F89B5D /* Source */,
 				976BE22CCA5F11282143698A /* Info.plist */,
-				99F3937A761593E1CE522597 /* Stripe UI Examples.entitlements */,
 			);
 			path = "UI Examples";
 			sourceTree = "<group>";
@@ -267,6 +265,8 @@
 		60F7610314405547AB6416E8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = 6E231E366F944087F8DD657F /* Build configuration list for PBXProject "UI Examples" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -368,8 +368,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/UI Examples/Stripe UI Examples.entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;
@@ -381,8 +379,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/UI Examples/Stripe UI Examples.entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;

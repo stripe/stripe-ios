@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -652,7 +652,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BEB85BD9F60559775AA470A2 /* AppClipExampleTests-iOS-Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Tests iOS/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
 				PRODUCT_NAME = AppClipExampleTestsiOS;
@@ -666,7 +665,6 @@
 			baseConfigurationReference = AF4954F9DF7D3F13773F8C09 /* AppClipExampleClip-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
 				PRODUCT_NAME = AppClipExampleClip;
@@ -679,7 +677,6 @@
 			baseConfigurationReference = E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
 				PRODUCT_NAME = AppClipExample;
@@ -692,7 +689,6 @@
 			baseConfigurationReference = F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
 				PRODUCT_NAME = AppClipExampleClip;
@@ -705,7 +701,6 @@
 			baseConfigurationReference = 70027B2F6D7A3AEFAC760B32 /* AppClipExampleClipTests-Debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = AppClipExampleClipTests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
 				PRODUCT_NAME = AppClipExampleClipTests;
@@ -720,7 +715,6 @@
 			baseConfigurationReference = DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
 				PRODUCT_NAME = AppClipExample;
@@ -732,7 +726,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5222A08DC440D011B4E85F8C /* AppClipExampleClipUITests-Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = AppClipExampleClipUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
 				PRODUCT_NAME = AppClipExampleClipUITests;
@@ -746,7 +739,6 @@
 			baseConfigurationReference = 4C8F6C7B0D0923B1BA540BC3 /* AppClipExampleClipTests-Release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = AppClipExampleClipTests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
 				PRODUCT_NAME = AppClipExampleClipTests;
@@ -774,7 +766,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 443909E7DA6C80AD83EDABDB /* AppClipExampleClipUITests-Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = AppClipExampleClipUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
 				PRODUCT_NAME = AppClipExampleClipUITests;
@@ -787,7 +778,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 30E442F06D23668D501C8C8E /* AppClipExampleTests-iOS-Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Tests iOS/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
 				PRODUCT_NAME = AppClipExampleTestsiOS;

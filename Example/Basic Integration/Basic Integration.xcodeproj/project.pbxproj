@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -451,7 +451,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F1A208AE2350AA815ADE529 /* BasicIntegrationUITests-Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = BasicIntegrationUITests;
@@ -464,7 +463,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 87573787ED54C9F497D1084D /* BasicIntegration-Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Basic Integration/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = BasicIntegration;
@@ -476,7 +474,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 76A4520B38C79648CC52074D /* BasicIntegration-Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Basic Integration/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = BasicIntegration;
@@ -495,7 +492,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 279E5BE26140F948375F1E42 /* BasicIntegrationUITests-Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = BasicIntegrationUITests;
