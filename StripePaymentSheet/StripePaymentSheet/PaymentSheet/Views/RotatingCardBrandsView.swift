@@ -101,8 +101,10 @@ class RotatingCardBrandsView: UIView {
     }
 
     var isAnimating: Bool = false
+    var stopAfterNextTransition = false
 
     func rotateCardBrand() {
+        isAnimating = true
         var nextIndex = self.rotatingIndex + 1
         if nextIndex >= self.rotatingCardBrands.count {
             nextIndex = 0
@@ -120,7 +122,9 @@ class RotatingCardBrandsView: UIView {
             })
         }
         animation.addCompletion { _ in
-            guard self.isAnimating else {
+            guard !self.stopAfterNextTransition else {
+                self.stopAfterNextTransition = false
+                self.isAnimating = false
                 return
             }
             self.rotateCardBrand()
@@ -131,20 +135,17 @@ class RotatingCardBrandsView: UIView {
     }
 
     func startAnimating() {
+        stopAfterNextTransition = false
         guard !isAnimating,
               !rotatingCardBrands.isEmpty,
               !Self.isUnitOrUITest else {
             return
         }
-        isAnimating = true
         rotateCardBrand()
     }
 
     func stopAnimating() {
-        guard isAnimating else {
-            return
-        }
-        isAnimating = false
+        stopAfterNextTransition = true
     }
 
     var rotatingCardBrandView: UIImageView = {
