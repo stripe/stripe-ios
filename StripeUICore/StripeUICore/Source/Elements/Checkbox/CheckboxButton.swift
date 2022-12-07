@@ -149,6 +149,7 @@ import UIKit
 
         // Preferred max width sometimes is off when changing font size
         descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
+        textView.invalidateIntrinsicContentSize()
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
