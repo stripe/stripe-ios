@@ -30,6 +30,9 @@
       </FileRef>
    </Group>
    <FileRef
+      location = "group:Package.swift">
+   </FileRef>
+   <FileRef
       location = "group:Stripe/Stripe.xcodeproj">
    </FileRef>
    <FileRef

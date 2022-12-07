@@ -33,11 +33,9 @@ let project = Project(
             resources: "Stripe3DS2/Resources/**",
             headers: .headers(
                 public: [
-                    "Stripe3DS2/Stripe3DS2.h",
-                    "Stripe3DS2/Stripe3DS2-Prefix.pch",
-                    "Stripe3DS2/Public/**/*.h",
+                    "Stripe3DS2/include/*.h",
                 ],
-                project: "Stripe3DS2/Internal/**/*.h"
+                project: "Stripe3DS2/*.h"
             ),
             settings: .settings(
                 configurations: [
