@@ -71,8 +71,8 @@ modules:
 - podspec: Stripe.podspec
   scheme: StripeiOS
   framework_name: Stripe
-  localization_dir: Stripe
-  custom_string_convertible_dir: Stripe
+  localization_dir: Stripe/StripeiOS
+  custom_string_convertible_dir: Stripe/StripeiOS/Source
   supports_catalyst: true
   docs:
     output: docs/docs

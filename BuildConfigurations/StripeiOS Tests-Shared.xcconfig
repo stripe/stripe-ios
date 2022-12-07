@@ -24,10 +24,10 @@ CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 // Code Signing Identity
 // 
 // The name ("common name") of a valid code-signing certificate in a keychain within your
-// keychain path. Leaving blank is recommended.
+// keychain path.   A missing or invalid certificate will cause a build error.
 
-CODE_SIGN_IDENTITY =
 CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM = Y28TH9SHX7
 
 // Framework Search Paths
 // 
@@ -87,3 +87,5 @@ OTHER_CFLAGS =
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 
 LIBRARY_SEARCH_PATHS = $(inherited)
+
+DEFINES_MODULE = YES
