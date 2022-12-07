@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -532,7 +532,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E904A99B8B08FEAB06B79043 /* LocalizationTester-Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
 				PRODUCT_NAME = LocalizationTester;
@@ -544,7 +543,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FBEBC15127F5903AA54A2E1F /* LocalizationTester-Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
 				PRODUCT_NAME = LocalizationTester;
