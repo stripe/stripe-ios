@@ -149,7 +149,7 @@ extension EndpointSelectorViewController {
 
 // MARK: - Helpers
 extension EndpointSelectorViewController {
-    func endpointFor(indexPath: IndexPath) -> String? {
+    func endpoint(for indexPath: IndexPath) -> String? {
         if indexPath.section == 0 {
             return currentCheckoutEndpoint
         }
