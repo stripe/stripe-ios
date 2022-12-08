@@ -11,7 +11,6 @@
 		1A6707B8E8D69A84024E42D9 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AD4E2BD8F718111DE84DC7 /* StripePayments.framework */; };
 		1E8E4C6D33C1B552640600B6 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDACA98C7884823F4901D65 /* StripePaymentsUI.framework */; };
 		1EFD7E1DDD68819AD4295946 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8E8DFFAC491560BEACA5DDE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		20D1B3E82581359BEB057E8A /* TuistBundle+LocalizationTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62917C76BA297482F652055E /* TuistBundle+LocalizationTester.swift */; };
 		35D050FC8F25E5794BD13075 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 36BFACDF2318B5119EC221B8 /* AppDelegate.m */; };
 		53B95C805D539BC137119AA1 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CD164D4B9F3C2E5CD192D2D /* StripeApplePay.framework */; };
 		5E31A628E8897717EA27D97F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84F4F38FA96538F739850002 /* LaunchScreen.storyboard */; };
@@ -98,7 +97,6 @@
 		59B39D50DC289F00BA05536D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		5B57B5840BC952DE787327BF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		5FB28D16E6C8A9AEE81B882D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		62917C76BA297482F652055E /* TuistBundle+LocalizationTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+LocalizationTester.swift"; sourceTree = "<group>"; };
 		6AC1F1DB075A132A6670CD44 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		6B60A201EED87B68A15E6C56 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		70D4395199E724CA5431F53E /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -218,19 +216,10 @@
 			isa = PBXGroup;
 			children = (
 				EEBE8448E1DABC58418B69A5 /* BuildConfigurations */,
-				7DA0BF6BA1617905DBEE7571 /* Derived */,
 				A9613CE2482ADF24ECC6DDE3 /* LocalizationTester */,
 				5A5B9D071A0DB30465B9FA6A /* LocalizationTesterUITests */,
 			);
 			name = Project;
-			sourceTree = "<group>";
-		};
-		7DA0BF6BA1617905DBEE7571 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				AED87AAAD239EA2E905FF310 /* Sources */,
-			);
-			path = Derived;
 			sourceTree = "<group>";
 		};
 		A9613CE2482ADF24ECC6DDE3 /* LocalizationTester */ = {
@@ -241,14 +230,6 @@
 				1BE3EAF002B8F3342C90E851 /* Info.plist */,
 			);
 			path = LocalizationTester;
-			sourceTree = "<group>";
-		};
-		AED87AAAD239EA2E905FF310 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				62917C76BA297482F652055E /* TuistBundle+LocalizationTester.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		B242A37A2A55DAB5909D57D8 /* Resources */ = {
@@ -417,7 +398,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20D1B3E82581359BEB057E8A /* TuistBundle+LocalizationTester.swift in Sources */,
 				35D050FC8F25E5794BD13075 /* AppDelegate.m in Sources */,
 				93E9E9B418B6EBE8C6458264 /* MockCustomerContext.m in Sources */,
 				64F845A1690B98F3E9EC2E81 /* ViewController.m in Sources */,
@@ -501,6 +481,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 93A6BBFA8D674FA3DC95F21E /* LocalizationTesterUITests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTesterUITests;
 				PRODUCT_NAME = LocalizationTesterUITests;
@@ -513,6 +495,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9781188AB3CBA7C1626A857A /* LocalizationTesterUITests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTesterUITests;
 				PRODUCT_NAME = LocalizationTesterUITests;
@@ -532,6 +516,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E904A99B8B08FEAB06B79043 /* LocalizationTester-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
 				PRODUCT_NAME = LocalizationTester;
@@ -543,6 +529,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FBEBC15127F5903AA54A2E1F /* LocalizationTester-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
 				PRODUCT_NAME = LocalizationTester;

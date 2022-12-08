@@ -1,8 +1,13 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "LocalizationTester",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     settings: .settings(
         configurations: [
             .debug(
@@ -37,18 +42,8 @@ let project = Project(
                 .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
                 .project(target: "StripeiOS", path: "//Stripe"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/LocalizationTester-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/LocalizationTester-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/LocalizationTester"
             )
         ),
         Target(
@@ -61,18 +56,8 @@ let project = Project(
             dependencies: [
                 .target(name: "LocalizationTester"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/LocalizationTesterUITests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/LocalizationTesterUITests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/LocalizationTesterUITests"
             )
         ),
     ],
@@ -82,6 +67,5 @@ let project = Project(
             buildAction: .buildAction(targets: ["LocalizationTester"]),
             testAction: .targets(["LocalizationTesterUITests"])
         )
-    ],
-    resourceSynthesizers: []
+    ]
 )

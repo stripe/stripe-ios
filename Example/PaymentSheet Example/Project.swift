@@ -1,8 +1,13 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "PaymentSheet Example",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     packages: [
         .remote(
             url: "https://github.com/uber/ios-snapshot-test-case",
@@ -45,18 +50,8 @@ let project = Project(
                     path: "//StripeFinancialConnections"
                 ),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/PaymentSheet-Example-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/PaymentSheet-Example-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/PaymentSheet-Example"
             )
         ),
         Target(
@@ -75,18 +70,8 @@ let project = Project(
                 .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
                 .package(product: "iOSSnapshotTestCase"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/PaymentSheetUITest-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/PaymentSheetUITest-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/PaymentSheetUITest"
             )
         ),
         Target(
@@ -100,18 +85,8 @@ let project = Project(
             dependencies: [
                 .target(name: "PaymentSheet Example"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/PaymentSheetLocalizationScreenshotGenerator"
             )
         ),
     ],

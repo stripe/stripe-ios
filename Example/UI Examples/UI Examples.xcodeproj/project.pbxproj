@@ -21,8 +21,6 @@
 		7251058865ACA98C98273875 /* CardFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1294FDC8AE5C19800151F829 /* CardFieldViewController.swift */; };
 		7C7E088B5EA745CDDA43BE5E /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A59691F976A1B6FF14320055 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97628266E1DFA00F28045C7C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7973A50BA0AE6BE3911FCE8 /* StripeUICore.framework */; };
-		9FE0DBCDEC9F53A41C7BF805 /* TuistAssets+UIExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCA0086FEC3CA385D0CB23E /* TuistAssets+UIExamples.swift */; };
-		A3BDA664C9D50DDD9C29A391 /* TuistStrings+UIExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084674E7A4C353371AB8F24E /* TuistStrings+UIExamples.swift */; };
 		A61E99A31C25F9EE54CB3465 /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69382A94399A814B97E6BF13 /* BrowseViewController.swift */; };
 		AEF8EE236AB748778C8C9BCE /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A59691F976A1B6FF14320055 /* Stripe3DS2.framework */; };
 		B0542D0E99812D6D2F595CAF /* AUBECSDebitFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4BD63EDF46E844BE902031 /* AUBECSDebitFormViewController.swift */; };
@@ -34,7 +32,6 @@
 		EB04DF08EF3D94B6AAA5B441 /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FEC7ADA06B237EFA9BA61939 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F9A86FC25BDB54F3D64FE458 /* CardFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EE0C28786C46F7AD5678C4 /* CardFormViewController.swift */; };
 		FCB92C416FBB9287BAE1FCDF /* SwiftUICardFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F92F71B779415739E02D5 /* SwiftUICardFormView.swift */; };
-		FE2CD68744DCB8D8B85780C1 /* TuistBundle+UIExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA170C94A00CA0F89463FB70 /* TuistBundle+UIExamples.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,7 +55,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		084674E7A4C353371AB8F24E /* TuistStrings+UIExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+UIExamples.swift"; sourceTree = "<group>"; };
 		0A45472E7D5B14BD3395A3D7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1294FDC8AE5C19800151F829 /* CardFieldViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardFieldViewController.swift; sourceTree = "<group>"; };
 		14DF1090C4435D6643977EDA /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -73,7 +69,6 @@
 		5C2F92F71B779415739E02D5 /* SwiftUICardFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUICardFormView.swift; sourceTree = "<group>"; };
 		69382A94399A814B97E6BF13 /* BrowseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViewController.swift; sourceTree = "<group>"; };
 		6E1B9A78F0BE9BE3D542CB7D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		6FCA0086FEC3CA385D0CB23E /* TuistAssets+UIExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+UIExamples.swift"; sourceTree = "<group>"; };
 		74B92067761E45B0D87100A7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		753BA90BA35AA6FBDAA07FBE /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		833EA2464B7FD282DC0509FB /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -89,7 +84,6 @@
 		D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "UI-Examples-Debug.xcconfig"; sourceTree = "<group>"; };
 		D7D4CC026D81D7E26EDA474B /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8BFFBA74634A24020A4E389 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EA170C94A00CA0F89463FB70 /* TuistBundle+UIExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+UIExamples.swift"; sourceTree = "<group>"; };
 		EFEAD84E710812643F204F1E /* PaymentMethodMessagingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingViewController.swift; sourceTree = "<group>"; };
 		F16D8E3EDF1E3CCBF5FE6F36 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F351572061CC8F516217BD0F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -157,14 +151,6 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
-		5665BC45510A3D98A60F780A /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				BE8EFB833127094B7A444768 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		899A2FD46DC9D58FC8E92B05 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -208,22 +194,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BE8EFB833127094B7A444768 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				6FCA0086FEC3CA385D0CB23E /* TuistAssets+UIExamples.swift */,
-				EA170C94A00CA0F89463FB70 /* TuistBundle+UIExamples.swift */,
-				084674E7A4C353371AB8F24E /* TuistStrings+UIExamples.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
 		C6B59D38A5B194CA677DABED /* Project */ = {
 			isa = PBXGroup;
 			children = (
 				899A2FD46DC9D58FC8E92B05 /* BuildConfigurations */,
 				294EC109746111B350F3536D /* BuildConfigurations */,
-				5665BC45510A3D98A60F780A /* Derived */,
 				A61F91913361BF3B3D59DD1E /* UI Examples */,
 				6E1B9A78F0BE9BE3D542CB7D /* README.md */,
 			);
@@ -312,9 +287,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9FE0DBCDEC9F53A41C7BF805 /* TuistAssets+UIExamples.swift in Sources */,
-				FE2CD68744DCB8D8B85780C1 /* TuistBundle+UIExamples.swift in Sources */,
-				A3BDA664C9D50DDD9C29A391 /* TuistStrings+UIExamples.swift in Sources */,
 				B0542D0E99812D6D2F595CAF /* AUBECSDebitFormViewController.swift in Sources */,
 				B881DC1D937D301C7B35B86C /* AppDelegate.swift in Sources */,
 				A61E99A31C25F9EE54CB3465 /* BrowseViewController.swift in Sources */,
@@ -368,6 +340,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;
@@ -379,6 +353,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;

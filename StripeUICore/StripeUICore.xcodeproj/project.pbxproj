@@ -53,7 +53,6 @@
 		64E61A5E0A705F1C4582381A /* PhoneNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263B7E56A83CFA4BA8385638 /* PhoneNumberTests.swift */; };
 		65B9A839BD4AAC315231B421 /* TextFieldElement+AccountFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69C3FF914611057972ABA41 /* TextFieldElement+AccountFactory.swift */; };
 		6606DC43D230ADD183AEF5DA /* RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00332BBDCE27F6F5A615C4 /* RegionCodeProvider.swift */; };
-		6705E835869964B501275FFF /* TuistBundle+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5CFF46051799679371814E /* TuistBundle+StripeUICore.swift */; };
 		67216EB4E004BDB1D2E49BD4 /* IDNumberTextFieldConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92623B785C43F351D8A944D1 /* IDNumberTextFieldConfiguration.swift */; };
 		67FCE4493235656689E915F6 /* UIBarButtonItem+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5321D6CCBA2AA9162A96080C /* UIBarButtonItem+StripeUICore.swift */; };
 		68F7D5EEB894A68DDC184ADA /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20209CDCC3856CE548DA4D25 /* Image.swift */; };
@@ -177,7 +176,6 @@
 		36342ED77935BE9A32B082EC /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
 		374D0BE980D58B75FA04DE66 /* DropdownFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropdownFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
 		3A99D0F01D29E302C52217FE /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3C5CFF46051799679371814E /* TuistBundle+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeUICore.swift"; sourceTree = "<group>"; };
 		40DF1A7FC5D84F937042D172 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		40E0822DE6CFA0D3CCD5D513 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		43943E8FF7CD279F8D8605D3 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
@@ -413,14 +411,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		3B592643CC22F8B662F3E336 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				3C5CFF46051799679371814E /* TuistBundle+StripeUICore.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
 		3F7B82C31FE216F26BAA22BD /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -640,7 +630,6 @@
 			isa = PBXGroup;
 			children = (
 				5A4B0EAF2FA9E28C057A2AB2 /* BuildConfigurations */,
-				FF284A06A72FF809D0973456 /* Derived */,
 				89DCFAE23D35B3B8313A52E2 /* StripeUICore */,
 				95A37FFB73E533980DEB7AC6 /* StripeUICoreTests */,
 			);
@@ -731,14 +720,6 @@
 				4D4BD46908791D2E4150C4DC /* TextFieldElement+Factory.swift */,
 			);
 			path = Factories;
-			sourceTree = "<group>";
-		};
-		FF284A06A72FF809D0973456 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				3B592643CC22F8B662F3E336 /* Sources */,
-			);
-			path = Derived;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -927,7 +908,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6705E835869964B501275FFF /* TuistBundle+StripeUICore.swift in Sources */,
 				824858D45F9D952BBDF822E2 /* CALayer+StripeUICore.swift in Sources */,
 				AA8F938C3A8B7BC7F11B5048 /* Enums+CustomStringConvertible.swift in Sources */,
 				2F1D03471202E25FD7682148 /* Locale+StripeUICore.swift in Sources */,
@@ -1070,6 +1050,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeUICore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
@@ -1088,6 +1070,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E395C593AC970A8C79A8109C /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeUICore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
@@ -1106,6 +1090,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E242FECC90FE2644CF99692D /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1121,6 +1107,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9E3254388F5DAB8E8C76AE04 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

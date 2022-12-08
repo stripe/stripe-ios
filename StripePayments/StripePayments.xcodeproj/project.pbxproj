@@ -82,7 +82,6 @@
 		7173E36D0A3EB23E68469BD1 /* STPPaymentMethodUSBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D01E809A78E4DC7FB87A2D /* STPPaymentMethodUSBankAccount.swift */; };
 		71A589E7CCAEA272B9CC37AB /* STPThreeDSLabelCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC7BD1E3971B7E4EAE98F40 /* STPThreeDSLabelCustomization.swift */; };
 		7309D5A475371AF0BF93E608 /* STPPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC802E2459BD87F3BA519146 /* STPPaymentMethod.swift */; };
-		7472387A014474D02A1FE3E9 /* TuistBundle+StripePayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86834D0FAADCFDC614E3750 /* TuistBundle+StripePayments.swift */; };
 		754AA58F8D3AE8431E01D47E /* STPPaymentMethodBoleto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96D695818084C70BB532B5E /* STPPaymentMethodBoleto.swift */; };
 		75C5CAAE1A4FE2A3D8646A9C /* STPPaymentMethodOXXOParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F59A24701CB3FE96477631 /* STPPaymentMethodOXXOParams.swift */; };
 		77990E2F33FBDB74AEC3D410 /* STPPaymentIntentSourceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2F503300363DCBB8096E59 /* STPPaymentIntentSourceAction.swift */; };
@@ -421,7 +420,6 @@
 		D3403BA8AC9DAEAAEF288879 /* STPPaymentMethodAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAddress.swift; sourceTree = "<group>"; };
 		D6655131EE24F94190D1C116 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D6EA09CF77BB869BB6007328 /* NSDecimalNumber+Stripe_Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDecimalNumber+Stripe_Currency.swift"; sourceTree = "<group>"; };
-		D86834D0FAADCFDC614E3750 /* TuistBundle+StripePayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripePayments.swift"; sourceTree = "<group>"; };
 		D927FD12223821805ED77D59 /* STPIntentActionBoletoDisplayDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionBoletoDisplayDetails.swift; sourceTree = "<group>"; };
 		D9C59B2D92DDEC0B9A0E9379 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		DABCA7D3C2103189243C48DB /* STPPaymentMethodEPS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodEPS.swift; sourceTree = "<group>"; };
@@ -600,14 +598,6 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		568969A6F795917DDD2259F1 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				857689FCB6F216A951F27541 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		5945A05F8C61551C1D4A013C /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -662,14 +652,6 @@
 				480E9503640B668172950214 /* Enums+CustomStringConvertible.swift */,
 			);
 			path = Categories;
-			sourceTree = "<group>";
-		};
-		857689FCB6F216A951F27541 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				D86834D0FAADCFDC614E3750 /* TuistBundle+StripePayments.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		9A6E05AA460A559025FD0CE8 /* Frameworks */ = {
@@ -784,7 +766,6 @@
 			isa = PBXGroup;
 			children = (
 				DAFF97F173BFBD48A55102DB /* BuildConfigurations */,
-				568969A6F795917DDD2259F1 /* Derived */,
 				3005E0BF2F91B3A67DB6AECB /* StripePayments */,
 				9B75653A857383561112C72D /* StripePaymentsTests */,
 			);
@@ -1082,7 +1063,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7472387A014474D02A1FE3E9 /* TuistBundle+StripePayments.swift in Sources */,
 				78DD210269D85D83D6D4A87C /* StripeAPI+Deprecated.swift in Sources */,
 				42C624FBE88EAB43B14F82A9 /* StripeApplePay+Import.swift in Sources */,
 				02698991542836F0834FA013 /* StripeCore+Import.swift in Sources */,
@@ -1336,6 +1316,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C1765710FB6104D69982D20 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1351,6 +1333,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D241D01F717B2991D4946283 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1366,6 +1350,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A3BA665404FD4B327A775906 /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripePayments/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
 				PRODUCT_NAME = StripePayments;
@@ -1384,6 +1370,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A7CE39E853BD92ABE59F8EA /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripePayments/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
 				PRODUCT_NAME = StripePayments;

@@ -50,7 +50,6 @@
 		3C228BF28D1D56F1E74AE7AB /* VerificationPageData_submitted.json in Resources */ = {isa = PBXBuildFile; fileRef = 99607F36AF24C978953964E9 /* VerificationPageData_submitted.json */; };
 		3C553B8ADA8136498FF8E011 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9BD2014C4A16821A2B8DC1 /* VerificationPageStaticContentDocumentSelectPage.swift */; };
 		3CB793BE23FC9716A0F35CCB /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF56E95E47DA51C3517E1EC /* IdentityElementsFactoryTest.swift */; };
-		3CF8B794F9E0BB4CAE93B541 /* TuistBundle+StripeIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4705605DCDEFDA9866A0B27 /* TuistBundle+StripeIdentityTests.swift */; };
 		3D9D1BA3B4C7E2464D457FF7 /* VerificationPageDataRequirementError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E15397783A643B74921A00 /* VerificationPageDataRequirementError.swift */; };
 		3E64C28D0E13D6F9F455C3F2 /* SuccessViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF19274A29802CDB696D1DF /* SuccessViewControllerSnapshotTest.swift */; };
 		3F9FB3BC02DDC7BCF4207F73 /* MotionBlurDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F22CC7DFA4B98A1A533CE0 /* MotionBlurDetector.swift */; };
@@ -184,7 +183,6 @@
 		DB6005016F47D09559DA0C98 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAC1FACF9A36AAFC19BF2F /* DocumentType.swift */; };
 		DCFBA69CC4437E2E6061F50B /* IdentityMLModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546F9D432ACFF45E9CE1368 /* IdentityMLModelLoader.swift */; };
 		DCFFA11A461B012F7515941F /* VerificationFlowWebViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A64D0C0989BD43624BB506 /* VerificationFlowWebViewSnapshotTests.swift */; };
-		DF6A20E68CD9BB9B4D1EF241 /* TuistBundle+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBC41D68BA6D70111EF223E /* TuistBundle+StripeIdentity.swift */; };
 		E15D79E05C4FA68CA56B0CC8 /* TruncatedDecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9DA29DC85773AC710A5201 /* TruncatedDecimal.swift */; };
 		E1D4A5DD8C188725C5D23BBB /* VerificationPage_no_selfie.json in Resources */ = {isa = PBXBuildFile; fileRef = D5C7698331B899B80AF4F730 /* VerificationPage_no_selfie.json */; };
 		E5B984BE9EFC4E87D1866CB3 /* VerificationPageStaticContentSelfieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B35B47EE955CE3D6A670CA0 /* VerificationPageStaticContentSelfieModels.swift */; };
@@ -387,7 +385,6 @@
 		A2AF434F2405C5F38F259112 /* IdentityHTMLViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityHTMLViewSnapshotTest.swift; sourceTree = "<group>"; };
 		A2C25D8AD61094AB6530BCA4 /* VerificationPageFieldType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageFieldType.swift; sourceTree = "<group>"; };
 		A31C88110FBCDDA9FB912491 /* AnimatedBorderViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedBorderViewSnapshotTest.swift; sourceTree = "<group>"; };
-		A4705605DCDEFDA9866A0B27 /* TuistBundle+StripeIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeIdentityTests.swift"; sourceTree = "<group>"; };
 		A5082A4100CEE0C8378AD185 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
 		A59680E002FC6E7BC9906BD2 /* IdentityAPIClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAPIClientTest.swift; sourceTree = "<group>"; };
 		A5D517A4C8669379A029BBAD /* StripeIdentityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIdentityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -417,7 +414,6 @@
 		BCB41D1D6B1D35C92EA6F2B7 /* IDDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDDetector.swift; sourceTree = "<group>"; };
 		BCC019FA1D6D8AEB598D9EC5 /* IdentityAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAnalyticsClient.swift; sourceTree = "<group>"; };
 		BD9BA1457F98160EBCBEE670 /* FaceDetectorOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceDetectorOutput.swift; sourceTree = "<group>"; };
-		BDBC41D68BA6D70111EF223E /* TuistBundle+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeIdentity.swift"; sourceTree = "<group>"; };
 		C3288667B33AACBC2380CD9D /* icon_clock@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_clock@3x.png"; sourceTree = "<group>"; };
 		C334F59C93D3D11534FACBBA /* DocumentUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploader.swift; sourceTree = "<group>"; };
 		C3C78174C0059A8957832825 /* VNBarcodeSymbology+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VNBarcodeSymbology+StripeIdentity.swift"; sourceTree = "<group>"; };
@@ -706,14 +702,6 @@
 			path = StripeIdentity;
 			sourceTree = "<group>";
 		};
-		640E60B391C7A2011DFA3F57 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				A77AC3F219D04E3DA00BFCA3 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		6C8A36498C59C6AA87239ADC /* Snapshot */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,7 +768,6 @@
 			isa = PBXGroup;
 			children = (
 				1839EB588B1D039EC1FC1671 /* BuildConfigurations */,
-				640E60B391C7A2011DFA3F57 /* Derived */,
 				500DB8B56AFF3E5D762BA726 /* StripeIdentity */,
 				00D6B9FD0E5C501B4BF57EF9 /* StripeIdentityTests */,
 			);
@@ -925,15 +912,6 @@
 				EE238D8B6DAA92980E1F813A /* ShadowedCorneredImageView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		A77AC3F219D04E3DA00BFCA3 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				BDBC41D68BA6D70111EF223E /* TuistBundle+StripeIdentity.swift */,
-				A4705605DCDEFDA9866A0B27 /* TuistBundle+StripeIdentityTests.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		B676F5058454EA479CE2B699 /* Frameworks */ = {
@@ -1321,7 +1299,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3CF8B794F9E0BB4CAE93B541 /* TuistBundle+StripeIdentityTests.swift in Sources */,
 				548C24D5A0F63E60BC83676F /* DocumentUploaderMock.swift in Sources */,
 				F2BBAF668109BC42FF4FCD09 /* IdentityAPIClientTestMock.swift in Sources */,
 				CB3E51C6E407E6A4A1001AAC /* IdentityAnalyticsClientTestHelpers.swift in Sources */,
@@ -1378,7 +1355,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF6A20E68CD9BB9B4D1EF241 /* TuistBundle+StripeIdentity.swift in Sources */,
 				EA2A1C7D4A9FB826A2146808 /* DocumentScanner+API.swift in Sources */,
 				C378303DE7D3674CE4C771B7 /* DocumentType+StripeIdentity.swift in Sources */,
 				F1CA28CC435B94C289B08257 /* DocumentUploader+API.swift in Sources */,
@@ -1566,6 +1542,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 434BC5FFBC1163872413A40A /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1581,6 +1559,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E850C3F1FEA42490F1B3761E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeIdentity/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-identity";
 				PRODUCT_NAME = StripeIdentity;
@@ -1606,6 +1586,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B17C20418C972E7B06B84370 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeIdentity/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-identity";
 				PRODUCT_NAME = StripeIdentity;
@@ -1617,6 +1599,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8605B809AD7EBA140CC9DBE9 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

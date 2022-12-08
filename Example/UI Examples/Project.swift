@@ -1,8 +1,13 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "UI Examples",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     settings: .settings(
         configurations: [
             .debug(
@@ -35,18 +40,8 @@ let project = Project(
                 .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
                 .project(target: "StripeiOS", path: "//Stripe"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/UI-Examples-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/UI-Examples-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/UI-Examples"
             )
         )
     ],

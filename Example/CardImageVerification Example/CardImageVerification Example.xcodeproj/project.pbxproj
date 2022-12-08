@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0FE3262219255EC0625BD17E /* TuistAssets+CardImageVerificationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B63E297559033D12663B27 /* TuistAssets+CardImageVerificationExample.swift */; };
 		14017146A92727DBF2762F3F /* StripeCardScan.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 42919CBDD4A22565A9C9DB78 /* StripeCardScan.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		151997DE6D76CD9FF1F7E98D /* TuistStrings+CardImageVerificationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1705DCFC521093062A876140 /* TuistStrings+CardImageVerificationExample.swift */; };
 		3AC3BADD4D393EA0F30EA256 /* VerificationCardInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B218F856E8F563C255873C8 /* VerificationCardInputViewController.swift */; };
 		5088641EE7C2A9D56C3A6AFE /* URLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B559E0CDA9850E57AE044E4 /* URLHelper.swift */; };
 		53E2CCA28A8F10FBE176CBF4 /* CTAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C085819047EFDFE64834CC0B /* CTAButton.swift */; };
@@ -22,7 +20,6 @@
 		8015A127FD067FD9CA4023D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AC6FC5156669FB2939F4653 /* LaunchScreen.storyboard */; };
 		82F25757E8833C501E8C62A1 /* card_scanning_instruction.png in Resources */ = {isa = PBXBuildFile; fileRef = E7F4E92BC498695EFFD9E426 /* card_scanning_instruction.png */; };
 		8741973E15C8893F4520185D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEE45A51003DA37F32D10E5 /* AppDelegate.swift */; };
-		9A2DB5574634E23DF69D5FB1 /* TuistBundle+CardImageVerificationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17213E17DCCDF2506E32C0BE /* TuistBundle+CardImageVerificationExample.swift */; };
 		9A7ED65986834C9172610E59 /* VerificationExplanationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34759EA337227B90AA9B69 /* VerificationExplanationViewController.swift */; };
 		DC7CBF4EF1C6191B915C6BF3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0792001614FB9AD6C495B9C2 /* ViewController.swift */; };
 		E40F2C10AA49A3172FB30FE6 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D2FBB82039C12638B1A3EE /* APIClient.swift */; };
@@ -66,13 +63,10 @@
 
 /* Begin PBXFileReference section */
 		0792001614FB9AD6C495B9C2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		1705DCFC521093062A876140 /* TuistStrings+CardImageVerificationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+CardImageVerificationExample.swift"; sourceTree = "<group>"; };
-		17213E17DCCDF2506E32C0BE /* TuistBundle+CardImageVerificationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+CardImageVerificationExample.swift"; sourceTree = "<group>"; };
 		1CCF8FEE15F4D59017FD2595 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		23B93ACA79325D539C32F309 /* CardImageVerificationExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CardImageVerificationExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A34759EA337227B90AA9B69 /* VerificationExplanationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationExplanationViewController.swift; sourceTree = "<group>"; };
 		3CE0B6CC20864C0008614046 /* CardImageVerification-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "CardImageVerification-Example-Release.xcconfig"; sourceTree = "<group>"; };
-		41B63E297559033D12663B27 /* TuistAssets+CardImageVerificationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+CardImageVerificationExample.swift"; sourceTree = "<group>"; };
 		42919CBDD4A22565A9C9DB78 /* StripeCardScan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCardScan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		47FE5701F624F6CE8D9F9027 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4AFE0B327286E7F0302D9D1B /* CardImageVerification_ExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageVerification_ExampleUITests.swift; sourceTree = "<group>"; };
@@ -170,14 +164,6 @@
 			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
-		64B8FD24A2194A39D9042AAC /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				E8AB0B48C54624E8E96235A8 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		6F079DF6B7EF5EE355078DD7 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,7 +210,6 @@
 				6F079DF6B7EF5EE355078DD7 /* BuildConfigurations */,
 				0305B2C2E323627C38B7F078 /* CardImageVerification Example */,
 				BD4FFC07D9390ECD9EDB077A /* CardImageVerification ExampleUITests */,
-				64B8FD24A2194A39D9042AAC /* Derived */,
 			);
 			name = Project;
 			sourceTree = "<group>";
@@ -236,16 +221,6 @@
 				44EC74304CAE5B297FCDFBC6 /* Frameworks */,
 				41474EC63599755CF3802E13 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		E8AB0B48C54624E8E96235A8 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				41B63E297559033D12663B27 /* TuistAssets+CardImageVerificationExample.swift */,
-				17213E17DCCDF2506E32C0BE /* TuistBundle+CardImageVerificationExample.swift */,
-				1705DCFC521093062A876140 /* TuistStrings+CardImageVerificationExample.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,9 +361,6 @@
 				9A7ED65986834C9172610E59 /* VerificationExplanationViewController.swift in Sources */,
 				DC7CBF4EF1C6191B915C6BF3 /* ViewController.swift in Sources */,
 				53E2CCA28A8F10FBE176CBF4 /* CTAButton.swift in Sources */,
-				0FE3262219255EC0625BD17E /* TuistAssets+CardImageVerificationExample.swift in Sources */,
-				9A2DB5574634E23DF69D5FB1 /* TuistBundle+CardImageVerificationExample.swift in Sources */,
-				151997DE6D76CD9FF1F7E98D /* TuistStrings+CardImageVerificationExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +401,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 74D9CF010C9F1E76EA59098A /* CardImageVerification-Example-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-Example";
 				PRODUCT_NAME = CardImageVerificationExample;
@@ -440,6 +414,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CE0B6CC20864C0008614046 /* CardImageVerification-Example-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-Example";
 				PRODUCT_NAME = CardImageVerificationExample;
@@ -465,6 +441,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B96E61A575FF9A7B3828D967 /* CardImageVerification-ExampleUITests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification ExampleUITests/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-ExampleUITests";
 				PRODUCT_NAME = CardImageVerificationExampleUITests;
@@ -477,6 +455,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 52B4B1ADDDBC7792175EE884 /* CardImageVerification-ExampleUITests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification ExampleUITests/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-ExampleUITests";
 				PRODUCT_NAME = CardImageVerificationExampleUITests;

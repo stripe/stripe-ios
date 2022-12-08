@@ -6,6 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import SwiftUI
+
 /// :nodoc:
 extension STPBankSelectionMethod: CustomStringConvertible {
     public var description: String {

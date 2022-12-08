@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07CD4C97C36D2A934E18A074 /* TuistStrings+IdentityVerificationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E64042E04068845964881A8 /* TuistStrings+IdentityVerificationExample.swift */; };
 		1875377FB12B8BF4E0A40B71 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */; };
 		2DAC0A5AC68834182A3C3157 /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAE76BD5531A138F256081C /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2F1FD2F4B8158010DB506DEC /* ExampleVerificationViewControllerNativeUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C02084EDD36D9CAA51F7C5D /* ExampleVerificationViewControllerNativeUI.swift */; };
@@ -19,12 +18,10 @@
 		7E4B2DB2F2F91139B316669F /* ExampleVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5147C45F39A30B64BBCCB46 /* ExampleVerificationViewController.swift */; };
 		B45485CEA2574141EC53065D /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D1964BE2EC5DCFEB84A4CB20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A92DA0D8C6D744CA9629D3 /* AppDelegate.swift */; };
-		D6D5F04E38DB40282749A1F5 /* TuistAssets+IdentityVerificationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F642151ECA859786163F1DB1 /* TuistAssets+IdentityVerificationExample.swift */; };
 		D782EED16A8D9E57A29120DF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37FB11661A885C509E590A5E /* MainViewController.swift */; };
 		DF48F0D08F6BA0BACAFF83EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95C6B55E7540A785E80BAB86 /* LaunchScreen.storyboard */; };
 		E42092C2333F56732BC546C7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FDB4292C7CFB1DCFF2395F2 /* Main.storyboard */; };
 		EA880791607D43F53AE425D9 /* PlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD550B84969CEBD8F27923 /* PlaygroundViewController.swift */; };
-		EF9F28D43AAF5E6B95B77B6D /* TuistBundle+IdentityVerificationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4622EE638243CC52F7772FF /* TuistBundle+IdentityVerificationExample.swift */; };
 		F40A0A5D85C7D664264EC323 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */; };
 		FB0DCB24D8B0434C232A7A93 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAE76BD5531A138F256081C /* StripeCameraCore.framework */; };
 /* End PBXBuildFile section */
@@ -112,7 +109,6 @@
 		9A60D7F6A8EC130755011B00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9B4C1F19B67F37987487589F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		9C6F733BCFA9A551D6B8F35F /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		9E64042E04068845964881A8 /* TuistStrings+IdentityVerificationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+IdentityVerificationExample.swift"; sourceTree = "<group>"; };
 		A7661221B10BC87A668E5324 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		A9448885B1DBF7D76A86345B /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Main.strings; sourceTree = "<group>"; };
 		ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IdentityVerification-Example-Release.xcconfig"; sourceTree = "<group>"; };
@@ -125,7 +121,6 @@
 		BD7771EEEB47D8B3FB649AD0 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		C0970DF49C0FC4916DBC9517 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
 		C23AE354486268FB6D9EEB5C /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		C4622EE638243CC52F7772FF /* TuistBundle+IdentityVerificationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+IdentityVerificationExample.swift"; sourceTree = "<group>"; };
 		C58612FE715F700C8245BB36 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		D20308A69311D54E2EB58609 /* IdentityVerificationExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdentityVerificationExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D70C6C1D561BEABBFA194F5E /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -144,7 +139,6 @@
 		F2C0F7A6A4A8A7F6684EA931 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F4DB31053E5C371C5A409C82 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		F5147C45F39A30B64BBCCB46 /* ExampleVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleVerificationViewController.swift; sourceTree = "<group>"; };
-		F642151ECA859786163F1DB1 /* TuistAssets+IdentityVerificationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+IdentityVerificationExample.swift"; sourceTree = "<group>"; };
 		F76B5E448B763D05FB15AEC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F8F70C424B79561EA7B2BA03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		FCB34FDFDA644F655DA9A87A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -166,16 +160,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0F096ABFBD2AC9A3062E4F1F /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				F642151ECA859786163F1DB1 /* TuistAssets+IdentityVerificationExample.swift */,
-				C4622EE638243CC52F7772FF /* TuistBundle+IdentityVerificationExample.swift */,
-				9E64042E04068845964881A8 /* TuistStrings+IdentityVerificationExample.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
 		18C80FCB205DB85724EA25A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -197,18 +181,9 @@
 			children = (
 				D63AB17F796AEA9B4404C0B4 /* BuildConfigurations */,
 				9712D8211A434D4FEC9ABB6A /* BuildConfigurations */,
-				4323911B66C6E678CCF21C46 /* Derived */,
 				FC2358907DA780D67C7C2D61 /* IdentityVerification Example */,
 			);
 			name = Project;
-			sourceTree = "<group>";
-		};
-		4323911B66C6E678CCF21C46 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				0F096ABFBD2AC9A3062E4F1F /* Sources */,
-			);
-			path = Derived;
 			sourceTree = "<group>";
 		};
 		7676F5ED056BC1598DFDB77F /* Resources */ = {
@@ -373,9 +348,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6D5F04E38DB40282749A1F5 /* TuistAssets+IdentityVerificationExample.swift in Sources */,
-				EF9F28D43AAF5E6B95B77B6D /* TuistBundle+IdentityVerificationExample.swift in Sources */,
-				07CD4C97C36D2A934E18A074 /* TuistStrings+IdentityVerificationExample.swift in Sources */,
 				D1964BE2EC5DCFEB84A4CB20 /* AppDelegate.swift in Sources */,
 				7E4B2DB2F2F91139B316669F /* ExampleVerificationViewController.swift in Sources */,
 				2F1FD2F4B8158010DB506DEC /* ExampleVerificationViewControllerNativeUI.swift in Sources */,
@@ -498,6 +470,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
@@ -509,6 +483,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;

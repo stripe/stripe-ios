@@ -36,8 +36,7 @@ CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 // The name ("common name") of a valid code-signing certificate in a keychain within your
 // keychain path.   A missing or invalid certificate will cause a build error.
 
-CODE_SIGN_STYLE = Automatic
-DEVELOPMENT_TEAM = Y28TH9SHX7
+CODE_SIGN_IDENTITY[sdk=iphoneos*] =
 
 // Defines Module
 // 

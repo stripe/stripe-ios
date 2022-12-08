@@ -27,7 +27,6 @@
 		6B69932E6CC7BE9D71AF54C1 /* FPXView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59BC76C0F4E0B96796F412 /* FPXView.swift */; };
 		738352333BC65C77F28CCD6E /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA7414BE30CD6E4778C3982F /* Stripe.framework */; };
 		7D6A6F51B50CB5043BEE3454 /* CardSetupIntentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F38BCBD16314976A7ABFB7D /* CardSetupIntentsView.swift */; };
-		81ABAF9A763055AC72D5ABF7 /* TuistBundle+IntegrationTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB63BF4C7667FBD76012E20D /* TuistBundle+IntegrationTester.swift */; };
 		867577501F923D56CA61E0B7 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40F16C3CE95FEA4DC72EE1 /* PaymentButton.swift */; };
 		869A2C7F10ADE40F95B17438 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C59F79598662D370E750284E /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		925B06A1984163D9A1DE2A1E /* IntegrationTesterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1093AE24530AED2074A1348F /* IntegrationTesterUITests.swift */; };
@@ -159,7 +158,6 @@
 		C3E84A059F7377505F1CB1B8 /* PaymentMethodWithContactInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodWithContactInfoView.swift; sourceTree = "<group>"; };
 		C59F79598662D370E750284E /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA7414BE30CD6E4778C3982F /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB63BF4C7667FBD76012E20D /* TuistBundle+IntegrationTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+IntegrationTester.swift"; sourceTree = "<group>"; };
 		E6AAC1C0B685BBE74010651F /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		ED3F8E45FE6EF9639CC65B19 /* IntegrationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F02984906B63BC59A0033A9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -265,14 +263,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		6077DE1B6B700DA3621B996B /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				DB63BF4C7667FBD76012E20D /* TuistBundle+IntegrationTester.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
 		62E25771CBB40F9DE7355718 = {
 			isa = PBXGroup;
 			children = (
@@ -345,19 +335,10 @@
 			children = (
 				B304CFFD06423C85D8CCB521 /* BuildConfigurations */,
 				81D603F43394B54AE2B5EA2C /* Common */,
-				E1C5D570CC0CC4E03534AC55 /* Derived */,
 				EF53BF2D5DDCC96E934ECCBE /* IntegrationTester */,
 				289395EA52A7FA4D77013143 /* IntegrationTesterUITests */,
 			);
 			name = Project;
-			sourceTree = "<group>";
-		};
-		E1C5D570CC0CC4E03534AC55 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				6077DE1B6B700DA3621B996B /* Sources */,
-			);
-			path = Derived;
 			sourceTree = "<group>";
 		};
 		EF53BF2D5DDCC96E934ECCBE /* IntegrationTester */ = {
@@ -502,7 +483,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81ABAF9A763055AC72D5ABF7 /* TuistBundle+IntegrationTester.swift in Sources */,
 				CDF598B325038871E7F0DF79 /* HelperViews.swift in Sources */,
 				867577501F923D56CA61E0B7 /* PaymentButton.swift in Sources */,
 				4491C263B412538D7CADD6D9 /* IntegrationTesterApp.swift in Sources */,
@@ -566,6 +546,8 @@
 			baseConfigurationReference = 8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/IntegrationTester/IntegrationTester.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
 				PRODUCT_NAME = IntegrationTester;
@@ -577,6 +559,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2324F82EFFBE27D202549019 /* IntegrationTesterUITests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterUITests;
 				PRODUCT_NAME = IntegrationTesterUITests;
@@ -590,6 +574,8 @@
 			baseConfigurationReference = 5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/IntegrationTester/IntegrationTester.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
 				PRODUCT_NAME = IntegrationTester;
@@ -601,6 +587,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C3025BEBDF23D03A2B9DAA6F /* IntegrationTesterUITests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterUITests;
 				PRODUCT_NAME = IntegrationTesterUITests;
@@ -613,6 +601,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterCommon;
 				PRODUCT_NAME = IntegrationTesterCommon;
 				SDKROOT = iphoneos;
@@ -623,6 +613,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterCommon;
 				PRODUCT_NAME = IntegrationTesterCommon;
 				SDKROOT = iphoneos;

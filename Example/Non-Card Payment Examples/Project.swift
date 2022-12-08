@@ -1,8 +1,13 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "Non-Card Payment Examples",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     settings: .settings(
         configurations: [
             .debug(
@@ -32,8 +37,6 @@ let project = Project(
             headers: .headers(project: "Non-Card Payment Example/*.h"),
             entitlements: "Non-Card Payment Examples/Non-Card Payment Examples.entitlements",
             dependencies: [
-                .sdk(name: "Security", type: .framework),
-                .sdk(name: "PassKit", type: .framework),
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeUICore", path: "//StripeUICore"),
                 .project(target: "StripeApplePay", path: "//StripeApplePay"),
@@ -47,18 +50,8 @@ let project = Project(
                     path: "//StripeFinancialConnections"
                 ),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/Non-Card-Payment-Examples-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/Non-Card-Payment-Examples-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/Non-Card-Payment-Examples"
             ),
             additionalFiles: [
                 "Non-Card Payment Examples/*.h",
@@ -72,6 +65,5 @@ let project = Project(
             runAction: .runAction(executable: "Non-Card Payment Examples")
         )
     ],
-    additionalFiles: "README.md",
-    resourceSynthesizers: []
+    additionalFiles: "README.md"
 )
