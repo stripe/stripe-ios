@@ -1,3 +1,8 @@
+## X.Y.Z 2022-xx-xx
+## PaymentSheet
+* [Fixed] Fixed an issue that caused animations of the card logos in the Card input field to glitch.
+* [Fixed] Fixed a layout issue in the "Save my info" checkbox.
+
 ## 23.3.0 2022-12-05
 ### PaymentSheet
 * [Added] Added logos of accepted card brands on Card input field.
