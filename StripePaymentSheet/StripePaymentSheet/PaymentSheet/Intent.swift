@@ -172,16 +172,18 @@ class IntentConfirmParams {
         
         // Dashboard only supports a specific payment flow today
         assert(paymentMethodOptions == nil)
+        
         let options = STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
             shouldSavePaymentMethod,
             paymentMethodType: paymentMethodType,
             customer: configuration.customer
         )
-        let cardOptions = STPConfirmCardOptions()
+        params.paymentMethodOptions = options
+        
+        let cardOptions = options.cardOptions ?? STPConfirmCardOptions()
         cardOptions.additionalAPIParameters["moto"] = true
         options.cardOptions = cardOptions
-        params.paymentMethodOptions = options
         return params
     }
 }
@@ -199,18 +201,28 @@ extension STPConfirmPaymentMethodOptions {
         paymentMethodType: STPPaymentMethodType,
         customer: PaymentSheet.CustomerConfiguration?
     ) {
-        // This property cannot be set if there is no customer.
+        // Something went wrong if we're trying to save and there's no Customer!
         assert(!(shouldSave && customer == nil))
 
-        // Only support card and US bank setup_future_usage in payment_method_options
-        guard customer != nil && paymentMethodType == .card || paymentMethodType == .USBankAccount
-        else {
+        // This property should only be set if
+        // 1. We're displaying a "Save this pm for future payments" checkbox
+        // 2. The PM type is card or US bank
+        guard customer != nil && paymentMethodType == .card || paymentMethodType == .USBankAccount else {
             return
         }
-        additionalAPIParameters[STPPaymentMethod.string(from: paymentMethodType)] = [
-            // We pass an empty string to 'unset' this value. This makes the PaymentIntent inherit the top-level setup_future_usage.
-            "setup_future_usage": shouldSave ? "off_session" : ""
-        ]
+        // Passing "none" *overrides* the top-level setup_future_usage and is not what we want, b/c this code is called even when we don't display the "save" checkbox (e.g. when the PI top-level setup_future_usage is already set).
+        // Instead, we pass an empty string to 'unset' this value. This makes the PaymentIntent *inherit* the top-level setup_future_usage.
+        let sfuValue = shouldSave ? "off_session" : ""
+        switch paymentMethodType {
+        case .card:
+            cardOptions = cardOptions ?? STPConfirmCardOptions()
+            cardOptions?.additionalAPIParameters["setup_future_usage"] = sfuValue
+        case .USBankAccount:
+            usBankAccountOptions = usBankAccountOptions ?? STPConfirmUSBankAccountOptions(setupFutureUsage: .none)
+            usBankAccountOptions?.additionalAPIParameters["setup_future_usage"] = sfuValue
+        default:
+            return
+        }
     }
     func setSetupFutureUsageIfNecessary(
         _ shouldSave: Bool,
