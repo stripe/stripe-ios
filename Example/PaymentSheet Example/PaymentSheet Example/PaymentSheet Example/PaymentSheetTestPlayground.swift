@@ -252,7 +252,7 @@ class PaymentSheetTestPlayground: UIViewController {
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
-    var checkoutEndpoint: String?
+    var checkoutEndpoint: String = defaultCheckoutEndpoint
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
@@ -295,8 +295,6 @@ class PaymentSheetTestPlayground: UIViewController {
         } else if let nsUserDefaultSettings = settingsFromDefaults() {
             loadSettingsFrom(settings: nsUserDefaultSettings)
             loadBackend()
-        } else {
-            checkoutEndpoint = defaultCheckoutEndpoint
         }
     }
 
@@ -385,7 +383,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBAction func didTapEndpointConfiguration(_ sender: Any) {
         let endpointSelector = EndpointSelectorViewController(delegate: self,
                                                               endpointSelectorEndpoint: endpointSelectorEndpoint,
-                                                              currentCheckoutEndpoint: checkoutEndpoint!)
+                                                              currentCheckoutEndpoint: checkoutEndpoint)
         let navController = UINavigationController(rootViewController: endpointSelector)
         self.navigationController?.present(navController, animated: true, completion: nil)
     }
@@ -427,7 +425,7 @@ extension PaymentSheetTestPlayground {
         addressViewController = nil
 
         let session = URLSession.shared
-        let url = URL(string: checkoutEndpoint!)!
+        let url = URL(string: checkoutEndpoint)!
         let customer: String = {
             switch customerMode {
             case .guest:
