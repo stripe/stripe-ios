@@ -11,6 +11,7 @@ import Foundation
 protocol PartnerAuthDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var returnURL: String? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     
     func createAuthSession() -> Future<FinancialConnectionsAuthSession>
@@ -23,6 +24,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     
     let institution: FinancialConnectionsInstitution
     let manifest: FinancialConnectionsSessionManifest
+    let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -37,12 +39,14 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     init(
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
+        returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.institution = institution
         self.manifest = manifest
+        self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient

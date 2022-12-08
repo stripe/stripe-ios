@@ -25,7 +25,18 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
-    
+
+    /**
+     Unfortunately there is a need for this state-full parameter. When we get url callback the app might not be in foreground state.
+     If we then authorize the auth session will fail as you can't do background networking without special permission.
+     */
+    private var unprocessedReturnURL: URL?
+    private var subscribedToURLNotifications = false
+    private var subscribedToAppActiveNotifications = false
+    private var continueStateView: ContinueStateView?
+
+    private var currentAuthSession: FinancialConnectionsAuthSession?
+
     private let dataSource: PartnerAuthDataSource
     private var institution: FinancialConnectionsInstitution {
         return dataSource.institution
@@ -63,6 +74,9 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func createAuthSession() {
+        assertMainQueue()
+
+        currentAuthSession = nil
         showEstablishingConnectionLoadingView(true)
         dataSource
             .createAuthSession()
@@ -72,6 +86,7 @@ final class PartnerAuthViewController: UIViewController {
                 self.showEstablishingConnectionLoadingView(false)
                 switch result {
                 case .success(let authSession):
+                    self.currentAuthSession = authSession
                     self.createdAuthSession(authSession)
                 case .failure(let error):
                     self.showErrorView(error)
@@ -89,10 +104,14 @@ final class PartnerAuthViewController: UIViewController {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 institutionImageUrl: institution.icon?.default,
-                partner: (authSession.showPartnerDisclosure ?? false) ? authSession.flow?.toPartner() : nil,
+                partner: authSession.partner,
                 isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
                 didSelectContinue: { [weak self] in
-                    self?.openInstitutionAuthenticationWebView(authSession: authSession)
+                    if authSession.requiresNativeRedirect {
+                        self?.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+                    } else {
+                        self?.openInstitutionAuthenticationWebView(authSession: authSession)
+                    }
                 }
             )
             view.addAndPinSubview(prepaneView)
@@ -227,7 +246,117 @@ final class PartnerAuthViewController: UIViewController {
             view.addAndPinSubviewToSafeArea(errorView)
         }
     }
+
+    fileprivate func handleAuthSessionCompletion(_ status: String, _ authSession: FinancialConnectionsAuthSession) {
+        if status == "success" {
+            self.dataSource.recordAuthSessionEvent(
+                eventName: "success",
+                authSessionId: authSession.id
+            )
+
+            if authSession.isOauthNonOptional {
+                // for OAuth flows, we need to fetch OAuth results
+                self.authorizeAuthSession(authSession)
+            } else {
+                // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
+                self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
+            }
+        } else if status == "failure" {
+            self.dataSource.recordAuthSessionEvent(
+                eventName: "failure",
+                authSessionId: authSession.id
+            )
+
+            // cancel current auth session
+            self.dataSource.cancelPendingAuthSessionIfNeeded()
+
+            // show a terminal error
+            self.showErrorView(
+                FinancialConnectionsSheetError.unknown(
+                    debugDescription: "Shim returned a failure."
+                )
+            )
+        } else { // assume `status == cancel`
+            self.dataSource.recordAuthSessionEvent(
+                eventName: "cancel",
+                authSessionId: authSession.id
+            )
+
+            // cancel current auth session
+            self.dataSource.cancelPendingAuthSessionIfNeeded()
+
+            // whether legacy or OAuth, we always go back
+            // if we got an explicit cancel from backend
+            self.navigateBack()
+        }
+    }
     
+    fileprivate func handleAuthSessionCompletionWithNoStatus(_ authSession: FinancialConnectionsAuthSession, _ error: Error?) {
+        if authSession.isOauthNonOptional {
+            // on "manual cancels" (for OAuth) we log retry event:
+            self.dataSource.recordAuthSessionEvent(
+                eventName: "retry",
+                authSessionId: authSession.id
+            )
+        } else {
+            // on "manual cancels" (for Legacy) we log cancel event:
+            self.dataSource.recordAuthSessionEvent(
+                eventName: "cancel",
+                authSessionId: authSession.id
+            )
+        }
+
+        if let error = error {
+            self.dataSource
+                .analyticsClient
+                .logUnexpectedError(
+                    error,
+                    errorName: "ASWebAuthenticationSessionError",
+                    pane: .partnerAuth
+                )
+        }
+
+        // cancel current auth session because something went wrong
+        self.dataSource.cancelPendingAuthSessionIfNeeded()
+
+        if authSession.isOauthNonOptional {
+            // for OAuth institutions, we remain on the pre-pane,
+            // but create a brand new auth session
+            self.createAuthSession()
+        } else {
+            // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
+            self.navigateBack()
+        }
+    }
+
+    private func openInstitutionAuthenticationNativeRedirect(authSession: FinancialConnectionsAuthSession) {
+        guard
+            let urlString = authSession.url?.dropPrefix("stripe-auth://native-redirect/"),
+                let url = URL(string: urlString) else {
+            self.showErrorView(
+                FinancialConnectionsSheetError.unknown(
+                    debugDescription: "Malformed auth session url."
+                )
+            )
+            return
+        }
+        self.continueStateView = ContinueStateView(
+            institutionImageUrl: self.institution.icon?.default,
+            partner: authSession.partner,
+            isStripeDirect: self.dataSource.manifest.isStripeDirect ?? false,
+            didSelectContinue: { [weak self] in
+                guard let self = self else { return }
+                self.continueStateView?.removeFromSuperview()
+                self.continueStateView = nil
+                // recreate the auth session since the old link cannot be reused.
+                self.createAuthSession()
+            })
+        self.view.addAndPinSubview(self.continueStateView!)
+
+        self.subscribeToURLAndAppActiveNotifications()
+        UIApplication.shared.open(url, options: [:], completionHandler:  nil)
+    }
+
     private func openInstitutionAuthenticationWebView(authSession: FinancialConnectionsAuthSession) {
         guard let urlString =  authSession.url, let url = URL(string: urlString) else {
             assertionFailure("Expected to get a URL back from authorization session.")
@@ -261,86 +390,12 @@ final class PartnerAuthViewController: UIViewController {
                     let urlComponsents = URLComponents(url: returnUrl, resolvingAgainstBaseURL: true),
                     let status = urlComponsents.queryItems?.first(where: { $0.name == "status" })?.value
                 {
-                    if status == "success" {
-                        self.dataSource.recordAuthSessionEvent(
-                            eventName: "success",
-                            authSessionId: authSession.id
-                        )
-                        
-                        if authSession.isOauthNonOptional {
-                            // for OAuth flows, we need to fetch OAuth results
-                            self.authorizeAuthSession(authSession)
-                        } else {
-                            // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
-                            self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
-                        }
-                    } else if status == "failure" {
-                        self.dataSource.recordAuthSessionEvent(
-                            eventName: "failure",
-                            authSessionId: authSession.id
-                        )
-                        
-                        // cancel current auth session
-                        self.dataSource.cancelPendingAuthSessionIfNeeded()
-                        
-                        // show a terminal error
-                        self.showErrorView(
-                            FinancialConnectionsSheetError.unknown(
-                                debugDescription: "Shim returned a failure."
-                            )
-                        )
-                    } else { // assume `status == cancel`
-                        self.dataSource.recordAuthSessionEvent(
-                            eventName: "cancel",
-                            authSessionId: authSession.id
-                        )
-                        
-                        // cancel current auth session
-                        self.dataSource.cancelPendingAuthSessionIfNeeded()
-                        
-                        // whether legacy or OAuth, we always go back
-                        // if we got an explicit cancel from backend
-                        self.navigateBack()
-                    }
+                    self.handleAuthSessionCompletion(status, authSession)
                 }
                 // we did NOT get a `status` back from the backend,
                 // so assume a "cancel"
                 else {
-                    if authSession.isOauthNonOptional {
-                        // on "manual cancels" (for OAuth) we log retry event:
-                        self.dataSource.recordAuthSessionEvent(
-                            eventName: "retry",
-                            authSessionId: authSession.id
-                        )
-                    } else {
-                        // on "manual cancels" (for Legacy) we log cancel event:
-                        self.dataSource.recordAuthSessionEvent(
-                            eventName: "cancel",
-                            authSessionId: authSession.id
-                        )
-                    }
-                    
-                    if let error = error {
-                        self.dataSource
-                            .analyticsClient
-                            .logUnexpectedError(
-                                error,
-                                errorName: "ASWebAuthenticationSessionError",
-                                pane: .partnerAuth
-                            )
-                    }
-                    
-                    // cancel current auth session because something went wrong
-                    self.dataSource.cancelPendingAuthSessionIfNeeded()
-                    
-                    if authSession.isOauthNonOptional {
-                        // for OAuth institutions, we remain on the pre-pane,
-                        // but create a brand new auth session
-                        self.createAuthSession()
-                    } else {
-                        // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
-                        self.navigateBack()
-                    }
+                    self.handleAuthSessionCompletionWithNoStatus(authSession, error)
                 }
                 
                 self.webAuthenticationSession = nil
@@ -421,6 +476,110 @@ final class PartnerAuthViewController: UIViewController {
         
         navigationItem.hidesBackButton = show
         establishingConnectionLoadingView.isHidden = !show
+    }
+}
+
+// MARK: - STPURLCallbackListener
+
+@available(iOSApplicationExtension, unavailable)
+extension PartnerAuthViewController: STPURLCallbackListener {
+
+    private func handleAuthSessionCompletionFromNativeRedirect(_ url: URL) {
+        assertMainQueue()
+
+        guard let authSession = self.currentAuthSession else { return }
+        guard var urlComponsents = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
+        urlComponsents.query = url.fragment
+
+        guard
+           let status = urlComponsents.queryItems?.first(where: { $0.name == "code" })?.value,
+            let authSessionId = urlComponsents.queryItems?.first(where: { $0.name == "authSessionId" })?.value,
+            authSessionId == self.currentAuthSession?.id
+        else {
+            self.handleAuthSessionCompletionWithNoStatus(authSession, nil)
+            return
+        }
+
+        handleAuthSessionCompletion(status, authSession)
+    }
+
+    func handleURLCallback(_ url: URL) -> Bool {
+        DispatchQueue.main.async {
+            self.unprocessedReturnURL = url
+            self.handleAuthSessionCompletionFromNativeRedirectIfNeeded()
+        }
+        return true
+    }
+}
+
+// MARK: - Authentication restart helpers
+
+@available(iOSApplicationExtension, unavailable)
+private extension PartnerAuthViewController {
+
+    private func subscribeToURLAndAppActiveNotifications() {
+        dispatchPrecondition(condition: .onQueue(.main))
+
+        subscribeToURLNotifications()
+        if !subscribedToAppActiveNotifications {
+            subscribedToAppActiveNotifications = true
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleDidBecomeActiveNotification),
+                name: UIApplication.didBecomeActiveNotification,
+                object: nil)
+        }
+    }
+
+    private func subscribeToURLNotifications() {
+        dispatchPrecondition(condition: .onQueue(.main))
+
+        guard let returnURL = dataSource.returnURL,
+                let url = URL(string: returnURL) else {
+            return
+        }
+        if !subscribedToURLNotifications {
+            subscribedToURLNotifications = true
+            STPURLCallbackHandler.shared().register(
+                self,
+                for: url)
+        }
+    }
+
+    private func unsubscribeFromNotifications() {
+        dispatchPrecondition(condition: .onQueue(.main))
+
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil)
+        STPURLCallbackHandler.shared().unregisterListener(self)
+        subscribedToURLNotifications = false
+        subscribedToAppActiveNotifications = false
+    }
+
+    @objc func handleDidBecomeActiveNotification() {
+        DispatchQueue.main.async {
+            self.handleAuthSessionCompletionFromNativeRedirectIfNeeded()
+        }
+    }
+
+    private func handleAuthSessionCompletionFromNativeRedirectIfNeeded() {
+        dispatchPrecondition(condition: .onQueue(.main))
+
+        guard UIApplication.shared.applicationState == .active,
+                let url = unprocessedReturnURL else {
+            /**
+             When we get url callback the app might not be in foreground state.
+             If we then proceed with authorization network request might fail as we will be doing background networking without special permission..
+             */
+            return
+        }
+        handleAuthSessionCompletionFromNativeRedirect(url)
+        unprocessedReturnURL = nil
+        continueStateView?.removeFromSuperview()
+        continueStateView = nil
+        unsubscribeFromNotifications()
     }
 }
 

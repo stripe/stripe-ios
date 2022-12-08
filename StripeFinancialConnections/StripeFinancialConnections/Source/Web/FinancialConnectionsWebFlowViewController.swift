@@ -32,9 +32,12 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        let contentView = ContinueStateView(frame: .zero)
-        contentView.primaryButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
-        return contentView
+        return ContinueStateView(institutionImageUrl: nil,
+                                 partner: nil,
+                                 isStripeDirect: false) { [weak self] in
+            guard let self = self else { return }
+            self.startAuthenticationSession(manifest: self.manifest)
+        }
     }()
     
     /**
@@ -301,9 +304,5 @@ private extension FinancialConnectionsWebFlowViewController {
             return startPollingParam
         }
         return startPollingParam + "&\(fragment)"
-    }
-    
-    @objc func didSelectContinueButton() {
-        startAuthenticationSession(manifest: manifest)
     }
 }
