@@ -15,6 +15,9 @@ import UIKit
 import SwiftUI
 import PassKit
 
+let endpointSelectorEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/endpoints"
+let defaultCheckoutEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
+
 class PaymentSheetTestPlayground: UIViewController {
     static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
 
@@ -249,6 +252,7 @@ class PaymentSheetTestPlayground: UIViewController {
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
+    var checkoutEndpoint: String?
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
@@ -291,6 +295,8 @@ class PaymentSheetTestPlayground: UIViewController {
         } else if let nsUserDefaultSettings = settingsFromDefaults() {
             loadSettingsFrom(settings: nsUserDefaultSettings)
             loadBackend()
+        } else {
+            checkoutEndpoint = defaultCheckoutEndpoint
         }
     }
 
@@ -376,6 +382,14 @@ class PaymentSheetTestPlayground: UIViewController {
         self.selectPaymentMethodButton.setNeedsLayout()
     }
 
+    @IBAction func didTapEndpointConfiguration(_ sender: Any) {
+        let endpointSelector = EndpointSelectorViewController(delegate: self,
+                                                              endpointSelectorEndpoint: endpointSelectorEndpoint,
+                                                              currentCheckoutEndpoint: checkoutEndpoint!)
+        let navController = UINavigationController(rootViewController: endpointSelector)
+        self.navigationController?.present(navController, animated: true, completion: nil)
+    }
+
     @IBAction func didTapResetConfig(_ sender: Any) {
         loadSettingsFrom(settings: PaymentSheetPlaygroundSettings.defaultValues())
     }
@@ -413,7 +427,7 @@ extension PaymentSheetTestPlayground {
         addressViewController = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
+        let url = URL(string: checkoutEndpoint!)!
         let customer: String = {
             switch customerMode {
             case .guest:
@@ -508,6 +522,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let shippingInfoSelectorValue: Int
     let linkSelectorValue: Int
     let customCtaLabel: String?
+    let checkoutEndpoint: String?
 
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
         return PaymentSheetPlaygroundSettings(
@@ -522,7 +537,8 @@ struct PaymentSheetPlaygroundSettings: Codable {
             defaultBillingAddressSelectorValue: 1,
             shippingInfoSelectorValue: 0,
             linkSelectorValue: 1,
-            customCtaLabel: nil
+            customCtaLabel: nil,
+            checkoutEndpoint: defaultCheckoutEndpoint
         )
     }
 }
@@ -533,6 +549,20 @@ extension PaymentSheetTestPlayground: AddressViewControllerDelegate {
         addressViewController.dismiss(animated: true)
         self.addressDetails = address
         self.updateButtons()
+    }
+}
+
+// MARK: - EndpointSelectorViewControllerDelegate
+extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
+    func selected(endpoint: String) -> Void {
+        checkoutEndpoint = endpoint
+        serializeSettingsToNSUserDefaults()
+        loadBackend()
+        self.navigationController?.dismiss(animated: true)
+
+    }
+    func cancelTapped() -> Void {
+        self.navigationController?.dismiss(animated: true)
     }
 }
 
@@ -552,7 +582,8 @@ extension PaymentSheetTestPlayground {
             defaultBillingAddressSelectorValue: defaultBillingAddressSelector.selectedSegmentIndex,
             shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
             linkSelectorValue: linkSelector.selectedSegmentIndex,
-            customCtaLabel: customCTALabelTextField.text
+            customCtaLabel: customCTALabelTextField.text,
+            checkoutEndpoint: checkoutEndpoint
         )
         let data = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
@@ -583,6 +614,7 @@ extension PaymentSheetTestPlayground {
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
         customCTALabelTextField.text = settings.customCtaLabel
+        checkoutEndpoint = settings.checkoutEndpoint ?? defaultCheckoutEndpoint
     }
 }
 
