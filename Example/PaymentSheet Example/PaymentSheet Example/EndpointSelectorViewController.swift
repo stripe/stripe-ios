@@ -87,10 +87,7 @@ extension EndpointSelectorViewController {
             return 0
         }
         let sectionKey = sortedSection[sectionNumberIndex].key
-        guard let endpointsInSection = specs.endpointMap[sectionKey] else {
-            return 0
-        }
-        return endpointsInSection.count
+        return specs.endpointMap[sectionKey]?.count ?? 0
     }
     override func tableView(_ tableView: UITableView, titleForHeaderInSection sectionNumber: Int) -> String? {
         if sectionNumber == 0 {
