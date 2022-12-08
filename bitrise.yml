@@ -233,6 +233,10 @@ workflows:
     - prep_all
     after_run:
     - upload_logs
+    meta:
+      bitrise.io:
+        stack: osx-xcode-13.3.x
+        machine_type_id: g2.12core
   legacy-tests-14:
     steps:
     - fastlane@3:
