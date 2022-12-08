@@ -103,7 +103,7 @@ extension EndpointSelectorViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "endpoint")
-        guard let endpoint = endpointFor(indexPath: indexPath) else {
+        guard let endpoint = endpoint(for: indexPath) else {
             return cell
         }
         cell.textLabel?.text = endpoint
@@ -112,7 +112,7 @@ extension EndpointSelectorViewController {
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let endpoint = endpointFor(indexPath: indexPath) else {
+        guard let endpoint = endpoint(for: indexPath) else {
             return
         }
         self.selectorDelegate?.selected(endpoint: endpoint)
@@ -128,7 +128,6 @@ extension EndpointSelectorViewController {
                   let data = data,
                   let specs = self.deserializeResponse(data: data) else {
                 fatalError("FAILED on endpoint selector url request")
-                return
             }
             self.endpointSpecs = specs
             DispatchQueue.main.async {
@@ -139,6 +138,7 @@ extension EndpointSelectorViewController {
     }
     func deserializeResponse(data: Data) -> EndpointSpec? {
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         do {
             return try decoder.decode(EndpointSpec.self, from: data)
         } catch {
@@ -150,7 +150,7 @@ extension EndpointSelectorViewController {
 // MARK: - Helpers
 extension EndpointSelectorViewController {
     func endpoint(for indexPath: IndexPath) -> String? {
-        if indexPath.section == 0 {
+        guard indexPath.section != 0 else {
             return currentCheckoutEndpoint
         }
         guard let specs = endpointSpecs,
@@ -164,7 +164,7 @@ extension EndpointSelectorViewController {
         return endpointsInSection[indexPath.row]
     }
 
-    func sortedSections() -> [[String: [String]].Element]? {
+    func sortedSections() -> [Dictionary<String, [String]>.Element]? {
         guard let specs = endpointSpecs else {
             return nil
         }
@@ -176,7 +176,7 @@ struct EndpointSpec: Codable {
     let endpointMap: [String: [String]]
 
     private enum CodingKeys: String, CodingKey {
-        case endpointMap = "endpoint_map"
+        case endpointMap
     }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
