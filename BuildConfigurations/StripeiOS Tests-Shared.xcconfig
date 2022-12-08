@@ -26,7 +26,7 @@ CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 // The name ("common name") of a valid code-signing certificate in a keychain within your
 // keychain path.   A missing or invalid certificate will cause a build error.
 
-CODE_SIGN_IDENTITY[sdk=iphoneos*] =
+CODE_SIGN_IDENTITY = iPhone Developer
 
 // Framework Search Paths
 // 
