@@ -168,9 +168,7 @@ extension EndpointSelectorViewController {
         guard let specs = endpointSpecs else {
             return nil
         }
-        return specs.endpointMap.sorted { k1, k2 in
-            k1.key < k2.key
-        }
+        return specs.endpointMap.sorted { $0.key < $1.key }
     }
 }
 
