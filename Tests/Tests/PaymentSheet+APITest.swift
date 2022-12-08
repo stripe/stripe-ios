@@ -39,17 +39,6 @@ class PaymentSheetAPITest: XCTestCase {
         }
         return config
     }()
-    var newCardPaymentOption: PaymentOption {
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.cvc = "123"
-        cardParams.expYear = 22
-        cardParams.expMonth = 12
-        return .new(confirmParams: IntentConfirmParams(
-            params: .init(card: cardParams, billingDetails: .init(), metadata: nil),
-            type: .card
-        ))
-    }
 
     override class func setUp() {
         super.setUp()
@@ -125,11 +114,27 @@ class PaymentSheetAPITest: XCTestCase {
                         )
                         XCTAssertEqual(paymentMethods, [])
                         // 2. Confirm the intent with a new card
+                        let cardParams = STPPaymentMethodCardParams()
+                        cardParams.number = "4242424242424242"
+                        cardParams.cvc = "123"
+                        cardParams.expYear = 22
+                        cardParams.expMonth = 12
+                        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
+                            confirmParams: .init(
+                                params: .init(
+                                    card: cardParams,
+                                    billingDetails: .init(),
+                                    metadata: nil
+                                ),
+                                type: .card
+                            )
+                        )
+
                         PaymentSheet.confirm(
                             configuration: self.configuration,
                             authenticationContext: self,
                             intent: paymentIntent,
-                            paymentOption: self.newCardPaymentOption,
+                            paymentOption: newCardPaymentOption,
                             paymentHandler: self.paymentHandler
                         ) { result in
                             switch result {
@@ -398,48 +403,6 @@ class PaymentSheetAPITest: XCTestCase {
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
         XCTAssertEqual((params["payment_method_options"] as! [String: Any]).count, 0)
-    }
-    
-    func testMakeDashboardParamsSetsMoto() {
-        let mockPaymentIntent = STPFixtures.paymentIntent()
-        let mockPaymentMethod = STPFixtures.paymentMethod()
-        
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.cvc = "123"
-        cardParams.expYear = 22
-        cardParams.expMonth = 12
-        let intentConfirmParams = IntentConfirmParams(
-            params: .init(card: cardParams, billingDetails: .init(), metadata: nil),
-            type: .card
-        )
-        var configuration = configuration
-        configuration.customer = .init(id: "cus_123", ephemeralKeySecret: "ek_123")
-        let dashboardPaymentIntentConfirmParams = intentConfirmParams.makeDashboardParams(
-            paymentIntentClientSecret: mockPaymentIntent.clientSecret,
-            paymentMethodID: mockPaymentMethod.stripeId,
-            configuration: configuration
-        )
-        
-        let z = STPFormEncoder.dictionary(forObject: dashboardPaymentIntentConfirmParams)
-        
-//        let intent = Intent.paymentIntent(mockPaymentIntent)
-//        let e = expectation(description: "confirm")
-//
-//        // Overwrite configuration to mimick Dashboard's use of uk_
-//        var configuration = configuration
-//        configuration.apiClient = STPAPIClient(publishableKey: "uk_123")
-//
-//        PaymentSheet.confirm(
-//            configuration: configuration,
-//            authenticationContext: self,
-//            intent: intent,
-//            paymentOption: newCardPaymentOption,
-//            paymentHandler: paymentHandler
-//        ) { result in
-//            e.fulfill()
-//        }
-//        waitForExpectations(timeout: 10)
     }
 }
 
