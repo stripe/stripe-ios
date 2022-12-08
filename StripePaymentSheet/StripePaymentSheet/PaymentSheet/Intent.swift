@@ -190,11 +190,17 @@ class IntentConfirmParams {
 
 extension STPConfirmPaymentMethodOptions {
     /**
-     Sets `payment_method_options[card][setup_future_usage]`
+     Sets `payment_method_options[x][setup_future_usage]` where x is either "card" or "us_bank_account"
      
+     `setup_future_usage` controls whether or not the payment method should be saved to the Customer and is only set if:
+        1. We're displaying a "Save this pm for future payments" checkbox
+        2. The PM type is card or US bank
+     
+     - Parameter paymentMethodType: This method no-ops unless the type is either `.card` or `.USBankAccount`
      - Note: PaymentSheet uses this `setup_future_usage` (SFU) value very differently from the top-level one:
         We read the top-level SFU to know the merchant’s desired save behavior
         We write payment method options SFU to set the customer’s desired save behavior
+     
      */
     func setSetupFutureUsageIfNecessary(
         _ shouldSave: Bool,
@@ -204,12 +210,10 @@ extension STPConfirmPaymentMethodOptions {
         // Something went wrong if we're trying to save and there's no Customer!
         assert(!(shouldSave && customer == nil))
 
-        // This property should only be set if
-        // 1. We're displaying a "Save this pm for future payments" checkbox
-        // 2. The PM type is card or US bank
         guard customer != nil && paymentMethodType == .card || paymentMethodType == .USBankAccount else {
             return
         }
+        // Note: The API officially only allows the values "off_session", "on_session", and "none".
         // Passing "none" *overrides* the top-level setup_future_usage and is not what we want, b/c this code is called even when we don't display the "save" checkbox (e.g. when the PI top-level setup_future_usage is already set).
         // Instead, we pass an empty string to 'unset' this value. This makes the PaymentIntent *inherit* the top-level setup_future_usage.
         let sfuValue = shouldSave ? "off_session" : ""
