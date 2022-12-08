@@ -73,14 +73,12 @@
 		41246FCC0695BABE1489C53E /* UIViewController+Stripe3DS2.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F72413F99F8E50FD0FA085D /* UIViewController+Stripe3DS2.h */; };
 		4142A3AB3E384F91A1E5550B /* STDSExpandableInformationView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBF3A441B1F782B766F61 /* STDSExpandableInformationView.m */; };
 		425849564519D6454DDA3424 /* NSData+JWEHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B05A609753EE71502409082 /* NSData+JWEHelpers.h */; };
-		428EB83BF5B04C920DB1B834 /* TuistBundle+Stripe3DS2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEEEF7F7C9B9C2D91C3A8A /* TuistBundle+Stripe3DS2Tests.swift */; };
 		435EFC9119D4B42B2C6A6F88 /* STDSAuthenticationResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA4AB3BA2FB41B3D5F38978 /* STDSAuthenticationResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4518AD83580FC222B883DAFB /* STDSSimulatorChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D60BDF245487FE3362BE07 /* STDSSimulatorChecker.m */; };
 		4587DADB1B2D98560E8BB181 /* error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E3640C73D001D32CCC449F1 /* error@3x.png */; };
 		458BC5A3D0E7B4D05549474F /* STDSBrandingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CFAC8D74AFFC2E61BAD82A5 /* STDSBrandingView.h */; };
 		480CD62EC91F4796D1D8D8DC /* STDSSecTypeUtilitiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D22985091381DFCDF077E9 /* STDSSecTypeUtilitiesTests.m */; };
 		48316C1AB1D9151C205A59A4 /* STDSChallengeResponseMessageExtensionObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BAAC56EDE0AAD2E50E02E9AE /* STDSChallengeResponseMessageExtensionObject.h */; };
-		492A8D691F4B0168BD7A3755 /* TuistBundle+Stripe3DS2DemoUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73B175841BCB1F2EEFDA6D8 /* TuistBundle+Stripe3DS2DemoUI.swift */; };
 		4A9423CC79312BC3A0DEC38B /* STDSChallengeRequestParametersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD29E57D206B5D6BAF9099 /* STDSChallengeRequestParametersTest.m */; };
 		4C0E13298F08D391FE8600CF /* STDSJSONWebSignatureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C668442518B446D573AD24 /* STDSJSONWebSignatureTests.m */; };
 		4C267E9A30ADC18E71408ED5 /* STDSTextFieldCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 68ED2A0E11E1B27980E0C60A /* STDSTextFieldCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -243,7 +241,6 @@
 		F939E05536AE838DC489C3AA /* STDSChallengeResponseViewControllerSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 466DF80D33CEC20DF4E844A9 /* STDSChallengeResponseViewControllerSnapshotTests.m */; };
 		FD6456BD86F07C446B9FB6C8 /* ec_test.der in Resources */ = {isa = PBXBuildFile; fileRef = 3E4C02D9D6978AD5C3D7E3D2 /* ec_test.der */; };
 		FD8A81873C3BC7579ED07460 /* STDSCompletionEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B6B71C61CF5ADC7796441F5 /* STDSCompletionEvent.m */; };
-		FFE98241A680D50C99F7047B /* TuistBundle+Stripe3DS2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5AB81E93F2E1AB4E606C96 /* TuistBundle+Stripe3DS2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -415,7 +412,6 @@
 		4BC4D9FD1D3869D491CC2CF8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4C158B552B0CBE635A2AF7BB /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4CCA15E0819F9A9D89FEF9EA /* STDSChallengeResponseSelectionInfoObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeResponseSelectionInfoObject.h; sourceTree = "<group>"; };
-		4D5AB81E93F2E1AB4E606C96 /* TuistBundle+Stripe3DS2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+Stripe3DS2.swift"; sourceTree = "<group>"; };
 		4DB91F58CF23E72636C69C41 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		4DD55BECC3FB85216FE46218 /* UIButton+CustomInitialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+CustomInitialization.h"; sourceTree = "<group>"; };
 		4EA4AB3BA2FB41B3D5F38978 /* STDSAuthenticationResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSAuthenticationResponse.h; sourceTree = "<group>"; };
@@ -482,7 +478,6 @@
 		84967ED0D9B206B3F5AA4F02 /* STDSProgressViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProgressViewController.m; sourceTree = "<group>"; };
 		853A361AB630A2BD402D1B47 /* STDSInvalidInputException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSInvalidInputException.h; sourceTree = "<group>"; };
 		869733153BCA6BE2EB7A452F /* UIColor+DefaultColors.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DefaultColors.m"; sourceTree = "<group>"; };
-		88EEEEF7F7C9B9C2D91C3A8A /* TuistBundle+Stripe3DS2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+Stripe3DS2Tests.swift"; sourceTree = "<group>"; };
 		89B5ED899439D1C1054CB448 /* STDSConfigParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSConfigParameters.m; sourceTree = "<group>"; };
 		89ED2133B61092FE1B478204 /* STDSChallengeParametersTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeParametersTests.m; sourceTree = "<group>"; };
 		8A6035A8211B3D50D10EB947 /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -591,7 +586,6 @@
 		E629F85B783E42244E37DFA9 /* STDSProgressViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSProgressViewController.h; sourceTree = "<group>"; };
 		E64C700DED163CB77DCDEA78 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E6A3C5D4C46E681B7D76B2BA /* STDSJSONEncodable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSJSONEncodable.h; sourceTree = "<group>"; };
-		E73B175841BCB1F2EEFDA6D8 /* TuistBundle+Stripe3DS2DemoUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+Stripe3DS2DemoUI.swift"; sourceTree = "<group>"; };
 		E9F1A5A8E5922748A9BEC724 /* STDSNavigationBarCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSNavigationBarCustomization.m; sourceTree = "<group>"; };
 		EB1BDF12DBD6264C6199FFA7 /* STDSChallengeResponseObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeResponseObject.h; sourceTree = "<group>"; };
 		EB910E98EDD6D3E00802793C /* STDSChallengeSelectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeSelectionView.h; sourceTree = "<group>"; };
@@ -827,14 +821,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3D81B22A1789FF7C58D7C4D9 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				6109D7EAB977B3761571B602 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		47CD3B0E4EAA05F75DA05252 /* CertificateFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -862,16 +848,6 @@
 				C7F1C55E51129933B02576E7 /* visa-white-logo@3x.png */,
 			);
 			path = Images;
-			sourceTree = "<group>";
-		};
-		6109D7EAB977B3761571B602 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				4D5AB81E93F2E1AB4E606C96 /* TuistBundle+Stripe3DS2.swift */,
-				E73B175841BCB1F2EEFDA6D8 /* TuistBundle+Stripe3DS2DemoUI.swift */,
-				88EEEEF7F7C9B9C2D91C3A8A /* TuistBundle+Stripe3DS2Tests.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		79E03C9F2FB6092200EE737F /* Stripe3DS2Tests */ = {
@@ -1039,7 +1015,6 @@
 			isa = PBXGroup;
 			children = (
 				20B0FECAB4F18569649603E9 /* BuildConfigurations */,
-				3D81B22A1789FF7C58D7C4D9 /* Derived */,
 				148D1BA6A2E8B2B60CA9951F /* Stripe3DS2 */,
 				8CF6AFFC9FD5638E0D1E988E /* Stripe3DS2DemoUI */,
 				C169A9439FD628D620B218AA /* Stripe3DS2DemoUITests */,
@@ -1370,7 +1345,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				428EB83BF5B04C920DB1B834 /* TuistBundle+Stripe3DS2Tests.swift in Sources */,
 				B426123CC7FCA337E13304F9 /* NSDictionary+DecodingHelpersTest.m in Sources */,
 				E73028FD4537F6E48F927127 /* NSString+EmptyCheckingTests.m in Sources */,
 				D1427392DA8AD8F5B4118781 /* STDSACSNetworkingManagerTest.m in Sources */,
@@ -1404,7 +1378,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFE98241A680D50C99F7047B /* TuistBundle+Stripe3DS2.swift in Sources */,
 				A8CAD8276ED8057A760147CB /* NSData+JWEHelpers.m in Sources */,
 				0D4B42EC5019D213BDBC84E7 /* NSDictionary+DecodingHelpers.m in Sources */,
 				089DAFECA444861762781974 /* NSError+Stripe3DS2.m in Sources */,
@@ -1491,7 +1464,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				492A8D691F4B0168BD7A3755 /* TuistBundle+Stripe3DS2DemoUI.swift in Sources */,
 				B84ED7FBD49865F23B774067 /* AppDelegate.m in Sources */,
 				A39CFB56BF33B21A89987F9C /* STDSChallengeResponseObject+TestObjects.m in Sources */,
 				128B64380D6724F016EE8D56 /* STDSDemoViewController.m in Sources */,
@@ -1592,6 +1564,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6940D75CA36F7DB9FB56196B /* Stripe3DS2DemoUI-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2DemoUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2DemoUI;
 				PRODUCT_NAME = Stripe3DS2DemoUI;
@@ -1603,6 +1577,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5316D0759F7F2ED0BF1D3B2E /* Stripe3DS2DemoUI-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2DemoUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2DemoUI;
 				PRODUCT_NAME = Stripe3DS2DemoUI;
@@ -1622,6 +1598,8 @@
 			baseConfigurationReference = D7A9D36FEF7E97CF735D82B8 /* Stripe3DS2DemoUITests-Release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1639,6 +1617,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F5686FB8EFA3AE3B39F85BBC /* Stripe3DS2Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1661,6 +1641,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F2BC7014D26158AC9D74CC67 /* Stripe3DS2Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1677,6 +1659,8 @@
 			baseConfigurationReference = 0E3C05BE55CF3086738AA182 /* Stripe3DS2DemoUITests-Debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1694,6 +1678,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F8F6FFED1A0966A49B78F252 /* Stripe3DS2-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
 				PRODUCT_NAME = Stripe3DS2;
@@ -1705,6 +1691,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A9CD7EC589C5CC6CE5CF9310 /* Stripe3DS2-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
 				PRODUCT_NAME = Stripe3DS2;

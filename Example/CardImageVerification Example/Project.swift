@@ -1,8 +1,13 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "CardImageVerification Example",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     settings: .settings(
         configurations: [
             .debug(
@@ -30,18 +35,8 @@ let project = Project(
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeCardScan", path: "//StripeCardScan"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/CardImageVerification-Example-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/CardImageVerification-Example-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/CardImageVerification-Example"
             )
         ),
         Target(
@@ -69,18 +64,8 @@ let project = Project(
             dependencies: [
                 .target(name: "CardImageVerification Example"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/CardImageVerification-ExampleUITests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/CardImageVerification-ExampleUITests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/CardImageVerification-ExampleUITests"
             )
         ),
     ],

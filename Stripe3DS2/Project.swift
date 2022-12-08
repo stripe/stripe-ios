@@ -1,8 +1,13 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "Stripe3DS2",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     packages: [
         .remote(
             url: "https://github.com/uber/ios-snapshot-test-case",
@@ -37,18 +42,8 @@ let project = Project(
                 ],
                 project: "Stripe3DS2/*.h"
             ),
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/Stripe3DS2-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/Stripe3DS2-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/Stripe3DS2"
             )
         ),
         Target(
@@ -66,18 +61,8 @@ let project = Project(
                 .xctest,
                 .target(name: "Stripe3DS2"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/Stripe3DS2Tests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/Stripe3DS2Tests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/Stripe3DS2Tests"
             )
         ),
         Target(
@@ -94,18 +79,8 @@ let project = Project(
             dependencies: [
                 .target(name: "Stripe3DS2"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUI-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUI-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/Stripe3DS2DemoUI"
             )
         ),
         Target(
@@ -121,18 +96,8 @@ let project = Project(
                 .target(name: "Stripe3DS2DemoUI"),
                 .package(product: "iOSSnapshotTestCase"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUITests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/Stripe3DS2DemoUITests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/Stripe3DS2DemoUITests"
             )
         ),
     ],
@@ -157,6 +122,5 @@ let project = Project(
             ),
             runAction: .runAction(executable: "Stripe3DS2DemoUI")
         ),
-    ],
-    resourceSynthesizers: []
+    ]
 )

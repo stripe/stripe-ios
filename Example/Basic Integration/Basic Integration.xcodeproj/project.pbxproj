@@ -23,16 +23,13 @@
 		945FD39EF8215C84A40F4729 /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806BF6EF2535B535C9D20CF /* UIColor+Stripe.swift */; };
 		95BDB6149695108CE5FB1EC6 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022856BC9E9C415CD6330365 /* StripeCore.framework */; };
 		96F453421BB12B7B0A77ECB8 /* CheckoutRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC1C0217B83E9ED147F38FD /* CheckoutRowView.swift */; };
-		97147CBF842793F297A54511 /* TuistStrings+BasicIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F97C3EA3F8ACE7A12A3CC5 /* TuistStrings+BasicIntegration.swift */; };
 		9AB1D32792FD5EA7CB7E60E8 /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED59A57831214818B852FEE /* CheckoutViewController.swift */; };
 		A3AE2A57BBD1A5CCA13441E9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9B689B3512CC37D136468E3 /* Localizable.strings */; };
 		A9816F70E6D00FB166BB1CAD /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85B15F69FE8043C1B1D39B8A /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B2C9226C7B7AA7A3448FC48F /* TuistBundle+BasicIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD577F134CE45A5D0C8D2CE /* TuistBundle+BasicIntegration.swift */; };
 		BC4E5A9E6949F997A6D61B2E /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 022856BC9E9C415CD6330365 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C3C9A5C39AF92B2BD9A4AC3E /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 178084545BCB7023D506924F /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C7E6AE8EEBDBD1ADFBE4C36D /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B15F69FE8043C1B1D39B8A /* Stripe3DS2.framework */; };
 		C91088084410864EA47CA32A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66D166D166C755DFCD4724DF /* Images.xcassets */; };
-		DEBC64142E9FBB3B02F5BB01 /* TuistAssets+BasicIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304E6D77BFCB74EBD81B2202 /* TuistAssets+BasicIntegration.swift */; };
 		E655BDCE91147022D40C912E /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89BEDC3C75E33E904368B700 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ECE3CFF1CDB3151D63D1A2A5 /* PaymentContextFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D55C44D6B5AEFFEBA329DD /* PaymentContextFooterView.swift */; };
 		EDCDF82E7F39CBE5E81C6019 /* BrowseProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B41C90883355F7A8CFA6 /* BrowseProductsViewController.swift */; };
@@ -90,8 +87,6 @@
 		178084545BCB7023D506924F /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		19112014D553A866859734E1 /* MyAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		279E5BE26140F948375F1E42 /* BasicIntegrationUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BasicIntegrationUITests-Debug.xcconfig"; sourceTree = "<group>"; };
-		304E6D77BFCB74EBD81B2202 /* TuistAssets+BasicIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+BasicIntegration.swift"; sourceTree = "<group>"; };
-		31F97C3EA3F8ACE7A12A3CC5 /* TuistStrings+BasicIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+BasicIntegration.swift"; sourceTree = "<group>"; };
 		3219256F716EA01C1F702B69 /* BasicIntegration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicIntegration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		361E03AF40022E3CE42541DC /* BasicIntegrationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BasicIntegrationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4263D23E68CC2784E891A23A /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -118,7 +113,6 @@
 		B806BF6EF2535B535C9D20CF /* UIColor+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Stripe.swift"; sourceTree = "<group>"; };
 		B8B07FEB44C4F6DD941DBF16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		BA43DADA7CCA6BCE06E6F466 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
-		BBD577F134CE45A5D0C8D2CE /* TuistBundle+BasicIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+BasicIntegration.swift"; sourceTree = "<group>"; };
 		BC3AB3F1CABED5C18E685A9C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C5AC3E78B11A26C06A41EA70 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		CFC1C0217B83E9ED147F38FD /* CheckoutRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutRowView.swift; sourceTree = "<group>"; };
@@ -228,30 +222,12 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		69663AAACD0B9044755E5CEE /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				A86424169A997AD180250A47 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		82D8E06E6EE23D28010F658E /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
 				D9B689B3512CC37D136468E3 /* Localizable.strings */,
 			);
 			path = Localizations;
-			sourceTree = "<group>";
-		};
-		A86424169A997AD180250A47 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				304E6D77BFCB74EBD81B2202 /* TuistAssets+BasicIntegration.swift */,
-				BBD577F134CE45A5D0C8D2CE /* TuistBundle+BasicIntegration.swift */,
-				31F97C3EA3F8ACE7A12A3CC5 /* TuistStrings+BasicIntegration.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		AA36E0A5069F3A8D0D91E627 /* Project */ = {
@@ -261,7 +237,6 @@
 				DD88FC2477F40A6339AC582A /* BasicIntegrationUITests */,
 				4920E6C343C613F5A54B52F2 /* BuildConfigurations */,
 				3FC85D4D529E39A799ADFD25 /* BuildConfigurations */,
-				69663AAACD0B9044755E5CEE /* Derived */,
 			);
 			name = Project;
 			sourceTree = "<group>";
@@ -407,9 +382,6 @@
 				ECE3CFF1CDB3151D63D1A2A5 /* PaymentContextFooterView.swift in Sources */,
 				18F2D96937E21836280B1DD5 /* SettingsViewController.swift in Sources */,
 				945FD39EF8215C84A40F4729 /* UIColor+Stripe.swift in Sources */,
-				DEBC64142E9FBB3B02F5BB01 /* TuistAssets+BasicIntegration.swift in Sources */,
-				B2C9226C7B7AA7A3448FC48F /* TuistBundle+BasicIntegration.swift in Sources */,
-				97147CBF842793F297A54511 /* TuistStrings+BasicIntegration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +423,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F1A208AE2350AA815ADE529 /* BasicIntegrationUITests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = BasicIntegrationUITests;
@@ -463,6 +437,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 87573787ED54C9F497D1084D /* BasicIntegration-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Basic Integration/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = BasicIntegration;
@@ -474,6 +450,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 76A4520B38C79648CC52074D /* BasicIntegration-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Basic Integration/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = BasicIntegration;
@@ -492,6 +470,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 279E5BE26140F948375F1E42 /* BasicIntegrationUITests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = BasicIntegrationUITests;

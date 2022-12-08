@@ -3,7 +3,11 @@ import ProjectDescriptionHelpers
 
 let project = Project(
     name: "AppClipExample",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     settings: .settings(
         configurations: [
             .debug(
@@ -32,18 +36,8 @@ let project = Project(
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeApplePay", path: "//StripeApplePay"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/AppClipExample-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/AppClipExample-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/AppClipExample"
             )
         ),
         Target(
@@ -57,18 +51,8 @@ let project = Project(
             dependencies: [
                 .target(name: "AppClipExample"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/AppClipExampleTests-iOS-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/AppClipExampleTests-iOS-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/AppClipExampleTests-iOS"
             )
         ),
         Target(
@@ -87,18 +71,8 @@ let project = Project(
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeApplePay", path: "//StripeApplePay"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/AppClipExampleClip-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/AppClipExampleClip-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/AppClipExampleClip"
             )
         ),
         Target(
@@ -111,18 +85,8 @@ let project = Project(
             dependencies: [
                 .target(name: "AppClipExampleClip"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/AppClipExampleClipTests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/AppClipExampleClipTests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/AppClipExampleClipTests"
             )
         ),
         Target(
@@ -135,18 +99,8 @@ let project = Project(
             dependencies: [
                 .target(name: "AppClipExampleClip"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/AppClipExampleClipUITests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/AppClipExampleClipUITests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/AppClipExampleClipUITests"
             )
         ),
     ],

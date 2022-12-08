@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0A6632AC245E8AD86850685A /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 03E7365D673694C8D7EDFB20 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0B647212C7B1C5DC253193E0 /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		20411B3862CCE7CB93F129E6 /* TuistAssets+FinancialConnectionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E33DAD89E3D0E1A452D286 /* TuistAssets+FinancialConnectionsExample.swift */; };
 		2FFB7D24916B79615F334BD4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 936C5935D51A54BE9F183ECA /* Main.storyboard */; };
 		307E63F1F0E10D8B419C3DAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF678252EB811ACE4D0EC296 /* LaunchScreen.storyboard */; };
 		597C7552115D87218591934C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DA32DE3842C0AD47047104 /* AppDelegate.swift */; };
@@ -20,7 +19,6 @@
 		C0495B99B568EE4ED5E4F44A /* CollectBankAccountTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E192850895613723B1E4AEA6 /* CollectBankAccountTokenViewController.swift */; };
 		C2D21072C2E0187FD065BB3C /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EA925F32466BF115E6419F /* ConnectAccountViewController.swift */; };
 		DA6FA2C369E10A2B4663B434 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */; };
-		ED5A8887B8DFA5AF2DA85C5A /* TuistBundle+FinancialConnectionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C233C6110A6362BA20C0C492 /* TuistBundle+FinancialConnectionsExample.swift */; };
 		F75FA2EBFB3A08D31E7A8D4D /* ExampleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092E132F7DB46E518F2F1B21 /* ExampleListViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +39,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		03E33DAD89E3D0E1A452D286 /* TuistAssets+FinancialConnectionsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+FinancialConnectionsExample.swift"; sourceTree = "<group>"; };
 		03E7365D673694C8D7EDFB20 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		07DA32DE3842C0AD47047104 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		092E132F7DB46E518F2F1B21 /* ExampleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleListViewController.swift; sourceTree = "<group>"; };
@@ -56,7 +53,6 @@
 		76B43732FE4180268DAA8355 /* FinancialConnectionsExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinancialConnectionsExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DACDB8126F851C25D6A14A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ADFEE494187576194F8B46BB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C233C6110A6362BA20C0C492 /* TuistBundle+FinancialConnectionsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+FinancialConnectionsExample.swift"; sourceTree = "<group>"; };
 		DCDA61A23BDB5ED4D9676E62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E192850895613723B1E4AEA6 /* CollectBankAccountTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectBankAccountTokenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,14 +96,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4A256CDD47BAA021FF65892E /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				8EED7CE598081C3F56D6DB87 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		4C86E7995C2BF4E2E9E42971 /* FinancialConnections Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -128,7 +116,6 @@
 			children = (
 				08699B52A213AE177E94F864 /* BuildConfigurations */,
 				8B31A4C157CED701A95FD892 /* BuildConfigurations */,
-				4A256CDD47BAA021FF65892E /* Derived */,
 				4C86E7995C2BF4E2E9E42971 /* FinancialConnections Example */,
 			);
 			name = Project;
@@ -142,15 +129,6 @@
 			);
 			name = BuildConfigurations;
 			path = ../../BuildConfigurations;
-			sourceTree = "<group>";
-		};
-		8EED7CE598081C3F56D6DB87 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				03E33DAD89E3D0E1A452D286 /* TuistAssets+FinancialConnectionsExample.swift */,
-				C233C6110A6362BA20C0C492 /* TuistBundle+FinancialConnectionsExample.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		EDE09A27F1A22ECA0F4D45B4 /* Products */ = {
@@ -230,8 +208,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20411B3862CCE7CB93F129E6 /* TuistAssets+FinancialConnectionsExample.swift in Sources */,
-				ED5A8887B8DFA5AF2DA85C5A /* TuistBundle+FinancialConnectionsExample.swift in Sources */,
 				597C7552115D87218591934C /* AppDelegate.swift in Sources */,
 				C0495B99B568EE4ED5E4F44A /* CollectBankAccountTokenViewController.swift in Sources */,
 				C2D21072C2E0187FD065BB3C /* ConnectAccountViewController.swift in Sources */,
@@ -272,6 +248,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
 				PRODUCT_NAME = FinancialConnectionsExample;
@@ -290,6 +268,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B50C88219DC0F3F0BFC5CE4 /* FinancialConnections-Example-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
 				PRODUCT_NAME = FinancialConnectionsExample;

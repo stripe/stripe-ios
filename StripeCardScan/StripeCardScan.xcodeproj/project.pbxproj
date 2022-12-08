@@ -33,7 +33,6 @@
 		20DF2E9D5A543360DF3A4DDA /* DetectedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53D407C0AC8D44ECC0C3C52 /* DetectedBox.swift */; };
 		213A91107E76434972A1F848 /* SSDOcr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E329C37141862BD4A4DE7 /* SSDOcr.swift */; };
 		25FAF64D4FE93BF38E807ECA /* VerifyFramesAPIBindingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4301B281F5E0A5BACBBD68CC /* VerifyFramesAPIBindingsTests.swift */; };
-		29A9562EF67722CE63836AA9 /* TuistBundle+StripeCardScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 296FAB819A1267FAB1450B0B /* TuistBundle+StripeCardScan.swift */; };
 		2A9ECCF086685AD607D82492 /* AppleOcr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E24CF248F312DDE025D662A /* AppleOcr.swift */; };
 		2D042FD2E8A0C8236596CE54 /* CardScanFraudData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D41E45A285FEF48E9528997 /* CardScanFraudData.swift */; };
 		2F3FA5E8CCBF7F77106A8268 /* EndToEndTestDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3ECBF071E7507C9D41F232 /* EndToEndTestDataSource.swift */; };
@@ -83,7 +82,6 @@
 		8FC373E15C1169677F563901 /* OcrPriorsGen.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED780E8B4C14EE39F853B3A1 /* OcrPriorsGen.swift */; };
 		9188179F13E5EA15E0419580 /* ScanStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A49708CF5D37C7CB267732 /* ScanStats.swift */; };
 		93D4785D8B91F12B6DDDE203 /* UxAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85031ADAE5928D977465C2 /* UxAnalyzer.swift */; };
-		93E5C55E6EF87BFD507C87BB /* TuistBundle+StripeCardScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBB868AC1170ECA9D09BF72 /* TuistBundle+StripeCardScanTests.swift */; };
 		9FA5A312032FC54B35BB604E /* SoftNMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A93BFDEE4072A2A9C30397 /* SoftNMS.swift */; };
 		A060350B93E3369463AE2898 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E889051D7CD76D4FB9084A1 /* StripeCore.framework */; };
 		A7014CF97250D97BC683FAC8 /* CreditCardUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8735A24B634F3B9060CADE45 /* CreditCardUtils.swift */; };
@@ -204,7 +202,6 @@
 		2667E0E0C7DC6CDAF03F8B40 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		27F4BF66273070C2054BBAC0 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		27F6ECCDC721E4D46DAC4F48 /* ScanAnalyticsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanAnalyticsManagerTests.swift; sourceTree = "<group>"; };
-		296FAB819A1267FAB1450B0B /* TuistBundle+StripeCardScan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeCardScan.swift"; sourceTree = "<group>"; };
 		2D61E754E520B4E21920D1DA /* ScanStatsPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStatsPayload.swift; sourceTree = "<group>"; };
 		2E889051D7CD76D4FB9084A1 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F3E329C37141862BD4A4DE7 /* SSDOcr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDOcr.swift; sourceTree = "<group>"; };
@@ -334,7 +331,6 @@
 		E4FAA99A64BCD00A336A5E01 /* VerifyFrames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyFrames.swift; sourceTree = "<group>"; };
 		E73DC7DD9C3E3395DF3F5A29 /* SSDOcr.mlmodelc */ = {isa = PBXFileReference; path = SSDOcr.mlmodelc; sourceTree = "<group>"; };
 		EA89DA7FF10BC3A7B2D102FB /* SSDOcrOutputExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDOcrOutputExtensions.swift; sourceTree = "<group>"; };
-		EBBB868AC1170ECA9D09BF72 /* TuistBundle+StripeCardScanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeCardScanTests.swift"; sourceTree = "<group>"; };
 		ED780E8B4C14EE39F853B3A1 /* OcrPriorsGen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcrPriorsGen.swift; sourceTree = "<group>"; };
 		EDE92803C69CE8253D73A25F /* CreditCardOcrResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardOcrResult.swift; sourceTree = "<group>"; };
 		EF53C194DDC96160505D54D5 /* AsyncModelLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncModelLoading.swift; sourceTree = "<group>"; };
@@ -489,7 +485,6 @@
 			children = (
 				79C01535652A2F89EB22D9A9 /* BuildConfigurations */,
 				6C3738C5D8A82E9A3C5AFC85 /* BuildConfigurations */,
-				F0665D5F00C52FDD808BAFC2 /* Derived */,
 				DF93066F033C46A7B100FC82 /* StripeCardScan */,
 				0E245ED03746B2F8EE73B5F9 /* StripeCardScanTests */,
 			);
@@ -770,14 +765,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		F0665D5F00C52FDD808BAFC2 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				F78E3B4AD6AB1E5ACD5370C5 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		F28CFA0B72751113E838303F /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -785,15 +772,6 @@
 				324D2CF5354B3283BC0C49ED /* CardVerify */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		F78E3B4AD6AB1E5ACD5370C5 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				296FAB819A1267FAB1450B0B /* TuistBundle+StripeCardScan.swift */,
-				EBBB868AC1170ECA9D09BF72 /* TuistBundle+StripeCardScanTests.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -944,7 +922,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93E5C55E6EF87BFD507C87BB /* TuistBundle+StripeCardScanTests.swift in Sources */,
 				77443628E02F3AEFF112314D /* CardScanMockData.swift in Sources */,
 				DB74787AF4EEF0E506DD0E1C /* Data+Sha256.swift in Sources */,
 				3F5B9466E9FC13CA29218750 /* ImageHelpers.swift in Sources */,
@@ -967,7 +944,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29A9562EF67722CE63836AA9 /* TuistBundle+StripeCardScan.swift in Sources */,
 				2A9ECCF086685AD607D82492 /* AppleOcr.swift in Sources */,
 				C3B9A4A30443A38C2D17BE8E /* CardNetwork.swift in Sources */,
 				0ADD10809FEABDCB59A8FA72 /* CardType.swift in Sources */,
@@ -1156,6 +1132,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F1FCC855CCB0816414A4BEC1 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1182,6 +1160,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A67EDE2BCCC081DEDD684AAC /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

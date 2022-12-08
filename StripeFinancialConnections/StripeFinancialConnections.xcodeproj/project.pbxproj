@@ -55,7 +55,6 @@
 		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
 		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
 		4AADAA347EF70ECB8BE28E84 /* SuccessIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455C145AEAE3D5F87532187 /* SuccessIconView.swift */; };
-		4C6B6AB6213B1E6304CC88DC /* TuistBundle+StripeFinancialConnectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CC6107A7B240FFECC1EE6D /* TuistBundle+StripeFinancialConnectionsTests.swift */; };
 		4CEE364A07B91B51B3D00F05 /* ConsentBottomSheetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */; };
 		58CD76A6379A04566684D2AC /* InstitutionSearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71BC4222E1986338BCB9587 /* InstitutionSearchTableView.swift */; };
 		5E5C480AB5F0B2DBDA7B61B1 /* email@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EA1FC49D47073CD333D2EEA /* email@3x.png */; };
@@ -144,7 +143,6 @@
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
 		D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */; };
 		D50E771043434AD80EA28628 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652EBE38C47B36962AD370A /* StripeUICore.framework */; };
-		D682CAE1EF3CA74781556B15 /* TuistBundle+StripeFinancialConnections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B50E573EBBD5F78267BCFB /* TuistBundle+StripeFinancialConnections.swift */; };
 		D926228B6C7601AE4C806C93 /* FinancialConnectionsPaymentAccountResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF9E2D4C9D7684B02AD6037A /* FinancialConnectionsPaymentAccountResource.swift */; };
 		D936C8A9F6E018DB144A5B0A /* FinancialConnectionsSynchronize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */; };
 		D949AE695F3288F84258BACD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BF6810BAADB14ACB95216C2B /* Localizable.strings */; };
@@ -331,11 +329,9 @@
 		947F7F2C282A37EC4AB119E0 /* FeaturedInstitutionGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridView.swift; sourceTree = "<group>"; };
 		94869BACB486153419B30DE5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		956668158B27ACD34A6B2657 /* warning_circle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_circle@3x.png"; sourceTree = "<group>"; };
-		95B50E573EBBD5F78267BCFB /* TuistBundle+StripeFinancialConnections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeFinancialConnections.swift"; sourceTree = "<group>"; };
 		965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFetcherTests.swift; sourceTree = "<group>"; };
 		97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
 		97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
-		98CC6107A7B240FFECC1EE6D /* TuistBundle+StripeFinancialConnectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+StripeFinancialConnectionsTests.swift"; sourceTree = "<group>"; };
 		9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerFooterView.swift; sourceTree = "<group>"; };
 		9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkingAccountsLoadingView.swift; sourceTree = "<group>"; };
 		9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -633,14 +629,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		65EBF9FCBD257BBFB606CC2F /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				88417375D9189EF320DD3FBD /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		7879CBA341D7E807714A831B = {
 			isa = PBXGroup;
 			children = (
@@ -682,7 +670,6 @@
 			isa = PBXGroup;
 			children = (
 				132A42D1B9A52681405D214A /* BuildConfigurations */,
-				65EBF9FCBD257BBFB606CC2F /* Derived */,
 				B099AE2E516197735F31B3D9 /* StripeFinancialConnections */,
 				EA8A954B6F8275294AD1D76F /* StripeFinancialConnectionsTests */,
 			);
@@ -699,15 +686,6 @@
 				6652EBE38C47B36962AD370A /* StripeUICore.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		88417375D9189EF320DD3FBD /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				95B50E573EBBD5F78267BCFB /* TuistBundle+StripeFinancialConnections.swift */,
-				98CC6107A7B240FFECC1EE6D /* TuistBundle+StripeFinancialConnectionsTests.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		92A9D27306891BBCBC4DBF49 /* ManualEntry */ = {
@@ -1059,7 +1037,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D682CAE1EF3CA74781556B15 /* TuistBundle+StripeFinancialConnections.swift in Sources */,
 				648FA50974B14CC861B08ECB /* APIPollingHelper.swift in Sources */,
 				BCEA321423DF0E7674C2544C /* APIVersion.swift in Sources */,
 				11FB97AC840FEB5B5BF85BF9 /* FinancialConnectionsAPIClient.swift in Sources */,
@@ -1187,7 +1164,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C6B6AB6213B1E6304CC88DC /* TuistBundle+StripeFinancialConnectionsTests.swift in Sources */,
 				CBEAB081DD7353928F485071 /* APIPollingHelperTests.swift in Sources */,
 				0AF88791C01102CDCC31F419 /* AccountFetcherTests.swift in Sources */,
 				700B745FEF43088D9E34C0E4 /* AccountPickerHelpersTests.swift in Sources */,
@@ -1270,6 +1246,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14CED33665ED3D8EE8D5D7B7 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1292,6 +1270,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1CD19E0601599AE89976DB4D /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeFinancialConnections/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-financial-connections";
 				PRODUCT_NAME = StripeFinancialConnections;
@@ -1303,6 +1283,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 314462DF7856349FF9775598 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeFinancialConnections/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-financial-connections";
 				PRODUCT_NAME = StripeFinancialConnections;
@@ -1314,6 +1296,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA2DA47ECE153F888FA675CE /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

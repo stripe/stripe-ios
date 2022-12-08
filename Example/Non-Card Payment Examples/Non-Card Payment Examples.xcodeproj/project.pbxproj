@@ -19,7 +19,6 @@
 		1FA04694E0497168529EBEF9 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6CA51E7BD0D4D1E0B94075FE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		21EB5C20341E71683313BC87 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C55D540D77E57684BEBD1773 /* StripeFinancialConnections.framework */; };
 		237E7C2EA6DD82598235F430 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A122962D3F1C0C7F56AC4501 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		282E8E710BD97056F5712B9D /* TuistBundle+NonCardPaymentExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CF9847F7F5FB7D50BB9C02 /* TuistBundle+NonCardPaymentExamples.swift */; };
 		2965738ADB4C4325D7BDEB97 /* EPSExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C003C0154CCBA34AF5CAC43 /* EPSExampleViewController.m */; };
 		2A69E8181D591533B0F9E09B /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A433EDC5906D77ED94937E64 /* BrowseExamplesViewController.m */; };
 		2BFF43283D3D33B24CCCB073 /* AfterpayClearpayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A0E6ABAC9BED6D249FA96E /* AfterpayClearpayExampleViewController.swift */; };
@@ -55,13 +54,11 @@
 		C5C612D49748599F5A09421D /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64F13592DB0CDD803283B035 /* StripePayments.framework */; };
 		C9DCB32902B62F3E8F3F9052 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF98C4542C942B8BE99AF2AE /* PaymentExampleViewController.m */; };
 		CD7FC52A94895E322DB5B3D9 /* FPXExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4387CA3F60553DB73F05BDC9 /* FPXExampleViewController.m */; };
-		CEA239DCEDE89DA6C6212BDA /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 571FA269319DCDF64289711A /* PassKit.framework */; };
 		CF0983C679CA4196DF4DA37D /* PayPalExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D62F7B5288E04FB14DBFFF /* PayPalExampleViewController.m */; };
 		D46A05D88420B85C1B275640 /* MyAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7CAC14165BD4EFB39E7C5 /* MyAPIClient.m */; };
 		D9507571006167E5188CA5BD /* GiropayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D896A3BF93A934C07AB388E /* GiropayExampleViewController.m */; };
 		E25C6341B4F787932711D689 /* SofortSourcesExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E87A8E1AE06AA97A3310C1 /* SofortSourcesExampleViewController.m */; };
 		E88340F6DFAA14F6772159E7 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CA51E7BD0D4D1E0B94075FE /* Stripe.framework */; };
-		F3FE50343F8A778B14E9843E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E28959C66D6697FB14FC81 /* Security.framework */; };
 		F635434F095301C541789E1C /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ADDFFDCAC5AF682FC6648E8 /* StripePaymentSheet.framework */; };
 /* End PBXBuildFile section */
 
@@ -88,7 +85,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		04E28959C66D6697FB14FC81 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		052F9CDA0D4546CC1E5FF77C /* iDEALExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iDEALExampleViewController.m; sourceTree = "<group>"; };
 		05FF02CFBFA8863282D020E0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0AA7CAC14165BD4EFB39E7C5 /* MyAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAPIClient.m; sourceTree = "<group>"; };
@@ -96,7 +92,6 @@
 		1282A6CFB51F4F3D2CE92B22 /* AffirmExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmExampleViewController.swift; sourceTree = "<group>"; };
 		15F68FCA537974E451A03C00 /* ShippingManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShippingManager.m; sourceTree = "<group>"; };
 		173B34E97F92E48FBB42E82B /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		23CF9847F7F5FB7D50BB9C02 /* TuistBundle+NonCardPaymentExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+NonCardPaymentExamples.swift"; sourceTree = "<group>"; };
 		287AF410BE4A7CD331E65114 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		295A6C099422195DEA070B92 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2ADDFFDCAC5AF682FC6648E8 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,7 +108,6 @@
 		4C003C0154CCBA34AF5CAC43 /* EPSExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPSExampleViewController.m; sourceTree = "<group>"; };
 		4C7C09286B3FF62A1562B3FB /* KlarnaExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaExampleViewController.swift; sourceTree = "<group>"; };
 		54FC82B45AF4D84F4A87C0AD /* ShippingManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShippingManager.h; sourceTree = "<group>"; };
-		571FA269319DCDF64289711A /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PassKit.framework; sourceTree = DEVELOPER_DIR; };
 		58E87A8E1AE06AA97A3310C1 /* SofortSourcesExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SofortSourcesExampleViewController.m; sourceTree = "<group>"; };
 		5B7DEBB2735CF9537D464127 /* PayPalExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayPalExampleViewController.h; sourceTree = "<group>"; };
 		5D8F3D727489A14C470D62C6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -180,8 +174,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA239DCEDE89DA6C6212BDA /* PassKit.framework in Frameworks */,
-				F3FE50343F8A778B14E9843E /* Security.framework in Frameworks */,
 				C16B397FC306A8B0025D5AFF /* Stripe3DS2.framework in Frameworks */,
 				A8BE2C599C08080AE773D2D8 /* StripeApplePay.framework in Frameworks */,
 				002758E8FE057ACF7A168646 /* StripeCore.framework in Frameworks */,
@@ -202,7 +194,6 @@
 			children = (
 				C9918E2A43A3DF3C304A2F2A /* BuildConfigurations */,
 				7991A720EF91B3EAA8C3DFDC /* BuildConfigurations */,
-				D98FE7FDBD0AB02CD6C29B90 /* Derived */,
 				9F4ECD0AE0A14B5FABE7D8E5 /* Non-Card Payment Examples */,
 				295A6C099422195DEA070B92 /* README.md */,
 			);
@@ -300,14 +291,6 @@
 			path = "Non-Card Payment Examples";
 			sourceTree = "<group>";
 		};
-		B3BC4DC45967C289E4B152B2 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				23CF9847F7F5FB7D50BB9C02 /* TuistBundle+NonCardPaymentExamples.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
 		C17C8844C1C4AA7C978FAACA = {
 			isa = PBXGroup;
 			children = (
@@ -326,14 +309,6 @@
 			path = BuildConfigurations;
 			sourceTree = "<group>";
 		};
-		D98FE7FDBD0AB02CD6C29B90 /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				B3BC4DC45967C289E4B152B2 /* Sources */,
-			);
-			path = Derived;
-			sourceTree = "<group>";
-		};
 		E59C7706B356781B83ACBA3F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -346,8 +321,6 @@
 		FDB5D8AADEA5CB1BFB647FA2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				571FA269319DCDF64289711A /* PassKit.framework */,
-				04E28959C66D6697FB14FC81 /* Security.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -426,7 +399,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				282E8E710BD97056F5712B9D /* TuistBundle+NonCardPaymentExamples.swift in Sources */,
 				09470488B2A3383D39A9445C /* AUBECSDebitExampleViewController.m in Sources */,
 				11E6BDE8B898A7215AE679F6 /* AffirmExampleViewController.swift in Sources */,
 				2BFF43283D3D33B24CCCB073 /* AfterpayClearpayExampleViewController.swift in Sources */,
@@ -498,6 +470,8 @@
 			baseConfigurationReference = 7EB5EE88F3BCE3D52302C896 /* Non-Card-Payment-Examples-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Non-Card Payment Examples/Non-Card Payment Examples.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Non-Card Payment Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = NonCardPaymentExamples;
@@ -510,6 +484,8 @@
 			baseConfigurationReference = 8B4FE9E774494C148EBFDD0F /* Non-Card-Payment-Examples-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Non-Card Payment Examples/Non-Card Payment Examples.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Non-Card Payment Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = NonCardPaymentExamples;

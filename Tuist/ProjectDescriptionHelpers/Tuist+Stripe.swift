@@ -5,18 +5,8 @@ extension Project {
     public struct TestOptions {
         public var resources: ResourceFileElements? = nil
         public var dependencies: [TargetDependency] = []
-        public var settings: Settings = .settings(
-            configurations: [
-                .debug(
-                    name: "Debug",
-                    xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
-                ),
-                .release(
-                    name: "Release",
-                    xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
-                ),
-            ],
-            defaultSettings: .none
+        public var settings: Settings = .stripeTargetSettings(
+            baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
         )
         public var includesSnapshots: Bool = false
         public var usesMocks: Bool = false
@@ -25,18 +15,8 @@ extension Project {
         public static func testOptions(
             resources: ResourceFileElements? = nil,
             dependencies: [TargetDependency] = [],
-            settings: Settings = .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: Settings = .stripeTargetSettings(
+                baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
             ),
             includesSnapshots: Bool = false,
             usesMocks: Bool = false,
@@ -69,18 +49,8 @@ extension Project {
             ],
             defaultSettings: .none
         ),
-        targetSettings: Settings = .settings(
-            configurations: [
-                .debug(
-                    name: "Debug",
-                    xcconfig: "//BuildConfigurations/StripeiOS-Debug.xcconfig"
-                ),
-                .release(
-                    name: "Release",
-                    xcconfig: "//BuildConfigurations/StripeiOS-Release.xcconfig"
-                ),
-            ],
-            defaultSettings: .none
+        targetSettings: Settings = .stripeTargetSettings(
+            baseXcconfigFilePath: "//BuildConfigurations/StripeiOS"
         ),
         resources: ResourceFileElements? = nil,
         dependencies: [TargetDependency] = [],
@@ -90,7 +60,11 @@ extension Project {
     ) -> Project {
         return Project(
             name: name,
-            options: .options(automaticSchemesOptions: .disabled),
+            options: .options(
+                automaticSchemesOptions: .disabled,
+                disableBundleAccessors: true,
+                disableSynthesizedResourceAccessors: true
+            ),
             packages: makePackages(
                 testUtilsOptions: testUtilsOptions,
                 unitTestOptions: unitTestOptions,
@@ -111,8 +85,7 @@ extension Project {
                 testUtilsOptions: testUtilsOptions,
                 unitTestOptions: unitTestOptions,
                 uiTestOptions: uiTestOptions
-            ),
-            resourceSynthesizers: []
+            )
         )
     }
 
@@ -330,6 +303,38 @@ extension Project {
     }
 }
 
+extension Settings {
+    enum BuildSetting: String {
+        case codeSignIdentity = "CODE_SIGN_IDENTITY"
+        case developmentTeam = "DEVELOPMENT_TEAM"
+    }
+
+    public static func stripeTargetSettings(baseXcconfigFilePath: String) -> Settings {
+        var baseSettings = SettingsDictionary()
+        if case let .string(codeSignIdentity) = Environment.codeSignIdentity {
+            baseSettings[BuildSetting.codeSignIdentity.rawValue] = .string(codeSignIdentity)
+        }
+        if case let .string(developmentTeam) = Environment.developmentTeam {
+            baseSettings[BuildSetting.developmentTeam.rawValue] = .string(developmentTeam)
+        }
+
+        return .settings(
+            base: baseSettings,
+            configurations: [
+                .debug(
+                    name: "Debug",
+                    xcconfig: "\(baseXcconfigFilePath)-Debug.xcconfig"
+                ),
+                .release(
+                    name: "Release",
+                    xcconfig: "\(baseXcconfigFilePath)-Release.xcconfig"
+                ),
+            ],
+            defaultSettings: .none
+        )
+    }
+}
+
 extension String {
     // Based on https://gist.github.com/dmsl1805/ad9a14b127d0409cf9621dc13d237457.
     var casedToDashed: String {
@@ -353,15 +358,3 @@ extension String {
     }
 }
 
-extension CopyFilesAction {
-    public static func appClips(
-        name: String,
-        files: [FileElement]
-    ) -> CopyFilesAction {
-        return .productsDirectory(
-            name: name,
-            subpath: "$(CONTENTS_FOLDER_PATH)/AppClips",
-            files: files
-        )
-    }
-}

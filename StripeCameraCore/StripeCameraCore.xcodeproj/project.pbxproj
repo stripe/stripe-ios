@@ -503,6 +503,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 17E9A614AF4543DB62E7F5B4 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -518,6 +520,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 83596C8ED3829B17A93490A6 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCameraCore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-camera-core";
 				PRODUCT_NAME = StripeCameraCore;
@@ -536,6 +540,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 44E9A4900C4B8D08A617488C /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -551,6 +557,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 17E9A614AF4543DB62E7F5B4 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -566,6 +574,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4E0D85BEF8C269A46D5ECEAC /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCameraCore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-camera-core";
 				PRODUCT_NAME = StripeCameraCore;
@@ -584,6 +594,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 44E9A4900C4B8D08A617488C /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

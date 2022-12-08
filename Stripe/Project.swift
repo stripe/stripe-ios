@@ -1,8 +1,13 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "Stripe",
-    options: .options(automaticSchemesOptions: .disabled),
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        disableBundleAccessors: true,
+        disableSynthesizedResourceAccessors: true
+    ),
     packages: [
         .remote(
             url: "https://github.com/uber/ios-snapshot-test-case",
@@ -41,12 +46,6 @@ let project = Project(
                 public: "StripeiOS/Stripe-umbrella.h"
             ),
             dependencies: [
-                .sdk(name: "Contacts", type: .framework),
-                .sdk(name: "CoreLocation", type: .framework),
-                .sdk(name: "Foundation", type: .framework),
-                .sdk(name: "PassKit", type: .framework),
-                .sdk(name: "Security", type: .framework),
-                .sdk(name: "WebKit", type: .framework),
                 .project(target: "Stripe3DS2", path: "//Stripe3DS2"),
                 .project(target: "StripeCore", path: "//StripeCore"),
                 .project(target: "StripeUICore", path: "//StripeUICore"),
@@ -54,18 +53,8 @@ let project = Project(
                 .project(target: "StripePayments", path: "//StripePayments"),
                 .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/Stripe-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/Stripe-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/Stripe"
             )
         ),
         Target(
@@ -100,18 +89,8 @@ let project = Project(
                 .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
                 .project(target: "StripePaymentSheet", path: "//StripePaymentSheet"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "BuildConfigurations/Stripe Tests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "BuildConfigurations/Stripe Tests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/Stripe Tests"
             )
         ),
         Target(
@@ -122,18 +101,8 @@ let project = Project(
             infoPlist: "StripeiOSTestHostApp/Info.plist",
             sources: "StripeiOSTestHostApp/*.swift",
             resources: "StripeiOSTestHostApp/Resources/**",
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
             )
         ),
         Target(
@@ -149,18 +118,8 @@ let project = Project(
                 .target(name: "StripeiOSTestHostApp"),
                 .project(target: "StripePaymentSheet", path: "//StripePaymentSheet"),
             ],
-            settings: .settings(
-                configurations: [
-                    .debug(
-                        name: "Debug",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
-                    ),
-                    .release(
-                        name: "Release",
-                        xcconfig: "//BuildConfigurations/StripeiOS Tests-Release.xcconfig"
-                    ),
-                ],
-                defaultSettings: .none
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
             )
         ),
     ],
@@ -176,6 +135,5 @@ let project = Project(
             testAction: .targets(["StripeiOSAppHostedTests"]),
             runAction: .runAction(executable: "StripeiOSTestHostApp")
         ),
-    ],
-    resourceSynthesizers: []
+    ]
 )
