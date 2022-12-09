@@ -22,4 +22,9 @@ class NSDecimalNumberStripeTest: XCTestCase {
         let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: "jpy")
         XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "1000"))
     }
+    
+    func testDecimalAmount_threeDecimal() {
+        let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92000, currency: "kwd")
+        XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92"))
+    }
 }

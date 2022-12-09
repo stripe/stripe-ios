@@ -18,6 +18,11 @@ extension NSDecimalNumber {
         if noDecimalCurrencies.contains(currency?.lowercased() ?? "") {
             return number
         }
+        
+        if self.stp_currenciesWithThreeDecimals().contains(currency?.lowercased() ?? "") {
+            return number.multiplying(byPowerOf10: -3)
+        }
+        
         return number.multiplying(byPowerOf10: -2)
     }
 
@@ -47,7 +52,19 @@ extension NSDecimalNumber {
             "vuv",
             "xaf",
             "xof",
-            "xpf",
+            "xpf"
+        ]
+    }
+    
+    class func stp_currenciesWithThreeDecimals() -> [String] {
+        return [
+            "bhd",
+            "iqd",
+            "jod",
+            "kwd",
+            "lyd",
+            "omr",
+            "tnd"
         ]
     }
 }
