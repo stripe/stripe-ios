@@ -6,7 +6,7 @@ require 'json'
 require 'openssl'
 require 'base64'
 
-if ENV['$BITRISE_GIT_BRANCH'] != 'master'
+if ENV['BITRISE_GIT_BRANCH'] != 'master'
   puts 'Not on main branch, skipping notification'
   exit 0
 end
