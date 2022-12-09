@@ -102,7 +102,9 @@ extension EndpointSelectorViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "endpoint")
+        let reuseIdentifier = "endpointCell"
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
+                    UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
         guard let endpoint = endpoint(for: indexPath) else {
             return cell
         }

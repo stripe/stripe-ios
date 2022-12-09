@@ -15,10 +15,10 @@ import UIKit
 import SwiftUI
 import PassKit
 
-let endpointSelectorEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/endpoints"
-let defaultCheckoutEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
-
 class PaymentSheetTestPlayground: UIViewController {
+    static let endpointSelectorEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/endpoints"
+    static let defaultCheckoutEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
+
     static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
 
     // Configuration
@@ -382,7 +382,7 @@ class PaymentSheetTestPlayground: UIViewController {
 
     @IBAction func didTapEndpointConfiguration(_ sender: Any) {
         let endpointSelector = EndpointSelectorViewController(delegate: self,
-                                                              endpointSelectorEndpoint: endpointSelectorEndpoint,
+                                                              endpointSelectorEndpoint: Self.endpointSelectorEndpoint,
                                                               currentCheckoutEndpoint: checkoutEndpoint)
         let navController = UINavigationController(rootViewController: endpointSelector)
         self.navigationController?.present(navController, animated: true, completion: nil)
@@ -536,7 +536,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
             shippingInfoSelectorValue: 0,
             linkSelectorValue: 1,
             customCtaLabel: nil,
-            checkoutEndpoint: defaultCheckoutEndpoint
+            checkoutEndpoint: PaymentSheetTestPlayground.defaultCheckoutEndpoint
         )
     }
 }
@@ -612,7 +612,7 @@ extension PaymentSheetTestPlayground {
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
         customCTALabelTextField.text = settings.customCtaLabel
-        checkoutEndpoint = settings.checkoutEndpoint ?? defaultCheckoutEndpoint
+        checkoutEndpoint = settings.checkoutEndpoint ?? PaymentSheetTestPlayground.defaultCheckoutEndpoint
     }
 }
 
