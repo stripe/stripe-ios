@@ -32,12 +32,14 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        return ContinueStateView(institutionImageUrl: nil,
+        let view = ContinueStateView(institutionImageUrl: nil,
                                  partner: nil,
                                  isStripeDirect: false) { [weak self] in
             guard let self = self else { return }
             self.startAuthenticationSession(manifest: self.manifest)
         }
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     /**
@@ -101,9 +103,9 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
         continueStateView.isHidden = true
         view.addSubview(continueStateView)
         NSLayoutConstraint.activate([
-            continueStateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
-            continueStateView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-            continueStateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            continueStateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
+            continueStateView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
+            continueStateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
             continueStateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
         ])
         

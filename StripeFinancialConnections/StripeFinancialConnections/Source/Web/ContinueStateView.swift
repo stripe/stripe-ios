@@ -48,8 +48,6 @@ class ContinueStateView: UIView {
             )
         )
         paneLayoutView.addTo(view: self)
-
-
     }
     
     required init?(coder: NSCoder) {
