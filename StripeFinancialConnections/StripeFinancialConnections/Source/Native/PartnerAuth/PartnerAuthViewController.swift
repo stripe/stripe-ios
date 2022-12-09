@@ -35,8 +35,6 @@ final class PartnerAuthViewController: UIViewController {
     private var subscribedToAppActiveNotifications = false
     private var continueStateView: ContinueStateView?
 
-    private var currentAuthSession: FinancialConnectionsAuthSession?
-
     private let dataSource: PartnerAuthDataSource
     private var institution: FinancialConnectionsInstitution {
         return dataSource.institution
@@ -76,7 +74,6 @@ final class PartnerAuthViewController: UIViewController {
     private func createAuthSession() {
         assertMainQueue()
 
-        currentAuthSession = nil
         showEstablishingConnectionLoadingView(true)
         dataSource
             .createAuthSession()
@@ -86,7 +83,6 @@ final class PartnerAuthViewController: UIViewController {
                 self.showEstablishingConnectionLoadingView(false)
                 switch result {
                 case .success(let authSession):
-                    self.currentAuthSession = authSession
                     self.createdAuthSession(authSession)
                 case .failure(let error):
                     self.showErrorView(error)
@@ -247,7 +243,7 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
 
-    private func handleAuthSessionCompletion(_ status: String, _ authSession: FinancialConnectionsAuthSession) {
+    private func handleAuthSessionCompletionWithStatus(_ status: String, _ authSession: FinancialConnectionsAuthSession) {
         if status == "success" {
             self.dataSource.recordAuthSessionEvent(
                 eventName: "success",
@@ -331,7 +327,7 @@ final class PartnerAuthViewController: UIViewController {
 
     private func openInstitutionAuthenticationNativeRedirect(authSession: FinancialConnectionsAuthSession) {
         guard
-            let urlString = authSession.url?.dropPrefix("stripe-auth://native-redirect/"),
+            let urlString = authSession.url?.droppingNativeRedirectPrefix(),
                 let url = URL(string: urlString) else {
             self.showErrorView(
                 FinancialConnectionsSheetError.unknown(
@@ -390,7 +386,7 @@ final class PartnerAuthViewController: UIViewController {
                     let urlComponsents = URLComponents(url: returnUrl, resolvingAgainstBaseURL: true),
                     let status = urlComponsents.queryItems?.first(where: { $0.name == "status" })?.value
                 {
-                    self.handleAuthSessionCompletion(status, authSession)
+                    self.handleAuthSessionCompletionWithStatus(status, authSession)
                 }
                 // we did NOT get a `status` back from the backend,
                 // so assume a "cancel"
@@ -487,20 +483,20 @@ extension PartnerAuthViewController: STPURLCallbackListener {
     private func handleAuthSessionCompletionFromNativeRedirect(_ url: URL) {
         assertMainQueue()
 
-        guard let authSession = self.currentAuthSession else { return }
+        guard let authSession = dataSource.getPendingAuthSession() else { return }
         guard var urlComponsents = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
         urlComponsents.query = url.fragment
 
         guard
            let status = urlComponsents.queryItems?.first(where: { $0.name == "code" })?.value,
             let authSessionId = urlComponsents.queryItems?.first(where: { $0.name == "authSessionId" })?.value,
-            authSessionId == self.currentAuthSession?.id
+            authSessionId == dataSource.getPendingAuthSession()?.id
         else {
             self.handleAuthSessionCompletionWithNoStatus(authSession, nil)
             return
         }
 
-        handleAuthSessionCompletion(status, authSession)
+        handleAuthSessionCompletionWithStatus(status, authSession)
     }
 
     func handleURLCallback(_ url: URL) -> Bool {

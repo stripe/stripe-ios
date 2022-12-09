@@ -38,7 +38,6 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
             guard let self = self else { return }
             self.startAuthenticationSession(manifest: self.manifest)
         }
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -102,12 +101,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
         continueStateView.isHidden = true
         view.addSubview(continueStateView)
-        NSLayoutConstraint.activate([
-            continueStateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
-            continueStateView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
-            continueStateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            continueStateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        ])
+        view.addAndPinSubviewToSafeArea(continueStateView)
         
         // start authentication session
         loadingView.errorView.isHidden = true

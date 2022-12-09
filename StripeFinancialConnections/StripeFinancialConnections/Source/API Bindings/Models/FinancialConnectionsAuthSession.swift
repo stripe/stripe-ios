@@ -83,7 +83,7 @@ struct FinancialConnectionsAuthSession: Decodable {
 
     var requiresNativeRedirect: Bool {
         guard flow == .mxOauthAppToApp else { return false }
-        return url?.hasPrefix("stripe-auth://native-redirect/") ?? false
+        return url?.hasNativeRedirectPrefix ?? false
     }
 
     var partner: FinancialConnectionsPartner? {

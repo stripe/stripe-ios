@@ -7,10 +7,23 @@
 
 import Foundation
 
+// MARK: - Native Redirect Helpers
+
+private let nativeRedirectPrefix = "stripe-auth://native-redirect/"
+
 extension String {
+
     func dropPrefix(_ prefix: String) -> String {
         guard self.hasPrefix(prefix) else { return self }
         return String(self.dropFirst(prefix.count))
+    }
+
+    func droppingNativeRedirectPrefix() -> String {
+        return dropPrefix(nativeRedirectPrefix)
+    }
+
+    var hasNativeRedirectPrefix: Bool {
+        return self.hasPrefix(nativeRedirectPrefix)
     }
 }
 
