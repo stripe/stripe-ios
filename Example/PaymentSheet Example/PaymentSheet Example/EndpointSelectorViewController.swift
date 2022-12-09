@@ -166,7 +166,7 @@ extension EndpointSelectorViewController {
         return endpointsInSection[indexPath.row]
     }
 
-    func sortedSections() -> [String: [String]].Element]? {
+    func sortedSections() -> [Dictionary<String, [String]>.Element]? {
         guard let specs = endpointSpecs else {
             return nil
         }
