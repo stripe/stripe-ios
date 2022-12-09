@@ -481,14 +481,14 @@ extension PartnerAuthViewController: STPURLCallbackListener {
     private func handleAuthSessionCompletionFromNativeRedirect(_ url: URL) {
         assertMainQueue()
 
-        guard let authSession = dataSource.getPendingAuthSession() else { return }
+        guard let authSession = dataSource.pendingAuthSession else { return }
         guard var urlComponsents = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
         urlComponsents.query = url.fragment
 
         guard
            let status = urlComponsents.queryItems?.first(where: { $0.name == "code" })?.value,
             let authSessionId = urlComponsents.queryItems?.first(where: { $0.name == "authSessionId" })?.value,
-            authSessionId == dataSource.getPendingAuthSession()?.id
+            authSessionId == dataSource.pendingAuthSession?.id
         else {
             self.handleAuthSessionCompletionWithNoStatus(authSession, nil)
             return

@@ -13,8 +13,8 @@ protocol PartnerAuthDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var returnURL: String? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var pendingAuthSession: FinancialConnectionsAuthSession? { get }
 
-    func getPendingAuthSession() ->FinancialConnectionsAuthSession?
     func createAuthSession() -> Future<FinancialConnectionsAuthSession>
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
     func cancelPendingAuthSessionIfNeeded()
@@ -35,7 +35,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     //
     // in other words, a `pendingAuthSession` is up for being
     // cancelled unless the user successfully authorizes
-    private var pendingAuthSession: FinancialConnectionsAuthSession?
+    private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
     
     init(
         institution: FinancialConnectionsInstitution,
@@ -51,10 +51,6 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-    }
-
-    func getPendingAuthSession() -> FinancialConnectionsAuthSession? {
-        return pendingAuthSession
     }
     
     func createAuthSession() -> Future<FinancialConnectionsAuthSession> {
