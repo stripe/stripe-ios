@@ -6,6 +6,11 @@ require 'json'
 require 'openssl'
 require 'base64'
 
+if ENV['BITRISE_GIT_BRANCH'] != 'master'
+  puts 'Not on main branch, skipping notification'
+  exit 0
+end
+
 env_sdk_failure_notif_endpoint = ENV['SDK_FAILURE_NOTIFICATION_ENDPOINT']
 env_sdk_failure_notif_endpoint_hmac_key = ENV['SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY']
 
