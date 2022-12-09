@@ -21,7 +21,13 @@ final class PlaygroundUserDefaults {
         defaultValue: nil
     )
     static var enableNative: Bool?
-    
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_APP_TO_APP",
+        defaultValue: false
+    )
+    static var enableAppToApp: Bool
+
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TEST_MODE",
         defaultValue: false
