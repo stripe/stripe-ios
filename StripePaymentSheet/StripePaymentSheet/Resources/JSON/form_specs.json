@@ -462,6 +462,31 @@
     }
 },
 {
+  "type": "mobilepay",
+  "async": false,
+  "selector_icon": {
+    "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-mobilepay@3x-23fda467d59a37d21796b2e4abc45c11.png",
+    "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/mobilepay-8473098c2f914f0376b4526d75438513.svg"
+  },
+  "fields": [],
+  "next_action_spec": {
+    "confirm_response_status_specs": {
+      "requires_action": {
+        "type": "redirect_to_url",
+        "native_mobile_redirect_strategy" : "follow_redirects"
+      }
+    },
+    "post_confirm_handling_pi_status_specs": {
+      "succeeded": {
+        "type": "finished"
+      },
+      "requires_action": {
+        "type": "canceled"
+      }
+    }
+  }
+},
+{
     "type": "card",
     "async": false,
     "fields": [
