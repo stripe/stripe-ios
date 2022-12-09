@@ -470,8 +470,6 @@
 			baseConfigurationReference = 7EB5EE88F3BCE3D52302C896 /* Non-Card-Payment-Examples-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Non-Card Payment Examples/Non-Card Payment Examples.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Non-Card Payment Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = NonCardPaymentExamples;
@@ -484,8 +482,6 @@
 			baseConfigurationReference = 8B4FE9E774494C148EBFDD0F /* Non-Card-Payment-Examples-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Non-Card Payment Examples/Non-Card Payment Examples.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "Non-Card Payment Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = NonCardPaymentExamples;

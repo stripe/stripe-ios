@@ -1072,8 +1072,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 33A34DF206B0980BA1D2258F /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1089,8 +1087,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CB2721EE8E075E700FF3E58A /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-core";
 				PRODUCT_NAME = StripeCore;
@@ -1102,8 +1098,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9761FF113E3F940E2B2BEBB1 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1119,8 +1113,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C3DCE66C04A91C235972687D /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-core";
 				PRODUCT_NAME = StripeCore;
@@ -1139,8 +1131,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9761FF113E3F940E2B2BEBB1 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1156,8 +1146,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 33A34DF206B0980BA1D2258F /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

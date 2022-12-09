@@ -1564,8 +1564,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6940D75CA36F7DB9FB56196B /* Stripe3DS2DemoUI-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2DemoUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2DemoUI;
 				PRODUCT_NAME = Stripe3DS2DemoUI;
@@ -1577,8 +1575,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5316D0759F7F2ED0BF1D3B2E /* Stripe3DS2DemoUI-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2DemoUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2DemoUI;
 				PRODUCT_NAME = Stripe3DS2DemoUI;
@@ -1598,8 +1594,6 @@
 			baseConfigurationReference = D7A9D36FEF7E97CF735D82B8 /* Stripe3DS2DemoUITests-Release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1617,8 +1611,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F5686FB8EFA3AE3B39F85BBC /* Stripe3DS2Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1641,8 +1633,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F2BC7014D26158AC9D74CC67 /* Stripe3DS2Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1659,8 +1649,6 @@
 			baseConfigurationReference = 0E3C05BE55CF3086738AA182 /* Stripe3DS2DemoUITests-Debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1678,8 +1666,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F8F6FFED1A0966A49B78F252 /* Stripe3DS2-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
 				PRODUCT_NAME = Stripe3DS2;
@@ -1691,8 +1677,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A9CD7EC589C5CC6CE5CF9310 /* Stripe3DS2-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = Stripe3DS2/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
 				PRODUCT_NAME = Stripe3DS2;

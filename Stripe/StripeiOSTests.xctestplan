@@ -26,6 +26,7 @@
     {
       "skippedTests" : [
         "AfterpayPriceBreakdownViewSnapshotTests",
+        "PaymentMethodMessagingViewFunctionalTest",
         "STPCardBINMetadataTests",
         "STPPaymentIntentFunctionalTest\/testConfirmPaymentIntentWithBLIK",
         "STPSourceFunctionalTest\/testCreateSource_wechatPay",

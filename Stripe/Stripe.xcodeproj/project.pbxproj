@@ -2349,8 +2349,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1D23EB567F573612E0794B3A /* Stripe Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -2373,8 +2371,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5E4EA6394497D1BD57ED0032 /* Stripe Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -2390,8 +2386,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E1A2173E0891B7138687D544 /* Stripe-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeiOS/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				PRODUCT_NAME = Stripe;
@@ -2404,8 +2398,6 @@
 			baseConfigurationReference = D609FFD051FC01BF566665A0 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -2424,8 +2416,6 @@
 			baseConfigurationReference = E3C8833E7EBA7A1EBF349D19 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -2450,8 +2440,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E3C8833E7EBA7A1EBF349D19 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeiOSTestHostApp/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeiOSTestHostApp;
 				PRODUCT_NAME = StripeiOSTestHostApp;
@@ -2463,8 +2451,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D609FFD051FC01BF566665A0 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeiOSTestHostApp/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeiOSTestHostApp;
 				PRODUCT_NAME = StripeiOSTestHostApp;
@@ -2476,8 +2462,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DA82BB67D434E76B9ABA4CEC /* Stripe-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeiOS/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				PRODUCT_NAME = Stripe;
