@@ -269,6 +269,9 @@ workflows:
         run_if: ".IsBuildFailed"
   prep_all:
     steps:
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
