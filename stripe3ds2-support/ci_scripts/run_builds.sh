@@ -10,14 +10,14 @@ function die {
 }
 
 # Execute builds
-info "Executing build (iPhone 12 mini, iOS 16.0)..."
+info "Executing build (iPhone 12 mini, iOS 16.1)..."
 
 xcodebuild build \
   -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=16.0"
+  -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=16.1"
 
 exit_code="${PIPESTATUS[0]}"
 
