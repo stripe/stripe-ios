@@ -222,6 +222,7 @@ extension STPConfirmPaymentMethodOptions {
             cardOptions = cardOptions ?? STPConfirmCardOptions()
             cardOptions?.additionalAPIParameters["setup_future_usage"] = sfuValue
         case .USBankAccount:
+            // Note: the SFU value passed in the STPConfirmUSBankAccountOptions init will be overwritten by `additionalAPIParameters`. See https://jira.corp.stripe.com/browse/RUN_MOBILESDK-1737
             usBankAccountOptions = usBankAccountOptions ?? STPConfirmUSBankAccountOptions(setupFutureUsage: .none)
             usBankAccountOptions?.additionalAPIParameters["setup_future_usage"] = sfuValue
         default:
