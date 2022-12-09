@@ -1,10 +1,12 @@
 ## X.Y.Z 2022-xx-xx
-
 * [Fixed] Fixed a bug where 3 decimal place currencies were not being formatted properly.
 
 ### PaymentSheet
 * [Fixed] Fixed an issue that caused animations of the card logos in the Card input field to glitch.
 * [Fixed] Fixed a layout issue in the "Save my info" checkbox.
+
+### CardScan
+* [Fixed] Fixed UX model loading from the wrong bundle. [#2078](https://github.com/stripe/stripe-ios/issues/2078) (Thanks [nickm01](https://github.com/nickm01))
 
 ## 23.3.0 2022-12-05
 ### PaymentSheet
