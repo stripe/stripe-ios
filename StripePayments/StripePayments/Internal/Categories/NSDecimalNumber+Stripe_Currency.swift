@@ -9,45 +9,33 @@
 import Foundation
 
 extension NSDecimalNumber {
+    
     @objc @_spi(STP) public class func stp_decimalNumber(
         withAmount amount: Int,
         currency: String?
     ) -> NSDecimalNumber {
-        let noDecimalCurrencies = self.stp_currenciesWithNoDecimal()
         let number = self.init(mantissa: UInt64(amount), exponent: 0, isNegative: false)
-        if noDecimalCurrencies.contains(currency?.lowercased() ?? "") {
-            return number
-        }
-        return number.multiplying(byPowerOf10: -2)
+        let decimalCount = decimalCount(for: currency)
+        return number.multiplying(byPowerOf10: -Int16(decimalCount))
     }
 
     @objc @_spi(STP) public func stp_amount(withCurrency currency: String?) -> Int {
-        let noDecimalCurrencies = NSDecimalNumber.stp_currenciesWithNoDecimal()
-
         var ourNumber = self
-        if !(noDecimalCurrencies.contains(currency?.lowercased() ?? "")) {
-            ourNumber = multiplying(byPowerOf10: 2)
-        }
+        let decimalCount = NSDecimalNumber.decimalCount(for: currency)
+        ourNumber = multiplying(byPowerOf10: Int16(decimalCount))
         return Int(ourNumber.doubleValue)
     }
-
-    class func stp_currenciesWithNoDecimal() -> [String] {
-        return [
-            "bif",
-            "clp",
-            "djf",
-            "gnf",
-            "jpy",
-            "kmf",
-            "krw",
-            "mga",
-            "pyg",
-            "rwf",
-            "vnd",
-            "vuv",
-            "xaf",
-            "xof",
-            "xpf",
-        ]
+    
+    private class func decimalCount(for currency: String?) -> Int {
+        let currencyLocaleIdentifier = Locale.availableIdentifiers.first(where: {
+            let locale = Locale(identifier: $0)
+            return locale.currencyCode?.lowercased() == currency?.lowercased()
+        })
+        
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.locale = Locale(identifier: currencyLocaleIdentifier ?? "")
+        
+        return currencyFormatter.maximumFractionDigits
     }
 }
