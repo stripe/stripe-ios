@@ -340,8 +340,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2DA5DB960FC1D52C51FFB5B /* UI-Examples-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;
@@ -353,8 +351,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = UIExamples;

@@ -481,8 +481,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 93A6BBFA8D674FA3DC95F21E /* LocalizationTesterUITests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTesterUITests;
 				PRODUCT_NAME = LocalizationTesterUITests;
@@ -495,8 +493,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9781188AB3CBA7C1626A857A /* LocalizationTesterUITests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTesterUITests;
 				PRODUCT_NAME = LocalizationTesterUITests;
@@ -516,8 +512,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E904A99B8B08FEAB06B79043 /* LocalizationTester-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
 				PRODUCT_NAME = LocalizationTester;
@@ -529,8 +523,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FBEBC15127F5903AA54A2E1F /* LocalizationTester-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = LocalizationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.LocalizationTester;
 				PRODUCT_NAME = LocalizationTester;

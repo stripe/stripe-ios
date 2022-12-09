@@ -546,8 +546,6 @@
 			baseConfigurationReference = 8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/IntegrationTester/IntegrationTester.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
 				PRODUCT_NAME = IntegrationTester;
@@ -559,8 +557,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2324F82EFFBE27D202549019 /* IntegrationTesterUITests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterUITests;
 				PRODUCT_NAME = IntegrationTesterUITests;
@@ -574,8 +570,6 @@
 			baseConfigurationReference = 5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/IntegrationTester/IntegrationTester.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTester/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
 				PRODUCT_NAME = IntegrationTester;
@@ -587,8 +581,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C3025BEBDF23D03A2B9DAA6F /* IntegrationTesterUITests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = IntegrationTesterUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterUITests;
 				PRODUCT_NAME = IntegrationTesterUITests;
@@ -601,8 +593,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterCommon;
 				PRODUCT_NAME = IntegrationTesterCommon;
 				SDKROOT = iphoneos;
@@ -613,8 +603,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterCommon;
 				PRODUCT_NAME = IntegrationTesterCommon;
 				SDKROOT = iphoneos;

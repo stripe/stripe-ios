@@ -1050,8 +1050,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeUICore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
@@ -1070,8 +1068,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E395C593AC970A8C79A8109C /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeUICore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
@@ -1090,8 +1086,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E242FECC90FE2644CF99692D /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1107,8 +1101,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9E3254388F5DAB8E8C76AE04 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

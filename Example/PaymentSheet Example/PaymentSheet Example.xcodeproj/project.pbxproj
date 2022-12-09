@@ -715,8 +715,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
@@ -735,8 +733,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
@@ -748,8 +744,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
 				PRODUCT_NAME = PaymentSheetUITest;
@@ -762,8 +756,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 28CE345E1398AF3E28F164EF /* PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = PaymentSheetLocalizationScreenshotGenerator/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetLocalizationScreenshotGenerator;
 				PRODUCT_NAME = PaymentSheetLocalizationScreenshotGenerator;
@@ -776,8 +768,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = PaymentSheetLocalizationScreenshotGenerator/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetLocalizationScreenshotGenerator;
 				PRODUCT_NAME = PaymentSheetLocalizationScreenshotGenerator;
@@ -790,8 +780,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
 				PRODUCT_NAME = PaymentSheetUITest;

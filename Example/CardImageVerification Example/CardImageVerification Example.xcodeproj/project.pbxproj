@@ -401,8 +401,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 74D9CF010C9F1E76EA59098A /* CardImageVerification-Example-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-Example";
 				PRODUCT_NAME = CardImageVerificationExample;
@@ -414,8 +412,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CE0B6CC20864C0008614046 /* CardImageVerification-Example-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-Example";
 				PRODUCT_NAME = CardImageVerificationExample;
@@ -441,8 +437,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B96E61A575FF9A7B3828D967 /* CardImageVerification-ExampleUITests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification ExampleUITests/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-ExampleUITests";
 				PRODUCT_NAME = CardImageVerificationExampleUITests;
@@ -455,8 +449,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 52B4B1ADDDBC7792175EE884 /* CardImageVerification-ExampleUITests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "CardImageVerification ExampleUITests/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-ExampleUITests";
 				PRODUCT_NAME = CardImageVerificationExampleUITests;

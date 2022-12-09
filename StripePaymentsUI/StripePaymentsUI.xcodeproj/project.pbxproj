@@ -1004,8 +1004,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6FE56C292DBB21E554AADCFC /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1028,8 +1026,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E22E366C1397E3E321EFBA72 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1045,8 +1041,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 378D7AAFE63F6D4ADC1D4EC8 /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripePaymentsUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments-ui";
 				PRODUCT_NAME = StripePaymentsUI;
@@ -1058,8 +1052,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DACC385F4CE5DE8BCFAA8A49 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripePaymentsUI/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments-ui";
 				PRODUCT_NAME = StripePaymentsUI;

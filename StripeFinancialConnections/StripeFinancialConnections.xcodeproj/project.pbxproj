@@ -1246,8 +1246,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14CED33665ED3D8EE8D5D7B7 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -1270,8 +1268,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1CD19E0601599AE89976DB4D /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeFinancialConnections/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-financial-connections";
 				PRODUCT_NAME = StripeFinancialConnections;
@@ -1283,8 +1279,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 314462DF7856349FF9775598 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeFinancialConnections/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-financial-connections";
 				PRODUCT_NAME = StripeFinancialConnections;
@@ -1296,8 +1290,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA2DA47ECE153F888FA675CE /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
