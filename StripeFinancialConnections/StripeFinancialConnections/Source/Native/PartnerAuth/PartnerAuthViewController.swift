@@ -247,7 +247,7 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
 
-    fileprivate func handleAuthSessionCompletion(_ status: String, _ authSession: FinancialConnectionsAuthSession) {
+    private func handleAuthSessionCompletion(_ status: String, _ authSession: FinancialConnectionsAuthSession) {
         if status == "success" {
             self.dataSource.recordAuthSessionEvent(
                 eventName: "success",
@@ -291,7 +291,7 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
     
-    fileprivate func handleAuthSessionCompletionWithNoStatus(_ authSession: FinancialConnectionsAuthSession, _ error: Error?) {
+    private func handleAuthSessionCompletionWithNoStatus(_ authSession: FinancialConnectionsAuthSession, _ error: Error?) {
         if authSession.isOauthNonOptional {
             // on "manual cancels" (for OAuth) we log retry event:
             self.dataSource.recordAuthSessionEvent(
@@ -518,7 +518,7 @@ extension PartnerAuthViewController: STPURLCallbackListener {
 private extension PartnerAuthViewController {
 
     private func subscribeToURLAndAppActiveNotifications() {
-        dispatchPrecondition(condition: .onQueue(.main))
+        assertMainQueue()
 
         subscribeToURLNotifications()
         if !subscribedToAppActiveNotifications {
@@ -532,7 +532,7 @@ private extension PartnerAuthViewController {
     }
 
     private func subscribeToURLNotifications() {
-        dispatchPrecondition(condition: .onQueue(.main))
+        assertMainQueue()
 
         guard let returnURL = dataSource.returnURL,
                 let url = URL(string: returnURL) else {
@@ -547,7 +547,7 @@ private extension PartnerAuthViewController {
     }
 
     private func unsubscribeFromNotifications() {
-        dispatchPrecondition(condition: .onQueue(.main))
+        assertMainQueue()
 
         NotificationCenter.default.removeObserver(
             self,
@@ -565,7 +565,7 @@ private extension PartnerAuthViewController {
     }
 
     private func handleAuthSessionCompletionFromNativeRedirectIfNeeded() {
-        dispatchPrecondition(condition: .onQueue(.main))
+        assertMainQueue()
 
         guard UIApplication.shared.applicationState == .active,
                 let url = unprocessedReturnURL else {
