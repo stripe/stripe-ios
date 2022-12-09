@@ -2,6 +2,7 @@
 ## PaymentSheet
 * [Fixed] Fixed an issue that caused animations of the card logos in the Card input field to glitch.
 * [Fixed] Fixed a layout issue in the "Save my info" checkbox.
+* [Fixed] Fixed a bug where 3 decimal place currencies were not being formatted properly.
 
 ## 23.3.0 2022-12-05
 ### PaymentSheet
