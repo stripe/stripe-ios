@@ -12,7 +12,7 @@ protocol EndpointSelectorViewControllerDelegate: AnyObject {
 }
 
 class EndpointSelectorViewController: UITableViewController {
-
+    let reuseIdentifierEndpointCell = "endpointCell"
     let endpointSelectorEndpoint: String
     var currentCheckoutEndpoint: String
 
@@ -32,6 +32,7 @@ class EndpointSelectorViewController: UITableViewController {
     }
 
     override func viewDidLoad() {
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifierEndpointCell)
         loadEndpointSelector(endpoint: endpointSelectorEndpoint)
         setBarButtonItems()
     }
@@ -102,9 +103,7 @@ extension EndpointSelectorViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let reuseIdentifier = "endpointCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
-                    UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierEndpointCell, for: indexPath)
         guard let endpoint = endpoint(for: indexPath) else {
             return cell
         }
