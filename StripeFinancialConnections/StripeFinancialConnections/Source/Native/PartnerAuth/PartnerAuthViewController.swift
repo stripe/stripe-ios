@@ -338,8 +338,6 @@ final class PartnerAuthViewController: UIViewController {
         }
         self.continueStateView = ContinueStateView(
             institutionImageUrl: self.institution.icon?.default,
-            partner: authSession.partner,
-            isStripeDirect: self.dataSource.manifest.isStripeDirect ?? false,
             didSelectContinue: { [weak self] in
                 guard let self = self else { return }
                 self.continueStateView?.removeFromSuperview()

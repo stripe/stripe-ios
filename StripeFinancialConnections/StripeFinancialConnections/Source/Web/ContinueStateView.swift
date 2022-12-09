@@ -20,8 +20,6 @@ class ContinueStateView: UIView {
     
     init(
         institutionImageUrl: String?,
-        partner: FinancialConnectionsPartner?,
-        isStripeDirect: Bool,
         didSelectContinue: @escaping () -> Void
     ) {
         self.didSelectContinue = didSelectContinue
@@ -42,8 +40,6 @@ class ContinueStateView: UIView {
                 return clearView
             }(),
             footerView: CreateFooterView(
-                partner: partner,
-                isStripeDirect: isStripeDirect,
                 view: self
             )
         )
@@ -61,8 +57,6 @@ class ContinueStateView: UIView {
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
-    partner: FinancialConnectionsPartner?,
-    isStripeDirect: Bool,
     view: ContinueStateView
 ) -> UIView {
     let continueButton = Button(configuration: .financialConnectionsPrimary)
@@ -76,14 +70,6 @@ private func CreateFooterView(
     let footerStackView = UIStackView()
     footerStackView.axis = .vertical
     footerStackView.spacing = 20
-
-    if let partner = partner {
-        let partnerDisclosureView = CreatePartnerDisclosureView(
-            partner: partner,
-            isStripeDirect: false
-        )
-        footerStackView.addArrangedSubview(partnerDisclosureView)
-    }
     footerStackView.addArrangedSubview(continueButton)
 
     return footerStackView

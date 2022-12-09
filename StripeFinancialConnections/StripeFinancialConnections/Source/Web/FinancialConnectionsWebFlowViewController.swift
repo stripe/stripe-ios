@@ -32,9 +32,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        let view = ContinueStateView(institutionImageUrl: nil,
-                                 partner: nil,
-                                 isStripeDirect: false) { [weak self] in
+        let view = ContinueStateView(institutionImageUrl: nil) { [weak self] in
             guard let self = self else { return }
             self.startAuthenticationSession(manifest: self.manifest)
         }

@@ -89,7 +89,7 @@ private func CreateFooterView(
 }
 
 @available(iOSApplicationExtension, unavailable)
-func CreatePartnerDisclosureView(
+private func CreatePartnerDisclosureView(
     partner: FinancialConnectionsPartner,
     isStripeDirect: Bool
 ) -> UIView {
