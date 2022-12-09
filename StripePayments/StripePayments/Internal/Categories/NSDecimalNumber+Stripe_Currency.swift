@@ -59,10 +59,8 @@ extension NSDecimalNumber {
     class func stp_currenciesWithThreeDecimals() -> [String] {
         return [
             "bhd",
-            "iqd",
             "jod",
             "kwd",
-            "lyd",
             "omr",
             "tnd"
         ]
