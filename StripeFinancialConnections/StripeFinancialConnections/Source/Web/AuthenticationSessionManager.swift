@@ -83,7 +83,7 @@ final class AuthenticationSessionManager: NSObject {
                     promise.resolve(with: .success)
                 } else if returnUrlString == self.manifest.cancelUrl {
                     promise.resolve(with: .webCancelled)
-                } else if returnUrlString.starts(with: Constants.nativeRedirectPrefix), let targetURL = URL(string: returnUrlString.dropPrefix(Constants.nativeRedirectPrefix)) {
+                } else if returnUrlString.hasNativeRedirectPrefix, let targetURL = URL(string: returnUrlString.droppingNativeRedirectPrefix()) {
                     promise.resolve(with: .redirect(url: targetURL))
                 } else {
                     promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Nil return URL"))
@@ -138,14 +138,5 @@ extension AuthenticationSessionManager: ASWebAuthenticationPresentationContextPr
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.window ?? ASPresentationAnchor()
-    }
-}
-
-// MARK: - Constants
-
-/// :nodoc:
-extension AuthenticationSessionManager {
-    private enum Constants {
-        static let nativeRedirectPrefix = "stripe-auth://native-redirect/"
     }
 }

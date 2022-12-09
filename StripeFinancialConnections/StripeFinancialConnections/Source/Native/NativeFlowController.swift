@@ -663,6 +663,7 @@ private func CreatePaneViewController(
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
                 institution: institution,
                 manifest: dataManager.manifest,
+                returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient

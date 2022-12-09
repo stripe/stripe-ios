@@ -11,8 +11,10 @@ import Foundation
 protocol PartnerAuthDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var returnURL: String? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    
+    var pendingAuthSession: FinancialConnectionsAuthSession? { get }
+
     func createAuthSession() -> Future<FinancialConnectionsAuthSession>
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
     func cancelPendingAuthSessionIfNeeded()
@@ -23,6 +25,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     
     let institution: FinancialConnectionsInstitution
     let manifest: FinancialConnectionsSessionManifest
+    let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -32,17 +35,19 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     //
     // in other words, a `pendingAuthSession` is up for being
     // cancelled unless the user successfully authorizes
-    private var pendingAuthSession: FinancialConnectionsAuthSession?
+    private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
     
     init(
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
+        returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.institution = institution
         self.manifest = manifest
+        self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
