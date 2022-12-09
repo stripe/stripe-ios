@@ -225,7 +225,7 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
@@ -235,7 +235,7 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
@@ -245,7 +245,7 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
@@ -255,14 +255,14 @@ platform :ios do
     end
     run_tests(
       project: './Tests/installation_tests/carthage/CarthageTest.xcodeproj',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
   lane :installation_spm_objc do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
       scheme: 'SPMTest'
     )
   end
@@ -270,7 +270,7 @@ platform :ios do
   lane :installation_spm_swift do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_swift/SPMTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
       scheme: 'SPMTest'
     )
   end

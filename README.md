@@ -130,7 +130,7 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 
 1. Install Carthage 0.37 or later (if you have homebrew installed, `brew install carthage`)
 2. From the root of the repo, run `bundle install && bundle exec fastlane stripeios_tests`. This will install the test dependencies and run the tests.
-3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`. Make sure to use the iPhone 12 mini, iOS 15.4 simulator so the snapshot tests will pass.
+3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`. Make sure to use the iPhone 12 mini, iOS 16.0 simulator so the snapshot tests will pass.
 
 ## Migrating from older versions
 

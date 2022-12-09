@@ -16,7 +16,7 @@ source ci_scripts/localization_vars.sh
 LANGUAGE="ms-MY"
 
   # Generate PaymentSheet screenshots
-  xcodebuild -quiet test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "PaymentSheetLocalizationScreenshotGenerator" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=15.4" -resultBundlePath "${script_dir}/../build/loc_qa/${LANGUAGE}_payment_sheet" -testLanguage $LANGUAGE -testRegion $LANGUAGE
+  xcodebuild -quiet test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "PaymentSheetLocalizationScreenshotGenerator" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=16.0" -resultBundlePath "${script_dir}/../build/loc_qa/${LANGUAGE}_payment_sheet" -testLanguage $LANGUAGE -testRegion $LANGUAGE
   retVal=$?
   if [ $retVal -ne 0 ]; then
     exit 1
@@ -24,7 +24,7 @@ LANGUAGE="ms-MY"
 
 
   # Generate legacy (Basic Integration) screenshots
-  xcodebuild -quiet test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "LocalizationTester" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=15.4" -resultBundlePath "${script_dir}/../build/loc_qa/${LANGUAGE}_legacy_ui" -testLanguage $LANGUAGE -testRegion $LANGUAGE
+  xcodebuild -quiet test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "LocalizationTester" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=16.0" -resultBundlePath "${script_dir}/../build/loc_qa/${LANGUAGE}_legacy_ui" -testLanguage $LANGUAGE -testRegion $LANGUAGE
 
   retVal=$?
   if [ $retVal -ne 0 ]; then
