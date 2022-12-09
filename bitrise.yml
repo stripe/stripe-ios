@@ -383,5 +383,5 @@ workflows:
         machine_type_id: g2-m1.8core
 meta:
   bitrise.io:
-    stack: osx-xcode-14.1.x-ventura
+    stack: osx-xcode-14.1.x
     machine_type_id: g2-m1.8core
