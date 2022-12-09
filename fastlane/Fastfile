@@ -16,7 +16,7 @@
 default_platform(:ios)
 
 DEFAULT_TEST_DEVICE = 'iPhone 12 mini'.freeze
-DEFAULT_TEST_VERSION = '15.4'.freeze
+DEFAULT_TEST_VERSION = '16.0'.freeze
 # SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
 # set Fastlane's timeout to a more reasonable value.
 ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = '60'
