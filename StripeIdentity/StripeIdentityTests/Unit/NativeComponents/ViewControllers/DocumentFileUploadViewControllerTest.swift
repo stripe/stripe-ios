@@ -106,8 +106,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
             return XCTFail("Expected UIAlertController")
         }
 
-        // NOTE: The photo option is not available on the simulator
-        XCTAssertEqual(alert.actions.map { $0.title }, ["Photo Library", "Choose File", "Cancel"])
+        // NOTE: The photo option is not available on some simulators
+        XCTAssert(Set(alert.actions.map { $0.title }).isSuperset(of: ["Photo Library", "Choose File", "Cancel"]))
     }
 
     func testSelectPhotoFromLibrary() {
