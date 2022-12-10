@@ -247,6 +247,8 @@ workflows:
         inputs:
         - lane: legacy_tests_14
         title: fastlane legacy_tests_14
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=14.5"
     before_run:
     - prep_all
     after_run:
