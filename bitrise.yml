@@ -239,8 +239,8 @@ workflows:
     - upload_logs
     meta:
       bitrise.io:
-        stack: osx-xcode-13.2.x
-        machine_type_id: g2-m1.8core
+        stack: osx-xcode-13.3.x
+        machine_type_id: g2.12core
   legacy-tests-14:
     steps:
     - fastlane@3:
