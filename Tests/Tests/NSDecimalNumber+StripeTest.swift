@@ -13,13 +13,85 @@
 @testable@_spi(STP) import StripePaymentsUI
 
 class NSDecimalNumberStripeTest: XCTestCase {
-    func testDecimalAmount_hasDecimal() {
-        let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: "usd")
-        XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "10.00"))
+    // an incomplete list of 2 decimal point currencies
+    private let twoDecimalPointCurrencies = [
+        "usd",
+        "dkk",
+        "eur",
+        "aud",
+        "sek",
+        "sgd"
+    ]
+    
+    private let noDecimalPointCurrencies = [
+        "bif",
+        "clp",
+        "djf",
+        "gnf",
+        "jpy",
+        "kmf",
+        "krw",
+        "mga",
+        "pyg",
+        "rwf",
+        "vnd",
+        "vuv",
+        "xaf",
+        "xof",
+        "xpf"
+    ]
+    
+    private let threeDecimalCurrencies = [
+        "bhd",
+        "jod",
+        "kwd",
+        "omr",
+        "tnd"
+    ]
+    
+    
+    func testDecimalAmount_twoDecimal() {
+        for twoDecimalPointCurrency in twoDecimalPointCurrencies {
+            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: twoDecimalPointCurrency)
+            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "10.00"))
+        }
     }
 
     func testDecimalAmount_noDecimal() {
-        let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: "jpy")
-        XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "1000"))
+        for currency in noDecimalPointCurrencies {
+            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: currency)
+            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "1000"))
+        }
+    }
+    
+    func testDecimalAmount_threeDecimal() {
+        for currency in threeDecimalCurrencies {
+            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92000, currency: currency)
+            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92"))
+        }
+    }
+    
+    func testAmount_twoDecimal() {
+        for twoDecimalPointCurrency in twoDecimalPointCurrencies {
+            let amount = NSDecimalNumber(value: 1000)
+            let decimalNumber = amount.stp_amount(withCurrency: twoDecimalPointCurrency)
+            XCTAssertEqual(decimalNumber, 100000)
+        }
+    }
+    
+    func testAmount_noDecimal() {
+        for noDecimalPointCurrency in noDecimalPointCurrencies {
+            let amount = NSDecimalNumber(value: 1000)
+            let decimalNumber = amount.stp_amount(withCurrency: noDecimalPointCurrency)
+            XCTAssertEqual(decimalNumber, 1000)
+        }
+    }
+    
+    func testAmount_threeDecimal() {
+        for threeDecimalPointCurrency in threeDecimalCurrencies {
+            let amount = NSDecimalNumber(value: 1000)
+            let decimalNumber = amount.stp_amount(withCurrency: threeDecimalPointCurrency)
+            XCTAssertEqual(decimalNumber, 1000000)
+        }
     }
 }

@@ -46,6 +46,8 @@ struct PlaygroundMainView: View {
                             .italic()
                     }
 
+                    Toggle("Enable App To App", isOn: $viewModel.enableAppToApp)
+
                     if #available(iOS 14.0, *) {
                         Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
                             // test mode color

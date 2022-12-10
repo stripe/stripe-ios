@@ -32,9 +32,11 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        let contentView = ContinueStateView(frame: .zero)
-        contentView.primaryButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
-        return contentView
+        let view = ContinueStateView(institutionImageUrl: nil) { [weak self] in
+            guard let self = self else { return }
+            self.startAuthenticationSession(manifest: self.manifest)
+        }
+        return view
     }()
     
     /**
@@ -97,12 +99,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
         continueStateView.isHidden = true
         view.addSubview(continueStateView)
-        NSLayoutConstraint.activate([
-            continueStateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
-            continueStateView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-            continueStateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            continueStateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        ])
+        view.addAndPinSubviewToSafeArea(continueStateView)
         
         // start authentication session
         loadingView.errorView.isHidden = true
@@ -301,9 +298,5 @@ private extension FinancialConnectionsWebFlowViewController {
             return startPollingParam
         }
         return startPollingParam + "&\(fragment)"
-    }
-    
-    @objc func didSelectContinueButton() {
-        startAuthenticationSession(manifest: manifest)
     }
 }

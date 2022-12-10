@@ -52,6 +52,12 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.enableNative = enableNative
         }
     }
+
+    @Published var enableAppToApp: Bool = PlaygroundUserDefaults.enableAppToApp {
+        didSet {
+            PlaygroundUserDefaults.enableAppToApp = enableAppToApp
+        }
+    }
     
     @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
         didSet {
@@ -78,6 +84,7 @@ final class PlaygroundMainViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
+            enableAppToApp: enableAppToApp,
             enableTestMode: enableTestMode,
             flow: flow.rawValue
         ) { [weak self] setupPlaygroundResponse in
@@ -117,6 +124,7 @@ final class PlaygroundMainViewModel: ObservableObject {
 }
 
 private func SetupPlayground(
+    enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
     completionHandler: @escaping ([String:String]?) -> Void
@@ -130,6 +138,7 @@ private func SetupPlayground(
     urlRequest.httpBody = {
         var requestBody: [String:Any] = [:]
         requestBody["enable_test_mode"] = enableTestMode
+        requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
         return try! JSONSerialization.data(
             withJSONObject: requestBody,

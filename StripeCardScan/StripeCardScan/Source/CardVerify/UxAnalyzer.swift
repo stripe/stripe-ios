@@ -6,6 +6,10 @@ import UIKit
 
 @_spi(STP) public class UxAnalyzer: CreditCardOcrImplementation {
     @AtomicProperty var uxModel: UxModel?
+    
+    static let uxResource = "UxModel"
+    static let uxExtension = "mlmodelc"
+    
     let ocr: CreditCardOcrImplementation
 
     init(
@@ -26,7 +30,7 @@ import UIKit
 
     @_spi(STP) public static func loadModelFromBundle() -> UxModel? {
         let bundle = StripeCardScanBundleLocator.resourcesBundle
-        guard let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
+        guard let url = bundle.url(forResource: UxAnalyzer.uxResource, withExtension: UxAnalyzer.uxExtension) else {
             return nil
         }
 
@@ -60,7 +64,16 @@ import UIKit
     }
 
     private func loadModel() {
-        UxModel.asyncLoad { [weak self] result in
+        guard
+            let uxModelUrl = StripeCardScanBundleLocator.resourcesBundle.url(
+                forResource: UxAnalyzer.uxResource,
+                withExtension: UxAnalyzer.uxExtension
+            )
+        else {
+            return
+        }
+        
+        UxModel.asyncLoad(contentsOf: uxModelUrl) { [weak self] result in
             switch result {
             case .success(let model):
                 self?.uxModel = model

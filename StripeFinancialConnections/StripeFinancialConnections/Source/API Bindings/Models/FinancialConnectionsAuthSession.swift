@@ -20,6 +20,7 @@ struct FinancialConnectionsAuthSession: Decodable {
         case mxConnect = "mx_connect"
         case mxOauth = "mx_oauth"
         case mxOauthWebview = "mx_oauth_webview"
+        case mxOauthAppToApp = "mx_oauth_app_to_app"
         case testmode = "testmode"
         case testmodeOauth = "testmode_oauth"
         case testmodeOauthWebview = "testmode_oauth_webview"
@@ -43,6 +44,8 @@ struct FinancialConnectionsAuthSession: Decodable {
             case .mxOauth:
                 fallthrough
             case .mxOauthWebview:
+                return .mx
+            case .mxOauthAppToApp:
                 return .mx
             case .truelayerEmbedded:
                 fallthrough
@@ -76,6 +79,15 @@ struct FinancialConnectionsAuthSession: Decodable {
     
     var isOauthNonOptional: Bool {
         return isOauth ?? false
+    }
+
+    var requiresNativeRedirect: Bool {
+        guard flow == .mxOauthAppToApp else { return false }
+        return url?.hasNativeRedirectPrefix ?? false
+    }
+
+    var partner: FinancialConnectionsPartner? {
+        return (showPartnerDisclosure ?? false) ? flow?.toPartner() : nil
     }
 }
 

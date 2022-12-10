@@ -48,6 +48,7 @@ final class SpinnerIconView: UIView {
         animation.duration = 1
         animation.repeatCount = .infinity
         animation.isCumulative = true
+        animation.isRemovedOnCompletion = false
         animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         layer.add(animation, forKey: animationKey)
     }
