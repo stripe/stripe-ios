@@ -121,6 +121,8 @@ workflows:
         - content: bundle exec ./ci_scripts/deploy_release.rb --dry-run
         is_always_run: true
         title: Deploy release
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     before_run:
     - prep_all
     after_run:
@@ -229,10 +231,16 @@ workflows:
         inputs:
         - lane: legacy_tests_13
         title: fastlane legacy_tests_13
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     before_run:
     - prep_all
     after_run:
     - upload_logs
+    meta:
+      bitrise.io:
+        stack: osx-xcode-13.2.x
+        machine_type_id: g2-m1.8core
   legacy-tests-14:
     steps:
     - fastlane@3:
@@ -376,6 +384,8 @@ workflows:
         inputs:
         - lane: installation_carthage
         title: fastlane installation_carthage
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     before_run:
     - prep_all
     after_run:
