@@ -46,7 +46,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 23;
+    return 24;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -120,6 +120,9 @@
             break;
         case 22:
             cell.textLabel.text = @"US Bank Account w/ FinancialConnections";
+            break;
+        case 23:
+            cell.textLabel.text = @"Cash App";
             break;
     }
     return cell;
@@ -269,6 +272,12 @@
         }
         case 22: {
             USBankAccountFinancialConnectionsExampleViewController *exampleVC = [USBankAccountFinancialConnectionsExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 23: {
+            CashAppExampleViewController *exampleVC = [CashAppExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

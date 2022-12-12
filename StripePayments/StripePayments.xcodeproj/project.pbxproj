@@ -190,6 +190,9 @@
 		31EBFBE4286E358C00911FA9 /* STPAPIClient+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EBFBD9286E358B00911FA9 /* STPAPIClient+ApplePay.swift */; };
 		31EBFBE9286E358C00911FA9 /* STPRedirectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EBFBDE286E358C00911FA9 /* STPRedirectContext.swift */; };
 		31F7EBF528F787120007C0BB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 31F7EBCA28F787120007C0BB /* Localizable.strings */; };
+		6172D64A29477D0B005FBEB3 /* STPPaymentMethodCashApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6172D64929477D0B005FBEB3 /* STPPaymentMethodCashApp.swift */; };
+		6172D64C29477D2E005FBEB3 /* STPPaymentMethodCashAppParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6172D64B29477D2E005FBEB3 /* STPPaymentMethodCashAppParams.swift */; };
+		6172D65029479FB2005FBEB3 /* STPIntentActionCashAppRedirectToApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6172D64F29479FB2005FBEB3 /* STPIntentActionCashAppRedirectToApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -439,6 +442,9 @@
 		31F7EBF228F787120007C0BB /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		31F7EBF328F787120007C0BB /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		31F7EBF428F787120007C0BB /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6172D64929477D0B005FBEB3 /* STPPaymentMethodCashApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCashApp.swift; sourceTree = "<group>"; };
+		6172D64B29477D2E005FBEB3 /* STPPaymentMethodCashAppParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCashAppParams.swift; sourceTree = "<group>"; };
+		6172D64F29479FB2005FBEB3 /* STPIntentActionCashAppRedirectToApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionCashAppRedirectToApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -719,6 +725,7 @@
 				314D286A286E3663000076C8 /* STPIntentActionRedirectToURL.swift */,
 				314D286B286E3663000076C8 /* STPIntentActionVerifyWithMicrodeposits.swift */,
 				314D286C286E3664000076C8 /* STPIntentActionWeChatPayRedirectToApp.swift */,
+				6172D64F29479FB2005FBEB3 /* STPIntentActionCashAppRedirectToApp.swift */,
 				314D2863286E3663000076C8 /* LinkSettings.swift */,
 				314D286D286E3664000076C8 /* STPMandateCustomerAcceptanceParams.swift */,
 				314D2862286E3662000076C8 /* STPMandateDataParams.swift */,
@@ -779,6 +786,8 @@
 				314D27E7286E3638000076C8 /* STPPaymentMethodBLIKParams.swift */,
 				314D27F7286E363A000076C8 /* STPPaymentMethodBoleto.swift */,
 				314D27D8286E3637000076C8 /* STPPaymentMethodBoletoParams.swift */,
+				6172D64929477D0B005FBEB3 /* STPPaymentMethodCashApp.swift */,
+				6172D64B29477D2E005FBEB3 /* STPPaymentMethodCashAppParams.swift */,
 				314D27EE286E3639000076C8 /* STPPaymentMethodCard.swift */,
 				314D27F5286E363A000076C8 /* STPPaymentMethodCardChecks.swift */,
 				314D2805286E363B000076C8 /* STPPaymentMethodCardNetworks.swift */,
@@ -1087,6 +1096,7 @@
 				314D282B286E363C000076C8 /* STPPaymentMethodGiropayParams.swift in Sources */,
 				314D282F286E363C000076C8 /* STPPaymentMethodPayPalParams.swift in Sources */,
 				314D28A7286E368C000076C8 /* STPPaymentIntentEnums.swift in Sources */,
+				6172D64A29477D0B005FBEB3 /* STPPaymentMethodCashApp.swift in Sources */,
 				314D283C286E363C000076C8 /* STPPaymentMethodAlipayParams.swift in Sources */,
 				314D27BF286E35F0000076C8 /* STPConnectAccountCompanyParams.swift in Sources */,
 				314D28A0286E368C000076C8 /* STPConfirmUSBankAccountOptions.swift in Sources */,
@@ -1103,6 +1113,7 @@
 				31DCB10F28F4CF57002EF128 /* LinkAccountSession.swift in Sources */,
 				314D283A286E363C000076C8 /* STPPaymentMethodAUBECSDebitParams.swift in Sources */,
 				314D285E286E3657000076C8 /* STPSourceProtocol.swift in Sources */,
+				6172D65029479FB2005FBEB3 /* STPIntentActionCashAppRedirectToApp.swift in Sources */,
 				314D284E286E364B000076C8 /* STPCard.swift in Sources */,
 				314D280D286E363B000076C8 /* STPPaymentMethodPrzelewy24.swift in Sources */,
 				314D2816286E363B000076C8 /* STPPaymentMethodNetBankingParams.swift in Sources */,
@@ -1139,6 +1150,7 @@
 				314D27C4286E35F0000076C8 /* STPFormEncodable.swift in Sources */,
 				31EBFBE9286E358C00911FA9 /* STPRedirectContext.swift in Sources */,
 				31227117286E414A0007ED5E /* STPSourcePoller.swift in Sources */,
+				6172D64C29477D2E005FBEB3 /* STPPaymentMethodCashAppParams.swift in Sources */,
 				31EBFBE4286E358C00911FA9 /* STPAPIClient+ApplePay.swift in Sources */,
 				3122712A286E43A00007ED5E /* STPPaymentHandler.swift in Sources */,
 				314D2888286E3680000076C8 /* STPPaymentMethodParams.swift in Sources */,

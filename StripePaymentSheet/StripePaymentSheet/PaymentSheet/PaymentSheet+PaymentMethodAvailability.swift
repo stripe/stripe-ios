@@ -68,7 +68,7 @@ extension PaymentSheet {
                 return [.returnURL, .notSettingUp, .userSupportsDelayedPaymentMethods]
             case .afterpayClearpay, .affirm:
                 return [.returnURL, .shippingAddress]
-            case .link, .unknown:
+            case .link, .cashApp, .unknown:
                 return [.unavailable]
             @unknown default:
                 return [.unavailable]
@@ -115,7 +115,7 @@ extension PaymentSheet {
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .unknown:
+                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .cashApp, .unknown:
                 return [.unavailable]
             @unknown default:
                 return [.unavailable]

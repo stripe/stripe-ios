@@ -65,6 +65,8 @@ import Foundation
     case affirm
     /// A US Bank Account payment method (ACH)
     case USBankAccount
+    /// A CashApp payment method
+    case cashApp
     /// An unknown type.
     case unknown
 
@@ -127,6 +129,8 @@ import Foundation
                 "US Bank Account",
                 "Payment Method type name for US Bank Account payments."
             )
+        case .cashApp:
+            return STPLocalizedString("Cash App", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:

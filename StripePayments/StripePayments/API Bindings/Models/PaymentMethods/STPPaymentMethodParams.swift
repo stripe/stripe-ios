@@ -86,6 +86,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var affirm: STPPaymentMethodAffirmParams?
     /// If this is a US Bank Account PaymentMethod, this contains additional details.
     @objc public var usBankAccount: STPPaymentMethodUSBankAccountParams?
+    /// If this is an Cash App PaymentMethod, this contains additional details.
+    @objc public var cashApp: STPPaymentMethodCashAppParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -513,6 +515,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
+    
+    /// Creates params for an Cash App PaymentMethod. :nodoc:
+    /// - Parameters:
+    ///   - cashApp:   An object containing additional Cash App details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        cashApp: STPPaymentMethodCashAppParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .cashApp
+        self.cashApp = cashApp
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
 
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
@@ -612,6 +632,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .link,
             .linkInstantDebit,
             .USBankAccount,
+            .cashApp, // TODO confirm this
             .unknown:
             return nil
         }
@@ -649,6 +670,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter:klarna)): "klarna",
             NSStringFromSelector(#selector(getter:affirm)): "affirm",
             NSStringFromSelector(#selector(getter:usBankAccount)): "us_bank_account",
+            NSStringFromSelector(#selector(getter:cashApp)): "cashapp",
             NSStringFromSelector(#selector(getter:link)): "link",
             NSStringFromSelector(#selector(getter:metadata)): "metadata",
         ]
@@ -1106,6 +1128,8 @@ extension STPPaymentMethodParams {
             break
         case .USBankAccount:
             usBankAccount = STPPaymentMethodUSBankAccountParams()
+        case .cashApp:
+            cashApp = STPPaymentMethodCashAppParams()
         case .unknown:
             break
         }
@@ -1177,6 +1201,8 @@ extension STPPaymentMethodParams {
             return "Affirm"
         case .USBankAccount:
             return "US Bank Account"
+        case .cashApp:
+            return "Cash App"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:

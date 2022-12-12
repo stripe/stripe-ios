@@ -54,6 +54,9 @@ import Foundation
 
     /// The action type for UPI payment methods. The customer must complete the transaction in their banking app within 5 minutes.
     case upiAwaitNotification
+    
+    /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
+    case cashAppRedirectToApp
 
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
@@ -80,6 +83,8 @@ import Foundation
             self = .verifyWithMicrodeposits
         case "upi_await_notification":
             self = .upiAwaitNotification
+        case "cashapp_handle_redirect_or_display_qr_code":
+            self = .cashAppRedirectToApp
         default:
             self = .unknown
         }
@@ -108,6 +113,8 @@ import Foundation
             return "verify_with_microdeposits"
         case .upiAwaitNotification:
             return "upi_await_notification"
+        case .cashAppRedirectToApp:
+            return "cashapp_handle_redirect_or_display_qr_code"
         case .unknown:
             break
         }
@@ -145,6 +152,9 @@ public class STPIntentAction: NSObject {
 
     /// Contains details describing microdeposits verification flow for US bank accounts
     @objc public let verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
+    
+    /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
+    @objc public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -194,6 +204,10 @@ public class STPIntentAction: NSObject {
             }
         case .upiAwaitNotification:
             props.append("upiAwaitNotification != nil")
+        case .cashAppRedirectToApp:
+            if let cashAppRedirectToApp = cashAppRedirectToApp {
+                props.append("cashAppRedirectToApp = \(cashAppRedirectToApp)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -211,6 +225,7 @@ public class STPIntentAction: NSObject {
         weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?,
         boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?,
         verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?,
+        cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -221,6 +236,7 @@ public class STPIntentAction: NSObject {
         self.weChatPayRedirectToApp = weChatPayRedirectToApp
         self.boletoDisplayDetails = boletoDisplayDetails
         self.verifyWithMicrodeposits = verifyWithMicrodeposits
+        self.cashAppRedirectToApp = cashAppRedirectToApp
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -248,6 +264,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
         var weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
         var verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
+        var cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
 
         switch type {
         case .unknown:
@@ -305,6 +322,13 @@ extension STPIntentAction: STPAPIResponseDecodable {
             }
         case .upiAwaitNotification:
             break  // no additional details
+        case .cashAppRedirectToApp:
+            cashAppRedirectToApp = STPIntentActionCashAppRedirectToApp.decodedObject(
+                fromAPIResponse: dict["cashapp_handle_redirect_or_display_qr_code"] as? [AnyHashable: Any]
+            )
+            if cashAppRedirectToApp == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -316,6 +340,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             weChatPayRedirectToApp: weChatPayRedirectToApp,
             boletoDisplayDetails: boletoDisplayDetails,
             verifyWithMicrodeposits: verifyWithMicrodeposits,
+            cashAppRedirectToApp: cashAppRedirectToApp,
             allResponseFields: dict
         ) as? Self
     }

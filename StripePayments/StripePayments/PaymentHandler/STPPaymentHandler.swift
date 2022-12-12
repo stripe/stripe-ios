@@ -613,7 +613,8 @@ public class STPPaymentHandler: NSObject {
             .link,
             .klarna,
             .affirm,
-            .linkInstantDebit:
+            .linkInstantDebit,
+            .cashApp:
             return false
 
         case .unknown:
@@ -1275,6 +1276,22 @@ public class STPPaymentHandler: NSObject {
             }
             presentingVC.presentPollingVCForAction(currentAction)
             break
+        case .cashAppRedirectToApp:
+            if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
+                _handleRedirectToExternalBrowser(to: mobileAuthURL,
+                                                 withReturn: nil) // TODO check return URL
+                
+            } else {
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": authenticationAction.description
+                        ]
+                    )
+                )
+            }
         @unknown default:
             fatalError()
         }
@@ -1687,7 +1704,8 @@ public class STPPaymentHandler: NSObject {
                 .useStripeSDK,
                 .alipayHandleRedirect,
                 .BLIKAuthorize,
-                .weChatPayRedirectToApp:
+                .weChatPayRedirectToApp,
+                .cashAppRedirectToApp:
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
@@ -1717,7 +1735,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification:
+            .upiAwaitNotification, .cashAppRedirectToApp:
             break
         @unknown default:
             fatalError()
