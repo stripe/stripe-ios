@@ -71,9 +71,9 @@ class IntegrationTesterUITests: XCTestCase {
     func testAuthentication(cardNumber: String, expectedResult: String = "Payment complete!", confirmationBehavior: ConfirmationBehavior = .none) {
         print("Testing \(cardNumber)")
         self.popToMainMenu()
-        let tablesQuery = app.tables
+        let tablesQuery = app.collectionViews
         
-        let cardExampleElement = tablesQuery.cells["Card"]
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
         cardExampleElement.tap()
         try! fillCardData(app, number: cardNumber)
         
@@ -141,9 +141,9 @@ class IntegrationTesterUITests: XCTestCase {
     
     func testSetupIntents() throws {
         self.popToMainMenu()
-        let tablesQuery = app.tables
+        let tablesQuery = app.collectionViews
         
-        let cardExampleElement = tablesQuery.cells["Card (SetupIntents)"]
+        let cardExampleElement = tablesQuery.cells.buttons["Card (SetupIntents)"]
         cardExampleElement.tap()
         try! fillCardData(app, number: "4242424242424242")
         
@@ -158,9 +158,9 @@ class IntegrationTesterUITests: XCTestCase {
     
     func testApplePay() throws {
         self.popToMainMenu()
-        let tablesQuery = app.tables
+        let tablesQuery = app.collectionViews
         
-        let applePayElement = tablesQuery.cells["Apple Pay"]
+        let applePayElement = tablesQuery.cells.buttons["Apple Pay"]
         applePayElement.tap()
         let applePayButton = app.buttons["Buy with Apple Pay"]
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 10.0))
@@ -219,11 +219,11 @@ class IntegrationTesterUITests: XCTestCase {
         // The test BSB 000-000 doesn't work. https://stripe.com/docs/payments/au-becs-debit/accept-a-payment#web-test-integration
         //    self.popToMainMenu()
         //
-        //    let tablesQuery = app.tables
-        //    let rowForPaymentMethod = tablesQuery.cells["AU BECS Debit"]
+        //    let tablesQuery = app.collectionViews
+        //    let rowForPaymentMethod = tablesQuery.cells.buttons["AU BECS Debit"]
         //    rowForPaymentMethod.tap()
         //
-        //    XCUIApplication().tables/*@START_MENU_TOKEN@*/.buttons["AU BECS Debit"]/*[[".cells[\"AU BECS Debit\"].buttons[\"AU BECS Debit\"]",".buttons[\"AU BECS Debit\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        //    XCUIApplication().collectionViews/*@START_MENU_TOKEN@*/.buttons["AU BECS Debit"]/*[[".cells[\"AU BECS Debit\"].buttons[\"AU BECS Debit\"]",".buttons[\"AU BECS Debit\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         //
         //    let nameField = app.textFields["Full name"]
         //    XCTAssertTrue(nameField.waitForExistence(timeout: 10.0))
@@ -255,8 +255,8 @@ class IntegrationTesterUITests: XCTestCase {
     func testOxxo() {
         self.popToMainMenu()
         
-        let tablesQuery = app.tables
-        let rowForPaymentMethod = tablesQuery.cells["OXXO"]
+        let tablesQuery = app.collectionViews
+        let rowForPaymentMethod = tablesQuery.cells.buttons["OXXO"]
         rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
@@ -278,11 +278,11 @@ class IntegrationTesterUITests: XCTestCase {
     func testFPX() {
         self.popToMainMenu()
         
-        let tablesQuery = app.tables
-        let rowForPaymentMethod = tablesQuery.cells["FPX"]
+        let tablesQuery = app.collectionViews
+        let rowForPaymentMethod = tablesQuery.cells.buttons["FPX"]
         rowForPaymentMethod.scrollToAndTap(in: app)
         
-        let maybank = tablesQuery.staticTexts["Maybank2U"]
+        let maybank = app.tables.staticTexts["Maybank2U"]
         XCTAssertTrue(maybank.waitForExistence(timeout: 60.0))
         maybank.tap()
         
@@ -298,9 +298,9 @@ class IntegrationTesterUITests: XCTestCase {
     
     func testNoInputIntegrationMethod(_ integrationMethod: IntegrationMethod, shouldConfirm: Bool) {
         self.popToMainMenu()
-        let tablesQuery = app.tables
+        let tablesQuery = app.collectionViews
         
-        let rowForPaymentMethod = tablesQuery.cells[integrationMethod.rawValue]
+        let rowForPaymentMethod = tablesQuery.cells.buttons[integrationMethod.rawValue]
         rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
@@ -322,9 +322,9 @@ class IntegrationTesterUITests: XCTestCase {
     
     func testAppToAppRedirect(_ integrationMethod: IntegrationMethod) {
         self.popToMainMenu()
-        let tablesQuery = app.tables
+        let tablesQuery = app.collectionViews
         
-        let rowForPaymentMethod = tablesQuery.cells[integrationMethod.rawValue]
+        let rowForPaymentMethod = tablesQuery.cells.buttons[integrationMethod.rawValue]
         rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
@@ -354,9 +354,9 @@ class IntegrationTesterUITests: XCTestCase {
     
     func testAppToAppRedirectWithoutReturnURL(_ integrationMethod: IntegrationMethod) {
         self.popToMainMenu()
-        let tablesQuery = app.tables
+        let tablesQuery = app.collectionViews
         
-        let rowForPaymentMethod = tablesQuery.cells[integrationMethod.rawValue]
+        let rowForPaymentMethod = tablesQuery.cells.buttons[integrationMethod.rawValue]
         rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
