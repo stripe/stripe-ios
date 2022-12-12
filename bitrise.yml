@@ -5,7 +5,7 @@ project_type: ios
 app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: '120'
-  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.4
+  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - opts:
       is_expand: false
@@ -121,6 +121,8 @@ workflows:
         - content: bundle exec ./ci_scripts/deploy_release.rb --dry-run
         is_always_run: true
         title: Deploy release
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     before_run:
     - prep_all
     after_run:
@@ -229,6 +231,8 @@ workflows:
         inputs:
         - lane: legacy_tests_13
         title: fastlane legacy_tests_13
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     before_run:
     - prep_all
     after_run:
@@ -243,6 +247,8 @@ workflows:
         inputs:
         - lane: legacy_tests_14
         title: fastlane legacy_tests_14
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=14.5"
     before_run:
     - prep_all
     after_run:
@@ -273,6 +279,9 @@ workflows:
         run_if: ".IsBuildFailed"
   prep_all:
     steps:
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
@@ -377,6 +386,8 @@ workflows:
         inputs:
         - lane: installation_carthage
         title: fastlane installation_carthage
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     before_run:
     - prep_all
     after_run:
@@ -387,5 +398,5 @@ workflows:
         machine_type_id: g2-m1.8core
 meta:
   bitrise.io:
-    stack: osx-xcode-13.3.x
+    stack: osx-xcode-14.1.x-ventura
     machine_type_id: g2-m1.8core

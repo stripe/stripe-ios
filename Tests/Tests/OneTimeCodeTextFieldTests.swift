@@ -81,13 +81,14 @@ class OneTimeCodeTextFieldTests: XCTestCase {
         XCTAssertEqual(field.value, "")
     }
 
-    func test_paste() {
-        UIPasteboard.general.string = "123-456"
-
-        let field = makeSUT()
-        field.paste(nil)
-        XCTAssertEqual(field.value, "123456")
-    }
+//    TODO(RUN_MOBILESDK-1848): This test is broken on iOS 16, as it invokes the pasteboard permission dialog
+//    func test_paste() {
+//        UIPasteboard.general.string = "123-456"
+//
+//        let field = makeSUT()
+//        field.paste(nil)
+//        XCTAssertEqual(field.value, "123456")
+//    }
 
     // MARK: - UITextInput conformance
 
