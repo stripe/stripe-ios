@@ -16,8 +16,6 @@ app:
 trigger_map:
 - push_branch: "*"
   pipeline: main-trigger-pipeline
-- pull_request_source_branch: "*"
-  pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
     stages:
