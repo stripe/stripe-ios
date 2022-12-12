@@ -318,6 +318,7 @@ workflows:
         title: Set Bundler to use local vendor directory
     - git-clone@6:
         inputs:
+        - merge_pr: 'no'
         - fetch_tags: 'yes'
     - cache-pull@2: {}
     - bundler@0: {}
@@ -333,8 +334,7 @@ workflows:
         title: Fetch full branch history
     - script@1:
         inputs:
-        - content: bundle exec ruby Tests/installation_tests/size_test/size_report.rb
-            master $BITRISE_GIT_BRANCH
+        - content: bundle exec fastlane size_report
         title: Generate size report
   ui-tests:
     steps:
