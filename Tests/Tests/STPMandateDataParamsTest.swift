@@ -5,7 +5,11 @@
 //  Created by Cameron Sabol on 10/18/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPMandateDataParamsTest: XCTestCase {
     func testRootObjectName() {
@@ -16,7 +20,9 @@ class STPMandateDataParamsTest: XCTestCase {
         let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
         onlineParams.inferFromClient = NSNumber(value: true)
         let customerAcceptanceParams = STPMandateCustomerAcceptanceParams(
-            type: .online, onlineParams: onlineParams)!
+            type: .online,
+            onlineParams: onlineParams
+        )!
 
         let params = STPMandateDataParams(customerAcceptance: customerAcceptanceParams)
 

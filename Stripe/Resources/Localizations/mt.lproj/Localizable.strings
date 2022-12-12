@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
-
 "%@ - Offline" = "%@- Offline";
 
-"+ Add" = "+ Żid";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "Debitu Dirett BECS AU";
 
 "Add New Card…" = "Żid Kard Ġdida…";
 
 "Add a Card" = "Żid Kard";
 
-"Add a card" = "Żid kard";
-
-"Add a payment method" = "Żid metodu tal-pagament";
-
-"Add bank account" = "Żid kont tal-bank";
-
-"Add new payment method" = "Żid metodu tal-ħlas ġdid";
-
-"Add your payment information" = "Żid l-informazzjoni dwar il-pagament tiegħek";
-
-"Address line 2 (optional)" = "Indirizz linja 2 (mhux obbligatorju)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Appartament";
 
-"Are you sure you want to remove this card?" = "Żgur li tixtieq tneħħi dil-karta?";
-
-"Are you sure you want to remove this linked account?" = "Żgur li tixtieq tneħħi dal-kont marbut?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Lura";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Bank";
-
-"Bank Account" = "Kont bankarju";
-
-"Bank account" = "Kont tal-bank";
-
-"Billing Address" = "Indirizz tal-Kont";
-
-"Billing address" = "Indirizz tal-kont";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Ixtri issa jew ħallas iktar tard bil-Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Meta tkompli, inti taqbel li tawtorizza l-pagamenti skont dawn <terms>it-termini</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mat-<terms>Termini</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Meta tagħti d-dettalji tal-kont tal-bank tiegħek u tikkonferma dal-pagament tkun qed taqbel mat-Talba tad-Debitu Dirett u mal-<terms>ftehim tas-servizz tat-Talba tad-Debitu Dirett</terms> u tkun qed tawtorizza lil Stripe Payments Australia Pty Ltd ACN 160 180 343 bin-numru tal-identità tal-Utent tad-Debitu Dirett 507156 (\"Stripe\") biex, f'isem %@ (\"in-Negozjant\"), tiġbor mill-kont tiegħek permezz tal-Bulk Electronic Clearing System (BECS) il-flus kollha li talbek in-Negozjant permezz ta' messaġġ ieħor. Int tagħti kelmtek li int jew sid il-kont jew firmatarju awtorizzat tal-kont muri hawn fuq.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Meta tagħti l-informazzjoni tal-pagament tiegħek u tikkonferma dan il-pagament, tkun qed tawtorizza lil (A) %@ u lil Stripe, l-operatur tas-servizz tal-pagamenti tagħna, biex jibagħtu struzzjonijiet lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek u (B) lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek skont dawn l-istruzzjonijiet. Bħala parti mid-drittijiet tiegħek, inti għandek dritt għall-ħlas lura mill-bank tiegħek skont it-termini u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Ħlas lura għandu jintalab fi żmien 8 ġimgħat, li jibdew jgħoddu mid-data li fiha l-fondi jittieħdu mill-kont tiegħek. Id-drittijiet tiegħek huma spjegati f'dikjarazzjoni li tista' tikseb mingħand il-bank tiegħek. Inti taqbel li, sa jumejn qabel, tirċievi notifika kull darba li l-fondi jkunu se jittieħdu mill-kont tiegħek.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tissejvja l-kont tal-bank tiegħek għal %@ tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Kard";
-
-"Card information" = "L-informazzjoni tal-kard";
-
-"Card number" = "In-numru tal-kard";
-
-"Change email" = "Ibdel l-indirizz tal-email";
-
-"Choose a payment method" = "Agħżel metodu tal-ħlas";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Agħlaq l-iskenner tal-kard";
-
-"Code field" = "Taqsima tal-kodiċi";
-
-"Code sent" = "Il-kodiċi ntbagħat";
-
 "Contact" = "Kuntatt";
-
-"Default" = "Standard";
 
 "Delivery" = "Kunsinna";
 
 "Delivery Address" = "Indirizz tal-Kunsinna";
 
-"Double tap to edit" = "Taptap biex tibdel";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS Bank";
-
-"Edit" = "Editja";
-
-"Enter address manually" = "Ikteb l-indirizz int stess";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża Link u tħallas bil-metodu tal-pagament standard.";
-
-"Enter your verification code" = "Daħħal il-kodiċi ta' verifika tiegħek";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
-
 "Free" = "Bla ħlas";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "L-Indirizz għat-Trasport tal-Merkanzija Mhux Validu";
 
-"Invalid data." = "Data invalida.";
-
-"Join Link" = "Ingħaqad ma' Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Qed jillowdja…";
-
-"Log out of Link" = "Oħroġ minn Link";
-
-"MM / YY" = "XX / SS";
-
-"MM/YY" = "XX/SS";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Li jmiss";
-
-"Not %@?" = "M'intix %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Bankar online";
 
-"Or" = "Jew";
-
-"Or pay using" = "Jew ħallas bil-";
-
-"Or pay with a card" = "Jew ħallas bil-kard";
-
-"P24" = "P24";
-
-"Pay %@" = "Ħallas %@";
-
-"Pay another way" = "Ħallas mod ieħor";
-
-"Pay faster at %@ and thousands of merchants." = "Ħallas lil %@ u lil eluf ta' negozjanti oħra iktar malajr.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Ħallas f'dan-numru ta' pagamenti: <num_installments/> ta' <installment_price/> mingħajr imgħax grazzi għal <img/>";
-
-"Pay later with Klarna." = "Ħlas aktar tard bil-Klarna.";
-
-"Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
-
-"Pay using" = "Ħallas b'dal-metodu tal-pagament:";
-
-"Pay with %@" = "Ħallas b' %@";
-
-"Pay with your bank account in just a few steps." = "Ħallas bil-kont tal-bank tiegħek fi ftit passi.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Pagament";
-
 "Payment Method" = "Metodu tal-Ħlas";
-
-"Payment methods" = "Metodi tal-pagament";
-
-"Point the camera at your card." = "Dawwar il-kamera lejn il-kard tiegħek.";
-
-"Postal Code" = "Kodiċi Postali";
-
-"Processing..." = "Qed jiġi pproċessat...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Bank permezz ta' Przelewy24";
-
-"Remove %1$@ ending in %2$@" = "Neħħi %1$@ li jispiċċa %2$@";
-
-"Remove Card" = "Neħħi Kard";
-
-"Remove card" = "Neħħi l-karta";
-
-"Remove linked account" = "Neħħi l-kont marbut";
-
-"Resend code" = "Erġa' ibgħat il-kodiċi";
-
-"SEPA Debit" = "Debitu SEPA";
-
-"SEPA Direct Debit" = "Debitu Dirett SEPA";
-
-"Save for future payments" = "Erfa' għall-pagamenti fil-ġejjieni";
-
-"Save my info for secure 1-click checkout" = "Erfa' l-informazzjoni tiegħek għal ħlas sigur b'mossa waħda";
-
-"Save this account for future %@ payments" = "Erfa' dal-kont għall-pagament lil %@ tal-ġejjieni";
-
-"Save this card for future %@ payments" = "Erfa' din il-kard għal pagamenti futuri %@";
-
-"Secure 1⁠-⁠click checkout" = "Ħlas sigur b'mossa waħda";
-
-"Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
-
-"Set as default" = "Qiegħed bħala standard";
-
-"Set as default payment method" = "Qiegħed bħala l-metodu tal-pagament standard";
-
-"Set up" = "Stabilixxi";
 
 "Shipping" = "Trasport tal-Merkanzija";
 
-"Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";
-
 "Shipping Method" = "Il-Mod tat-Trasport tal-Merkanzija";
-
-"Show menu" = "Uri l-menù";
-
-"Sign in to your Link account" = "Idħol fil-kont Link tiegħek";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Xi ħaġa marret ħażin aħna u norbtu l-kont tiegħek.\nJekk jogħġbok erġa' pprova iktar tard.";
-
-"State / Province / Region" = "Stat / Provinċja / Reġjun";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tagħmel il-pagament lil %@.";
-
-"Tap to close" = "Agħfas biex tagħlaq";
-
-"Tap to expand" = "Agħfas biex tkabbar";
-
-"The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
-
-"The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L-IBAN li daħħalt mhux tajjeb, \"%@\" mhux pajjiż li jista' jintuża.";
-
-"The provided verification code has expired." = "Il-kodiċi tal-verifika mogħti skada.";
-
-"The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Dil-karta skadiet. Aġġorna d-dettalji tal-karta tiegħek jew agħżel metodu tal-pagament ieħor.";
-
-"This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
-
-"Timed out authenticating your payment method -- try again" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
-
-"To scan your card, allow camera access in Settings." = "Biex tiskennja l-kard tiegħek, ippermetti l-aċċess tal-kamera fis-Settings.";
-
-"Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Kont tal-bank tal-Istati Uniti tal-Amerka";
-
-"Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
-
-"Unknown" = "Mhux magħruf";
-
-"Update card" = "Aġġorna l-karta";
 
 "Use Billing" = "Uża tal-Kont";
 
 "Use Delivery" = "Uża tal-Kunsinna";
 
 "Use Shipping" = "Uża tat-Trasport tal-Merkanzija";
-
-"Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ma nistgħux nawtentikaw il-metodu tal-ħlas tiegħek. Jekk jogħġbok agħżel metodu tal-ħlas differenti u erġa' pprova.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
-
-"Your ZIP is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
-
-"Your card number is incomplete." = "In-numru tal-kard tiegħek mhux komplut.";
-
-"Your card number is invalid." = "In-numru tal-kard tiegħek mhux validu.";
-
-"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex kompluta.";
-
-"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex valida.";
-
-"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-kard tiegħek mhux validu.";
-
-"Your card's expiration year is invalid." = "Is-sena tal-iskadenza tal-kard tiegħek mhijiex valida.";
-
-"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux komplut.";
-
-"Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux validu.";
-
-"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
-
-"ZIP Code" = "Kodiċi Postali";
-
-"card number" = "in-numru tal-kard";
-
-"example@example.com" = "eżempju@eżempju.com";
-
-"expiration date" = "id-data tal-iskadenza";
-
-"giropay" = "Giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "Il-Bank iDEAL";

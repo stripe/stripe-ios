@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@, оканч. на %2$@";
-
 "%@ - Offline" = "%@ - не в сети";
 
-"+ Add" = "+ Добавить";
-
 "3D Secure" = "Метод 3D Secure";
-
-"AU BECS Direct Debit" = "Австралийская система прямого списания средств BECS";
 
 "Add New Card…" = "Добавить новую карту...";
 
 "Add a Card" = "Добавить карту";
 
-"Add a card" = "Добавьте карту";
-
-"Add a payment method" = "Добавьте способ оплаты";
-
-"Add bank account" = "Добавить банковский счет";
-
-"Add new payment method" = "Добавить новый метод оплаты";
-
-"Add your payment information" = "Укажите платежные данные";
-
-"Address line 2 (optional)" = "Адрес (строка 2) (необязательно)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Кв.";
 
-"Are you sure you want to remove this card?" = "Вы уверены, что хотите удалить эту карту?";
-
-"Are you sure you want to remove this linked account?" = "Вы уверены, что хотите удалить этот привязанный счет?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Назад";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Банк";
-
-"Bank Account" = "Банковский счет";
-
-"Bank account" = "Банковский счет";
-
-"Billing Address" = "Адрес выставления счета";
-
-"Billing address" = "Адрес для выставления счета";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Купить немедленно или оплатить позже через систему Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продолжая использование, вы тем самым соглашаетесь авторизовать платежи согласно данным <terms>условиям</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Указывая свои банковские реквизиты и подтверждая платеж, вы принимаете данный запрос прямого списания средств и <terms>Сервисное соглашение о запросе прямого списания средств</terms>, а также уполномочиваете компанию Stripe Payments Australia Pty Ltd ACN 160 180 343, идентификационный номер пользователя системы прямого списания средств 507156, (“Stripe”), снимать средства с вашего счета через систему Bulk Electronic Clearing System (BECS) от имени %@ (далее \"Продавец\") на суммы, отдельно указанные вам Продавцом. Вы подтверждаете, что являетесь либо владельцем указанного выше счета, либо его уполномоченным представителем.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
-
-"CVC" = "Код CVV/CVC";
-
-"CVV" = "Код CVV/CVC";
-
-"Card" = "Карта";
-
-"Card information" = "Данные платежной карты";
-
-"Card number" = "Номер карты";
-
-"Change email" = "Изменить адрес электронной почты";
-
-"Choose a payment method" = "Выберите метод оплаты";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Закрыть сканер карт";
-
-"Code field" = "Поле кода";
-
-"Code sent" = "Код отправлен";
-
 "Contact" = "Контактные данные";
-
-"Default" = "По умолчанию";
 
 "Delivery" = "Доставка";
 
 "Delivery Address" = "Адрес доставки";
 
-"Double tap to edit" = "Коснитесь дважды, чтобы отредактировать";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "Банк EPS";
-
-"Edit" = "Редактировать";
-
-"Enter address manually" = "Введите адрес вручную";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Введите код, отправленный на адрес %@, для оплаты с помощью Link по умолчанию.";
-
-"Enter your verification code" = "Введите проверочный код";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
-
 "Free" = "Бесплатно";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Ошибочный адрес доставки";
 
-"Invalid data." = "Недопустимые данные.";
-
-"Join Link" = "Подключиться к Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Идет загрузка...";
-
-"Log out of Link" = "Выйти из Link";
-
-"MM / YY" = "ММ / ГГ";
-
-"MM/YY" = "ММ/ГГ";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Далее";
-
-"Not %@?" = "Не %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Онлайн-банкинг (FPX)";
 
-"Or" = "Или";
-
-"Or pay using" = "Или оплатить с помощью";
-
-"Or pay with a card" = "Или оплатить картой";
-
-"P24" = "P24";
-
-"Pay %@" = "Оплатить %@";
-
-"Pay another way" = "Оплатить другим способом";
-
-"Pay faster at %@ and thousands of merchants." = "Ускоренная оплата на сайте %@ и тысячах других вебсайтов";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Оплатить в беспроцентную рассрочку <num_installments/> выплатами по <installment_price/> через <img/>";
-
-"Pay later with Klarna." = "Оплатить позже через систему Klarna.";
-
-"Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
-
-"Pay using" = "Оплатить с помощью";
-
-"Pay with %@" = "Оплатить с помощью %@";
-
-"Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Платеж";
-
 "Payment Method" = "Метод оплаты";
-
-"Payment methods" = "Способы оплаты";
-
-"Point the camera at your card." = "Направьте камеру телефона на карту.";
-
-"Postal Code" = "Почтовый индекс";
-
-"Processing..." = "Идет обработка...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 Bank";
-
-"Remove %1$@ ending in %2$@" = "Удалить карту %1$@, оканчивающуюся на %2$@";
-
-"Remove Card" = "Удалить карту";
-
-"Remove card" = "Удалить карту";
-
-"Remove linked account" = "Удалить привязанный счет";
-
-"Resend code" = "Послать код вторично";
-
-"SEPA Debit" = "Списание средств SEPA";
-
-"SEPA Direct Debit" = "Прямое списание средств SEPA";
-
-"Save for future payments" = "Сохранить данные для будущих платежей";
-
-"Save my info for secure 1-click checkout" = "Сохранить мои данные для безопасного оформления покупок одним щелчком";
-
-"Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
-
-"Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
-
-"Secure 1⁠-⁠click checkout" = "Безопасное оформление и оплата заказа одним щелчком";
-
-"Select your payment method" = "Выберите способ оплаты";
-
-"Set as default" = "Назначить способом по умолчанию";
-
-"Set as default payment method" = "Назначить способом оплаты по умолчанию";
-
-"Set up" = "Настроить";
 
 "Shipping" = "Доставка";
 
-"Shipping Address" = "Адрес доставки";
-
 "Shipping Method" = "Метод доставки";
-
-"Show menu" = "Показать меню";
-
-"Sign in to your Link account" = "Войти в учетную запись Link";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "При попытке подключить ваш счет произошла ошибка.\nПопробуйте еще раз позже.";
-
-"State / Province / Region" = "Штат / провинция / регион";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
-
-"Tap to close" = "Коснитесь, чтобы закрыть";
-
-"Tap to expand" = "Коснитесь, чтобы развернуть";
-
-"The BSB you entered is invalid." = "Введенный код BSB неверен.";
-
-"The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Введенный код IBAN ошибочен, \"%@\" – неверный код страны.";
-
-"The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
-
-"The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Срок действия этой карты истек. Обновите данные карты или выберите другой способ оплаты.";
-
-"This is your default" = "Это ваше значение по умолчанию";
-
-"Timed out authenticating your payment method -- try again" = "Лимит времени для аутентификации метода оплаты истек. Попробуйте еще раз";
-
-"To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
-
-"Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Банковский счет в США";
-
-"Unavailable for this purchase" = "Не предусмотрено для этой покупки";
-
-"Unknown" = "Неизвестно";
-
-"Update card" = "Обновить реквизиты карты";
 
 "Use Billing" = "Использовать адрес выставления счетов";
 
 "Use Delivery" = "Использовать адрес доставки";
 
 "Use Shipping" = "Использовать адрес доставки";
-
-"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не удалось верифицировать метод оплаты. Выберите другой метод оплаты и повторите попытку.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
-
-"Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
-
-"Your card number is incomplete." = "Номер карты введен не полностью.";
-
-"Your card number is invalid." = "Номер карты недействителен.";
-
-"Your card's expiration date is incomplete." = "Дата истечения срока действия карты введена не полностью.";
-
-"Your card's expiration date is invalid." = "Дата истечения срока действия карты недействительна.";
-
-"Your card's expiration month is invalid." = "Недопустимый месяц окончания действия карты.";
-
-"Your card's expiration year is invalid." = "Недопустимый год окончания действия карты.";
-
-"Your card's security code is incomplete." = "Код CVV/CVC карты введен не полностью.";
-
-"Your card's security code is invalid." = "Код CVV/CVC карты недействителен.";
-
-"Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
-
-"ZIP Code" = "Почтовый индекс";
-
-"card number" = "номер карты";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "срок окончания действия";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "Банк в системе iDEAL";

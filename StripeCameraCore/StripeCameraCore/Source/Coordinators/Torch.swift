@@ -3,10 +3,11 @@
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 12/1/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 struct Torch {
     enum State {
@@ -18,7 +19,9 @@ struct Torch {
     var lastStateChange: Date
     var level: Float
 
-    init(device: AVCaptureDevice) {
+    init(
+        device: AVCaptureDevice
+    ) {
         self.state = .off
         self.lastStateChange = Date()
         if device.hasTorch {

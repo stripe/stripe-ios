@@ -1,6 +1,6 @@
 //
 //  UIStackView+StripeUICore.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Ramon Torres on 10/22/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

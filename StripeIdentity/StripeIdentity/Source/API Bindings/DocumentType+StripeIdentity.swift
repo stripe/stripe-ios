@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/11/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -13,7 +14,7 @@ extension DocumentType {
         case .passport:
             return false
         case .drivingLicense,
-             .idCard:
+            .idCard:
             return true
         }
     }

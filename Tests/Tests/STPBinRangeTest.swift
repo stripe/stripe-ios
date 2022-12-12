@@ -1,12 +1,16 @@
 //
 //  STPBinRangeTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 5/24/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPBinRangeTest: XCTestCase {
     func testAllRanges() {
@@ -17,7 +21,12 @@ class STPBinRangeTest: XCTestCase {
 
     func testMatchesNumber() {
         var binRange = STPBINRange(
-            panLength: 0, brand: .unknown, accountRangeLow: "134", accountRangeHigh: "167", country: nil)
+            panLength: 0,
+            brand: .unknown,
+            accountRangeLow: "134",
+            accountRangeHigh: "167",
+            country: nil
+        )
 
         XCTAssertFalse(binRange.matchesNumber("0"))
         XCTAssertTrue(binRange.matchesNumber("1"))
@@ -44,7 +53,12 @@ class STPBinRangeTest: XCTestCase {
         XCTAssertFalse(binRange.matchesNumber("1680"))
 
         binRange = STPBINRange(
-            panLength: 0, brand: .unknown, accountRangeLow: "004", accountRangeHigh: "017", country: nil)
+            panLength: 0,
+            brand: .unknown,
+            accountRangeLow: "004",
+            accountRangeHigh: "017",
+            country: nil
+        )
 
         XCTAssertTrue(binRange.matchesNumber("0"))
         XCTAssertFalse(binRange.matchesNumber("1"))
@@ -75,7 +89,12 @@ class STPBinRangeTest: XCTestCase {
         XCTAssertFalse(binRange.matchesNumber("1004"))
 
         binRange = STPBINRange(
-            panLength: 0, brand: .unknown, accountRangeLow: "", accountRangeHigh: "", country: nil)
+            panLength: 0,
+            brand: .unknown,
+            accountRangeLow: "",
+            accountRangeHigh: "",
+            country: nil
+        )
         XCTAssertTrue(binRange.matchesNumber(""))
         XCTAssertTrue(binRange.matchesNumber("1"))
     }

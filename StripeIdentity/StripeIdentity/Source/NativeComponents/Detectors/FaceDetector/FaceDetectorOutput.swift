@@ -3,17 +3,16 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
 import CoreML
+import Foundation
 @_spi(STP) import StripeCameraCore
 import Vision
 
-/**
- Represents the output from the FaceDetector ML model.
- */
+/// Represents the output from the FaceDetector ML model.
 struct FaceDetectorOutput: Equatable {
     let predictions: [FaceDetectorPrediction]
 }
@@ -36,7 +35,7 @@ extension FaceDetectorPrediction: MLBoundingBox {
 }
 
 // MARK: - MultiArray
-@available(iOS 13, *)
+
 extension FaceDetectorOutput: VisionBasedDetectorOutput {
 
     /// We want to know if 0, 1, or > 1 faces are returned by the model, so tell
@@ -54,13 +53,20 @@ extension FaceDetectorOutput: VisionBasedDetectorOutput {
         observations: [VNObservation],
         originalImageSize: CGSize
     ) throws {
-        let featureValueObservations = observations.compactMap { $0 as? VNCoreMLFeatureValueObservation }
+        let featureValueObservations = observations.compactMap {
+            $0 as? VNCoreMLFeatureValueObservation
+        }
 
-        guard let scoresObservation = featureValueObservations.first(where: { $0.featureName == FeatureNames.scores.rawValue }),
-              let boxesObservation = featureValueObservations.first(where: { $0.featureName == FeatureNames.boxes.rawValue }),
-              let scoresMultiArray = scoresObservation.featureValue.multiArrayValue,
-              let boxesMultiArray = boxesObservation.featureValue.multiArrayValue,
-              FaceDetectorOutput.isValidShape(boxes: boxesMultiArray, scores: scoresMultiArray)
+        guard
+            let scoresObservation = featureValueObservations.first(where: {
+                $0.featureName == FeatureNames.scores.rawValue
+            }),
+            let boxesObservation = featureValueObservations.first(where: {
+                $0.featureName == FeatureNames.boxes.rawValue
+            }),
+            let scoresMultiArray = scoresObservation.featureValue.multiArrayValue,
+            let boxesMultiArray = boxesObservation.featureValue.multiArrayValue,
+            FaceDetectorOutput.isValidShape(boxes: boxesMultiArray, scores: scoresMultiArray)
         else {
             throw MLModelUnexpectedOutputError(observations: featureValueObservations)
         }
@@ -73,17 +79,15 @@ extension FaceDetectorOutput: VisionBasedDetectorOutput {
         )
     }
 
-    /**
-     Initializes `FaceDetectorOutput` from multi arrays of boxes and scores using
-     the non-maximum-suppression algorithm to determine the best scores and
-     bounding boxes.
-     - Parameters:
-       - boxes: The multi array of the "boxes" with a shape of
-                1 x numPredictions x 4 where `boxes[0][n]` returns an array of
-                `[minX, minY, maxX, maxY]`
-       - scores: The multi array of the "scores" with a shape of
-                 1 x numPredictions x 1
-     */
+    /// Initializes `FaceDetectorOutput` from multi arrays of boxes and scores using
+    /// the non-maximum-suppression algorithm to determine the best scores and
+    /// bounding boxes.
+    /// - Parameters:
+    ///   - boxes: The multi array of the "boxes" with a shape of
+    ///            1 x numPredictions x 4 where `boxes[0][n]` returns an array of
+    ///            `[minX, minY, maxX, maxY]`
+    ///   - scores: The multi array of the "scores" with a shape of
+    ///             1 x numPredictions x 1
     init(
         boxes: MLMultiArray,
         scores: MLMultiArray,
@@ -133,58 +137,52 @@ extension FaceDetectorOutput: VisionBasedDetectorOutput {
         )
     }
 
-    /**
-     Initializes `FaceDetectorOutput` from a list of predictions using a
-     center-cropped square coordinate space.
-
-     - Note:
-     Because the FaceDetector model is only scanning the center-cropped
-     square region of the original image, the bounding box returned by
-     the model is going to be relative to the center-cropped square.
-     We need to convert the bounding box into coordinates relative to
-     the original image size.
-
-     - Parameters:
-       - predictions: A list of predictions using a center-cropped square coordinate space.
-       - originalImageSize: The size of the original image.
-     */
+    /// Initializes `FaceDetectorOutput` from a list of predictions using a
+    /// center-cropped square coordinate space.
+    ///
+    /// - Note:
+    /// Because the FaceDetector model is only scanning the center-cropped
+    /// square region of the original image, the bounding box returned by
+    /// the model is going to be relative to the center-cropped square.
+    /// We need to convert the bounding box into coordinates relative to
+    /// the original image size.
+    ///
+    /// - Parameters:
+    ///   - predictions: A list of predictions using a center-cropped square coordinate space.
+    ///   - originalImageSize: The size of the original image.
     init(
         centerCroppedSquarePredictions predictions: [FaceDetectorPrediction],
         originalImageSize: CGSize
     ) {
-        self.init(predictions: predictions.map {
+        self.init(
+            predictions: predictions.map {
                 .init(
                     rect: $0.rect.convertFromNormalizedCenterCropSquare(
                         toOriginalSize: originalImageSize
                     ),
                     score: $0.score
                 )
-        })
+            }
+        )
     }
 
-    /**
-     Determines if the multi-arrays output by the FaceDetector's ML model have a
-     valid shape that can be parsed into a list of predictions.
-
-     - Parameters:
-       - boxes: The multi array of the "boxes" with a shape of
-                1 x numPredictions x 4 where `boxes[0][n]` returns an array of
-                `[minX, minY, maxX, maxY]`
-       - scores: The multi array of the "scores" with a shape of
-                 1 x numPredictions x 1
-
-     - Returns: True if the multi-arrays have a valid shape that can be parsed into predictions.
-     */
+    /// Determines if the multi-arrays output by the FaceDetector's ML model have a
+    /// valid shape that can be parsed into a list of predictions.
+    ///
+    /// - Parameters:
+    ///   - boxes: The multi array of the "boxes" with a shape of
+    ///            1 x numPredictions x 4 where `boxes[0][n]` returns an array of
+    ///            `[minX, minY, maxX, maxY]`
+    ///   - scores: The multi array of the "scores" with a shape of
+    ///             1 x numPredictions x 1
+    ///
+    /// - Returns: True if the multi-arrays have a valid shape that can be parsed into predictions.
     static func isValidShape(
         boxes: MLMultiArray,
         scores: MLMultiArray
     ) -> Bool {
-        return boxes.shape.count == 3 &&
-        boxes.shape[0] == 1 &&
-        boxes.shape[2] == 4 &&
-        scores.shape.count == 3 &&
-        scores.shape[0] == 1 &&
-        scores.shape[2] == 1 &&
-        boxes.shape[1] == scores.shape[1]
+        return boxes.shape.count == 3 && boxes.shape[0] == 1 && boxes.shape[2] == 4
+            && scores.shape.count == 3 && scores.shape[0] == 1 && scores.shape[2] == 1
+            && boxes.shape[1] == scores.shape[1]
     }
 }

@@ -3,10 +3,11 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 4/27/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Displays either an instructional camera scanning view or an error message
 final class SelfieCaptureView: UIView {
@@ -41,7 +42,9 @@ final class SelfieCaptureView: UIView {
         installConstraints()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -66,20 +69,23 @@ final class SelfieCaptureView: UIView {
 
 // MARK: - Private Helpers
 
-private extension SelfieCaptureView {
-    func installViews() {
+extension SelfieCaptureView {
+    fileprivate func installViews() {
         // Add top/bottom content insets to stackView
-        addAndPinSubview(stackView, insets: .init(
-            top: Styling.contentInsets.top,
-            leading: 0,
-            bottom: Styling.contentInsets.bottom,
-            trailing: 0
-        ))
+        addAndPinSubview(
+            stackView,
+            insets: .init(
+                top: Styling.contentInsets.top,
+                leading: 0,
+                bottom: Styling.contentInsets.bottom,
+                trailing: 0
+            )
+        )
         stackView.addArrangedSubview(scanningView)
         stackView.addArrangedSubview(errorView)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         // Add the horizontal contentInset to errorView (scanningView has horizontal insets built in already)
         NSLayoutConstraint.activate([
             widthAnchor.constraint(

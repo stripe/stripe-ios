@@ -1,24 +1,34 @@
 //
-//  UIImage+StripeTests.swift
-//  Stripe
+//  UIImage+StripeCoreTests.swift
+//  StripeCoreTests
 //
 //  Created by Brian Dorfman on 4/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
+
 import XCTest
+
+// swift-format-ignore
 @_spi(STP) @testable import StripeCore
 
 class UIImage_StripeTests: XCTestCase {
     static let testJpegImageResizingKBiggerSize = 50000
     static let testJpegImageResizingKSmallerSize = 6000
-    static let testJpegImageResizingKMuchSmallerSize = 5000  // don't make this too low or test becomes somewhat meaningless, as jpegs can only get so small
+    // Don't make this too low or test becomes somewhat meaningless, as jpegs can only get so small
+    static let testJpegImageResizingKMuchSmallerSize = 5000
 
     func testJpegImageResizing() {
         // Strategy is to grab an image from our bundle and pass to the resizer
         // with maximums both larger and smaller than it already is
         // then make sure we get what we expect
 
-        guard let testImage = UIImage(named: "test_image", in: Bundle(for: UIImage_StripeTests.self), compatibleWith: nil) else {
+        guard
+            let testImage = UIImage(
+                named: "test_image",
+                in: Bundle(for: UIImage_StripeTests.self),
+                compatibleWith: nil
+            )
+        else {
             return XCTFail("Could not load test image")
         }
 
@@ -34,16 +44,20 @@ class UIImage_StripeTests: XCTestCase {
         let baselineSize = data.count
 
         // Test passing in a maxBytes larger than original image
-        data = testImage.jpegDataAndDimensions(
-            maxBytes: UIImage_StripeTests.testJpegImageResizingKBiggerSize).imageData
+        data =
+            testImage.jpegDataAndDimensions(
+                maxBytes: UIImage_StripeTests.testJpegImageResizingKBiggerSize
+            ).imageData
         var resultingImage = UIImage(data: data, scale: testImage.scale)!
         XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKBiggerSize)
         // Image shouldn't have been shrunk at all
         XCTAssertEqual(resultingImage.size, testImage.size)
 
         // Test passing in a maxBytes a bit smaller than the original image
-        data = testImage.jpegDataAndDimensions(
-            maxBytes: UIImage_StripeTests.testJpegImageResizingKSmallerSize).imageData
+        data =
+            testImage.jpegDataAndDimensions(
+                maxBytes: UIImage_StripeTests.testJpegImageResizingKSmallerSize
+            ).imageData
         resultingImage = UIImage(data: data, scale: testImage.scale)!
         XCTAssertNotNil(data)
         XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKSmallerSize)
@@ -51,8 +65,10 @@ class UIImage_StripeTests: XCTestCase {
         XCTAssertLessThan(resultingImage.size.height, testImage.size.height)
 
         // Test passing in a maxBytes a lot smaller than the original image
-        data = testImage.jpegDataAndDimensions(
-            maxBytes: UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize).imageData
+        data =
+            testImage.jpegDataAndDimensions(
+                maxBytes: UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize
+            ).imageData
         resultingImage = UIImage(data: data, scale: testImage.scale)!
         XCTAssertNotNil(data)
         XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)

@@ -10,8 +10,10 @@ import Foundation
 import UIKit
 
 protocol CardImageVerificationControllerDelegate: AnyObject {
-    func cardImageVerificationController(_ controller: CardImageVerificationController,
-                                         didFinishWithResult result: CardImageVerificationSheetResult)
+    func cardImageVerificationController(
+        _ controller: CardImageVerificationController,
+        didFinishWithResult result: CardImageVerificationSheetResult
+    )
 }
 
 class CardImageVerificationController {
@@ -29,9 +31,10 @@ class CardImageVerificationController {
     }
 
     func present(
-        with expectedCard: CardImageVerificationExpectedCard?,
+        with expectedCard: CardImageVerificationExpectedCard,
         and acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
-        from presentingViewController: UIViewController
+        from presentingViewController: UIViewController,
+        animated: Bool = true
     ) {
         /// Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
@@ -39,26 +42,32 @@ class CardImageVerificationController {
             let error = CardScanSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
-            self.delegate?.cardImageVerificationController(self, didFinishWithResult: .failed(error: error))
+            self.delegate?.cardImageVerificationController(
+                self,
+                didFinishWithResult: .failed(error: error)
+            )
             return
         }
 
         // TODO(jaimepark): Create controller that has configurable view and handles coordination / business logic
-        if let expectedCard = expectedCard {
+        if let expectedCardLast4 = expectedCard.last4 {
             /// Create the view controller for card-set-verification with expected card's last4 and issuer
             let vc = VerifyCardViewController(
-                expectedCard: expectedCard,
+                acceptedImageConfigs: acceptedImageConfigs,
+                configuration: configuration,
+                expectedCardLast4: expectedCardLast4,
+                expectedCardIssuer: expectedCard.issuer
+            )
+            vc.verifyDelegate = self
+            presentingViewController.present(vc, animated: animated)
+        } else {
+            /// Create the view controller for card-add-verification
+            let vc = VerifyCardAddViewController(
                 acceptedImageConfigs: acceptedImageConfigs,
                 configuration: configuration
             )
             vc.verifyDelegate = self
-            presentingViewController.present(vc, animated: true)
-        } else {
-            /// Create the view controller for card-add-verification
-            let vc = VerifyCardAddViewController(acceptedImageConfigs: acceptedImageConfigs,
-                                                 configuration: configuration)
-            vc.verifyDelegate = self
-            presentingViewController.present(vc, animated: true)
+            presentingViewController.present(vc, animated: animated)
         }
     }
 
@@ -67,9 +76,10 @@ class CardImageVerificationController {
         result: CardImageVerificationSheetResult
     ) {
         /// Fire-and-forget uploading the scan stats
-        ScanAnalyticsManager.shared.generateScanAnalyticsPayload(with: configuration) { [weak self] payload in
+        ScanAnalyticsManager.shared.generateScanAnalyticsPayload(with: configuration) {
+            [weak self] payload in
             guard let self = self,
-                  let payload = payload
+                let payload = payload
             else {
                 return
             }

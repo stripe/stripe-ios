@@ -3,11 +3,13 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 11/5/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import XCTest
+
 @testable import StripeIdentity
 
 /// Mock to help us test behavior that relies on  VerificationSheetFlowController
@@ -20,16 +22,20 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     let navigationController = UINavigationController()
 
-    private(set) var didTransitionToNextScreenExp = XCTestExpectation(description: "transitionToNextScreen")
+    private(set) var didTransitionToNextScreenExp = XCTestExpectation(
+        description: "transitionToNextScreen"
+    )
     private(set) var transitionedWithStaticContentResult: Result<StripeAPI.VerificationPage, Error>?
-    private(set) var transitionedWithUpdateDataResult: Result<StripeAPI.VerificationPageData, Error>?
+    private(set) var transitionedWithUpdateDataResult:
+        Result<StripeAPI.VerificationPageData, Error>?
 
     private(set) var replacedWithViewController: UIViewController?
 
     private(set) var didPopToScreenWithField: StripeAPI.VerificationPageFieldType?
 
-
-    init(uncollectedFields: Set<StripeAPI.VerificationPageFieldType> = []) {
+    init(
+        uncollectedFields: Set<StripeAPI.VerificationPageFieldType> = []
+    ) {
         self.uncollectedFields = uncollectedFields
     }
 

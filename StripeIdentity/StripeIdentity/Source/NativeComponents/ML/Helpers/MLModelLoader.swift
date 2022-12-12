@@ -3,18 +3,17 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/1/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreML
-import Vision
+import Foundation
 @_spi(STP) import StripeCore
+import Vision
 
-/**
- Loads and compiles CoreML models from a remote URL. The compiled model is saved
- to a cache directory. If a model with the same remote URL is loaded again, the
- cached model will be loaded instead of re-downloading it.
- */
+/// Loads and compiles CoreML models from a remote URL. The compiled model is saved
+/// to a cache directory. If a model with the same remote URL is loaded again, the
+/// cached model will be loaded instead of re-downloading it.
 final class MLModelLoader {
 
     private let loadPromiseCacheQueue = DispatchQueue(label: "com.stripe.ml-loader")
@@ -23,13 +22,11 @@ final class MLModelLoader {
     let fileDownloader: FileDownloader
     let cacheDirectory: URL
 
-    /**
-     - Parameters:
-       - fileDownloader: A file downloader used to download files
-       - cacheDirectory: File URL corresponding to a directory where the
-                         compiled ML model can be cached to. The app must have
-                         permission to write to this directory.
-     */
+    /// - Parameters:
+    ///   - fileDownloader: A file downloader used to download files
+    ///   - cacheDirectory: File URL corresponding to a directory where the
+    ///                     compiled ML model can be cached to. The app must have
+    ///                     permission to write to this directory.
     init(
         fileDownloader: FileDownloader,
         cacheDirectory: URL
@@ -53,18 +50,16 @@ final class MLModelLoader {
         }
     }
 
-    /**
-     Downloads, compiles, and loads a `.mlmodel` file stored on a remote URL.
-
-     If the a model from the given URL has already been successfully compiled
-     before, it will be loaded from the cache. Otherwise the file is downloaded
-     from the given remote URL, compiled, and loaded into an MLModel.
-
-     - Parameters:
-       - remoteURL: The URL to download the model from.
-
-     - Returns: A future resolving to an `MLModel` instantiated from the compiled model.
-     */
+    /// Downloads, compiles, and loads a `.mlmodel` file stored on a remote URL.
+    ///
+    /// If the a model from the given URL has already been successfully compiled
+    /// before, it will be loaded from the cache. Otherwise the file is downloaded
+    /// from the given remote URL, compiled, and loaded into an MLModel.
+    ///
+    /// - Parameters:
+    ///   - remoteURL: The URL to download the model from.
+    ///
+    /// - Returns: A future resolving to an `MLModel` instantiated from the compiled model.
     func loadModel(
         fromRemote remoteURL: URL
     ) -> Future<MLModel> {
@@ -85,7 +80,8 @@ final class MLModelLoader {
                 return returnedPromise.resolve(with: mlModel)
             }
 
-            self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained { [weak self] tmpFileURL -> Promise<MLModel> in
+            self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained {
+                [weak self] tmpFileURL -> Promise<MLModel> in
                 let compilePromise = Promise<MLModel>()
                 compilePromise.fulfill { [weak self] in
                     // Note: The model must be compiled synchronously immediately
@@ -93,10 +89,11 @@ final class MLModelLoader {
                     // delete the temporary file url before we've had a chance to
                     // compile it.
                     let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
-                    let compiledURL = self?.cache(
-                        compiledModel: tmpCompiledURL,
-                        downloadedFrom: remoteURL
-                    ) ?? tmpCompiledURL
+                    let compiledURL =
+                        self?.cache(
+                            compiledModel: tmpCompiledURL,
+                            downloadedFrom: remoteURL
+                        ) ?? tmpCompiledURL
                     return try MLModel(contentsOf: compiledURL)
                 }
                 return compilePromise
@@ -116,18 +113,16 @@ final class MLModelLoader {
         return returnedPromise
     }
 
-    /**
-     Downloads, compiles, and loads a `.mlmodel` file stored on a remote URL.
-
-     If the a model from the given URL has already been successfully compiled
-     before, it will be loaded from the cache. Otherwise the file is downloaded
-     from the given remote URL, compiled, and loaded into an MLModel.
-
-     - Parameters:
-       - remoteURL: The URL to download the model from.
-
-     - Returns: A future resolving to a `VNCoreMLModel` instantiated from the compiled model.
-     */
+    /// Downloads, compiles, and loads a `.mlmodel` file stored on a remote URL.
+    ///
+    /// If the a model from the given URL has already been successfully compiled
+    /// before, it will be loaded from the cache. Otherwise the file is downloaded
+    /// from the given remote URL, compiled, and loaded into an MLModel.
+    ///
+    /// - Parameters:
+    ///   - remoteURL: The URL to download the model from.
+    ///
+    /// - Returns: A future resolving to a `VNCoreMLModel` instantiated from the compiled model.
     func loadVisionModel(
         fromRemote remoteURL: URL
     ) -> Future<VNCoreMLModel> {

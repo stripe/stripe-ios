@@ -1,6 +1,6 @@
 //
 //  STPPaymentOptionsViewControllerTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 10/10/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import OCMock
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 @available(iOS 13.0, *)
 class STPPaymentOptionsViewControllerTest: XCTestCase {
@@ -53,9 +57,14 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
         delegate: STPPaymentOptionsViewControllerDelegate
     ) -> STPPaymentOptionsViewController {
         let mockCustomerContext = Testing_StaticCustomerContext(
-            customer: customer, paymentMethods: paymentMethods)
+            customer: customer,
+            paymentMethods: paymentMethods
+        )
         return buildViewController(
-            with: mockCustomerContext, configuration: config, delegate: delegate)
+            with: mockCustomerContext,
+            configuration: config,
+            delegate: delegate
+        )
     }
 
     func buildViewController(
@@ -68,7 +77,8 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             configuration: config,
             theme: theme,
             customerContext: customerContext,
-            delegate: delegate)
+            delegate: delegate
+        )
         let didLoadExpectation = expectation(description: "VC did load")
         vc.loadingPromise?.onSuccess({ (_) in
             didLoadExpectation.fulfill()
@@ -90,7 +100,8 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             with: customer,
             paymentMethods: [],
             configuration: config,
-            delegate: delegate)
+            delegate: delegate
+        )
         XCTAssertTrue((sut.internalViewController is STPAddCardViewController))
     }
 
@@ -105,7 +116,8 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             with: customer,
             paymentMethods: paymentMethods.compactMap { $0 },
             configuration: config,
-            delegate: delegate)
+            delegate: delegate
+        )
         XCTAssertTrue((sut.internalViewController is STPPaymentOptionsInternalViewController))
     }
 
@@ -121,7 +133,8 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             with: customer,
             paymentMethods: paymentMethods.compactMap { $0 },
             configuration: config,
-            delegate: delegate)
+            delegate: delegate
+        )
         XCTAssertTrue((sut.internalViewController is STPPaymentOptionsInternalViewController))
     }
 
@@ -135,7 +148,8 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             with: customer,
             paymentMethods: [],
             configuration: config,
-            delegate: delegate)
+            delegate: delegate
+        )
         XCTAssertTrue((sut.internalViewController is STPAddCardViewController))
         let cancelButton = sut.internalViewController?.navigationItem.leftBarButtonItem
         cancelButton?.target?.perform(cancelButton?.action, with: cancelButton)
@@ -154,7 +168,8 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             with: customer,
             paymentMethods: paymentMethods.compactMap { $0 },
             configuration: config,
-            delegate: delegate)
+            delegate: delegate
+        )
         XCTAssertTrue((sut.internalViewController is STPPaymentOptionsInternalViewController))
         let cancelButton = sut.internalViewController?.navigationItem.leftBarButtonItem
         _ = cancelButton?.target?.perform(cancelButton?.action, with: cancelButton)
@@ -168,10 +183,15 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
         let config = STPFixtures.paymentConfiguration()
         let customer = STPFixtures.customerWithNoSources()
         let mockCustomerContext = Testing_StaticCustomerContext(
-            customer: customer, paymentMethods: [])
+            customer: customer,
+            paymentMethods: []
+        )
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
-            with: mockCustomerContext, configuration: config, delegate: delegate)
+            with: mockCustomerContext,
+            configuration: config,
+            delegate: delegate
+        )
         XCTAssertNotNil(sut.view)
         XCTAssertTrue((sut.internalViewController is STPAddCardViewController))
 
@@ -179,7 +199,8 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
         let exp = expectation(description: "completion")
         let expectedPaymentMethod = STPFixtures.paymentMethod()
         internalVC?.delegate?.addCardViewController(
-            internalVC!, didCreatePaymentMethod: expectedPaymentMethod
+            internalVC!,
+            didCreatePaymentMethod: expectedPaymentMethod
         ) { error in
             XCTAssertNil(error)
             exp.fulfill()

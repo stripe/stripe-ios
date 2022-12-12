@@ -3,17 +3,18 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/9/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import CoreVideo
-import Vision
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import Vision
 
 typealias AnyDocumentScanner = AnyImageScanner<DocumentScannerOutput?>
 
 /// Scans a camera feed for a valid identity document.
-@available(iOS 13, *)
+
 final class DocumentScanner {
 
     // MARK: Detectors
@@ -22,14 +23,12 @@ final class DocumentScanner {
     private let motionBlurDetector: MotionBlurDetector
     private let barcodeDetector: BarcodeDetector?
 
-    /**
-     Initializes a DocumentScanner with detectors.
-
-     - Parameters:
-       - idDetector: The IDDetector to classify document images.
-       - motionBlurDetector: A motion blur detector to determine if the frame is blurry.
-       - barcodeDetector: A barcode detector
-     */
+    /// Initializes a DocumentScanner with detectors.
+    ///
+    /// - Parameters:
+    ///   - idDetector: The IDDetector to classify document images.
+    ///   - motionBlurDetector: A motion blur detector to determine if the frame is blurry.
+    ///   - barcodeDetector: A barcode detector
     init(
         idDetector: IDDetector,
         motionBlurDetector: MotionBlurDetector,
@@ -68,7 +67,6 @@ final class DocumentScanner {
     }
 }
 
-@available(iOS 13, *)
 extension DocumentScanner: ImageScanner {
     typealias Output = DocumentScannerOutput?
 
@@ -94,7 +92,8 @@ extension DocumentScanner: ImageScanner {
         // Otherwise, scan for a barcode if this is the back of an ID.
         var barcodeOutput: BarcodeDetectorOutput? = nil
         if let barcodeDetector = self.barcodeDetector,
-           idDetectorOutput.classification == .idCardBack {
+            idDetectorOutput.classification == .idCardBack
+        {
             barcodeOutput = try barcodeDetector.scanImage(
                 pixelBuffer: pixelBuffer,
                 regionOfInterest: idDetectorOutput.documentBounds
@@ -117,16 +116,14 @@ extension DocumentScanner: ImageScanner {
 }
 
 extension IDDetectorOutput.Classification {
-    /**
-     Determines if the classification output by the IDDetector matches the
-     scanner's desired classification.
-
-     - Parameters:
-       - type: The desired document type
-       - side: The desired document side
-
-     - Returns: True if this classification matches the desired classification.
-     */
+    /// Determines if the classification output by the IDDetector matches the
+    /// scanner's desired classification.
+    ///
+    /// - Parameters:
+    ///   - type: The desired document type
+    ///   - side: The desired document side
+    ///
+    /// - Returns: True if this classification matches the desired classification.
     func matchesDocument(
         type: DocumentType,
         side: DocumentSide

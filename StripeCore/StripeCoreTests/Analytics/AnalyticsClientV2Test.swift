@@ -3,12 +3,13 @@
 //  StripeCoreTests
 //
 //  Created by Mel Ludowise on 6/7/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import XCTest
 
-@testable @_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeCore
 
 final class AnalyticsClientV2Test: XCTestCase {
     let client = AnalyticsClientV2(
@@ -22,7 +23,11 @@ final class AnalyticsClientV2Test: XCTestCase {
 
     func testRequestHeaders() {
         let headers = client.requestHeaders
-        XCTAssertEqual(headers["user-agent"]?.starts(with: "Stripe/v1 ios/"), true, String(describing: headers["user-agent"]))
+        XCTAssertEqual(
+            headers["user-agent"]?.starts(with: "Stripe/v1 ios/"),
+            true,
+            String(describing: headers["user-agent"])
+        )
         XCTAssertEqual(headers["origin"], "test_origin")
     }
 
@@ -66,8 +71,8 @@ final class AnalyticsClientV2Test: XCTestCase {
                 "custom_property": "test_property",
                 "event_metadata": [
                     "string_property": "test_string",
-                    "int_property": 156
-                ]
+                    "int_property": 156,
+                ],
             ]
         )
 

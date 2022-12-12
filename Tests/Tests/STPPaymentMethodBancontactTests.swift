@@ -7,7 +7,12 @@
 //
 
 import StripeCoreTestUtils
-@testable import Stripe
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodBancontactTests: XCTestCase {
     private(set) var bancontactJSON: [AnyHashable: Any]?

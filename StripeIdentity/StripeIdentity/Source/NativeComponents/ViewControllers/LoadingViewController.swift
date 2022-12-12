@@ -3,11 +3,12 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 10/28/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Simple view controller with a spinner
 final class LoadingViewController: UIViewController {
@@ -37,7 +38,9 @@ final class LoadingViewController: UIViewController {
         installConstraints()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -54,24 +57,32 @@ final class LoadingViewController: UIViewController {
     }
 }
 
-private extension LoadingViewController {
-    func installViews() {
+extension LoadingViewController {
+    fileprivate func installViews() {
         view.addSubview(spinner)
         view.addSubview(loadingLabel)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         [spinner, loadingLabel].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
 
         NSLayoutConstraint.activate([
             loadingLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             loadingLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            loadingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Styling.inset.leading),
-            loadingLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Styling.inset.trailing),
-
+            loadingLabel.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: Styling.inset.leading
+            ),
+            loadingLabel.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -Styling.inset.trailing
+            ),
 
             spinner.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            spinner.bottomAnchor.constraint(equalTo: loadingLabel.topAnchor, constant: -Styling.inset.top),
+            spinner.bottomAnchor.constraint(
+                equalTo: loadingLabel.topAnchor,
+                constant: -Styling.inset.top
+            ),
         ])
     }
 }

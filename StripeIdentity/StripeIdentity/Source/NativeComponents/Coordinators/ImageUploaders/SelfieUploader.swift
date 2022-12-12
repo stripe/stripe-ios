@@ -3,12 +3,13 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/31/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import UIKit
 
 /// Dependency-injectable protocol for SelfieUploader
 protocol SelfieUploaderProtocol: AnyObject {
@@ -20,7 +21,6 @@ protocol SelfieUploaderProtocol: AnyObject {
 
     func reset()
 }
-
 
 final class SelfieUploader: SelfieUploaderProtocol {
 
@@ -37,15 +37,15 @@ final class SelfieUploader: SelfieUploaderProtocol {
 
     private(set) var uploadFuture: Future<FileData>?
 
-    init(imageUploader: IdentityImageUploader) {
+    init(
+        imageUploader: IdentityImageUploader
+    ) {
         self.imageUploader = imageUploader
     }
 
-    /**
-     Uploads a high and low resolution image for each of the captured images.
-     - Parameters:
-       - capturedImages: The original images and scanner output for each of the 3 captured images.
-     */
+    /// Uploads a high and low resolution image for each of the captured images.
+    /// - Parameters:
+    ///   - capturedImages: The original images and scanner output for each of the 3 captured images.
     func uploadImages(
         _ capturedImages: FaceCaptureData
     ) {

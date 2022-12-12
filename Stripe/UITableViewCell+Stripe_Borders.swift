@@ -1,6 +1,6 @@
 //
 //  UITableViewCell+Stripe_Borders.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 5/16/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -29,8 +29,11 @@ extension UITableViewCell {
 
     @objc(stp_setFakeSeparatorLeftInset:) func stp_setFakeSeparatorLeftInset(_ leftInset: CGFloat) {
         stp_fakeSeparatorView()?.frame = CGRect(
-            x: leftInset, y: bounds.size.height - 0.5, width: bounds.size.width - leftInset,
-            height: 0.5)
+            x: leftInset,
+            y: bounds.size.height - 0.5,
+            width: bounds.size.width - leftInset,
+            height: 0.5
+        )
     }
 
     @objc(stp_setFakeSeparatorColor:) func stp_setFakeSeparatorColor(_ color: UIColor?) {
@@ -58,7 +61,12 @@ extension UITableViewCell {
         if view == nil {
             view = UIView(
                 frame: CGRect(
-                    x: 0, y: bounds.size.height - 0.5, width: bounds.size.width, height: 0.5))
+                    x: 0,
+                    y: bounds.size.height - 0.5,
+                    width: bounds.size.width,
+                    height: 0.5
+                )
+            )
             view?.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
             view?.tag = STPTableViewCellBottomBorderTag
             view?.backgroundColor = backgroundColor
@@ -76,7 +84,12 @@ extension UITableViewCell {
         if view == nil {
             view = UIView(
                 frame: CGRect(
-                    x: 0, y: bounds.size.height - 0.5, width: bounds.size.width, height: 0.5))
+                    x: 0,
+                    y: bounds.size.height - 0.5,
+                    width: bounds.size.width,
+                    height: 0.5
+                )
+            )
             view?.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
             view?.tag = STPTableViewCellFakeSeparatorTag
             view?.backgroundColor = backgroundColor

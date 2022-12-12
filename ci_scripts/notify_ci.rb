@@ -6,12 +6,17 @@ require 'json'
 require 'openssl'
 require 'base64'
 
+if ENV['BITRISE_GIT_BRANCH'] != 'master'
+  puts 'Not on main branch, skipping notification'
+  exit 0
+end
+
 env_sdk_failure_notif_endpoint = ENV['SDK_FAILURE_NOTIFICATION_ENDPOINT']
 env_sdk_failure_notif_endpoint_hmac_key = ENV['SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY']
 
 if !env_sdk_failure_notif_endpoint || !env_sdk_failure_notif_endpoint_hmac_key
-  puts "Two environment variables required: `SDK_FAILURE_NOTIFICATION_ENDPOINT` and `SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY`"
-  puts "Visit http://go/ios-sdk-failure-notification-endpoint for details"
+  puts 'Two environment variables required: `SDK_FAILURE_NOTIFICATION_ENDPOINT` and `SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY`'
+  puts 'Visit http://go/ios-sdk-failure-notification-endpoint for details'
   exit 102
 end
 
@@ -24,9 +29,9 @@ end
 req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
 
 params = {
-  project: "RUN_MOBILESDK",
-  summary: "Job failed: #{ENV['CIRCLE_JOB']}",
-  description: "Please investigate the failure: #{ENV['CIRCLE_BUILD_URL']}"
+  project: 'RUN_MOBILESDK',
+  summary: "Job failed: #{ENV['BITRISE_TRIGGERED_WORKFLOW_TITLE']}",
+  description: "Please investigate the failure: #{ENV['BITRISE_BUILD_URL']}"
 }
 
 req.body = params.to_json

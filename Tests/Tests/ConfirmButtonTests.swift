@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class ConfirmButtonTests: XCTestCase {
 
@@ -18,14 +22,24 @@ class ConfirmButtonTests: XCTestCase {
             (background: .systemBlue, foreground: .white),
             (background: .black, foreground: .white),
             // Light backgrounds
-            (background: UIColor(red: 1.0, green: 0.87, blue: 0.98, alpha: 1.0), foreground: .black),
-            (background: UIColor(red: 1.0, green: 0.89, blue: 0.35, alpha: 1.0), foreground: .black)
+            (
+                background: UIColor(red: 1.0, green: 0.87, blue: 0.98, alpha: 1.0),
+                foreground: .black
+            ),
+            (
+                background: UIColor(red: 1.0, green: 0.89, blue: 0.35, alpha: 1.0),
+                foreground: .black
+            ),
         ]
 
         for (backgroundColor, expectedForeground) in testCases {
             let button = ConfirmButton.BuyButton()
             button.tintColor = backgroundColor
-            button.update(status: .enabled, callToAction: .pay(amount: 900, currency: "usd"), animated: false)
+            button.update(
+                status: .enabled,
+                callToAction: .pay(amount: 900, currency: "usd"),
+                animated: false
+            )
 
             XCTAssertEqual(
                 // Test against `.cgColor` because any color set as `.backgroundColor`
@@ -43,7 +57,11 @@ class ConfirmButtonTests: XCTestCase {
     }
 
     func testUpdateShouldCallTheCompletionBlock() {
-        let sut = ConfirmButton(style: .stripe, callToAction: .pay(amount: 1000, currency: "usd"), didTap: {})
+        let sut = ConfirmButton(
+            style: .stripe,
+            callToAction: .pay(amount: 1000, currency: "usd"),
+            didTap: {}
+        )
 
         let expectation = XCTestExpectation(description: "Should call the completion block")
 
@@ -55,7 +73,11 @@ class ConfirmButtonTests: XCTestCase {
     }
 
     func testUpdateShouldCallTheCompletionBlockWhenAnimated() {
-        let sut = ConfirmButton(style: .stripe, callToAction: .pay(amount: 1000, currency: "usd"), didTap: {})
+        let sut = ConfirmButton(
+            style: .stripe,
+            callToAction: .pay(amount: 1000, currency: "usd"),
+            didTap: {}
+        )
 
         let expectation = XCTestExpectation(description: "Should call the completion block")
 

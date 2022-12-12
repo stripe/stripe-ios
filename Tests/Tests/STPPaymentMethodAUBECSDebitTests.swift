@@ -7,7 +7,12 @@
 //
 
 import StripeCoreTestUtils
-@testable import Stripe
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 private var kAUBECSDebitPaymentIntentClientSecret =
     "pi_1GaRLjF7QokQdxByYgFPQEi0_secret_z76otRQH2jjOIEQYsA9vxhuKn"
@@ -46,7 +51,8 @@ class STPPaymentMethodAUBECSDebitTests: XCTestCase {
             auBECSDebitJSON?["bsb_number"] = nil
             XCTAssertNil(
                 STPPaymentMethodAUBECSDebit.decodedObject(fromAPIResponse: auBECSDebitJSON),
-                "Should not intialize with missing `bsb_number`")
+                "Should not intialize with missing `bsb_number`"
+            )
             retrieveJSON.fulfill()
         })
         wait(for: [retrieveJSON], timeout: STPTestingNetworkRequestTimeout)
@@ -57,7 +63,8 @@ class STPPaymentMethodAUBECSDebitTests: XCTestCase {
             auBECSDebitJSON?["last4"] = nil
             XCTAssertNil(
                 STPPaymentMethodAUBECSDebit.decodedObject(fromAPIResponse: auBECSDebitJSON),
-                "Should not intialize with missing `last4`")
+                "Should not intialize with missing `last4`"
+            )
             retrieveJSON.fulfill()
         })
         wait(for: [retrieveJSON], timeout: STPTestingNetworkRequestTimeout)
@@ -68,7 +75,8 @@ class STPPaymentMethodAUBECSDebitTests: XCTestCase {
             auBECSDebitJSON?["fingerprint"] = nil
             XCTAssertNil(
                 STPPaymentMethodAUBECSDebit.decodedObject(fromAPIResponse: auBECSDebitJSON),
-                "Should not intialize with missing `fingerprint`")
+                "Should not intialize with missing `fingerprint`"
+            )
             retrieveJSON.fulfill()
         })
         wait(for: [retrieveJSON], timeout: STPTestingNetworkRequestTimeout)

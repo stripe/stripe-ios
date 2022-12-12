@@ -6,10 +6,14 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
 import XCTest
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPFormViewSnapshotTests: FBSnapshotTestCase {
 
@@ -20,7 +24,9 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
 
     func testSingleInput() {
         let input = STPInputTextField(
-            formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator())
+            formatter: STPInputTextFieldFormatter(),
+            validator: STPInputTextFieldValidator()
+        )
         input.placeholder = "Single input"
         let section = STPFormView.Section(rows: [[input]], title: nil, accessoryButton: nil)
         let formView = STPFormView(sections: [section])
@@ -32,7 +38,9 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
         var rows = [[STPInputTextField]]()
         for row in 0..<5 {
             let input = STPInputTextField(
-                formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator())
+                formatter: STPInputTextFieldFormatter(),
+                validator: STPInputTextFieldValidator()
+            )
             input.placeholder = "Row \(row)"
             rows.append([input])
         }
@@ -48,7 +56,8 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
             var rowInputs = [STPInputTextField]()
             for c in ["A", "B", "C"] {
                 let input = STPInputTextField(
-                    formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator()
+                    formatter: STPInputTextFieldFormatter(),
+                    validator: STPInputTextFieldValidator()
                 )
                 input.placeholder = "Row \(row) \(c)"
                 rowInputs.append(input)
@@ -68,7 +77,8 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
             var rowInputs = [STPInputTextField]()
             for c in ["A", "B", "C"] {
                 let input = STPInputTextField(
-                    formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator()
+                    formatter: STPInputTextFieldFormatter(),
+                    validator: STPInputTextFieldValidator()
                 )
                 input.placeholder = "Row \(row) \(c)"
                 rowInputs.append(input)
@@ -91,7 +101,8 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
             var rowInputs = [STPInputTextField]()
             for c in ["A", "B", "C"] {
                 let input = STPInputTextField(
-                    formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator()
+                    formatter: STPInputTextFieldFormatter(),
+                    validator: STPInputTextFieldValidator()
                 )
                 input.placeholder = "Row \(row) \(c)"
                 rowInputs.append(input)
@@ -111,7 +122,8 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
             var rowInputs = [STPInputTextField]()
             for c in ["A", "B", "C"] {
                 let input = STPInputTextField(
-                    formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator()
+                    formatter: STPInputTextFieldFormatter(),
+                    validator: STPInputTextFieldValidator()
                 )
                 input.placeholder = "Row \(row) \(c)"
                 rowInputs.append(input)
@@ -120,14 +132,18 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
             rows1.append(rowInputs)
         }
         let section1 = STPFormView.Section(
-            rows: rows1, title: "First Section", accessoryButton: nil)
+            rows: rows1,
+            title: "First Section",
+            accessoryButton: nil
+        )
 
         var rows2 = [[STPInputTextField]]()
         for row in 0..<5 {
             var rowInputs = [STPInputTextField]()
             for c in ["A", "B", "C"] {
                 let input = STPInputTextField(
-                    formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator()
+                    formatter: STPInputTextFieldFormatter(),
+                    validator: STPInputTextFieldValidator()
                 )
                 input.placeholder = "Row \(row) \(c)"
                 rowInputs.append(input)
@@ -136,7 +152,10 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
             rows2.append(rowInputs)
         }
         let section2 = STPFormView.Section(
-            rows: rows2, title: "Second Section", accessoryButton: nil)
+            rows: rows2,
+            title: "Second Section",
+            accessoryButton: nil
+        )
 
         let formView = STPFormView(sections: [section1, section2])
         formView.frame.size = formView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)

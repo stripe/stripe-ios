@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ завършващо на %2$@";
-
 "%@ - Offline" = "%@ - Офлайн";
 
-"+ Add" = "+ Добавяне";
-
 "3D Secure" = "3D Secure удостоверяване";
-
-"AU BECS Direct Debit" = "AU BECS директно дебитиране";
 
 "Add New Card…" = "Добавяне на нова карта...";
 
 "Add a Card" = "Добавяне на карта";
 
-"Add a card" = "Добавяне на карта";
-
-"Add a payment method" = "Добавяне на начин на плащане";
-
-"Add bank account" = "Добавяне на банкова сметка";
-
-"Add new payment method" = "Добавяне на нов метод на плащане";
-
-"Add your payment information" = "Добавете своята информация за плащането";
-
-"Address line 2 (optional)" = "Ред 2 на адреса (по желание)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Aп.";
 
-"Are you sure you want to remove this card?" = "Сигурни ли сте, че желаете да премахнете тази банкова карта?";
-
-"Are you sure you want to remove this linked account?" = "Сигурни ли сте, че желаете да премахнете този свързан акаунт?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Назад";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Банка";
-
-"Bank Account" = "Банкова сметка";
-
-"Bank account" = "Банкова сметка";
-
-"Billing Address" = "Адрес за фактуриране";
-
-"Billing address" = "Адрес за фактуриране";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Платете сега или платете по-късно чрез Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно тези <terms>условия</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Предоставяйки данните за банковата си сметка и потвърждавайки това плащане, Вие се съгласявате с това Искане за директен дебит и със <terms>споразумението за обслужване на искане за директен дебит</terms> и оправомощавате Stripe Payments Australia Pty Ltd ACN 160 180 343, потребителски ИД номер за директен дебит 507156 („Stripe“) да дебитира Вашата сметка чрез системата масов електронен клиринг (BECS) от името на %@ („Търговеца“) за всички суми, за които Търговецът Ви е съобщил отделно. Удостоверявате, че по отношение на горепосочената сметка сте титуляр на сметката или лице, имащо правото да подписва.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "С предоставянето на информация за плащания и с потвърждаването на това плащане Вие упълномощавате (A) %@ и Stripe, нашия доставчик на платежни услуги, да изпращат инструкции до Вашата банка за дебитиране на сметката Ви и (B) Вашата банка да дебитира сметката Ви в съответствие с тези инструкции. Като част от Вашите права имате право на възстановяване на суми от Вашата банка при условията и реда на споразумението с Вашата банка. Възстановяването на сума трябва да бъде поискано в рамките на 8 седмици, считано от датата, на която сметката Ви е била дебитирана. Вашите права са обяснени в извлечение, което можете да получите от Вашата банка. Вие давате своето съгласие да получавате известия за бъдещи дебитирания до 2 дни преди изпълнението им.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Карта";
-
-"Card information" = "Информация за картата";
-
-"Card number" = "Номер на картата";
-
-"Change email" = "Промяна на имейл";
-
-"Choose a payment method" = "Избор на метод на плащане";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Затваряне на скенера за карти";
-
-"Code field" = "Поле за код";
-
-"Code sent" = "Изпратен е код";
-
 "Contact" = "Контакт";
-
-"Default" = "По подразбиране";
 
 "Delivery" = "Доставка";
 
 "Delivery Address" = "Адрес за доставка";
 
-"Double tap to edit" = "Докоснете два пъти, за да редактирате";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "Банка EPS";
-
-"Edit" = "Редактиране";
-
-"Enter address manually" = "Ръчно въвеждане на адрес";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Въведете кода, изпратен до %@, за да използвате Link за плащане по подразбиране.";
-
-"Enter your verification code" = "Въведете Вашия код за верификация";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "От съображения за сигурност, моля, въведете отново защитния код на Вашата банкова карта.";
-
 "Free" = "Безплатно";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Невалиден адрес за доставка";
 
-"Invalid data." = "Невалидни данни.";
-
-"Join Link" = "Присъединяване към Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Зареждане...";
-
-"Log out of Link" = "Излизане от Link";
-
-"MM / YY" = "ММ / ГГ";
-
-"MM/YY" = "ММ/ГГ";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "Netbanking";
-
 "Next" = "Следващо";
-
-"Not %@?" = "Не сте %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Онлайн банкиране (FPX)";
 
-"Or" = "Или";
-
-"Or pay using" = "Или платете чрез";
-
-"Or pay with a card" = "Или платете с карта";
-
-"P24" = "P24";
-
-"Pay %@" = "Плащане %@";
-
-"Pay another way" = "Плащане по друг начин";
-
-"Pay faster at %@ and thousands of merchants." = "Плащайте по-бързо при %@ и хиляди други търговци.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Платете на <num_installments/> безлихвени плащания от <installment_price/> с <img/>";
-
-"Pay later with Klarna." = "Платете по-късно чрез Klarna.";
-
-"Pay over time with %@" = "Плащане на разсрочени вноски с %@";
-
-"Pay using" = "Плащане чрез";
-
-"Pay with %@" = "Платете чрез %@";
-
-"Pay with your bank account in just a few steps." = "Платете с банковата си сметка само с няколко стъпки.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Плащане";
-
 "Payment Method" = "Метод на плащане";
-
-"Payment methods" = "Начини на плащане";
-
-"Point the camera at your card." = "Насочете камерата към картата си.";
-
-"Postal Code" = "Пощенски код";
-
-"Processing..." = "Обработване...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Банка Przelewy24";
-
-"Remove %1$@ ending in %2$@" = "Премахване на %1$@, завършваща на %2$@";
-
-"Remove Card" = "Премахване на банкова карта";
-
-"Remove card" = "Премахване на банкова карта";
-
-"Remove linked account" = "Премахване на свързан акаунт";
-
-"Resend code" = "Повторно изпращане на кода";
-
-"SEPA Debit" = "SEPA дебит";
-
-"SEPA Direct Debit" = "SEPA директно дебитиране";
-
-"Save for future payments" = "Запазване за бъдещи плащания";
-
-"Save my info for secure 1-click checkout" = "Запазване на моята информация за защитено финализиране с едно щракване";
-
-"Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
-
-"Save this card for future %@ payments" = "Запазете тази карта за следващи %@ плащания";
-
-"Secure 1⁠-⁠click checkout" = "Защитено финализиране с едно щракване";
-
-"Select your payment method" = "Изберете метод на плащане";
-
-"Set as default" = "Задаване по подразбиране";
-
-"Set as default payment method" = "Задаване на начин на плащане по подразбиране";
-
-"Set up" = "Създаване";
 
 "Shipping" = "Доставка";
 
-"Shipping Address" = "Адрес за доставка";
-
 "Shipping Method" = "Метод на доставка";
-
-"Show menu" = "Показване на менюто";
-
-"Sign in to your Link account" = "Влезте в своя акаунт в Link";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Възникнал е проблем при свързването на акаунта Ви.\nМоля, опитайте отново по-късно.";
-
-"State / Province / Region" = "Щат/Област/Регион";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0.01 USD. След това ще получите имейл с инструкции за завършване на плащането към %@.";
-
-"Tap to close" = "Докоснете, за да затворите";
-
-"Tap to expand" = "Докоснете, за да разширите";
-
-"The BSB you entered is invalid." = "BSB, който сте въвели, е невалиден.";
-
-"The IBAN you entered is incomplete." = "Въведеният IBAN е непълен.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Въведеният IBAN е невалиден, „%@“ не е поддържан код на държава.";
-
-"The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
-
-"The provided verification code is incorrect." = "Предоставеният код за потвърждаване е неправилен.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Срокът на валидност на тази банкова карта е изтекъл. Актуализирайте информацията за картата си или изберете друг начин на плащане.";
-
-"This is your default" = "Това е настройката по подразбиране.";
-
-"Timed out authenticating your payment method -- try again" = "Времето на изчакване на удостоверяването на Вашия метод на плащане изтече -- опитайте отново";
-
-"To scan your card, allow camera access in Settings." = "За да сканирате картата си, разрешете достъп до камерата в Настройки.";
-
-"Too many attempts. Please try again in a few minutes." = "Твърде много опити. Моля, опитайте отново след няколко минути.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Банкова сметка в САЩ";
-
-"Unavailable for this purchase" = "Недостъпно за тази покупка";
-
-"Unknown" = "Непознат";
-
-"Update card" = "Актуализиране на банкова карта";
 
 "Use Billing" = "Да се използва адреса за фактуриране";
 
 "Use Delivery" = "Да се използва адреса за доставка";
 
 "Use Shipping" = "Да се използва адреса за изпращане";
-
-"Use your saved info to check out faster" = "Използвайте запазената си информация за по-бързо финализиране";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не можем да удостоверим Вашия метод на плащане. Моля, изберете различен метод на плащане и опитайте отново.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Вашият IBAN трябва да започва с двубуквен код на държава.";
-
-"Your ZIP is invalid." = "Вашият ZIP код е невалиден.";
-
-"Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
-
-"Your card number is invalid." = "Номерът на Вашата карта е невалиден.";
-
-"Your card's expiration date is incomplete." = "Срокът на валидност на Вашата карта е непълен.";
-
-"Your card's expiration date is invalid." = "Датата на валидност на Вашата карта е невалидна.";
-
-"Your card's expiration month is invalid." = "Месецът на валидност на Вашата карта е невалиден.";
-
-"Your card's expiration year is invalid." = "Годината на валидност на Вашата карта е невалидна.";
-
-"Your card's security code is incomplete." = "Кодът за сигурност на Вашата карта е непълен.";
-
-"Your card's security code is invalid." = "Кодът за сигурност на Вашата карта е невалиден.";
-
-"Your postal code is invalid." = "Вашият пощенски код е невалиден.";
-
-"ZIP Code" = "Пощенски код";
-
-"card number" = "номер на картата";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "дата на валидност";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL Bank";

@@ -1,12 +1,14 @@
 //
-//  STPAPIClient+PinManagement.h
-//  Stripe
+//  STPPinManagementService.swift
+//  StripeiOS
 //
 //  Created by Arnaud Cavailhez on 4/29/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 import UIKit
 
 /// STPAPIClient extensions to manage PIN on Stripe Issuing cards
@@ -15,25 +17,17 @@ public class STPPinManagementService: NSObject {
     /// Defaults to STPAPIClient.shared
     public var apiClient: STPAPIClient = STPAPIClient.shared
 
-    /// The STPAPIClient instance to use to make API requests to Stripe.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
-    
     /// Create a STPPinManagementService, you must provide an implementation of STPIssuingCardEphemeralKeyProvider
     @objc
-    public init(keyProvider: STPIssuingCardEphemeralKeyProvider) {
+    public init(
+        keyProvider: STPIssuingCardEphemeralKeyProvider
+    ) {
         super.init()
         keyManager = STPEphemeralKeyManager(
-            keyProvider: keyProvider as Any, apiVersion: STPAPIClient.apiVersion,
-            performsEagerFetching: false)
+            keyProvider: keyProvider as Any,
+            apiVersion: STPAPIClient.apiVersion,
+            performsEagerFetching: false
+        )
     }
 
     /// Retrieves a PIN number for a given card,

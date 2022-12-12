@@ -1,12 +1,16 @@
 //
 //  STPAddressViewModelTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 10/21/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAddressViewModelTest: XCTestCase {
     func testInitWithRequiredBillingFields() {
@@ -39,18 +43,23 @@ class STPAddressViewModelTest: XCTestCase {
 
     func testInitWithRequiredShippingFields() {
         var sut = STPAddressViewModel(
-            requiredShippingFields: Set<STPContactField>(), availableCountries: nil)
+            requiredShippingFields: Set<STPContactField>(),
+            availableCountries: nil
+        )
         XCTAssertTrue(sut.addressCells.count == 0)
 
         sut = STPAddressViewModel(
-            requiredShippingFields: Set<STPContactField>([.name]), availableCountries: nil)
+            requiredShippingFields: Set<STPContactField>([.name]),
+            availableCountries: nil
+        )
         XCTAssertTrue(sut.addressCells.count == 1)
         let cell1 = sut.addressCells[0]
         XCTAssertEqual(cell1.type, .name)
 
         sut = STPAddressViewModel(
             requiredShippingFields: Set<STPContactField>([.name, .emailAddress]),
-            availableCountries: nil)
+            availableCountries: nil
+        )
         XCTAssertTrue(sut.addressCells.count == 2)
         var types: [STPAddressFieldType] = [.name, .email]
         for i in 0..<sut.addressCells.count {
@@ -60,7 +69,9 @@ class STPAddressViewModelTest: XCTestCase {
         sut = STPAddressViewModel(
             requiredShippingFields: Set<STPContactField>([
                 .postalAddress, .emailAddress, .phoneNumber,
-            ]), availableCountries: nil)
+            ]),
+            availableCountries: nil
+        )
         XCTAssertTrue(sut.addressCells.count == 9)
         types = [
             .email,
@@ -84,7 +95,9 @@ class STPAddressViewModelTest: XCTestCase {
                 .postalAddress,
                 .emailAddress,
                 .phoneNumber,
-            ]), availableCountries: nil)
+            ]),
+            availableCountries: nil
+        )
         sut.addressCells[0].contents = "foo@example.com"
         sut.addressCells[1].contents = "John Smith"
         sut.addressCells[2].contents = "55 John St"
@@ -123,7 +136,9 @@ class STPAddressViewModelTest: XCTestCase {
                 .postalAddress,
                 .emailAddress,
                 .phoneNumber,
-            ]), availableCountries: nil)
+            ]),
+            availableCountries: nil
+        )
         sut.address = address
         XCTAssertEqual(sut.addressCells[0].contents, "foo@example.com")
         XCTAssertEqual(sut.addressCells[1].contents, "John Smith")
@@ -144,7 +159,8 @@ class STPAddressViewModelTest: XCTestCase {
 
         address.country = "US"
         sut.address = address
-        XCTAssertEqual(sut.addressCells.count, 0)  // The AddressViewModel shouldn't request any information when requesting ZIPs.
+        // The AddressViewModel shouldn't request any information when requesting ZIPs.
+        XCTAssertEqual(sut.addressCells.count, 0)
 
         address.postalCode = "94016"
         sut.address = address

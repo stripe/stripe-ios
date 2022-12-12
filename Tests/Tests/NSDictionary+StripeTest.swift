@@ -1,23 +1,27 @@
 //
-//  NSDictionary+StripeTest.swift
-//  Stripe
+//  Dictionary+StripeTest.swift
+//  StripeiOS Tests
 //
 //  Created by Joey Dong on 7/24/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
-class NSDictionary_StripeTest: XCTestCase {
+class Dictionary_StripeTest: XCTestCase {
     // MARK: - dictionaryByRemovingNullsValidatingRequiredFields
     func test_dictionaryByRemovingNulls_removesNullsDeeply() {
         let dictionary =
             [
                 "id": "card_123",
-                "tokenization_method": NSNull() /* null in root */,
+                "tokenization_method": NSNull(),  // null in root
                 "metadata": [
                     "user": "user_123",
-                    "country": NSNull() /* null in dictionary */,
+                    "country": NSNull(),  // null in dictionary
                     "nicknames": ["john", "johnny", NSNull()],
                     "profiles": [
                         "facebook": "fb_123",
@@ -25,14 +29,14 @@ class NSDictionary_StripeTest: XCTestCase {
                     ],
                 ],
                 "fees": [
-                    NSNull() /* null in array */,
+                    NSNull(),  // null in array
                     [
                         "id": "fee_123",
                         "frequency": NSNull(),
                     ],
                     ["payment", NSNull()],
                 ],
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
 
         let expected =
             [
@@ -49,43 +53,43 @@ class NSDictionary_StripeTest: XCTestCase {
                         "id": "fee_123"
                     ], ["payment"],
                 ],
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
 
-        let result = dictionary.stp_dictionaryByRemovingNulls() as NSDictionary
-        XCTAssertEqual(result, expected)
+        let result = dictionary.stp_dictionaryByRemovingNulls()
+        XCTAssertEqual(result as NSDictionary, expected as NSDictionary)
     }
 
     func test_dictionaryByRemovingNullsValidatingRequiredFields_keepsEmptyLeaves() {
         let dictionary =
             [
                 "id": NSNull()
-            ] as NSDictionary
-        let result = dictionary.stp_dictionaryByRemovingNulls() as NSDictionary
+            ] as [AnyHashable: Any]
+        let result = dictionary.stp_dictionaryByRemovingNulls()
 
-        XCTAssertEqual(result, [:])
+        XCTAssertEqual(result as NSDictionary, [:] as NSDictionary)
     }
 
     // MARK: - dictionaryByRemovingNonStrings
     func test_dictionaryByRemovingNonStrings_basicCases() {
         // Empty dictionary
-        var dictionary = [:] as NSDictionary
-        var expected = [:] as NSDictionary
-        var result = dictionary.stp_dictionaryByRemovingNonStrings() as NSDictionary
-        XCTAssertEqual(result, expected)
+        var dictionary = [:] as [AnyHashable: Any]
+        var expected = [:] as [AnyHashable: Any]
+        var result = dictionary.stp_dictionaryByRemovingNonStrings()
+        XCTAssertEqual(result as NSDictionary, expected as NSDictionary)
 
         // Regular case
         dictionary =
             [
                 "user": "user_123",
                 "nicknames": "John, Johnny",
-            ] as NSDictionary
+            ]
         expected =
             [
                 "user": "user_123",
                 "nicknames": "John, Johnny",
-            ] as NSDictionary
-        result = dictionary.stp_dictionaryByRemovingNonStrings() as NSDictionary
-        XCTAssertEqual(result, expected)
+            ]
+        result = dictionary.stp_dictionaryByRemovingNonStrings()
+        XCTAssertEqual(result as NSDictionary, expected as NSDictionary)
 
         // Strips non-NSString keys and values
         dictionary =
@@ -94,22 +98,42 @@ class NSDictionary_StripeTest: XCTestCase {
                 "nicknames": "John, Johnny",
                 "profiles": NSNull(),
                 NSNull(): "San Francisco, CA",
-                NSNull(): NSNull(),
                 "age": NSNumber(value: 21),
                 NSNumber(value: 21): "age",
+                "fees": [
+                    "plan": "monthly"
+                ],
+                "visits": ["january", "february"],
+            ]
+        expected =
+            [
+                "user": "user_123",
+                "nicknames": "John, Johnny",
+            ]
+        result = dictionary.stp_dictionaryByRemovingNonStrings()
+        XCTAssertEqual(result as NSDictionary, expected as NSDictionary)
+
+        // Strips non-NSString keys and values
+        dictionary =
+            [
+                "user": "user_123",
+                "nicknames": "John, Johnny",
+                "profiles": NSNull(),
+                NSNull(): NSNull(),
+                "age": NSNumber(value: 21),
                 NSNumber(value: 21): NSNumber(value: 21),
                 "fees": [
                     "plan": "monthly"
                 ],
                 "visits": ["january", "february"],
-            ] as NSDictionary
+            ]
         expected =
             [
                 "user": "user_123",
                 "nicknames": "John, Johnny",
-            ] as NSDictionary
-        result = dictionary.stp_dictionaryByRemovingNonStrings() as NSDictionary
-        XCTAssertEqual(result, expected)
+            ]
+        result = dictionary.stp_dictionaryByRemovingNonStrings()
+        XCTAssertEqual(result as NSDictionary, expected as NSDictionary)
     }
 
     // MARK: - Getters
@@ -117,7 +141,7 @@ class NSDictionary_StripeTest: XCTestCase {
         let dict =
             [
                 "a": ["foo"]
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
 
         XCTAssertEqual(dict.stp_array(forKey: "a") as! [String], ["foo"])
         XCTAssertNil(dict.stp_array(forKey: "b"))
@@ -132,7 +156,7 @@ class NSDictionary_StripeTest: XCTestCase {
                 "d": "false",
                 "e": "1",
                 "f": "foo",
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
 
         XCTAssertTrue(dict.stp_bool(forKey: "a", or: false))
         XCTAssertFalse(dict.stp_bool(forKey: "b", or: true))
@@ -154,7 +178,7 @@ class NSDictionary_StripeTest: XCTestCase {
                 "g": NSNumber(value: 10.0),
                 "h": NSNumber(value: 10.5),
                 "i": "foo",
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
 
         XCTAssertEqual(dict.stp_int(forKey: "a", or: 0), 1)
         XCTAssertEqual(dict.stp_int(forKey: "b", or: 0), -1)
@@ -172,7 +196,7 @@ class NSDictionary_StripeTest: XCTestCase {
             [
                 "a": NSNumber(value: 0),
                 "b": "0",
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
         let expectedDate = Date(timeIntervalSince1970: 0)
 
         XCTAssertEqual(dict.stp_date(forKey: "a"), expectedDate)
@@ -186,13 +210,14 @@ class NSDictionary_StripeTest: XCTestCase {
                 "a": [
                     "foo": "bar"
                 ]
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
 
         XCTAssertEqual(
             dict.stp_dictionary(forKey: "a")! as NSDictionary,
             [
                 "foo": "bar"
-            ])
+            ] as NSDictionary
+        )
         XCTAssertNil(dict.stp_dictionary(forKey: "b"))
     }
 
@@ -200,7 +225,7 @@ class NSDictionary_StripeTest: XCTestCase {
         let dict =
             [
                 "a": NSNumber(value: 1)
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
 
         XCTAssertEqual(dict.stp_number(forKey: "a"), NSNumber(value: 1))
         XCTAssertNil(dict.stp_number(forKey: "b"))
@@ -210,7 +235,7 @@ class NSDictionary_StripeTest: XCTestCase {
         let dict =
             [
                 "a": "foo"
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
         XCTAssertEqual(dict.stp_string(forKey: "a"), "foo")
         XCTAssertNil(dict.stp_string(forKey: "b"))
     }
@@ -220,7 +245,7 @@ class NSDictionary_StripeTest: XCTestCase {
             [
                 "a": "https://example.com",
                 "b": "not a url",
-            ] as NSDictionary
+            ] as [AnyHashable: Any]
         XCTAssertEqual(dict.stp_url(forKey: "a"), URL(string: "https://example.com"))
         XCTAssertNil(dict.stp_url(forKey: "b"))
         XCTAssertNil(dict.stp_url(forKey: "c"))

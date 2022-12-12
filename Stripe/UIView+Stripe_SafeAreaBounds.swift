@@ -1,6 +1,6 @@
 //
 //  UIView+Stripe_SafeAreaBounds.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 12/12/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -17,7 +17,8 @@ extension UIView {
             x: bounds.origin.x + insets.left,
             y: bounds.origin.y,
             width: bounds.size.width - (insets.left + insets.right),
-            height: bounds.size.height)
+            height: bounds.size.height
+        )
         return safeBounds
     }
 }

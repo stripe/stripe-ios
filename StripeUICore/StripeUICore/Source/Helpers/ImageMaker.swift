@@ -3,6 +3,7 @@
 //  StripeUICore
 //
 //  Created by Mel Ludowise on 9/10/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -66,8 +67,5 @@ import UIKit
 }
 
 @_spi(STP) public func isDarkMode() -> Bool {
-    if #available(iOS 13.0, *) {
-        return UITraitCollection.current.isDarkMode
-    }
-    return false
+    return UITraitCollection.current.isDarkMode
 }

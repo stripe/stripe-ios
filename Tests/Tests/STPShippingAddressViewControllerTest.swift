@@ -8,7 +8,11 @@
 
 import Stripe
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPShippingAddressViewControllerTest: XCTestCase {
     func testPrefilledBillingAddress_removeAddress() {
@@ -22,7 +26,8 @@ class STPShippingAddressViewControllerTest: XCTestCase {
         address.line1 = "55 John St"
         address.city = "Harare"
         address.postalCode = "10002"
-        address.country = "ZW"  // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+        // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+        address.country = "ZW"
         // Sanity checks
         XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
         XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
@@ -33,7 +38,8 @@ class STPShippingAddressViewControllerTest: XCTestCase {
             currency: nil,
             shippingAddress: address,
             selectedShippingMethod: nil,
-            prefilledInformation: nil)
+            prefilledInformation: nil
+        )
 
         XCTAssertNoThrow(sut.loadView())
         XCTAssertNoThrow(sut.viewDidLoad())
@@ -48,7 +54,7 @@ class STPShippingAddressViewControllerTest: XCTestCase {
             let config = STPFixtures.paymentConfiguration()
             config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
             config.availableCountries = Set<String>(["CA", "BT"])
-            
+
             let address = STPAddress()
             address.name = "John Smith Doe"
             address.phone = "8885551212"
@@ -58,15 +64,16 @@ class STPShippingAddressViewControllerTest: XCTestCase {
             address.state = "NY"
             address.postalCode = "10002"
             address.country = "US"
-            
+
             let sut = STPShippingAddressViewController(
                 configuration: config,
                 theme: STPTheme.defaultTheme,
                 currency: nil,
                 shippingAddress: address,
                 selectedShippingMethod: nil,
-                prefilledInformation: nil)
-            
+                prefilledInformation: nil
+            )
+
             XCTAssertNoThrow(sut.loadView())
             XCTAssertNoThrow(sut.viewDidLoad())
         }
@@ -80,7 +87,7 @@ class STPShippingAddressViewControllerTest: XCTestCase {
             XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
             let config = STPFixtures.paymentConfiguration()
             config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
-            
+
             let address = STPAddress()
             address.name = "John Smith Doe"
             address.phone = "8885551212"
@@ -90,15 +97,16 @@ class STPShippingAddressViewControllerTest: XCTestCase {
             address.state = "NY"
             address.postalCode = "10002"
             address.country = "US"
-            
+
             let sut = STPShippingAddressViewController(
                 configuration: config,
                 theme: STPTheme.defaultTheme,
                 currency: nil,
                 shippingAddress: address,
                 selectedShippingMethod: nil,
-                prefilledInformation: nil)
-            
+                prefilledInformation: nil
+            )
+
             XCTAssertNoThrow(sut.loadView())
             XCTAssertNoThrow(sut.viewDidLoad())
         }

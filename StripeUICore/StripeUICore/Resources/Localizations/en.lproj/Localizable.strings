@@ -57,6 +57,9 @@ Label of an address field */
 /* Done button title */
 "Done" = "Done";
 
+/* Button title to enter editing mode */
+"Edit" = "Edit";
+
 /* Label of an address field */
 "Eircode" = "Eircode";
 
@@ -77,6 +80,9 @@ Label of an address field */
 
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Incomplete phone number";
+
+/* Error message when UPI ID is invalid */
+"Invalid UPI ID" = "Invalid UPI ID";
 
 /* Label of an address field */
 "Island" = "Island";
@@ -149,6 +155,9 @@ Label of an address field */
 
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Unable to parse phone number";
+
+/* Label for UPI ID number field on form */
+"UPI ID" = "UPI ID";
 
 /* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Use rotor to access links";

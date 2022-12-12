@@ -1,0 +1,161 @@
+"+ Add" = "+ Hinzufügen";
+
+"Add a card" = "Karte hinzufügen";
+
+"Add a payment method" = "Zahlungsmethode hinzufügen";
+
+"Add bank account" = "Bankkonto hinzufügen";
+
+"Add new payment method" = "Neue Zahlungsmethode hinzufügen";
+
+"Add your payment information" = "Zahlungsinformationen hinzufügen";
+
+"Are you sure you want to remove this card?" = "Sind Sie sicher, dass Sie diese Karte entfernen möchten?";
+
+"Are you sure you want to remove this linked account?" = "Sind Sie sicher, dass Sie dieses verknüpfte Konto entfernen möchten?";
+
+"Back" = "Zurück";
+
+"Bank account" = "Bankkonto";
+
+"Buy now or pay later with Klarna." = "Jetzt kaufen oder später mit Klarna bezahlen.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie fortfahren, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Indem Sie fortfahren, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Indem Sie Link beitreten, stimmen Sie den <terms>Nutzungsbedingungen</terms> und der <privacy>Datenschutzerklärung</privacy> zu.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Durch Angabe der Zahlungsinformationen und Bestätigung der Zahlung ermächtigen Sie (A) %@ und Stripe, unseren Zahlungsdienstleister, Zahlungen von Ihrem Konto mittels Lastschrift einzuziehen. Zugleich (B) weisen Sie Ihr Kreditinstitut gemäß diesen Anweisungen an, Ihr Konto entsprechend zu belasten. Sie haben im Rahmen Ihrer Rechte Anspruch auf Erstattung von Ihrem Kreditinstitut gemäß den vereinbarten Bedingungen mit Ihrem Kreditinstitut. Sie können innerhalb von 8 Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit Ihrem Kreditinstitut vereinbarten Bedingungen. Weiterhin erklären Sie sich damit einverstanden, die Vorabankündigung bis spätestens 2 Tage vor Zahlungseinzug zu erhalten.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie Ihr Bankkonto für %@ speichern, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
+
+"Change email" = "E-Mail ändern";
+
+"Choose a payment method" = "Zahlungsmethode auswählen ";
+
+"Close card scanner" = "Kartenscanner schließen";
+
+"Code field" = "Code-Feld";
+
+"Code sent" = "Code wurde gesendet";
+
+"Default" = "Standard";
+
+"Double tap to edit" = "Doppelklick zum Bearbeiten";
+
+"EPS Bank" = "EPS-Bank";
+
+"Enter address manually" = "Adresse manuell eingeben";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Geben Sie den an %@ gesendeten Code ein, um Link als Ihre Standard-Zahlungsmethode festzulegen.";
+
+"Enter your verification code" = "Verifizierungscode eingeben";
+
+"For security, please re-enter your card’s security code." = "Geben Sie aus Sicherheitsgründen bitte den Sicherheitscode Ihrer Karte erneut ein.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Bei Link registrieren";
+
+"Log out of Link" = "Von Link abmelden";
+
+"Not %@?" = "Nicht %@?";
+
+"Or" = "Oder";
+
+"Or pay using" = "Oder zahlen mit";
+
+"Or pay with a card" = "Oder mit Karte bezahlen";
+
+"Pay %@" = "%@ zahlen";
+
+"Pay another way" = "Andere Zahlungsmethode wählen";
+
+"Pay faster at %@ and thousands of merchants." = "Bei %@ und tausenden anderen Händlern schneller bezahlen.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zahlen Sie mit <img/> in <num_installments/> zinslosen Raten zu je <installment_price/>.";
+
+"Pay later with Klarna." = "Später mit Klarna bezahlen.";
+
+"Pay over time with %@" = "Ratenzahlung mit %@";
+
+"Pay using" = "Zahlen mit";
+
+"Pay with %@" = "Mit %@ bezahlen";
+
+"Pay with your bank account in just a few steps." = "In nur wenigen Schritten von Ihrem Bankkonto aus zahlen.";
+
+"Payment" = "Zahlung";
+
+"Payment methods" = "Zahlungsmethoden";
+
+"Point the camera at your card." = "Richten Sie die Kamera auf die Karte.";
+
+"Processing..." = "Wird verarbeitet …";
+
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
+"Remove %1$@ ending in %2$@" = "%1$@ endend auf %2$@ entfernen";
+
+"Remove Card" = "Karte entfernen";
+
+"Remove card" = "Karte entfernen";
+
+"Remove linked account" = "Verknüpftes Konto entfernen";
+
+"Resend code" = "Code erneut senden";
+
+"Save address" = "Adresse speichern";
+
+"Save for future payments" = "Für zukünftige Zahlungen speichern";
+
+"Save my info for secure 1-click checkout" = "Meine Angaben für sichere Bezahlungen mit nur einem Klick speichern";
+
+"Save this account for future %@ payments" = "Konto für zukünftige %@-Zahlungen speichern";
+
+"Save this card for future %@ payments" = "Karte für zukünftige Zahlungen von %@ speichern";
+
+"Secure 1⁠-⁠click checkout" = "Mit nur einem Klick sicher bezahlen";
+
+"Select your payment method" = "Zahlungsmethode auswählen";
+
+"Set as default" = "Als Standard festlegen";
+
+"Set as default payment method" = "Als Standard-Zahlungsmethode festlegen";
+
+"Set up" = "Einrichten";
+
+"Shipping to %@ is not supported." = "Der Versandort %@ wird nicht unterstützt.";
+
+"Show menu" = "Menü anzeigen";
+
+"Sign in to your Link account" = "Bei Ihrem Link-Konto anmelden";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "In ein bis zwei Werktagen wird Stripe Ihrem Konto einen Betrag von 0,01 USD gutschreiben. Danach erhalten Sie eine E-Mail mit weiteren Anweisungen zur Durchführung der Zahlung an %@.";
+
+"Tap to close" = "Antippen um weniger anzuzeigen";
+
+"Tap to expand" = "Antippen um mehr anzuzeigen";
+
+"The IBAN you entered is incomplete." = "Die eingegebene IBAN ist unvollständig.";
+
+"The provided verification code has expired." = "Der angegebene Verifizierungscode ist abgelaufen.";
+
+"The provided verification code is incorrect." = "Der angegebene Verifizierungscode ist falsch.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Diese Karte ist abgelaufen. Aktualisieren Sie die Kartendaten oder ändern Sie die Zahlungsmethode.";
+
+"This is your default" = "Dies ist Ihre Standard-Methode";
+
+"Too many attempts. Please try again in a few minutes." = "Zu viele Versuche. Versuchen Sie es in ein paar Minuten noch einmal.";
+
+"Unavailable for this purchase" = "Nicht verfügbar für diesen Kauf";
+
+"Update card" = "Karte aktualisieren";
+
+"Use your saved info to check out faster" = "Nutzen Sie Ihre gespeicherten Angaben, um den Kauf schneller abzuschließen.";
+
+"Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
+
+"iDEAL Bank" = "iDEAL-Bank";

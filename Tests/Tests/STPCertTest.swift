@@ -1,15 +1,18 @@
 //
 //  STPCertTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Phillip Cohen on 4/14/14.
-//
+//  Copyright © 2014 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
 
-@testable import Stripe
-@_spi(STP) @testable import StripeCore
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 let STPExamplePublishableKey = "bad_key"
 
@@ -36,7 +39,8 @@ class STPCertTest: XCTestCase {
             XCTAssertEqual((error as NSError?)?.domain, "NSURLErrorDomain")
             XCTAssertNotNil(
                 (error as NSError?)?.userInfo["NSURLErrorFailingURLPeerTrustErrorKey"],
-                "There should be a secTustRef for Foundation HTTPS errors")
+                "There should be a secTustRef for Foundation HTTPS errors"
+            )
         }
     }
 

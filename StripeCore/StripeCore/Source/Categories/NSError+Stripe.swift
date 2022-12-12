@@ -1,6 +1,6 @@
 //
 //  NSError+Stripe.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Brian Dorfman on 8/4/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -15,7 +15,8 @@ extension NSError {
             STPError.errorMessageKey: "There was an error connecting to Stripe.",
         ]
         return NSError(
-            domain: STPError.stripeDomain, code: STPErrorCode.connectionError.rawValue,
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.connectionError.rawValue,
             userInfo: userInfo
         )
     }
@@ -27,7 +28,10 @@ extension NSError {
                 "The response from Stripe failed to get parsed into valid JSON.",
         ]
         return NSError(
-            domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue, userInfo: userInfo)
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.apiError.rawValue,
+            userInfo: userInfo
+        )
     }
 
     @objc @_spi(STP) public class func stp_ephemeralKeyDecodingError() -> NSError {
@@ -37,8 +41,10 @@ extension NSError {
                 "Failed to decode the ephemeral key. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app.",
         ]
         return NSError(
-            domain: STPError.stripeDomain, code: STPErrorCode.ephemeralKeyDecodingError.rawValue,
-            userInfo: userInfo)
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.ephemeralKeyDecodingError.rawValue,
+            userInfo: userInfo
+        )
     }
 
     @objc @_spi(STP) public class func stp_clientSecretError() -> NSError {
@@ -48,27 +54,34 @@ extension NSError {
                 "The `secret` format does not match expected client secret formatting.",
         ]
         return NSError(
-            domain: STPError.stripeDomain, code: STPErrorCode.invalidRequestError.rawValue,
-            userInfo: userInfo)
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.invalidRequestError.rawValue,
+            userInfo: userInfo
+        )
     }
 
     // TODO(davide): We'll want to move these into StripePayments, once it exists.
-    
+
     // MARK: Strings
     @objc @_spi(STP) public class func stp_cardErrorInvalidNumberUserMessage() -> String {
         return STPLocalizedString(
-            "Your card's number is invalid", "Error when the card number is not valid")
+            "Your card's number is invalid",
+            "Error when the card number is not valid"
+        )
     }
 
     @objc @_spi(STP) public class func stp_cardInvalidCVCUserMessage() -> String {
         return STPLocalizedString(
-            "Your card's security code is invalid", "Error when the card's CVC is not valid")
+            "Your card's security code is invalid",
+            "Error when the card's CVC is not valid"
+        )
     }
 
     @objc @_spi(STP) public class func stp_cardErrorInvalidExpMonthUserMessage() -> String {
         return STPLocalizedString(
             "Your card's expiration month is invalid",
-            "Error when the card's expiration month is not valid")
+            "Error when the card's expiration month is not valid"
+        )
     }
 
     @objc @_spi(STP) public class func stp_cardErrorInvalidExpYearUserMessage() -> String {
@@ -80,12 +93,15 @@ extension NSError {
 
     @objc @_spi(STP) public class func stp_cardErrorExpiredCardUserMessage() -> String {
         return STPLocalizedString(
-            "Your card has expired", "Error when the card has already expired")
+            "Your card has expired",
+            "Error when the card has already expired"
+        )
     }
 
     @objc @_spi(STP) public class func stp_cardErrorDeclinedUserMessage() -> String {
         return STPLocalizedString(
-            "Your card was declined", "Error when the card was declined by the credit card networks"
+            "Your card was declined",
+            "Error when the card was declined by the credit card networks"
         )
     }
 
@@ -99,7 +115,8 @@ extension NSError {
     @objc @_spi(STP) public class func stp_cardErrorProcessingErrorUserMessage() -> String {
         return STPLocalizedString(
             "There was an error processing your card -- try again in a few seconds",
-            "Error when there is a problem processing the credit card")
+            "Error when there is a problem processing the credit card"
+        )
     }
 
     @_spi(STP) public static var stp_invalidOwnerName: String {
@@ -108,7 +125,7 @@ extension NSError {
             "Error when customer's name is invalid"
         )
     }
-    
+
     @_spi(STP) public static var stp_invalidBankAccountIban: String {
         return STPLocalizedString(
             "The IBAN you entered is invalid.",

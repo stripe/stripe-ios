@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 22.7.1
+          Stripe iOS SDKs 23.3.0
         </a>
         
       </p>
@@ -113,7 +113,8 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">final</span> <span class="kd">public</span> <span class="kd">class</span> <span class="kt">FinancialConnectionsSheet</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@available(iOSApplicationExtension, unavailable)</span>
+<span class="kd">final</span> <span class="kd">public</span> <span class="kd">class</span> <span class="kt">FinancialConnectionsSheet</span></code></pre>
 
                 </div>
               </div>
@@ -121,7 +122,7 @@
 This class is in beta; see <a href="https://stripe.com/docs/financial-connections">https://stripe.com/docs/financial-connections</a> for access</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L15-L133">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L16-L166">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -166,7 +167,7 @@ This class is in beta; see <a href="https://stripe.com/docs/financial-connection
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L20-L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L21-L28">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -210,7 +211,38 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L46">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:26StripeFinancialConnections0bC5SheetC9returnURLSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/returnURL" class="dashAnchor"></a>
+                    <a class="token" href="#/s:26StripeFinancialConnections0bC5SheetC9returnURLSSSgvp">returnURL</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A URL that redirects back to your app that FinancialConnectionsSheet can use
+get back to your app after completing authentication in another app (such as bank app or Safari).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -235,12 +267,12 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">apiClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">apiClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L53-L57">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -261,9 +293,9 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:26StripeFinancialConnections0bC5SheetC09financialC19SessionClientSecretACSS_tcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(financialConnectionsSessionClientSecret:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:26StripeFinancialConnections0bC5SheetC09financialC19SessionClientSecretACSS_tcfc">init(financialConnectionsSessionClientSecret:<wbr>)</a>
+                    <a name="/s:26StripeFinancialConnections0bC5SheetC09financialC19SessionClientSecret9returnURLACSS_SSSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(financialConnectionsSessionClientSecret:returnURL:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:26StripeFinancialConnections0bC5SheetC09financialC19SessionClientSecret9returnURLACSS_SSSgtcfc">init(financialConnectionsSessionClientSecret:<wbr>returnURL:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -278,7 +310,7 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">financialConnectionsSessionClientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">financialConnectionsSessionClientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -298,11 +330,23 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A URL that redirects back to your application. FinancialConnectionsSheet uses it after completing authentication in another application (such as a bank application or Safari).</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L66-L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L77-L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -340,7 +384,8 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">present</span><span class="p">(</span><span class="n">from</span> <span class="nv">presentingViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOSApplicationExtension, unavailable)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">present</span><span class="p">(</span><span class="n">from</span> <span class="nv">presentingViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
                     <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/FinancialConnectionsSheet/Result.html">Result</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">())</span></code></pre>
 
                         </div>
@@ -377,7 +422,7 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L100-L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift#L116-L165">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -390,7 +435,7 @@ See <a href="https://stripe.com/docs/api/financial_connections/sessions/object#f
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-08-31)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-12-05)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

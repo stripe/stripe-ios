@@ -1,6 +1,6 @@
 //
 //  UIViewController+Stripe_ParentViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 1/12/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -9,7 +9,9 @@
 import UIKit
 
 extension UIViewController {
-    @objc(stp_parentViewControllerOfClass:) func stp_parentViewControllerOf(_ klass: AnyClass)
+    @objc(stp_parentViewControllerOfClass:) func stp_parentViewControllerOf(
+        _ klass: AnyClass
+    )
         -> UIViewController?
     {
         if let parent = parent, parent.isKind(of: klass) {

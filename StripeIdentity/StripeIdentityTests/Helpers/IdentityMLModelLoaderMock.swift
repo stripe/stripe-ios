@@ -3,10 +3,12 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 2/2/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
+
 @testable import StripeIdentity
 
 final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
@@ -29,11 +31,15 @@ final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
         return faceModelsPromise
     }
 
-    func startLoadingDocumentModels(from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage) {
+    func startLoadingDocumentModels(
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
+    ) {
         didStartLoadingDocumentModels = true
     }
 
-    func startLoadingFaceModels(from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage) {
+    func startLoadingFaceModels(
+        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    ) {
         didStartLoadingFaceModels = true
     }
 }

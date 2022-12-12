@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ završava na %2$@";
+
+"Address line 2 (optional)" = "Ulica i kućni broj 2 (neobavezno)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Bankovni račun";
+
+"Billing Address" = "Adresa za naplatu";
+
+"Billing address" = "Adresa za naplatu";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Informacije o kartici";
+
+"Card number" = "Broj kartice";
+
+"Invalid data." = "Nevaljani podaci.";
+
+"MM / YY" = "MM / GG";
+
+"MM/YY" = "MM/GG";
+
+"Postal Code" = "Poštanski broj";
+
+"Shipping Address" = "Adresa za otpremu";
+
+"State / Province / Region" = "Država / pokrajina / regija";
+
+"The BSB you entered is invalid." = "Uneseni BSB nije valjan.";
+
+"To scan your card, allow camera access in Settings." = "Da biste skenirali karticu, dopustite pristup kameri u Postavkama.";
+
+"Your ZIP is invalid." = "Vaš ZIP broj nije valjan.";
+
+"Your card number is incomplete." = "Broj vaše kartice nije kompletan.";
+
+"Your card number is invalid." = "Broj vaše kartice nije valjan.";
+
+"Your card's expiration date is incomplete." = "Datum isteka vaše kartice nije kompletan.";
+
+"Your card's expiration date is invalid." = "Datum isteka vaše kartice nije valjan.";
+
+"Your card's expiration month is invalid." = "Mjesec isteka kartice nije valjan.";
+
+"Your card's expiration year is invalid." = "Godina isteka kartice nije valjana.";
+
+"Your card's security code is incomplete." = "Sigurnosni kod vaše kartice nije kompletan.";
+
+"Your card's security code is invalid." = "Sigurnosni kod vaše kartice nije valjan.";
+
+"Your postal code is invalid." = "Vaš poštanski broj nije valjan.";
+
+"card number" = "broj kartice";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "Datum isteka";

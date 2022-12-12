@@ -1,3 +1,94 @@
+## X.Y.Z 2022-xx-xx
+* [Fixed] Fixed a bug where 3 decimal place currencies were not being formatted properly.
+
+### PaymentSheet
+* [Fixed] Fixed an issue that caused animations of the card logos in the Card input field to glitch.
+* [Fixed] Fixed a layout issue in the "Save my info" checkbox.
+
+### CardScan
+* [Fixed] Fixed UX model loading from the wrong bundle. [#2078](https://github.com/stripe/stripe-ios/issues/2078) (Thanks [nickm01](https://github.com/nickm01))
+
+## 23.3.0 2022-12-05
+### PaymentSheet
+* [Added] Added logos of accepted card brands on Card input field.
+* [Fixed] Fixed erroneously displaying the card scan button when card scanning is not available.
+
+### Financial Connections
+* [Changed] FinancialConnectionsSheet methods now require to be called from non-extensions. 
+* [Changed] BankAccountToken.bankAccount was changed to an optional.
+
+## 23.2.0 2022-11-14
+### PaymentSheet
+* [Added] Added `AddressViewController`, a customizable view controller that collects local and international addresses for your customers. See https://stripe.com/docs/elements/address-element?platform=ios.
+* [Added] Added `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress`. Previously, to allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, you attached a shipping address to the PaymentIntent before initializing PaymentSheet. Now, you can instead set this property to `true` and set `PaymentSheet.Configuration.shippingDetails` to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
+* [Fixed] Fixed user facing error messages for card related errors.
+* [Fixed] Fixed `setup_future_usage` value being set when there's no customer.
+
+## 23.1.1 2022-11-07
+### Payments
+* [Fixed] Fixed an issue with linking the StripePayments SDK in certain configurations.
+
+## 23.1.0 2022-10-31
+### CardScan
+* [Added] Added a README.md for the `CardScanSheet` integration.
+
+### PaymentSheet
+* [Added] Added parameters to customize the primary button and Apple Pay button labels. They can be found under `PaymentSheet.Configuration.primaryButtonLabel` and `PaymentSheet.ApplePayConfiguration.buttonType` respectively.
+
+## 23.0.0 2022-10-24
+### Payments
+* [Changed] Reduced the size of the SDK by splitting the `Stripe` module into `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+
+|Module|Description|Compressed|Uncompressed|
+|------|-----------|----------|------------|
+|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|2.7MB|6.3MB|
+|Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](/docs/mobile/ios/basic).|2.3MB|5.1MB|
+|StripeApplePay|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.4MB|1.0MB|
+|StripePayments|Bindings for the Stripe Payments API.|1.0MB|2.6MB|
+|StripePaymentsUI|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|1.7MB|3.9MB|
+
+* [Changed] The minimum iOS version is now 13.0. If you'd like to deploy for iOS 12.0, please use Stripe SDK 22.8.4.
+* [Changed] STPPaymentCardTextField's `cardParams` parameter has been deprecated in favor of `paymentMethodParams`, making it easier to include the postal code from the card field. If you need to access the `STPPaymentMethodCardParams`, use `.paymentMethodParams.card`.
+
+### PaymentSheet
+* [Fixed] Fixed a validation issue where cards expiring at the end of the current month were incorrectly treated as expired.
+* [Fixed] Fixed a visual bug in iOS 16 where advancing between text fields would momentarily dismiss the keyboard.
+
+## 22.8.4 2022-10-12
+### PaymentSheet
+* [Fixed] Use `.formSheet` modal presentation in Mac Catalyst. [#2023](https://github.com/stripe/stripe-ios/issues/2023) (Thanks [sergiocampama](https://github.com/sergiocampama)!)
+
+## 22.8.3 2022-10-03
+### CardScan
+* [Fixed] [Garbled privacy link text in Card Scan UI](https://github.com/stripe/stripe-ios/issues/2015)
+
+## 22.8.2 2022-09-19
+### Identity
+* [Changed] Support uploading single side documents.
+* [Fixed] Fixed Xcode 14 support.
+### Financial Connections
+* [Fixed] Fixes an issue of returning canceled result from FinancialConnections if user taps cancel on the manual entry success screen.
+### CardScan
+* [Added] Added a new parameter to CardScanSheet.present() to specify if the presentation should be done animated or not. Defaults to true.
+* [Changed] Changed card scan ML model loading to be async.
+* [Changed] Changed minimum deployment target for card scan to iOS 13.
+
+## 22.8.1 2022-09-12
+### PaymentSheet
+* [Fixed] Fixed potential crash when using Link in Mac Catalyst.
+* [Fixed] Fixed Right-to-Left (RTL) layout issues.
+
+### Apple Pay
+* [Fixed] Fixed an issue where `applePayContext:willCompleteWithResult:authorizationResult:handler:` may not be called in Objective-C implementations of `STPApplePayContextDelegate`.
+
+## 22.8.0 2022-09-06
+### PaymentSheet
+* [Changed] Renamed `PaymentSheet.reset()` to `PaymentSheet.resetCustomer()`. See `MIGRATING.md` for more info.
+* [Added] You can now set closures in `PaymentSheet.ApplePayConfiguration.customHandlers` to configure the PKPaymentRequest and PKPaymentAuthorizationResult during a transaction. This enables you to build support for [Merchant Tokens](https://developer.apple.com/documentation/passkit/pkpaymentrequest/3916053-recurringpaymentrequest) and [Order Tracking](https://developer.apple.com/documentation/passkit/pkpaymentorderdetails) in iOS 16.
+
+### Apple Pay
+* [Added] You can now implement the `applePayContext(_:willCompleteWithResult:handler:)` function in your `ApplePayContextDelegate` to configure the PKPaymentAuthorizationResult during a transaction. This enables you to build support for [Order Tracking](https://developer.apple.com/documentation/passkit/pkpaymentorderdetails) in iOS 16.
+
 ## 22.7.1 2022-08-31
 * [Fixed] Fixed Mac Catalyst support in Xcode 14. [#2001](https://github.com/stripe/stripe-ios/issues/2001)
 

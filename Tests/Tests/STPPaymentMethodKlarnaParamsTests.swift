@@ -8,7 +8,12 @@
 
 import Foundation
 import StripeCoreTestUtils
-@testable import Stripe
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodKlarnaParamsTests: XCTestCase {
 
@@ -31,29 +36,33 @@ class STPPaymentMethodKlarnaParamsTests: XCTestCase {
         let params = STPPaymentMethodParams(
             klarna: klarnaParams,
             billingDetails: billingDetails,
-            metadata: nil)
+            metadata: nil
+        )
 
         let exp = expectation(description: "Payment Method Klarna create")
 
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        client.createPaymentMethod(with: params) { (paymentMethod: STPPaymentMethod?, error: Error?) in
+        client.createPaymentMethod(with: params) {
+            (paymentMethod: STPPaymentMethod?, error: Error?) in
             exp.fulfill()
 
-            XCTAssertNil(error);
-            XCTAssertNotNil(paymentMethod, "Payment method should be populated");
-            XCTAssertEqual(paymentMethod?.type, .klarna, "Incorrect PaymentMethod type");
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod, "Payment method should be populated")
+            XCTAssertEqual(paymentMethod?.type, .klarna, "Incorrect PaymentMethod type")
 
             XCTAssertEqual(
-                paymentMethod?.billingDetails?.name, "John Smith",
+                paymentMethod?.billingDetails?.name,
+                "John Smith",
                 "Billing name should match the name provided during creation"
             )
 
             XCTAssertEqual(
-                paymentMethod?.billingDetails?.email, "foo@example.com",
+                paymentMethod?.billingDetails?.email,
+                "foo@example.com",
                 "Billing email should match the name provided during creation"
             )
 
-            XCTAssertNotNil(paymentMethod?.klarna, "The `klarna` property must be populated");
+            XCTAssertNotNil(paymentMethod?.klarna, "The `klarna` property must be populated")
         }
 
         self.waitForExpectations(timeout: STPTestingNetworkRequestTimeout)

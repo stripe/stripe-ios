@@ -3,15 +3,14 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/11/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
-/**
- A row inside of a `ListView`
- */
+/// A row inside of a `ListView`
 final class ListItemView: UIView {
     typealias Styling = ListView.Styling
 
@@ -70,17 +69,15 @@ final class ListItemView: UIView {
         return button
     }()
 
-    /*
-     UIButtons are taller than UILabels because they add additional padding
-     around the text to increase the tap target. However, we want the button to
-     visually align with the label and maintain consistent padding around the
-     stackView.
-
-     This view will be added to the stackView instead of the button and
-     constrained to the button's width so that we achieve visual alignment with
-     consistent padding and maintain the button's intrinsic height to ensure a
-     the tap target is big enough.
-     */
+    // UIButtons are taller than UILabels because they add additional padding
+    // around the text to increase the tap target. However, we want the button to
+    // visually align with the label and maintain consistent padding around the
+    // stackView.
+    //
+    // This view will be added to the stackView instead of the button and
+    // constrained to the button's width so that we achieve visual alignment with
+    // consistent padding and maintain the button's intrinsic height to ensure a
+    // the tap target is big enough.
     private let buttonSpacer = UIView()
 
     private var buttonIsHidden: Bool {
@@ -110,7 +107,9 @@ final class ListItemView: UIView {
         isAccessibilityElement = true
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -151,7 +150,10 @@ final class ListItemView: UIView {
         // Configure the new accessory
         switch accessoryViewModel {
         case .button(let title, let tapHandler):
-            assert(itemTapHandler == nil, "ListItemView should not be configured with both a button and a tap action or button will be inaccessible to accessibility to VoiceOver")
+            assert(
+                itemTapHandler == nil,
+                "ListItemView should not be configured with both a button and a tap action or button will be inaccessible to accessibility to VoiceOver"
+            )
 
             buttonIsHidden = false
             buttonTapHandler = tapHandler

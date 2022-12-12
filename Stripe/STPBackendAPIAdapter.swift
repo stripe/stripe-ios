@@ -1,6 +1,6 @@
 //
 //  STPBackendAPIAdapter.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 1/12/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -64,7 +64,9 @@ import UIKit
     /// from the customer on your backend. For example, `completion(nil)` (if your call
     /// succeeds) or `completion(error)` if an error is returned.
     @objc optional func detachPaymentMethod(
-        fromCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?)
+        fromCustomer paymentMethod: STPPaymentMethod,
+        completion: STPErrorBlock?
+    )
     /// Sets the given shipping address on the customer.
     /// If you are implementing your own <STPBackendAPIAdapter>:
     /// On your backend, retrieve the Stripe customer associated with your logged-in user.
@@ -78,5 +80,7 @@ import UIKit
     /// `completion(error)` if an error is returned.
     /// - seealso: https://stripe.com/docs/api#update_customer
     @objc optional func updateCustomer(
-        withShippingAddress shipping: STPAddress, completion: STPErrorBlock?)
+        withShippingAddress shipping: STPAddress,
+        completion: STPErrorBlock?
+    )
 }

@@ -12,6 +12,8 @@
 
 "BSB number" = "Nomor BSB";
 
+"Billing address is same as shipping" = "Alamat tagihan sama dengan pengiriman";
+
 "Cancel" = "Batalkan";
 
 "City" = "Kota";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Selesai";
+
+"Edit" = "Edit";
 
 "Eircode" = "Eircode";
 

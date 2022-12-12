@@ -6,8 +6,13 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
 @_spi(STP) import StripeCore
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPBECSDebitAccountNumberValidatorTests: XCTestCase {
     func testValidationStateForText() {
@@ -161,11 +166,17 @@ class STPBECSDebitAccountNumberValidatorTests: XCTestCase {
             let bsb = test["bsb"] as? String
             let editing = (test["editing"] as? NSNumber)!.boolValue
             let expected = STPTextValidationState(
-                rawValue: (test["expected"] as! NSNumber).intValue)!
+                rawValue: (test["expected"] as! NSNumber).intValue
+            )!
 
             XCTAssertEqual(
                 STPBECSDebitAccountNumberValidator.validationState(
-                    forText: input, withBSBNumber: bsb, completeOnMaxLengthOnly: editing), expected)
+                    forText: input,
+                    withBSBNumber: bsb,
+                    completeOnMaxLengthOnly: editing
+                ),
+                expected
+            )
         }
     }
 
@@ -219,8 +230,11 @@ class STPBECSDebitAccountNumberValidatorTests: XCTestCase {
             let expected = test["expected"]
             XCTAssertEqual(
                 STPBECSDebitAccountNumberValidator.formattedSanitizedText(
-                    from: input, withBSBNumber: bsb),
-                expected)
+                    from: input,
+                    withBSBNumber: bsb
+                ),
+                expected
+            )
         }
     }
 }

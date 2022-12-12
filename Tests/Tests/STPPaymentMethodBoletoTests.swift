@@ -6,15 +6,21 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import StripeCoreTestUtils
-@testable import Stripe
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodBoletoTests: XCTestCase {
 
     private(set) var boletoJSON: [AnyHashable: Any]?
 
-    static let boletoPaymentIntentClientSecret = "pi_3JYFj9JQVROkWvqT0d2HYaTk_secret_c2PniS4q2A7XhZ9mbFwOTpN08"
+    static let boletoPaymentIntentClientSecret =
+        "pi_3JYFj9JQVROkWvqT0d2HYaTk_secret_c2PniS4q2A7XhZ9mbFwOTpN08"
 
     func _retrieveBoletoJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         if let boletoJSON = boletoJSON {

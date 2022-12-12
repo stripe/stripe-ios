@@ -6,21 +6,28 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
-import StripeCoreTestUtils
 @_spi(STP) import StripeCore
-@testable import Stripe
+import StripeCoreTestUtils
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPSetupIntentFunctionalTestSwift: XCTestCase {
 
     // MARK: - US Bank Account
-    func createAndConfirmSetupIntentWithUSBankAccount(completion: @escaping (String?)->Void) {
+    func createAndConfirmSetupIntentWithUSBankAccount(completion: @escaping (String?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         var clientSecret: String? = nil
         let createSIExpectation = expectation(description: "Create SetupIntent")
-        STPTestingAPIClient.shared().createSetupIntent(withParams: ["payment_method_types": ["us_bank_account"]],
-                                                         account: nil) { intentClientSecret, error in
+        STPTestingAPIClient.shared().createSetupIntent(
+            withParams: ["payment_method_types": ["us_bank_account"]],
+            account: nil
+        ) { intentClientSecret, error in
             XCTAssertNil(error)
             XCTAssertNotNil(intentClientSecret)
             clientSecret = intentClientSecret
@@ -31,26 +38,30 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
             XCTFail("Failed to create SetupIntent")
             return
         }
-        
+
         let usBankAccountParams = STPPaymentMethodUSBankAccountParams()
         usBankAccountParams.accountType = .checking
         usBankAccountParams.accountHolderType = .individual
         usBankAccountParams.accountNumber = "000123456789"
         usBankAccountParams.routingNumber = "110000000"
-        
+
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "iOS CI Tester"
         billingDetails.email = "tester@example.com"
-        
-        let paymentMethodParams = STPPaymentMethodParams(usBankAccount: usBankAccountParams,
-                                                         billingDetails: billingDetails,
-                                                         metadata: nil)
-        
+
+        let paymentMethodParams = STPPaymentMethodParams(
+            usBankAccount: usBankAccountParams,
+            billingDetails: billingDetails,
+            metadata: nil
+        )
+
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
         setupIntentParams.paymentMethodParams = paymentMethodParams
 
         let confirmSIExpectation = expectation(description: "Confirm SetupIntent")
-        client.confirmSetupIntent(with: setupIntentParams, expand: ["payment_method"]) { setupIntent, error in
+        client.confirmSetupIntent(with: setupIntentParams, expand: ["payment_method"]) {
+            setupIntent,
+            error in
             XCTAssertNil(error)
             XCTAssertNotNil(setupIntent)
             XCTAssertNotNil(setupIntent?.paymentMethod)
@@ -64,20 +75,22 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
         completion(clientSecret)
     }
-    
+
     func testConfirmSetupIntentWithUSBankAccount_verifyWithAmounts() {
         createAndConfirmSetupIntentWithUSBankAccount { [self] clientSecret in
             guard let clientSecret = clientSecret else {
                 XCTFail("Failed to create SetupIntent")
                 return
             }
-            
+
             let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
             let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret,
-                                                      firstAmount: 32,
-                                                      secondAmount: 45) { setupIntent, error in
+            client.verifySetupIntentWithMicrodeposits(
+                clientSecret: clientSecret,
+                firstAmount: 32,
+                secondAmount: 45
+            ) { setupIntent, error in
                 XCTAssertNil(error)
                 XCTAssertNotNil(setupIntent)
                 XCTAssertEqual(setupIntent?.status, .succeeded)
@@ -86,19 +99,21 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
             waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
         }
     }
-    
+
     func testConfirmSetupIntentWithUSBankAccount_verifyWithDescriptorCode() {
         createAndConfirmSetupIntentWithUSBankAccount { [self] clientSecret in
             guard let clientSecret = clientSecret else {
                 XCTFail("Failed to create SetupIntent")
                 return
             }
-            
+
             let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            
+
             let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret,
-                                                      descriptorCode: "SM11AA") { setupIntent, error in
+            client.verifySetupIntentWithMicrodeposits(
+                clientSecret: clientSecret,
+                descriptorCode: "SM11AA"
+            ) { setupIntent, error in
                 XCTAssertNil(error)
                 XCTAssertNotNil(setupIntent)
                 XCTAssertEqual(setupIntent?.status, .succeeded)
@@ -107,6 +122,5 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
             waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
         }
     }
-
 
 }

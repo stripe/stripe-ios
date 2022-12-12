@@ -14,7 +14,10 @@ final class AuthenticationSessionManager: NSObject {
     // MARK: - Types
 
     enum Result {
-        case success, webCancelled, nativeCancelled
+        case success
+        case webCancelled
+        case nativeCancelled
+        case redirect(url: URL)
     }
 
     // MARK: - Properties
@@ -32,15 +35,29 @@ final class AuthenticationSessionManager: NSObject {
 
     // MARK: - Public
 
-    func start() -> Promise<AuthenticationSessionManager.Result> {
+    func start(additionalQueryParameters: String? = nil) -> Promise<AuthenticationSessionManager.Result> {
         let promise = Promise<AuthenticationSessionManager.Result>()
-        guard let url = URL(string: manifest.hostedAuthUrl) else {
+        
+        guard let hostedAuthUrl = manifest.hostedAuthUrl else {
+            promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "NULL `hostedAuthUrl`"))
+            return promise
+        }
+        
+        let urlString = hostedAuthUrl + (additionalQueryParameters ?? "")
+
+        guard let url = URL(string: urlString) else {
             promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Malformed hosted auth URL"))
             return promise
         }
+        
+        guard let successUrl = manifest.successUrl else {
+            promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "NULL `successUrl`"))
+            return promise
+        }
+
         let authSession = ASWebAuthenticationSession(
             url: url,
-            callbackURLScheme: URL(string: manifest.successUrl)?.scheme,
+            callbackURLScheme: URL(string: successUrl)?.scheme,
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
                 if let error = error {
@@ -66,14 +83,14 @@ final class AuthenticationSessionManager: NSObject {
                     promise.resolve(with: .success)
                 } else if returnUrlString == self.manifest.cancelUrl {
                     promise.resolve(with: .webCancelled)
+                } else if returnUrlString.hasNativeRedirectPrefix, let targetURL = URL(string: returnUrlString.droppingNativeRedirectPrefix()) {
+                    promise.resolve(with: .redirect(url: targetURL))
                 } else {
                     promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Nil return URL"))
                 }
         })
-        if #available(iOS 13.0, *) {
-            authSession.presentationContextProvider = self
-            authSession.prefersEphemeralWebBrowserSession = true
-        }
+        authSession.presentationContextProvider = self
+        authSession.prefersEphemeralWebBrowserSession = true
 
         self.authSession = authSession
         if #available(iOS 13.4, *) {
@@ -94,6 +111,7 @@ final class AuthenticationSessionManager: NSObject {
         if #available(iOS 13, *) {
             UIView.setAnimationsEnabled(false)
         }
+
         if !authSession.start() {
             if #available(iOS 13, *) {
                 UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
@@ -115,7 +133,7 @@ final class AuthenticationSessionManager: NSObject {
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 /// :nodoc:
-@available(iOS 13, *)
+
 extension AuthenticationSessionManager: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

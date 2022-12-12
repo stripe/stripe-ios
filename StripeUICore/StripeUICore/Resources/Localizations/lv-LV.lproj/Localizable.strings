@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB numurs";
 
+"Billing address is same as shipping" = "Norēķinu adrese un piegādes adrese sakrīt";
+
 "Cancel" = "Atcelt";
 
 "City" = "Pilsēta";
@@ -33,6 +35,8 @@
 "Do Si" = "Province un pilsēta (Do Si)";
 
 "Done" = "Gatavs";
+
+"Edit" = "Rediģēt";
 
 "Eircode" = "Pasta indekss (Eirkods)";
 

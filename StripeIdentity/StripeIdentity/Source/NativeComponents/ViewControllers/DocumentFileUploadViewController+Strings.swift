@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/4/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -59,10 +60,13 @@ extension DocumentFileUploadViewController {
         }
     }
 
-    func accessibilityLabel(for side: DocumentSide, uploadStatus: DocumentUploader.UploadStatus) -> String {
+    func accessibilityLabel(
+        for side: DocumentSide,
+        uploadStatus: DocumentUploader.UploadStatus
+    ) -> String {
         switch uploadStatus {
         case .notStarted,
-                .error:
+            .error:
             return selectAccessibilityLabel(for: side)
         case .inProgress:
             return uploadingAccessibilityLabel(for: side)

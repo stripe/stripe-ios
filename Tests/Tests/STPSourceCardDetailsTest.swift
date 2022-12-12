@@ -1,6 +1,6 @@
 //
 //  STPSourceCardDetailsTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Joey Dong on 6/21/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPSourceCardDetailsTest: XCTestCase {
     // MARK: - STPSourceCard3DSecureStatus Tests
@@ -20,9 +24,13 @@ class STPSourceCardDetailsTest: XCTestCase {
         XCTAssertEqual(STPSourceCardDetails.threeDSecureStatus(from: "OPTIONAL"), .optional)
 
         XCTAssertEqual(
-            STPSourceCardDetails.threeDSecureStatus(from: "not_supported"), .notSupported)
+            STPSourceCardDetails.threeDSecureStatus(from: "not_supported"),
+            .notSupported
+        )
         XCTAssertEqual(
-            STPSourceCardDetails.threeDSecureStatus(from: "NOT_SUPPORTED"), .notSupported)
+            STPSourceCardDetails.threeDSecureStatus(from: "NOT_SUPPORTED"),
+            .notSupported
+        )
 
         XCTAssertEqual(STPSourceCardDetails.threeDSecureStatus(from: "recommended"), .recommended)
         XCTAssertEqual(STPSourceCardDetails.threeDSecureStatus(from: "RECOMMENDED"), .recommended)
@@ -66,7 +74,8 @@ class STPSourceCardDetailsTest: XCTestCase {
     // MARK: - Description Tests
     func testDescription() {
         let cardDetails = STPSourceCardDetails.decodedObject(
-            fromAPIResponse: STPTestUtils.jsonNamed("CardSource")!["card"] as? [AnyHashable: Any])
+            fromAPIResponse: STPTestUtils.jsonNamed("CardSource")!["card"] as? [AnyHashable: Any]
+        )
         XCTAssert(cardDetails?.description != nil)
     }
 
@@ -84,8 +93,10 @@ class STPSourceCardDetailsTest: XCTestCase {
         XCTAssert(
             (STPSourceCardDetails.decodedObject(
                 fromAPIResponse: STPTestUtils.jsonNamed("CardSource")!["card"]
-                    as? [AnyHashable: Any])
-                != nil))
+                    as? [AnyHashable: Any]
+            )
+                != nil)
+        )
     }
 
     func testDecodedObjectFromAPIResponseMapping() {

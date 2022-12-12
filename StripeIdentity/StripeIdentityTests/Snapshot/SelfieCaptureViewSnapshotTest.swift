@@ -3,14 +3,14 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 5/5/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-
-import Foundation
-import FBSnapshotTestCase
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
+import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 final class SelfieCaptureViewSnapshotTest: FBSnapshotTestCase {
@@ -20,37 +20,50 @@ final class SelfieCaptureViewSnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testError() {
-        verifyView(with: .error(.init(
-            titleText: "Error title",
-            bodyText: "Error message"
-        )))
+        verifyView(
+            with: .error(
+                .init(
+                    titleText: "Error title",
+                    bodyText: "Error message"
+                )
+            )
+        )
     }
 
     func testBlank() {
-        verifyView(with: .scan(.init(
-            state: .blank,
-            instructionalText: SelfieScanningViewSnapshotTest.mockText
-        )))
+        verifyView(
+            with: .scan(
+                .init(
+                    state: .blank,
+                    instructionalText: SelfieScanningViewSnapshotTest.mockText
+                )
+            )
+        )
     }
 
     func testScannedImages() {
-        verifyView(with: .scan(.init(
-            state: .scanned(Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
-                            consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
-                            consentHandler: {_ in },
-                            openURLHandler: {_ in }
-                           ),
-            instructionalText: SelfieScanningViewSnapshotTest.mockText
-        )))
+        verifyView(
+            with: .scan(
+                .init(
+                    state: .scanned(
+                        Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
+                        consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
+                        consentHandler: { _ in },
+                        openURLHandler: { _ in }
+                    ),
+                    instructionalText: SelfieScanningViewSnapshotTest.mockText
+                )
+            )
+        )
     }
 }
 
-private extension SelfieCaptureViewSnapshotTest {
-    func verifyView(
+extension SelfieCaptureViewSnapshotTest {
+    fileprivate func verifyView(
         with viewModel: SelfieCaptureView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line

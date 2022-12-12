@@ -6,9 +6,13 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPLabeledMultiFormTextFieldViewSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
@@ -28,10 +32,13 @@ class STPLabeledMultiFormTextFieldViewSnapshotTests: FBSnapshotTestCase {
         let labeledFormField = STPLabeledMultiFormTextFieldView(
             formLabel: "Test Label",
             firstTextField: formTextField1,
-            secondTextField: formTextField2)
+            secondTextField: formTextField2
+        )
         labeledFormField.formBackgroundColor = UIColor.white
         labeledFormField.frame = CGRect(x: 0.0, y: 0.0, width: 320.0, height: 62.0)
         STPSnapshotVerifyView(
-            labeledFormField, identifier: "STPLabeledMultiFormTextFieldView.defaultAppearance")
+            labeledFormField,
+            identifier: "STPLabeledMultiFormTextFieldView.defaultAppearance"
+        )
     }
 }

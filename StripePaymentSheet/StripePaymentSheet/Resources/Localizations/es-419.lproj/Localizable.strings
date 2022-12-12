@@ -1,0 +1,161 @@
+"+ Add" = "Agregar otro";
+
+"Add a card" = "Agrega una tarjeta";
+
+"Add a payment method" = "Agregar un método de pago";
+
+"Add bank account" = "Agregar cuenta bancaria";
+
+"Add new payment method" = "Agregar nuevo método de pago";
+
+"Add your payment information" = "Agrega la información de pago";
+
+"Are you sure you want to remove this card?" = "¿Deseas quitar esta tarjeta?";
+
+"Are you sure you want to remove this linked account?" = "¿Deseas quitar esta cuenta vinculada?";
+
+"Back" = "Atrás";
+
+"Bank account" = "Cuenta bancaria";
+
+"Buy now or pay later with Klarna." = "Compra ahora y paga después con Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al continuar, aceptas autorizar pagos conforme a <terms>estas condiciones</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Al continuar, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al unirte a Link, aceptas las <terms>Condiciones de servicio</terms> y la <privacy>Política de privacidad</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Al suministrar tus datos de pago y confirmar el pago, autorizas (A) a %@ y a Stripe, nuestro proveedor de servicios de pago, a enviar instrucciones a tu banco para que efectúe débitos en tu cuenta y (B) al banco a que efectúe los débitos en tu cuenta siguiendo esas instrucciones. Como parte de tus prerrogativas, tienes derecho a un rembolso del banco conforme a los términos y condiciones del contrato suscripto con dicha entidad. La solicitud de rembolso deberá efectuarse dentro de las 8 semanas posteriores a la fecha en que se efectuó el débito en tu cuenta. Tus derechos se explican en una declaración que puedes solicitarle a tu banco. Aceptas recibir notificaciones sobre próximos débitos con hasta 2 días de antelación a que estos ocurran.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
+
+"Change email" = "Cambiar correo electrónico";
+
+"Choose a payment method" = "Elegir un método de pago";
+
+"Close card scanner" = "Cerrar escáner de tarjetas";
+
+"Code field" = "Campo del código";
+
+"Code sent" = "Código enviado";
+
+"Default" = "Predeterminado";
+
+"Double tap to edit" = "Pulsa dos veces para editar";
+
+"EPS Bank" = "Banco que opera con EPS";
+
+"Enter address manually" = "Ingresar dirección manualmente";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Ingresa el código enviado al %@ para utilizar Link como método de pago predeterminado.";
+
+"Enter your verification code" = "Ingresa el código de verificación";
+
+"For security, please re-enter your card’s security code." = "Por razones de seguridad, vuelve a ingresar el código de seguridad de tu tarjeta.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Únete a Link";
+
+"Log out of Link" = "Cerrar sesión de Link";
+
+"Not %@?" = "¿No eres %@?";
+
+"Or" = "O";
+
+"Or pay using" = "O pagar con";
+
+"Or pay with a card" = "O pagar con tarjeta";
+
+"Pay %@" = "Pagar %@";
+
+"Pay another way" = "Pagar de otra manera";
+
+"Pay faster at %@ and thousands of merchants." = "Paga más rápido en %@ y en miles de comercios.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Paga en <num_installments/> cuotas sin interés de <installment_price/> con <img/>";
+
+"Pay later with Klarna." = "Paga después con Klarna.";
+
+"Pay over time with %@" = "Paga a lo largo del tiempo con %@";
+
+"Pay using" = "Pagar con";
+
+"Pay with %@" = "Pagar con %@";
+
+"Pay with your bank account in just a few steps." = "Paga con tu cuenta bancaria en unos pocos pasos.";
+
+"Payment" = "Pago";
+
+"Payment methods" = "Métodos de pago";
+
+"Point the camera at your card." = "Apunta la cámara a la tarjeta.";
+
+"Processing..." = "Procesando...";
+
+"Przelewy24 Bank" = "Banco que opera con Przelewy24";
+
+"Remove %1$@ ending in %2$@" = "Elimina la tarjeta %1$@ terminada en %2$@";
+
+"Remove Card" = "Eliminación de la tarjeta";
+
+"Remove card" = "Quitar tarjeta";
+
+"Remove linked account" = "Eliminar cuenta vinculada";
+
+"Resend code" = "Reenviar código";
+
+"Save address" = "Guardar dirección";
+
+"Save for future payments" = "Guardar para futuros pagos";
+
+"Save my info for secure 1-click checkout" = "Guardar mis datos para hacer el pago en 1 click en modo seguro";
+
+"Save this account for future %@ payments" = "Guardar esta cuenta para realizar futuros pagos a %@";
+
+"Save this card for future %@ payments" = "Guardar esta tarjeta para futuros pagos de %@";
+
+"Secure 1⁠-⁠click checkout" = "Pago seguro en un click";
+
+"Select your payment method" = "Selecciona el método de pago";
+
+"Set as default" = "Establecer como valor predeterminado";
+
+"Set as default payment method" = "Establecer como método de pago predeterminado";
+
+"Set up" = "Configurar";
+
+"Shipping to %@ is not supported." = "No se aceptan envíos a %@.";
+
+"Show menu" = "Mostrar menú";
+
+"Sign in to your Link account" = "Inicia sesión en tu cuenta de Link";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe depositará $0.01 en tu cuenta dentro de 1 o 2 días hábiles. Luego, recibirás un correo electrónico con instrucciones para completar el pago de %@.";
+
+"Tap to close" = "Pulsa para cerrar";
+
+"Tap to expand" = "Pulsa para expandir";
+
+"The IBAN you entered is incomplete." = "El IBAN que ingresaste está incompleto.";
+
+"The provided verification code has expired." = "El código de verificación suministrado está vencido.";
+
+"The provided verification code is incorrect." = "El código de verificación proporcionado es incorrecto.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Esta tarjeta se venció. Actualiza los datos de la tarjeta o elige un método de pago diferente.";
+
+"This is your default" = "Tu método predeterminado";
+
+"Too many attempts. Please try again in a few minutes." = "Se hicieron demasiados intentos. Vuelve a intentarlo en unos minutos.";
+
+"Unavailable for this purchase" = "No disponible para esta compra";
+
+"Update card" = "Actualizar tarjeta";
+
+"Use your saved info to check out faster" = "Utiliza la información guardada para finalizar la compra más rápido";
+
+"Your IBAN should start with a two-letter country code." = "El IBAN debe empezar con un código de país de dos letras.";
+
+"iDEAL Bank" = "Banco iDEAL";

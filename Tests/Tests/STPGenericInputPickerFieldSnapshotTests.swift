@@ -6,9 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 final class STPGenericInputPickerFieldSnapshotTests: FBSnapshotTestCase {
 
@@ -55,13 +59,19 @@ private final class MockDataSource: STPGenericInputPickerFieldDataSource {
         return 10
     }
 
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
+    func inputPickerField(
+        _ pickerField: STPGenericInputPickerField,
+        titleForRow row: Int
+    )
         -> String?
     {
         return "\(row)"
     }
 
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int)
+    func inputPickerField(
+        _ pickerField: STPGenericInputPickerField,
+        inputValueForRow row: Int
+    )
         -> String?
     {
         return "\(row)"

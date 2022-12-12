@@ -1,14 +1,16 @@
 //
 //  STPAddCardViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 3/23/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
 public class STPAddCardViewController: STPCoreTableViewController, STPAddressViewModelDelegate,
@@ -27,10 +29,14 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     ///   - configuration: The configuration to use (this determines the Stripe publishable key to use, the required billing address fields, whether or not to use SMS autofill, etc). - seealso: STPPaymentConfiguration
     ///   - theme:         The theme to use to inform the view controller's visual appearance. - seealso: STPTheme
     @objc(initWithConfiguration:theme:)
-    public init(configuration: STPPaymentConfiguration, theme: STPTheme) {
+    public init(
+        configuration: STPPaymentConfiguration,
+        theme: STPTheme
+    ) {
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         super.init(theme: theme)
         commonInit(with: configuration)
     }
@@ -58,7 +64,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     func _configureFooterView() {
         if isViewLoaded, let footerView = _customFooterView {
             let size = footerView.sizeThatFits(
-                CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude))
+                CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude)
+            )
             footerView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
 
             tableView?.tableFooterView = footerView
@@ -68,25 +75,16 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
     public var apiClient: STPAPIClient = STPAPIClient.shared
-    
-    /// The API Client to use to make requests.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
 
     /// Use init: or initWithConfiguration:theme:
-    required init(theme: STPTheme?) {
+    required init(
+        theme: STPTheme?
+    ) {
         let configuration = STPPaymentConfiguration.shared
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         super.init(theme: theme)
     }
 
@@ -98,16 +96,20 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         let configuration = STPPaymentConfiguration.shared
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
     /// Use init: or initWithConfiguration:theme:
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         let configuration = STPPaymentConfiguration.shared
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         super.init(coder: aDecoder)
     }
 
@@ -129,7 +131,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     private weak var cardImageView: UIImageView?
     private var doneItem: UIBarButtonItem?
     private var cardHeaderView: STPSectionHeaderView?
-    
+
     @available(iOS 13, macCatalyst 14, *)
     private var cardScanner: STPCardScanner? {
         get {
@@ -169,7 +171,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
             cardHeaderView?.button?.isEnabled = !isScanning
             let indexPath = IndexPath(
-                row: 0, section: STPPaymentCardSection.stpPaymentCardScannerSection.rawValue)
+                row: 0,
+                section: STPPaymentCardSection.stpPaymentCardScannerSection.rawValue
+            )
             tableView?.beginUpdates()
             if isScanning {
                 tableView?.insertRows(at: [indexPath], with: .automatic)
@@ -222,7 +226,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                     withDuration: 0.1,
                     animations: {
                         cell.alpha = loading ? 0.7 : 1.0
-                    })
+                    }
+                )
             }
         }
     }
@@ -236,7 +241,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     @objc(commonInitWithConfiguration:) func commonInit(with configuration: STPPaymentConfiguration)
     {
         STPAnalyticsClient.sharedClient.addClass(
-            toProductUsageIfNecessary: STPAddCardViewController.self)
+            toProductUsageIfNecessary: STPAddCardViewController.self
+        )
 
         self.configuration = configuration
         shippingAddress = nil
@@ -252,7 +258,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// :nodoc:
     @objc
     public func tableView(
-        _ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath
+        _ tableView: UITableView,
+        estimatedHeightForRowAt indexPath: IndexPath
     ) -> CGFloat {
         return 44.0
     }
@@ -261,7 +268,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         super.createAndSetupViews()
 
         let doneItem = UIBarButtonItem(
-            barButtonSystemItem: .done, target: self, action: #selector(nextPressed(_:)))
+            barButtonSystemItem: .done,
+            target: self,
+            action: #selector(nextPressed(_:))
+        )
         self.doneItem = doneItem
         stp_navigationItemProxy?.rightBarButtonItem = doneItem
         updateDoneButton()
@@ -271,17 +281,21 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         stp_navigationItemProxy?.rightBarButtonItem?.accessibilityIdentifier =
             "AddCardViewControllerNavBarDoneButtonIdentifier"
 
-        let cardImageView = UIImageView(image: STPImageLibrary.largeCardFrontImage())
+        let cardImageView = UIImageView(image: STPLegacyImageLibrary.largeCardFrontImage())
         cardImageView.contentMode = .center
         cardImageView.frame = CGRect(
-            x: 0, y: 0, width: view.bounds.size.width,
+            x: 0,
+            y: 0,
+            width: view.bounds.size.width,
             height: cardImageView.bounds.size.height + (57 * 2)
         )
         self.cardImageView = cardImageView
         tableView?.tableHeaderView = cardImageView
 
         let paymentCell = STPPaymentCardTextFieldCell(
-            style: .default, reuseIdentifier: "STPAddCardViewControllerPaymentCardTextFieldCell")
+            style: .default,
+            reuseIdentifier: "STPAddCardViewControllerPaymentCardTextFieldCell"
+        )
         paymentCell.paymentField?.delegate = self
         if configuration?.requiredBillingAddressFields == .postalCode {
             // If postal code collection is enabled, move the postal code field into the card entry field.
@@ -291,10 +305,13 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         self.paymentCell = paymentCell
 
         activityIndicator = STPPaymentActivityIndicatorView(
-            frame: CGRect(x: 0, y: 0, width: 20.0, height: 20.0))
+            frame: CGRect(x: 0, y: 0, width: 20.0, height: 20.0)
+        )
 
         inputAccessoryToolbar = UIToolbar.stp_inputAccessoryToolbar(
-            withTarget: self, action: #selector(paymentFieldNextTapped))
+            withTarget: self,
+            action: #selector(paymentFieldNextTapped)
+        )
         inputAccessoryToolbar?.stp_setEnabled(false)
         updateInputAccessoryVisiblity()
         tableView?.dataSource = self
@@ -306,26 +323,32 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
         let addressHeaderView = STPSectionHeaderView()
         addressHeaderView.theme = theme
-        addressHeaderView.title = STPLocalizedString(
-            "Billing Address", "Title for billing address entry section")
+        addressHeaderView.title = String.Localized.billing_address
         switch configuration?.shippingType {
         case .shipping:
             addressHeaderView.button?.setTitle(
                 STPLocalizedString(
-                    "Use Shipping", "Button to fill billing address from shipping address."),
-                for: .normal)
+                    "Use Shipping",
+                    "Button to fill billing address from shipping address."
+                ),
+                for: .normal
+            )
         case .delivery:
             addressHeaderView.button?.setTitle(
                 STPLocalizedString(
-                    "Use Delivery", "Button to fill billing address from delivery address."),
-                for: .normal)
+                    "Use Delivery",
+                    "Button to fill billing address from delivery address."
+                ),
+                for: .normal
+            )
         default:
             break
         }
         addressHeaderView.button?.addTarget(
             self,
             action: #selector(useShippingAddress(_:)),
-            for: .touchUpInside)
+            for: .touchUpInside
+        )
         let requiredFields = configuration?.requiredBillingAddressFields ?? .none
         let needsAddress = requiredFields != .none && !addressViewModel.isValid
         let buttonVisible =
@@ -336,8 +359,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         self.addressHeaderView = addressHeaderView
         let cardHeaderView = STPSectionHeaderView()
         cardHeaderView.theme = theme
-        cardHeaderView.title = STPLocalizedString(
-            "Card", "Title for credit card number entry field")
+        cardHeaderView.title = STPPaymentMethodType.card.displayName
         cardHeaderView.buttonHidden = true
         self.cardHeaderView = cardHeaderView
 
@@ -345,7 +367,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         _configureFooterView()
 
         view.addGestureRecognizer(
-            UITapGestureRecognizer(target: self, action: #selector(endEditing)))
+            UITapGestureRecognizer(target: self, action: #selector(endEditing))
+        )
 
         setUpCardScanningIfAvailable()
 
@@ -367,8 +390,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     func setUpCardScanningIfAvailable() {
         if #available(iOS 13.0, macCatalyst 14, *) {
-            if !STPCardScanner.cardScanningAvailable() || configuration?.cardScanningEnabled != true
-            {
+            if !STPCardScanner.cardScanningAvailable || configuration?.cardScanningEnabled != true {
                 return
             }
             let scannerCell = STPCardScannerTableViewCell()
@@ -381,9 +403,13 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
             cardHeaderView?.buttonHidden = false
             cardHeaderView?.button?.setTitle(
                 String.Localized.scan_card_title_capitalization,
-                for: .normal)
+                for: .normal
+            )
             cardHeaderView?.button?.addTarget(
-                self, action: #selector(scanCard), for: .touchUpInside)
+                self,
+                action: #selector(scanCard),
+                for: .touchUpInside
+            )
             cardHeaderView?.setNeedsLayout()
         }
     }
@@ -428,7 +454,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         stp_beginObservingKeyboardAndInsettingScrollView(
-            tableView, onChange: nil)
+            tableView,
+            onChange: nil
+        )
         firstEmptyField()?.becomeFirstResponder()
     }
 
@@ -454,7 +482,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     @objc func nextPressed(_ sender: Any?) {
         loading = true
-        guard let cardParams = paymentCell?.paymentField?.cardParams else {
+        guard let cardParams = paymentCell?.paymentField?.paymentMethodParams.card else {
             return
         }
         // Create and return a Payment Method
@@ -472,15 +500,18 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         let paymentMethodParams = STPPaymentMethodParams(
             card: cardParams,
             billingDetails: billingDetails,
-            metadata: nil)
+            metadata: nil
+        )
         apiClient.createPaymentMethod(with: paymentMethodParams) {
-            paymentMethod, createPaymentMethodError in
+            paymentMethod,
+            createPaymentMethodError in
             if let createPaymentMethodError = createPaymentMethodError {
                 self.handleError(createPaymentMethodError)
             } else {
                 if let paymentMethod = paymentMethod {
                     self.delegate?.addCardViewController(
-                        self, didCreatePaymentMethod: paymentMethod
+                        self,
+                        didCreatePaymentMethod: paymentMethod
                     ) {
                         attachToCustomerError in
                         stpDispatchToMainThreadIfNecessary({
@@ -503,13 +534,16 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         let alertController = UIAlertController(
             title: error.localizedDescription,
             message: (error as NSError).localizedFailureReason,
-            preferredStyle: .alert)
+            preferredStyle: .alert
+        )
 
         alertController.addAction(
             UIAlertAction(
                 title: String.Localized.ok,
                 style: .cancel,
-                handler: nil))
+                handler: nil
+            )
+        )
 
         present(alertController, animated: true)
     }
@@ -551,10 +585,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         var animationTransition: UIView.AnimationOptions
 
         if isAmex {
-            newImage = STPImageLibrary.largeCardAmexCVCImage()
+            newImage = STPLegacyImageLibrary.largeCardAmexCVCImage()
             animationTransition = .transitionCrossDissolve
         } else {
-            newImage = STPImageLibrary.largeCardBackImage()
+            newImage = STPLegacyImageLibrary.largeCardBackImage()
             animationTransition = .transitionFlipFromRight
         }
 
@@ -565,7 +599,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                 options: animationTransition,
                 animations: {
                     self.cardImageView?.image = newImage
-                })
+                }
+            )
         }
     }
 
@@ -581,8 +616,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                 duration: 0.2,
                 options: animationTransition,
                 animations: {
-                    self.cardImageView?.image = STPImageLibrary.largeCardFrontImage()
-                })
+                    self.cardImageView?.image = STPLegacyImageLibrary.largeCardFrontImage()
+                }
+            )
         }
     }
 
@@ -596,7 +632,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     // MARK: - STPAddressViewModelDelegate
     func addressViewModel(_ addressViewModel: STPAddressViewModel, addedCellAt index: Int) {
         let indexPath = IndexPath(
-            row: index, section: STPPaymentCardSection.stpPaymentCardBillingAddressSection.rawValue)
+            row: index,
+            section: STPPaymentCardSection.stpPaymentCardBillingAddressSection.rawValue
+        )
         tableView?.insertRows(at: [indexPath], with: .automatic)
         updateInputAccessoryVisiblity()
     }
@@ -604,7 +642,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     func addressViewModel(_ addressViewModel: STPAddressViewModel, removedCellAt index: Int) {
         let indexPath = IndexPath(
             row: Int(index),
-            section: STPPaymentCardSection.stpPaymentCardBillingAddressSection.rawValue)
+            section: STPPaymentCardSection.stpPaymentCardBillingAddressSection.rawValue
+        )
         tableView?.deleteRows(at: [indexPath], with: .automatic)
         updateInputAccessoryVisiblity()
     }
@@ -671,7 +710,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// :nodoc:
     @objc
     public func tableView(
-        _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
     ) {
         let topRow = indexPath.row == 0
         let bottomRow =
@@ -685,7 +726,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        heightForFooterInSection section: Int
+    )
         -> CGFloat
     {
         if self.tableView(tableView, numberOfRowsInSection: section) == 0 {
@@ -697,10 +741,13 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// :nodoc:
     @objc
     public override func tableView(
-        _ tableView: UITableView, heightForHeaderInSection section: Int
+        _ tableView: UITableView,
+        heightForHeaderInSection section: Int
     ) -> CGFloat {
         let fittingSize = CGSize(
-            width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude)
+            width: view.bounds.size.width,
+            height: CGFloat.greatestFiniteMagnitude
+        )
         let numberOfRows = self.tableView(tableView, numberOfRowsInSection: section)
         if section == STPPaymentCardSection.stpPaymentCardNumberSection.rawValue {
             return cardHeaderView?.sizeThatFits(fittingSize).height ?? 0.0
@@ -718,7 +765,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        viewForHeaderInSection section: Int
+    )
         -> UIView?
     {
         if self.tableView(tableView, numberOfRowsInSection: section) == 0 {
@@ -736,7 +786,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        viewForFooterInSection section: Int
+    )
         -> UIView?
     {
         return UIView()
@@ -751,7 +804,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
             withDuration: 0.2,
             animations: {
                 self.addressHeaderView?.buttonHidden = true
-            })
+            }
+        )
         tableView?.endUpdates()
     }
 
@@ -759,7 +813,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// :nodoc:
     @objc
     public override func viewWillTransition(
-        to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator
     ) {
         super.viewWillTransition(to: size, with: coordinator)
         if #available(iOS 13.0, macCatalyst 14.0, *) {
@@ -769,7 +824,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
             }
             if isScanning {
                 let indexPath = IndexPath(
-                    row: 0, section: STPPaymentCardSection.stpPaymentCardScannerSection.rawValue)
+                    row: 0,
+                    section: STPPaymentCardSection.stpPaymentCardScannerSection.rawValue
+                )
                 DispatchQueue.main.async(execute: {
                     self.tableView?.scrollToRow(at: indexPath, at: .middle, animated: true)
                 })
@@ -781,7 +838,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     @available(iOS 13, macCatalyst 14, *)
     func cardScanner(
-        _ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?,
+        _ scanner: STPCardScanner,
+        didFinishWith cardParams: STPPaymentMethodCardParams?,
         error: Error?
     ) {
         if let error = error {
@@ -804,13 +862,23 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                     }
                     if i < number.count {
                         newParams.number = String(
-                            number[...number.index(number.startIndex, offsetBy: i)])
+                            number[...number.index(number.startIndex, offsetBy: i)]
+                        )
                     } else {
                         newParams.number = number
                     }
-                    self.paymentCell?.paymentField?.cardParams = newParams
+                    self.paymentCell?.paymentField?.paymentMethodParams = STPPaymentMethodParams(
+                        card: newParams,
+                        billingDetails: nil,
+                        metadata: nil
+                    )
                     if i > number.count {
-                        self.paymentCell?.paymentField?.cardParams = cardParams
+                        self.paymentCell?.paymentField?.paymentMethodParams =
+                            STPPaymentMethodParams(
+                                card: cardParams,
+                                billingDetails: nil,
+                                metadata: nil
+                            )
                         self.isScanning = false
                         self.paymentCell?.paymentField?.inputView = nil
                         // Force the inputView to reload by asking the text field to resign/become first responder:
@@ -819,7 +887,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                         timer.invalidate()
                         self.view.isUserInteractionEnabled = true
                     }
-                })
+                }
+            )
         } else {
             isScanning = false
         }
@@ -857,7 +926,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// This method is deprecated as of v16.0.0 (https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--1600).
     /// To use this class, migrate your integration from Charges to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Use addCardViewController(_:didCreatePaymentMethod:completion:) instead and migrate your integration to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read",
         renamed: "addCardViewController(_:didCreatePaymentMethod:completion:)"
@@ -870,7 +940,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// This method is deprecated as of v16.0.0 (https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--1600).
     /// To use this class, migrate your integration from Charges to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read
     @available(
-        *, deprecated,
+        *,
+        deprecated,
         message:
             "Use addCardViewController(_:didCreatePaymentMethod:completion:) instead and migrate your integration to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read",
         renamed: "addCardViewController(_:didCreatePaymentMethod:completion:)"

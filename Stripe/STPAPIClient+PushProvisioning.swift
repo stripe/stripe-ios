@@ -1,12 +1,13 @@
 //
 //  STPAPIClient+PushProvisioning.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 9/27/18.
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 typealias STPPushProvisioningDetailsCompletionBlock = (STPPushProvisioningDetails?, Error?) -> Void
 extension STPAPIClient {

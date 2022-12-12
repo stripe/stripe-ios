@@ -3,9 +3,10 @@
 //  StripeUICoreTests
 //
 //  Created by Mel Ludowise on 10/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 

@@ -3,9 +3,11 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 11/17/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
+
 @testable import StripeIdentity
 
 final class IdentityFlowNavigationControllerTest: XCTestCase {
@@ -30,7 +32,9 @@ final class IdentityFlowNavigationControllerTest: XCTestCase {
 private final class MockDelegate: IdentityFlowNavigationControllerDelegate {
     private(set) var didCallDismiss = false
 
-    func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
+    func identityFlowNavigationControllerDidDismiss(
+        _ navigationController: IdentityFlowNavigationController
+    ) {
         didCallDismiss = true
     }
 }

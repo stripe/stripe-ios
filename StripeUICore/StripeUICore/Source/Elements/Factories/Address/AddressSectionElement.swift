@@ -66,7 +66,7 @@ import UIKit
         case all
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
-        case countryAndPostal(countriesRequiringPostalCollection: [String])
+        case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
         
         case autoCompletable
     }
@@ -94,7 +94,7 @@ import UIKit
     
     // MARK: Element protocol
     public let elements: [Element]
-    public var delegate: ElementDelegate?
+    public weak var delegate: ElementDelegate?
     public lazy var view: UIView = {
         let vStack = UIStackView(arrangedSubviews: [addressSection.view, sameAsCheckbox.view].compactMap { $0 })
         vStack.axis = .vertical
@@ -111,7 +111,7 @@ import UIKit
     public private(set) var line1: TextFieldElement?
     public private(set) var line2: TextFieldElement?
     public private(set) var city: TextFieldElement?
-    public private(set) var state: TextFieldElement?
+    public private(set) var state: TextOrDropdownElement?
     public private(set) var postalCode: TextFieldElement?
     public let sameAsCheckbox: CheckboxElement
     
@@ -127,7 +127,7 @@ import UIKit
         return countryCodes[country.selectedIndex]
     }
     var addressDetails: AddressDetails {
-        let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.text)
+        let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
         return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
     }
     public let countryCodes: [String]
@@ -271,7 +271,7 @@ import UIKit
             line1: line1?.text,
             line2: line2?.text,
             postalCode: postalCode?.text,
-            state: state?.text
+            state: state?.rawData
         )
         
         // Get the address spec for the country and filter out unused fields
@@ -304,12 +304,14 @@ import UIKit
         city = fieldOrdering.contains(.city) ?
         spec.makeCityElement(defaultValue: address.city, theme: theme) : nil
         state = fieldOrdering.contains(.state) ?
-        spec.makeStateElement(defaultValue: address.state, theme: theme) : nil
+        spec.makeStateElement(defaultValue: address.state,
+                              stateDict: Dictionary(uniqueKeysWithValues: zip(spec.subKeys ?? [], spec.subLabels ?? [])),
+                              theme: theme) : nil
         postalCode = fieldOrdering.contains(.postal) ?
         spec.makePostalElement(countryCode: countryCode, defaultValue: address.postalCode, theme: theme) : nil
         
         // Order the address fields according to `fieldOrdering`
-        let addressFields: [TextFieldElement?] = fieldOrdering.reduce([]) { partialResult, fieldType in
+        let addressFields: [TextOrDropdownElement?] = fieldOrdering.reduce([]) { partialResult, fieldType in
             // This should be a flatMap but I'm having trouble satisfying the compiler
             switch fieldType {
             case .line:
@@ -344,7 +346,7 @@ import UIKit
         if let postalCode = postalCode, postalCode.text.nonEmpty != address.postalCode?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
-        if let state = state, state.text.nonEmpty != address.state?.nonEmpty {
+        if let state = state, state.rawData.nonEmpty != address.state?.nonEmpty {
            allDisplayedFieldsEqual = false
         }
         return allDisplayedFieldsEqual
@@ -382,11 +384,14 @@ extension AddressSectionElement: ElementDelegate {
         }
         delegate?.didUpdate(element: self)
         
-        // Update the selected country in the phone element if the text is empty
+        // Update the selected country in the phone element if the no defaults have been provided
+        // and the phone number element hasn't been modified
         // to match the country picker if they don't match
-        if let phone = phone, phone.textFieldElement.text.isEmpty
+        if let phone = phone,
+            defaults.phone == nil,
+            !phone.hasBeenModified
             && phone.countryDropdownElement.selectedIndex != country.selectedIndex {
-            phone.countryDropdownElement.select(index: country.selectedIndex)
+            phone.selectCountry(index: country.selectedIndex, shouldUpdateDefaultNumber: true)
         }
     }
 }

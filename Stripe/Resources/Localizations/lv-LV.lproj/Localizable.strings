@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@, kuras numura pēdējie cipari ir %2$@";
-
 "%@ - Offline" = "%@ — bezsaistē";
 
-"+ Add" = "+ Pievienot";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "AU BECS tiešais debets";
 
 "Add New Card…" = "Pievienot jaunu karti…";
 
 "Add a Card" = "Kartes pievienošana";
 
-"Add a card" = "Pievienot karti";
-
-"Add a payment method" = "Pievienot maksājuma veidu";
-
-"Add bank account" = "Pievienot bankas kontu";
-
-"Add new payment method" = "Pievienot jaunu maksājuma veidu";
-
-"Add your payment information" = "Pievienot maksājuma informāciju";
-
-"Address line 2 (optional)" = "2. adreses rindiņa (nav obligāti)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Dzīv.";
 
-"Are you sure you want to remove this card?" = "Vai tiešām vēlaties noņemt šo karti?";
-
-"Are you sure you want to remove this linked account?" = "Vai tiešām vēlaties noņemt šo saistīto kontu?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Atpakaļ";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Banka";
-
-"Bank Account" = "Bankas konts";
-
-"Bank account" = "Bankas konts";
-
-"Billing Address" = "Norēķinu adrese";
-
-"Billing address" = "Norēķinu adrese";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Pērciet tagad vai maksājiet vēlāk ar Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar šiem<terms>noteikumiem</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sniedzot savu bankas konta informāciju un apstiprinot šo maksājumu, jūs piekrītat šim tiešā debeta pieprasījumam un <terms>tiešā debeta pieprasījuma pakalpojuma līgumam</terms>, kā arī pilnvarojat uzņēmumu Stripe Payments Australia Pty Ltd ACN 160 180 343, tiešā debeta lietotāja ID numurs 507156 (turpmāk — “Stripe”) izmantot lielapjoma elektronisko klīringa sistēmu (BECS), lai uzņēmuma %@ (turpmāk — “Tirgotājs”) vārdā debitētu jūsu kontu par jebkādām summām, par kurām Tirgotājs jums ir atsevišķi ziņojis. Jūs apliecināt, ka esat vai nu iepriekš minētā konta īpašnieks, vai tā pilnvarota persona ar paraksta tiesībām.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Norādot savu maksājuma informāciju un apstiprinot šo maksājumu, jūs pilnvarojat A) %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma noteikumiem un nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa astoņu nedēļu laikā, sākot no jūsu konta debetēšanas datuma. Jūsu tiesības ir paskaidrotas paziņojumā, kuru varat saņemt savā bankā. Jūs piekrītat saņemt paziņojumus par turpmākajiem debeta darījumiem vismaz divas dienas pirms to veikšanas.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Karte";
-
-"Card information" = "Kartes informācija";
-
-"Card number" = "Kartes numurs";
-
-"Change email" = "Mainīt e-pastu";
-
-"Choose a payment method" = "Izvēlēties maksājuma veidu";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Aizvērt kartes skeneri";
-
-"Code field" = "Koda lauks";
-
-"Code sent" = "Kods nosūtīts";
-
 "Contact" = "Kontaktinformācija";
-
-"Default" = "Noklusējuma";
 
 "Delivery" = "Piegāde";
 
 "Delivery Address" = "Piegādes adrese";
 
-"Double tap to edit" = "Pieskarieties divreiz, lai rediģētu";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS Bank";
-
-"Edit" = "Rediģēt";
-
-"Enter address manually" = "Ievadīt adresi manuāli";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Ievadiet kodu, kas nosūtīts %@, lai izmantotu Link maksāšanai pēc noklusējuma.";
-
-"Enter your verification code" = "Ievadiet savu verifikācijas kodu";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
-
 "Free" = "Bezmaksas";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Nederīga piegādes adrese";
 
-"Invalid data." = "Nederīgi dati.";
-
-"Join Link" = "Pievienoties Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Ielādē…";
-
-"Log out of Link" = "Izrakstīties no Link";
-
-"MM / YY" = "MM/GG";
-
-"MM/YY" = "MM/GG";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "Tiešsaistes banku pakalpojumi";
-
 "Next" = "Tālāk";
-
-"Not %@?" = "Ne %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Internetbanka (FPX)";
 
-"Or" = "Vai";
-
-"Or pay using" = "Vai maksāt, izmantojot";
-
-"Or pay with a card" = "Vai maksāt ar karti";
-
-"P24" = "P24";
-
-"Pay %@" = "Maksāt %@";
-
-"Pay another way" = "Maksāt citā veidā";
-
-"Pay faster at %@ and thousands of merchants." = "Maksājiet ātrāk %@ un pie tūkstošiem tirgotāju.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksāt ar <num_installments/> bezprocentu maksājumiem <installment_price/> ar <img/>";
-
-"Pay later with Klarna." = "Maksāt vēlāk ar Klarna.";
-
-"Pay over time with %@" = "Maksāt pakāpeniski ar %@";
-
-"Pay using" = "Maksāt, izmantojot";
-
-"Pay with %@" = "Maksāt ar %@";
-
-"Pay with your bank account in just a few steps." = "Maksājiet ar savu bankas kontu, izpildot tikai dažus soļus";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Maksājums";
-
 "Payment Method" = "Maksājuma metode";
-
-"Payment methods" = "Maksājuma veidi";
-
-"Point the camera at your card." = "Vērsiet kameru uz karti.";
-
-"Postal Code" = "Pasta indekss";
-
-"Processing..." = "Apstrādā…";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 Bank";
-
-"Remove %1$@ ending in %2$@" = "Noņemt %1$@ pēdējos ciparus %2$@";
-
-"Remove Card" = "Noņemt karti";
-
-"Remove card" = "Noņemt karti";
-
-"Remove linked account" = "Noņemt piesaistītu kontu";
-
-"Resend code" = "Nosūtīt kodu vēlreiz";
-
-"SEPA Debit" = "SEPA debets";
-
-"SEPA Direct Debit" = "SEPA tiešais debets";
-
-"Save for future payments" = "Saglabāt nākotnes maksājumiem";
-
-"Save my info for secure 1-click checkout" = "Saglabāt manu informāciju, lai varētu droši norēķināties ar vienu klikšķi";
-
-"Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
-
-"Save this card for future %@ payments" = "Saglabāt šo karti %@ maksājumiem nākotnē";
-
-"Secure 1⁠-⁠click checkout" = "Droša 1 klikšķa norēķināšanās";
-
-"Select your payment method" = "Izvēlēties savu maksājuma veidu";
-
-"Set as default" = "Iestatīt kā noklusējumu";
-
-"Set as default payment method" = "Iestatīt kā noklusējuma maksājuma veidu";
-
-"Set up" = "Iestatīt";
 
 "Shipping" = "Piegāde";
 
-"Shipping Address" = "Piegādes adrese";
-
 "Shipping Method" = "Piegādes metode";
-
-"Show menu" = "Rādīt izvēlni";
-
-"Sign in to your Link account" = "Pierakstīties Link kontā";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Savienojot jūsu kontu, radās problēma.\nLūdzu, vēlāk mēģiniet vēlreiz.";
-
-"State / Province / Region" = "Novads/štats/province/reģions";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe uz jūsu kontu 1-2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt maksājumu ar %@.";
-
-"Tap to close" = "Pieskarieties, lai aizvērtu";
-
-"Tap to expand" = "Pieskarieties, lai izvērstu";
-
-"The BSB you entered is invalid." = "Ievadītais BSB nav derīgs.";
-
-"The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, \"%@\" nav atbalstīts valsts kods.";
-
-"The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
-
-"The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Šai kartei ir beidzies derīguma termiņš. Atjauniniet savu kartes informāciju vai izmantojiet citu maksājuma veidu.";
-
-"This is your default" = "Tas ir jūsu noklusējums";
-
-"Timed out authenticating your payment method -- try again" = "Autentificējot jūsu maksājuma metodi, iestājās noildze — mēģiniet vēlreiz";
-
-"To scan your card, allow camera access in Settings." = "Lai noskenētu karti, Iestatījumos atļaujiet piekļuvi kamerai.";
-
-"Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "ASV bankas konts";
-
-"Unavailable for this purchase" = "Nav pieejams šim pirkumam";
-
-"Unknown" = "Nav zināms";
-
-"Update card" = "Atjaunināt karti";
 
 "Use Billing" = "Izmantot norēķinu adresi";
 
 "Use Delivery" = "Izmantot piegādes adresi";
 
 "Use Shipping" = "Izmantot piegādes adresi";
-
-"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nevaram autentificēt jūsu maksājuma metodi. Lūdzu, izvēlieties citu maksājuma metodi un mēģiniet vēlreiz.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
-
-"Your ZIP is invalid." = "Pasta indekss nav derīgs.";
-
-"Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
-
-"Your card number is invalid." = "Kartes numurs nav derīgs.";
-
-"Your card's expiration date is incomplete." = "Kartes derīguma termiņa datums nav pilnīgs.";
-
-"Your card's expiration date is invalid." = "Kartes derīguma termiņa beigu datums nav derīgs.";
-
-"Your card's expiration month is invalid." = "Kartes derīguma termiņa mēnesis nav derīgs.";
-
-"Your card's expiration year is invalid." = "Kartes derīguma termiņa gads nav derīgs.";
-
-"Your card's security code is incomplete." = "Kartes drošības kods nav pilnīgs.";
-
-"Your card's security code is invalid." = "Kartes drošības kods nav derīgs.";
-
-"Your postal code is invalid." = "Pasta indekss nav derīgs.";
-
-"ZIP Code" = "Pasta indekss";
-
-"card number" = "kartes numurs";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "derīguma termiņš";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL banka";

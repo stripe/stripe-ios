@@ -3,18 +3,20 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 11/5/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import XCTest
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
+import UIKit
+import XCTest
+
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
-    
+
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     var collectedData: StripeAPI.VerificationPageCollectedData
@@ -23,18 +25,32 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     var delegate: VerificationSheetControllerDelegate?
 
+    var needBack: Bool = true
+
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
-    private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
+    private(set) var uploadedDocumentsResult:
+        Result<DocumentUploaderProtocol.CombinedFileData, Error>?
+    private(set) var frontUploadedDocumentsResult:
+        Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    private(set) var backUploadedDocumentsResult:
+        Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     private(set) var uploadedSelfieResult: Result<SelfieUploader.FileData, Error>?
 
+    private(set) var didCheckSubmitAndTransition = false
+    private(set) var didSaveDocumentFrontAndDecideBack = false
+    private(set) var didSaveDocumentBackAndTransition = false
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
-        flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowControllerMock(),
+        flowController: VerificationSheetFlowControllerProtocol =
+            VerificationSheetFlowControllerMock(),
         collectedData: StripeAPI.VerificationPageCollectedData = .init(),
         mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock(),
-        analyticsClient: IdentityAnalyticsClient = .init(verificationSessionId: "", analyticsClient: MockAnalyticsClientV2())
+        analyticsClient: IdentityAnalyticsClient = .init(
+            verificationSessionId: "",
+            analyticsClient: MockAnalyticsClientV2()
+        )
     ) {
         self.apiClient = apiClient
         self.flowController = flowController
@@ -56,14 +72,38 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         completion()
     }
 
-    func saveDocumentFileDataAndTransition(
+    func checkSubmitAndTransition(
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>? = nil,
+        completion: @escaping () -> Void
+    ) {
+        didCheckSubmitAndTransition = true
+    }
+
+    func saveDocumentFrontAndDecideBack(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        documentUploader: DocumentUploaderProtocol,
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void
+    ) {
+        didSaveDocumentFrontAndDecideBack = true
+        documentUploader.frontUploadFuture?.observe { [self] result in
+            self.frontUploadedDocumentsResult = result
+            if self.needBack {
+                onCompletion(true)
+            } else {
+                onCompletion(false)
+            }
+
+        }
+    }
+
+    func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     ) {
-        // Wait to save data until after documents are uploaded
-        documentUploader.frontBackUploadFuture.observe { [weak self] result in
-            self?.uploadedDocumentsResult = result
+        didSaveDocumentBackAndTransition = true
+        documentUploader.backUploadFuture?.observe { [weak self] result in
+            self?.backUploadedDocumentsResult = result
             completion()
         }
     }

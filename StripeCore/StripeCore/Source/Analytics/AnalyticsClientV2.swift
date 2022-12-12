@@ -3,22 +3,22 @@
 //  StripeCore
 //
 //  Created by Mel Ludowise on 6/7/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-/// Dependency-injectable protocol for `AnalyticsClientV2`
+/// Dependency-injectable protocol for `AnalyticsClientV2`.
 @_spi(STP) public protocol AnalyticsClientV2Protocol {
     var clientId: String { get }
 
     func log(eventName: String, parameters: [String: Any])
 }
 
-/**
- Logs analytics to `r.stripe.com`.
- To log analytics to the legacy `q.stripe.com`, use `STPAnalyticsClient`.
- */
+/// Logs analytics to `r.stripe.com`.
+///
+/// To log analytics to the legacy `q.stripe.com`, use `STPAnalyticsClient`.
 @_spi(STP) public class AnalyticsClientV2: AnalyticsClientV2Protocol {
 
     static let loggerUrl = URL(string: "https://r.stripe.com/0")!
@@ -30,12 +30,11 @@ import UIKit
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
-    /**
-     Instantiates an AnalyticsClient capable of logging to a specific events table.
-     - Parameters:
-       - clientId: The client identifier corresponding to `client_config.yaml`
-       - origin: The origin corresponding to `r.stripe.com.conf`
-     */
+    /// Instantiates an AnalyticsClient capable of logging to a specific events table.
+    ///
+    /// - Parameters:
+    ///     - clientId: The client identifier corresponding to `client_config.yaml`.
+    ///     - origin: The origin corresponding to `r.stripe.com.conf`.
     public init(
         clientId: String,
         origin: String
@@ -46,9 +45,9 @@ import UIKit
 
     static let shouldCollectAnalytics: Bool = {
         #if targetEnvironment(simulator)
-        return false
+            return false
         #else
-        return NSClassFromString("XCTest") == nil
+            return NSClassFromString("XCTest") == nil
         #endif
     }()
 
@@ -59,18 +58,14 @@ import UIKit
         ]
     }
 
-    /**
-     Helper to serialize errors to a dictionary that can be included in event parameters.
-
-     - Parameters:
-       - error: The error to serialize.
-
-       - filePath: Optionally include the filePath of the call site that threw
-                   the error. Only the name of the file (e.g. "MyClass.swift")
-                   will be serialized and not the full path.
-
-       - line: Optionally include the line number of the call site that threw the error.
-     */
+    /// Helper to serialize errors to a dictionary that can be included in event parameters.
+    ///
+    /// - Parameters:
+    ///     - error: The error to serialize.
+    ///     - filePath: Optionally include the filePath of the call site that threw
+    ///     the error. Only the name of the file (e.g. "MyClass.swift")
+    ///     will be serialized and not the full path.
+    ///     - line: Optionally include the line number of the call site that threw the error.
     public static func serialize(
         error: Error,
         filePath: StaticString?,
@@ -95,7 +90,7 @@ import UIKit
         let payload = payload(withEventName: eventName, parameters: parameters)
 
         #if DEBUG
-        NSLog("LOG ANALYTICS: \(payload)")
+            NSLog("LOG ANALYTICS: \(payload)")
         #endif
 
         guard AnalyticsClientV2.shouldCollectAnalytics else {
@@ -113,8 +108,8 @@ import UIKit
     }
 }
 
-public extension AnalyticsClientV2Protocol {
-    func makeCommonPayload() -> [String: Any] {
+extension AnalyticsClientV2Protocol {
+    public func makeCommonPayload() -> [String: Any] {
         var payload: [String: Any] = [:]
 
         // Required by Analytics Event Logger
@@ -137,18 +132,22 @@ public extension AnalyticsClientV2Protocol {
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["platform_info"] = [
             "install": InstallMethod.current.rawValue,
-            "app_bundle_id": Bundle.stp_applicationBundleId() ?? ""
+            "app_bundle_id": Bundle.stp_applicationBundleId() ?? "",
         ]
 
         return payload
     }
 
-    func payload(withEventName eventName: String, parameters: [String: Any]) -> [String: Any] {
+    public func payload(withEventName eventName: String, parameters: [String: Any]) -> [String: Any]
+    {
         var payload = makeCommonPayload()
         payload["event_name"] = eventName
-        payload = payload.merging(parameters, uniquingKeysWith: { a, _ in
-            return a
-        })
+        payload = payload.merging(
+            parameters,
+            uniquingKeysWith: { a, _ in
+                return a
+            }
+        )
         return payload
     }
 }

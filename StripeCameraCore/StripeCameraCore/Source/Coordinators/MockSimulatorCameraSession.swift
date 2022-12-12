@@ -3,7 +3,12 @@
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 1/21/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
+
+// Ignoring file formatt becase of compiler directive which would force the whole file to be
+// indented, including import statements.
+// swift-format-ignore-file
 
 #if targetEnvironment(simulator)
 
@@ -11,9 +16,7 @@ import Foundation
 import AVKit
 @_spi(STP) import StripeCore
 
-/**
- Mocks a CameraSession on the simulator.
- */
+/// Mocks a CameraSession on the simulator.
 @_spi(STP) public final class MockSimulatorCameraSession: CameraSessionProtocol {
 
     enum Error: Swift.Error {
@@ -28,7 +31,10 @@ import AVKit
     private var currentImage: UIImage?
     private let sessionQueue = DispatchQueue(label: "com.stripe.mock-simulator-camera-session")
     private let videoOutput = AVCaptureVideoDataOutput()
-    private lazy var captureConnection = AVCaptureConnection(inputPorts: [], output: videoOutput)
+    private lazy var captureConnection = AVCaptureConnection(
+        inputPorts: [],
+        output: videoOutput
+    )
     private var mockSampleBufferTimer: Timer?
     weak private var delegate: AVCaptureVideoDataOutputSampleBufferDelegate?
 
@@ -43,7 +49,9 @@ import AVKit
         }
     }
 
-    public init(images: [UIImage]) {
+    public init(
+        images: [UIImage]
+    ) {
         self.images = images
     }
 
@@ -172,18 +180,19 @@ import AVKit
     }
 }
 
-private extension MockSimulatorCameraSession {
-    @objc func mockSampleBufferDelegateCallback() {
+extension MockSimulatorCameraSession {
+    @objc fileprivate func mockSampleBufferDelegateCallback() {
         sessionQueue.async { [weak self] in
             guard let self = self,
-                  var image = self.currentImage
+                var image = self.currentImage
             else {
                 return
             }
 
             // Flip image horizontally if mocking front-facing camera
             if self.cameraPosition == .front,
-               let cgImage = image.cgImage {
+                let cgImage = image.cgImage
+            {
                 image = UIImage(cgImage: cgImage, scale: image.scale, orientation: .upMirrored)
             }
 
@@ -199,7 +208,7 @@ private extension MockSimulatorCameraSession {
         }
     }
 
-    func setPreviewViewToCurrentImage() {
+    fileprivate func setPreviewViewToCurrentImage() {
         DispatchQueue.main.async { [weak self, weak currentImage] in
             guard let self = self else { return }
             self.previewView?.layer.contents = currentImage?.cgImage

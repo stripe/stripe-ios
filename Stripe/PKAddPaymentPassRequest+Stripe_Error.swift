@@ -1,6 +1,6 @@
 //
 //  PKAddPaymentPassRequest+Stripe_Error.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 9/29/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
@@ -20,7 +20,11 @@ extension PKAddPaymentPassRequest {
         }
         set(stp_error) {
             objc_setAssociatedObject(
-                self, &stpAddPaymentPassRequest, stp_error, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                self,
+                &stpAddPaymentPassRequest,
+                stp_error,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
 }

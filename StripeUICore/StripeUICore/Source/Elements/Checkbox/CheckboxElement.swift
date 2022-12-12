@@ -1,6 +1,6 @@
 //
 //  CheckboxElement.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/15/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

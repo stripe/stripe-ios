@@ -6,12 +6,13 @@
 //  Copyright © 2021 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
-import StripeIdentity
-import StripeFinancialConnections
-import StripeCardScan
 import StripeApplePay
+import StripeCardScan
+import StripeFinancialConnections
+import StripeIdentity
+import StripePaymentSheet
+import UIKit
 
 class ViewController: UIViewController {
 
@@ -24,7 +25,10 @@ class ViewController: UIViewController {
         }
 
         if #available(iOS 12.0, *) {
-            let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: "")
+            let _ = FinancialConnectionsSheet(
+                financialConnectionsSessionClientSecret: "",
+                returnURL: nil
+            )
         }
 
         // Initialize a card field to make sure we can load image resources
@@ -35,19 +39,12 @@ class ViewController: UIViewController {
             cardImageVerificationIntentId: "foo",
             cardImageVerificationIntentSecret: "foo"
         )
+
+        let _ = PaymentSheet(
+            setupIntentClientSecret: "",
+            configuration: PaymentSheet.Configuration()
+        )
         // Do any additional setup after loading the view.
 
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

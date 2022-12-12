@@ -588,7 +588,14 @@
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
                                  completion:[OCMArg isNil]]);
-
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Waiting 100ms for SafariServices"];
+    
+    // Hack: Wait ~100ms to call sut back before unsubscribing from notifications. Otherwise the Safari thread doesn't get the unsubscribe request in time and calls the deallocated sut, crashing the app.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+        
+    [self waitForExpectationsWithTimeout:1 handler:nil];
     [sut unsubscribeFromNotifications];
 }
 
@@ -628,7 +635,14 @@
     OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
                                options:[OCMArg isEqual:@{}]
                      completionHandler:[OCMArg isNotNil]]);
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Waiting 100ms for SafariServices"];
     
+    // Hack: Wait ~100ms to call sut back before unsubscribing from notifications. Otherwise the Safari thread doesn't get the unsubscribe request in time and calls the deallocated sut, crashing the app.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+        
+    [self waitForExpectationsWithTimeout:1 handler:nil];
     [sut unsubscribeFromNotifications];
 }
 
@@ -671,7 +685,12 @@
     OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
                                options:[OCMArg isEqual:@{}]
                      completionHandler:[OCMArg isNotNil]]);
+    XCTestExpectation *safariWaitExpectation = [self expectationWithDescription:@"Waiting 100ms for SafariServices"];
     
+    // Hack: Wait ~100ms to call sut back before unsubscribing from notifications. Otherwise the Safari thread doesn't get the unsubscribe request in time and calls the deallocated sut, crashing the app.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [safariWaitExpectation fulfill];
+    });
     [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 

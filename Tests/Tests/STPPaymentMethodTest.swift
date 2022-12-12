@@ -5,15 +5,23 @@
 //  Created by Yuki Tokuhiro on 3/6/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodTest: XCTestCase {
     // MARK: - STPPaymentMethodType Tests
     func testTypeFromString() {
         XCTAssertEqual(
-            STPPaymentMethod.type(from: "au_becs_debit"), STPPaymentMethodType.AUBECSDebit)
+            STPPaymentMethod.type(from: "au_becs_debit"),
+            STPPaymentMethodType.AUBECSDebit
+        )
         XCTAssertEqual(
-            STPPaymentMethod.type(from: "AU_BECS_DEBIT"), STPPaymentMethodType.AUBECSDebit)
+            STPPaymentMethod.type(from: "AU_BECS_DEBIT"),
+            STPPaymentMethodType.AUBECSDebit
+        )
         XCTAssertEqual(STPPaymentMethod.type(from: "BACS_DEBIT"), STPPaymentMethodType.bacsDebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "bacs_debit"), STPPaymentMethodType.bacsDebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "BACS_DEBIT"), STPPaymentMethodType.bacsDebit)
@@ -26,9 +34,13 @@ class STPPaymentMethodTest: XCTestCase {
         XCTAssertEqual(STPPaymentMethod.type(from: "sepa_debit"), STPPaymentMethodType.SEPADebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "SEPA_DEBIT"), STPPaymentMethodType.SEPADebit)
         XCTAssertEqual(
-            STPPaymentMethod.type(from: "card_present"), STPPaymentMethodType.cardPresent)
+            STPPaymentMethod.type(from: "card_present"),
+            STPPaymentMethodType.cardPresent
+        )
         XCTAssertEqual(
-            STPPaymentMethod.type(from: "CARD_PRESENT"), STPPaymentMethodType.cardPresent)
+            STPPaymentMethod.type(from: "CARD_PRESENT"),
+            STPPaymentMethodType.cardPresent
+        )
         XCTAssertEqual(STPPaymentMethod.type(from: "unknown_string"), STPPaymentMethodType.unknown)
     }
 
@@ -118,7 +130,9 @@ class STPPaymentMethodTest: XCTestCase {
         let fullJson = STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)
 
         XCTAssertNotNil(
-            STPPaymentMethod.decodedObject(fromAPIResponse: fullJson), "can decode with full json")
+            STPPaymentMethod.decodedObject(fromAPIResponse: fullJson),
+            "can decode with full json"
+        )
 
         let requiredFields = ["id"]
 

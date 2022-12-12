@@ -1,6 +1,6 @@
 //
 //  CheckboxButton.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Cameron Sabol on 12/11/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
@@ -149,6 +149,7 @@ import UIKit
 
         // Preferred max width sometimes is off when changing font size
         descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
+        textView.invalidateIntrinsicContentSize()
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
 extension FBSnapshotTestCase {
     /// Embeds the given controller in a navigation controller, prepares it for
@@ -20,7 +20,9 @@ extension FBSnapshotTestCase {
 
     /// Returns a navigation controller initialized with the given root view controller
     /// and prepares it for snapshot testing (adding it to a UIWindow and loading views)
-    @objc func stp_navigationControllerForSnapshotTest(withRootVC viewController: UIViewController?)
+    @objc func stp_navigationControllerForSnapshotTest(
+        withRootVC viewController: UIViewController?
+    )
         -> UINavigationController?
     {
         var navController: UINavigationController?
@@ -42,7 +44,9 @@ extension FBSnapshotTestCase {
     /// navigation controller, making necessary layout adjustments for
     /// `STPCoreScrollViewController`.
     @objc(stp_preparedAndSizedViewForSnapshotTestFromNavigationController:)
-    func stp_preparedAndSizedViewForSnapshotTest(from navController: UINavigationController?)
+    func stp_preparedAndSizedViewForSnapshotTest(
+        from navController: UINavigationController?
+    )
         -> UIView?
     {
         let viewController = navController?.topViewController
@@ -61,10 +65,13 @@ extension FBSnapshotTestCase {
 
             let topOffset = scrollView.convert(scrollView.frame.origin, to: navController.view).y
             navController.view.frame = CGRect(
-                x: 0, y: 0, width: 320,
+                x: 0,
+                y: 0,
+                width: 320,
                 height: (topOffset) + (scrollView.contentSize.height)
                     + (scrollView.contentInset.top)
-                    + (scrollView.contentInset.bottom))
+                    + (scrollView.contentInset.bottom)
+            )
         }
 
         return navController?.view

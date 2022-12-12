@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB 号码";
 
+"Billing address is same as shipping" = "账单地址与配送地址相同";
+
 "Cancel" = "取消";
 
 "City" = "城市";
@@ -33,6 +35,8 @@
 "Do Si" = "道/县";
 
 "Done" = "完成";
+
+"Edit" = "编辑";
 
 "Eircode" = "爱尔兰邮编";
 

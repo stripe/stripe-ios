@@ -1,6 +1,6 @@
 //
 //  OperationDebouncerTests.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by Ramon Torres on 1/23/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class OperationDebouncerTests: XCTestCase {
 

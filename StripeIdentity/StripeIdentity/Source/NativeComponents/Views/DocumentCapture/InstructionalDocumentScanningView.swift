@@ -3,17 +3,16 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeUICore
+import UIKit
 
-/**
- A view that displays instructions to the user underneath a live camera feed.
- The view can be configured such that it can either display a live camera feed or
- a static image in place of the camera feed.
- */
+/// A view that displays instructions to the user underneath a live camera feed.
+/// The view can be configured such that it can either display a live camera feed or
+/// a static image in place of the camera feed.
 final class InstructionalDocumentScanningView: UIView {
 
     struct Styling {
@@ -61,12 +60,16 @@ final class InstructionalDocumentScanningView: UIView {
         isAccessibilityElement = true
     }
 
-    convenience init(from viewModel: ViewModel) {
+    convenience init(
+        from viewModel: ViewModel
+    ) {
         self.init()
         configure(with: viewModel)
     }
 
-    required init(coder: NSCoder) {
+    required init(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -84,8 +87,8 @@ final class InstructionalDocumentScanningView: UIView {
 
 // MARK: - Helpers
 
-private extension InstructionalDocumentScanningView {
-    func installViews() {
+extension InstructionalDocumentScanningView {
+    fileprivate func installViews() {
         addAndPinSubview(vStack)
         vStack.addArrangedSubview(label)
         vStack.addArrangedSubview(scanningView)

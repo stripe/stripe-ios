@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
+extension StripeAPI {
 
     struct VerificationPageStaticContentTextPage: Decodable, Equatable {
         let body: String

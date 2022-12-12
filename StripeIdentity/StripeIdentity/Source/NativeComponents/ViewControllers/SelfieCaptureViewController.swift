@@ -3,19 +3,21 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 4/27/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
-import UIKit
+
 import AVKit
+@_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripeCameraCore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class SelfieCaptureViewController: IdentityFlowViewController {
 
     typealias SelfieImageScanningSession = ImageScanningSession<
         EmptyClassificationType,
-        Array<FaceScannerInputOutput>,
+        [FaceScannerInputOutput],
         FaceCaptureData,
         FaceScannerOutput
     >
@@ -25,7 +27,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     override var warningAlertViewModel: WarningAlertViewModel? {
         switch imageScanningSession.state {
         case .saving,
-             .scanned:
+            .scanned:
             return .init(
                 titleText: .Localized.unsavedChanges,
                 messageText: STPLocalizedString(
@@ -37,18 +39,18 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             )
 
         case .initial,
-             .scanning,
-             .timeout,
-             .noCameraAccess,
-             .cameraError:
-          return nil
+            .scanning,
+            .timeout,
+            .noCameraAccess,
+            .cameraError:
+            return nil
         }
     }
 
     var flowViewModel: IdentityFlowView.ViewModel {
         return .init(
             headerViewModel: .init(
-                backgroundColor: CompatibleColor.systemBackground,
+                backgroundColor: .systemBackground,
                 headerType: .plain,
                 titleText: STPLocalizedString(
                     "Selfie captures",
@@ -66,16 +68,18 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     var buttonViewModels: [IdentityFlowView.ViewModel.Button] {
         switch imageScanningSession.state {
         case .initial,
-             .scanning:
+            .scanning:
             return [.continueButton(state: .disabled, didTap: {})]
 
         case .saving:
             return [.continueButton(state: .loading, didTap: {})]
 
         case .scanned(_, let faceCaptureData):
-            return [.continueButton { [weak self] in
-                self?.saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
-            }]
+            return [
+                .continueButton { [weak self] in
+                    self?.saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+                }
+            ]
 
         case .noCameraAccess:
             return [
@@ -102,7 +106,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     didTap: { [weak self] in
                         self?.imageScanningSession.startScanning()
                     }
-                ),
+                )
             ]
         }
     }
@@ -110,50 +114,63 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     var selfieCaptureViewModel: SelfieCaptureView.ViewModel {
         switch imageScanningSession.state {
         case .initial:
-            return .scan(.init(
-                state: .blank,
-                instructionalText: SelfieCaptureViewController.initialInstructionText
-            ))
+            return .scan(
+                .init(
+                    state: .blank,
+                    instructionalText: SelfieCaptureViewController.initialInstructionText
+                )
+            )
         case .scanning(_, let collectedSamples):
             // Show a flash animation when capturing the first sample image
-            return .scan(.init(
-                state: .videoPreview(
-                    imageScanningSession.cameraSession,
-                    showFlashAnimation: collectedSamples.count == 1
-                ),
-                instructionalText: collectedSamples.isEmpty ?                     SelfieCaptureViewController.initialInstructionText :
-                    SelfieCaptureViewController.capturingInstructionText
-            ))
+            return .scan(
+                .init(
+                    state: .videoPreview(
+                        imageScanningSession.cameraSession,
+                        showFlashAnimation: collectedSamples.count == 1
+                    ),
+                    instructionalText: collectedSamples.isEmpty
+                        ? SelfieCaptureViewController.initialInstructionText
+                        : SelfieCaptureViewController.capturingInstructionText
+                )
+            )
         case .scanned(_, let faceCaptureData),
-             .saving(let faceCaptureData):
-            return .scan(.init(
-                state: .scanned(
-                    faceCaptureData.toArray.map { UIImage(cgImage: $0.image) },
-                    consentHTMLText: apiConfig.trainingConsentText,
-                    consentHandler: { [weak self] consentSelection in
-                        self?.consentSelection = consentSelection
-                    },
-                    openURLHandler: { [weak self] url in
-                        self?.openInSafariViewController(url: url)
-                    }
-                ),
-                instructionalText: SelfieCaptureViewController.scannedInstructionText
-            ))
+            .saving(_, let faceCaptureData):
+            return .scan(
+                .init(
+                    state: .scanned(
+                        faceCaptureData.toArray.map { UIImage(cgImage: $0.image) },
+                        consentHTMLText: apiConfig.trainingConsentText,
+                        consentHandler: { [weak self] consentSelection in
+                            self?.consentSelection = consentSelection
+                        },
+                        openURLHandler: { [weak self] url in
+                            self?.openInSafariViewController(url: url)
+                        }
+                    ),
+                    instructionalText: SelfieCaptureViewController.scannedInstructionText
+                )
+            )
         case .noCameraAccess:
-            return .error(.init(
-                titleText: .Localized.noCameraAccessErrorTitleText,
-                bodyText: .Localized.noCameraAccessErrorBodyText
-            ))
+            return .error(
+                .init(
+                    titleText: .Localized.noCameraAccessErrorTitleText,
+                    bodyText: .Localized.noCameraAccessErrorBodyText
+                )
+            )
         case .cameraError:
-            return .error(.init(
-                titleText: .Localized.cameraUnavailableErrorTitleText,
-                bodyText: .Localized.cameraUnavailableErrorBodyText
-            ))
+            return .error(
+                .init(
+                    titleText: .Localized.cameraUnavailableErrorTitleText,
+                    bodyText: .Localized.cameraUnavailableErrorBodyText
+                )
+            )
         case .timeout:
-            return .error(.init(
-                titleText: .Localized.timeoutErrorTitleText,
-                bodyText: .Localized.timeoutErrorBodyText
-            ))
+            return .error(
+                .init(
+                    titleText: .Localized.timeoutErrorTitleText,
+                    bodyText: .Localized.timeoutErrorBodyText
+                )
+            )
         }
     }
 
@@ -194,7 +211,8 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         selfieUploader: SelfieUploaderProtocol,
         anyFaceScanner: AnyFaceScanner,
         concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil,
-        cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
+        cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager
+            .shared,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared,
         notificationCenter: NotificationCenter = .default
     ) {
@@ -206,7 +224,10 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 autocaptureTimeout: TimeInterval(milliseconds: apiConfig.autocaptureTimeout),
                 cameraSession: cameraSession,
                 scanner: anyFaceScanner,
-                concurrencyManager: concurrencyManager ?? ImageScanningConcurrencyManager(analyticsClient: sheetController.analyticsClient),
+                concurrencyManager: concurrencyManager
+                    ?? ImageScanningConcurrencyManager(
+                        analyticsClient: sheetController.analyticsClient
+                    ),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
             ),
@@ -216,7 +237,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         updateUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -232,10 +255,15 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         imageScanningSession.stopScanning()
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
         super.viewWillTransition(to: size, with: coordinator)
 
-        imageScanningSession.cameraSession.setVideoOrientation(orientation: UIDevice.current.orientation.videoOrientation)
+        imageScanningSession.cameraSession.setVideoOrientation(
+            orientation: UIDevice.current.orientation.videoOrientation
+        )
     }
 }
 
@@ -278,7 +306,10 @@ extension SelfieCaptureViewController {
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
-        imageScanningSession.setStateSaving(faceCaptureData)
+        imageScanningSession.setStateSaving(
+            expectedClassification: .empty,
+            capturedData: faceCaptureData
+        )
         self.sheetController?.saveSelfieFileDataAndTransition(
             from: analyticsScreenName,
             selfieUploader: selfieUploader,
@@ -293,21 +324,35 @@ extension SelfieCaptureViewController {
 // MARK: - ImageScanningSessionDelegate
 @available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController: ImageScanningSessionDelegate {
-    func imageScanningSession(_ scanningSession: SelfieImageScanningSession, cameraDidError error: Error) {
+    func imageScanningSession(
+        _ scanningSession: SelfieImageScanningSession,
+        cameraDidError error: Error
+    ) {
         guard let sheetController = sheetController else {
             return
         }
-        sheetController.analyticsClient.logCameraError(sheetController: sheetController, error: error)
+        sheetController.analyticsClient.logCameraError(
+            sheetController: sheetController,
+            error: error
+        )
     }
 
-    func imageScanningSession(_ scanningSession: SelfieImageScanningSession, didRequestCameraAccess isGranted: Bool?) {
+    func imageScanningSession(
+        _ scanningSession: SelfieImageScanningSession,
+        didRequestCameraAccess isGranted: Bool?
+    ) {
         guard let sheetController = sheetController else {
             return
         }
-        sheetController.analyticsClient.logCameraPermissionsChecked(sheetController: sheetController, isGranted: isGranted)
+        sheetController.analyticsClient.logCameraPermissionsChecked(
+            sheetController: sheetController,
+            isGranted: isGranted
+        )
     }
 
-    func imageScanningSessionShouldScanCameraOutput(_ scanningSession: SelfieImageScanningSession) -> Bool {
+    func imageScanningSessionShouldScanCameraOutput(
+        _ scanningSession: SelfieImageScanningSession
+    ) -> Bool {
         return sampleTimer == nil
     }
 
@@ -340,7 +385,8 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionWillStopScanning(_ scanningSession: SelfieImageScanningSession) {
-        scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) { [weak sheetController] averageFPS, numFramesScanned in
+        scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) {
+            [weak sheetController] averageFPS, numFramesScanned in
             guard let averageFPS = averageFPS else { return }
             sheetController?.analyticsClient.logAverageFramesPerSecond(
                 averageFPS: averageFPS,
@@ -366,7 +412,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     ) {
         // Extract already scanned faces if there are any
         var collectedSamples: [FaceScannerInputOutput] = []
-        if case let .scanning(_, _collectedSamples) = scanningSession.state {
+        if case .scanning(_, let _collectedSamples) = scanningSession.state {
             collectedSamples = _collectedSamples
         }
 
@@ -377,11 +423,13 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
 
         // Update the number of collected samples
-        collectedSamples.append(.init(
-            image: image,
-            scannerOutput: scannerOutput,
-            cameraExifMetadata: exifMetadata
-        ))
+        collectedSamples.append(
+            .init(
+                image: image,
+                scannerOutput: scannerOutput,
+                cameraExifMetadata: exifMetadata
+            )
+        )
 
         // Reset timeout timer
         scanningSession.stopTimeoutTimer()
@@ -389,7 +437,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         // If we've found the required number of samples, upload images and
         // finish scanning. Otherwise, keep scanning
         guard collectedSamples.count == apiConfig.numSamples,
-              let faceCaptureData = FaceCaptureData(samples: collectedSamples)
+            let faceCaptureData = FaceCaptureData(samples: collectedSamples)
         else {
             // Reset timers
             scanningSession.startTimeoutTimer()
@@ -413,5 +461,6 @@ extension SelfieCaptureViewController: IdentityDataCollecting {
 
     func reset() {
         imageScanningSession.reset()
+        clearCollectedFields()
     }
 }

@@ -1,6 +1,6 @@
 //
 //  PaymentIntent+API.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 8/10/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -14,8 +14,10 @@ extension StripeAPI.PaymentIntent {
     /// - Parameters:
     ///   - paymentIntent: The Stripe PaymentIntent from the response. Will be nil if an error occurs. - seealso: PaymentIntent
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias PaymentIntentCompletionBlock = (Result<StripeAPI.PaymentIntent, Error>) -> Void
-    
+    @_spi(STP) public typealias PaymentIntentCompletionBlock = (
+        Result<StripeAPI.PaymentIntent, Error>
+    ) -> Void
+
     /// Retrieves the PaymentIntent object using the given secret. - seealso: https://stripe.com/docs/api#retrieve_payment_intent
     /// - Parameters:
     ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
@@ -27,17 +29,18 @@ extension StripeAPI.PaymentIntent {
     ) {
         assert(
             StripeAPI.PaymentIntentParams.isClientSecretValid(clientSecret),
-                "`secret` format does not match expected client secret formatting.")
+            "`secret` format does not match expected client secret formatting."
+        )
         guard let identifier = StripeAPI.PaymentIntent.id(fromClientSecret: clientSecret) else {
             completion(.failure(StripeError.invalidRequest))
             return
         }
         let endpoint = "\(Resource)/\(identifier)"
         let parameters: [String: String] = ["client_secret": clientSecret]
-        
+
         apiClient.get(resource: endpoint, parameters: parameters, completion: completion)
     }
-    
+
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
     /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
@@ -56,7 +59,8 @@ extension StripeAPI.PaymentIntent {
             "`paymentIntentParams.clientSecret` format does not match expected client secret formatting."
         )
 
-        guard let identifier = StripeAPI.PaymentIntent.id(fromClientSecret: params.clientSecret) else {
+        guard let identifier = StripeAPI.PaymentIntent.id(fromClientSecret: params.clientSecret)
+        else {
             completion(.failure(StripeError.invalidRequest))
             return
         }
@@ -64,16 +68,18 @@ extension StripeAPI.PaymentIntent {
 
         let type = params.paymentMethodData?.type.rawValue
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
-            paymentMethodType: type)
+            paymentMethodType: type
+        )
 
         // Add telemetry
         var paramsWithTelemetry = params
         if let pmAdditionalParams = paramsWithTelemetry.paymentMethodData?.additionalParameters {
-            paramsWithTelemetry.paymentMethodData?.additionalParameters = STPTelemetryClient.shared.paramsByAddingTelemetryFields(toParams: pmAdditionalParams)
+            paramsWithTelemetry.paymentMethodData?.additionalParameters = STPTelemetryClient.shared
+                .paramsByAddingTelemetryFields(toParams: pmAdditionalParams)
         }
-        
+
         apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
     }
-    
+
     static let Resource = "payment_intents"
 }

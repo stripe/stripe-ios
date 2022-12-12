@@ -3,25 +3,28 @@
 //  StripeCore
 //
 //  Created by Mel Ludowise on 9/16/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 
-@_spi(STP) public extension String {
-    func stp_stringByRemovingCharacters(from characterSet: CharacterSet) -> String {
+@_spi(STP) extension String {
+    public func stp_stringByRemovingCharacters(from characterSet: CharacterSet) -> String {
         return String(unicodeScalars.filter { !characterSet.contains($0) })
     }
 
-    var isSecretKey: Bool {
+    public var isSecretKey: Bool {
         return self.hasPrefix("sk_")
     }
-    
-    var nonEmpty: String? {
-       stringIfHasContentsElseNil(self)
+
+    public var nonEmpty: String? {
+        stringIfHasContentsElseNil(self)
     }
 }
 
-@_spi(STP) public func stringIfHasContentsElseNil(_ string: String?) ->  // MARK: -
+@_spi(STP) public func stringIfHasContentsElseNil(
+    _ string: String?
+) ->  // MARK: -
     String?
 {
     guard let string = string,

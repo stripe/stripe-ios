@@ -6,7 +6,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAUBECSFormViewModelTests: XCTestCase {
     func testBECSDebitParams() {
@@ -223,7 +227,10 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             var isErrorString = true
             var bsbLabel = model.bsbLabel(
-                forInput: "", editing: false, isErrorString: &isErrorString)
+                forInput: "",
+                editing: false,
+                isErrorString: &isErrorString
+            )
             XCTAssertFalse(isErrorString, "Empty input shouldn't be an error.")
             XCTAssertNil(bsbLabel, "No bsb label for empty input.")
 
@@ -238,13 +245,19 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             var isErrorString = false
             var bsbLabel = model.bsbLabel(
-                forInput: "666-666", editing: false, isErrorString: &isErrorString)
+                forInput: "666-666",
+                editing: false,
+                isErrorString: &isErrorString
+            )
             XCTAssertTrue(isErrorString, "Invalid input should be an error.")
             XCTAssertEqual(bsbLabel, "The BSB you entered is invalid.")
 
             isErrorString = false
             bsbLabel = model.bsbLabel(
-                forInput: "666-666", editing: true, isErrorString: &isErrorString)
+                forInput: "666-666",
+                editing: true,
+                isErrorString: &isErrorString
+            )
             XCTAssertTrue(isErrorString, "Invalid input should be an error (editing).")
             XCTAssertEqual(bsbLabel, "The BSB you entered is invalid.")
         }
@@ -254,13 +267,19 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             var isErrorString = false
             var bsbLabel = model.bsbLabel(
-                forInput: "111-11", editing: false, isErrorString: &isErrorString)
+                forInput: "111-11",
+                editing: false,
+                isErrorString: &isErrorString
+            )
             XCTAssertTrue(isErrorString, "Incomplete input should be an error when not editing.")
             XCTAssertEqual(bsbLabel, "The BSB you entered is incomplete.")
 
             isErrorString = true
             bsbLabel = model.bsbLabel(
-                forInput: "111-11", editing: true, isErrorString: &isErrorString)
+                forInput: "111-11",
+                editing: true,
+                isErrorString: &isErrorString
+            )
             XCTAssertFalse(isErrorString, "Incomplete input should not be an error when editing.")
             XCTAssertEqual(bsbLabel, "St George Bank (division of Westpac Bank)")
         }
@@ -270,13 +289,19 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             var isErrorString = true
             var bsbLabel = model.bsbLabel(
-                forInput: "111-111", editing: false, isErrorString: &isErrorString)
+                forInput: "111-111",
+                editing: false,
+                isErrorString: &isErrorString
+            )
             XCTAssertFalse(isErrorString, "Complete input should be not an error when not editing.")
             XCTAssertEqual(bsbLabel, "St George Bank (division of Westpac Bank)")
 
             isErrorString = true
             bsbLabel = model.bsbLabel(
-                forInput: "111-111", editing: true, isErrorString: &isErrorString)
+                forInput: "111-111",
+                editing: true,
+                isErrorString: &isErrorString
+            )
             XCTAssertFalse(isErrorString, "Complete input should not be an error when editing.")
             XCTAssertEqual(bsbLabel, "St George Bank (division of Westpac Bank)")
         }
@@ -287,9 +312,12 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             // name
             let model = STPAUBECSFormViewModel()
             XCTAssertTrue(
-                model.isInputValid("", for: .name, editing: false), "Name should always be valid.")
+                model.isInputValid("", for: .name, editing: false),
+                "Name should always be valid."
+            )
             XCTAssertTrue(
-                model.isInputValid("Jen", for: .name, editing: true), "Name should always be valid."
+                model.isInputValid("Jen", for: .name, editing: true),
+                "Name should always be valid."
             )
         }
 
@@ -298,21 +326,29 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             XCTAssertFalse(
                 model.isInputValid("jrosen", for: .email, editing: false),
-                "Partial email is invalid when not editing.")
+                "Partial email is invalid when not editing."
+            )
             XCTAssertTrue(
                 model.isInputValid("jrosen", for: .email, editing: true),
-                "Partial email is valid when editing.")
+                "Partial email is valid when editing."
+            )
 
             XCTAssertTrue(
-                model.isInputValid("", for: .email, editing: false), "Empty email is always valid.")
+                model.isInputValid("", for: .email, editing: false),
+                "Empty email is always valid."
+            )
             XCTAssertTrue(
-                model.isInputValid("", for: .email, editing: true), "Empty email is always valid.")
+                model.isInputValid("", for: .email, editing: true),
+                "Empty email is always valid."
+            )
 
             XCTAssertTrue(
                 model.isInputValid("jrosen@example.com", for: .email, editing: false),
-                "Valid email.")
+                "Valid email."
+            )
             XCTAssertTrue(
-                model.isInputValid("jrosen@example.com", for: .email, editing: true), "Valid email."
+                model.isInputValid("jrosen@example.com", for: .email, editing: true),
+                "Valid email."
             )
         }
 
@@ -321,36 +357,48 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             XCTAssertFalse(
                 model.isInputValid("111-1", for: .BSBNumber, editing: false),
-                "Partial bsb is invalid when not editing.")
+                "Partial bsb is invalid when not editing."
+            )
             XCTAssertTrue(
                 model.isInputValid("111-1", for: .BSBNumber, editing: true),
-                "Partial bsb is valid when editing.")
-
-            XCTAssertTrue(
-                model.isInputValid("", for: .BSBNumber, editing: false),
-                "Empty bsb is always valid.")
-            XCTAssertTrue(
-                model.isInputValid("", for: .BSBNumber, editing: true), "Empty bsb is always valid."
+                "Partial bsb is valid when editing."
             )
 
             XCTAssertTrue(
-                model.isInputValid("111-111", for: .BSBNumber, editing: false), "Valid bsb.")
+                model.isInputValid("", for: .BSBNumber, editing: false),
+                "Empty bsb is always valid."
+            )
             XCTAssertTrue(
-                model.isInputValid("111-111", for: .BSBNumber, editing: true), "Valid bsb.")
+                model.isInputValid("", for: .BSBNumber, editing: true),
+                "Empty bsb is always valid."
+            )
+
+            XCTAssertTrue(
+                model.isInputValid("111-111", for: .BSBNumber, editing: false),
+                "Valid bsb."
+            )
+            XCTAssertTrue(
+                model.isInputValid("111-111", for: .BSBNumber, editing: true),
+                "Valid bsb."
+            )
 
             XCTAssertFalse(
                 model.isInputValid("666-6", for: .BSBNumber, editing: false),
-                "Invalid partial bsb is always invalid.")
+                "Invalid partial bsb is always invalid."
+            )
             XCTAssertFalse(
                 model.isInputValid("666-6", for: .BSBNumber, editing: true),
-                "Invalid partial bsb is always invalid.")
+                "Invalid partial bsb is always invalid."
+            )
 
             XCTAssertFalse(
                 model.isInputValid("666-666", for: .BSBNumber, editing: false),
-                "Invalid full bsb is always invalid.")
+                "Invalid full bsb is always invalid."
+            )
             XCTAssertFalse(
                 model.isInputValid("666-666", for: .BSBNumber, editing: true),
-                "Invalid full bsb is always invalid.")
+                "Invalid full bsb is always invalid."
+            )
         }
 
         do {
@@ -358,31 +406,39 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             XCTAssertFalse(
                 model.isInputValid("1234", for: .accountNumber, editing: false),
-                "Partial account number is invalid when not editing.")
+                "Partial account number is invalid when not editing."
+            )
             XCTAssertTrue(
                 model.isInputValid("1234", for: .accountNumber, editing: true),
-                "Partial  account number is valid when editing.")
+                "Partial  account number is valid when editing."
+            )
 
             XCTAssertTrue(
                 model.isInputValid("", for: .accountNumber, editing: false),
-                "Empty  account number is always valid.")
+                "Empty  account number is always valid."
+            )
             XCTAssertTrue(
                 model.isInputValid("", for: .accountNumber, editing: true),
-                "Empty  account number is always valid.")
+                "Empty  account number is always valid."
+            )
 
             XCTAssertTrue(
                 model.isInputValid("12345", for: .accountNumber, editing: false),
-                "Valid  account number.")
+                "Valid  account number."
+            )
             XCTAssertTrue(
                 model.isInputValid("12345", for: .accountNumber, editing: true),
-                "Valid  account number.")
+                "Valid  account number."
+            )
 
             XCTAssertFalse(
                 model.isInputValid("12345678910", for: .accountNumber, editing: false),
-                "Invalid  account number is always invalid.")
+                "Invalid  account number is always invalid."
+            )
             XCTAssertFalse(
                 model.isInputValid("12345678910", for: .accountNumber, editing: true),
-                "Invalid  account number is always invalid.")
+                "Invalid  account number is always invalid."
+            )
         }
     }
 
@@ -392,17 +448,21 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "", in: .name, editing: false),
-                "Empty name is not complete.")
+                "Empty name is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "", in: .name, editing: true),
-                "Empty name is not complete.")
+                "Empty name is not complete."
+            )
 
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "Jen", in: .name, editing: false),
-                "Non-empty name is complete.")
+                "Non-empty name is complete."
+            )
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "Jenny Rosen", in: .name, editing: true),
-                "Non-empty name is complete.")
+                "Non-empty name is complete."
+            )
         }
 
         do {
@@ -410,17 +470,21 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "jrosen", in: .email, editing: false),
-                "Partial email is not complete.")
+                "Partial email is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "jrosen", in: .email, editing: true),
-                "Partial email is not complete.")
+                "Partial email is not complete."
+            )
 
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "jrosen@example.com", in: .email, editing: false),
-                "Full email is complete.")
+                "Full email is complete."
+            )
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "jrosen@example.com", in: .email, editing: true),
-                "Full email is complete.")
+                "Full email is complete."
+            )
         }
 
         do {
@@ -428,38 +492,48 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "111-1", in: .BSBNumber, editing: false),
-                "Partial bsb is not complete.")
+                "Partial bsb is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "111-1", in: .BSBNumber, editing: true),
-                "Partial bsb is not complete.")
+                "Partial bsb is not complete."
+            )
 
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "", in: .BSBNumber, editing: false),
-                "Empty bsb is not complete.")
+                "Empty bsb is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "", in: .BSBNumber, editing: true),
-                "Empty bsb is not complete.")
+                "Empty bsb is not complete."
+            )
 
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "111-111", in: .BSBNumber, editing: false),
-                "Full bsb is complete.")
+                "Full bsb is complete."
+            )
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "111-111", in: .BSBNumber, editing: true),
-                "Full bsb is complete.")
+                "Full bsb is complete."
+            )
 
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "666-6", in: .BSBNumber, editing: false),
-                "Invalid partial bsb is not complete.")
+                "Invalid partial bsb is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "666-6", in: .BSBNumber, editing: true),
-                "Invalid partial bsb is not complete.")
+                "Invalid partial bsb is not complete."
+            )
 
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "666-666", in: .BSBNumber, editing: false),
-                "Invalid full bsb is not complete.")
+                "Invalid full bsb is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "666-666", in: .BSBNumber, editing: true),
-                "Invalid full bsb is not complete.")
+                "Invalid full bsb is not complete."
+            )
         }
 
         do {
@@ -467,35 +541,44 @@ class STPAUBECSFormViewModelTests: XCTestCase {
             let model = STPAUBECSFormViewModel()
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "1234", in: .accountNumber, editing: false),
-                "Partial account number is not complete.")
+                "Partial account number is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "1234", in: .accountNumber, editing: true),
-                "Partial account number is not complete.")
+                "Partial account number is not complete."
+            )
 
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "", in: .accountNumber, editing: false),
-                "Empty account number is not complete.")
+                "Empty account number is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "", in: .accountNumber, editing: true),
-                "Empty account number is not complete.")
+                "Empty account number is not complete."
+            )
 
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "12345", in: .accountNumber, editing: false),
-                "Min length account number is complete when not editing.")
+                "Min length account number is complete when not editing."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "12345", in: .accountNumber, editing: true),
-                "Min length account number is not complete when editing.")
+                "Min length account number is not complete when editing."
+            )
 
             XCTAssertTrue(
                 model.isFieldComplete(withInput: "123456789", in: .accountNumber, editing: true),
-                "Max length account number is complete when editing.")
+                "Max length account number is complete when editing."
+            )
 
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "12345678910", in: .accountNumber, editing: false),
-                "Invalid  account number is not complete.")
+                "Invalid  account number is not complete."
+            )
             XCTAssertFalse(
                 model.isFieldComplete(withInput: "12345678910", in: .accountNumber, editing: true),
-                "Invalid  account number is not complete.")
+                "Invalid  account number is not complete."
+            )
         }
     }
 }

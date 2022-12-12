@@ -1,15 +1,18 @@
 //
 //  STPShippingAddressViewControllerLocalizationTests.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 11/3/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
-@testable @_spi(STP) import StripeCore
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPShippingAddressViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {
@@ -18,7 +21,9 @@ class STPShippingAddressViewControllerLocalizationTests: FBSnapshotTestCase {
     }
 
     func performSnapshotTest(
-        forLanguage language: String?, shippingType: STPShippingType, contact: Bool
+        forLanguage language: String?,
+        shippingType: STPShippingType,
+        contact: Bool
     ) {
         var identifier = (shippingType == .shipping) ? "shipping" : "delivery"
         let config = STPFixtures.paymentConfiguration()
@@ -46,7 +51,8 @@ class STPShippingAddressViewControllerLocalizationTests: FBSnapshotTestCase {
             currency: nil,
             shippingAddress: nil,
             selectedShippingMethod: nil,
-            prefilledInformation: info)
+            prefilledInformation: info
+        )
 
         /// This method rejects nil or empty country codes to stop strange looking behavior
         /// when scrolling to the top "unset" position in the picker, so put in

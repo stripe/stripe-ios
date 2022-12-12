@@ -1,2 +1,2 @@
-# Automatically request reviews from @ios-reviewers by default
-* @stripe-ios/ios-reviewers
+# Automatically request reviews from @ios-reviewers by default, allow reviews from @ios-non-core-reviewers
+* @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers

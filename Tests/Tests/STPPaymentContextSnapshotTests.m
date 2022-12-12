@@ -6,7 +6,6 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <OCMock/OCMock.h>
 #import "StripeiOS_Tests-Swift.h"
 
@@ -14,6 +13,8 @@
 #import "STPFixtures.h"
 #import "STPMocks.h"
 #import "STPTestUtils.h"
+
+@import iOSSnapshotTestCaseCore;
 
 @interface STPPaymentContextSnapshotTests : FBSnapshotTestCase
 

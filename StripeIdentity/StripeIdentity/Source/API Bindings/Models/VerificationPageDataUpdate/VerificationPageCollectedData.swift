@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/26/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -11,11 +12,11 @@ import Foundation
 extension StripeAPI {
     struct VerificationPageCollectedData: Encodable, Equatable {
 
-        let biometricConsent: Bool?
-        let face: VerificationPageDataFace?
-        let idDocumentBack: VerificationPageDataDocumentFileData?
-        let idDocumentFront: VerificationPageDataDocumentFileData?
-        let idDocumentType: DocumentType?
+        private(set) var biometricConsent: Bool?
+        private(set) var face: VerificationPageDataFace?
+        private(set) var idDocumentBack: VerificationPageDataDocumentFileData?
+        private(set) var idDocumentFront: VerificationPageDataDocumentFileData?
+        private(set) var idDocumentType: DocumentType?
 
         init(
             biometricConsent: Bool? = nil,
@@ -33,12 +34,13 @@ extension StripeAPI {
     }
 }
 
+/// All mutating functions needs to pass all values explicitly to the new object, as the default value would be nil.
 extension StripeAPI.VerificationPageCollectedData {
-    /**
-     Returns a new `VerificationPageCollectedData`, merging the data from this
-     one with the provided one.
-     */
-    func merging(_ otherData: StripeAPI.VerificationPageCollectedData) -> StripeAPI.VerificationPageCollectedData {
+    /// Returns a new `VerificationPageCollectedData`, merging the data from this
+    /// one with the provided one.
+    func merging(
+        _ otherData: StripeAPI.VerificationPageCollectedData
+    ) -> StripeAPI.VerificationPageCollectedData {
         return StripeAPI.VerificationPageCollectedData(
             biometricConsent: otherData.biometricConsent ?? self.biometricConsent,
             face: otherData.face ?? self.face,
@@ -48,23 +50,56 @@ extension StripeAPI.VerificationPageCollectedData {
         )
     }
 
-    /**
-     Merges the data from the provided `VerificationPageCollectedData` into this one.
-     */
+    /// Merges the data from the provided `VerificationPageCollectedData` into this one.
     mutating func merge(_ otherData: StripeAPI.VerificationPageCollectedData) {
         self = self.merging(otherData)
+    }
+
+    mutating func clearData(field: StripeAPI.VerificationPageFieldType) {
+        switch field {
+        case .biometricConsent:
+            self.biometricConsent = nil
+        case .face:
+            self.face = nil
+        case .idDocumentBack:
+            self.idDocumentBack = nil
+        case .idDocumentFront:
+            self.idDocumentFront = nil
+        case .idDocumentType:
+            self.idDocumentType = nil
+        }
     }
 
     /// Helper to determine the front document score for analytics purposes
     var frontDocumentScore: TwoDecimalFloat? {
         switch idDocumentType {
         case .drivingLicense,
-             .idCard:
+            .idCard:
             return idDocumentFront?.frontCardScore
         case .passport:
             return idDocumentFront?.passportScore
         case .none:
             return nil
         }
+    }
+
+    var collectedTypes: Set<StripeAPI.VerificationPageFieldType> {
+        var ret = Set<StripeAPI.VerificationPageFieldType>()
+        if self.biometricConsent != nil {
+            ret.insert(.biometricConsent)
+        }
+        if self.face != nil {
+            ret.insert(.face)
+        }
+        if self.idDocumentBack != nil {
+            ret.insert(.idDocumentBack)
+        }
+        if self.idDocumentFront != nil {
+            ret.insert(.idDocumentFront)
+        }
+        if self.idDocumentType != nil {
+            ret.insert(.idDocumentType)
+        }
+        return ret
     }
 }

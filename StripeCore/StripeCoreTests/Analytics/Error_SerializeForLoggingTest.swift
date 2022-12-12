@@ -3,17 +3,18 @@
 //  StripeCoreTests
 //
 //  Created by Nick Porter on 9/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import XCTest
 
-@testable @_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeCore
 
 class Error_SerializeForLoggingTest: XCTestCase {
 
     struct CustomLoggableError: Error, AnalyticLoggableError {
-        func analyticLoggableSerializeForLogging() -> [String : Any] {
+        func analyticLoggableSerializeForLogging() -> [String: Any] {
             return [
                 "foo": "value"
             ]
@@ -25,17 +26,21 @@ class Error_SerializeForLoggingTest: XCTestCase {
     }
 
     func testNSErrorSerializedForLogging() throws {
-        let error = NSError(domain: "test-domain", code: 1, userInfo: ["description": "test-description"])
-        
+        let error = NSError(
+            domain: "test-domain",
+            code: 1,
+            userInfo: ["description": "test-description"]
+        )
+
         let serializedError = error.serializeForLogging()
-        
+
         XCTAssertEqual(serializedError.count, 2)
         XCTAssertEqual("test-domain", serializedError["domain"] as? String)
         XCTAssertEqual(serializedError["code"] as? Int, 1)
     }
 
     /// Tests that casting an the error to `Error` still uses custom
-    /// serialization as opposed to the NSError default behavior
+    /// serialization as opposed to the NSError default behavior.
     func testAnalyticLoggableSerializedForLogging() {
         let error: Error = CustomLoggableError()
 
@@ -54,6 +59,9 @@ class Error_SerializeForLoggingTest: XCTestCase {
 
         XCTAssertEqual(serializedError.count, 2)
         XCTAssertEqual(serializedError["type"] as? String, "foo")
-        XCTAssertEqual(serializedError["domain"] as? String, "StripeCoreTests.Error_SerializeForLoggingTest.StringError")
+        XCTAssertEqual(
+            serializedError["domain"] as? String,
+            "StripeCoreTests.Error_SerializeForLoggingTest.StringError"
+        )
     }
 }

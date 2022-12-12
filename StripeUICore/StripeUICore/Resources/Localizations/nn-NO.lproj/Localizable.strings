@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB-nummer";
 
+"Billing address is same as shipping" = "Fakturaadressa er den same som leveringsadressa";
+
 "Cancel" = "Avbryt";
 
 "City" = "Stad";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Ferdig";
+
+"Edit" = "Rediger";
 
 "Eircode" = "Eircode";
 

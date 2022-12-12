@@ -3,15 +3,18 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 6/2/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import UIKit
 
 extension IdentityImageUploader.Configuration {
-    init(from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage) {
+    init(
+        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    ) {
         self.init(
             filePurpose: selfiePageConfig.filePurpose,
             highResImageCompressionQuality: selfiePageConfig.highResImageCompressionQuality,
@@ -53,7 +56,8 @@ extension StripeAPI.VerificationPageDataFace {
             bestFocalLength: bestFrameExifMetadata?.focalLength.map {
                 TwoDecimalFloat(double: $0)
             },
-            bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?.isVirtualDevice,
+            bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?
+                .isVirtualDevice,
             trainingConsent: trainingConsent
         )
     }

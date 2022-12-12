@@ -8,31 +8,41 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPIntentActionTypeTest: XCTestCase {
 
     func testTypeFromString() {
         XCTAssertEqual(
             STPIntentActionType(string: "redirect_to_url"),
-            STPIntentActionType.redirectToURL)
+            STPIntentActionType.redirectToURL
+        )
         XCTAssertEqual(
             STPIntentActionType(string: "REDIRECT_TO_URL"),
-            STPIntentActionType.redirectToURL)
+            STPIntentActionType.redirectToURL
+        )
 
         XCTAssertEqual(
             STPIntentActionType(string: "use_stripe_sdk"),
-            STPIntentActionType.useStripeSDK)
+            STPIntentActionType.useStripeSDK
+        )
         XCTAssertEqual(
             STPIntentActionType(string: "USE_STRIPE_SDK"),
-            STPIntentActionType.useStripeSDK)
+            STPIntentActionType.useStripeSDK
+        )
 
         XCTAssertEqual(
             STPIntentActionType(string: "garbage"),
-            STPIntentActionType.unknown)
+            STPIntentActionType.unknown
+        )
         XCTAssertEqual(
             STPIntentActionType(string: "GARBAGE"),
-            STPIntentActionType.unknown)
+            STPIntentActionType.unknown
+        )
     }
 
 }

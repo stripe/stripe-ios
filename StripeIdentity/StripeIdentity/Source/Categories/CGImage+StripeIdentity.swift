@@ -1,13 +1,14 @@
 //
 //  CGImage+StripeIdentity.swift
-//  StripeCameraCore
+//  StripeIdentity
 //
 //  Created by Mel Ludowise on 12/8/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import CoreGraphics
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 enum STPCGImageError: String, Error {
     /// The image could not be cropped
@@ -25,34 +26,36 @@ extension CGImage {
         case regionWidth
     }
 
-    /**
-     Crops the image to a given region of interest plus padding.
-
-     - Parameters:
-       - normalizedRegion: A rect, in image coordinates, defining the area to add padding to and then crop, where origin is bottom-left.
-       - cropPadding: A value, ranging between 0–1, that is added as padding to the region of interest.
-       - computationMethod: The method which the crop padding pixel value is computed from.
-
-     - Returns: An image cropped to the given specifications.
-
-     - Throws: STPCGImageError if the image could not be cropped
-
-     - Note:
-     The pixel value of the padding added to region of interest is defined as `cropPadding * max(width, height)`.
-     */
+    /// Crops the image to a given region of interest plus padding.
+    ///
+    /// - Parameters:
+    ///   - normalizedRegion: A rect, in image coordinates, defining the area to add padding to and then crop, where origin is bottom-left.
+    ///   - cropPadding: A value, ranging between 0–1, that is added as padding to the region of interest.
+    ///   - computationMethod: The method which the crop padding pixel value is computed from.
+    ///
+    /// - Returns: An image cropped to the given specifications.
+    ///
+    /// - Throws: STPCGImageError if the image could not be cropped
+    ///
+    /// - Note:
+    /// The pixel value of the padding added to region of interest is defined as `cropPadding * max(width, height)`.
     func cropping(
         toNormalizedRegion normalizedRegion: CGRect,
         withPadding cropPadding: CGFloat,
         computationMethod: CropPaddingComputationMethod
     ) throws -> CGImage {
-        guard let image = cropping(to: computePixelCropArea(
-            normalizedRegion: normalizedRegion,
-            pixelPadding: computePixelPadding(
-                padding: cropPadding,
-                normalizedRegion: normalizedRegion,
-                computationMethod: computationMethod
+        guard
+            let image = cropping(
+                to: computePixelCropArea(
+                    normalizedRegion: normalizedRegion,
+                    pixelPadding: computePixelPadding(
+                        padding: cropPadding,
+                        normalizedRegion: normalizedRegion,
+                        computationMethod: computationMethod
+                    )
+                )
             )
-        )) else {
+        else {
             throw STPCGImageError.unableToCrop
         }
         return image
@@ -87,17 +90,15 @@ extension CGImage {
         )
     }
 
-    /**
-     Scales the image, maintaining its aspect ratio, to a maximum dimension.
-     If the image size is already smaller than the given dimension, it will
-     maintain its original dimension.
-
-     - Parameter maxPixelDimension: The maximum dimensions, in pixels, the returned image should be.
-
-     - Returns: An image scaled down to the max dimensions.
-
-     - Throws: STPCGImageError if the image could not be scaled
-     */
+    /// Scales the image, maintaining its aspect ratio, to a maximum dimension.
+    /// If the image size is already smaller than the given dimension, it will
+    /// maintain its original dimension.
+    ///
+    /// - Parameter maxPixelDimension: The maximum dimensions, in pixels, the returned image should be.
+    ///
+    /// - Returns: An image scaled down to the max dimensions.
+    ///
+    /// - Throws: STPCGImageError if the image could not be scaled
     func scaledDown(
         toMaxPixelDimension maxPixelDimension: CGSize
     ) throws -> CGImage {

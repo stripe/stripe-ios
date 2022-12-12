@@ -3,11 +3,15 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 2/9/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import XCTest
+
+// swift-format-ignore
 @_spi(STP) @testable import StripeCore
+
 @testable import StripeIdentity
 
 final class TruncatedDecimalTest: XCTestCase {
@@ -27,8 +31,8 @@ final class TruncatedDecimalTest: XCTestCase {
     }
 }
 
-private extension TruncatedDecimalTest {
-    func verify<T: TruncatedDecimal>(
+extension TruncatedDecimalTest {
+    fileprivate func verify<T: TruncatedDecimal>(
         _ truncatedDecimal: T,
         isFormattedTo string: String,
         file: StaticString = #filePath,
@@ -40,7 +44,13 @@ private extension TruncatedDecimalTest {
 
         let jsonDict = try container.encodeJSONDictionary()
         let queryString = URLEncoder.queryString(from: jsonDict)
-        XCTAssertEqual(queryString, "number=\(string)", "encodeJSONDictionary", file: file, line: line)
+        XCTAssertEqual(
+            queryString,
+            "number=\(string)",
+            "encodeJSONDictionary",
+            file: file,
+            line: line
+        )
 
         // Verify we can decode the number
         guard let jsonDataToDecode = "{\"number\":\(string)}".data(using: .utf8) else {

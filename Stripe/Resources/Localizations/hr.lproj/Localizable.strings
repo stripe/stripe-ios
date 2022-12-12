@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ završava na %2$@";
-
 "%@ - Offline" = "%@ - Izvan mreže";
 
-"+ Add" = "+ Dodaj";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "AU BECS Izravno terećenje";
 
 "Add New Card…" = "Dodaj novu karticu...";
 
 "Add a Card" = "Dodaj karticu";
 
-"Add a card" = "Dodavanje kartice";
-
-"Add a payment method" = "Dodaj način plaćanja";
-
-"Add bank account" = "Dodajte bankovni račun";
-
-"Add new payment method" = "Dodajte novi način plaćanja";
-
-"Add your payment information" = "Dodavanje informacija o plaćanju";
-
-"Address line 2 (optional)" = "Ulica i kućni broj 2 (neobavezno)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Stan br.";
 
-"Are you sure you want to remove this card?" = "Jeste li sigurni da želite ukloniti ovu karticu?";
-
-"Are you sure you want to remove this linked account?" = "Jeste li sigurni da želite ukloniti ovaj povezani račun?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Natrag";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Banka";
-
-"Bank Account" = "Bankovni račun";
-
-"Bank account" = "Bankovni račun";
-
-"Billing Address" = "Adresa za naplatu";
-
-"Billing address" = "Adresa za naplatu";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Kupite sada ili platite kasnije pomoću Klarne";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s ovim <terms>uvjetima</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Unosom svojih podataka o bankovnom računu i potvrdom ovoga plaćanja, suglasni ste s ovim Zahtjevom za izravno terećenje i <terms>Ugovorom o usluzi za izravno terećenje</terms>, te ovlašćujete Stripe Payments Australia Pty Ltd ACN 160 180 343, ID broj korisnika za izravno terećenje 507156 (“Stripe”) da tereti vaš račun koristeći Bulk Electronic Clearing System (BECS) u ime %@ (\"Trgovac\") za bilo koji iznos koji vam je Trgovac javio u odvojenoj korespondenciji. Potvrđujete da ste ili vlasnik računa ili ovlašteni potpisnik na prethodno navedenom računu.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Unošenjem vaših podataka o plaćanju, ovlašćujete (A) %@ i Stripe, našeg davatelja usluga platnog prometa, da vašoj banci pošalje upute za terećenje vašeg računa, i (B) vašu banku za terećenje vašeg računa u skladu s tim uputama. U sklopu vaših prava, imate pravo na povrat novca od svoje banke prema uvjetima i odredbama ugovora s bankom. Povrat novca mora se zatražiti u roku od 8 tjedana počevši od datuma terećenja vašeg računa. Vaša prava objašnjena su u izjavi koju možete dobiti od svoje banke. Slažete se s primanjem obavijesti o budućim terećenjima do 2 dana prije njihova izvršenja.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Spremanjem bankovnog računa za %@ pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Kartica";
-
-"Card information" = "Informacije o kartici";
-
-"Card number" = "Broj kartice";
-
-"Change email" = "Izmijeni e-poštu";
-
-"Choose a payment method" = "Odaberite način plaćanja";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Zatvori skener kartice";
-
-"Code field" = "Polje za kod";
-
-"Code sent" = "Kod je poslan";
-
 "Contact" = "Kontakt";
-
-"Default" = "Zadano";
 
 "Delivery" = "Dostava";
 
 "Delivery Address" = "Adresa za dostavu";
 
-"Double tap to edit" = "Dodirnite dva puta za uređivanje";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "Banka EPS";
-
-"Edit" = "Uredi";
-
-"Enter address manually" = "Unesite adresu ručno";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Unesite kod poslan na %@ kako biste koristili Link za plaćanje kao zadanu opciju.";
-
-"Enter your verification code" = "Unesite verifikacijski kod";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Radi sigurnosti, ponovno unesite sigurnosni kod vaše kartice.";
-
 "Free" = "Besplatno";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Adresa za otpremu nije valjana";
 
-"Invalid data." = "Nevaljani podaci.";
-
-"Join Link" = "Pridružite se na Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Učitava se...";
-
-"Log out of Link" = "Odjavite se s Linka";
-
-"MM / YY" = "MM / GG";
-
-"MM/YY" = "MM/GG";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Sljedeće";
-
-"Not %@?" = "Niste %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
-"Or" = "Ili";
-
-"Or pay using" = "Ili platite koristeći";
-
-"Or pay with a card" = "Ili plati karticom";
-
-"P24" = "P24";
-
-"Pay %@" = "Plati %@";
-
-"Pay another way" = "Platite na drugi način";
-
-"Pay faster at %@ and thousands of merchants." = "Platite brže kod %@ i tisuća drugih trgovaca.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Platite u <num_installments/> beskamatnih obroka po <installment_price/> koristeći <img/>";
-
-"Pay later with Klarna." = "Platite kasnije pomoću Klarne.";
-
-"Pay over time with %@" = "Platite u ratama koristeći %@";
-
-"Pay using" = "Platite koristeći";
-
-"Pay with %@" = "Plati sa %@";
-
-"Pay with your bank account in just a few steps." = "Platite svojim bankovnim računom u samo par koraka.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Plaćanje";
-
 "Payment Method" = "Način plaćanja";
-
-"Payment methods" = "Načini plaćanja";
-
-"Point the camera at your card." = "Usmjerite kameru na svoju karticu.";
-
-"Postal Code" = "Poštanski broj";
-
-"Processing..." = "Obrađuje se...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Banka Przelewy24";
-
-"Remove %1$@ ending in %2$@" = "Uklonite %1$@ koji završava s %2$@";
-
-"Remove Card" = "Uklonite karticu";
-
-"Remove card" = "Ukloni karticu";
-
-"Remove linked account" = "Ukloni povezani račun";
-
-"Resend code" = "Ponovo pošalji kod";
-
-"SEPA Debit" = "SEPA Debit";
-
-"SEPA Direct Debit" = "SEPA izravno terećenje";
-
-"Save for future payments" = "Spremi za buduća plaćanja";
-
-"Save my info for secure 1-click checkout" = "Sačuvaj moje podatke za sigurno plaćanje pomoću 1 klika";
-
-"Save this account for future %@ payments" = "Spremi ovaj račun za buduća %@ plaćanja";
-
-"Save this card for future %@ payments" = "Spremi ovu karticu za buduća plaćanja %@";
-
-"Secure 1⁠-⁠click checkout" = "Sigurno plaćanje pomoću 1 klika";
-
-"Select your payment method" = "Odaberite način plaćanja";
-
-"Set as default" = "Postavi kao zadano";
-
-"Set as default payment method" = "Postavi kao zadani način plaćanja";
-
-"Set up" = "Postavi";
 
 "Shipping" = "Otprema";
 
-"Shipping Address" = "Adresa za otpremu";
-
 "Shipping Method" = "Način otpreme";
-
-"Show menu" = "Prikaži izbornik";
-
-"Sign in to your Link account" = "Prijavite se na svoj Link račun";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Došlo je do greške pri povezivanju vašeg računa.\nPokušajte ponovo kasnije.";
-
-"State / Province / Region" = "Država / pokrajina / regija";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak plaćanja za %@.";
-
-"Tap to close" = "Dodirnite za zatvaranje";
-
-"Tap to expand" = "Dodirnite za proširivanje";
-
-"The BSB you entered is invalid." = "Uneseni BSB nije valjan.";
-
-"The IBAN you entered is incomplete." = "Uneseni IBAN nije potpun.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Uneseni IBAN je neispravan, \"%@\" nije podržani broj države.";
-
-"The provided verification code has expired." = "Navedeni kontrolni kôd je istekao.";
-
-"The provided verification code is incorrect." = "Navedeni kontrolni kôd nije točan.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ova kartica je istekla. Ažurirajte svoje podatke o kartici ili odaberite drugi način plaćanja.";
-
-"This is your default" = "Ovo je vaša zadana vrijednost";
-
-"Timed out authenticating your payment method -- try again" = "Istek vremena pri provjeri načina plaćanja -- pokušajte ponovno";
-
-"To scan your card, allow camera access in Settings." = "Da biste skenirali karticu, dopustite pristup kameri u Postavkama.";
-
-"Too many attempts. Please try again in a few minutes." = "Previše pokušaja. Pokušajte ponovno za nekoliko minuta.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Američki bankovni račun";
-
-"Unavailable for this purchase" = "Nije dostupno za ovu kupnju";
-
-"Unknown" = "Nepoznato";
-
-"Update card" = "Ažuriraj karticu";
 
 "Use Billing" = "Koristi istu adresu kao i za naplatu";
 
 "Use Delivery" = "Koristi istu adresu kao i za dostavu";
 
 "Use Shipping" = "Koristi istu adresu kao i za otpremu";
-
-"Use your saved info to check out faster" = "Upotrijebite svoje spremljene podatke za brže plaćanje";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nismo mogli potvrditi vaš način plaćanja. Odaberite drugi način plaćanja i pokušajte ponovno.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Vaš bi IBAN trebao započeti s kodom države od dva slova.";
-
-"Your ZIP is invalid." = "Vaš ZIP broj nije valjan.";
-
-"Your card number is incomplete." = "Broj vaše kartice nije kompletan.";
-
-"Your card number is invalid." = "Broj vaše kartice nije valjan.";
-
-"Your card's expiration date is incomplete." = "Datum isteka vaše kartice nije kompletan.";
-
-"Your card's expiration date is invalid." = "Datum isteka vaše kartice nije valjan.";
-
-"Your card's expiration month is invalid." = "Mjesec isteka kartice nije valjan.";
-
-"Your card's expiration year is invalid." = "Godina isteka kartice nije valjana.";
-
-"Your card's security code is incomplete." = "Sigurnosni kod vaše kartice nije kompletan.";
-
-"Your card's security code is invalid." = "Sigurnosni kod vaše kartice nije valjan.";
-
-"Your postal code is invalid." = "Vaš poštanski broj nije valjan.";
-
-"ZIP Code" = "ZIP broj";
-
-"card number" = "broj kartice";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "Datum isteka";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL Bank";

@@ -7,9 +7,9 @@
 
 import XCTest
 
-public extension XCTestCase {
+extension XCTestCase {
 
-    func expectation<Object, Value: Equatable>(
+    public func expectation<Object, Value: Equatable>(
         for object: Object,
         keyPath: KeyPath<Object, Value>,
         equalsToValue value: Value,
@@ -23,7 +23,7 @@ public extension XCTestCase {
         )
     }
 
-    func expectation<Object, Value: Equatable>(
+    public func expectation<Object, Value: Equatable>(
         for object: Object,
         keyPath: KeyPath<Object, Value>,
         notEqualsToValue value: Value,
@@ -37,12 +37,13 @@ public extension XCTestCase {
         )
     }
 
-    func notNullExpectation<Object, Value>(
+    public func notNullExpectation<Object, Value>(
         for object: Object,
-        keyPath: KeyPath<Object, Optional<Value>>,
+        keyPath: KeyPath<Object, Value?>,
         description: String? = nil
     ) -> KeyPathExpectation {
-        let description = description ?? "Expect predicate `\(keyPath)` != nil for \(String(describing: object))"
+        let description =
+            description ?? "Expect predicate `\(keyPath)` != nil for \(String(describing: object))"
 
         return KeyPathExpectation(
             object: object,

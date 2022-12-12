@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-typealias PayloadInfo =  ScanAnalyticsPayload.PayloadInfo
+typealias PayloadInfo = ScanAnalyticsPayload.PayloadInfo
 
 /// Manager used to aggregate scan analytics
 class ScanAnalyticsManager {
@@ -34,8 +34,10 @@ class ScanAnalyticsManager {
     /// Create ScanAnalyticsPayload API model
     func generateScanAnalyticsPayload(
         with configuration: CardImageVerificationSheet.Configuration,
-        completion: @escaping (ScanAnalyticsPayload?
-    ) -> Void) {
+        completion: @escaping (
+            ScanAnalyticsPayload?
+        ) -> Void
+    ) {
         mutexQueue.async { [weak self] in
             guard let self = self else {
                 completion(nil)
@@ -52,10 +54,11 @@ class ScanAnalyticsManager {
             )
 
             DispatchQueue.main.async {
-                completion(ScanAnalyticsPayload(
-                    configuration: configuration,
-                    payloadInfo: self.payloadInfo,
-                    scanStats: scanStatsTasks
+                completion(
+                    ScanAnalyticsPayload(
+                        configuration: configuration,
+                        payloadInfo: self.payloadInfo,
+                        scanStats: scanStatsTasks
                     )
                 )
             }

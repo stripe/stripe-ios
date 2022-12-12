@@ -1,6 +1,6 @@
 //
 //  UIViewController+Stripe_NavigationItemProxy.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 6/9/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -17,8 +17,11 @@ extension UIViewController {
         }
         set(stp_navigationItemProxy) {
             objc_setAssociatedObject(
-                self, UnsafeRawPointer(&kSTPNavigationItemProxyKey), stp_navigationItemProxy,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                self,
+                UnsafeRawPointer(&kSTPNavigationItemProxyKey),
+                stp_navigationItemProxy,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
             if navigationItem.leftBarButtonItem != nil {
                 stp_navigationItemProxy?.leftBarButtonItem = navigationItem.leftBarButtonItem
             }

@@ -1,6 +1,6 @@
 //
 //  STPPushProvisioningContext.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 9/27/18.
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
@@ -15,18 +15,6 @@ public class STPPushProvisioningContext: NSObject {
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared
     public var apiClient: STPAPIClient = .shared
-    
-    /// The STPAPIClient instance to use to make API requests to Stripe.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
 
     /// This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
     /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `initWithRequestConfiguration:delegate:` initializer.
@@ -37,16 +25,28 @@ public class STPPushProvisioningContext: NSObject {
     ///   - last4: The last 4 of the card to be added to the user's Apple Pay wallet. Example: 4242
     ///   - brand: The brand of the card. Example: `STPCardBrandVisa`
     @objc
-    @available(*, deprecated, message: "Use `requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:)` instead.", renamed: "requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:)")
+    @available(
+        *,
+        deprecated,
+        message:
+            "Use `requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:)` instead.",
+        renamed: "requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:)"
+    )
     public class func requestConfiguration(
         withName name: String,
         description: String?,
         last4: String?,
         brand: STPCardBrand
     ) -> PKAddPaymentPassRequestConfiguration {
-        return self.requestConfiguration(withName: name, description: description, last4: last4, brand: brand, primaryAccountIdentifier: nil)
+        return self.requestConfiguration(
+            withName: name,
+            description: description,
+            last4: last4,
+            brand: brand,
+            primaryAccountIdentifier: nil
+        )
     }
-    
+
     /// This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
     /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `initWithRequestConfiguration:delegate:` initializer.
     /// - Parameters:
@@ -80,11 +80,15 @@ public class STPPushProvisioningContext: NSObject {
 
     /// In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a "key provider" that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see https://stripe.com/docs/mobile/ios/basic#ephemeral-key
     @objc
-    public init(keyProvider: STPIssuingCardEphemeralKeyProvider) {
+    public init(
+        keyProvider: STPIssuingCardEphemeralKeyProvider
+    ) {
         apiClient = STPAPIClient.shared
         keyManager = STPEphemeralKeyManager(
-            keyProvider: keyProvider, apiVersion: STPAPIClient.apiVersion,
-            performsEagerFetching: false)
+            keyProvider: keyProvider,
+            apiVersion: STPAPIClient.apiVersion,
+            performsEagerFetching: false
+        )
         super.init()
     }
 
@@ -92,7 +96,9 @@ public class STPPushProvisioningContext: NSObject {
     @objc
     public func addPaymentPassViewController(
         _ controller: PKAddPaymentPassViewController,
-        generateRequestWithCertificateChain certificates: [Data], nonce: Data, nonceSignature: Data,
+        generateRequestWithCertificateChain certificates: [Data],
+        nonce: Data,
+        nonceSignature: Data,
         completionHandler handler: @escaping (PKAddPaymentPassRequest) -> Void
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, keyError in
@@ -104,13 +110,18 @@ public class STPPushProvisioningContext: NSObject {
                 return
             }
             let params = STPPushProvisioningDetailsParams(
-                cardId: ephemeralKey?.issuingCardID ?? "", certificates: certificates, nonce: nonce,
-                nonceSignature: nonceSignature)
+                cardId: ephemeralKey?.issuingCardID ?? "",
+                certificates: certificates,
+                nonce: nonce,
+                nonceSignature: nonceSignature
+            )
             if let ephemeralKey = ephemeralKey {
                 self.apiClient.retrievePushProvisioningDetails(
-                    with: params, ephemeralKey: ephemeralKey
+                    with: params,
+                    ephemeralKey: ephemeralKey
                 ) {
-                    details, error in
+                    details,
+                    error in
                     if let error = error {
                         let request = PKAddPaymentPassRequest()
                         request.stp_error = error as NSError

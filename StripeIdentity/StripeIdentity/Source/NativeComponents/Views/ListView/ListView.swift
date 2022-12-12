@@ -3,18 +3,17 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
-/**
- A reusable view that can display a short list of items.
-
- Note: If displaying a list with many items, use a `UITableView` instead to take
- advantage of cell reuse UI performance optimizations.
- */
+/// A reusable view that can display a short list of items.
+///
+/// Note: If displaying a list with many items, use a `UITableView` instead to take
+/// advantage of cell reuse UI performance optimizations.
 final class ListView: UIView {
 
     struct Styling {
@@ -22,7 +21,12 @@ final class ListView: UIView {
             IdentityUI.preferredFont(forTextStyle: .body)
         }
 
-        static let itemInsets = NSDirectionalEdgeInsets(top: 24, leading: 16, bottom: 24, trailing: 16)
+        static let itemInsets = NSDirectionalEdgeInsets(
+            top: 24,
+            leading: 16,
+            bottom: 24,
+            trailing: 16
+        )
         static let itemAccessibilitySpacing: CGFloat = 16
     }
 
@@ -52,7 +56,9 @@ final class ListView: UIView {
         addAndPinSubview(stackView)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -71,13 +77,11 @@ final class ListView: UIView {
 
     // MARK: Accessibility
 
-    /**
-     Notifies the accessibility engine that there's been a layout change and
-     focuses the VoiceOver onto the itemView with the specified index.
-
-     - Parameter:
-       - index: The index of the list item to focus on
-     */
+    /// Notifies the accessibility engine that there's been a layout change and
+    /// focuses the VoiceOver onto the itemView with the specified index.
+    ///
+    /// - Parameter:
+    ///   - index: The index of the list item to focus on
     func focusAccessibility(onItemIndex index: Int) {
         guard let itemView = itemViews.stp_boundSafeObject(at: index) else {
             return
@@ -124,9 +128,9 @@ final class ListView: UIView {
         // Configure separator color & height
         separatorViews.forEach { $0.backgroundColor = IdentityUI.separatorColor }
         NSLayoutConstraint.activate(
-            separatorViews.map { $0.heightAnchor.constraint(equalToConstant: IdentityUI.separatorHeight) }
+            separatorViews.map {
+                $0.heightAnchor.constraint(equalToConstant: IdentityUI.separatorHeight)
+            }
         )
     }
 }
-
-

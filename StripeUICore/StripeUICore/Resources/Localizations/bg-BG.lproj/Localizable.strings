@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB номер";
 
+"Billing address is same as shipping" = "Адресът за фактуриране е същият като за доставка";
+
 "Cancel" = "Отмяна";
 
 "City" = "Град";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Готово";
+
+"Edit" = "Редактиране";
 
 "Eircode" = "Eircode";
 

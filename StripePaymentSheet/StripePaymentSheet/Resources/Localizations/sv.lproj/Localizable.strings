@@ -1,0 +1,161 @@
+"+ Add" = "+ Lägg till";
+
+"Add a card" = "Lägg till ett kort";
+
+"Add a payment method" = "Lägg till en betalningsmetod";
+
+"Add bank account" = "Lägg till bankkonto";
+
+"Add new payment method" = "Lägg till ny betalningsmetod";
+
+"Add your payment information" = "Lägg till betalningsinformation";
+
+"Are you sure you want to remove this card?" = "Är du säker på att du vill ta bort kortet?";
+
+"Are you sure you want to remove this linked account?" = "Är du säker på att du vill ta bort det länkade kontot?";
+
+"Back" = "Tillbaka";
+
+"Bank account" = "Bankkonto";
+
+"Buy now or pay later with Klarna." = "Köp nu eller betala senare med Klarna.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Genom att tillhandahålla din betalningsinformation och bekräfta denna betalning godkänner du (A) %@ och Stripe, vår betaltjänstleverantör, att skicka instruktioner till din bank att debitera ditt konto och (B) din bank att debitera ditt konto i enlighet med dessa instruktioner. Som en del av dina rättigheter har du rätt till återbetalning från din bank enligt villkoren för ditt avtal med din bank. Återbetalning måste krävas inom åtta veckor från det datum då ditt konto debiterades. Dina rättigheter förklaras i ett utdrag som du kan få från din bank. Du godkänner att få aviseringar för framtida debiteringar upp till två dagar innan de inträffar.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att spara ditt bankkonto för %@ samtycker du till att godkänna betalningar i enlighet med <terms>dessa villkor</terms>.";
+
+"Change email" = "Ändra e-postadress";
+
+"Choose a payment method" = "Välj en betalmetod";
+
+"Close card scanner" = "Stäng kortskanner";
+
+"Code field" = "Fält för kod";
+
+"Code sent" = "Koden har skickats";
+
+"Default" = "Standard";
+
+"Double tap to edit" = "Dubbelklicka för att redigera";
+
+"EPS Bank" = "EPS Bank";
+
+"Enter address manually" = "Ange adress manuellt";
+
+"Enter the code sent to %@ to use Link to pay by default." = "Ange koden som skickades till %@ för att använda Link för att betala som standard.";
+
+"Enter your verification code" = "Ange din verifieringskod";
+
+"For security, please re-enter your card’s security code." = "Ange säkerhetskoden för ditt kort igen av säkerhetsskäl.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Börja använda Link";
+
+"Log out of Link" = "Logga ut från Link";
+
+"Not %@?" = "Inte %@?";
+
+"Or" = "Eller";
+
+"Or pay using" = "Eller betala genom att använda";
+
+"Or pay with a card" = "Eller betala med ett kort";
+
+"Pay %@" = "Betala %@";
+
+"Pay another way" = "Betala på ett annat sätt";
+
+"Pay faster at %@ and thousands of merchants." = "Betala snabbare hos %@ och hos tusentals handlare.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betala av genom <num_installments/> räntefria delbetalningar på <installment_price/> med <img/>";
+
+"Pay later with Klarna." = "Betala senare med Klarna.";
+
+"Pay over time with %@" = "Sprid ut betalningarna med %@";
+
+"Pay using" = "Betala med";
+
+"Pay with %@" = "Betala med %@";
+
+"Pay with your bank account in just a few steps." = "Betala med ditt bankkonto på några få steg.";
+
+"Payment" = "Betalning";
+
+"Payment methods" = "Betalningsmetoder";
+
+"Point the camera at your card." = "Rikta kameran mot ditt kort.";
+
+"Processing..." = "Bearbetar ...";
+
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
+"Remove %1$@ ending in %2$@" = "Ta bort %1$@ med slutsiffrorna %2$@";
+
+"Remove Card" = "Ta bort kort";
+
+"Remove card" = "Ta bort kort";
+
+"Remove linked account" = "Ta bort länkat konto";
+
+"Resend code" = "Skicka koden igen";
+
+"Save address" = "Spara adress";
+
+"Save for future payments" = "Spara för framtida betalningar";
+
+"Save my info for secure 1-click checkout" = "Spara mina uppgifter för säker betalning med ett klick";
+
+"Save this account for future %@ payments" = "Spara detta konto för framtida betalningar hos %@";
+
+"Save this card for future %@ payments" = "Spara detta kort för framtida betalningar hos %@";
+
+"Secure 1⁠-⁠click checkout" = "Betala säkert med ett klick";
+
+"Select your payment method" = "Välj din betalningsmetod";
+
+"Set as default" = "Ställ in som standard";
+
+"Set as default payment method" = "Ställ in som standardbetalningsmetod";
+
+"Set up" = "Konfigurera";
+
+"Shipping to %@ is not supported." = "Leverans till %@ stöds inte.";
+
+"Show menu" = "Visa meny";
+
+"Sign in to your Link account" = "Logga in på ditt Link-konto";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sätter in 0,01 USD på ditt konto inom 1–2 arbetsdagar. Sedan får du ett e-postmeddelande med instruktioner för att slutföra betalningen till %@.";
+
+"Tap to close" = "Klicka för att stänga";
+
+"Tap to expand" = "Klicka för att utvidga";
+
+"The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
+
+"The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
+
+"The provided verification code is incorrect." = "Den angivna verifieringskoden är felaktig.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Detta kort har löpt ut. Uppdatera kortinformationen eller använd en annan betalningsmetod.";
+
+"This is your default" = "Detta är din standardbetalningsmetod";
+
+"Too many attempts. Please try again in a few minutes." = "För många försök. Försök igen om några minuter.";
+
+"Unavailable for this purchase" = "Otillgängligt för detta köp";
+
+"Update card" = "Uppdatera kort";
+
+"Use your saved info to check out faster" = "Använd din sparade information för att betala snabbare";
+
+"Your IBAN should start with a two-letter country code." = "Ditt IBAN ska börja med en landskod (två bokstäver).";
+
+"iDEAL Bank" = "iDEAL Bank";

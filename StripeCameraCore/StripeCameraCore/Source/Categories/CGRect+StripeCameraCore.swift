@@ -3,26 +3,25 @@
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 12/14/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 
-@_spi(STP) public extension CGRect {
+@_spi(STP) extension CGRect {
 
     /// Represents the bounds of a normalized coordinate system with range from (0,0) to (1,1)
-    static let normalizedBounds = CGRect(x: 0, y: 0, width: 1, height: 1)
+    public static let normalizedBounds = CGRect(x: 0, y: 0, width: 1, height: 1)
 
-    /**
-     - Returns: A `CGRect` that has its y-coordinates inverted between the
-     upper-left corner and lower-left corner.
-
-     - Note:
-     This should only be used for rects that are using a normalized
-     coordinate system, meaning that the coordinate of the corner opposite
-     origin is (1,1)
-     */
-    var invertedNormalizedCoordinates: CGRect {
+    /// - Returns: A `CGRect` that has its y-coordinates inverted between the
+    /// upper-left corner and lower-left corner.
+    ///
+    /// - Note:
+    /// This should only be used for rects that are using a normalized
+    /// coordinate system, meaning that the coordinate of the corner opposite
+    /// origin is (1,1)
+    public var invertedNormalizedCoordinates: CGRect {
         return CGRect(
             x: minX,
             y: 1 - minY - height,
@@ -31,42 +30,40 @@ import CoreGraphics
         )
     }
 
-    /**
-     Converts a rectangle that's using a normalized coordinate system from a
-     center-crop coordinate system to an un-cropped coordinate system
-
-     Example, if the original size has a portrait aspect ratio, center-cropping
-     the rect will result in the square area:
-     ```
-     +---------+
-     |         |
-     |---------|
-     |         |
-     |         |
-     |         |
-     |---------|
-     |         |
-     +---------+
-     ```
-
-     This method converts the rect's coordinate relative to the center-cropped
-     area into coordinates relative to the original un-cropped area:
-     ```
-                     +---------+
-                     |         |
-     +---------+     |         |
-     |    +--+ |     |    +--+ |
-     |    |  | | --> |    |  | |
-     |    +--+ |     |    +--+ |
-     +---------+     |         |
-                     |         |
-                     +---------+
-     ```
-
-     - Parameters:
-       - size: The original size of the un-cropped area.
-     */
-    func convertFromNormalizedCenterCropSquare(
+    /// Converts a rectangle that's using a normalized coordinate system from a
+    /// center-crop coordinate system to an un-cropped coordinate system
+    ///
+    /// Example, if the original size has a portrait aspect ratio, center-cropping
+    /// the rect will result in the square area:
+    /// ```
+    /// +---------+
+    /// |         |
+    /// |---------|
+    /// |         |
+    /// |         |
+    /// |         |
+    /// |---------|
+    /// |         |
+    /// +---------+
+    /// ```
+    ///
+    /// This method converts the rect's coordinate relative to the center-cropped
+    /// area into coordinates relative to the original un-cropped area:
+    /// ```
+    ///                 +---------+
+    ///                 |         |
+    /// +---------+     |         |
+    /// |    +--+ |     |    +--+ |
+    /// |    |  | | --> |    |  | |
+    /// |    +--+ |     |    +--+ |
+    /// +---------+     |         |
+    ///                 |         |
+    ///                 +---------+
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - size: The original size of the un-cropped area.
+    public func convertFromNormalizedCenterCropSquare(
         toOriginalSize originalSize: CGSize
     ) -> CGRect {
         let croppedWidth = min(originalSize.width, originalSize.height)

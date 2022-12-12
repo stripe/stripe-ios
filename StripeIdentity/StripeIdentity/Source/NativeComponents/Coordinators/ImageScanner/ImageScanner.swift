@@ -3,13 +3,13 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/4/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
-
 import CoreVideo
-@_spi(STP) import StripeCore
+import Foundation
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
 
 /// Scans an image and returns results
 protocol ImageScanner {
@@ -32,13 +32,13 @@ struct AnyImageScanner<Output> {
 
     private let _getModelMetricsTrackers: () -> [MLDetectorMetricsTrackerProtocol]
 
-    private let _scanImage: (
-        _ pixelBuffer: CVPixelBuffer,
-        _ cameraProperties: CameraSession.DeviceProperties?
-    ) throws -> Output
-    
-    private let _reset: () -> Void
+    private let _scanImage:
+        (
+            _ pixelBuffer: CVPixelBuffer,
+            _ cameraProperties: CameraSession.DeviceProperties?
+        ) throws -> Output
 
+    private let _reset: () -> Void
 
     init<ImageScannerType: ImageScanner>(
         _ imageScanner: ImageScannerType

@@ -7,12 +7,20 @@
 //
 
 import XCTest
-@testable import Stripe
-@testable @_spi(STP) import StripeApplePay
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class UserDefaults_StripeTest: XCTestCase {
     func testFraudDetectionData() throws {
-        let fraudDetectionData = FraudDetectionData(sid: UUID().uuidString, muid: UUID().uuidString, guid: UUID().uuidString, sidCreationDate: Date())
+        let fraudDetectionData = FraudDetectionData(
+            sid: UUID().uuidString,
+            muid: UUID().uuidString,
+            guid: UUID().uuidString,
+            sidCreationDate: Date()
+        )
         UserDefaults.standard.fraudDetectionData = fraudDetectionData
         XCTAssertEqual(UserDefaults.standard.fraudDetectionData, fraudDetectionData)
     }

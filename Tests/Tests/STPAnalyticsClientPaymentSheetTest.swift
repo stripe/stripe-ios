@@ -6,11 +6,12 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 import XCTest
 
-import StripeCoreTestUtils
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -23,54 +24,81 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     func testPaymentSheetInit() {
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "", ephemeralKeySecret: "")
         let applePayConfig = PaymentSheet.ApplePayConfiguration(
-            merchantId: "", merchantCountryCode: "")
-        XCTAssertEqual(
-            client.paymentSheetInitEventValue(
-                isCustom: false, configuration: makeConfig(applePay: nil, customer: nil)).rawValue,
-            "mc_complete_init_default")
-        XCTAssertEqual(
-            client.paymentSheetInitEventValue(
-                isCustom: true, configuration: makeConfig(applePay: nil, customer: nil)).rawValue,
-            "mc_custom_init_default")
-        XCTAssertEqual(
-            client.paymentSheetInitEventValue(
-                isCustom: false, configuration: makeConfig(applePay: applePayConfig, customer: nil)).rawValue,
-            "mc_complete_init_applepay")
-        XCTAssertEqual(
-            client.paymentSheetInitEventValue(
-                isCustom: true, configuration: makeConfig(applePay: applePayConfig, customer: nil)).rawValue,
-            "mc_custom_init_applepay")
-        XCTAssertEqual(
-            client.paymentSheetInitEventValue(
-                isCustom: false, configuration: makeConfig(applePay: nil, customer: customerConfig)).rawValue,
-            "mc_complete_init_customer")
-        XCTAssertEqual(
-            client.paymentSheetInitEventValue(
-                isCustom: true, configuration: makeConfig(applePay: nil, customer: customerConfig)).rawValue,
-            "mc_custom_init_customer")
+            merchantId: "",
+            merchantCountryCode: ""
+        )
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
                 isCustom: false,
-                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)).rawValue,
-            "mc_complete_init_customer_applepay")
+                configuration: makeConfig(applePay: nil, customer: nil)
+            ).rawValue,
+            "mc_complete_init_default"
+        )
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
                 isCustom: true,
-                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)).rawValue,
-            "mc_custom_init_customer_applepay")
+                configuration: makeConfig(applePay: nil, customer: nil)
+            ).rawValue,
+            "mc_custom_init_default"
+        )
+        XCTAssertEqual(
+            client.paymentSheetInitEventValue(
+                isCustom: false,
+                configuration: makeConfig(applePay: applePayConfig, customer: nil)
+            ).rawValue,
+            "mc_complete_init_applepay"
+        )
+        XCTAssertEqual(
+            client.paymentSheetInitEventValue(
+                isCustom: true,
+                configuration: makeConfig(applePay: applePayConfig, customer: nil)
+            ).rawValue,
+            "mc_custom_init_applepay"
+        )
+        XCTAssertEqual(
+            client.paymentSheetInitEventValue(
+                isCustom: false,
+                configuration: makeConfig(applePay: nil, customer: customerConfig)
+            ).rawValue,
+            "mc_complete_init_customer"
+        )
+        XCTAssertEqual(
+            client.paymentSheetInitEventValue(
+                isCustom: true,
+                configuration: makeConfig(applePay: nil, customer: customerConfig)
+            ).rawValue,
+            "mc_custom_init_customer"
+        )
+        XCTAssertEqual(
+            client.paymentSheetInitEventValue(
+                isCustom: false,
+                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)
+            ).rawValue,
+            "mc_complete_init_customer_applepay"
+        )
+        XCTAssertEqual(
+            client.paymentSheetInitEventValue(
+                isCustom: true,
+                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)
+            ).rawValue,
+            "mc_custom_init_customer_applepay"
+        )
     }
 
     func testPaymentSheetAddsUsage() {
         let client = STPAnalyticsClient.sharedClient
         let _ = PaymentSheet(
-            paymentIntentClientSecret: "", configuration: PaymentSheet.Configuration())
+            paymentIntentClientSecret: "",
+            configuration: PaymentSheet.Configuration()
+        )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
 
         let _ = PaymentSheet.FlowController(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
             savedPaymentMethods: [],
             isLinkEnabled: false,
-            configuration: PaymentSheet.Configuration())
+            configuration: PaymentSheet.Configuration()
+        )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))
     }
 
@@ -78,11 +106,23 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let client = STPTestingAnalyticsClient()
         let event1 = XCTestExpectation(description: "mc_custom_sheet_newpm_show")
         client.registerExpectation(event1)
-        client.logPaymentSheetShow(isCustom: true, paymentMethod: .newPM, linkEnabled: false, activeLinkSession: false)
+        client.logPaymentSheetShow(
+            isCustom: true,
+            paymentMethod: .newPM,
+            linkEnabled: false,
+            activeLinkSession: false,
+            currency: "USD"
+        )
 
         let event2 = XCTestExpectation(description: "mc_complete_sheet_savedpm_show")
         client.registerExpectation(event2)
-        client.logPaymentSheetShow(isCustom: false, paymentMethod: .savedPM, linkEnabled: false, activeLinkSession: false)
+        client.logPaymentSheetShow(
+            isCustom: false,
+            paymentMethod: .savedPM,
+            linkEnabled: false,
+            activeLinkSession: false,
+            currency: "USD"
+        )
 
         let event3 = XCTestExpectation(description: "mc_complete_payment_savedpm_success")
         client.registerExpectation(event3)
@@ -91,7 +131,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .savedPM,
             result: .completed,
             linkEnabled: false,
-            activeLinkSession: false)
+            activeLinkSession: false,
+            paymentOption: .applePay,
+            currency: "USD"
+        )
 
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
         client.registerExpectation(event4)
@@ -100,7 +143,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .applePay,
             result: .failed(error: PaymentSheetError.unknown(debugDescription: "Error")),
             linkEnabled: false,
-            activeLinkSession: false)
+            activeLinkSession: false,
+            paymentOption: .applePay,
+            currency: "USD"
+        )
 
         let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
         client.registerExpectation(event5)
@@ -110,16 +156,19 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         client.registerExpectation(event6)
         client.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: .newPM)
 
-
-        wait(for: [event1, event2, event3, event4, event5, event6], timeout: STPTestingNetworkRequestTimeout)
+        wait(
+            for: [event1, event2, event3, event4, event5, event6],
+            timeout: STPTestingNetworkRequestTimeout
+        )
     }
-    
+
     func testPaymentSheetAnalyticPayload() throws {
         // setup
-        let analytic = PaymentSheetAnalytic(event: STPAnalyticEvent.mcInitCompleteApplePay,
-                                            paymentConfiguration: nil,
-                                            productUsage: Set<String>([STPPaymentContext.stp_analyticsIdentifier]),
-                                            additionalParams: ["testKey": "testVal"])
+        let analytic = PaymentSheetAnalytic(
+            event: STPAnalyticEvent.mcInitCompleteApplePay,
+            productUsage: Set<String>([STPPaymentContext.stp_analyticsIdentifier]),
+            additionalParams: ["testKey": "testVal"]
+        )
 
         let client = STPAnalyticsClient()
         client.addAdditionalInfo("test-additional-info")
@@ -135,7 +184,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         // In xctest, this is the version of Xcode
         XCTAssertNotNil(payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
-        XCTAssertEqual(STPAnalyticEvent.mcInitCompleteApplePay.rawValue, payload["event"] as? String)
+        XCTAssertEqual(
+            STPAnalyticEvent.mcInitCompleteApplePay.rawValue,
+            payload["event"] as? String
+        )
         XCTAssertEqual(STPTestingDefaultPublishableKey, payload["publishable_key"] as? String)
         XCTAssertEqual("analytics.stripeios-1.0", payload["analytics_ua"] as? String)
         XCTAssertEqual("xctest", payload["app_name"] as? String)
@@ -163,7 +215,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             isCustom: false,
             paymentMethod: .newPM,
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            currency: "USD"
         )
 
         client.logPaymentSheetPayment(
@@ -171,7 +224,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .savedPM,
             result: .completed,
             linkEnabled: false,
-            activeLinkSession: false
+            activeLinkSession: false,
+            paymentOption: .applePay,
+            currency: "USD"
         )
 
         let duration = client.lastPayload?["duration"] as? TimeInterval
@@ -181,9 +236,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
 // MARK: - Helpers
 
-private extension STPAnalyticsClientPaymentSheetTest {
-    func makeConfig(
-        applePay: PaymentSheet.ApplePayConfiguration?, customer: PaymentSheet.CustomerConfiguration?
+extension STPAnalyticsClientPaymentSheetTest {
+    fileprivate func makeConfig(
+        applePay: PaymentSheet.ApplePayConfiguration?,
+        customer: PaymentSheet.CustomerConfiguration?
     ) -> PaymentSheet.Configuration {
         var config = PaymentSheet.Configuration()
         config.applePay = applePay
@@ -205,7 +261,8 @@ private class STPTestingAnalyticsClient: STPAnalyticsClient {
 
     override func logPayload(_ payload: [String: Any]) {
         if let event = payload["event"] as? String,
-           let expectedEvent = expectedEvents[event] {
+            let expectedEvent = expectedEvents[event]
+        {
             expectedEvent.fulfill()
         }
 

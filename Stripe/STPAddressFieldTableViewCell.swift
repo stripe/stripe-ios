@@ -1,14 +1,15 @@
 //
 //  STPAddressFieldTableViewCell.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 4/13/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+import UIKit
 
 enum STPAddressFieldType: Int {
     case name
@@ -62,25 +63,29 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         textField.addTarget(
             self,
             action: #selector(STPAddressFieldTableViewCell.textFieldTextDidChange(textField:)),
-            for: .editingChanged)
+            for: .editingChanged
+        )
         contentView.addSubview(textField)
 
         let toolbar = UIToolbar()
         let flexibleItem = UIBarButtonItem(
             barButtonSystemItem: .flexibleSpace,
             target: nil,
-            action: nil)
+            action: nil
+        )
         let nextItem = UIBarButtonItem(
             title: STPLocalizedString("Next", nil),
             style: .done,
             target: self,
-            action: #selector(nextTapped(sender:)))
+            action: #selector(nextTapped(sender:))
+        )
         toolbar.items = [flexibleItem, nextItem]
         inputAccessoryToolbar = toolbar
 
         var countryCode = NSLocale.autoupdatingCurrent.regionCode
         var otherCountryCodes = Array(
-            self.delegate?.availableCountries ?? Set(NSLocale.isoCountryCodes))
+            self.delegate?.availableCountries ?? Set(NSLocale.isoCountryCodes)
+        )
         if otherCountryCodes.contains(countryCode ?? "") {
             // Remove the current country code to re-add it once we sort the list.
             otherCountryCodes.removeAll { $0 == countryCode }
@@ -135,16 +140,24 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         NSLayoutConstraint.activate(
             [
                 textField.leadingAnchor.constraint(
-                    equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 15),
+                    equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
+                    constant: 15
+                ),
                 textField.trailingAnchor.constraint(
-                    equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -15),
+                    equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
+                    constant: -15
+                ),
                 textField.topAnchor.constraint(
-                    equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 1),
+                    equalTo: contentView.safeAreaLayoutGuide.topAnchor,
+                    constant: 1
+                ),
                 contentView.safeAreaLayoutGuide.bottomAnchor.constraint(
-                    greaterThanOrEqualTo: textField.bottomAnchor),
+                    greaterThanOrEqualTo: textField.bottomAnchor
+                ),
                 textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 43),
                 inputAccessoryToolbar?.heightAnchor.constraint(equalToConstant: 44),
-            ].compactMap { $0 })
+            ].compactMap { $0 }
+        )
     }
 
     var type: STPAddressFieldType = .name
@@ -245,7 +258,10 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
                 countryPickerView?.selectRow(index, inComponent: 0, animated: false)
                 if let countryPickerView = countryPickerView {
                     textField.text = pickerView(
-                        countryPickerView, titleForRow: index, forComponent: 0)
+                        countryPickerView,
+                        titleForRow: index,
+                        forComponent: 0
+                    )
                 }
             }
             textField.validText = validContents
@@ -267,7 +283,8 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         }
         self.textField.accessibilityLabel = self.textField.placeholder
         self.textField.accessibilityIdentifier = self.accessibilityIdentifierForAddressField(
-            type: self.type)
+            type: self.type
+        )
     }
 
     func accessibilityIdentifierForAddressField(type: STPAddressFieldType) -> String {
@@ -305,7 +322,9 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
             return String.Localized.address
         case .line2:
             return STPLocalizedString(
-                "Apt.", "Caption for Apartment/Address line 2 field on address form")
+                "Apt.",
+                "Caption for Apartment/Address line 2 field on address form"
+            )
         case .city:
             return String.Localized.city
         case .state:
@@ -399,12 +418,16 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
             return true
         case .zip:
             return STPPostalCodeValidator.validationState(
-                forPostalCode: self.contents, countryCode: self.ourCountryCode) == .valid
+                forPostalCode: self.contents,
+                countryCode: self.ourCountryCode
+            ) == .valid
         case .email:
             return STPEmailAddressValidator.stringIsValidEmailAddress(self.contents)
         case .phone:
             return STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                self.contents ?? "", forCountryCode: self.ourCountryCode)
+                self.contents ?? "",
+                forCountryCode: self.ourCountryCode
+            )
         }
     }
 
@@ -414,7 +437,9 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
             return true
         case .zip:
             let validationState = STPPostalCodeValidator.validationState(
-                forPostalCode: self.contents, countryCode: self.ourCountryCode)
+                forPostalCode: self.contents,
+                countryCode: self.ourCountryCode
+            )
             return validationState == .valid || validationState == .incomplete
         case .email:
             return STPEmailAddressValidator.stringIsValidPartialEmailAddress(self.contents)
@@ -422,7 +447,9 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
     }
 
     public func pickerView(
-        _ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int
+        _ pickerView: UIPickerView,
+        didSelectRow row: Int,
+        inComponent component: Int
     ) {
         guard let countryCode = self.countryCodes?[row] as? String
         else {
@@ -431,13 +458,16 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         self.ourCountryCode = countryCode
         self.contents = self.ourCountryCode
         textField.text = self.pickerView(pickerView, titleForRow: row, forComponent: component)
-        self.textFieldTextDidChange(textField: textField)  // UIControlEvent not fired for programmatic changes
+        // UIControlEvent not fired for programmatic changes
+        self.textFieldTextDidChange(textField: textField)
         self.delegate?.addressFieldTableViewCountryCode = self.ourCountryCode ?? ""
 
     }
 
     public func pickerView(
-        _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int
+        _ pickerView: UIPickerView,
+        titleForRow row: Int,
+        forComponent component: Int
     ) -> String? {
         guard let countryCode = self.countryCodes?[row] as? String else {
             return nil
@@ -446,26 +476,34 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
             NSLocale.Key.countryCode.rawValue: countryCode
         ])
         return (NSLocale.autoupdatingCurrent as NSLocale).displayName(
-            forKey: NSLocale.Key(rawValue: NSLocale.Key.identifier.rawValue), value: identifier)
+            forKey: NSLocale.Key(rawValue: NSLocale.Key.identifier.rawValue),
+            value: identifier
+        )
     }
 
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
 
-    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int)
+    public func pickerView(
+        _ pickerView: UIPickerView,
+        numberOfRowsInComponent component: Int
+    )
         -> Int
     {
         self.countryCodes?.count ?? 0
     }
 
-    required convenience init?(coder aDecoder: NSCoder) {
+    required convenience init?(
+        coder aDecoder: NSCoder
+    ) {
         assertionFailure("Use initWithType: instead.")
         self.init(
             type: .name,
             contents: nil,
             lastInList: false,
-            delegate: nil)
+            delegate: nil
+        )
     }
 
 }

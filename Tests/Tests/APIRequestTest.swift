@@ -8,8 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
-@_spi(STP) @testable import StripeCore
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class AnyAPIResponse: NSObject, STPAPIResponseDecodable {
     override required init() {
@@ -39,7 +42,9 @@ class APIRequestTest: XCTestCase {
         let e = expectation(description: "Request completed")
         apiClient.publishableKey = "pk_foo"
         APIRequest<AnyAPIResponse>.getWith(
-            apiClient, endpoint: "bearer", parameters: ["foo": "bar"]
+            apiClient,
+            endpoint: "bearer",
+            parameters: ["foo": "bar"]
         ) {
             (obj, _, error) in
             guard let obj = obj,
@@ -75,7 +80,9 @@ class APIRequestTest: XCTestCase {
         let parameters = ["foo": "bar"]
         let e = expectation(description: "Request completed")
         APIRequest<AnyAPIResponse>.post(
-            with: apiClient, endpoint: "post", parameters: ["foo": "bar"]
+            with: apiClient,
+            endpoint: "post",
+            parameters: ["foo": "bar"]
         ) {
             (obj, response, error) in
             XCTAssertNil(error)
@@ -122,7 +129,10 @@ class APIRequestTest: XCTestCase {
         let json: [AnyHashable: Any] = [:]
         let body = try? JSONSerialization.data(withJSONObject: json, options: [])
         let errorParameter = NSError(
-            domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
+            domain: NSURLErrorDomain,
+            code: NSURLErrorNotConnectedToInternet,
+            userInfo: nil
+        )
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
@@ -209,7 +219,10 @@ class APIRequestTest: XCTestCase {
         let json: [AnyHashable: Any] = STPTestUtils.jsonNamed("CardSource")!
         let body = try? JSONSerialization.data(withJSONObject: json, options: [])
         let errorParameter: NSError? = NSError(
-            domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil)
+            domain: NSURLErrorDomain,
+            code: NSURLErrorUnknown,
+            userInfo: nil
+        )
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
@@ -228,7 +241,7 @@ class APIRequestTest: XCTestCase {
 
         waitForExpectations(timeout: 2.0, handler: nil)
     }
-    
+
     func test429Backoff() {
         var inProgress = true
 
@@ -240,8 +253,10 @@ class APIRequestTest: XCTestCase {
             inProgress = false
             e.fulfill()
         }
-        
-        let checkedStillInProgress = expectation(description: "Checked that we're still in progress after 2s")
+
+        let checkedStillInProgress = expectation(
+            description: "Checked that we're still in progress after 2s"
+        )
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
             // Make sure we're still in progress after 2 seconds
             // This shows that we're retrying the request a few times
@@ -249,10 +264,10 @@ class APIRequestTest: XCTestCase {
             XCTAssertEqual(inProgress, true)
             checkedStillInProgress.fulfill()
         }
-        
+
         wait(for: [e, checkedStillInProgress], timeout: 30)
     }
-    
+
     func test429NoBackoff() {
         let oldMaxRetries = StripeAPI.maxRetries
         StripeAPI.maxRetries = 0
@@ -263,7 +278,7 @@ class APIRequestTest: XCTestCase {
             XCTAssertEqual(response?.statusCode, 429)
             e.fulfill()
         }
-        
+
         // We expect this request to return ~immediately, so we set a timeout lower than the highest
         // amount of backoff.
         wait(for: [e], timeout: 5.0)

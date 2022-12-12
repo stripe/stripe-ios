@@ -1,6 +1,6 @@
 //
 //  STPPaymentOptionTuple.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 5/17/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -41,13 +41,17 @@ class STPPaymentOptionTuple: NSObject {
         if fpxEnabled {
             let fpx = STPPaymentMethodFPXParams()
             let fpxPaymentOption = STPPaymentMethodParams(
-                fpx: fpx, billingDetails: nil, metadata: nil)
+                fpx: fpx,
+                billingDetails: nil,
+                metadata: nil
+            )
             mutablePaymentOptions.append(fpxPaymentOption)
         }
 
         self.init(
             paymentOptions: mutablePaymentOptions,
-            selectedPaymentOption: selected)
+            selectedPaymentOption: selected
+        )
     }
 
     /// Returns a tuple for the given array of STPPaymentMethod, filtered to only include the
@@ -75,7 +79,8 @@ class STPPaymentOptionTuple: NSObject {
             paymentOptions: paymentOptions,
             selectedPaymentOption: selectedPaymentMethod,
             addApplePayOption: configuration.applePayEnabled,
-            addFPXOption: configuration.fpxEnabled)
+            addFPXOption: configuration.fpxEnabled
+        )
     }
 
     private(set) weak var selectedPaymentOption: STPPaymentOption?

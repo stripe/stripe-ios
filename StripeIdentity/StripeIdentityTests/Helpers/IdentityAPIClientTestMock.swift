@@ -3,12 +3,14 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 11/4/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import UIKit
 import XCTest
-@_spi(STP) import StripeCore
+
 @testable import StripeIdentity
 
 final class IdentityAPIClientTestMock: IdentityAPIClient {
@@ -23,7 +25,9 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     }
 
     let verificationPage = MockAPIRequests<Void, StripeAPI.VerificationPage>()
-    let verificationPageData = MockAPIRequests<StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData>()
+    let verificationPageData = MockAPIRequests<
+        StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
+    >()
     let verificationSessionSubmit = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let imageUpload = MockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
 
@@ -58,12 +62,14 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         purpose: String,
         fileName: String
     ) -> Future<STPAPIClient.FileAndUploadMetrics> {
-        return imageUpload.makeRequest(with: .init(
-            image: image,
-            compressionQuality: compressionQuality,
-            purpose: purpose,
-            fileName: fileName
-        ))
+        return imageUpload.makeRequest(
+            with: .init(
+                image: image,
+                compressionQuality: compressionQuality,
+                purpose: purpose,
+                fileName: fileName
+            )
+        )
     }
 
     // Ensures `count` number of files are uploaded
@@ -84,7 +90,11 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
                 uploadCount += 1
             }
             guard uploadCount < count else {
-                return XCTFail("Images were uploaded \(uploadCount+1) times. Only expected \(count) times.", file: file, line: line)
+                return XCTFail(
+                    "Images were uploaded \(uploadCount+1) times. Only expected \(count) times.",
+                    file: file,
+                    line: line
+                )
             }
             expectations[uploadCount].fulfill()
         }

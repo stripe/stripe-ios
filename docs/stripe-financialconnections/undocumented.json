@@ -1,299 +1,509 @@
 {
   "warnings": [
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
-      "line": 82,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift",
+      "line": 90,
       "symbol": "STPAPIClient.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 117,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 112,
       "symbol": "AnalyticsClientV2Protocol.makeCommonPayload()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
-      "line": 146,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/AnalyticsClientV2.swift",
+      "line": 141,
       "symbol": "AnalyticsClientV2Protocol.payload(withEventName:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
-      "line": 122,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Analytics/STPAnalyticsClient.swift",
+      "line": 127,
       "symbol": "STPAnalyticsClient",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
-      "line": 56,
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Coder/StripeJSONEncoder.swift",
+      "line": 77,
       "symbol": "StripeJSONEncoder",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 71,
+      "symbol": "DownloadManager.downloadImage(url:updateHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/DownloadManager/DownloadManager.swift",
+      "line": 221,
+      "symbol": "DownloadManager.imagePlaceHolder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCore/StripeCore/Source/Helpers/BundleLocatorProtocol.swift",
       "line": 32,
       "symbol": "BundleLocatorProtocol",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/BankAccountToken.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/BankAccountToken.swift",
       "line": 13,
       "symbol": "StripeAPI.BankAccountToken",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 19,
       "symbol": "StripeAPI.FinancialConnectionsAccount.BalanceRefresh",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 31,
       "symbol": "StripeAPI.FinancialConnectionsAccount.CashBalance",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 36,
       "symbol": "StripeAPI.FinancialConnectionsAccount.CreditBalance",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 41,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Balance",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
       "line": 56,
-      "symbol": "StripeAPI.FinancialConnectionsAccount.Owner",
-      "symbol_kind": "source.lang.swift.decl.struct",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 73,
-      "symbol": "StripeAPI.FinancialConnectionsAccount.OwnerList",
-      "symbol_kind": "source.lang.swift.decl.struct",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 84,
-      "symbol": "StripeAPI.FinancialConnectionsAccount.Ownership",
-      "symbol_kind": "source.lang.swift.decl.struct",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 92,
       "symbol": "StripeAPI.FinancialConnectionsAccount.OwnershipRefresh",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 105,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 69,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Category",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 113,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 77,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Permissions",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 122,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 86,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Status",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 129,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 93,
       "symbol": "StripeAPI.FinancialConnectionsAccount.Subcategory",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 139,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 103,
       "symbol": "StripeAPI.FinancialConnectionsAccount.SupportedPaymentMethodTypes",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 147,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 111,
       "symbol": "StripeAPI.FinancialConnectionsAccount.balance",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 148,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 112,
       "symbol": "StripeAPI.FinancialConnectionsAccount.balanceRefresh",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 149,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 113,
       "symbol": "StripeAPI.FinancialConnectionsAccount.ownership",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 152,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 116,
       "symbol": "StripeAPI.FinancialConnectionsAccount.displayName",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 153,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 117,
       "symbol": "StripeAPI.FinancialConnectionsAccount.institutionName",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 154,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 118,
       "symbol": "StripeAPI.FinancialConnectionsAccount.last4",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 155,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 119,
       "symbol": "StripeAPI.FinancialConnectionsAccount.category",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 156,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 120,
       "symbol": "StripeAPI.FinancialConnectionsAccount.created",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 157,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 121,
       "symbol": "StripeAPI.FinancialConnectionsAccount.id",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 158,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 122,
       "symbol": "StripeAPI.FinancialConnectionsAccount.livemode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 159,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 123,
       "symbol": "StripeAPI.FinancialConnectionsAccount.permissions",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 160,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 124,
       "symbol": "StripeAPI.FinancialConnectionsAccount.status",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
-      "line": 161,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift",
+      "line": 125,
       "symbol": "StripeAPI.FinancialConnectionsAccount.subcategory",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 23,
       "symbol": "StripeAPI.FinancialConnectionsSession.AccountList.data",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 71,
       "symbol": "StripeAPI.FinancialConnectionsSession.clientSecret",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 72,
       "symbol": "StripeAPI.FinancialConnectionsSession.id",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 73,
       "symbol": "StripeAPI.FinancialConnectionsSession.accounts",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift",
       "line": 74,
       "symbol": "StripeAPI.FinancialConnectionsSession.livemode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
-      "line": 42,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/FinancialConnectionsNavigationController.swift",
+      "line": 52,
+      "symbol": "FinancialConnectionsNavigationController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/FinancialConnectionsNavigationController.swift",
+      "line": 94,
+      "symbol": "FinancialConnectionsNavigationController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
+      "line": 59,
       "symbol": "HostController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
-      "line": 66,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
+      "line": 130,
       "symbol": "HostController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
-      "line": 29,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Common/HostController.swift",
+      "line": 137,
+      "symbol": "HostController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
+      "line": 30,
       "symbol": "FinancialConnectionsSheet.TokenResult",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yuki/code/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
-      "line": 80,
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/FinancialConnectionsSheet.swift",
+      "line": 95,
       "symbol": "FinancialConnectionsSheet.presentForToken(from:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/AccountPicker/AccountPickerSelectionView.swift",
+      "line": 53,
+      "symbol": "AccountPickerSelectionView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/AccountPicker/AccountPickerViewController.swift",
+      "line": 345,
+      "symbol": "AccountPickerViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/AccountPicker/AccountPickerViewController.swift",
+      "line": 358,
+      "symbol": "AccountPickerViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/AccountPicker/CheckboxView.swift",
+      "line": 127,
+      "symbol": "CheckboxView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/AccountPicker/RadioButtonView.swift",
+      "line": 128,
+      "symbol": "RadioButtonView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/InstitutionPicker/FeaturedInstitutionGridView.swift",
+      "line": 89,
+      "symbol": "FeaturedInstitutionGridView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/InstitutionPicker/InstitutionPickerViewController.swift",
+      "line": 226,
+      "symbol": "InstitutionPickerViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/InstitutionPicker/InstitutionPickerViewController.swift",
+      "line": 237,
+      "symbol": "InstitutionPickerViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/InstitutionPicker/InstitutionPickerViewController.swift",
+      "line": 248,
+      "symbol": "InstitutionPickerViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/InstitutionPicker/InstitutionPickerViewController.swift",
+      "line": 268,
+      "symbol": "InstitutionPickerViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/InstitutionPicker/InstitutionSearchBar.swift",
+      "line": 143,
+      "symbol": "InstitutionSearchBar",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/InstitutionPicker/InstitutionSearchTableView.swift",
+      "line": 218,
+      "symbol": "InstitutionSearchTableView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/ManualEntry/ManualEntryFormView.swift",
+      "line": 154,
+      "symbol": "ManualEntryFormView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/ManualEntry/ManualEntryTextField.swift",
+      "line": 154,
+      "symbol": "ManualEntryTextField",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/ManualEntry/ManualEntryViewController.swift",
+      "line": 118,
+      "symbol": "ManualEntryViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 301,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 325,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 346,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 385,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 431,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 445,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 471,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 481,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 517,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/NativeFlowController.swift",
+      "line": 534,
+      "symbol": "NativeFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/Shared/ClickableLabel.swift",
+      "line": 137,
+      "symbol": "ClickableLabel",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Native/Shared/ConsentBottomSheetViewController.swift",
+      "line": 115,
+      "symbol": "ConsentBottomSheetViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeFinancialConnections/StripeFinancialConnections/Source/Web/FinancialConnectionsWebFlowViewController.swift",
+      "line": 196,
+      "symbol": "FinancialConnectionsWebFlowViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/yuki/code/stripe-ios"
+  "source_directory": "/Users/porter/stripe/stripe-ios"
 }

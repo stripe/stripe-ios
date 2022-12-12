@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>STPPaymentCardTextField Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/STPPaymentCardTextField" class="dashAnchor"></a>
+
+    <a title="STPPaymentCardTextField Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../index.html">
+          Stripe iOS SDKs 23.3.0
+        </a>
+        
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../index.html">Stripe iOS SDKs</a>
+      <img class="carat" src="../img/carat.png" />
+      <a class="breadcrumb" href="../index.html">StripePaymentsUI</a>
+      <img class="carat" src="../img/carat.png" />
+      STPPaymentCardTextField Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAUBECSDebitFormView.html">STPAUBECSDebitFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardFormView.html">STPCardFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardFormView/Representable.html">– Representable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPError.html">STPError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@StripePaymentsUI@objc(cs)STPFormView">STPFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMultiFormTextField.html">STPMultiFormTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField/Representable.html">– Representable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StripeAPI.html">StripeAPI</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardErrorCode.html">STPCardErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCardFormViewStyle.html">STPCardFormViewStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPErrorCode.html">STPErrorCode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSError.html">NSError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAUBECSDebitFormViewDelegate.html">STPAUBECSDebitFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPCardFormViewDelegate.html">STPCardFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPFormTextFieldContainer.html">STPFormTextFieldContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>STPPaymentCardTextField</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">@IBDesignable</span>
+<span class="kd">@objc(STPPaymentCardTextField)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">STPPaymentCardTextField</span> <span class="p">:</span> <span class="kt">UIControl</span><span class="p">,</span> <span class="kt">UIKeyInput</span><span class="p">,</span> <span class="kt">STPFormTextFieldDelegate</span></code></pre>
+
+                </div>
+              </div>
+            <p>STPPaymentCardTextField is a text field with similar properties to UITextField,
+but specialized for credit/debit card information. It manages
+multiple UITextFields under the hood to collect this information. It&rsquo;s
+designed to fit on a single line, and from a design perspective can be used
+anywhere a UITextField would be appropriate.</p>
+
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L21-L2215">Show on GitHub</a>
+              </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)delegate"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)delegate">delegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    STPPaymentCardTextFieldDelegate
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
+<span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L44">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)font"></a>
+                    <a name="//apple_ref/swift/Property/font" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)font">font</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The font used in each child field. Default is <code>UIFont.systemFont(ofSize:18)</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L47-L61">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)textColor"></a>
+                    <a name="//apple_ref/swift/Property/textColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)textColor">textColor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The text color to be used when entering valid text. Default is <code>.label</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L64-L76">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)textErrorColor"></a>
+                    <a name="//apple_ref/swift/Property/textErrorColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)textErrorColor">textErrorColor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The text color to be used when the user has entered invalid information,
+such as an invalid card number.
+Default is <code>.red</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">textErrorColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L81-L93">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)placeholderColor"></a>
+                    <a name="//apple_ref/swift/Property/placeholderColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)placeholderColor">placeholderColor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The text placeholder color used in each child field.
+This will also set the color of the card placeholder icon.
+Default is <code>.systemGray2</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">placeholderColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L98-L106">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)numberPlaceholder"></a>
+                    <a name="//apple_ref/swift/Property/numberPlaceholder" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)numberPlaceholder">numberPlaceholder</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The placeholder for the card number field.
+Default is &ldquo;4242424242424242&rdquo;.
+If this is set to something that resembles a card number, it will automatically
+format it as such (in other words, you don&rsquo;t need to add spaces to this string).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">numberPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L113-L121">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)expirationPlaceholder"></a>
+                    <a name="//apple_ref/swift/Property/expirationPlaceholder" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)expirationPlaceholder">expirationPlaceholder</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The placeholder for the expiration field. Defaults to &ldquo;MM/YY&rdquo;.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">expirationPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L125-L133">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cvcPlaceholder"></a>
+                    <a name="//apple_ref/swift/Property/cvcPlaceholder" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cvcPlaceholder">cvcPlaceholder</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The placeholder for the cvc field. Defaults to &ldquo;CVC&rdquo;.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cvcPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L137-L145">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCodePlaceholder"></a>
+                    <a name="//apple_ref/swift/Property/postalCodePlaceholder" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCodePlaceholder">postalCodePlaceholder</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The placeholder for the postal code field. Defaults to &ldquo;ZIP&rdquo; for United States
+or @&ldquo;Postal&rdquo; for all other country codes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">postalCodePlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L150-L158">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cursorColor"></a>
+                    <a name="//apple_ref/swift/Property/cursorColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cursorColor">cursorColor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The cursor color for the field.
+This is a proxy for the view&rsquo;s tintColor property, exposed for clarity only
+(in other words, calling setCursorColor is identical to calling setTintColor).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cursorColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L162-L169">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)borderColor"></a>
+                    <a name="//apple_ref/swift/Property/borderColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)borderColor">borderColor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The border color for the field.
+Can be nil (in which case no border will be drawn).
+Default is .systemGray2.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">borderColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L175-L187">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)borderWidth"></a>
+                    <a name="//apple_ref/swift/Property/borderWidth" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)borderWidth">borderWidth</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The width of the field&rsquo;s border.
+Default is 1.0.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">borderWidth</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L192-L200">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cornerRadius"></a>
+                    <a name="//apple_ref/swift/Property/cornerRadius" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cornerRadius">cornerRadius</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The corner radius for the field&rsquo;s border.
+Default is 5.0.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cornerRadius</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L205-L213">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)keyboardAppearance"></a>
+                    <a name="//apple_ref/swift/Property/keyboardAppearance" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)keyboardAppearance">keyboardAppearance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The keyboard appearance for the field.
+Default is UIKeyboardAppearanceDefault.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">keyboardAppearance</span><span class="p">:</span> <span class="kt">UIKeyboardAppearance</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L217-L223">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)inputView"></a>
+                    <a name="//apple_ref/swift/Property/inputView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)inputView">inputView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This behaves identically to setting the inputView for each child text field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">inputView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L227-L238">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)inputAccessoryView"></a>
+                    <a name="//apple_ref/swift/Property/inputAccessoryView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)inputAccessoryView">inputAccessoryView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This behaves identically to setting the inputAccessoryView for each child text field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">inputAccessoryView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L242-L253">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)brandImage"></a>
+                    <a name="//apple_ref/swift/Property/brandImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)brandImage">brandImage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The curent brand image displayed in the receiver.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">brandImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L255">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid"></a>
+                    <a name="//apple_ref/swift/Property/isValid" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid">isValid</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Whether or not the form currently contains a valid card number,
+expiration date, CVC, and postal code (if required).</p>
+<div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    STPCardValidator
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">dynamic</span> <span class="kd">open</span> <span class="k">var</span> <span class="nv">isValid</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L260-L262">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)enabled"></a>
+                    <a name="//apple_ref/swift/Property/isEnabled" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)enabled">isEnabled</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Enable/disable selecting or editing the field. Useful when submitting card details to Stripe.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">isEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L265-L275">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cardNumber"></a>
+                    <a name="//apple_ref/swift/Property/cardNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cardNumber">cardNumber</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current card number displayed by the field.
+May or may not be valid, unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid">isValid</a></code> is true, in which case it is guaranteed
+to be valid.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cardNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L279-L281">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)expirationMonth"></a>
+                    <a name="//apple_ref/swift/Property/expirationMonth" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)expirationMonth">expirationMonth</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current expiration month displayed by the field (1 = January, etc).
+May or may not be valid, unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid">isValid</a></code> is true, in which case it is
+guaranteed to be valid.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">expirationMonth</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L285-L290">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)formattedExpirationMonth"></a>
+                    <a name="//apple_ref/swift/Property/formattedExpirationMonth" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)formattedExpirationMonth">formattedExpirationMonth</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current expiration month displayed by the field, as a string. T
+This may or may not be a valid entry (i.e. &ldquo;0&rdquo;) unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid">isValid</a></code> is true.
+It may be also 0-prefixed (i.e. &ldquo;01&rdquo; for January).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">formattedExpirationMonth</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L294-L296">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)expirationYear"></a>
+                    <a name="//apple_ref/swift/Property/expirationYear" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)expirationYear">expirationYear</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current expiration year displayed by the field, modulo 100
+(e.g. the year 2015 will be represented as 15).
+May or may not be valid, unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid">isValid</a></code> is true, in which case it is
+guaranteed to be valid.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">expirationYear</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L302-L307">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)formattedExpirationYear"></a>
+                    <a name="//apple_ref/swift/Property/formattedExpirationYear" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)formattedExpirationYear">formattedExpirationYear</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current expiration year displayed by the field, as a string.
+This is a 2-digit year (i.e. &ldquo;15&rdquo;), and may or may not be a valid entry
+unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid">isValid</a></code> is true.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">formattedExpirationYear</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L312-L314">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cvc"></a>
+                    <a name="//apple_ref/swift/Property/cvc" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cvc">cvc</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current card CVC displayed by the field.
+May or may not be valid, unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)isValid">isValid</a></code> is true, in which case it
+is guaranteed to be valid.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cvc</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L319-L321">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCode"></a>
+                    <a name="//apple_ref/swift/Property/postalCode" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCode">postalCode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current card ZIP or postal code displayed by the field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L324-L339">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCodeEntryEnabled"></a>
+                    <a name="//apple_ref/swift/Property/postalCodeEntryEnabled" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCodeEntryEnabled">postalCodeEntryEnabled</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Controls if a postal code entry field can be displayed to the user.
+Default is YES.
+If YES, the type of code entry shown is controlled by the set <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)countryCode">countryCode</a></code>
+value. Some country codes may result in no postal code entry being shown if
+those countries do not commonly use postal codes.
+If NO, no postal code entry will ever be displayed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">postalCodeEntryEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L346-L353">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)countryCode"></a>
+                    <a name="//apple_ref/swift/Property/countryCode" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)countryCode">countryCode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The two-letter ISO country code that corresponds to the user&rsquo;s billing address.
+If <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCodeEntryEnabled">postalCodeEntryEnabled</a></code> is YES, this controls which type of entry is allowed.
+If <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)postalCodeEntryEnabled">postalCodeEntryEnabled</a></code> is NO, this property currently has no effect.
+If set to nil and postal code entry is enabled, the country from the user&rsquo;s current
+locale will be filled in. Otherwise the specific country code set will be used.
+By default this will fetch the user&rsquo;s current country code from NSLocale.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L361-L376">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cardParams"></a>
+                    <a name="//apple_ref/swift/Property/cardParams" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)cardParams">cardParams</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Convenience property for creating an <code>STPPaymentMethodCardParams</code> from the currently entered information
+or programmatically setting the field&rsquo;s contents. For example, if you&rsquo;re using another library
+to scan your user&rsquo;s credit card with a camera, you can assemble that data into an <code>STPPaymentMethodCardParams</code>
+object and set this property to that object to prefill the fields you&rsquo;ve collected.
+Accessing this property returns a <em>copied</em> <code>cardParams</code>. The only way to change properties in this
+object is to make changes to a <code>STPPaymentMethodCardParams</code> you own (retrieved from this text field if desired),
+and then set this property to the new value.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    Deprecated. Use <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)paymentMethodParams">.paymentMethodParams</a></code> instead. If you must access the STPPaymentMethodCardParams, use <code>.paymentMethodParams.card</code>.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(*, deprecated, message: "Use .paymentMethodParams instead. If you must access the STPPaymentMethodCardParams, use .paymentMethodParams.card.")</span>
+<span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cardParams</span><span class="p">:</span> <span class="kt">STPPaymentMethodCardParams</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L392-L404">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)paymentMethodParams"></a>
+                    <a name="//apple_ref/swift/Property/paymentMethodParams" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(py)paymentMethodParams">paymentMethodParams</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Convenience property for creating an <code>STPPaymentMethodParams</code> from the currently entered information
+or programmatically setting the field&rsquo;s contents. For example, if you&rsquo;re using another library
+to scan your user&rsquo;s credit card with a camera, you can assemble that data into an <code>STPPaymentMethodParams</code>
+object and set this property to that object to prefill the fields you&rsquo;ve collected.
+Accessing this property returns a <em>copied</em> <code>paymentMethodParams</code>. The only way to change properties in this
+object is to make changes to a <code>STPPaymentMethodParams</code> you own (retrieved from this text field if desired),
+and then set this property to the new value.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">paymentMethodParams</span><span class="p">:</span> <span class="kt">STPPaymentMethodParams</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L413-L566">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)becomeFirstResponder"></a>
+                    <a name="//apple_ref/swift/Method/becomeFirstResponder()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)becomeFirstResponder">becomeFirstResponder()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Causes the text field to begin editing. Presents the keyboard.</p>
+<div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    UIResponder
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@objc</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">becomeFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Whether or not the text field successfully began editing.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L571-L574">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)resignFirstResponder"></a>
+                    <a name="//apple_ref/swift/Method/resignFirstResponder()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)resignFirstResponder">resignFirstResponder()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Causes the text field to stop editing. Dismisses the keyboard.</p>
+<div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    UIResponder
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">resignFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Whether or not the field successfully stopped editing.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L579-L590">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)clear"></a>
+                    <a name="//apple_ref/swift/Method/clear()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)clear">clear()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resets all of the contents of all of the fields. If the field is currently being edited, the number field will become selected.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">clear</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L593-L616">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(cm)cvcImageForCardBrand:"></a>
+                    <a name="//apple_ref/swift/Method/cvcImage(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(cm)cvcImageForCardBrand:">cvcImage(for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the cvc image used for a card brand.
+Override this method in a subclass if you would like to provide custom images.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(cvcImageForCardBrand:)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">cvcImage</span><span class="p">(</span><span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt">STPCardBrand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cardBrand</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The brand of card entered.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The cvc image used for a card brand.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L622-L624">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(cm)brandImageForCardBrand:"></a>
+                    <a name="//apple_ref/swift/Method/brandImage(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(cm)brandImageForCardBrand:">brandImage(for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the brand image used for a card brand.
+Override this method in a subclass if you would like to provide custom images.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(brandImageForCardBrand:)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">brandImage</span><span class="p">(</span>
+    <span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt">STPCardBrand</span>
+<span class="p">)</span>
+    <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cardBrand</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The brand of card entered.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The brand image used for a card brand.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L630-L636">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(cm)errorImageForCardBrand:"></a>
+                    <a name="//apple_ref/swift/Method/errorImage(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(cm)errorImageForCardBrand:">errorImage(for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the error image used for a card brand.
+Override this method in a subclass if you would like to provide custom images.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(errorImageForCardBrand:)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">errorImage</span><span class="p">(</span>
+    <span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt">STPCardBrand</span>
+<span class="p">)</span>
+    <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cardBrand</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The brand of card entered.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The error image used for a card brand.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L642-L648">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)brandImageRectForBounds:"></a>
+                    <a name="//apple_ref/swift/Method/brandImageRect(forBounds:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)brandImageRectForBounds:">brandImageRect(forBounds:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the rectangle in which the receiver draws its brand image.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(brandImageRectForBounds:)</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">brandImageRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>bounds</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The bounding rectangle of the receiver.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the rectangle in which the receiver draws its brand image.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L653-L662">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)fieldsRectForBounds:"></a>
+                    <a name="//apple_ref/swift/Method/fieldsRect(forBounds:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@StripePaymentsUI@objc(cs)STPPaymentCardTextField(im)fieldsRectForBounds:">fieldsRect(forBounds:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the rectangle in which the receiver draws the text fields.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(fieldsRectForBounds:)</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">fieldsRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>bounds</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The bounding rectangle of the receiver.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The rectangle in which the receiver draws the text fields.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField.swift#L667-L675">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16StripePaymentsUI23STPPaymentCardTextFieldC13RepresentableV"></a>
+                    <a name="//apple_ref/swift/Struct/Representable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16StripePaymentsUI23STPPaymentCardTextFieldC13RepresentableV">Representable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A SwiftUI representation of an STPPaymentCardTextField.</p>
+
+                        <a href="../Classes/STPPaymentCardTextField/Representable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Representable</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentsUI/StripePaymentsUI/UI Components/STPPaymentCardTextField+SwiftUI.swift#L18-L68">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-12-05)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

@@ -3,12 +3,13 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/1/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreML
-import Vision
+import Foundation
 @_spi(STP) import StripeCore
+import Vision
 
 enum IdentityMLModelLoaderError: Error, AnalyticLoggableError {
     /// Attempted to open a URL that could not be constructed from the given string
@@ -16,12 +17,12 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableError {
     /// The ML model never started loading on the client
     case mlModelNeverLoaded
 
-    func analyticLoggableSerializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String: Any] {
         switch self {
         case .malformedURL(let value):
             return [
                 "type": "malformed_url",
-                "value": value
+                "value": value,
             ]
         case .mlModelNeverLoaded:
             return [
@@ -44,10 +45,8 @@ protocol IdentityMLModelLoaderProtocol {
     )
 }
 
-/**
- Loads the ML models used by Identity.
- */
-@available(iOS 13, *)
+/// Loads the ML models used by Identity.
+
 final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     private static let cacheDirectoryName = "com.stripe.stripe-identity"
@@ -96,7 +95,9 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
         // Create a name-spaced subdirectory inside the temp directory so
         // we don't clash with any other files the app is storing here.
-        let cacheDirectory = tempDirectory.appendingPathComponent(IdentityMLModelLoader.cacheDirectoryName)
+        let cacheDirectory = tempDirectory.appendingPathComponent(
+            IdentityMLModelLoader.cacheDirectoryName
+        )
 
         do {
             try FileManager.default.createDirectory(
@@ -113,56 +114,64 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     // MARK: Load models
 
-    /**
-     Starts loading the ML models needed for document scanning. When the models
-     are done loading, they can be retrieved by observing `documentModelsFuture`.
-
-     - Parameters:
-       - documentModelURLs: The URLs of all the ML models required to scan documents
-     */
+    /// Starts loading the ML models needed for document scanning. When the models
+    /// are done loading, they can be retrieved by observing `documentModelsFuture`.
+    ///
+    /// - Parameters:
+    ///   - documentModelURLs: The URLs of all the ML models required to scan documents
     func startLoadingDocumentModels(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     ) {
         guard let idDetectorURL = URL(string: capturePageConfig.models.idDetectorUrl) else {
-            documentMLModelsPromise.reject(with: IdentityMLModelLoaderError.malformedURL(
-                capturePageConfig.models.idDetectorUrl
-            ))
+            documentMLModelsPromise.reject(
+                with: IdentityMLModelLoaderError.malformedURL(
+                    capturePageConfig.models.idDetectorUrl
+                )
+            )
             return
         }
 
         mlModelLoader.loadVisionModel(
             fromRemote: idDetectorURL
         ).chained { idDetectorModel in
-            return Promise(value: .init(DocumentScanner(
-                idDetectorModel: idDetectorModel,
-                configuration: .init(from: capturePageConfig)
-            )))
+            return Promise(
+                value: .init(
+                    DocumentScanner(
+                        idDetectorModel: idDetectorModel,
+                        configuration: .init(from: capturePageConfig)
+                    )
+                )
+            )
         }.observe { [weak self] result in
             self?.documentMLModelsPromise.fullfill(with: result)
         }
     }
 
-    /**
-     Starts loading the ML models needed for face scanning. When the models
-     are done loading, they can be retrieved by observing `faceModelsFuture`.
-     */
+    /// Starts loading the ML models needed for face scanning. When the models
+    /// are done loading, they can be retrieved by observing `faceModelsFuture`.
     func startLoadingFaceModels(
         from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     ) {
         guard let faceDetectorURL = URL(string: selfiePageConfig.models.faceDetectorUrl) else {
-            faceMLModelsPromise.reject(with: IdentityMLModelLoaderError.malformedURL(
-                selfiePageConfig.models.faceDetectorUrl
-            ))
+            faceMLModelsPromise.reject(
+                with: IdentityMLModelLoaderError.malformedURL(
+                    selfiePageConfig.models.faceDetectorUrl
+                )
+            )
             return
         }
 
         mlModelLoader.loadVisionModel(
             fromRemote: faceDetectorURL
         ).chained { faceDetectorModel in
-            return Promise(value: .init(FaceScanner(
-                faceDetectorModel: faceDetectorModel,
-                configuration: .init(from: selfiePageConfig)
-            )))
+            return Promise(
+                value: .init(
+                    FaceScanner(
+                        faceDetectorModel: faceDetectorModel,
+                        configuration: .init(from: selfiePageConfig)
+                    )
+                )
+            )
         }.observe { [weak self] result in
             self?.faceMLModelsPromise.fullfill(with: result)
         }

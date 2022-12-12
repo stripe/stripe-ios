@@ -1,6 +1,6 @@
 //
 //  BillingDetails+ApplePay.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 8/9/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -14,7 +14,9 @@ extension StripeContact {
     /// Initializes a new Contact with data from an PassKit contact.
     /// - Parameter contact: The PassKit contact you want to populate the Contact from.
     /// - Returns: A new Contact with data copied from the passed in contact.
-    init(pkContact contact: PKContact) {
+    init(
+        pkContact contact: PKContact
+    ) {
         let nameComponents = contact.name
         if let nameComponents = nameComponents {
             givenName = stringIfHasContentsElseNil(nameComponents.givenName)
@@ -32,10 +34,11 @@ extension StripeContact {
         }
         setAddressFromCNPostal(contact.postalAddress)
     }
-    
+
     private func sanitizedPhoneString(from phoneNumber: CNPhoneNumber) -> String? {
         return stringIfHasContentsElseNil(
-            STPNumericStringValidator.sanitizedNumericString(for: phoneNumber.stringValue))
+            STPNumericStringValidator.sanitizedNumericString(for: phoneNumber.stringValue)
+        )
     }
 
     private mutating func setAddressFromCNPostal(_ address: CNPostalAddress?) {
@@ -47,9 +50,10 @@ extension StripeContact {
     }
 }
 
-
 extension StripeAPI.BillingDetails {
-    init?(from payment: PKPayment) {
+    init?(
+        from payment: PKPayment
+    ) {
         var billingDetails: StripeAPI.BillingDetails?
         if payment.billingContact != nil {
             billingDetails = StripeAPI.BillingDetails()
@@ -59,7 +63,9 @@ extension StripeAPI.BillingDetails {
                 billingDetails?.email = billingAddress.email
                 billingDetails?.phone = billingAddress.phone
                 if billingContact.postalAddress != nil {
-                    billingDetails?.address = StripeAPI.BillingDetails.Address(contact: billingAddress)
+                    billingDetails?.address = StripeAPI.BillingDetails.Address(
+                        contact: billingAddress
+                    )
                 }
             }
         }

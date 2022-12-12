@@ -3,13 +3,14 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/4/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import AVKit
+@_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripeCameraCore
+import UIKit
 
 // MARK: - ScanningState
 
@@ -18,13 +19,13 @@ protocol ScanningState {
 }
 
 extension Array: ScanningState {
-    static func initialValue() -> Array<Element> {
+    static func initialValue() -> [Element] {
         return []
     }
 }
 
 extension Optional: ScanningState {
-    static func initialValue() -> Optional<Wrapped> {
+    static func initialValue() -> Wrapped? {
         return nil
     }
 }
@@ -49,7 +50,7 @@ final class ImageScanningSession<
         /// Successfully scanned the camera feed for the expected classification
         case scanned(ExpectedClassificationType, CapturedDataType)
         /// Saving the captured data
-        case saving(CapturedDataType)
+        case saving(ExpectedClassificationType, CapturedDataType)
         /// The app does not have camera access
         case noCameraAccess
         /// There was an error accessing the camera
@@ -111,7 +112,9 @@ final class ImageScanningSession<
         addObservers()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -125,30 +128,40 @@ final class ImageScanningSession<
 
     func setDelegate<Delegate: ImageScanningSessionDelegate>(
         delegate: Delegate?
-    ) where Delegate.ExpectedClassificationType == ExpectedClassificationType,
-            Delegate.ScanningStateType == ScanningStateType,
-            Delegate.CapturedDataType == CapturedDataType,
-            Delegate.ScannerOutput == ScannerOutput
+    )
+    where
+        Delegate.ExpectedClassificationType == ExpectedClassificationType,
+        Delegate.ScanningStateType == ScanningStateType,
+        Delegate.CapturedDataType == CapturedDataType,
+        Delegate.ScannerOutput == ScannerOutput
     {
         self.delegate = delegate.map { .init($0) }
     }
 
     func updateScanningState(_ scanningState: ScanningStateType) {
-        guard case let .scanning(expectedClassification, _) = state else {
-            assertionFailure("`updateScanningState` can only be called if current state is `scanning`")
+        guard case .scanning(let expectedClassification, _) = state else {
+            assertionFailure(
+                "`updateScanningState` can only be called if current state is `scanning`"
+            )
             return
         }
 
         state = .scanning(expectedClassification, scanningState)
     }
 
-    func setStateScanned(expectedClassification: ExpectedClassificationType, capturedData: CapturedDataType) {
+    func setStateScanned(
+        expectedClassification: ExpectedClassificationType,
+        capturedData: CapturedDataType
+    ) {
         state = .scanned(expectedClassification, capturedData)
         stopScanning()
     }
 
-    func setStateSaving(_ capturedData: CapturedDataType) {
-        state = .saving(capturedData)
+    func setStateSaving(
+        expectedClassification: ExpectedClassificationType,
+        capturedData: CapturedDataType
+    ) {
+        state = .saving(expectedClassification, capturedData)
     }
 
     func reset(to classification: ExpectedClassificationType) {
@@ -174,7 +187,10 @@ final class ImageScanningSession<
         // hogging the CameraSession's sessionQueue.
         self.state = .scanning(expectedClassification, .initialValue())
 
-        delegate?.imageScanningSession(self, willStartScanningForClassification: expectedClassification)
+        delegate?.imageScanningSession(
+            self,
+            willStartScanningForClassification: expectedClassification
+        )
 
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
@@ -228,7 +244,7 @@ final class ImageScanningSession<
     }
 
     @objc func appDidEnterForeground() {
-        if case let .scanning(expectedClassification, _) = state {
+        if case .scanning(let expectedClassification, _) = state {
             startScanning(expectedClassification: expectedClassification)
         }
     }
@@ -260,7 +276,9 @@ final class ImageScanningSession<
                     focusMode: .continuousAutoFocus,
                     focusPointOfInterest: CGPoint(x: 0.5, y: 0.5),
                     outputSettings: [
-                        (kCVPixelBufferPixelFormatTypeKey as String): Int(IDDetectorConstants.requiredPixelFormat)
+                        (kCVPixelBufferPixelFormatTypeKey as String): Int(
+                            IDDetectorConstants.requiredPixelFormat
+                        )
                     ]
                 ),
                 delegate: self,
@@ -295,9 +313,9 @@ final class ImageScanningSession<
         from connection: AVCaptureConnection
     ) {
         guard delegate?.imageScanningSessionShouldScanCameraOutput(self) != false,
-              case let .scanning(expectedClassification, _) = state,
-              let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
-              let cgImage = pixelBuffer.cgImage()
+            case .scanning(let expectedClassification, _) = state,
+            let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
+            let cgImage = pixelBuffer.cgImage()
         else {
             return
         }
@@ -315,7 +333,7 @@ final class ImageScanningSession<
             // verify that we're still scanning for the same document side
             // before handling the image.
             guard let self = self,
-                  case .scanning(expectedClassification, _) = self.state
+                case .scanning(expectedClassification, _) = self.state
             else {
                 return
             }

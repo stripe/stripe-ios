@@ -148,13 +148,6 @@ retry_tests_command = ""
 retry_tests_command = "-retry-tests-on-failure -test-iterations 5" if retry_tests
 
 Dir.chdir(__dir__ + '/..') do
-  carthage_command = <<~HEREDOC
-    carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks
-  HEREDOC
-  puts carthage_command
-  system carthage_command
-  exit $?.exitstatus unless $?.success?
-
   xcodebuild_command = <<~HEREDOC
     xcodebuild #{build_action} \
     #{quiet_command} \

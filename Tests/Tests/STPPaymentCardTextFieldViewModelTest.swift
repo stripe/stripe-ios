@@ -1,6 +1,6 @@
 //
-//  STPCreditCardTextFieldTest.m
-//  Stripe
+//  STPPaymentCardTextFieldViewModelTest.swift
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 7/16/15.
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentCardTextFieldViewModelTest: XCTestCase {
     var viewModel: STPPaymentCardTextFieldViewModel?
@@ -77,7 +81,8 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
 
     func testCompressedCardNumber() {
         viewModel?.cardNumber = nil
-        XCTAssertEqual(viewModel?.compressedCardNumber(withPlaceholder: nil), "4242")  // Should use default placeholder
+        // Should use default placeholder
+        XCTAssertEqual(viewModel?.compressedCardNumber(withPlaceholder: nil), "4242")
         XCTAssertEqual(viewModel?.compressedCardNumber(withPlaceholder: "1234567812345678"), "5678")
 
         viewModel?.cardNumber = "424212345678"

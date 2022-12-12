@@ -1,6 +1,6 @@
 //
 //  PaymentIntent.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 6/29/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -54,7 +54,7 @@ extension StripeAPI {
 
         /// Status of the PaymentIntent
         @_spi(STP) public let status: Status
-        
+
         /// Shipping information for this PaymentIntent.
         @_spi(STP) public let shipping: ShippingDetails?
 
@@ -67,7 +67,9 @@ extension StripeAPI {
             /// This PaymentIntent requires a Source
             /// Deprecated: Use STPPaymentIntentStatusRequiresPaymentMethod instead.
             @available(
-                *, deprecated, message: "Use STPPaymentIntentStatus.requiresPaymentMethod instead",
+                *,
+                deprecated,
+                message: "Use STPPaymentIntentStatus.requiresPaymentMethod instead",
                 renamed: "STPPaymentIntentStatus.requiresPaymentMethod"
             )
             case requiresSource = "requires_source"
@@ -80,7 +82,9 @@ extension StripeAPI {
             /// Additional actions found via `next_source_action`
             /// Deprecated: Use STPPaymentIntentStatusRequiresAction instead.
             @available(
-                *, deprecated, message: "Use STPPaymentIntentStatus.requiresAction instead",
+                *,
+                deprecated,
+                message: "Use STPPaymentIntentStatus.requiresAction instead",
                 renamed: "STPPaymentIntentStatus.requiresAction"
             )
             case requiresSourceAction = "requires_source_action"
@@ -92,12 +96,12 @@ extension StripeAPI {
             case requiresCapture = "requires_capture"
             /// This PaymentIntent was canceled and cannot be changed.
             case canceled
-            
+
             case unparsable
             // TODO: This is @frozen because of a bug in the Xcode 12.2 Swift compiler.
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
-        
+
         @frozen @_spi(STP) public enum ConfirmationMethod: String, SafeEnumCodable {
             /// Unknown confirmation method
             case unknown
@@ -105,12 +109,12 @@ extension StripeAPI {
             case manual
             /// Confirmed via secret key
             case automatic
-            
+
             case unparsable
             // TODO: This is @frozen because of a bug in the Xcode 12.2 Swift compiler.
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
-        
+
         @frozen @_spi(STP) public enum CaptureMethod: String, SafeEnumCodable {
             /// Unknown capture method
             case unknown
@@ -119,12 +123,12 @@ extension StripeAPI {
             /// The PaymentIntent must be manually captured once it has the status
             /// `.requiresCapture`
             case manual
-            
+
             case unparsable
             // TODO: This is @frozen because of a bug in the Xcode 12.2 Swift compiler.
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
-        
+
         @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
     }
 }

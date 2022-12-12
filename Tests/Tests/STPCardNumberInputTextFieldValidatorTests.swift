@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
 
@@ -137,9 +141,11 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
             tests.append(
                 (
                     .incomplete(
-                        description: card.0.isEmpty ? nil : "Your card number is incomplete."),
+                        description: card.0.isEmpty ? nil : "Your card number is incomplete."
+                    ),
                     card.0, card.1
-                ))
+                )
+            )
         }
 
         let validator = STPCardNumberInputTextFieldValidator()
@@ -154,33 +160,46 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
             let expectedCardBrand = test.2
             if !(validator.cardBrand == expectedCardBrand) {
                 XCTFail(
-                    "Expected \(expectedCardBrand), got \(validator.cardBrand) for number \(card)")
+                    "Expected \(expectedCardBrand), got \(validator.cardBrand) for number \(card)"
+                )
             }
         }
 
         validator.inputValue = "1"
         XCTAssertEqual(
-            .invalid(errorMessage: "Your card number is invalid."), validator.validationState)
+            .invalid(errorMessage: "Your card number is invalid."),
+            validator.validationState
+        )
 
         validator.inputValue = "0000000000000000"
         XCTAssertEqual(
-            .invalid(errorMessage: "Your card number is invalid."), validator.validationState)
+            .invalid(errorMessage: "Your card number is invalid."),
+            validator.validationState
+        )
 
         validator.inputValue = "9999999999999995"
         XCTAssertEqual(
-            .invalid(errorMessage: "Your card number is invalid."), validator.validationState)
+            .invalid(errorMessage: "Your card number is invalid."),
+            validator.validationState
+        )
 
         validator.inputValue = "0000000000000000000"
         XCTAssertEqual(
-            .invalid(errorMessage: "Your card number is invalid."), validator.validationState)
+            .invalid(errorMessage: "Your card number is invalid."),
+            validator.validationState
+        )
 
         validator.inputValue = "9999999999999999998"
         XCTAssertEqual(
-            .invalid(errorMessage: "Your card number is invalid."), validator.validationState)
+            .invalid(errorMessage: "Your card number is invalid."),
+            validator.validationState
+        )
 
         validator.inputValue = "4242424242424"
         XCTAssertEqual(
-            .incomplete(description: "Your card number is incomplete."), validator.validationState)
+            .incomplete(description: "Your card number is incomplete."),
+            validator.validationState
+        )
 
         validator.inputValue = nil
         XCTAssertEqual(.incomplete(description: nil), validator.validationState)

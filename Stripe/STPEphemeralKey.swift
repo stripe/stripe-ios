@@ -1,12 +1,13 @@
 //
 //  STPEphemeralKey.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 5/4/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     private(set) var stripeID: String
@@ -19,7 +20,12 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
 
     /// You cannot directly instantiate an `STPEphemeralKey`. You should instead use
     /// `decodedObjectFromAPIResponse:` to create a key from a JSON response.
-    required init(stripeID: String, created: Date, secret: String, expires: Date) {
+    required init(
+        stripeID: String,
+        created: Date,
+        secret: String,
+        expires: Date
+    ) {
         self.stripeID = stripeID
         self.created = created
         self.secret = secret
@@ -33,7 +39,7 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
+        let dict = response.stp_dictionaryByRemovingNulls()
 
         // required fields
         guard
@@ -50,7 +56,7 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
         var customerID: String?
         var issuingCardID: String?
         for obj in associatedObjects {
-            if let obj = obj as? NSDictionary {
+            if let obj = obj as? [AnyHashable: Any] {
                 let type = obj.stp_string(forKey: "type")
                 if type == "customer" {
                     customerID = obj.stp_string(forKey: "id")

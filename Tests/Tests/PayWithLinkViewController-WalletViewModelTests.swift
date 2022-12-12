@@ -6,10 +6,14 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import StripeCoreTestUtils
+import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
@@ -22,7 +26,10 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
         // Card with failing CVC checks
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.cardWithFailingChecks
-        XCTAssertTrue(sut.shouldRecollectCardCVC, "Should recollect CVC when CVC checks are failing")
+        XCTAssertTrue(
+            sut.shouldRecollectCardCVC,
+            "Should recollect CVC when CVC checks are failing"
+        )
 
         // Expired card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.expiredCard
@@ -42,7 +49,10 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
         // Expired card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.expiredCard
-        XCTAssertTrue(sut.shouldRecollectCardExpiryDate, "Should recollect new expiry date when card has expired")
+        XCTAssertTrue(
+            sut.shouldRecollectCardExpiryDate,
+            "Should recollect new expiry date when card has expired"
+        )
 
         // Bank account (CVC not supported)
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
@@ -96,8 +106,17 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 extension PayWithLinkViewController_WalletViewModelTests {
 
     func makeSUT() throws -> PayWithLinkViewController.WalletViewModel {
+        // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
+        // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
+        let paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
+        let orderedPaymentJson = ["card", "link"]
+        let paymentIntentResponse = ["payment_intent": paymentIntentJson,
+                                     "ordered_payment_method_types": orderedPaymentJson] as [String : Any]
+        let linkSettingsJson = ["link_funding_sources": ["CARD"]]
+        let response = ["payment_method_preference": paymentIntentResponse,
+                        "link_settings": linkSettingsJson]
         let paymentIntent = try XCTUnwrap(
-            STPPaymentIntent.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
+            STPPaymentIntent.decodedObject(fromAPIResponse: response)
         )
 
         return PayWithLinkViewController.WalletViewModel(

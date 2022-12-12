@@ -7,8 +7,12 @@
 //
 
 import XCTest
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import Stripe
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class ConsumerSessionTests: XCTestCase {
 
@@ -22,7 +26,8 @@ class ConsumerSessionTests: XCTestCase {
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) {
+            result in
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
@@ -33,7 +38,7 @@ class ConsumerSessionTests: XCTestCase {
                     XCTFail("Got not found response with \(errorMessage)")
 
                 case .noAvailableLookupParams:
-                    break // Pass
+                    break  // Pass
                 }
             case .failure(let error):
                 XCTFail("Received error: \(error.nonGenericDescription)")
@@ -49,7 +54,8 @@ class ConsumerSessionTests: XCTestCase {
 
         cookieStore.write(key: .session, value: "bad_session_cookie", allowSync: false)
 
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) {
+            result in
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
@@ -74,12 +80,13 @@ class ConsumerSessionTests: XCTestCase {
     func testLookupSession_cookieOnly() {
         _ = createVerifiedConsumerSession()
         let expectation = self.expectation(description: "Lookup ConsumerSession")
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) {
+            result in
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
-                    break // Pass
+                    break  // Pass
 
                 case .notFound(let errorMessage):
                     XCTFail("Got not found response with \(errorMessage)")
@@ -108,7 +115,7 @@ class ConsumerSessionTests: XCTestCase {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
-                    break // Pass
+                    break  // Pass
 
                 case .notFound(let errorMessage):
                     XCTFail("Got not found response with \(errorMessage)")
@@ -140,7 +147,7 @@ class ConsumerSessionTests: XCTestCase {
                     XCTFail("Got unexpected found response with \(consumerSession)")
 
                 case .notFound(_):
-                    break // Pass
+                    break  // Pass
 
                 case .noAvailableLookupParams:
                     XCTFail("Got no available lookup params")
@@ -167,15 +174,20 @@ class ConsumerSessionTests: XCTestCase {
             phoneNumber: "+13105551234",
             legalName: nil,
             countryCode: "US",
+            consentAction: nil,
             with: apiClient,
             cookieStore: cookieStore
         ) { result in
             switch result {
             case .success(let signupResponse):
                 XCTAssertTrue(signupResponse.consumerSession.isVerifiedForSignup)
-                XCTAssertTrue(signupResponse.consumerSession.verificationSessions.isVerifiedForSignup)
                 XCTAssertTrue(
-                    signupResponse.consumerSession.verificationSessions.contains(where: { $0.type == .signup })
+                    signupResponse.consumerSession.verificationSessions.isVerifiedForSignup
+                )
+                XCTAssertTrue(
+                    signupResponse.consumerSession.verificationSessions.contains(where: {
+                        $0.type == .signup
+                    })
                 )
 
                 consumerSession = signupResponse.consumerSession
@@ -193,7 +205,9 @@ class ConsumerSessionTests: XCTestCase {
             let cardParams = STPPaymentMethodCardParams()
             cardParams.number = "4242424242424242"
             cardParams.expMonth = 12
-            cardParams.expYear = NSNumber(value: Calendar.autoupdatingCurrent.component(.year, from: Date()) + 1)
+            cardParams.expYear = NSNumber(
+                value: Calendar.autoupdatingCurrent.component(.year, from: Date()) + 1
+            )
             cardParams.cvc = "123"
 
             let billingParams = STPPaymentMethodBillingDetails()
@@ -202,9 +216,11 @@ class ConsumerSessionTests: XCTestCase {
             address.postalCode = "55555"
             billingParams.address = address
 
-            let paymentMethodParams = STPPaymentMethodParams.paramsWith(card: cardParams,
-                                                                        billingDetails: billingParams,
-                                                                        metadata: nil)
+            let paymentMethodParams = STPPaymentMethodParams.paramsWith(
+                card: cardParams,
+                billingDetails: billingParams,
+                metadata: nil
+            )
 
             let createExpectation = self.expectation(description: "create payment details")
             consumerSession.createPaymentDetails(
@@ -215,7 +231,7 @@ class ConsumerSessionTests: XCTestCase {
                 switch result {
                 case .success(let createdPaymentDetails):
                     if case .card(let cardDetails) = createdPaymentDetails.details {
-                        XCTAssertEqual(cardDetails.expiryMonth,  cardParams.expMonth?.intValue)
+                        XCTAssertEqual(cardDetails.expiryMonth, cardParams.expMonth?.intValue)
                         XCTAssertEqual(cardDetails.expiryYear, cardParams.expYear?.intValue)
                     } else {
                         XCTAssert(false)
@@ -254,7 +270,9 @@ class ConsumerSessionTests: XCTestCase {
     }
 
     func testCreateLinkAccountSession() {
-        let createLinkAccountSessionExpectation = self.expectation(description: "Create LinkAccountSession")
+        let createLinkAccountSessionExpectation = self.expectation(
+            description: "Create LinkAccountSession"
+        )
 
         let (consumerSession, preferences) = createVerifiedConsumerSession()
         consumerSession.createLinkAccountSession(
@@ -274,13 +292,13 @@ class ConsumerSessionTests: XCTestCase {
 
         wait(for: [createLinkAccountSessionExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     func testUpdatePaymentDetails() {
         let (consumerSession, preferences) = createVerifiedConsumerSession()
 
         let listExpectation = self.expectation(description: "list payment details")
         var storedPaymentDetails = [ConsumerPaymentDetails]()
-        
+
         consumerSession.listPaymentDetails(
             with: apiClient,
             consumerAccountPublishableKey: preferences.publishableKey
@@ -296,31 +314,39 @@ class ConsumerSessionTests: XCTestCase {
         }
 
         wait(for: [listExpectation], timeout: STPTestingNetworkRequestTimeout)
-        
+
         let billingParams = STPPaymentMethodBillingDetails()
         billingParams.name = "Payments SDK CI"
         let address = STPPaymentMethodAddress()
         address.postalCode = "55555"
         billingParams.address = address
-        
+
         let updateExpectation = self.expectation(description: "update payment details")
         let paymentMethodToUpdate = try! XCTUnwrap(storedPaymentDetails.first)
-        guard let prefillDetails = paymentMethodToUpdate.prefillDetails else {
-            XCTFail("Payment method doesn't have expected prefill details")
+
+        guard case .card(let card) = paymentMethodToUpdate.details else {
+            XCTFail("Payment method must be `card` type")
             return
         }
+
+        let calendar = Calendar(identifier: .gregorian)
+        let yearOne = calendar.component(.year, from: Date()) + 1
+        let yearTwo = calendar.component(.year, from: Date()) + 2
+
         // toggle between expiry years/months
-        let expiryMonth = prefillDetails.expiryMonth == 1 ? 2 : 1
-        let expiryYear = prefillDetails.expiryYear == 25 ? 26 : 25
+        let newExpiryDate = CardExpiryDate(
+            month: card.expiryDate.month == 1 ? 2 : 1,
+            year: card.expiryDate.year == yearOne ? yearTwo : yearOne
+        )
 
         let updateParams = UpdatePaymentDetailsParams(
             isDefault: !paymentMethodToUpdate.isDefault,
             details: .card(
-                expiryDate: .init(month: expiryMonth, year: expiryYear),
+                expiryDate: newExpiryDate,
                 billingDetails: billingParams
             )
         )
-        
+
         consumerSession.updatePaymentDetails(
             with: apiClient,
             id: paymentMethodToUpdate.stripeID,
@@ -330,16 +356,19 @@ class ConsumerSessionTests: XCTestCase {
             switch result {
             case .success(let paymentDetails):
                 XCTAssertNotEqual(paymentDetails.isDefault, paymentMethodToUpdate.isDefault)
-                let prefillDetails = try! XCTUnwrap(paymentDetails.prefillDetails)
-                XCTAssertEqual(expiryMonth, prefillDetails.expiryMonth)
-                XCTAssertEqual(CardExpiryDate.normalizeYear(expiryYear), prefillDetails.expiryYear)
+                switch paymentDetails.details {
+                case .card(let card):
+                    XCTAssertEqual(newExpiryDate, card.expiryDate)
+                case .bankAccount:
+                    XCTFail("Unexpected payment details type")
+                }
             case .failure(let error):
                 XCTFail("Received error: \(error.nonGenericDescription)")
             }
 
             updateExpectation.fulfill()
         }
-        
+
         wait(for: [updateExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
@@ -370,9 +399,9 @@ class ConsumerSessionTests: XCTestCase {
 
 }
 
-private extension ConsumerSessionTests {
+extension ConsumerSessionTests {
 
-    func lookupExistingConsumer() -> (ConsumerSession, ConsumerSession.Preferences) {
+    fileprivate func lookupExistingConsumer() -> (ConsumerSession, ConsumerSession.Preferences) {
         var consumerSession: ConsumerSession!
         var consumerPreferences: ConsumerSession.Preferences!
 
@@ -408,7 +437,9 @@ private extension ConsumerSessionTests {
         return (consumerSession, consumerPreferences)
     }
 
-    func createVerifiedConsumerSession() -> (ConsumerSession, ConsumerSession.Preferences) {
+    fileprivate func createVerifiedConsumerSession() -> (
+        ConsumerSession, ConsumerSession.Preferences
+    ) {
         var (consumerSession, preferences) = lookupExistingConsumer()
 
         // Start verification

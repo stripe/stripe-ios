@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
+extension StripeAPI {
 
     struct VerificationPageStaticContentConsentPage: Decodable, Equatable {
         let acceptButtonText: String
@@ -17,6 +17,7 @@ extension StripeAPI {
         let privacyPolicy: String
         let timeEstimate: String
         let title: String
+        let scrollToContinueButtonText: String
     }
 
 }

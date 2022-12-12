@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 3/2/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -19,7 +20,9 @@ extension StripeAPI {
 }
 
 extension StripeAPI.VerificationPageClearData {
-    init(clearFields fields: Set<StripeAPI.VerificationPageFieldType>) {
+    init(
+        clearFields fields: Set<StripeAPI.VerificationPageFieldType>
+    ) {
         self.init(
             biometricConsent: fields.contains(.biometricConsent),
             face: fields.contains(.face),

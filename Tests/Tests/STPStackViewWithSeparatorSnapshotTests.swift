@@ -1,21 +1,25 @@
 //
-//  StackViewWithSeparatorSnapshotTests.swift
+//  STPStackViewWithSeparatorSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/23/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
-
-@testable import Stripe
 @_spi(STP) import StripeUICore
+import iOSSnapshotTestCase
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func embedInRenderableView(_ stackView: StackViewWithSeparator) -> UIView {
@@ -29,7 +33,8 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
             containingView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
         ])
         containingView.frame.size = containingView.systemLayoutSizeFitting(
-            UIView.layoutFittingCompressedSize)
+            UIView.layoutFittingCompressedSize
+        )
         return containingView
     }
 
@@ -120,7 +125,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
 
         STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testDisabledColor() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -138,7 +143,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
 
         STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testCustomBackgroundColor() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -153,10 +158,10 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.separatorColor = .lightGray
         stackView.drawBorder = true
         stackView.customBackgroundColor = .green
-        
+
         STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testCustomDisabledColor() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -175,7 +180,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
 
         STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testPartialSeparatorHorizontal() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -189,10 +194,10 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
         stackView.separatorStyle = .partial
-        
+
         STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testPartialSeparatorVertical() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -206,8 +211,8 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
         stackView.separatorStyle = .partial
-        
+
         STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
 }

@@ -3,10 +3,12 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 2/15/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
@@ -15,7 +17,7 @@ final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testViewIsConfiguredFromAPI() {

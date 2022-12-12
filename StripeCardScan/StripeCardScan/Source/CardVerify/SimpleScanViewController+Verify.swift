@@ -9,7 +9,14 @@ extension SimpleScanViewController {
         container.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.7462275257)
 
         let activityIndicator = UIActivityIndicatorView()
-        activityIndicator.style = .whiteLarge
+
+        if #available(iOS 13.0, *) {
+            activityIndicator.style = .large
+            activityIndicator.color = .white
+        } else {
+            activityIndicator.style = .whiteLarge
+        }
+
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         container.addSubview(activityIndicator)

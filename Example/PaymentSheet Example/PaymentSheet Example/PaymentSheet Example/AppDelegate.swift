@@ -6,7 +6,7 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import Stripe
+import StripePaymentSheet
 import UIKit
 
 @UIApplicationMain
@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 .forEach { $0.perform(setHardwareLayout, with: nil) }
 
             // Delete cookies before running UI tests
-            PaymentSheet.reset()
+            PaymentSheet.resetCustomer()
 
             PaymentSheetTestPlayground.paymentSheetPlaygroundSettings = PaymentSheetPlaygroundSettings.defaultValues()
         }

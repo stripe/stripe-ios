@@ -6,26 +6,40 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-import FBSnapshotTestCase
 import StripeCoreTestUtils
+import UIKit
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
+    private let emailAddress = "customer@example.com"
+    private let longEmailAddress = "long.customer.name@example.com"
+
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testDefault() {
         let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "customer@example.com", isRegistered: false)
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)
         verify(sut)
 
         sut.isHighlighted = true
         verify(sut, identifier: "Highlighted")
+    }
+
+    func testDefault_rounded() {
+        let sut = makeSUT()
+        sut.cornerRadius = 16
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)
+        verify(sut)
     }
 
     func testDisabled() {
@@ -36,13 +50,27 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
     func testRegistered() {
         let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "customer@example.com", isRegistered: true)
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
         verify(sut)
     }
 
-    func testRegisteredWithLongEmailAddress() {
+    func testRegistered_rounded() {
+        let sut = makeSUT()
+        sut.cornerRadius = 16
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
+        verify(sut)
+    }
+
+    func testRegistered_square() {
+        let sut = makeSUT()
+        sut.cornerRadius = 0
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
+        verify(sut)
+    }
+
+    func testRegistered_withLongEmailAddress() {
         let sut = PayWithLinkButton()
-        sut.linkAccount = makeAccountStub(email: "long.customer.name@example.com", isRegistered: true)
+        sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
         verify(sut)
     }
 
@@ -58,16 +86,16 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
 }
 
-private extension PayWithLinkButtonSnapshotTests {
+extension PayWithLinkButtonSnapshotTests {
 
-    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+    fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
         let isLoggedIn: Bool
     }
 
-    func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
+    fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
             redactedPhoneNumber: "+1********55",
@@ -76,7 +104,8 @@ private extension PayWithLinkButtonSnapshotTests {
         )
     }
 
-    func makeSUT() -> PayWithLinkButton {
+    fileprivate func makeSUT() -> PayWithLinkButton {
         return PayWithLinkButton()
     }
+
 }

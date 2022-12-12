@@ -1,14 +1,14 @@
 //
 //  STPEphemeralKeyManager.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 5/9/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 protocol STPEphemeralKeyManagerProtocol {
     /// If the retriever's stored ephemeral key has not expired, it will be
@@ -61,7 +61,8 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
             self,
             selector: #selector(handleWillForegroundNotification),
             name: UIApplication.willEnterForegroundNotification,
-            object: nil)
+            object: nil
+        )
     }
 
     @objc dynamic func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
@@ -97,7 +98,8 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.willEnterForegroundNotification,
-            object: nil)
+            object: nil
+        )
     }
 
     func currentKeyIsUnexpired() -> Bool {
@@ -159,11 +161,15 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         if keyProvider is STPCustomerEphemeralKeyProvider {
             weak var provider = keyProvider as? STPCustomerEphemeralKeyProvider
             provider?.createCustomerKey(
-                withAPIVersion: apiVersion ?? "", completion: jsonCompletion)
+                withAPIVersion: apiVersion ?? "",
+                completion: jsonCompletion
+            )
         } else if keyProvider is STPIssuingCardEphemeralKeyProvider {
             weak var provider = keyProvider as? STPIssuingCardEphemeralKeyProvider
             provider?.createIssuingCardKey(
-                withAPIVersion: apiVersion ?? "", completion: jsonCompletion)
+                withAPIVersion: apiVersion ?? "",
+                completion: jsonCompletion
+            )
         }
     }
 }

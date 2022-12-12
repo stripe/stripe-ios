@@ -7,12 +7,16 @@
 //
 
 import XCTest
-@testable import Stripe
-@testable @_spi(STP) import StripeApplePay
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class FraudDetectionDataTest: XCTestCase {
     func testResetsSIDIfExpired() {
-        FraudDetectionData.shared.sidCreationDate = Date(timeInterval: -30 * 60, since: Date())
+        FraudDetectionData.shared.sidCreationDate = Date(timeInterval: -30 * 60 - 1, since: Date())
         FraudDetectionData.shared.resetSIDIfExpired()
         XCTAssertNil(FraudDetectionData.shared.sid)
     }

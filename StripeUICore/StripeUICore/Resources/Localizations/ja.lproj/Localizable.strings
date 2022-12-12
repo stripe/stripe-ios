@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB 番号";
 
+"Billing address is same as shipping" = "請求先住所は配送先住所と同じ";
+
 "Cancel" = "キャンセル";
 
 "City" = "市";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "完了";
+
+"Edit" = "編集";
 
 "Eircode" = "郵便番号 (アイルランド)";
 

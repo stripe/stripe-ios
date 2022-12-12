@@ -3,11 +3,12 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 6/7/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 enum IdentityAnalyticsClientError: AnalyticLoggableError {
     /// `startTrackingTimeToScreen` was called twice in a row without calling
@@ -17,7 +18,7 @@ enum IdentityAnalyticsClientError: AnalyticLoggableError {
         requestedForScreen: IdentityAnalyticsClient.ScreenName?
     )
 
-    func analyticLoggableSerializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any] = [
             "domain": (self as NSError).domain
         ]
@@ -131,7 +132,7 @@ final class IdentityAnalyticsClient {
             eventName: eventName.rawValue,
             parameters: [
                 "verification_session": verificationSessionId,
-                "event_metadata": metadata
+                "event_metadata": metadata,
             ]
         )
     }
@@ -161,7 +162,7 @@ final class IdentityAnalyticsClient {
             )
             logSheetClosed(sessionResult: "flow_canceled")
 
-        case .flowFailed(error: let error):
+        case .flowFailed(let error):
             logVerificationFailed(
                 sheetController: sheetController,
                 error: error,
@@ -305,7 +306,8 @@ final class IdentityAnalyticsClient {
             metadata["scan_type"] = idDocumentType.rawValue
         }
 
-        let eventName: EventName = (isGranted == true) ? .cameraPermissionGranted : .cameraPermissionDenied
+        let eventName: EventName =
+            (isGranted == true) ? .cameraPermissionGranted : .cameraPermissionDenied
 
         logAnalytic(eventName, metadata: metadata)
     }
@@ -315,10 +317,13 @@ final class IdentityAnalyticsClient {
         idDocumentType: DocumentType,
         documentSide: DocumentSide
     ) {
-        logAnalytic(.documentCaptureTimeout, metadata: [
-            "scan_type": idDocumentType.rawValue,
-            "side": documentSide.rawValue
-        ])
+        logAnalytic(
+            .documentCaptureTimeout,
+            metadata: [
+                "scan_type": idDocumentType.rawValue,
+                "side": documentSide.rawValue,
+            ]
+        )
     }
 
     /// Logs an event when selfie capture times out
@@ -334,11 +339,14 @@ final class IdentityAnalyticsClient {
         numFrames: Int,
         scannerName: ScannerName
     ) {
-        logAnalytic(.averageFPS, metadata: [
-            "type": scannerName.rawValue,
-            "value": averageFPS,
-            "frames": numFrames
-        ])
+        logAnalytic(
+            .averageFPS,
+            metadata: [
+                "type": scannerName.rawValue,
+                "value": averageFPS,
+                "frames": numFrames,
+            ]
+        )
     }
 
     /// Logs the average inference and post-processing times for every ML model used for one scan
@@ -366,12 +374,15 @@ final class IdentityAnalyticsClient {
         averageMetrics: MLDetectorMetricsTracker.Metrics,
         numFrames: Int
     ) {
-        logAnalytic(.modelPerformance, metadata: [
-            "ml_model": modelName,
-            "inference": averageMetrics.inference.milliseconds,
-            "postprocess": averageMetrics.postProcess.milliseconds,
-            "frames": numFrames,
-        ])
+        logAnalytic(
+            .modelPerformance,
+            metadata: [
+                "ml_model": modelName,
+                "inference": averageMetrics.inference.milliseconds,
+                "postprocess": averageMetrics.postProcess.milliseconds,
+                "frames": numFrames,
+            ]
+        )
     }
 
     /// Logs the time it takes to upload an image along with its file size and compression quality
@@ -389,7 +400,7 @@ final class IdentityAnalyticsClient {
             "id": fileId,
             "compression_quality": compressionQuality,
             "file_name": fileName,
-            "file_size": fileSizeBytes / 1024
+            "file_size": fileSizeBytes / 1024,
         ]
         if let idDocumentType = idDocumentType {
             metadata["scan_type"] = idDocumentType.rawValue
@@ -434,14 +445,14 @@ final class IdentityAnalyticsClient {
         // dismissed or the back button was used. Only log an analytic if there's
         // `startTrackingTimeToScreen` was called.
         guard let startTime = timeToScreenStartTime,
-              timeToScreenFromScreen != toScreen
+            timeToScreenFromScreen != toScreen
         else {
             return
         }
 
         var metadata: [String: Any] = [
             "value": endTime.timeIntervalSince(startTime).milliseconds,
-            "to_screen_name": toScreen.rawValue
+            "to_screen_name": toScreen.rawValue,
         ]
         if let fromScreen = timeToScreenFromScreen {
             metadata["from_screen_name"] = fromScreen.rawValue
@@ -458,12 +469,15 @@ final class IdentityAnalyticsClient {
         filePath: StaticString = #filePath,
         line: UInt = #line
     ) {
-        logAnalytic(.genericError, metadata: [
-            "error_details": AnalyticsClientV2.serialize(
-                error: error,
-                filePath: filePath,
-                line: line
-            )
-        ])
+        logAnalytic(
+            .genericError,
+            metadata: [
+                "error_details": AnalyticsClientV2.serialize(
+                    error: error,
+                    filePath: filePath,
+                    line: line
+                )
+            ]
+        )
     }
 }

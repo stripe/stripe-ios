@@ -6,13 +6,19 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import StripeCoreTestUtils
-@testable import Stripe
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodKlarnaTests: XCTestCase {
 
-    static let klarnaPaymentIntentClientSecret = "pi_3Jn3kUFY0qyl6XeW0mCp95UD_secret_28aNjjd1zsySFWvGoSzgcR5Qw"
+    static let klarnaPaymentIntentClientSecret =
+        "pi_3Jn3kUFY0qyl6XeW0mCp95UD_secret_28aNjjd1zsySFWvGoSzgcR5Qw"
 
     func _retrieveKlarnaJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

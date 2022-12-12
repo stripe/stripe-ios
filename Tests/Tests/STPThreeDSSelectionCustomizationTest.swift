@@ -6,7 +6,11 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPThreeDSSelectionCustomizationTest: XCTestCase {
     func testPropertiesAreForwarded() {
@@ -22,13 +26,17 @@ class STPThreeDSSelectionCustomizationTest: XCTestCase {
 
         XCTAssertEqual(UIColor.blue, stdsCustomization.secondarySelectedColor)
         XCTAssertEqual(
-            stdsCustomization.secondarySelectedColor, customization.secondarySelectedColor)
+            stdsCustomization.secondarySelectedColor,
+            customization.secondarySelectedColor
+        )
 
         XCTAssertEqual(UIColor.brown, stdsCustomization.unselectedBorderColor)
         XCTAssertEqual(stdsCustomization.unselectedBorderColor, customization.unselectedBorderColor)
 
         XCTAssertEqual(UIColor.cyan, stdsCustomization.unselectedBackgroundColor)
         XCTAssertEqual(
-            stdsCustomization.unselectedBackgroundColor, customization.unselectedBackgroundColor)
+            stdsCustomization.unselectedBackgroundColor,
+            customization.unselectedBackgroundColor
+        )
     }
 }

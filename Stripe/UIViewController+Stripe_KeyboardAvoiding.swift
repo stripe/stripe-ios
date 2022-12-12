@@ -1,6 +1,6 @@
 //
 //  UIViewController+Stripe_KeyboardAvoiding.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 4/15/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -22,7 +22,8 @@ extension UIViewController {
         }
         let keyboardAvoiding = STPKeyboardDetectingViewController(
             keyboardFrameBlock: block,
-            scrollView: scrollView)
+            scrollView: scrollView
+        )
         addChild(keyboardAvoiding)
         view.addSubview(keyboardAvoiding.view)
         keyboardAvoiding.didMove(toParent: self)
@@ -54,11 +55,17 @@ class STPKeyboardDetectingViewController: UIViewController {
         keyboardFrameBlock = block
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardWillChangeFrame(_:)),
-            name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+            self,
+            selector: #selector(keyboardWillChangeFrame(_:)),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
         NotificationCenter.default.addObserver(
-            self, selector: #selector(textFieldWillBeginEditing(_:)),
-            name: UITextField.textDidBeginEditingNotification, object: nil)
+            self,
+            selector: #selector(textFieldWillBeginEditing(_:)),
+            name: UITextField.textDidBeginEditingNotification,
+            object: nil
+        )
         managedScrollView = scrollView
         currentBottomInsetChange = 0
     }
@@ -84,10 +91,13 @@ class STPKeyboardDetectingViewController: UIViewController {
             textField != lastResponder && !lastKeyboardFrame.isEmpty
         {
             UIView.animate(
-                withDuration: 0.3, delay: 0, options: .curveEaseOut,
+                withDuration: 0.3,
+                delay: 0,
+                options: .curveEaseOut,
                 animations: {
                     keyboardFrameBlock(self.lastKeyboardFrame, textField)
-                })
+                }
+            )
         }
     }
 
@@ -130,7 +140,8 @@ class STPKeyboardDetectingViewController: UIViewController {
 
             let windowFrame = scrollViewSuperView?.convert(
                 scrollViewSuperView?.frame ?? CGRect.zero,
-                to: nil)
+                to: nil
+            )
 
             let bottomIntersection = windowFrame?.intersection(keyboardFrame)
             let bottomInsetDelta =
@@ -147,7 +158,9 @@ class STPKeyboardDetectingViewController: UIViewController {
         }
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

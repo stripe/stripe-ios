@@ -6,9 +6,13 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
 
@@ -65,7 +69,8 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.countryCode = "US"
         field.text = "12-3456789"
         field.textDidChange()
-        field.validator.validationState = .invalid(errorMessage: nil) // manually set because the formatter prevents setting invalid text
+        // manually set because the formatter prevents setting invalid text
+        field.validator.validationState = .invalid(errorMessage: nil)
 
         STPSnapshotVerifyView(field)
     }

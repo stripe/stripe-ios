@@ -6,9 +6,13 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
@@ -64,7 +68,9 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
         _size(toFit: view)
 
         STPSnapshotVerifyView(
-            view, identifier: "STPAUBECSDebitFormView.invalidBSBAndEmailAppearance")
+            view,
+            identifier: "STPAUBECSDebitFormView.invalidBSBAndEmailAppearance"
+        )
     }
 
     func testInvalidBSBAndEmailCustomization() {
@@ -77,7 +83,9 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
         _size(toFit: view)
 
         STPSnapshotVerifyView(
-            view, identifier: "STPAUBECSDebitFormView.invalidBSBAndEmailCustomization")
+            view,
+            identifier: "STPAUBECSDebitFormView.invalidBSBAndEmailCustomization"
+        )
     }
 
     // MARK: - Helpers
@@ -94,7 +102,11 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
         view?.formPlaceholderColor = UIColor.black
         view?.formCursorColor = UIColor.red
         view?.formBackgroundColor = UIColor(
-            red: 255.0 / 255.0, green: 45.0 / 255.0, blue: 85.0 / 255.0, alpha: 1.0)
+            red: 255.0 / 255.0,
+            green: 45.0 / 255.0,
+            blue: 85.0 / 255.0,
+            alpha: 1.0
+        )
     }
 
     func _size(toFit view: STPAUBECSDebitFormView?) {

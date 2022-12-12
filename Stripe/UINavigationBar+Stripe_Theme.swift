@@ -1,6 +1,6 @@
 //
 //  UINavigationBar+Stripe_Theme.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 5/17/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -31,13 +31,18 @@ extension UINavigationBar {
     @objc public var stp_theme: STPTheme? {
         get {
             return objc_getAssociatedObject(
-                self, UnsafeRawPointer(&kUINavigationBarSTPThemeObjectKey))
+                self,
+                UnsafeRawPointer(&kUINavigationBarSTPThemeObjectKey)
+            )
                 as? STPTheme
         }
         set(theme) {
             objc_setAssociatedObject(
-                self, UnsafeRawPointer(&kUINavigationBarSTPThemeObjectKey), theme,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                self,
+                UnsafeRawPointer(&kUINavigationBarSTPThemeObjectKey),
+                theme,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
 
             if let hairlineImageView = stp_hairlineImageView() {
                 hairlineImageView.isHidden = theme != nil

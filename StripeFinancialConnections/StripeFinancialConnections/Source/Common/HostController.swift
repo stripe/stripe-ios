@@ -6,7 +6,9 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
+@available(iOSApplicationExtension, unavailable)
 protocol HostControllerDelegate: AnyObject {
 
     func hostController(
@@ -16,29 +18,44 @@ protocol HostControllerDelegate: AnyObject {
     )
 }
 
+@available(iOSApplicationExtension, unavailable)
 class HostController {
     
     // MARK: - Properties
     
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
+    private let returnURL: String?
+    private let analyticsClient: FinancialConnectionsAnalyticsClient
 
-    lazy var hostViewController = HostViewController(clientSecret: clientSecret, apiClient: api, delegate: self)
-    lazy var navigationController = UINavigationController(rootViewController: hostViewController)
+    private var nativeFlowController: NativeFlowController?
+    lazy var hostViewController = HostViewController(clientSecret: clientSecret, returnURL: returnURL, apiClient: api, delegate: self)
+    lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
 
     weak var delegate: HostControllerDelegate?
-
+        
     // MARK: - Init
     
     init(api: FinancialConnectionsAPIClient,
-         clientSecret: String) {
+         clientSecret: String,
+         returnURL: String?,
+         publishableKey: String?,
+         stripeAccount: String?) {
         self.api = api
         self.clientSecret = clientSecret
+        self.returnURL = returnURL
+        self.analyticsClient = FinancialConnectionsAnalyticsClient()
+        analyticsClient.setAdditionalParameters(
+            linkAccountSessionClientSecret: clientSecret,
+            publishableKey: publishableKey,
+            stripeAccount: stripeAccount
+        )
     }
 }
 
 // MARK: - HostViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension HostController: HostViewControllerDelegate {
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
@@ -49,13 +66,60 @@ extension HostController: HostViewControllerDelegate {
         delegate?.hostController(self, viewController: viewController, didFinish: .failed(error: error))
     }
 
-    func hostViewController(_ viewController: HostViewController, didFetchManifest: FinancialConnectionsSessionManifest) {
+    func hostViewController(
+        _ viewController: HostViewController,
+        didFetch synchronizePayload: FinancialConnectionsSynchronize
+    ) {
+        guard let consentPaneModel = synchronizePayload.text?.consentPane else {
+            continueWithWebFlow(synchronizePayload.manifest)
+            return
+        }
+        
+        let flowRouter = FlowRouter(synchronizePayload: synchronizePayload,
+                                    analyticsClient: analyticsClient)
+        defer {
+            // no matter how we exit this function
+            // log exposure to one of the variants if appropriate.
+            flowRouter.logExposureIfNeeded()
+        }
+
+        guard flowRouter.shouldUseNative else {
+            continueWithWebFlow(synchronizePayload.manifest)
+            return
+        }
+        
+        navigationController.configureAppearanceForNative()
+
+        let dataManager = NativeFlowAPIDataManager(
+            manifest: synchronizePayload.manifest,
+            returnURL: returnURL,
+            consentPaneModel: consentPaneModel,
+            apiClient: api,
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
+        )
+        nativeFlowController = NativeFlowController(
+            dataManager: dataManager,
+            navigationController: navigationController
+        )
+        nativeFlowController?.delegate = self
+        nativeFlowController?.startFlow()
+    }
+}
+
+// MARK: - Helpers
+
+@available(iOSApplicationExtension, unavailable)
+private extension HostController {
+    
+    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
         let webFlowViewController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
-                                                                              apiClient: api,
-                                                                              manifest: didFetchManifest,
-                                                                              sessionFetcher: sessionFetcher)
+                                                                          apiClient: api,
+                                                                          manifest: manifest,
+                                                                          sessionFetcher: sessionFetcher,
+                                                                          returnURL: returnURL)
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
     }
@@ -63,8 +127,21 @@ extension HostController: HostViewControllerDelegate {
 
 // MARK: - ConnectionsWebFlowViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
     func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: FinancialConnectionsSheet.Result) {
         delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
 }
+
+@available(iOSApplicationExtension, unavailable)
+extension HostController: NativeFlowControllerDelegate {
+    func authFlow(controller: NativeFlowController, didFinish result: FinancialConnectionsSheet.Result) {
+        guard let viewController = navigationController.topViewController else {
+            assertionFailure("Navigation stack is empty")
+            return
+        }
+        delegate?.hostController(self, viewController: viewController, didFinish: result)
+    }
+}
+

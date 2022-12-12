@@ -3,6 +3,7 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 6/15/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -21,13 +22,12 @@ protocol MLDetectorMetricsTrackerProtocol {
 
     func getPerformanceMetrics(
         completeOn queue: DispatchQueue,
-        completion: @escaping (_ averageMetrics: MLDetectorMetricsTracker.Metrics, _ numFrames: Int) -> Void
+        completion: @escaping (_ averageMetrics: MLDetectorMetricsTracker.Metrics, _ numFrames: Int)
+            -> Void
     )
 }
 
-/**
- Helper class to track performance metrics for detectors using ML models
- */
+/// Helper class to track performance metrics for detectors using ML models
 final class MLDetectorMetricsTracker: MLDetectorMetricsTrackerProtocol {
 
     struct Metrics {
@@ -38,14 +38,19 @@ final class MLDetectorMetricsTracker: MLDetectorMetricsTrackerProtocol {
     }
 
     /// Manages metrics array
-    private let dispatchQueue = DispatchQueue(label: "com.stripe.identity.metrics-tracker", target: .global(qos: .userInitiated))
+    private let dispatchQueue = DispatchQueue(
+        label: "com.stripe.identity.metrics-tracker",
+        target: .global(qos: .userInitiated)
+    )
     /// A metric for each frame scanned by the detector
     private var scanMetrics: [Metrics] = []
 
     /// Name of the model used for logging purposes
     let modelName: String
 
-    init(modelName: String) {
+    init(
+        modelName: String
+    ) {
         self.modelName = modelName
     }
 
@@ -55,10 +60,12 @@ final class MLDetectorMetricsTracker: MLDetectorMetricsTrackerProtocol {
         postProcessEnd: Date
     ) {
         dispatchQueue.async { [weak self] in
-            self?.scanMetrics.append(.init(
-                inference: inferenceEnd.timeIntervalSince(inferenceStart),
-                postProcess: postProcessEnd.timeIntervalSince(inferenceEnd)
-            ))
+            self?.scanMetrics.append(
+                .init(
+                    inference: inferenceEnd.timeIntervalSince(inferenceStart),
+                    postProcess: postProcessEnd.timeIntervalSince(inferenceEnd)
+                )
+            )
         }
     }
 

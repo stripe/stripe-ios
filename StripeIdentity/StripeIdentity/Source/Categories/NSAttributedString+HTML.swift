@@ -3,17 +3,18 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/1/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Specifies how to style HTML used to generate an NSAttributedString.
 struct HTMLStyle {
     static let `default` = HTMLStyle(
         bodyFont: UIFont.preferredFont(forTextStyle: .body, weight: .regular),
-        bodyColor: CompatibleColor.label,
+        bodyColor: .label,
         h1Font: UIFont.preferredFont(forTextStyle: .title1),
         h2Font: UIFont.preferredFont(forTextStyle: .title2),
         h3Font: UIFont.preferredFont(forTextStyle: .title3),
@@ -45,6 +46,7 @@ struct HTMLStyle {
     let h6Color: UIColor?
 
     let isLinkUnderlined: Bool
+    let shouldCenterText: Bool
 
     init(
         bodyFont: UIFont,
@@ -61,7 +63,8 @@ struct HTMLStyle {
         h5Color: UIColor? = nil,
         h6Font: UIFont? = nil,
         h6Color: UIColor? = nil,
-        isLinkUnderlined: Bool = false
+        isLinkUnderlined: Bool = false,
+        shouldCenterText: Bool = false
     ) {
         self.bodyFont = bodyFont
         self.bodyColor = bodyColor
@@ -78,12 +81,14 @@ struct HTMLStyle {
         self.h6Font = h6Font
         self.h6Color = h6Color
         self.isLinkUnderlined = isLinkUnderlined
+        self.shouldCenterText = shouldCenterText
     }
 
     fileprivate static func cssText(
         _ cssName: String,
         font: UIFont?,
-        color: UIColor?
+        color: UIColor?,
+        shouldCenterText: Bool
     ) -> String {
         guard font != nil || color != nil else {
             return ""
@@ -99,92 +104,129 @@ struct HTMLStyle {
                 familyName = "-apple-system"
             }
 
-            let fontWeight = font.fontDescriptor.symbolicTraits.contains(.traitBold)
-            ? "bold"
-            : "regular"
+            let fontWeight =
+                font.fontDescriptor.symbolicTraits.contains(.traitBold)
+                ? "bold"
+                : "regular"
 
             return """
-              font-family: "\(familyName)";
-              font-size: \(font.pointSize);
-              font-weight: "\(fontWeight)";
-            """
+                  font-family: "\(familyName)";
+                  font-size: \(font.pointSize);
+                  font-weight: "\(fontWeight)";
+                """
         }
 
         let colorAttributes = color.map { color -> String in
             return "color: \(color.cssValue);"
         }
 
+        let centerAttribute = shouldCenterText ? "text-align: center;" : ""
+
         return """
-        \(cssName) {
-        \(fontAttributes ?? "")
-        \(colorAttributes ?? "")
-        }
-        """
+            \(cssName) {
+            \(fontAttributes ?? "")
+            \(colorAttributes ?? "")
+            \(centerAttribute)
+            }
+            """
     }
 
     /// Constructs a style HTML tag from the properties of this HTMLStyle
     fileprivate var styleElementText: String {
         var text = "<style>\n"
 
-        text += HTMLStyle.cssText("body", font: bodyFont, color: bodyColor)
-        text += HTMLStyle.cssText("h1", font: h1Font, color: h1Color)
-        text += HTMLStyle.cssText("h2", font: h2Font, color: h2Color)
-        text += HTMLStyle.cssText("h3", font: h3Font, color: h3Color)
-        text += HTMLStyle.cssText("h4", font: h4Font, color: h4Color)
-        text += HTMLStyle.cssText("h5", font: h5Font, color: h5Color)
-        text += HTMLStyle.cssText("h6", font: h6Font, color: h6Color)
+        text += HTMLStyle.cssText(
+            "body",
+            font: bodyFont,
+            color: bodyColor,
+            shouldCenterText: shouldCenterText
+        )
+        text += HTMLStyle.cssText(
+            "h1",
+            font: h1Font,
+            color: h1Color,
+            shouldCenterText: shouldCenterText
+        )
+        text += HTMLStyle.cssText(
+            "h2",
+            font: h2Font,
+            color: h2Color,
+            shouldCenterText: shouldCenterText
+        )
+        text += HTMLStyle.cssText(
+            "h3",
+            font: h3Font,
+            color: h3Color,
+            shouldCenterText: shouldCenterText
+        )
+        text += HTMLStyle.cssText(
+            "h4",
+            font: h4Font,
+            color: h4Color,
+            shouldCenterText: shouldCenterText
+        )
+        text += HTMLStyle.cssText(
+            "h5",
+            font: h5Font,
+            color: h5Color,
+            shouldCenterText: shouldCenterText
+        )
+        text += HTMLStyle.cssText(
+            "h6",
+            font: h6Font,
+            color: h6Color,
+            shouldCenterText: shouldCenterText
+        )
 
         text += """
-        a {
-          text-decoration: \(isLinkUnderlined ? "underline" : "none");
-        }
-        </style>
-        """
+            a {
+              text-decoration: \(isLinkUnderlined ? "underline" : "none");
+            }
+            </style>
+            """
 
         return text
     }
 }
 
 extension NSAttributedString {
-    /**
-     Initializes an NSAttributedString from HTML with the specified style.
-
-     - Note:
-     By default, when an attributed string is built from HTML, the font defaults
-     to Times New Roman with 11pt font. Setting a font on the UILabel or
-     UITextView displaying the attributed string does not override the font.
-
-     This initializer wraps the HTML string in a `<style>` tag so the attributed
-     string is styled according to the style argument.
-
-     - Parameters:
-       - htmlText: HTML text to generate the attributed string from
-       - style: Specifies how the HTML should be styled.
-     */
+    /// Initializes an NSAttributedString from HTML with the specified style.
+    ///
+    /// - Note:
+    /// By default, when an attributed string is built from HTML, the font defaults
+    /// to Times New Roman with 11pt font. Setting a font on the UILabel or
+    /// UITextView displaying the attributed string does not override the font.
+    ///
+    /// This initializer wraps the HTML string in a `<style>` tag so the attributed
+    /// string is styled according to the style argument.
+    ///
+    /// - Parameters:
+    ///   - htmlText: HTML text to generate the attributed string from
+    ///   - style: Specifies how the HTML should be styled.
     convenience init(
         htmlText: String,
         style: HTMLStyle
     ) throws {
         let htmlTemplate = """
-        <html>
-            <head>\(style.styleElementText)</head>
-            <body>\(htmlText)</body>
-        </html>
-        """
+            <html>
+                <head>\(style.styleElementText)</head>
+                <body>\(htmlText)</body>
+            </html>
+            """
         let data = Data(htmlTemplate.utf8)
         try self.init(
             data: data,
             options: [
                 .documentType: NSAttributedString.DocumentType.html,
-                .characterEncoding: String.Encoding.utf8.rawValue
+                .characterEncoding: String.Encoding.utf8.rawValue,
             ],
             documentAttributes: nil
         )
     }
 }
 
-private extension UIColor {
-    var cssValue: String {
+extension UIColor {
+    fileprivate var cssValue: String {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0

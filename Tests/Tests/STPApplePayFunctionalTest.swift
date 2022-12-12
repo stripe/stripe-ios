@@ -1,6 +1,6 @@
 //
-//  STPApplePayTest.m
-//  Stripe
+//  STPApplePayFunctionalTest.swift
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 12/21/14.
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
@@ -9,8 +9,12 @@
 import PassKit
 import XCTest
 
-@testable import Stripe
-@testable import StripeApplePay
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeApplePay
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
     override func setUp() {
@@ -41,7 +45,8 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
                 ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(
                     of: "too long"
                 ).location != NSNotFound,
-                "Error is unrelated to 24-hour expiry: \(error)")
+                "Error is unrelated to 24-hour expiry: \(error)"
+            )
         }
         waitForExpectations(timeout: 5.0, handler: nil)
     }
@@ -69,11 +74,12 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
                 ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(
                     of: "too long"
                 ).location != NSNotFound,
-                "Error is unrelated to 24-hour expiry: \(error)")
+                "Error is unrelated to 24-hour expiry: \(error)"
+            )
         }
         waitForExpectations(timeout: 5.0, handler: nil)
     }
-    
+
     func testCreateSourceWithPayment() {
         let payment = STPFixtures.applePayPayment()
         let client = STPAPIClient(publishableKey: "pk_test_vOo1umqsYxSrP5UXfOeL3ecm")
@@ -96,7 +102,8 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
                 ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(
                     of: "too long"
                 ).location != NSNotFound,
-                "Error is unrelated to 24-hour expiry: \(error)")
+                "Error is unrelated to 24-hour expiry: \(error)"
+            )
         }
         waitForExpectations(timeout: 5.0, handler: nil)
     }

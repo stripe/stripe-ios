@@ -1,0 +1,161 @@
+"+ Add" = "+ Hozzáadás";
+
+"Add a card" = "Kártya hozzáadása";
+
+"Add a payment method" = "Fizetési mód hozzáadása";
+
+"Add bank account" = "Bankszámla hozzáadása";
+
+"Add new payment method" = "Új fizetési mód hozzáadása";
+
+"Add your payment information" = "Fizetési adatok megadása";
+
+"Are you sure you want to remove this card?" = "Biztosan törli ezt a kártyát?";
+
+"Are you sure you want to remove this linked account?" = "Biztosan törli ezt a kapcsolt számlát?";
+
+"Back" = "Vissza";
+
+"Bank account" = "Bankszámla";
+
+"Buy now or pay later with Klarna." = "Megvásárlás most, vagy fizetés később Klarnával.";
+
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
+
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
+
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A Linkhez történő csatlakozással Őn elfogadja a <terms>feltételeket</terms> és az </privacy>adatvédelmi szabályzatot<privacy>.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Fizetési adatainak megadásával és a fizetés megerősítésével Ön felhatalmazza (A) a(z) %@ céget és a Stripe-ot, fizetési szolgáltatónkat, hogy utasításokat küldjön a bankjának, hogy megterhelje a számláját, és (B) bankját, hogy az utasításoknak megfelelően megterhelje a számláját. A jogai részeként Ön jogosult a bankjától a velük kötött megállapodás feltételei szerinti visszatérítésre. A visszatérítést a számla megterhelésének napjától számított 8 héten belül kell igényelni. Jogait egy, a bankjától beszerezhető nyilatkozat tartalmazza. Beleegyezik abba, hogy a jövőbeni terhelésekről értesítést kap, legfeljebb 2 nappal azok bekövetkezése előtt.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
+
+"Change email" = "E-mail-cím módosítása";
+
+"Choose a payment method" = "Fizetési mód választása";
+
+"Close card scanner" = "Kártyabeolvasó bezárása";
+
+"Code field" = "Kódmező";
+
+"Code sent" = "Kód elküldve";
+
+"Default" = "Alapértelmezett";
+
+"Double tap to edit" = "A szerkesztéshez koppintson kétszer";
+
+"EPS Bank" = "EPS Bank";
+
+"Enter address manually" = "Cím megadása kézzel";
+
+"Enter the code sent to %@ to use Link to pay by default." = "A Link alapértelmezett fizetési módként történő használatához adja meg a(z) %@ számra küldött kódot";
+
+"Enter your verification code" = "Adja meg az ellenőrző kódot";
+
+"For security, please re-enter your card’s security code." = "Biztonsági okból adja meg újra kártyája biztonsági kódját.";
+
+"IBAN" = "IBAN";
+
+"Join Link" = "Csatlakozás a Linkhez";
+
+"Log out of Link" = "Kijelentkezés a Link";
+
+"Not %@?" = "Nem a(z) %@?";
+
+"Or" = "vagy";
+
+"Or pay using" = "Vagy fizetés a következővel:";
+
+"Or pay with a card" = "Vagy fizetés kártyával";
+
+"Pay %@" = "%@ kifizetése";
+
+"Pay another way" = "Fizetés más módon";
+
+"Pay faster at %@ and thousands of merchants." = "Gyorsabban fizethet a(z) %@ számára és még ezernyi kereskedőnek.";
+
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Fizetés <num_installments/>, egyenként <installment_price/> összegű kamatmentes részletben <img/> használatával";
+
+"Pay later with Klarna." = "Fizetés később Klarnával.";
+
+"Pay over time with %@" = "Fizessen később a következővel: %@";
+
+"Pay using" = "Fizetés a következővel:";
+
+"Pay with %@" = "%@ fizetési mód";
+
+"Pay with your bank account in just a few steps." = "Fizessen egyszerűen a bankszámlájával.";
+
+"Payment" = "Fizetés";
+
+"Payment methods" = "Fizetési módok";
+
+"Point the camera at your card." = "Tegye a kártyát a kamera elé.";
+
+"Processing..." = "Feldolgozás...";
+
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
+"Remove %1$@ ending in %2$@" = "%1$@ végződésének eltávolítása: %2$@";
+
+"Remove Card" = "Kártya eltávolítása";
+
+"Remove card" = "Kártya törlése";
+
+"Remove linked account" = "Kapcsolt számla törlése";
+
+"Resend code" = "Kód újraküldése";
+
+"Save address" = "Cím mentése";
+
+"Save for future payments" = "Mentés a későbbi fizetésekhez";
+
+"Save my info for secure 1-click checkout" = "Adatok mentése a biztonságos egykattintásos fizetéshez";
+
+"Save this account for future %@ payments" = "Számla mentése a(z) %@ részére történő fizetésekhez";
+
+"Save this card for future %@ payments" = "A kártya mentése a(z) %@ részére történő fizetésekhez";
+
+"Secure 1⁠-⁠click checkout" = "Biztonságos egykattintásos fizetés";
+
+"Select your payment method" = "Fizetési mód kiválasztása";
+
+"Set as default" = "Legyen alapértelmezett";
+
+"Set as default payment method" = "Legyen ez az alapértelmezett fizetési mód";
+
+"Set up" = "Beállítás";
+
+"Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
+
+"Show menu" = "Menü megjelenítése";
+
+"Sign in to your Link account" = "Bejelentkezés a Link-fiókba";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe néhány munkanapon belül egy 0,01 $ összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a fizetés befejezéséhez a(z) %@ felé.";
+
+"Tap to close" = "Koppintson a bezáráshoz";
+
+"Tap to expand" = "Koppintson a kinyitáshoz";
+
+"The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
+
+"The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
+
+"The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Ez a kártya lejárt. Frissítse a kártyájat, vagy használjon másik fizetési módot.";
+
+"This is your default" = "Ez az alapértelmezett";
+
+"Too many attempts. Please try again in a few minutes." = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
+
+"Unavailable for this purchase" = "Nem érhető el ennél a vásárlásnál";
+
+"Update card" = "Kártya módosítása";
+
+"Use your saved info to check out faster" = "Mentett adatok használata a gyorsabb fizetéshez";
+
+"Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
+
+"iDEAL Bank" = "iDEAL bank";

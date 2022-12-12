@@ -12,6 +12,8 @@
 
 "BSB number" = "Номер BSB";
 
+"Billing address is same as shipping" = "Адрес выставления счетов такой же, как адрес доставки";
+
 "Cancel" = "Отмена";
 
 "City" = "Город";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Готово";
+
+"Edit" = "Редактировать";
 
 "Eircode" = "Почтовый индекс (Eircode)";
 

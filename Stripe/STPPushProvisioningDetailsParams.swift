@@ -1,6 +1,6 @@
 //
 //  STPPushProvisioningDetailsParams.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 9/26/18.
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
@@ -59,7 +59,10 @@ public class STPPushProvisioningDetailsParams: NSObject {
         nonceSignature: Data
     ) -> Self {
         return self.init(
-            cardId: cardId, certificates: certificates, nonce: nonce, nonceSignature: nonceSignature
+            cardId: cardId,
+            certificates: certificates,
+            nonce: nonce,
+            nonceSignature: nonceSignature
         )
     }
 

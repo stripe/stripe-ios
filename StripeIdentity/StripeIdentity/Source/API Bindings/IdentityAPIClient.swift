@@ -3,11 +3,12 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 10/26/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 protocol IdentityAPIClient: AnyObject {
     var verificationSessionId: String { get }
@@ -30,12 +31,10 @@ protocol IdentityAPIClient: AnyObject {
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
-    /**
-     The latest production-ready version of the VerificationPages API that the
-     SDK is capable of using.
-
-     - Note: Update this value when a new API version is ready for use in production.
-     */
+    /// The latest production-ready version of the VerificationPages API that the
+    /// SDK is capable of using.
+    ///
+    /// - Note: Update this value when a new API version is ready for use in production.
     static let productionApiVersion: Int = 2
 
     var betas: Set<String> {
@@ -45,11 +44,9 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     let apiClient: STPAPIClient
     let verificationSessionId: String
 
-    /**
-     The VerificationPages API version used to make all API requests.
-
-     - Note: This should only be modified when testing endpoints not yet in production.
-     */
+    /// The VerificationPages API version used to make all API requests.
+    ///
+    /// - Note: This should only be modified when testing endpoints not yet in production.
     var apiVersion = IdentityAPIClientImpl.productionApiVersion {
         didSet {
             apiClient.betas = betas

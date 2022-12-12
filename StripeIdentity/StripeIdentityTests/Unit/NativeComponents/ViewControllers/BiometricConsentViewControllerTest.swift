@@ -3,13 +3,14 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 2/14/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import XCTest
+
 @testable import StripeIdentity
 
-@available(iOS 13, *)
 final class BiometricConsentViewControllerTest: XCTestCase {
 
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
@@ -22,12 +23,14 @@ final class BiometricConsentViewControllerTest: XCTestCase {
 
         vc = try! BiometricConsentViewController(
             brandLogo: UIImage(),
-            consentContent: BiometricConsentViewControllerTest.mockVerificationPage.biometricConsent,
+            consentContent: BiometricConsentViewControllerTest.mockVerificationPage
+                .biometricConsent,
             sheetController: mockSheetController
         )
     }
 
     func testAccept() {
+        vc.scrolledToBottom = true
         // Tap accept button
         vc.flowViewModel.buttons.first?.didTap()
 

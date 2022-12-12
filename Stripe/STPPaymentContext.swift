@@ -1,6 +1,6 @@
 //
 //  STPPaymentContext.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 4/20/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -26,7 +26,9 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     /// and modify its Stripe customer. - seealso: STPCustomerContext.h
     /// - Returns: the newly-instantiated payment context
     @objc
-    public convenience init(customerContext: STPCustomerContext) {
+    public convenience init(
+        customerContext: STPCustomerContext
+    ) {
         self.init(apiAdapter: customerContext)
     }
 
@@ -51,7 +53,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         self.init(
             apiAdapter: customerContext,
             configuration: configuration,
-            theme: theme)
+            theme: theme
+        )
     }
 
     /// Note: Instead of providing your own backend API adapter, we recommend using
@@ -60,11 +63,14 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     /// This is a convenience initializer; it is equivalent to calling
     /// `init(apiAdapter:apiAdapter configuration:STPPaymentConfiguration.shared theme:STPTheme.defaultTheme)`.
     @objc
-    public convenience init(apiAdapter: STPBackendAPIAdapter) {
+    public convenience init(
+        apiAdapter: STPBackendAPIAdapter
+    ) {
         self.init(
             apiAdapter: apiAdapter,
             configuration: STPPaymentConfiguration.shared,
-            theme: STPTheme.defaultTheme)
+            theme: STPTheme.defaultTheme
+        )
     }
 
     /// Note: Instead of providing your own backend API adapter, we recommend using
@@ -279,7 +285,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         get {
             return paymentAmountModel.paymentAmount(
                 withCurrency: paymentCurrency,
-                shippingMethod: selectedShippingMethod)
+                shippingMethod: selectedShippingMethod
+            )
         }
         set(paymentAmount) {
             paymentAmountModel = STPPaymentContextAmountModel(amount: paymentAmount)
@@ -310,11 +317,13 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             return paymentAmountModel.paymentSummaryItems(
                 withCurrency: paymentCurrency,
                 companyName: configuration.companyName,
-                shippingMethod: selectedShippingMethod) ?? []
+                shippingMethod: selectedShippingMethod
+            ) ?? []
         }
         set(paymentSummaryItems) {
             paymentAmountModel = STPPaymentContextAmountModel(
-                paymentSummaryItems: paymentSummaryItems)
+                paymentSummaryItems: paymentSummaryItems
+            )
         }
     }
     /// The presentation style used for all view controllers presented modally by the context.
@@ -346,18 +355,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared
     public var apiClient: STPAPIClient = .shared
-    
-    /// The STPAPIClient instance to use to make API requests.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
+
     /// If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
     /// can in turn call this method to try loading again (if that hasn't been called,
     /// calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:`
@@ -387,7 +385,9 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                     if let paymentOptionsViewController1 = strongSelf.paymentOptionsViewController {
                         strongSelf.appropriatelyDismiss(paymentOptionsViewController1) {
                             strongSelf.delegate?.paymentContext(
-                                strongSelf, didFailToLoadWithError: error)
+                                strongSelf,
+                                didFailToLoadWithError: error
+                            )
                         }
                     }
                 } else {
@@ -410,7 +410,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 }
 
                 strongSelf.apiAdapter.listPaymentMethodsForCustomer(completion: {
-                    paymentMethods, error in
+                    paymentMethods,
+                    error in
                     guard let strongSelf2 = weakSelf else {
                         return
                     }
@@ -426,7 +427,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                             // Retrieve the last selected payment method saved by STPCustomerContext
                             (strongSelf2.apiAdapter as? STPCustomerContext)?
                                 .retrieveLastSelectedPaymentMethodIDForCustomer(completion: {
-                                    paymentMethodID, `_` in
+                                    paymentMethodID,
+                                    `_` in
                                     guard let strongSelf3 = weakSelf else {
                                         return
                                     }
@@ -434,11 +436,13 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                                         let paymentTuple = STPPaymentOptionTuple(
                                             filteredForUIWith: paymentMethods,
                                             selectedPaymentMethod: paymentMethodID,
-                                            configuration: strongSelf3.configuration)
+                                            configuration: strongSelf3.configuration
+                                        )
                                         strongSelf3.loadingPromise?.succeed(paymentTuple)
                                     } else {
                                         strongSelf3.loadingPromise?.fail(
-                                            STPErrorCode.invalidRequestError as! Error)
+                                            STPErrorCode.invalidRequestError as! Error
+                                        )
                                     }
                                 })
                         } else {
@@ -446,7 +450,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                                 let paymentTuple = STPPaymentOptionTuple(
                                     filteredForUIWith: paymentMethods,
                                     selectedPaymentMethod: self.defaultPaymentMethod,
-                                    configuration: strongSelf2.configuration)
+                                    configuration: strongSelf2.configuration
+                                )
                                 strongSelf2.loadingPromise?.succeed(paymentTuple)
                             }
                         }
@@ -503,7 +508,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
 
             navigationController?.pushViewController(
                 paymentOptionsViewController,
-                animated: transitionAnimationsEnabled())
+                animated: transitionAnimationsEnabled()
+            )
         }
     }
 
@@ -547,7 +553,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             addressViewController.navigationItem.largeTitleDisplayMode = largeTitleDisplayMode
             navigationController?.pushViewController(
                 addressViewController,
-                animated: transitionAnimationsEnabled())
+                animated: transitionAnimationsEnabled()
+            )
         }
     }
 
@@ -583,7 +590,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 strongSelf.state = .requestingPayment
                 let result = STPPaymentResult(paymentOption: strongSelf.selectedPaymentOption!)
                 strongSelf.delegate?.paymentContext(self, didCreatePaymentResult: result) {
-                    status, error in
+                    status,
+                    error in
                     stpDispatchToMainThreadIfNecessary({
                         strongSelf.didFinish(with: status, error: error)
                     })
@@ -596,29 +604,41 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 strongSelf.state = .requestingPayment
                 let paymentRequest = strongSelf.buildPaymentRequest()
                 let shippingAddressHandler: STPShippingAddressSelectionBlock = {
-                    shippingAddress, completion in
+                    shippingAddress,
+                    completion in
                     // Apple Pay always returns a partial address here, so we won't
                     // update self.shippingAddress or self.shippingMethods
                     if strongSelf.delegate?.responds(
                         to: #selector(
                             STPPaymentContextDelegate.paymentContext(
-                                _:didUpdateShippingAddress:completion:)))
+                                _:
+                                didUpdateShippingAddress:
+                                completion:
+                            ))
+                    )
                         ?? false
                     {
                         strongSelf.delegate?.paymentContext?(
-                            strongSelf, didUpdateShippingAddress: shippingAddress
+                            strongSelf,
+                            didUpdateShippingAddress: shippingAddress
                         ) { status, _, shippingMethods, _ in
                             completion(
-                                status, shippingMethods ?? [], strongSelf.paymentSummaryItems)
+                                status,
+                                shippingMethods ?? [],
+                                strongSelf.paymentSummaryItems
+                            )
                         }
                     } else {
                         completion(
-                            .valid, strongSelf.shippingMethods ?? [], strongSelf.paymentSummaryItems
+                            .valid,
+                            strongSelf.shippingMethods ?? [],
+                            strongSelf.paymentSummaryItems
                         )
                     }
                 }
                 let shippingMethodHandler: STPShippingMethodSelectionBlock = {
-                    shippingMethod, completion in
+                    shippingMethod,
+                    completion in
                     strongSelf.selectedShippingMethod = shippingMethod
                     strongSelf.delegate?.paymentContextDidChange(strongSelf)
                     completion(self.paymentSummaryItems)
@@ -634,12 +654,15 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                         let customerContext = strongSelf.apiAdapter as? STPCustomerContext
                         if let shippingAddress1 = strongSelf.shippingAddress {
                             customerContext?.updateCustomer(
-                                withShippingAddress: shippingAddress1, completion: nil)
+                                withShippingAddress: shippingAddress1,
+                                completion: nil
+                            )
                         }
                     }
                 }
                 let applePayPaymentMethodHandler: STPApplePayPaymentMethodHandlerBlock = {
-                    paymentMethod, completion in
+                    paymentMethod,
+                    completion in
                     strongSelf.apiAdapter.attachPaymentMethod(toCustomer: paymentMethod) {
                         attachPaymentMethodError in
                         stpDispatchToMainThreadIfNecessary({
@@ -648,9 +671,11 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                             } else {
                                 let result = STPPaymentResult(paymentOption: paymentMethod)
                                 strongSelf.delegate?.paymentContext(
-                                    strongSelf, didCreatePaymentResult: result
+                                    strongSelf,
+                                    didCreatePaymentResult: result
                                 ) {
-                                    status, error in
+                                    status,
+                                    error in
                                     // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                                     completion(status, error)
                                 }
@@ -677,12 +702,14 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                                 strongSelf.didFinish(with: status, error: error)
                             }
                             strongSelf.applePayVC = nil
-                        })
+                        }
+                    )
                 }
                 if let applePayVC1 = strongSelf.applePayVC {
                     strongSelf.hostViewController?.present(
                         applePayVC1,
-                        animated: strongSelf.transitionAnimationsEnabled())
+                        animated: strongSelf.transitionAnimationsEnabled()
+                    )
                 }
             }
         }).onFailure({ error in
@@ -716,7 +743,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 }
                 return STPPaymentOptionTuple(
                     paymentOptions: paymentOptions,
-                    selectedPaymentOption: strongSelf.selectedPaymentOption)
+                    selectedPaymentOption: strongSelf.selectedPaymentOption
+                )
             }))!
     }
 
@@ -755,13 +783,15 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 largeTitleDisplayMode
 
             let navigationController = UINavigationController(
-                rootViewController: paymentOptionsViewController)
+                rootViewController: paymentOptionsViewController
+            )
             navigationController.navigationBar.stp_theme = theme
             navigationController.navigationBar.prefersLargeTitles = true
             navigationController.modalPresentationStyle = modalPresentationStyle
             hostViewController?.present(
                 navigationController,
-                animated: transitionAnimationsEnabled())
+                animated: transitionAnimationsEnabled()
+            )
         }
     }
 
@@ -795,7 +825,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             if self.state == .requestingPayment {
                 self.didFinish(
                     with: .userCancellation,
-                    error: nil)
+                    error: nil
+                )
             } else {
                 self.state = STPPaymentContextState.none
             }
@@ -853,13 +884,15 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             let addressViewController = STPShippingAddressViewController(paymentContext: self)
             addressViewController.navigationItem.largeTitleDisplayMode = largeTitleDisplayMode
             let navigationController = UINavigationController(
-                rootViewController: addressViewController)
+                rootViewController: addressViewController
+            )
             navigationController.navigationBar.stp_theme = theme
             navigationController.navigationBar.prefersLargeTitles = true
             navigationController.modalPresentationStyle = modalPresentationStyle
             hostViewController?.present(
                 navigationController,
-                animated: transitionAnimationsEnabled())
+                animated: transitionAnimationsEnabled()
+            )
         }
     }
 
@@ -871,7 +904,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             if self.state == .requestingPayment {
                 self.didFinish(
                     with: .userCancellation,
-                    error: nil)
+                    error: nil
+                )
             } else {
                 self.state = STPPaymentContextState.none
             }
@@ -886,11 +920,15 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     ) {
         if delegate?.responds(
             to: #selector(
-                STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:completion:)))
+                STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:completion:))
+        )
             ?? false
         {
             delegate?.paymentContext?(self, didUpdateShippingAddress: address) {
-                status, shippingValidationError, shippingMethods, selectedMethod in
+                status,
+                shippingValidationError,
+                shippingMethods,
+                selectedMethod in
                 self.shippingMethods = shippingMethods
                 completion(status, shippingValidationError, shippingMethods, selectedMethod)
             }
@@ -910,8 +948,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         selectedShippingMethod = method
         delegate?.paymentContextDidChange(self)
         if apiAdapter.responds(
-            to: #selector(STPCustomerContext.updateCustomer(withShippingAddress:completion:)))
-        {
+            to: #selector(STPCustomerContext.updateCustomer(withShippingAddress:completion:))
+        ) {
             if let shippingAddress = shippingAddress {
                 apiAdapter.updateCustomer?(withShippingAddress: shippingAddress, completion: nil)
             }
@@ -960,7 +998,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         if let requiredShippingAddressFields1 = configuration.requiredShippingAddressFields {
             shippingAddressIncomplete =
                 !(shippingAddress?.containsRequiredShippingAddressFields(
-                    requiredShippingAddressFields1)
+                    requiredShippingAddressFields1
+                )
                 ?? false)
         }
         let shippingMethodRequired =
@@ -968,7 +1007,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             && delegate?.responds(
                 to: #selector(
                     STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:completion:)
-                ))
+                )
+            )
                 ?? false
             && selectedShippingMethod == nil
         let verificationRequired =
@@ -994,7 +1034,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         delegate?.paymentContext(
             self,
             didFinishWith: status,
-            error: error)
+            error: error
+        )
     }
 
     func buildPaymentRequest() -> PKPaymentRequest? {
@@ -1004,19 +1045,23 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         }
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: appleMerchantIdentifier,
-            country: paymentCountry, currency: paymentCurrency)
+            country: paymentCountry,
+            currency: paymentCurrency
+        )
 
         let summaryItems = paymentSummaryItems
         paymentRequest.paymentSummaryItems = summaryItems
 
         let requiredFields = STPAddress.applePayContactFields(
-            from: configuration.requiredBillingAddressFields)
+            from: configuration.requiredBillingAddressFields
+        )
         paymentRequest.requiredBillingContactFields = requiredFields
 
         var shippingRequiredFields: Set<PKContactField>?
         if let requiredShippingAddressFields1 = configuration.requiredShippingAddressFields {
             shippingRequiredFields = STPAddress.pkContactFields(
-                fromStripeContactFields: requiredShippingAddressFields1)
+                fromStripeContactFields: requiredShippingAddressFields1
+            )
         }
         if let shippingRequiredFields = shippingRequiredFields {
             paymentRequest.requiredShippingContactFields = shippingRequiredFields
@@ -1048,13 +1093,18 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             return .shipping
         case .delivery:
             return .delivery
+        @unknown default:
+            fatalError()
         }
     }
 
     func artificiallyRetain(_ host: NSObject) {
         objc_setAssociatedObject(
-            host, UnsafeRawPointer(&kSTPPaymentCoordinatorAssociatedObjectKey), self,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            host,
+            UnsafeRawPointer(&kSTPPaymentCoordinatorAssociatedObjectKey),
+            self,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
 
     // MARK: - STPAuthenticationContext

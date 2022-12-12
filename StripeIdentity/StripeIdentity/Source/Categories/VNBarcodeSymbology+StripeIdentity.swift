@@ -3,22 +3,23 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 4/14/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 import Vision
 
 extension VNBarcodeSymbology {
-    /**
-     Initializes a barcode symbology from a string value.
-
-     - Parameters:
-       - string: A case-insensitive string value of the symbology.
-
-     - Returns: A matching symbology or nil if no matching symbology exists.
-     */
-    init?(fromStringValue string: String) {
-        switch (string.lowercased()) {
+    /// Initializes a barcode symbology from a string value.
+    ///
+    /// - Parameters:
+    ///   - string: A case-insensitive string value of the symbology.
+    ///
+    /// - Returns: A matching symbology or nil if no matching symbology exists.
+    init?(
+        fromStringValue string: String
+    ) {
+        switch string.lowercased() {
         case "aztec":
             self = .aztec
         case "codabar":

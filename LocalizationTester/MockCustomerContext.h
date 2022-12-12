@@ -7,6 +7,8 @@
 //
 
 @import Stripe;
+@import StripePayments;
+@import StripePaymentsUI;
 
 @import Foundation;
 

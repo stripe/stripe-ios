@@ -3,18 +3,17 @@
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 12/3/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import AVKit
+import Foundation
 
 @_spi(STP) public protocol CameraPermissionsManagerProtocol {
-    /**
-     Completion block called when done requesting permissions.
-
-     - Parameter granted: If camera permissions are granted for the app.
-       Value is `nil` if the authorization status cannot be determined.
-     */
+    /// Completion block called when done requesting permissions.
+    ///
+    /// - Parameter granted: If camera permissions are granted for the app.
+    ///   Value is `nil` if the authorization status cannot be determined.
     typealias CompletionBlock = (_ granted: Bool?) -> Void
 
     var hasCameraAccess: Bool { get }
@@ -38,23 +37,21 @@ import AVKit
         // Use shared instance instead of init
     }
 
-    /**
-     Requests camera permissions and calls completion block with result after retrieving them.
-
-     - Parameters:
-       - completion:
-       - queue: DispatchQueue to complete the
-
-     - Note:
-     If the user has already granted or denied camera permissions to the app,
-     this callback will respond immediately after `requestCameraAccess` is
-     called on the video feed and `showedPrompt` will be false.
-
-     If the user has not yet granted or denied camera permissions to the app,
-     they will be prompted to do so. This callback will respond after the user
-     selects a response and `showedPrompt` will be true.
-
-     */
+    /// Requests camera permissions and calls completion block with result after retrieving them.
+    ///
+    /// - Parameters:
+    ///   - completion:
+    ///   - queue: DispatchQueue to complete the
+    ///
+    /// - Note:
+    /// If the user has already granted or denied camera permissions to the app,
+    /// this callback will respond immediately after `requestCameraAccess` is
+    /// called on the video feed and `showedPrompt` will be false.
+    ///
+    /// If the user has not yet granted or denied camera permissions to the app,
+    /// they will be prompted to do so. This callback will respond after the user
+    /// selects a response and `showedPrompt` will be true.
+    ///
     public func requestCameraAccess(
         completeOnQueue queue: DispatchQueue = .main,
         completion: @escaping CompletionBlock
@@ -70,12 +67,15 @@ import AVKit
             wrappedCompletion(true)
 
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
-                wrappedCompletion(granted)
-            })
+            AVCaptureDevice.requestAccess(
+                for: .video,
+                completionHandler: { granted in
+                    wrappedCompletion(granted)
+                }
+            )
 
         case .restricted,
-             .denied:
+            .denied:
             wrappedCompletion(false)
 
         default:

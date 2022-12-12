@@ -3,10 +3,12 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 12/10/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import CoreImage
+import XCTest
+
 @testable import StripeIdentity
 
 final class CGImage_StripeIdentityUnitTest: XCTestCase {
@@ -92,7 +94,10 @@ final class CGImage_StripeIdentityUnitTest: XCTestCase {
         let pixelPadding: CGFloat = 100
 
         let expectedCropArea = CGRect(x: 100, y: 100, width: 400, height: 400)
-        let actualCropArea = cgImageLandscape.computePixelCropArea(normalizedRegion: normalizedRegion, pixelPadding: pixelPadding)
+        let actualCropArea = cgImageLandscape.computePixelCropArea(
+            normalizedRegion: normalizedRegion,
+            pixelPadding: pixelPadding
+        )
 
         XCTAssertEqual(round(actualCropArea.minX), expectedCropArea.minX)
         XCTAssertEqual(round(actualCropArea.minY), expectedCropArea.minY)
@@ -191,8 +196,8 @@ final class CGImage_StripeIdentityUnitTest: XCTestCase {
     }
 }
 
-private extension CGImage_StripeIdentityUnitTest {
-    func makeImage(ofSize size: CGSize) -> CGImage {
+extension CGImage_StripeIdentityUnitTest {
+    fileprivate func makeImage(ofSize size: CGSize) -> CGImage {
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
 

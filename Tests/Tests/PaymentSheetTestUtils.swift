@@ -6,9 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) @testable import Stripe
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripeUICore
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class PaymentSheetTestUtils {
     // Copy and pasted from PaymentSheetSnapshotTests
@@ -19,14 +21,15 @@ class PaymentSheetTestUtils {
         var font = PaymentSheet.Appearance.Font()
         font.sizeScaleFactor = 0.85
         font.base = UIFont(name: "AvenirNext-Regular", size: 12)!
-        
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
-        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .orange,
-                                                           opacity: 0.5,
-                                                          offset: CGSize(width: 0, height: 2),
-                                                                     radius: 4)
+        appearance.shadow = PaymentSheet.Appearance.Shadow(
+            color: .orange,
+            opacity: 0.5,
+            offset: CGSize(width: 0, height: 2),
+            radius: 4
+        )
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()
@@ -44,7 +47,7 @@ class PaymentSheetTestUtils {
 
         appearance.font = font
         appearance.colors = colors
-        
+
         return appearance
     }
 }

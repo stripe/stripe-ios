@@ -1,6 +1,6 @@
 //
 //  STPCoreTableViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Brian Dorfman on 1/6/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -43,7 +43,10 @@ public class STPCoreTableViewController: STPCoreScrollViewController {
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        heightForHeaderInSection section: Int
+    )
         -> CGFloat
     {
         return 0.01

@@ -1,6 +1,6 @@
 //
 //  Address.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 8/9/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -37,7 +37,7 @@ struct StripeContact {
 
     /// The email of the address (e.g. "jane@doe.com")
     public var email: String?
-    
+
     internal var givenName: String?
     internal var familyName: String?
 }

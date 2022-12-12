@@ -6,10 +6,14 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import XCTest
 
-@_spi(STP) import StripeCore
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 final class PaymentAnalyticTest: XCTestCase {
 
@@ -18,12 +22,11 @@ final class PaymentAnalyticTest: XCTestCase {
             event: .cardScanCancelled,
             paymentConfiguration: STPPaymentConfiguration(),
             productUsage: [
-                STPPaymentContext.stp_analyticsIdentifier,
+                STPPaymentContext.stp_analyticsIdentifier
             ],
             additionalParams: [:]
         )
 
-        XCTAssertEqual(analytic.params["ui_usage_level"] as? String, "full")
         XCTAssertNotNil(analytic.params["apple_pay_enabled"] as? NSNumber)
         XCTAssertNotNil(analytic.params["ocr_type"] as? String)
     }

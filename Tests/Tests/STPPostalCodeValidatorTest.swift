@@ -1,11 +1,15 @@
 //
 //  STPPostalCodeValidatorTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 4/14/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPostalCodeValidatorTest: XCTestCase {
     func testValidUSPostalCodes() {
@@ -14,8 +18,10 @@ class STPPostalCodeValidatorTest: XCTestCase {
             XCTAssertEqual(
                 STPPostalCodeValidator.validationState(
                     forPostalCode: code,
-                    countryCode: "US"),
-                .valid)
+                    countryCode: "US"
+                ),
+                .valid
+            )
         }
     }
 
@@ -25,8 +31,10 @@ class STPPostalCodeValidatorTest: XCTestCase {
             XCTAssertEqual(
                 STPPostalCodeValidator.validationState(
                     forPostalCode: code,
-                    countryCode: "US"),
-                .invalid)
+                    countryCode: "US"
+                ),
+                .invalid
+            )
         }
     }
 
@@ -36,8 +44,10 @@ class STPPostalCodeValidatorTest: XCTestCase {
             XCTAssertEqual(
                 STPPostalCodeValidator.validationState(
                     forPostalCode: code,
-                    countryCode: "US"),
-                .incomplete)
+                    countryCode: "US"
+                ),
+                .incomplete
+            )
         }
     }
 
@@ -47,8 +57,10 @@ class STPPostalCodeValidatorTest: XCTestCase {
             XCTAssertEqual(
                 STPPostalCodeValidator.validationState(
                     forPostalCode: code,
-                    countryCode: "UK"),
-                .valid)
+                    countryCode: "UK"
+                ),
+                .valid
+            )
         }
     }
 
@@ -58,31 +70,33 @@ class STPPostalCodeValidatorTest: XCTestCase {
             XCTAssertEqual(
                 STPPostalCodeValidator.validationState(
                     forPostalCode: code,
-                    countryCode: "UK"),
-                .incomplete)
+                    countryCode: "UK"
+                ),
+                .incomplete
+            )
         }
     }
-    
+
     func testPostalCodeIsRequiredForUPE_nil() {
         XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: nil))
     }
-    
+
     func testPostalCodeIsRequiredForUPE_empty() {
         XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: ""))
     }
-    
+
     func testPostalCodeIsRequiredForUPE_CA() {
         XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "CA"))
     }
-    
+
     func testPostalCodeIsRequiredForUPE_GB() {
         XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "GB"))
     }
-    
+
     func testPostalCodeIsRequiredForUPE_US() {
         XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "CA"))
     }
-    
+
     func testPostalCodeIsRequiredForUPE_DK() {
         XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "DK"))
     }

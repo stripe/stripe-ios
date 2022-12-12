@@ -3,19 +3,19 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 12/13/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import FBSnapshotTestCase
 import CoreImage
+import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
-/*
- For an overview of the expected results for these tests, see
- CGImage_StripeIdentitySnapshotTest.png
-
- Solid lines represent the region of interest (ROI) and dotted lines
- represent the expected crop area that includes padding.
- */
+// For an overview of the expected results for these tests, see
+// CGImage_StripeIdentitySnapshotTest.png
+//
+// Solid lines represent the region of interest (ROI) and dotted lines
+// represent the expected crop area that includes padding.
 final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
 
     // Image dimensions are 3024 × 4032
@@ -27,20 +27,18 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-//        recordMode = true
+        //        recordMode = true
     }
 
-    /*
-     Tests the case that the region of interest + padding are complete contained
-     inside the image bounds:
-         +-----------------+
-         |   + - - - - +   |
-         |   ┆ +-----+ ┆   |
-         |   ┆ | ROI | ┆   |
-         |   ┆ +-----+ ┆   |
-         |   + - - - - +   |
-         +-----------------+
-     */
+    // Tests the case that the region of interest + padding are complete contained
+    // inside the image bounds:
+    //     +-----------------+
+    //     |   + - - - - +   |
+    //     |   ┆ +-----+ ┆   |
+    //     |   ┆ | ROI | ┆   |
+    //     |   ┆ +-----+ ┆   |
+    //     |   + - - - - +   |
+    //     +-----------------+
     func testCropContained() throws {
         let regionOfInterestPixels = CGRect(x: 1262, y: 1766, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
@@ -52,18 +50,16 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
         snapshotVerifyImage(croppedImage)
     }
 
-    /*
-     Tests the case that the region of interest is contained inside the image
-     bounds, but the padding is not:
-       + - - - - - - +
-       ┆ +-----------------+
-       ┆ | +-----+   ┆     |
-       ┆ | | ROI |   ┆     |
-       ┆ | +-----+   ┆     |
-       ┆ |           ┆     |
-       + | - - - - - +     |
-         +-----------------+
-     */
+    // Tests the case that the region of interest is contained inside the image
+    // bounds, but the padding is not:
+    //   + - - - - - - +
+    //   ┆ +-----------------+
+    //   ┆ | +-----+   ┆     |
+    //   ┆ | | ROI |   ┆     |
+    //   ┆ | +-----+   ┆     |
+    //   ┆ |           ┆     |
+    //   + | - - - - - +     |
+    //     +-----------------+
     func testCropPaddingUncontainedTopLeft() throws {
         let regionOfInterestPixels = CGRect(x: 100, y: 100, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
@@ -75,18 +71,16 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
         snapshotVerifyImage(croppedImage)
     }
 
-    /*
-     Tests the case that the region of interest is contained inside the image
-     bounds, but the padding is not:
-         +-----------------+
-         |     + - - - - - | +
-         |     ┆           | ┆
-         |     ┆   +-----+ | ┆
-         |     ┆   | ROI | | ┆
-         |     ┆   +-----+ | ┆
-         +-----------------+ ┆
-               + - - - - - - +
-     */
+    // Tests the case that the region of interest is contained inside the image
+    // bounds, but the padding is not:
+    //     +-----------------+
+    //     |     + - - - - - | +
+    //     |     ┆           | ┆
+    //     |     ┆   +-----+ | ┆
+    //     |     ┆   | ROI | | ┆
+    //     |     ┆   +-----+ | ┆
+    //     +-----------------+ ┆
+    //           + - - - - - - +
     func testCropPaddingUncontainedBottomRight() throws {
         let regionOfInterestPixels = CGRect(x: 2424, y: 3432, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
@@ -98,19 +92,17 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
         snapshotVerifyImage(croppedImage)
     }
 
-    /*
-     Tests the case that the region of interest is contained outside the
-     image:
-               +-----------------+
-               |                 |
-         + - - - - - - +         |
-         ┆  +--|---+   ┆         |
-         ┆  |  |   |   ┆         |
-         ┆  | R|OI |   ┆         |
-         ┆  |  +---|-------------+
-         ┆  +------+   ┆
-         + - - - - - - +
-     */
+    // Tests the case that the region of interest is contained outside the
+    // image:
+    //           +-----------------+
+    //           |                 |
+    //     + - - - - - - +         |
+    //     ┆  +--|---+   ┆         |
+    //     ┆  |  |   |   ┆         |
+    //     ┆  | R|OI |   ┆         |
+    //     ┆  |  +---|-------------+
+    //     ┆  +------+   ┆
+    //     + - - - - - - +
     func testCropROIUncontainedBottomLeft() throws {
         let regionOfInterestPixels = CGRect(x: -20, y: 3552, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
@@ -122,19 +114,17 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
         snapshotVerifyImage(croppedImage)
     }
 
-    /*
-     Tests the case that the region of interest is contained outside the
-     image:
-                   + - - - - - - +
-                   ┆   +------+  ┆
-         +-------------|---+  |  ┆
-         |         ┆   | RO|I |  ┆
-         |         ┆   |   |  |  ┆
-         |         ┆   +---|--+  ┆
-         |         + - - - - - - +
-         |                 |
-         +-----------------+
-     */
+    // Tests the case that the region of interest is contained outside the
+    // image:
+    //               + - - - - - - +
+    //               ┆   +------+  ┆
+    //     +-------------|---+  |  ┆
+    //     |         ┆   | RO|I |  ┆
+    //     |         ┆   |   |  |  ┆
+    //     |         ┆   +---|--+  ┆
+    //     |         + - - - - - - +
+    //     |                 |
+    //     +-----------------+
     func testCropROIUncontainedTopRight() throws {
         let regionOfInterestPixels = CGRect(x: 2544, y: -20, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
@@ -147,9 +137,9 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
     }
 }
 
-private extension CGImage_StripeIdentitySnapshotTest {
+extension CGImage_StripeIdentitySnapshotTest {
     /// Uses `STPSnapshotVerifyView` to verify image by creating a `UIImageView`
-    func snapshotVerifyImage(
+    fileprivate func snapshotVerifyImage(
         _ image: CGImage?,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -162,7 +152,7 @@ private extension CGImage_StripeIdentitySnapshotTest {
     }
 
     /// Helper method to normalize rects into image coordinates
-    func imageNormalizeRect(for rect: CGRect) -> CGRect {
+    fileprivate func imageNormalizeRect(for rect: CGRect) -> CGRect {
         return CGRect(
             x: rect.minX / CGFloat(image.width),
             y: rect.minY / CGFloat(image.height),

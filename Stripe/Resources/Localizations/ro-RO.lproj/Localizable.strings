@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ se termină în %2$@";
-
 "%@ - Offline" = "%@ - Offline";
 
-"+ Add" = "+ Adăugare";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "AU BECS Direct Debit";
 
 "Add New Card…" = "Adăugare card nou...";
 
 "Add a Card" = "Adăugare card";
 
-"Add a card" = "Adăugare card";
-
-"Add a payment method" = "Adăugați o metodă de plată";
-
-"Add bank account" = "Adăugare cont bancar";
-
-"Add new payment method" = "Adăugare metodă de plată nouă";
-
-"Add your payment information" = "Adăugați informațiile dvs. privind plata";
-
-"Address line 2 (optional)" = "Rândul 2 pentru adresă (opțional)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Apartament";
 
-"Are you sure you want to remove this card?" = "Sigur doriți să eliminați acest card?";
-
-"Are you sure you want to remove this linked account?" = "Sigur doriți să eliminați acest cont asociat?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "Număr BSB";
-
-"Back" = "Înapoi";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Bancă";
-
-"Bank Account" = "Cont bancar";
-
-"Bank account" = "Cont bancar";
-
-"Billing Address" = "Adresa de facturare";
-
-"Billing address" = "Adresă de facturare";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Cumpărați acum sau plătiți mai târziu folosind Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu acești <terms>termeni</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prin accesarea link-ului de asociere, sunteți de acord cu <terms>Termenii</terms> și <privacy>Politica de confidențialitate</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Prin furnizarea detaliilor contului dvs. bancar și confirmarea acestei plăți, sunteți de acord cu această Solicitare Direct Debit și cu <terms>acordul de serviciu privind Solicitarea Direct Debit</terms> și autorizați Plățile Stripe Australia Pty Ltd ACN 160 180 343 număr ID utilizator Direct Debit 507156 („Stripe”) să vă debiteze contul prin intermediul Sistemului electronic de compensare colectivă (BECS) în numele %@ („Comerciantul”) pentru orice sume comunicate separat către dvs. de către Comerciant. Certificați faptul că sunteți fie un titular de cont, fie un semnatar autorizat în contul enumerat mai sus.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Prin furnizarea informațiilor dvs. privind plata și confirmarea acestei plăți, autorizați (A) %@ și Stripe, furnizorul nostru de servicii de plată, să trimită instrucțiuni băncii dvs. pentru a vă debita contul și pentru ca (B) banca dvs. să facă acest lucru în conformitate cu instrucțiunile respective. Conform drepturilor dvs., aveți dreptul la o rambursare din partea băncii dvs. în conformitate cu termenii și condițiile acordului dvs. cu aceasta. O rambursare trebuie revendicată în termen de opt săptămâni de la data debitării contului. Drepturile dvs. sunt explicate într-o declarație pe care o puteți obține de la bancă. Sunteți de acord să primiți notificări pentru debitări viitoare cu până la două zile înainte de efectuarea acestora.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin salvarea contului dvs. bancar pentru %@ sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
-
-"CVC" = "Cod CVC";
-
-"CVV" = "Cod CVC";
-
-"Card" = "Număr card";
-
-"Card information" = "Informații privind cardul";
-
-"Card number" = "Număr card";
-
-"Change email" = "Schimbați adresa de e-mail";
-
-"Choose a payment method" = "Alegeți o metodă de plată";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Închidere scaner card";
-
-"Code field" = "Câmp pentru introducerea codului";
-
-"Code sent" = "Codul a fost trimis";
-
 "Contact" = "Detalii de contact";
-
-"Default" = "Implicit";
 
 "Delivery" = "Informații privind livrarea";
 
 "Delivery Address" = "Adresa de livrare";
 
-"Double tap to edit" = "Atingeți de două ori pentru a edita";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "Banca EPS";
-
-"Edit" = "Editare";
-
-"Enter address manually" = "Introduceți adresa manual";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Introduceți codul trimis la %@ pentru a utiliza Link ca metodă de plată implicită";
-
-"Enter your verification code" = "Introduceți codul de verificare";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Din motive de securitate, vă rugăm să introduceți din nou codul de securitate al cardului dvs.";
-
 "Free" = "Expediere gratuită";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Adresa de expediere nu este validă";
 
-"Invalid data." = "Datele nu sunt valide.";
-
-"Join Link" = "Înscrieți-vă în Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Se încarcă...";
-
-"Log out of Link" = "Deconectare de la Link";
-
-"MM / YY" = "LL/AA";
-
-"MM/YY" = "LL/AA";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "Netbanking";
-
 "Next" = "Următorul";
-
-"Not %@?" = "Nu este %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Servicii bancare electronice (FPX)";
 
-"Or" = "Sau";
-
-"Or pay using" = "Sau folosiți ca metodă de plată";
-
-"Or pay with a card" = "Sau folosiți ca metodă de plată un card";
-
-"P24" = "P24";
-
-"Pay %@" = "Plătiți %@";
-
-"Pay another way" = "Folosiți altă metodă de plată";
-
-"Pay faster at %@ and thousands of merchants." = "Plătiți mai rapid la %@ și alți mii de comercianți.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Plătiți în <num_installments/> plăți fără dobândă a câte <installment_price/> cu <img/>";
-
-"Pay later with Klarna." = "Plătiți mai târziu folosind Klarna.";
-
-"Pay over time with %@" = "Folosiți ca metodă de plată de-a lungul timpului %@";
-
-"Pay using" = "Plătiți folosind";
-
-"Pay with %@" = "Folosiți ca metodă de plată %@";
-
-"Pay with your bank account in just a few steps." = "Plătiți cu contul dvs. bancar în doar câțiva pași.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Plată";
-
 "Payment Method" = "Metoda de plată";
-
-"Payment methods" = "Metode de plată";
-
-"Point the camera at your card." = "Îndreptați camera spre cardul dvs.";
-
-"Postal Code" = "Cod poștal";
-
-"Processing..." = "Se procesează...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Banca Przelewy24";
-
-"Remove %1$@ ending in %2$@" = "Eliminați cardul %1$@ care se termină în %2$@";
-
-"Remove Card" = "Eliminare card";
-
-"Remove card" = "Eliminare card";
-
-"Remove linked account" = "Eliminare cont asociat";
-
-"Resend code" = "Retrimitere cod";
-
-"SEPA Debit" = "SEPA Debit";
-
-"SEPA Direct Debit" = "SEPA Direct Debit";
-
-"Save for future payments" = "Salvați pentru plăți viitoare";
-
-"Save my info for secure 1-click checkout" = "Salvează informațiile mele pentru o finalizare securizată a comenzii cu un singur clic";
-
-"Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
-
-"Save this card for future %@ payments" = "Salvați acest card pentru plăți viitoare către %@";
-
-"Secure 1⁠-⁠click checkout" = "Finalizare securizată a comenzii cu un singur clic";
-
-"Select your payment method" = "Selectați metoda de plată";
-
-"Set as default" = "Setați ca implicită";
-
-"Set as default payment method" = "Setați ca metodă de plată implicită";
-
-"Set up" = "Configurare";
 
 "Shipping" = "Expediere";
 
-"Shipping Address" = "Adresa de expediere";
-
 "Shipping Method" = "Metoda de expediere";
-
-"Show menu" = "Afișare meniu";
-
-"Sign in to your Link account" = "Conectați-vă la contul dvs. Link";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Ceva nu a mers bine la asocierea contului dvs.\nVă rugăm să încercați din nou mai târziu.";
-
-"State / Province / Region" = "Stat";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe va depune 0,01 USD în contul dvs. în decurs de 1-2 zile lucrătoare. Apoi veți primi un e-mail cu instrucțiuni pentru a finaliza plata către %@.";
-
-"Tap to close" = "Atingeți pentru a închide";
-
-"Tap to expand" = "Atingeți pentru a extinde";
-
-"The BSB you entered is invalid." = "Numărul BSB pe care l-ați introdus nu este valid.";
-
-"The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Codul IBAN pe care l-ați introdus nu este valid, \"%@\" nu este un cod de țară acceptat.";
-
-"The provided verification code has expired." = "Codul de verificare furnizat a expirat.";
-
-"The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Acest card a expirat. Actualizați datele cardului sau alegeți o altă metodă de plată.";
-
-"This is your default" = "Aceasta este setarea dvs. implicită";
-
-"Timed out authenticating your payment method -- try again" = "Timpul de autentificare a metodei dvs. de plată a expirat -- încercați din nou";
-
-"To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
-
-"Too many attempts. Please try again in a few minutes." = "Prea multe încercări. Vă rugăm să încercați din nou în câteva minute.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Cont bancar SUA";
-
-"Unavailable for this purchase" = "Nu este disponibilă pentru această achiziție";
-
-"Unknown" = "Necunoscut";
-
-"Update card" = "Actualizare card";
 
 "Use Billing" = "Utilizare adresă de facturare";
 
 "Use Delivery" = "Utilizare adresă de livrare";
 
 "Use Shipping" = "Utilizare adresă de expediere";
-
-"Use your saved info to check out faster" = "Folosiți informațiile dvs. salvate pentru a finaliza comanda mai rapid";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nu vă putem autentifica metoda de plată. Alegeți o altă metodă de plată și încercați din nou.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
-
-"Your ZIP is invalid." = "Codul dvs. poștal nu este valid.";
-
-"Your card number is incomplete." = "Numărul cardului dvs. nu este complet.";
-
-"Your card number is invalid." = "Numărul cardului dvs. nu este valid.";
-
-"Your card's expiration date is incomplete." = "Data de expirare a cardului dvs. nu este completă.";
-
-"Your card's expiration date is invalid." = "Data de expirare a cardului dvs. nu este validă.";
-
-"Your card's expiration month is invalid." = "Luna de expirare a cardului dvs. nu este validă.";
-
-"Your card's expiration year is invalid." = "Anul de expirare al cardului dvs. nu este valid.";
-
-"Your card's security code is incomplete." = "Codul de securitate al cardului dvs. nu este complet.";
-
-"Your card's security code is invalid." = "Codul de securitate al cardului dvs. nu este valid.";
-
-"Your postal code is invalid." = "Codul dvs. poștal nu este valid.";
-
-"ZIP Code" = "Cod poștal";
-
-"card number" = "număr card";
-
-"example@example.com" = "exemplu@exemplu.com";
-
-"expiration date" = "data de expirare";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL Bank";

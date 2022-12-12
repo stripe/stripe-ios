@@ -12,6 +12,8 @@
 
 "BSB number" = "Číslo BSB";
 
+"Billing address is same as shipping" = "Fakturační adresa je stejná jako dodací";
+
 "Cancel" = "Zrušit";
 
 "City" = "Město";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Hotovo";
+
+"Edit" = "Upravit";
 
 "Eircode" = "Eircode";
 

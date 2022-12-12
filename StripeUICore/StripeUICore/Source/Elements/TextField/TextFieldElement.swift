@@ -70,7 +70,7 @@ import UIKit
         let attributedText: NSAttributedString
         let keyboardProperties: KeyboardProperties
         let validationState: ValidationState
-        let logo: (lightMode: UIImage, darkMode: UIImage)?
+        let accessoryView: UIView?
         let shouldShowClearButton: Bool
         let theme: ElementsUITheme
     }
@@ -90,7 +90,7 @@ import UIKit
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
-            logo: configuration.logo(for: text),
+            accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
             theme: theme
         )
@@ -160,8 +160,8 @@ extension TextFieldElement: TextFieldViewDelegate {
             text = newText
             // Advance to the next field if text is maximum length and valid
             if text.count == configuration.maxLength(for: text), case .valid = validationState {
-                view.endEditing(true)
                 delegate?.continueToNextField(element: self)
+                view.resignFirstResponder()
             }
         }
         isEditing = view.isEditing

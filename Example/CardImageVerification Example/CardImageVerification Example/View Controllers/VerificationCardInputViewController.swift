@@ -65,11 +65,8 @@ extension VerificationCardInputViewController: UITextFieldDelegate {
 
     @objc
     func textDidChange() {
-        if iinTextField.text!.count == 6 && lastFourTextField.text!.count == 4 {
-            continueButton.updateButtonState(isLoading: false)
+        if lastFourTextField.text!.count == 4 {
             view.endEditing(true)
-        } else {
-            continueButton.updateButtonState(isLoading: true)
         }
     }
 

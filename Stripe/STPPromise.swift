@@ -1,6 +1,6 @@
 //
 //  STPPromise.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 4/20/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -29,12 +29,16 @@ class STPPromise<T>: NSObject {
     private var successCallbacks: [STPPromiseValueBlock] = []
     private var errorCallbacks: [STPPromiseErrorBlock] = []
 
-    convenience init(error: Error) {
+    convenience init(
+        error: Error
+    ) {
         self.init()
         self.fail(error)
     }
 
-    convenience init(value: T) {
+    convenience init(
+        value: T
+    ) {
         self.init()
         self.succeed(value)
     }

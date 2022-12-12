@@ -1,15 +1,16 @@
 //
 //  STPShippingAddressViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 8/29/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
 import PassKit
-import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// This view controller contains a shipping address collection form. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`. Depending on your configuration's shippingType, the view controller may present a shipping method selection form after the user enters an address.
 public class STPShippingAddressViewController: STPCoreTableViewController {
@@ -18,17 +19,24 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
     @objc
     public convenience init() {
         self.init(
-            configuration: STPPaymentConfiguration.shared, theme: STPTheme.defaultTheme,
+            configuration: STPPaymentConfiguration.shared,
+            theme: STPTheme.defaultTheme,
             currency: "",
-            shippingAddress: nil, selectedShippingMethod: nil, prefilledInformation: nil)
+            shippingAddress: nil,
+            selectedShippingMethod: nil,
+            prefilledInformation: nil
+        )
     }
 
     /// Initializes a new `STPShippingAddressViewController` with the given payment context and sets the payment context as its delegate.
     /// - Parameter paymentContext: The payment context to use.
     @objc(initWithPaymentContext:)
-    public convenience init(paymentContext: STPPaymentContext) {
+    public convenience init(
+        paymentContext: STPPaymentContext
+    ) {
         STPAnalyticsClient.sharedClient.addClass(
-            toProductUsageIfNecessary: STPShippingAddressViewController.self)
+            toProductUsageIfNecessary: STPShippingAddressViewController.self
+        )
 
         var billingAddress: STPAddress?
         weak var paymentOption = paymentContext.selectedPaymentOption
@@ -54,7 +62,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
             currency: paymentContext.paymentCurrency,
             shippingAddress: paymentContext.shippingAddress,
             selectedShippingMethod: paymentContext.selectedShippingMethod,
-            prefilledInformation: prefilledInformation)
+            prefilledInformation: prefilledInformation
+        )
 
         self.delegate = paymentContext
     }
@@ -68,7 +77,11 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
     ///   - selectedShippingMethod:    If set, the shipping methods view controller will use this method as the selected shipping method. If `selectedShippingMethod` is nil, the first shipping method in the array of methods returned by your delegate will be selected.
     ///   - prefilledInformation:      If set, the shipping address view controller will be pre-filled with this information. - seealso: STPUserInformation
     @objc(
-        initWithConfiguration:theme:currency:shippingAddress:selectedShippingMethod:
+        initWithConfiguration:
+        theme:
+        currency:
+        shippingAddress:
+        selectedShippingMethod:
         prefilledInformation:
     )
     public init(
@@ -80,10 +93,12 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         prefilledInformation: STPUserInformation?
     ) {
         STPAnalyticsClient.sharedClient.addClass(
-            toProductUsageIfNecessary: STPShippingAddressViewController.self)
+            toProductUsageIfNecessary: STPShippingAddressViewController.self
+        )
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         super.init(theme: theme)
         assert(
             (configuration.requiredShippingAddressFields?.count ?? 0) > 0,
@@ -96,7 +111,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         hasUsedBillingAddress = false
         addressViewModel = STPAddressViewModel(
             requiredShippingFields: configuration.requiredShippingAddressFields ?? [],
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         addressViewModel.delegate = self
         if let shippingAddress = shippingAddress {
             addressViewModel.address = shippingAddress
@@ -124,26 +140,36 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
                 previous = viewController
             }
             navigationController?.stp_pop(
-                to: previous, animated: true, completion: completion ?? {})
+                to: previous,
+                animated: true,
+                completion: completion ?? {}
+            )
         }
     }
 
     /// Use one of the initializers declared in this interface.
     @available(
-        *, unavailable, message: "Use one of the initializers declared in this interface instead."
+        *,
+        unavailable,
+        message: "Use one of the initializers declared in this interface instead."
     )
-    @objc public required init(theme: STPTheme?) {
+    @objc public required init(
+        theme: STPTheme?
+    ) {
         let configuration = STPPaymentConfiguration.shared
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
 
         super.init(theme: theme)
     }
 
     /// Use one of the initializers declared in this interface.
     @available(
-        *, unavailable, message: "Use one of the initializers declared in this interface instead."
+        *,
+        unavailable,
+        message: "Use one of the initializers declared in this interface instead."
     )
     @objc public required init(
         nibName nibNameOrNil: String?,
@@ -152,19 +178,25 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         let configuration = STPPaymentConfiguration.shared
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
     /// Use one of the initializers declared in this interface.
     @available(
-        *, unavailable, message: "Use one of the initializers declared in this interface instead."
+        *,
+        unavailable,
+        message: "Use one of the initializers declared in this interface instead."
     )
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         let configuration = STPPaymentConfiguration.shared
         addressViewModel = STPAddressViewModel(
             requiredBillingFields: configuration.requiredBillingAddressFields,
-            availableCountries: configuration.availableCountries)
+            availableCountries: configuration.availableCountries
+        )
         super.init(coder: aDecoder)
     }
 
@@ -203,7 +235,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
                     withDuration: 0.1,
                     animations: {
                         cell.alpha = loading ? 0.7 : 1.0
-                    })
+                    }
+                )
             }
         }
     }
@@ -223,12 +256,14 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
                 title: STPLocalizedString("Next", "Button to move to the next text entry field"),
                 style: .done,
                 target: self,
-                action: #selector(next(_:)))
+                action: #selector(next(_:))
+            )
         case .delivery, .none, .some:
             nextItem = UIBarButtonItem(
                 barButtonSystemItem: .done,
                 target: self,
-                action: #selector(next(_:)))
+                action: #selector(next(_:))
+            )
         }
         self.nextItem = nextItem
         stp_navigationItemProxy?.rightBarButtonItem = nextItem
@@ -236,23 +271,30 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         stp_navigationItemProxy?.rightBarButtonItem?.accessibilityIdentifier =
             "ShippingViewControllerNextButtonIdentifier"
 
-        let imageView = UIImageView(image: STPImageLibrary.largeShippingImage())
+        let imageView = UIImageView(image: STPLegacyImageLibrary.largeShippingImage())
         imageView.contentMode = .center
         imageView.frame = CGRect(
-            x: 0, y: 0, width: view.bounds.size.width,
-            height: imageView.bounds.size.height + (57 * 2))
+            x: 0,
+            y: 0,
+            width: view.bounds.size.width,
+            height: imageView.bounds.size.height + (57 * 2)
+        )
         self.imageView = imageView
         tableView?.tableHeaderView = imageView
 
         activityIndicator = STPPaymentActivityIndicatorView(
-            frame: CGRect(x: 0, y: 0, width: 20.0, height: 20.0))
+            frame: CGRect(x: 0, y: 0, width: 20.0, height: 20.0)
+        )
 
         tableView?.dataSource = self
         tableView?.delegate = self
         tableView?.reloadData()
         view.addGestureRecognizer(
             UITapGestureRecognizer(
-                target: self, action: #selector(NSMutableAttributedString.endEditing)))
+                target: self,
+                action: #selector(NSMutableAttributedString.endEditing)
+            )
+        )
 
         let headerView = STPSectionHeaderView()
         headerView.theme = theme
@@ -261,12 +303,16 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         }
         headerView.button?.setTitle(
             STPLocalizedString(
-                "Use Billing", "Button to fill shipping address from billing address."),
-            for: .normal)
+                "Use Billing",
+                "Button to fill shipping address from billing address."
+            ),
+            for: .normal
+        )
         headerView.button?.addTarget(
             self,
             action: #selector(useBillingAddress(_:)),
-            for: .touchUpInside)
+            for: .touchUpInside
+        )
         headerView.button?.accessibilityIdentifier = "ShippingAddressViewControllerUseBillingButton"
         var buttonVisible = false
         if let requiredFields = configuration?.requiredShippingAddressFields {
@@ -310,7 +356,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         super.viewDidAppear(animated)
         stp_beginObservingKeyboardAndInsettingScrollView(
             tableView,
-            onChange: nil)
+            onChange: nil
+        )
         firstEmptyField()?.becomeFirstResponder()
     }
 
@@ -333,7 +380,10 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         case .shipping:
             loading = true
             delegate?.shippingAddressViewController(self, didEnter: address) {
-                status, shippingValidationError, shippingMethods, selectedShippingMethod in
+                status,
+                shippingValidationError,
+                shippingMethods,
+                selectedShippingMethod in
                 self.loading = false
                 if status == .valid {
                     if (shippingMethods?.count ?? 0) > 0 {
@@ -345,18 +395,22 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
                                 shippingMethods: shippingMethods,
                                 selectedShippingMethod: selectedShippingMethod,
                                 currency: self.currency ?? "",
-                                theme: self.theme)
+                                theme: self.theme
+                            )
                         }
                         nextViewController?.delegate = self
                         if let nextViewController = nextViewController {
                             self.navigationController?.pushViewController(
-                                nextViewController, animated: true)
+                                nextViewController,
+                                animated: true
+                            )
                         }
                     } else {
                         self.delegate?.shippingAddressViewController(
                             self,
                             didFinishWith: address,
-                            shippingMethod: nil)
+                            shippingMethod: nil
+                        )
                     }
                 } else {
                     self.handleShippingValidationError(shippingValidationError)
@@ -366,7 +420,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
             delegate?.shippingAddressViewController(
                 self,
                 didFinishWith: address,
-                shippingMethod: nil)
+                shippingMethod: nil
+            )
         }
     }
 
@@ -385,22 +440,27 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         let alertController = UIAlertController(
             title: title,
             message: message,
-            preferredStyle: .alert)
+            preferredStyle: .alert
+        )
         alertController.addAction(
             UIAlertAction(
                 title: String.Localized.ok,
                 style: .cancel,
-                handler: nil))
+                handler: nil
+            )
+        )
         present(alertController, animated: true)
     }
 
     /// :nodoc:
     @objc
     public override func tableView(
-        _ tableView: UITableView, heightForHeaderInSection section: Int
+        _ tableView: UITableView,
+        heightForHeaderInSection section: Int
     ) -> CGFloat {
         let size = addressHeaderView?.sizeThatFits(
-            CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude))
+            CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude)
+        )
         return size?.height ?? 0.0
     }
 
@@ -416,7 +476,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
             withDuration: 0.2,
             animations: {
                 self.addressHeaderView?.buttonHidden = true
-            })
+            }
+        )
         tableView?.endUpdates()
     }
 
@@ -441,11 +502,12 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         {
             switch type {
             case .shipping:
-                return STPLocalizedString(
-                    "Shipping Address", "Title for shipping address entry section")
+                return String.Localized.shipping_address
             case .delivery:
                 return STPLocalizedString(
-                    "Delivery Address", "Title for delivery address entry section")
+                    "Delivery Address",
+                    "Title for delivery address entry section"
+                )
             }
         } else {
             return STPLocalizedString("Contact", "Title for contact info form")
@@ -458,7 +520,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
     /// Called when the user cancels entering a shipping address. You should dismiss (or pop) the view controller at this point.
     /// - Parameter addressViewController: the view controller that has been cancelled
     func shippingAddressViewControllerDidCancel(
-        _ addressViewController: STPShippingAddressViewController)
+        _ addressViewController: STPShippingAddressViewController
+    )
     /// This is called when the user enters a shipping address and taps next. You
     /// should validate the address and determine what shipping methods are available,
     /// and call the `completion` block when finished. If an error occurrs, call
@@ -514,7 +577,7 @@ extension STPShippingAddressViewController:
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cell =
-        addressViewModel.addressCells.stp_boundSafeObject(at: indexPath.row)
+            addressViewModel.addressCells.stp_boundSafeObject(at: indexPath.row)
         cell?.backgroundColor = theme.secondaryBackgroundColor
         cell?.contentView.backgroundColor = UIColor.clear
         return cell!
@@ -523,7 +586,9 @@ extension STPShippingAddressViewController:
     /// :nodoc:
     @objc
     public func tableView(
-        _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
     ) {
         let topRow = indexPath.row == 0
         let bottomRow = tableView.numberOfRows(inSection: indexPath.section) - 1 == indexPath.row
@@ -536,7 +601,10 @@ extension STPShippingAddressViewController:
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        heightForFooterInSection section: Int
+    )
         -> CGFloat
     {
         return 0.01
@@ -544,7 +612,10 @@ extension STPShippingAddressViewController:
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        viewForFooterInSection section: Int
+    )
         -> UIView?
     {
         return UIView()
@@ -552,7 +623,10 @@ extension STPShippingAddressViewController:
 
     /// :nodoc:
     @objc
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int)
+    public func tableView(
+        _ tableView: UITableView,
+        viewForHeaderInSection section: Int
+    )
         -> UIView?
     {
         return addressHeaderView
@@ -566,7 +640,8 @@ extension STPShippingAddressViewController:
         delegate?.shippingAddressViewController(
             self,
             didFinishWith: addressViewModel.address,
-            shippingMethod: method)
+            shippingMethod: method
+        )
     }
 
     // MARK: - STPAddressViewModelDelegate

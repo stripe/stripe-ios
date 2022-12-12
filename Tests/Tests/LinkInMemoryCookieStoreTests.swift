@@ -7,7 +7,12 @@
 //
 
 import XCTest
-@testable import Stripe
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class LinkInMemoryCookieStoreTests: XCTestCase {
 
@@ -42,9 +47,12 @@ class LinkInMemoryCookieStoreTests: XCTestCase {
         let sut = makeSUT()
 
         sut.write(key: .session, value: "cookie_value")
-        XCTAssertEqual(sut.formattedSessionCookies(), [
-            "verification_session_client_secrets": ["cookie_value"]
-        ])
+        XCTAssertEqual(
+            sut.formattedSessionCookies(),
+            [
+                "verification_session_client_secrets": ["cookie_value"]
+            ]
+        )
 
         sut.delete(key: .session)
         XCTAssertNil(sut.formattedSessionCookies())

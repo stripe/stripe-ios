@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 22.7.1
+          Stripe iOS SDKs 23.3.0
         </a>
         
       </p>
@@ -113,14 +113,15 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StripeAPI</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">StripeAPI</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                 </div>
               </div>
             <p>A top-level class that imports the rest of the Stripe SDK.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L13-L160">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L13-L174">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -132,9 +133,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC21defaultPublishableKeySSSgvpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)defaultPublishableKey"></a>
                     <a name="//apple_ref/swift/Variable/defaultPublishableKey" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC21defaultPublishableKeySSSgvpZ">defaultPublishableKey</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)defaultPublishableKey">defaultPublishableKey</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -142,8 +143,9 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Set this to your Stripe publishable API key, obtained from <a href="https://dashboard.stripe.com/apikeys">https://dashboard.stripe.com/apikeys</a>.
-Set this as early as possible in your application&rsquo;s lifecycle, preferably in your AppDelegate or SceneDelegate.
+                        <p>Set this to your Stripe publishable API key, obtained from <a href="https://dashboard.stripe.com/apikeys">https://dashboard.stripe.com/apikeys</a>.</p>
+
+<p>Set this as early as possible in your application&rsquo;s lifecycle, preferably in your AppDelegate or SceneDelegate.
 New instances of STPAPIClient will be initialized with this value.
 @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.</p>
 
@@ -152,12 +154,13 @@ New instances of STPAPIClient will be initialized with this value.
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">defaultPublishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">defaultPublishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L18">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L19">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -165,9 +168,9 @@ New instances of STPAPIClient will be initialized with this value.
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC24setDefaultPublishableKeyyySSF"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(im)setDefaultPublishableKey:"></a>
                     <a name="//apple_ref/swift/Method/setDefaultPublishableKey(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC24setDefaultPublishableKeyyySSF">setDefaultPublishableKey(_:<wbr>)</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(im)setDefaultPublishableKey:">setDefaultPublishableKey(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -175,8 +178,9 @@ New instances of STPAPIClient will be initialized with this value.
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Set this to your Stripe publishable API key, obtained from <a href="https://dashboard.stripe.com/apikeys">https://dashboard.stripe.com/apikeys</a>.
-Set this as early as possible in your application&rsquo;s lifecycle, preferably in your AppDelegate or SceneDelegate.
+                        <p>Set this to your Stripe publishable API key, obtained from <a href="https://dashboard.stripe.com/apikeys">https://dashboard.stripe.com/apikeys</a>.</p>
+
+<p>Set this as early as possible in your application&rsquo;s lifecycle, preferably in your AppDelegate or SceneDelegate.
 New instances of STPAPIClient will be initialized with this value.
 @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.</p>
 
@@ -185,12 +189,13 @@ New instances of STPAPIClient will be initialized with this value.
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDefaultPublishableKey</span><span class="p">(</span><span class="n">_</span> <span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDefaultPublishableKey</span><span class="p">(</span><span class="n">_</span> <span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L24-L26">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L26-L28">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -198,9 +203,9 @@ New instances of STPAPIClient will be initialized with this value.
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC27advancedFraudSignalsEnabledSbvpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)advancedFraudSignalsEnabled"></a>
                     <a name="//apple_ref/swift/Variable/advancedFraudSignalsEnabled" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC27advancedFraudSignalsEnabledSbvpZ">advancedFraudSignalsEnabled</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)advancedFraudSignalsEnabled">advancedFraudSignalsEnabled</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -208,8 +213,9 @@ New instances of STPAPIClient will be initialized with this value.
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
-If YES, additional device signals will be sent to Stripe.
+                        <p>A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.</p>
+
+<p>If YES, additional device signals will be sent to Stripe.
 For more details on the information we collect, visit <a href="https://stripe.com/docs/disputes/prevention/advanced-fraud-detection">https://stripe.com/docs/disputes/prevention/advanced-fraud-detection</a>
 Disabling this setting will reduce Stripe&rsquo;s ability to protect your business from fraudulent payments.
 The default value is YES.</p>
@@ -219,12 +225,13 @@ The default value is YES.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">advancedFraudSignalsEnabled</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">advancedFraudSignalsEnabled</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -232,9 +239,9 @@ The default value is YES.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC10maxRetriesSivpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)maxRetries"></a>
                     <a name="//apple_ref/swift/Variable/maxRetries" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC10maxRetriesSivpZ">maxRetries</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)maxRetries">maxRetries</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -243,8 +250,9 @@ The default value is YES.</p>
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>If the SDK receives a &ldquo;Too Many Requests&rdquo; (429) status code from Stripe,
-it will automatically retry the request.
-The default value is 3.
+it will automatically retry the request.</p>
+
+<p>The default value is 3.
 See <a href="https://stripe.com/docs/rate-limits">https://stripe.com/docs/rate-limits</a> for more information.</p>
 
                       </div>
@@ -252,12 +260,13 @@ See <a href="https://stripe.com/docs/rate-limits">https://stripe.com/docs/rate-l
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">maxRetries</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">maxRetries</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L39">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -278,9 +287,9 @@ See <a href="https://stripe.com/docs/rate-limits">https://stripe.com/docs/rate-l
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC26jcbPaymentNetworkSupportedSbvpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)jcbPaymentNetworkSupported"></a>
                     <a name="//apple_ref/swift/Variable/jcbPaymentNetworkSupported" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC26jcbPaymentNetworkSupportedSbvpZ">jcbPaymentNetworkSupported</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)jcbPaymentNetworkSupported">jcbPaymentNetworkSupported</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -288,8 +297,10 @@ See <a href="https://stripe.com/docs/rate-limits">https://stripe.com/docs/rate-l
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Japanese users can enable JCB for Apple Pay by setting this to <code>YES</code>, after they have been approved by JCB.
-The default value is NO.
+                        <p>Japanese users can enable JCB for Apple Pay by setting this to <code>YES</code>,
+after they have been approved by JCB.</p>
+
+<p>The default value is NO.
 @note JCB is only supported on iOS 10.1+</p>
 
                       </div>
@@ -297,12 +308,13 @@ The default value is NO.
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">jcbPaymentNetworkSupported</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">jcbPaymentNetworkSupported</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L46-L64">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L52-L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -310,9 +322,9 @@ The default value is NO.
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC33additionalEnabledApplePayNetworksSaySo16PKPaymentNetworkaGvpZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cpy)additionalEnabledApplePayNetworks"></a>
                     <a name="//apple_ref/swift/Variable/additionalEnabledApplePayNetworks" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC33additionalEnabledApplePayNetworksSaySo16PKPaymentNetworkaGvpZ">additionalEnabledApplePayNetworks</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cpy)additionalEnabledApplePayNetworks">additionalEnabledApplePayNetworks</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -320,8 +332,9 @@ The default value is NO.
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
-Set this property to enable other card networks in addition to these.
+                        <p>The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.</p>
+
+<p>Set this property to enable other card networks in addition to these.
 For example, <code>additionalEnabledApplePayNetworks = [.JCB]</code> enables JCB (note this requires onboarding from JCB and Stripe).</p>
 
                       </div>
@@ -329,12 +342,13 @@ For example, <code>additionalEnabledApplePayNetworks = [.JCB]</code> enables JCB
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">additionalEnabledApplePayNetworks</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentNetwork</span><span class="p">]</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">additionalEnabledApplePayNetworks</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentNetwork</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L75">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -342,9 +356,9 @@ For example, <code>additionalEnabledApplePayNetworks = [.JCB]</code> enables JCB
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC23canSubmitPaymentRequestySbSo09PKPaymentG0CFZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)canSubmitPaymentRequest:"></a>
                     <a name="//apple_ref/swift/Method/canSubmitPaymentRequest(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC23canSubmitPaymentRequestySbSo09PKPaymentG0CFZ">canSubmitPaymentRequest(_:<wbr>)</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)canSubmitPaymentRequest:">canSubmitPaymentRequest(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -352,8 +366,9 @@ For example, <code>additionalEnabledApplePayNetworks = [.JCB]</code> enables JCB
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Whether or not this device is capable of using Apple Pay. This checks both
-whether the device supports Apple Pay, as well as whether or not they have
+                        <p>Whether or not this device is capable of using Apple Pay.</p>
+
+<p>This checks both whether the device supports Apple Pay, as well as whether or not they have
 stored Apple Pay cards on their device.</p>
 
                       </div>
@@ -361,7 +376,8 @@ stored Apple Pay cards on their device.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">canSubmitPaymentRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">PKPaymentRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">canSubmitPaymentRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">PKPaymentRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -391,7 +407,7 @@ stored Apple Pay cards on their device.</p>
                         <p>whether or not the user is currently able to pay with Apple Pay.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L77-L86">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L86-L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -399,9 +415,9 @@ stored Apple Pay cards on their device.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC22deviceSupportsApplePaySbyFZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)deviceSupportsApplePay"></a>
                     <a name="//apple_ref/swift/Method/deviceSupportsApplePay()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC22deviceSupportsApplePaySbyFZ">deviceSupportsApplePay()</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)deviceSupportsApplePay">deviceSupportsApplePay()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -410,8 +426,9 @@ stored Apple Pay cards on their device.</p>
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Whether or not this can make Apple Pay payments via a card network supported
-by Stripe.
-The Stripe supported Apple Pay card networks are:
+by Stripe.</p>
+
+<p>The Stripe supported Apple Pay card networks are:
 American Express, Visa, Mastercard, Discover, Maestro.
 Japanese users can enable JCB by setting <code>JCBPaymentNetworkSupported</code> to YES,
 after they have been approved by JCB.</p>
@@ -421,7 +438,8 @@ after they have been approved by JCB.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">deviceSupportsApplePay</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">deviceSupportsApplePay</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -432,7 +450,7 @@ of the supported networks. NO if the user does not have a saved card of a
 supported type, or other restrictions prevent payment (such as parental controls).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L108-L111">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L118-L122">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -440,9 +458,9 @@ supported type, or other restrictions prevent payment (such as parental controls
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC14paymentRequest22withMerchantIdentifier7country8currencySo09PKPaymentE0CSS_S2StFZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)paymentRequestWithMerchantIdentifier:country:currency:"></a>
                     <a name="//apple_ref/swift/Method/paymentRequest(withMerchantIdentifier:country:currency:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC14paymentRequest22withMerchantIdentifier7country8currencySo09PKPaymentE0CSS_S2StFZ">paymentRequest(withMerchantIdentifier:<wbr>country:<wbr>currency:<wbr>)</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)paymentRequestWithMerchantIdentifier:country:currency:">paymentRequest(withMerchantIdentifier:<wbr>country:<wbr>currency:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -450,8 +468,9 @@ supported type, or other restrictions prevent payment (such as parental controls
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A convenience method to build a <code>PKPaymentRequest</code> with sane default values.
-You will still need to configure the <code>paymentSummaryItems</code> property to indicate
+                        <p>A convenience method to build a <code>PKPaymentRequest</code> with sane default values.</p>
+
+<p>You will still need to configure the <code>paymentSummaryItems</code> property to indicate
 what the user is purchasing, as well as the optional <code>requiredShippingContactFields</code>,
 <code>requiredBillingContactFields</code>, and <code>shippingMethods</code> properties to indicate
 what additional contact information your application requires.</p>
@@ -461,7 +480,8 @@ what additional contact information your application requires.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(paymentRequestWithMerchantIdentifier:country:currency:)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span>
     <span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="n">country</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="n">currency</span> <span class="nv">currencyCode</span><span class="p">:</span> <span class="kt">String</span>
@@ -520,7 +540,7 @@ attached to this request as amounts in this currency.</p>
                         <p>a <code>PKPaymentRequest</code> with proper default values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L126-L139">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L139-L152">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -541,9 +561,9 @@ attached to this request as amounts in this currency.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10StripeCore0A3APIC17handleURLCallback4withSb10Foundation3URLV_tFZ"></a>
+                    <a name="/c:@M@StripeCore@objc(cs)StripeAPI(cm)handleStripeURLCallbackWithURL:"></a>
                     <a name="//apple_ref/swift/Method/handleURLCallback(with:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10StripeCore0A3APIC17handleURLCallback4withSb10Foundation3URLV_tFZ">handleURLCallback(with:<wbr>)</a>
+                    <a class="token" href="#/c:@M@StripeCore@objc(cs)StripeAPI(cm)handleStripeURLCallbackWithURL:">handleURLCallback(with:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -552,8 +572,9 @@ attached to this request as amounts in this currency.</p>
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Call this method in your app delegate whenever you receive an URL in your
-app delegate for a Stripe callback.
-For convenience, you can pass all URL&rsquo;s you receive in your app delegate
+app delegate for a Stripe callback.</p>
+
+<p>For convenience, you can pass all URL&rsquo;s you receive in your app delegate
 to this method first, and check the return value
 to easily determine whether it is a callback URL that Stripe will handle
 or if your app should process it normally.
@@ -568,6 +589,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@objc(handleStripeURLCallbackWithURL:)</span>
 <span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">handleURLCallback</span><span class="p">(</span>
     <span class="n">with</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
@@ -598,7 +620,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         <p>YES if the URL is expected and will be handled by Stripe. NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L155-L159">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeCore/StripeCore/Source/API Bindings/StripeAPI.swift#L169-L173">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -634,7 +656,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift#L15-L164">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsAccount.swift#L15-L128">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -670,7 +692,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.1/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift#L17-L121">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripeFinancialConnections/StripeFinancialConnections/Source/API Bindings/Models/FinancialConnectionsSession.swift#L17-L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -683,7 +705,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-08-31)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-12-05)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

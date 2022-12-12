@@ -76,7 +76,7 @@ class CollectBankAccountTokenViewController: UIViewController {
         // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
         STPAPIClient.shared.publishableKey = publishableKey
 
-        financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret)
+        financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret, returnURL: "financial-connection-example://return")
         financialConnectionsSheet?.presentForToken(
             from: self,
             completion: { [weak self] result in
@@ -86,7 +86,11 @@ class CollectBankAccountTokenViewController: UIViewController {
                         self?.displayAlert("Completed, but no token was returned")
                         return
                     }
-                    let info = "\(token.bankAccount.bankName ?? "") ....\(token.bankAccount.last4)"
+                    guard let bankAccount = token.bankAccount else {
+                        self?.displayAlert("Completed, but no bankAccount was returned")
+                        return
+                    }
+                    let info = "\(bankAccount.bankName ?? "") ....\(bankAccount.last4)"
                     self?.displayAlert("Completed with account \(info) and token \(token.id) ")
                 case .canceled:
                     self?.displayAlert("Canceled!")

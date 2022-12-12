@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ nagtatapos sa %2$@";
-
 "%@ - Offline" = "%@ - Offline";
 
-"+ Add" = "+Magdagdag";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "AU BECS Direct Debit";
 
 "Add New Card…" = "Magdagdag ng Bagong Kard...";
 
 "Add a Card" = "Magdagdag ng isang Kard";
 
-"Add a card" = "Magdagdag ng isang kard";
-
-"Add a payment method" = "Magdagdag ng paraan ng pagbabayad";
-
-"Add bank account" = "Magdagdag ng account sa bangko";
-
-"Add new payment method" = "Magdagadag ng bagong pamamaraan ng pagbabayad";
-
-"Add your payment information" = "Magdagdag ng iyong impormasyon sa pagbabayad";
-
-"Address line 2 (optional)" = "Pangalawang linya ng adres";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Apt.";
 
-"Are you sure you want to remove this card?" = "Sigurado ka bang nais mong alisin ang kard na ito?";
-
-"Are you sure you want to remove this linked account?" = "Sigurado ka bang nais mong alisin ang naka-link na account na ito?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Bumalik";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Bangko";
-
-"Bank Account" = "Account sa Bangko";
-
-"Bank account" = "Account sa bangko";
-
-"Billing Address" = "Adres para sa Billing";
-
-"Billing address" = "Adres para sa billing";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntunin</terms> na ito.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sa pagbibigay ng mga detalye ng iyong account sa bangko at pagkumpirma sa pagbabayad na ito, sumasang-ayon ka sa Kahilingan sa Direktang Debit na ito at sa <terms>kasunduan sa serbisyo ng Kahilingan sa Direktang Debit</terms>, at pinahihintulutan ang Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (ang “Stripe”) para i-debit ang iyong account gamit ang Bulk Electronic Clearing System (BECS) sa ngalan ng %@ (ang \"Mangangalakal\") para sa anumang halagang hiwalay na ipinaalam sa iyo ng Mangangalakal. Pinapatunayan mong isa kang may hawak ng account o isang awtorisadong tagalagda sa account na nakalista sa itaas.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Sa pagbibigay ng iyong impormasyon ng pagbabayad at pagkukupirma sa bayad na ito, pinapayagan mo ang (A) %@ at ang Stripe, ang ating payment service provider, na magpadala ng mga tagubilin sa iyong bangko para i-debit ang iyong account at (B) ang iyong bangko na i-debit ang iyong account ayon sa mga naturang tuntunin. Bilang bahagi ng iyong mga karapatan, maaari kang makakuha ng refund mula sa iyong bangko sa ilalim ng mga takda at kundisyon ng iyong kasunduan sa iyong bangko. Ang refund ay dapat hingin sa loob ng 8 linggo mula sa petsa na na-debit ang iyong account. Ang iyong mga karapatan ay naipaliwanag sa isang pahayag na maari mong makuha sa iyong bangko. Pumapayag ka na makatanggap ng mga abiso ukol sa mga debit sa hinaharap ng hanggang 2 na araw bago sila maganap.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Kard";
-
-"Card information" = "Impormasyon ng kard";
-
-"Card number" = "Numero ng kard";
-
-"Change email" = "Palitan ang email";
-
-"Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Isara ang scanner ng kard";
-
-"Code field" = "Patlang ng code";
-
-"Code sent" = "Naipadala na ang code";
-
 "Contact" = "Kontak";
-
-"Default" = "Default";
 
 "Delivery" = "Pagpapadala";
 
 "Delivery Address" = "Adres ng Paghahatarin";
 
-"Double tap to edit" = "I-double tap para baguhin";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS Bank";
-
-"Edit" = "I-edit";
-
-"Enter address manually" = "Manwal na ilagay ang address";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Ilagay ang code na ipinadala sa %@ para gamitin ang Link sa pagbabayad bilang default.";
-
-"Enter your verification code" = "Ilagay ang iyong verification code.";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Para sa seguridad, pakilagay muli ang security code ng iyong kard.";
-
 "Free" = "Libre";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Adres ng Nagpadala ay di balido";
 
-"Invalid data." = "Data na di balido.";
-
-"Join Link" = "Sumali sa Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Naglo-load...";
-
-"Log out of Link" = "Mag-log out sa Link";
-
-"MM / YY" = "BB / TT";
-
-"MM/YY" = "BB / TT";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "NetBanking";
-
 "Next" = "Susunod";
-
-"Not %@?" = "Hindi %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
-"Or" = "O";
-
-"Or pay using" = "O magbayad gamit ang";
-
-"Or pay with a card" = "O magbayad gamit ang kard";
-
-"P24" = "P24";
-
-"Pay %@" = "Magbayad ng %@";
-
-"Pay another way" = "Magbayad sa ibang paraan";
-
-"Pay faster at %@ and thousands of merchants." = "Magbayad nang mas mabilis sa %@  at sa libu-libong mangangalakal.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Magbayad ng <num_installments/> na walang interes na pagbabayad ng <installment_price/> gamit ang <img/>";
-
-"Pay later with Klarna." = "Magbayad sa ibang pagkakataon gamit ang Klarna.";
-
-"Pay over time with %@" = "Magbayad ng over time gamit ang %@";
-
-"Pay using" = "Magbayad gamit ang";
-
-"Pay with %@" = "Magbayad gamit ang %@";
-
-"Pay with your bank account in just a few steps." = "Magbayad gamit ang iyong account sa bangko sa ilang hakbang lamang.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Pagbabayad";
-
 "Payment Method" = "Paraan ng Pagbabayad";
-
-"Payment methods" = "Mga pamamaraan sa pagbabayad";
-
-"Point the camera at your card." = "Itapat ang kamera sa iyong kard.";
-
-"Postal Code" = "Postal Code";
-
-"Processing..." = "Pinoproseso...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 Bank";
-
-"Remove %1$@ ending in %2$@" = "Alisin ang %1$@na nagtatapos sa %2$@";
-
-"Remove Card" = "Alisin ang Kard";
-
-"Remove card" = "Alisin ang kard";
-
-"Remove linked account" = "Alisin ang naka-link na account";
-
-"Resend code" = "Ipadala muli ang code";
-
-"SEPA Debit" = "SEPA Debit";
-
-"SEPA Direct Debit" = "SEPA Direct Debit";
-
-"Save for future payments" = "I-save para sa mga pagbabayad sa hinaharap";
-
-"Save my info for secure 1-click checkout" = "I-save ang aking info para sa tiyak na 1-click na pag-checkout";
-
-"Save this account for future %@ payments" = "I-save ang account na ito para sa mga pagbabayad sa hinaharap sa %@";
-
-"Save this card for future %@ payments" = "I-save ang kard na ito para sa mga hinaharap na pagbabayad sa %@";
-
-"Secure 1⁠-⁠click checkout" = "Tiyakin ang 1-click na pag-checkout";
-
-"Select your payment method" = "Piliin ang iyong paraan ng pagbabayad";
-
-"Set as default" = "I-set bilang default";
-
-"Set as default payment method" = "I-set bilang default na paraan ng pagbabayad";
-
-"Set up" = "I-set up";
 
 "Shipping" = "Pagpapadala";
 
-"Shipping Address" = "Adres ng Nagpadala";
-
 "Shipping Method" = "Paraan ng Pagpapadala";
-
-"Show menu" = "Ipakita ang menu";
-
-"Sign in to your Link account" = "Mag-sign in sa iyong Link account";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "May nangyaring mali sa pag-link ng iyong account.\nMangyaring subukan muli mamaya.";
-
-"State / Province / Region" = "State / Probinsiya / Rehiyon";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin para kumpletuhin ang pagbabayad sa %@.";
-
-"Tap to close" = "I-tap para isara";
-
-"Tap to expand" = "I-tap para i-expand";
-
-"The BSB you entered is invalid." = "Ang BSB na ipinasok mo ay di balido.";
-
-"The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ang IBAN na iniligay mo ay imbalido. \"%@\" ay di suportadong code ng bansa.";
-
-"The provided verification code has expired." = "Paso na ang ibinigay na verification code.";
-
-"The provided verification code is incorrect." = "Mali ang ibinigay na verification code.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ang kard na ito ay paso na. I-update ang impormayon ng iyong kard o pumili ng ibang paraan ng pagbabayad.";
-
-"This is your default" = "Ito ang iyong default";
-
-"Timed out authenticating your payment method -- try again" = "Nag- time out sa pagpapatunay ng iyong paraan ng pagbabayad --- subukin muli";
-
-"To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
-
-"Too many attempts. Please try again in a few minutes." = "Masyado nang marami ang pagtatangka. Pakisubukan muli sa loob ng ilang minuto.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Account sa Bangko sa US";
-
-"Unavailable for this purchase" = "Hindi magamit sa pagbiling ito";
-
-"Unknown" = "Di kilala";
-
-"Update card" = "I-update ang kard";
 
 "Use Billing" = "Gamitin ang Billing";
 
 "Use Delivery" = "Gamitin ang Padadalhan";
 
 "Use Shipping" = "Gamitin ang Nagpadala";
-
-"Use your saved info to check out faster" = "Gamitin ang iyong naka-save na impormayon para mas mabilis na mag-check out";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Hindi namin mapatunayan ang paraan ng iyong pagbabayad. Mangyaring pumili ng ibang paraan ng pagbabayad at subukin muli.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
-
-"Your ZIP is invalid." = "Ang iyong ZIP ay di balido.";
-
-"Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
-
-"Your card number is invalid." = "Ang numero ng iyong kard ay di balido.";
-
-"Your card's expiration date is incomplete." = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
-
-"Your card's expiration date is invalid." = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
-
-"Your card's expiration month is invalid." = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
-
-"Your card's expiration year is invalid." = "Ang taon ng pagkapaso ng iyong kard ay di balido.";
-
-"Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
-
-"Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
-
-"Your postal code is invalid." = "Ang iyong postal code ay di balido.";
-
-"ZIP Code" = "ZIP Code";
-
-"card number" = "numero ng kard";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "Petsa ng pagkapaso";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL Bank";

@@ -1,0 +1,33 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCardScan/StripeCardScan/Source/CardScan/UI/CardScanSheet.swift",
+      "line": 27,
+      "symbol": "CardScanSheet.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCardScan/StripeCardScan/Source/CardVerify/Card Image Verification/CardImageVerificationController.swift",
+      "line": 103,
+      "symbol": "CardImageVerificationController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCardScan/StripeCardScan/Source/CardVerify/Card Image Verification/CardImageVerificationSheetConfiguration.swift",
+      "line": 13,
+      "symbol": "CardImageVerificationSheet.Configuration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/porter/stripe/stripe-ios/StripeCardScan/StripeCardScan/Source/CardVerify/Card Image Verification/ScannedCard.swift",
+      "line": 13,
+      "symbol": "ScannedCard.pan",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/porter/stripe/stripe-ios"
+}

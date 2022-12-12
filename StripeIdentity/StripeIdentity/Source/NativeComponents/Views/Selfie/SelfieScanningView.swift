@@ -3,17 +3,16 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 4/25/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeUICore
+import UIKit
 
-/**
- Displays instructional text and either a camera preview or scanned selfie
- images and consent text to the user.
- */
+/// Displays instructional text and either a camera preview or scanned selfie
+/// images and consent text to the user.
 final class SelfieScanningView: UIView {
     struct Styling {
         static let contentInsets = IdentityFlowView.Style.defaultContentViewInsets
@@ -64,7 +63,10 @@ final class SelfieScanningView: UIView {
             theme.colors.secondaryText = IdentityUI.textColor
             theme.fonts.caption = IdentityUI.preferredFont(forTextStyle: .caption1)
             theme.fonts.footnote = IdentityUI.preferredFont(forTextStyle: .footnote)
-            theme.fonts.footnoteEmphasis = IdentityUI.preferredFont(forTextStyle: .footnote, weight: .medium)
+            theme.fonts.footnoteEmphasis = IdentityUI.preferredFont(
+                forTextStyle: .footnote,
+                weight: .medium
+            )
             theme.colors.primary = tintColor
             return theme
         }
@@ -77,7 +79,12 @@ final class SelfieScanningView: UIView {
             /// Live video feed from the camera while taking selfies
             case videoPreview(CameraSessionProtocol, showFlashAnimation: Bool)
             /// Display scanned selfie images
-            case scanned([UIImage], consentHTMLText: String, consentHandler: (Bool) -> Void, openURLHandler: (URL) -> Void)
+            case scanned(
+                [UIImage],
+                consentHTMLText: String,
+                consentHandler: (Bool) -> Void,
+                openURLHandler: (URL) -> Void
+            )
         }
 
         let state: State
@@ -141,7 +148,7 @@ final class SelfieScanningView: UIView {
     // MARK: Consent
 
     private(set) lazy var consentCheckboxButton: CheckboxButton = {
-        let checkbox = CheckboxButton(theme: Styling.consentCheckboxTheme(tintColor: tintColor) )
+        let checkbox = CheckboxButton(theme: Styling.consentCheckboxTheme(tintColor: tintColor))
         checkbox.isSelected = false
         checkbox.addTarget(self, action: #selector(didToggleConsent), for: .touchUpInside)
         checkbox.delegate = self
@@ -163,7 +170,9 @@ final class SelfieScanningView: UIView {
         installConstraints()
     }
 
-    required init(coder: NSCoder) {
+    required init(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -205,10 +214,12 @@ final class SelfieScanningView: UIView {
             }
 
             do {
-                consentCheckboxButton.setAttributedText(try NSAttributedString(
-                    htmlText: consentText,
-                    style: Styling.consentHTMLStyle
-                ))
+                consentCheckboxButton.setAttributedText(
+                    try NSAttributedString(
+                        htmlText: consentText,
+                        style: Styling.consentHTMLStyle
+                    )
+                )
 
                 consentCheckboxButton.isHidden = false
                 self.consentHandler = consentHandler
@@ -229,7 +240,9 @@ final class SelfieScanningView: UIView {
         // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.consentCheckboxButton.theme = Styling.consentCheckboxTheme(tintColor: self.tintColor)
+            self.consentCheckboxButton.theme = Styling.consentCheckboxTheme(
+                tintColor: self.tintColor
+            )
         }
     }
 
@@ -238,8 +251,8 @@ final class SelfieScanningView: UIView {
     }
 }
 
-private extension SelfieScanningView {
-    func installViews() {
+extension SelfieScanningView {
+    fileprivate func installViews() {
         addAndPinSubview(vStack)
 
         vStack.addArrangedSubview(instructionLabelView)
@@ -252,15 +265,18 @@ private extension SelfieScanningView {
 
         // Add some bottom margin so the scroll indicator doesn't overlay on
         // top of the scanned images
-        scannedImageScrollView.addAndPinSubview(scannedImageHStack, insets: .init(
-            top: 0,
-            leading: 0,
-            bottom: Styling.scannedImageScrollIndicatorMargin,
-            trailing: 0
-        ))
+        scannedImageScrollView.addAndPinSubview(
+            scannedImageHStack,
+            insets: .init(
+                top: 0,
+                leading: 0,
+                bottom: Styling.scannedImageScrollIndicatorMargin,
+                trailing: 0
+            )
+        )
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         scannedImageHStack.translatesAutoresizingMaskIntoConstraints = false
         scannedImageScrollView.setContentHuggingPriority(.required, for: .horizontal)
 
@@ -308,11 +324,11 @@ private extension SelfieScanningView {
                 )
                 constraint.priority = .defaultHigh
                 return constraint
-            }()
+            }(),
         ])
     }
 
-    func rebuildImageHStack(with images: [UIImage]) {
+    fileprivate func rebuildImageHStack(with images: [UIImage]) {
         // Remove old image views
         scannedImageHStack.subviews.forEach { $0.removeFromSuperview() }
 
@@ -332,22 +348,30 @@ private extension SelfieScanningView {
             scannedImageHStack.addArrangedSubview(containerView)
 
             constraints += [
-                containerView.widthAnchor.constraint(equalToConstant: Styling.scannedImageSize.width),
-                containerView.heightAnchor.constraint(equalToConstant: Styling.scannedImageSize.height),
+                containerView.widthAnchor.constraint(
+                    equalToConstant: Styling.scannedImageSize.width
+                ),
+                containerView.heightAnchor.constraint(
+                    equalToConstant: Styling.scannedImageSize.height
+                ),
             ]
         }
 
         NSLayoutConstraint.activate(constraints)
     }
 
-    func animateFlash() {
+    fileprivate func animateFlash() {
         animateFlashInDirection(forwards: true) { [weak self] _ in
             self?.animateFlashInDirection(forwards: false)
         }
     }
 
-    func animateFlashInDirection(forwards shouldAnimateForwards: Bool, completion: ((Bool) -> Void)? = nil) {
-        let options: UIView.AnimationOptions = shouldAnimateForwards ? [.curveEaseIn] : [.curveEaseOut]
+    fileprivate func animateFlashInDirection(
+        forwards shouldAnimateForwards: Bool,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        let options: UIView.AnimationOptions =
+            shouldAnimateForwards ? [.curveEaseIn] : [.curveEaseOut]
         let alpha = shouldAnimateForwards ? Styling.flashOverlayAlpha : 0
 
         UIView.animate(
@@ -361,7 +385,7 @@ private extension SelfieScanningView {
         )
     }
 
-    @objc func didToggleConsent() {
+    @objc fileprivate func didToggleConsent() {
         consentHandler?(consentCheckboxButton.isSelected)
     }
 }

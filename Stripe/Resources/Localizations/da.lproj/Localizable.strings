@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ slutter på %2$@";
-
 "%@ - Offline" = "%@ - Offline";
 
-"+ Add" = "+ Tilføj";
-
 "3D Secure" = "3D Secure";
-
-"AU BECS Direct Debit" = "AU BECS direkte debitering";
 
 "Add New Card…" = "Tilføj nyt kort …";
 
 "Add a Card" = "Tilføj et kort";
 
-"Add a card" = "Tilføj et kort";
-
-"Add a payment method" = "Tilføj en betalingsmetode";
-
-"Add bank account" = "Tilføj bankkonto";
-
-"Add new payment method" = "Tilføj ny betalingsmetode";
-
-"Add your payment information" = "Tilføj dine betalingsoplysninger";
-
-"Address line 2 (optional)" = "Adresselinje 2 (valgfrit)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Lejlighed";
 
-"Are you sure you want to remove this card?" = "Er du sikker på, at du vil fjerne dette kort?";
-
-"Are you sure you want to remove this linked account?" = "Er du sikker på, at du vil fjerne denne linket konto?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Tilbage";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Bank";
-
-"Bank Account" = "Bankkonto";
-
-"Bank account" = "Bankkonto";
-
-"Billing Address" = "Faktureringsadresse";
-
-"Billing address" = "Faktureringsadresse";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Køb nu, eller betal senere med Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til disse <terms>vilkår</terms>.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at tilmelde dig Link accepterer du <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved at angive dine bankoplysninger og bekræfte denne betaling accepterer du denne direkte debiteringsanmodning samt <terms>debiteringsanmodningens serviceaftale</terms>,og autoriserer Stripe Payments Australia Pty Ltd ACN 160 180 343, direkte debiterings-bruger-ID 507156 (“Stripe”) til at debitere din konto via Bulk Electronic Clearing System (BECS) på vegne af %@ (\"Forhandleren\") for eventuelle beløb, der separat meddeles dig af Forhandleren. Du bekræfter, at du enten er kontoindehaver eller autoriseret underskriver på den konto, der er anført ovenfor.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved at give dine betalingsoplysninger og bekræfte denne betaling giver du (A) %@ og Stripe, vores betalingstjenesteudbyder, tilladelse til at sende instruktioner til din bank om at debitere din konto og (B) din bank til at debitere din konto i overensstemmelse med disse instruktioner. Som en del af dine rettigheder har du ret til en refusion fra din bank under vilkårene og betingelserne i din aftale med din bank. Der skal kræves refusion inden for 8 uger fra den dato, hvor din konto blev debiteret. Dine rettigheder forklares i en erklæring, som du kan få fra din bank. Du accepterer at modtage underretninger om fremtidig debitering op til to dage før de opstår.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at gemme din bankkonto for %@ accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Kort";
-
-"Card information" = "Kortoplysninger";
-
-"Card number" = "Kortnummer";
-
-"Change email" = "Skift e-mail";
-
-"Choose a payment method" = "Vælg en betalingsmetode";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Luk kortscanner";
-
-"Code field" = "Kodefelt";
-
-"Code sent" = "Kode sendt";
-
 "Contact" = "Kontaktperson";
-
-"Default" = "Standard";
 
 "Delivery" = "Levering";
 
 "Delivery Address" = "Leveringsadresse";
 
-"Double tap to edit" = "Tryk to gange for at redigere";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "EPS Bank";
-
-"Edit" = "Rediger";
-
-"Enter address manually" = "Indtast adresse manuelt";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Indtast koden, der blev sendt til %@, for at bruge Link som standardbetaling.";
-
-"Enter your verification code" = "Indtast din bekræftelseskode";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Af hensyn til sikkerheden skal du indtaste dit korts sikkerhedskode igen.";
-
 "Free" = "Gratis";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Ugyldig forsendelsesadresse";
 
-"Invalid data." = "Ugyldige data";
-
-"Join Link" = "Tilmeld Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Indlæser ...";
-
-"Log out of Link" = "Log ud af Link";
-
-"MM / YY" = "MM/ÅÅ";
-
-"MM/YY" = "MM/ÅÅ";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "Onlinebanking";
-
 "Next" = "Næste";
-
-"Not %@?" = "Ikke %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Onlinebanking (FPX)";
 
-"Or" = "Eller";
-
-"Or pay using" = "Eller betal med";
-
-"Or pay with a card" = "Eller betal med et kort";
-
-"P24" = "P24";
-
-"Pay %@" = "Betal %@";
-
-"Pay another way" = "Betal på en anden måde";
-
-"Pay faster at %@ and thousands of merchants." = "Betal hurtigere hos %@ og tusinder af forhandlere.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal i <num_installments/> rentefri afdrag på <installment_price/> hver med <img/>";
-
-"Pay later with Klarna." = "Betal senere med Klarna.";
-
-"Pay over time with %@" = "Betal over tid med %@";
-
-"Pay using" = "Betal med";
-
-"Pay with %@" = "Betal med %@";
-
-"Pay with your bank account in just a few steps." = "Betal med din bankkonto i blot få trin.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Betaling";
-
 "Payment Method" = "Betalingsmetode";
-
-"Payment methods" = "Betalingsmetoder";
-
-"Point the camera at your card." = "Ret kameraet mod dit kort.";
-
-"Postal Code" = "Postnummer";
-
-"Processing..." = "Behandler...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Przelewy24 Bank";
-
-"Remove %1$@ ending in %2$@" = "Fjern %1$@, der slutter på %2$@";
-
-"Remove Card" = "Fjern kort";
-
-"Remove card" = "Fjern kort";
-
-"Remove linked account" = "Fjern linket konto";
-
-"Resend code" = "Send kode igen";
-
-"SEPA Debit" = "SEPA Debit";
-
-"SEPA Direct Debit" = "SEPA Direct Debit";
-
-"Save for future payments" = "Gem til fremtidige betalinger";
-
-"Save my info for secure 1-click checkout" = "Gem mine oplysninger for sikker 1-kliks-betaling";
-
-"Save this account for future %@ payments" = "Gem denne konto til fremtidige %@-betalinger";
-
-"Save this card for future %@ payments" = "Gem dette kort til fremtidige %@ betalinger";
-
-"Secure 1⁠-⁠click checkout" = "Sikker 1-kliks-betaling";
-
-"Select your payment method" = "Vælg din betalingsmetode";
-
-"Set as default" = "Brug som standard";
-
-"Set as default payment method" = "Angiv som standardbetalingsmetode";
-
-"Set up" = "Opsætning";
 
 "Shipping" = "Forsendelse";
 
-"Shipping Address" = "Forsendelsesadresse";
-
 "Shipping Method" = "Forsendelsesmetode";
-
-"Show menu" = "Vis menu";
-
-"Sign in to your Link account" = "Log ind på din Link-konto";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Noget gik galt ved tilknytningen af din bank.\nPrøv igen senere.";
-
-"State / Province / Region" = "Region";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre betalingen til %@.";
-
-"Tap to close" = "Tryk for at lukke";
-
-"Tap to expand" = "Tryk for at udvide";
-
-"The BSB you entered is invalid." = "Den BSB, du angav, er ugyldig.";
-
-"The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Den indtastede IBAN er ugyldig, \"%@\" er ikke en gyldig landekode.";
-
-"The provided verification code has expired." = "Den angivne verifikationskode er udløbet.";
-
-"The provided verification code is incorrect." = "Den angivne verifikationskode er forkert.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Dette kort er udløbet. Opdater dine kortoplysninger eller vælg en anden betalingsmetode.";
-
-"This is your default" = "Dette er din standard";
-
-"Timed out authenticating your payment method -- try again" = "Bekræftelsen af din betalingsmetode udløb -- prøv igen.";
-
-"To scan your card, allow camera access in Settings." = "Tillad kameraadgang i Indstillinger for at scanne dit kort.";
-
-"Too many attempts. Please try again in a few minutes." = "For mange forsøg. Prøv igen om et par minutter.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Bankkonto i USA";
-
-"Unavailable for this purchase" = "Ikke tilgængelig for dette køb";
-
-"Unknown" = "Ukendt";
-
-"Update card" = "Opdater kort";
 
 "Use Billing" = "Brug faktureringsadresse";
 
 "Use Delivery" = "Brug leveringsadresse";
 
 "Use Shipping" = "Brug forsendelsesadresse";
-
-"Use your saved info to check out faster" = "Brug dine gemte oplysninger til hurtigere betaling";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kunne ikke bekræfte din betalingsmetode. Vælg venligst en anden betalingsmetode, og prøv igen.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
-
-"Your ZIP is invalid." = "Dit postnummer er ugyldigt.";
-
-"Your card number is incomplete." = "Dit kortnummer er ikke fuldendt.";
-
-"Your card number is invalid." = "Dit kortnummer er ugyldigt.";
-
-"Your card's expiration date is incomplete." = "Dit korts udløbsdato er ikke fuldendt.";
-
-"Your card's expiration date is invalid." = "Dit korts udløbsdato er ugyldig.";
-
-"Your card's expiration month is invalid." = "Kortets udløbsmåned er ugyldig.";
-
-"Your card's expiration year is invalid." = "Dit korts udløbsår er ugyldigt.";
-
-"Your card's security code is incomplete." = "Dit korts sikkerhedskode er ufuldstændig.";
-
-"Your card's security code is invalid." = "Dit korts sikkerhedskode er ugyldig.";
-
-"Your postal code is invalid." = "Dit postnummer er ikke fuldendt.";
-
-"ZIP Code" = "Postnummer";
-
-"card number" = "kortnummer";
-
-"example@example.com" = "eksempel@eksempel.dk";
-
-"expiration date" = "udløbsdato";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "iDEAL Bank";

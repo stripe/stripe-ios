@@ -7,7 +7,12 @@
 //
 
 import Foundation
-@testable import Stripe
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 struct LinkStubs {
     private init() {}
@@ -30,58 +35,66 @@ extension LinkStubs {
         return [
             ConsumerPaymentDetails(
                 stripeID: "1",
-                details: .card(card: .init(
-                    expiryYear: nextYear,
-                    expiryMonth: 1,
-                    brand: "visa",
-                    last4: "4242",
-                    checks: .init(cvcCheck: .pass, allResponseFields: [:]),
-                    allResponseFields: [:]
-                )),
+                details: .card(
+                    card: .init(
+                        expiryYear: nextYear,
+                        expiryMonth: 1,
+                        brand: "visa",
+                        last4: "4242",
+                        checks: .init(cvcCheck: .pass, allResponseFields: [:]),
+                        allResponseFields: [:]
+                    )
+                ),
                 isDefault: true,
                 allResponseFields: [:]
             ),
             ConsumerPaymentDetails(
                 stripeID: "2",
-                details: .card(card: .init(
-                    expiryYear: nextYear,
-                    expiryMonth: 1,
-                    brand: "mastercard",
-                    last4: "4444",
-                    checks: .init(cvcCheck: .fail, allResponseFields: [:]),
-                    allResponseFields: [:]
-                )),
+                details: .card(
+                    card: .init(
+                        expiryYear: nextYear,
+                        expiryMonth: 1,
+                        brand: "mastercard",
+                        last4: "4444",
+                        checks: .init(cvcCheck: .fail, allResponseFields: [:]),
+                        allResponseFields: [:]
+                    )
+                ),
                 isDefault: false,
                 allResponseFields: [:]
             ),
             ConsumerPaymentDetails(
                 stripeID: "3",
-                details: .bankAccount(bankAccount: .init(
-                    iconCode: "capitalone",
-                    name: "Capital One",
-                    last4: "4242",
-                    allResponseFields: [:])
+                details: .bankAccount(
+                    bankAccount: .init(
+                        iconCode: "capitalone",
+                        name: "Capital One",
+                        last4: "4242",
+                        allResponseFields: [:]
+                    )
                 ),
                 isDefault: false,
                 allResponseFields: [:]
             ),
             ConsumerPaymentDetails(
                 stripeID: "4",
-                details: .card(card: .init(
-                    expiryYear: 2020,
-                    expiryMonth: 1,
-                    brand: "american_express",
-                    last4: "0005",
-                    checks: .init(cvcCheck: .fail, allResponseFields: [:]),
-                    allResponseFields: [:]
-                )),
+                details: .card(
+                    card: .init(
+                        expiryYear: 2020,
+                        expiryMonth: 1,
+                        brand: "american_express",
+                        last4: "0005",
+                        checks: .init(cvcCheck: .fail, allResponseFields: [:]),
+                        allResponseFields: [:]
+                    )
+                ),
                 isDefault: false,
                 allResponseFields: [:]
             ),
         ]
     }
 
-    static func consumerSession() -> ConsumerSession{
+    static func consumerSession() -> ConsumerSession {
         return ConsumerSession(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",

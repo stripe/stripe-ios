@@ -3,12 +3,15 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 6/7/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 
 extension TimeInterval {
-    init(milliseconds: Int) {
+    init(
+        milliseconds: Int
+    ) {
         self = Double(milliseconds) / 1000
     }
 

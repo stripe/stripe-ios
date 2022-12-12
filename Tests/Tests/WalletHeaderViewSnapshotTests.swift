@@ -6,22 +6,33 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-import FBSnapshotTestCase
 import StripeCoreTestUtils
+import UIKit
+import iOSSnapshotTestCase
 
-@testable @_spi(STP) import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
 
 class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        self.recordMode = true
+        //        self.recordMode = true
     }
 
     func testApplePayButton() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: .applePay,
+            delegate: nil
+        )
+        verify(headerView)
+    }
+
+    func testApplePayButtonWithCustomCta() {
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: .applePay,
+            applePayButtonType: .buy,
             delegate: nil
         )
         verify(headerView)
@@ -34,18 +45,18 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         )
         verify(headerView)
     }
-    
+
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
     @available(iOS 13.0, *)
     func testAdaptiveElements() {
         var darkMode = false
-        
+
         var appearance = PaymentSheet.Appearance()
         appearance.colors.background = UIColor.init(dynamicProvider: { _ in
             if darkMode {
                 return .black
             }
-            
+
             return .white
         })
 
@@ -55,12 +66,42 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
             appearance: appearance,
             delegate: nil
         )
-        
+
         verify(headerView, identifier: "Light")
-        
+
         darkMode = true
         headerView.traitCollectionDidChange(nil)
-        
+
+        verify(headerView, identifier: "Dark")
+    }
+
+    // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
+    @available(iOS 13.0, *)
+    func testAdaptiveElementsWithCustomApplePayCta() {
+        var darkMode = false
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.colors.background = UIColor.init(dynamicProvider: { _ in
+            if darkMode {
+                return .black
+            }
+
+            return .white
+        })
+
+        appearance.cornerRadius = 0
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: .applePay,
+            appearance: appearance,
+            applePayButtonType: .buy,
+            delegate: nil
+        )
+
+        verify(headerView, identifier: "Light")
+
+        darkMode = true
+        headerView.traitCollectionDidChange(nil)
+
         verify(headerView, identifier: "Dark")
     }
 
@@ -74,11 +115,23 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         headerView.showsCardPaymentMessage = true
         verify(headerView, identifier: "Card only")
     }
-    
+
+    func testAllButtonsWithCustomApplePayCta() {
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: [.applePay, .link],
+            applePayButtonType: .buy,
+            delegate: nil
+        )
+        verify(headerView)
+
+        headerView.showsCardPaymentMessage = true
+        verify(headerView, identifier: "Card only")
+    }
+
     func testCustomFont() throws {
         var appearance = PaymentSheet.Appearance.default
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
-        
+
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: [.applePay, .link],
             appearance: appearance,
@@ -87,11 +140,24 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
 
         verify(headerView)
     }
-    
+
     func testCustomFontScales() throws {
         var appearance = PaymentSheet.Appearance.default
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 1.25
+
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: [.applePay, .link],
+            appearance: appearance,
+            delegate: nil
+        )
+
+        verify(headerView)
+    }
+
+    func testCustomCornerRadius() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.cornerRadius = 14.5
 
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: [.applePay, .link],
@@ -113,15 +179,15 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     }
 }
 
-private extension WalletHeaderViewSnapshotTests {
-    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+extension WalletHeaderViewSnapshotTests {
+    fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
         let isLoggedIn: Bool
     }
 
-    func makeLinkAccountStub() -> LinkAccountStub {
+    fileprivate func makeLinkAccountStub() -> LinkAccountStub {
         return LinkAccountStub(
             email: "customer@example.com",
             redactedPhoneNumber: "+1********55",

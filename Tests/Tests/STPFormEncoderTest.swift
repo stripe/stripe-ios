@@ -1,15 +1,19 @@
 //
 //  STPFormEncoderTest.swift
-//  Stripe Tests
+//  StripeiOS Tests
 //
 //  Created by Jack Flintermann on 1/8/15.
+//  Copyright © 2015 Stripe, Inc. All rights reserved.
 //
-//
-
-import XCTest
 
 @_spi(STP) import StripeCore
-@testable import Stripe
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPTestFormEncodableObject: NSObject, STPFormEncodable {
     var additionalAPIParameters: [AnyHashable: Any] = [:]
@@ -108,7 +112,8 @@ class STPFormEncoderTest: XCTestCase {
             &test_object[test_array_property][2]=false\
             &test_object[test_array_property][3]=true\
             &test_object[test_array_property][4]=true
-            """)
+            """
+        )
     }
 
     func testFormEncoding_arrayOfEncodable() {
@@ -126,7 +131,8 @@ class STPFormEncoderTest: XCTestCase {
             """
             test_object[test_array_property][0][test_property]=inner1\
             &test_object[test_array_property][1][test_array_property][0]=inner2
-            """)
+            """
+        )
     }
 
     func testFormEncoding_dictionaryValue_empty() {
@@ -144,7 +150,8 @@ class STPFormEncoderTest: XCTestCase {
         ]
         XCTAssertEqual(
             encode(testObject),
-            "test_object[test_dictionary_property][foo]=bar&test_object[test_property]=success")
+            "test_object[test_dictionary_property][foo]=bar&test_object[test_property]=success"
+        )
     }
 
     func testFormEncoding_dictionaryOfEncodable() {
@@ -165,7 +172,8 @@ class STPFormEncoderTest: XCTestCase {
             """
             test_object[test_dictionary_property][one][test_property]=inner1\
             &test_object[test_dictionary_property][two][test_array_property][0]=inner2
-            """)
+            """
+        )
     }
 
     func testFormEncoding_setOfEncodable() {
@@ -178,7 +186,8 @@ class STPFormEncoderTest: XCTestCase {
 
         XCTAssertEqual(
             encode(testObject),
-            "test_object[test_array_property][0][test_property]=inner")
+            "test_object[test_array_property][0][test_property]=inner"
+        )
     }
 
     func testFormEncoding_nestedValue() {

@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardFormViewTests: XCTestCase {
 
@@ -36,62 +40,106 @@ class STPCardFormViewTests: XCTestCase {
 
         for shouldHandle in handledErrorsTypes {
             let error = NSError(
-                domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue,
-                userInfo: [STPError.stripeErrorCodeKey: shouldHandle])
+                domain: STPError.stripeDomain,
+                code: STPErrorCode.apiError.rawValue,
+                userInfo: [STPError.stripeErrorCodeKey: shouldHandle]
+            )
             XCTAssertTrue(
-                cardForm.markFormErrors(for: error), "Failed to handle error for \(shouldHandle)")
+                cardForm.markFormErrors(for: error),
+                "Failed to handle error for \(shouldHandle)"
+            )
         }
 
         for shouldNotHandle in unhandledErrorTypes {
             let error: NSError
             if let shouldNotHandle = shouldNotHandle {
                 error = NSError(
-                    domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue,
-                    userInfo: [STPError.stripeErrorCodeKey: shouldNotHandle])
+                    domain: STPError.stripeDomain,
+                    code: STPErrorCode.apiError.rawValue,
+                    userInfo: [STPError.stripeErrorCodeKey: shouldNotHandle]
+                )
             } else {
                 error = NSError(
-                    domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue,
-                    userInfo: nil)
+                    domain: STPError.stripeDomain,
+                    code: STPErrorCode.apiError.rawValue,
+                    userInfo: nil
+                )
             }
             XCTAssertFalse(
                 cardForm.markFormErrors(for: error),
-                "Incorrectly handled \(shouldNotHandle ?? "nil")")
+                "Incorrectly handled \(shouldNotHandle ?? "nil")"
+            )
         }
     }
-    
+
     func testHidingPostalCodeOnInit() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
             let cardForm = STPCardFormView()
             XCTAssertTrue(cardForm.postalCodeField.isHidden)
         }
     }
-    
+
     func testHidingPostalUPECodeOnInit() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
-            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil)
+            let cardForm = STPCardFormView(
+                billingAddressCollection: .automatic,
+                includeCardScanning: false,
+                mergeBillingFields: false,
+                style: .standard,
+                postalCodeRequirement: .upe,
+                prefillDetails: nil
+            )
             XCTAssertTrue(cardForm.postalCodeField.isHidden)
         }
     }
-    
+
     func testNotHidingPostalUPECodeOnInit() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
-            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil)
+            let cardForm = STPCardFormView(
+                billingAddressCollection: .automatic,
+                includeCardScanning: false,
+                mergeBillingFields: false,
+                style: .standard,
+                postalCodeRequirement: .upe,
+                prefillDetails: nil
+            )
             XCTAssertFalse(cardForm.postalCodeField.isHidden)
         }
     }
-    
+
     func testPanLockedOnInit() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
-            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil, inputMode: .panLocked)
+            let cardForm = STPCardFormView(
+                billingAddressCollection: .automatic,
+                includeCardScanning: false,
+                mergeBillingFields: false,
+                style: .standard,
+                postalCodeRequirement: .upe,
+                prefillDetails: nil,
+                inputMode: .panLocked
+            )
             XCTAssertFalse(cardForm.numberField.isUserInteractionEnabled)
         }
     }
-    
+
     func testPrefilledOnInit() {
-        let prefillDeatils = STPCardFormView.PrefillDetails(last4: "4242", expiryMonth: 12, expiryYear: 25, cardBrand: .amex)
+        let prefillDeatils = STPCardFormView.PrefillDetails(
+            last4: "4242",
+            expiryMonth: 12,
+            expiryYear: 25,
+            cardBrand: .amex
+        )
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
-            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: prefillDeatils, inputMode: .panLocked)
-            
+            let cardForm = STPCardFormView(
+                billingAddressCollection: .automatic,
+                includeCardScanning: false,
+                mergeBillingFields: false,
+                style: .standard,
+                postalCodeRequirement: .upe,
+                prefillDetails: prefillDeatils,
+                inputMode: .panLocked
+            )
+
             XCTAssertEqual(cardForm.numberField.text, prefillDeatils.formattedLast4)
             XCTAssertEqual(cardForm.numberField.cardBrand, prefillDeatils.cardBrand)
             XCTAssertEqual(cardForm.expiryField.text, prefillDeatils.formattedExpiry)
@@ -104,7 +152,8 @@ class STPCardFormViewTests: XCTestCase {
 
     func helperFunctionalTestNumber(_ cardNumber: String, shouldHandle: Bool) {
         let createPaymentIntentExpectation = self.expectation(
-            description: "createPaymentIntentExpectation")
+            description: "createPaymentIntentExpectation"
+        )
         var retrievedClientSecret: String? = nil
         STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) {
             (createdPIClientSecret, error) in
@@ -123,7 +172,8 @@ class STPCardFormViewTests: XCTestCase {
             return
         }
 
-        let client = STPAPIClient(publishableKey: "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6")  // STPTestingDefaultPublishableKey
+        // STPTestingDefaultPublishableKey
+        let client = STPAPIClient(publishableKey: "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6")
 
         let expiryYear = NSNumber(value: currentYear + 2)
         let expiryMonth = NSNumber(1)
@@ -140,7 +190,10 @@ class STPCardFormViewTests: XCTestCase {
         billingDetails.address = address
 
         let paymentMethodParams = STPPaymentMethodParams.paramsWith(
-            card: cardParams, billingDetails: billingDetails, metadata: nil)
+            card: cardParams,
+            billingDetails: billingDetails,
+            metadata: nil
+        )
 
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
         paymentIntentParams.paymentMethodParams = paymentMethodParams
@@ -152,11 +205,13 @@ class STPCardFormViewTests: XCTestCase {
                 if shouldHandle {
                     XCTAssertTrue(
                         cardForm.markFormErrors(for: error),
-                        "Failed to handle \(error) for \(cardNumber)")
+                        "Failed to handle \(error) for \(cardNumber)"
+                    )
                 } else {
                     XCTAssertFalse(
                         cardForm.markFormErrors(for: error),
-                        "Incorrectly handled \(error) for \(cardNumber)")
+                        "Incorrectly handled \(error) for \(cardNumber)"
+                    )
                 }
                 confirmExpectation.fulfill()
             } else {

@@ -1,6 +1,6 @@
 //
 //  STPBankSelectionTableViewCell.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by David Estes on 8/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
@@ -10,7 +10,10 @@ import UIKit
 
 class STPBankSelectionTableViewCell: UITableViewCell {
     func configure(
-        withBank bankBrand: STPFPXBankBrand, theme: STPTheme, selected: Bool, offline: Bool,
+        withBank bankBrand: STPFPXBankBrand,
+        theme: STPTheme,
+        selected: Bool,
+        offline: Bool,
         enabled: Bool
     ) {
         bank = bankBrand
@@ -19,7 +22,7 @@ class STPBankSelectionTableViewCell: UITableViewCell {
         backgroundColor = theme.secondaryBackgroundColor
 
         // Left icon
-        leftIcon?.image = STPImageLibrary.fpxBrandImage(for: bank)
+        leftIcon?.image = STPLegacyImageLibrary.fpxBrandImage(for: bank)
         leftIcon?.tintColor = primaryColorForPaymentOption(withSelected: selected, enabled: enabled)
 
         // Title label
@@ -27,11 +30,15 @@ class STPBankSelectionTableViewCell: UITableViewCell {
         titleLabel?.text = STPFPXBank.stringFrom(bank)
         if offline {
             let format = STPLocalizedString(
-                "%@ - Offline", "Bank name when bank is offline for maintenance.")
+                "%@ - Offline",
+                "Bank name when bank is offline for maintenance."
+            )
             titleLabel?.text = String(format: format, STPFPXBank.stringFrom(bank) ?? "")
         }
         titleLabel?.textColor = primaryColorForPaymentOption(
-            withSelected: isSelected, enabled: enabled)
+            withSelected: isSelected,
+            enabled: enabled
+        )
 
         // Loading indicator
         activityIndicator?.tintColor = theme.accentColor
@@ -50,7 +57,10 @@ class STPBankSelectionTableViewCell: UITableViewCell {
     private var titleLabel: UILabel?
     private var activityIndicator: UIActivityIndicatorView?
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // Left icon
         let leftIcon = UIImageView()
@@ -89,7 +99,9 @@ class STPBankSelectionTableViewCell: UITableViewCell {
 
         // Activity indicator
         activityIndicator?.center = CGPoint(
-            x: bounds.width - padding - (activityIndicator?.bounds.midX ?? 0.0), y: midY)
+            x: bounds.width - padding - (activityIndicator?.bounds.midX ?? 0.0),
+            y: midY
+        )
 
         // Title label
         var labelFrame = bounds
@@ -111,7 +123,9 @@ class STPBankSelectionTableViewCell: UITableViewCell {
         }
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

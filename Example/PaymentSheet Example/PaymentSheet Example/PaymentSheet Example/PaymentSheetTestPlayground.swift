@@ -9,18 +9,22 @@
 //  an example of what you should do in a real app!
 //  Note: Do not import Stripe using `@_spi(STP)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
-@_spi(STP) import Stripe
-@_spi(STP) import StripeCore
+import StripePaymentSheet
 import Contacts
 import UIKit
 import SwiftUI
+import PassKit
 
 class PaymentSheetTestPlayground: UIViewController {
+    static let endpointSelectorEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/endpoints"
+    static let defaultCheckoutEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
+
     static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
 
     // Configuration
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
+    @IBOutlet weak var applePayButtonSelector: UISegmentedControl!
     @IBOutlet weak var allowsDelayedPaymentMethodsSelector: UISegmentedControl!
     @IBOutlet weak var shippingInfoSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
@@ -30,6 +34,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var automaticPaymentMethodsSelector: UISegmentedControl!
     @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
+    @IBOutlet weak var customCTALabelTextField: UITextField!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
@@ -51,6 +56,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case eur
         case aud
         case gbp
+        case inr
     }
 
     enum MerchantCountryCode: String, CaseIterable {
@@ -58,12 +64,19 @@ class PaymentSheetTestPlayground: UIViewController {
         case GB
         case AU
         case FR
+        case IN
     }
 
     enum IntentMode: String, CaseIterable {
         case payment
         case paymentWithSetup = "payment_with_setup"
         case setup
+    }
+    
+    enum ShippingMode {
+        case on
+        case onWithDefaults
+        case off
     }
 
     var customerMode: CustomerMode {
@@ -82,9 +95,55 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
-        if applePaySelector.selectedSegmentIndex == 0 {
+        let buttonType: PKPaymentButtonType = {
+            switch applePayButtonSelector.selectedSegmentIndex {
+            case 0: return .plain
+            case 1: return .buy
+            case 2: return .setUp
+            case 3: return .checkout
+            default: return .plain
+            }
+        }()
+#if compiler(>=5.7)
+        if #available(iOS 16.0, *), applePaySelector.selectedSegmentIndex == 2 {
+            let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
+                paymentRequestHandler: { request in
+                    let billing = PKRecurringPaymentSummaryItem(label: "My Subscription", amount: NSDecimalNumber(string: "59.99"))
+                    billing.startDate = Date()
+                    billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+                    billing.intervalUnit = .month
+                    
+                    request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
+                                                                                regularBilling: billing,
+                                                                                managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
+                    request.recurringPaymentRequest?.billingAgreement = "You're going to be billed $59.99 every month for some period of time."
+                    request.paymentSummaryItems = [billing]
+                    return request
+                },
+                authorizationResultHandler: { result, completion in
+//                  Hardcoded order details:
+//                  In a real app, you should fetch these details from your service and call the completion() block on
+//                  the main queue.
+                    result.orderDetails = PKPaymentOrderDetails(
+                        orderTypeIdentifier: "com.myapp.order",
+                        orderIdentifier: "ABC123-AAAA-1111",
+                        webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
+                        authenticationToken: "abc123")
+                    completion(result)
+                }
+            )
             return PaymentSheet.ApplePayConfiguration(
-                merchantId: "com.foo.example", merchantCountryCode: "US")
+                merchantId: "com.foo.example",
+                merchantCountryCode: "US",
+                buttonType: buttonType,
+                customHandlers: customHandlers)
+        }
+#endif
+        if applePaySelector.selectedSegmentIndex == 0  {
+            return PaymentSheet.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe",
+                merchantCountryCode: "US",
+                buttonType: buttonType)
         } else {
             return nil
         }
@@ -126,6 +185,14 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
+    
+    var shippingMode: ShippingMode {
+        switch shippingInfoSelector.selectedSegmentIndex {
+        case 0: return .on
+        case 1: return .onWithDefaults
+        default: return .off
+        }
+    }
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -148,19 +215,25 @@ class PaymentSheetTestPlayground: UIViewController {
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
         }
-        configuration.shippingDetails = { [weak self] in
-            return self?.addressViewController?.addressDetails
+        if shippingMode != .off {
+            configuration.allowsPaymentMethodsRequiringShippingAddress = true
+            configuration.shippingDetails = { [weak self] in
+                return self?.addressDetails
+            }
         }
-            
+        if !(customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false) {
+            configuration.primaryButtonLabel = customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
         return configuration
     }
     var addressConfiguration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
-        if shippingInfoSelector.selectedSegmentIndex == 1 {
+        if case .onWithDefaults = shippingMode {
             configuration.defaultValues = .init(
                 address: .init(
                     city: "San Francisco",
-                    country: "CA",
+                    country: "US",
                     line1: "510 Townsend St.",
                     postalCode: "94102",
                     state: "California"
@@ -174,9 +247,12 @@ class PaymentSheetTestPlayground: UIViewController {
         return configuration
     }
 
+    var addressDetails: AddressViewController.AddressDetails?
+    
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
+    var checkoutEndpoint: String = defaultCheckoutEndpoint
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
@@ -195,8 +271,8 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        // PaymentSheet.supportedPaymentMethods += [.link]
-
+//        PaymentSheet.supportedPaymentMethods += [.link]
+        
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
         
@@ -282,7 +358,7 @@ class PaymentSheetTestPlayground: UIViewController {
 
     func updateButtons() {
         // Update the shipping address
-        if let shippingAddressDetails = addressViewController?.addressDetails {
+        if let shippingAddressDetails = addressDetails {
             let shippingText = shippingAddressDetails.localizedDescription.replacingOccurrences(of: "\n", with: ", ")
             shippingAddressButton.setTitle(shippingText, for: .normal)
         } else {
@@ -302,6 +378,14 @@ class PaymentSheetTestPlayground: UIViewController {
             self.checkoutInlineButton.isEnabled = false
         }
         self.selectPaymentMethodButton.setNeedsLayout()
+    }
+
+    @IBAction func didTapEndpointConfiguration(_ sender: Any) {
+        let endpointSelector = EndpointSelectorViewController(delegate: self,
+                                                              endpointSelectorEndpoint: Self.endpointSelectorEndpoint,
+                                                              currentCheckoutEndpoint: checkoutEndpoint)
+        let navController = UINavigationController(rootViewController: endpointSelector)
+        self.navigationController?.present(navController, animated: true, completion: nil)
     }
 
     @IBAction func didTapResetConfig(_ sender: Any) {
@@ -341,7 +425,7 @@ extension PaymentSheetTestPlayground {
         addressViewController = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
+        let url = URL(string: checkoutEndpoint)!
         let customer: String = {
             switch customerMode {
             case .guest:
@@ -358,9 +442,9 @@ extension PaymentSheetTestPlayground {
             "currency": currency.rawValue,
             "merchant_country_code": merchantCountryCode.rawValue,
             "mode": intentMode.rawValue,
-            "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0
+//            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)
@@ -390,6 +474,7 @@ extension PaymentSheetTestPlayground {
                     self.selectPaymentMethodButton.isEnabled = true
                     self.shippingAddressButton.isEnabled = true
                     self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
+                    self.addressDetails = nil
                     self.updateButtons()
                 }
             }
@@ -429,10 +514,13 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let automaticPaymentMethodsSelectorValue: Int
 
     let applePaySelectorValue: Int
+    let applePayButtonTypeValue: Int
     let allowsDelayedPaymentMethodsSelectorValue: Int
     let defaultBillingAddressSelectorValue: Int
     let shippingInfoSelectorValue: Int
     let linkSelectorValue: Int
+    let customCtaLabel: String?
+    let checkoutEndpoint: String?
 
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
         return PaymentSheetPlaygroundSettings(
@@ -442,10 +530,13 @@ struct PaymentSheetPlaygroundSettings: Codable {
             merchantCountryCode: 0,
             automaticPaymentMethodsSelectorValue: 0,
             applePaySelectorValue: 0,
+            applePayButtonTypeValue: 0,
             allowsDelayedPaymentMethodsSelectorValue: 1,
             defaultBillingAddressSelectorValue: 1,
             shippingInfoSelectorValue: 0,
-            linkSelectorValue: 1
+            linkSelectorValue: 1,
+            customCtaLabel: nil,
+            checkoutEndpoint: PaymentSheetTestPlayground.defaultCheckoutEndpoint
         )
     }
 }
@@ -454,7 +545,22 @@ struct PaymentSheetPlaygroundSettings: Codable {
 extension PaymentSheetTestPlayground: AddressViewControllerDelegate {
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?) {
         addressViewController.dismiss(animated: true)
+        self.addressDetails = address
         self.updateButtons()
+    }
+}
+
+// MARK: - EndpointSelectorViewControllerDelegate
+extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
+    func selected(endpoint: String) -> Void {
+        checkoutEndpoint = endpoint
+        serializeSettingsToNSUserDefaults()
+        loadBackend()
+        self.navigationController?.dismiss(animated: true)
+
+    }
+    func cancelTapped() -> Void {
+        self.navigationController?.dismiss(animated: true)
     }
 }
 
@@ -469,10 +575,13 @@ extension PaymentSheetTestPlayground {
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
             automaticPaymentMethodsSelectorValue: automaticPaymentMethodsSelector.selectedSegmentIndex,
             applePaySelectorValue: applePaySelector.selectedSegmentIndex,
+            applePayButtonTypeValue: applePayButtonSelector.selectedSegmentIndex,
             allowsDelayedPaymentMethodsSelectorValue: allowsDelayedPaymentMethodsSelector.selectedSegmentIndex,
             defaultBillingAddressSelectorValue: defaultBillingAddressSelector.selectedSegmentIndex,
             shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
-            linkSelectorValue: linkSelector.selectedSegmentIndex
+            linkSelectorValue: linkSelector.selectedSegmentIndex,
+            customCtaLabel: customCTALabelTextField.text,
+            checkoutEndpoint: checkoutEndpoint
         )
         let data = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
@@ -493,6 +602,7 @@ extension PaymentSheetTestPlayground {
     func loadSettingsFrom(settings: PaymentSheetPlaygroundSettings) {
         customerModeSelector.selectedSegmentIndex = settings.customerModeSelectorValue
         applePaySelector.selectedSegmentIndex = settings.applePaySelectorValue
+        applePayButtonSelector.selectedSegmentIndex = settings.applePayButtonTypeValue
         allowsDelayedPaymentMethodsSelector.selectedSegmentIndex = settings.allowsDelayedPaymentMethodsSelectorValue
         shippingInfoSelector.selectedSegmentIndex = settings.shippingInfoSelectorValue
         currencySelector.selectedSegmentIndex = settings.currencySelectorValue
@@ -501,6 +611,8 @@ extension PaymentSheetTestPlayground {
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
+        customCTALabelTextField.text = settings.customCtaLabel
+        checkoutEndpoint = settings.checkoutEndpoint ?? PaymentSheetTestPlayground.defaultCheckoutEndpoint
     }
 }
 

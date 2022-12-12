@@ -3,10 +3,11 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/4/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 @_spi(STP) import StripeCameraCore
 
 struct FaceScannerOutput: Equatable {
@@ -29,7 +30,7 @@ struct FaceScannerOutput: Equatable {
 }
 
 extension FaceScannerOutput {
-    @available(iOS 13, *)
+
     init(
         faceDetectorOutput: FaceDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?,
@@ -37,19 +38,22 @@ extension FaceScannerOutput {
     ) {
         var isValid = false
         if let rect = faceDetectorOutput.predictions.first?.rect {
-            isValid = cameraProperties?.isAdjustingFocus != true
-            && faceDetectorOutput.predictions.count == 1
-            && FaceScannerOutput.isFaceCentered(
-                rect: rect,
-                maxCenteredThreshold: configuration.maxCenteredThreshold
-            ) && FaceScannerOutput.isFaceAwayFromEdges(
-                rect: rect,
-                minEdgeThreshold: configuration.minEdgeThreshold
-            ) && FaceScannerOutput.isFaceWithinCoverageThresholds(
-                rect: rect,
-                min: configuration.minCoverageThreshold,
-                max: configuration.maxCoverageThreshold
-            )
+            isValid =
+                cameraProperties?.isAdjustingFocus != true
+                && faceDetectorOutput.predictions.count == 1
+                && FaceScannerOutput.isFaceCentered(
+                    rect: rect,
+                    maxCenteredThreshold: configuration.maxCenteredThreshold
+                )
+                && FaceScannerOutput.isFaceAwayFromEdges(
+                    rect: rect,
+                    minEdgeThreshold: configuration.minEdgeThreshold
+                )
+                && FaceScannerOutput.isFaceWithinCoverageThresholds(
+                    rect: rect,
+                    min: configuration.minCoverageThreshold,
+                    max: configuration.maxCoverageThreshold
+                )
         }
 
         self.init(
@@ -62,15 +66,15 @@ extension FaceScannerOutput {
     /// Is the face’s bounding box is centered in the frame within max thresholds
     static func isFaceCentered(rect: CGRect, maxCenteredThreshold: CGPoint) -> Bool {
         return abs(1 - (rect.maxY + rect.minY)) < maxCenteredThreshold.y
-        && abs(1 - (rect.maxX + rect.minX)) < maxCenteredThreshold.x
+            && abs(1 - (rect.maxX + rect.minX)) < maxCenteredThreshold.x
     }
 
     /// Is the face’s bounding box is away from the edges of the image by a minimum threshold
     static func isFaceAwayFromEdges(rect: CGRect, minEdgeThreshold: CGFloat) -> Bool {
         return rect.minY > minEdgeThreshold
-        && rect.maxY < (1 - minEdgeThreshold)
-        && rect.minX > minEdgeThreshold
-        && rect.maxX < (1 - minEdgeThreshold)
+            && rect.maxY < (1 - minEdgeThreshold)
+            && rect.minX > minEdgeThreshold
+            && rect.maxX < (1 - minEdgeThreshold)
     }
 
     /// Is the face’s bounding box area (coverage) is between a min & max threshold

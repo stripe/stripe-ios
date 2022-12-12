@@ -1,26 +1,33 @@
 //
 //  PaymentSheetFormFactoryTest.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 6/19/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
-@_spi(STP) @testable import Stripe
-@_spi(STP) @testable import StripeUICore
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class MockElement: Element {
     var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
-    
-    init(paramsUpdater: @escaping (IntentConfirmParams) -> IntentConfirmParams?) {
+
+    init(
+        paramsUpdater: @escaping (IntentConfirmParams) -> IntentConfirmParams?
+    ) {
         self.paramsUpdater = paramsUpdater
     }
-    
+
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         return paramsUpdater(params)
     }
-    
+
     weak var delegate: ElementDelegate?
     lazy var view: UIView = { UIView() }()
 }
@@ -38,7 +45,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let name = factory.makeName()
         let email = factory.makeEmail()
         let checkbox = factory.makeSaveCheckbox { _ in }
-        
+
         let form = FormElement(elements: [name, email, checkbox])
         let params = form.updateParams(params: IntentConfirmParams(type: .dynamic("sepa_debit")))
 
@@ -87,7 +94,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = name.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.name)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"] as! String, "someName")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"]
+                as! String,
+            "someName"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
@@ -106,7 +117,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = name.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.name, "someName")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
@@ -119,15 +132,28 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
-        let nameSpec = FormSpec.NameFieldSpec(apiPath: ["v1": "custom_location[name]"], translationId: nil)
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)], nextActionSpec: nil)
+        let nameSpec = FormSpec.NameFieldSpec(
+            apiPath: ["v1": "custom_location[name]"],
+            translationId: nil
+        )
+        let spec = FormSpec(
+            type: "mock_pm",
+            async: false,
+            fields: [.name(nameSpec)],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.name)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"] as! String, "someName")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"]
+                as! String,
+            "someName"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
@@ -141,13 +167,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("mock_payment_method")
         )
         let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, translationId: nil)
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)], nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "mock_pm",
+            async: false,
+            fields: [.name(nameSpec)],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
         let updatedParams = formElement.updateParams(params: params)
 
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[name]"]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.name, "someName")
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
@@ -166,7 +200,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let updatedParams = email.updateParams(params: params)
 
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"] as! String, "email@stripe.com")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"]
+                as! String,
+            "email@stripe.com"
+        )
         XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.email)
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
@@ -186,7 +224,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = email.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.email, "email@stripe.com")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
@@ -200,14 +240,24 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("mock_payment_method")
         )
         let emailSpec = FormSpec.BaseFieldSpec(apiPath: ["v1": "custom_location[email]"])
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.email(emailSpec)], nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "mock_pm",
+            async: false,
+            fields: [.email(emailSpec)],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.email)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"] as! String, "email@stripe.com")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"]
+                as! String,
+            "email@stripe.com"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
@@ -222,14 +272,22 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         let emailSpec = FormSpec.BaseFieldSpec(apiPath: nil)
-        let spec = FormSpec(type: "mock_pm", async: false, fields: [.email(emailSpec)], nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "mock_pm",
+            async: false,
+            fields: [.email(emailSpec)],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.email, "email@stripe.com")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[email]"]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
@@ -241,17 +299,31 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
-        let selectorSpec = FormSpec.SelectorSpec(translationId: .eps_bank,
-                                                 items: [.init(displayText: "d1", apiValue: "123"),
-                                                         .init(displayText: "d2", apiValue: "456")],
-                                                 apiPath: ["v1": "custom_location[selector]"])
-        let spec = FormSpec(type: "sepa_debit", async: false, fields: [.selector(selectorSpec)], nextActionSpec: nil)
+        let selectorSpec = FormSpec.SelectorSpec(
+            translationId: .eps_bank,
+            items: [
+                .init(displayText: "d1", apiValue: "123"),
+                .init(displayText: "d2", apiValue: "456"),
+            ],
+            apiPath: ["v1": "custom_location[selector]"]
+        )
+        let spec = FormSpec(
+            type: "sepa_debit",
+            async: false,
+            fields: [.selector(selectorSpec)],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
 
         let updatedParams = formElement.updateParams(params: params)
 
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[selector]"] as! String, "123")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[selector]"]
+                as! String,
+            "123"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
     }
@@ -263,17 +335,24 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("klarna")
         )
-        let spec = FormSpec(type: "klarna",
-                            async: false,
-                            fields: [.klarna_country(.init(apiPath: nil))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "klarna",
+            async: false,
+            fields: [.klarna_country(.init(apiPath: nil))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("klarna"))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "US")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[address][country]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters[
+                "billing_details[address][country]"
+            ]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "klarna")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .klarna)
     }
@@ -285,17 +364,25 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("klarna")
         )
-        let spec = FormSpec(type: "klarna",
-                            async: false,
-                            fields: [.klarna_country(.init(apiPath:["v1":"billing_details[address][country]"]))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "klarna",
+            async: false,
+            fields: [.klarna_country(.init(apiPath: ["v1": "billing_details[address][country]"]))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("klarna"))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.address?.country)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[address][country]"] as! String, "US")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters[
+                "billing_details[address][country]"
+            ] as! String,
+            "US"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "klarna")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .klarna)
     }
@@ -314,7 +401,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = bsb.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber, "000000")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -333,7 +422,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = bsb.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_path[bsb_number]"] as! String, "000000")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_path[bsb_number]"]
+                as! String,
+            "000000"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -345,10 +438,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
-        let spec = FormSpec(type: "au_becs_debit",
-                            async: false,
-                            fields: [.au_becs_bsb_number(.init(apiPath: nil))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "au_becs_debit",
+            async: false,
+            fields: [.au_becs_bsb_number(.init(apiPath: nil))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
@@ -360,7 +456,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber, "000000")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -372,10 +470,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
-        let spec = FormSpec(type: "au_becs_debit",
-                            async: false,
-                            fields: [.au_becs_bsb_number(.init(apiPath: ["v1":"au_becs_debit[bsb_number]"]))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "au_becs_debit",
+            async: false,
+            fields: [.au_becs_bsb_number(.init(apiPath: ["v1": "au_becs_debit[bsb_number]"]))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
@@ -387,7 +488,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"] as! String, "000000")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"]
+                as! String,
+            "000000"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -399,10 +504,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
-        let spec = FormSpec(type: "au_becs_debit",
-                            async: false,
-                            fields: [.au_becs_account_number(.init(apiPath: nil))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "au_becs_debit",
+            async: false,
+            fields: [.au_becs_account_number(.init(apiPath: nil))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
@@ -414,7 +522,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber, "000123456")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[account_number]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters[
+                "au_becs_debit[account_number]"
+            ]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -426,10 +538,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
-        let spec = FormSpec(type: "au_becs_debit",
-                            async: false,
-                            fields: [.au_becs_account_number(.init(apiPath: ["v1":"au_becs_debit[account_number]"]))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "au_becs_debit",
+            async: false,
+            fields: [
+                .au_becs_account_number(.init(apiPath: ["v1": "au_becs_debit[account_number]"]))
+            ],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
@@ -441,7 +558,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[account_number]"] as! String, "000123456")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters[
+                "au_becs_debit[account_number]"
+            ] as! String,
+            "000123456"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -460,7 +582,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = accountNum.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber, "000123456")
-        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[account_number]"])
+        XCTAssertNil(
+            updatedParams?.paymentMethodParams.additionalAPIParameters[
+                "au_becs_debit[account_number]"
+            ]
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -479,7 +605,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = accountNum.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_path[account_number]"] as! String, "000123456")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters[
+                "custom_path[account_number]"
+            ] as! String,
+            "000123456"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -491,10 +622,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("sofort")
         )
-        let spec = FormSpec(type: "sofort",
-                            async: false,
-                            fields: [.country(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "sofort",
+            async: false,
+            fields: [.country(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sofort"))
 
@@ -513,17 +647,28 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("sofort")
         )
-        let spec = FormSpec(type: "sofort",
-                            async: false,
-                            fields: [.country(.init(apiPath: ["v1":"sofort[country]"], allowedCountryCodes: ["AT", "BE"]))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "sofort",
+            async: false,
+            fields: [
+                .country(
+                    .init(apiPath: ["v1": "sofort[country]"], allowedCountryCodes: ["AT", "BE"])
+                )
+            ],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sofort"))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.sofort?.country)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"] as! String, "AT")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"]
+                as! String,
+            "AT"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
     }
@@ -559,7 +704,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = country.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.sofort?.country)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"] as! String, "AT")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"]
+                as! String,
+            "AT"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
     }
@@ -571,10 +720,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
-        let spec = FormSpec(type: "sepa_debit",
-                            async: false,
-                            fields: [.iban(.init(apiPath: nil))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "sepa_debit",
+            async: false,
+            fields: [.iban(.init(apiPath: nil))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
@@ -598,10 +750,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
-        let spec = FormSpec(type: "sepa_debit",
-                            async: false,
-                            fields: [.iban(.init(apiPath: ["v1": "sepa_debit[iban]"]))],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "sepa_debit",
+            async: false,
+            fields: [.iban(.init(apiPath: ["v1": "sepa_debit[iban]"]))],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
@@ -613,7 +768,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.sepaDebit?.iban)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sepa_debit[iban]"] as! String, "GB33BUKB20201555555555")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["sepa_debit[iban]"]
+                as! String,
+            "GB33BUKB20201555555555"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
     }
@@ -651,7 +810,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let updatedParams = iban.updateParams(params: params)
 
         XCTAssertNil(updatedParams?.paymentMethodParams.sepaDebit?.iban)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sepa_debit[iban]"] as! String, "GB33BUKB20201555555555")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.additionalAPIParameters["sepa_debit[iban]"]
+                as! String,
+            "GB33BUKB20201555555555"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
     }
@@ -663,14 +826,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("luxe_bucks")
         )
-        let spec = FormSpec(type: "luxe_bucks",
-                            async: false,
-                            fields: [
-                                .unknown("some_unknownField1"),
-                                .email(.init(apiPath: nil)),
-                                .unknown("some_unknownField2"),
-                            ],
-                            nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "luxe_bucks",
+            async: false,
+            fields: [
+                .unknown("some_unknownField1"),
+                .email(.init(apiPath: nil)),
+                .unknown("some_unknownField2"),
+            ],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("luxe_bucks"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
@@ -688,12 +854,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testMakeFormElement_BillingAddress() {
         let addressSpecProvider = AddressSpecProvider()
-        addressSpecProvider.addressSpecs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",
-                                                              require: "ACSZ",
-                                                              cityNameType: nil,
-                                                              stateNameType: .state,
-                                                              zip: "\\d{5}",
-                                                              zipNameType: .zip)]
+        addressSpecProvider.addressSpecs = [
+            "US": AddressSpec(
+                format: "%N%n%O%n%A%n%C, %S %Z",
+                require: "ACSZ",
+                cityNameType: nil,
+                stateNameType: .state,
+                zip: "\\d{5}",
+                zipNameType: .zip
+            )
+        ]
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -705,18 +875,30 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         accountNum.element.line1?.setText("123 main")
         accountNum.element.line2?.setText("#501")
         accountNum.element.city?.setText("AnywhereTown")
-        accountNum.element.state?.setText("California")
+        accountNum.element.state?.setRawData("California")
         accountNum.element.postalCode?.setText("55555")
 
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
         let updatedParams = accountNum.updateParams(params: params)
 
-        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.line1, "123 main")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.billingDetails?.address?.line1,
+            "123 main"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.line2, "#501")
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "US")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.city, "AnywhereTown")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.state, "California")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.postalCode, "55555")
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.billingDetails?.address?.city,
+            "AnywhereTown"
+        )
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.billingDetails?.address?.state,
+            "California"
+        )
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.billingDetails?.address?.postalCode,
+            "55555"
+        )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
@@ -731,10 +913,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             addressSpecProvider: addressSpecProvider
         )
         let billingAddressSpec = FormSpec.BillingAddressSpec(allowedCountryCodes: nil)
-        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)], nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "mockPM",
+            async: false,
+            fields: [.billing_address(billingAddressSpec)],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
-        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement) else {
+        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement)
+        else {
             XCTFail("failed to get address section element")
             return
         }
@@ -754,10 +943,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             addressSpecProvider: addressSpecProvider
         )
         let billingAddressSpec = FormSpec.BillingAddressSpec(allowedCountryCodes: ["FR"])
-        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)], nextActionSpec: nil)
+        let spec = FormSpec(
+            type: "mockPM",
+            async: false,
+            fields: [.billing_address(billingAddressSpec)],
+            selectorIcon: nil,
+            nextActionSpec: nil
+        )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
-        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement) else {
+        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement)
+        else {
             XCTFail("failed to get address section element")
             return
         }
@@ -771,28 +967,41 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let intent = Intent.paymentIntent(STPFixtures.paymentIntent())
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
-            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
+            "US": AddressSpec(
+                format: "ACSZP",
+                require: "AZ",
+                cityNameType: .post_town,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .pin
+            )
         ]
         let loadFormSpecs = expectation(description: "Load form specs")
         FormSpecProvider.shared.load { _ in
             loadFormSpecs.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
-        for type in PaymentSheet.supportedPaymentMethods.filter({ $0 != .card && $0 != .USBankAccount }) {
+        for type in PaymentSheet.supportedPaymentMethods.filter({
+            $0 != .card && $0 != .USBankAccount
+        }) {
             let factory = PaymentSheetFormFactory(
                 intent: intent,
                 configuration: configuration,
-                paymentMethod: PaymentSheet.PaymentMethodType(from: STPPaymentMethod.string(from: type)!),
+                paymentMethod: PaymentSheet.PaymentMethodType(
+                    from: STPPaymentMethod.string(from: type)!
+                ),
                 addressSpecProvider: specProvider
             )
-            
+
             guard let form = factory.make() as? FormElement else {
                 XCTFail()
                 return
             }
-            XCTAssertFalse(form.getAllSubElements().contains {
-                $0 is PaymentMethodElementWrapper<CheckboxElement> || $0 is CheckboxElement
-            })
+            XCTAssertFalse(
+                form.getAllSubElements().contains {
+                    $0 is PaymentMethodElementWrapper<CheckboxElement> || $0 is CheckboxElement
+                }
+            )
         }
     }
 
@@ -822,7 +1031,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testBillingAddressSection() {
         let defaultAddress = PaymentSheet.Address(
-            city: "San Francisco", country: "US", line1: "510 Townsend St.", line2: "Line 2", postalCode: "94102", state: "CA"
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
         )
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
@@ -831,7 +1045,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // An address section with defaults...
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
-            "US": AddressSpec(format: "NOACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "US": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            )
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
@@ -842,8 +1063,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let addressSection = factory.makeBillingAddressSection(countries: nil)
 
         // ...should update params
-        let intentConfirmParams = addressSection.updateParams(params: IntentConfirmParams(type: .card))
-        guard let billingDetails = intentConfirmParams?.paymentMethodParams.billingDetails?.address else {
+        let intentConfirmParams = addressSection.updateParams(
+            params: IntentConfirmParams(type: .card)
+        )
+        guard let billingDetails = intentConfirmParams?.paymentMethodParams.billingDetails?.address
+        else {
             XCTFail()
             return
         }
@@ -855,17 +1079,26 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(billingDetails.state, defaultAddress.state)
         XCTAssertEqual(billingDetails.country, defaultAddress.country)
     }
-    
+
     func testPreferDefaultBillingDetailsOverShippingDetails() {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         configuration.defaultBillingDetails.address = .init(line1: "Billing line 1")
-        configuration.shippingDetails = { return .init(address: .init(country: "US", line1: "Shipping line 1"), name: "Name") }
+        configuration.shippingDetails = {
+            return .init(address: .init(country: "US", line1: "Shipping line 1"), name: "Name")
+        }
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
         // An address section with both default billing and default shipping...
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
-            "US": AddressSpec(format: "NOACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+            "US": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            )
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
@@ -879,35 +1112,48 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...and doesn't show the shipping checkbox
         XCTAssertTrue(addressSection.element.sameAsCheckbox.view.isHidden)
     }
-    
+
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
         let addressSpecProvider = AddressSpecProvider()
-        let specs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",
-                                       require: "ACSZ",
-                                       cityNameType: nil,
-                                       stateNameType: .state,
-                                       zip: "\\d{5}",
-                                       zipNameType: .zip),
-                     "FR": AddressSpec(format: "%O%n%N%n%A%n%Z %C",
-                                       require: "ACZ",
-                                       cityNameType: nil,
-                                       stateNameType: nil,
-                                       zip: "\\d{2} ?\\d{3}",
-                                       zipNameType: nil)]
-        let filteredSpecs = specs.filter {countries.contains($0.key)}
+        let specs = [
+            "US": AddressSpec(
+                format: "%N%n%O%n%A%n%C, %S %Z",
+                require: "ACSZ",
+                cityNameType: nil,
+                stateNameType: .state,
+                zip: "\\d{5}",
+                zipNameType: .zip
+            ),
+            "FR": AddressSpec(
+                format: "%O%n%N%n%A%n%Z %C",
+                require: "ACZ",
+                cityNameType: nil,
+                stateNameType: nil,
+                zip: "\\d{2} ?\\d{3}",
+                zipNameType: nil
+            ),
+        ]
+        let filteredSpecs = specs.filter { countries.contains($0.key) }
         addressSpecProvider.addressSpecs = filteredSpecs
         return addressSpecProvider
     }
 
-    private func firstWrappedTextFieldElement(formElement: FormElement) -> PaymentMethodElementWrapper<TextFieldElement>? {
+    private func firstWrappedTextFieldElement(
+        formElement: FormElement
+    ) -> PaymentMethodElementWrapper<TextFieldElement>? {
         guard let sectionElement = formElement.elements.first as? SectionElement,
-              let wrappedElement = sectionElement.elements.first as? PaymentMethodElementWrapper<TextFieldElement> else {
-                  return nil
-              }
+            let wrappedElement = sectionElement.elements.first
+                as? PaymentMethodElementWrapper<TextFieldElement>
+        else {
+            return nil
+        }
         return wrappedElement
     }
     private func firstAddressSectionElement(formElement: FormElement) -> AddressSectionElement? {
-        guard let wrapper = formElement.elements.first as? PaymentMethodElementWrapper<AddressSectionElement> else {
+        guard
+            let wrapper = formElement.elements.first
+                as? PaymentMethodElementWrapper<AddressSectionElement>
+        else {
             return nil
         }
         return wrapper.element

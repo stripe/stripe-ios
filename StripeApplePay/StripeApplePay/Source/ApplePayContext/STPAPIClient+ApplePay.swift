@@ -1,8 +1,9 @@
 //
 //  STPAPIClient+ApplePay.swift
-//  Stripe
+//  StripeApplePay
 //
 //  Created by Jack Flintermann on 12/19/14.
+//  Copyright © 2014 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -17,6 +18,7 @@ extension STPAPIClient {
     /// Currently, we convert billing address related errors into a PKPaymentError that helpfully points to the billing address field in the Apple Pay sheet.
     /// Note that Apple Pay should prevent most card errors (e.g. invalid CVC, expired cards) when you add a card to the wallet.
     /// - Parameter stripeError:   An error from the Stripe SDK.
+    @objc(pkPaymentErrorForStripeError:)
     public class func pkPaymentError(forStripeError stripeError: Error?) -> Error? {
         guard let stripeError = stripeError else {
             return nil
@@ -32,7 +34,10 @@ extension STPAPIClient {
             userInfo[PKPaymentErrorKey.postalAddressUserInfoKey.rawValue] =
                 CNPostalAddressPostalCodeKey
             return NSError(
-                domain: STPError.stripeDomain, code: errorCode.rawValue, userInfo: userInfo)
+                domain: STPError.stripeDomain,
+                code: errorCode.rawValue,
+                userInfo: userInfo
+            )
         }
         return stripeError
     }

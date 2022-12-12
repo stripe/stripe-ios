@@ -6,32 +6,43 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
-@_spi(STP) @testable import StripeApplePay
+@_spi(STP) import StripePayments
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeApplePay
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
     func applePayContext(
-        _ context: STPApplePayContext, didSelectShippingContact contact: PKContact,
+        _ context: STPApplePayContext,
+        didSelectShippingContact contact: PKContact,
         handler completion: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
     ) {
         completion(PKPaymentRequestShippingContactUpdate())
     }
 
     func applePayContext(
-        _ context: STPApplePayContext, didSelect shippingMethod: PKShippingMethod,
+        _ context: STPApplePayContext,
+        didSelect shippingMethod: PKShippingMethod,
         handler completion: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
     ) {
         completion(PKPaymentRequestShippingMethodUpdate())
     }
 
     func applePayContext(
-        _ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Error?
+        _ context: STPApplePayContext,
+        didCompleteWith status: STPPaymentStatus,
+        error: Error?
     ) {
     }
 
     func applePayContext(
-        _ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: STPPaymentMethod,
-        paymentInformation: PKPayment, completion: STPIntentClientSecretCompletionBlock
+        _ context: STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        paymentInformation: PKPayment,
+        completion: STPIntentClientSecretCompletionBlock
     ) {
     }
 }
@@ -42,7 +53,10 @@ class STPApplePayContextTest: XCTestCase {
         // With a user that only implements iOS 11 delegate methods...
         let delegate = STPApplePayTestDelegateiOS11()
         let request = StripeAPI.paymentRequest(
-            withMerchantIdentifier: "foo", country: "US", currency: "USD")
+            withMerchantIdentifier: "foo",
+            country: "US",
+            currency: "USD"
+        )
         request.paymentSummaryItems = [
             PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
         ]
@@ -53,39 +67,58 @@ class STPApplePayContextTest: XCTestCase {
             context.responds(
                 to: #selector(
                     PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
-                        _:didSelectShippingContact:handler:))))
+                        _:
+                        didSelectShippingContact:
+                        handler:
+                    ))
+            )
+        )
         XCTAssertFalse(
             context.responds(
                 to: #selector(
                     PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
-                        _:didSelectShippingContact:completion:))))
+                        _:
+                        didSelectShippingContact:
+                        completion:
+                    ))
+            )
+        )
 
         // ...and forward the PassKit delegate method to its delegate
         let vc: PKPaymentAuthorizationController = PKPaymentAuthorizationController()
         let contact = PKContact()
         let shippingContactExpectation = expectation(
-            description: "didSelectShippingContact forwarded")
+            description: "didSelectShippingContact forwarded"
+        )
         context.paymentAuthorizationController(
-            vc, didSelectShippingContact: contact,
+            vc,
+            didSelectShippingContact: contact,
             handler: { _ in
                 shippingContactExpectation.fulfill()
-            })
+            }
+        )
 
         let method = PKShippingMethod()
         let shippingMethodExpectation = expectation(
-            description: "didSelectShippingMethod forwarded")
+            description: "didSelectShippingMethod forwarded"
+        )
         context.paymentAuthorizationController(
-            vc, didSelectShippingMethod: method,
+            vc,
+            didSelectShippingMethod: method,
             handler: { _ in
                 shippingMethodExpectation.fulfill()
-            })
+            }
+        )
         waitForExpectations(timeout: 2, handler: nil)
     }
 
     func testConvertsShippingDetails() {
         let delegate = STPApplePayTestDelegateiOS11()
         let request = StripeAPI.paymentRequest(
-            withMerchantIdentifier: "foo", country: "US", currency: "USD")
+            withMerchantIdentifier: "foo",
+            country: "US",
+            currency: "USD"
+        )
         request.paymentSummaryItems = [
             PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
         ]
@@ -117,5 +150,14 @@ class STPApplePayContextTest: XCTestCase {
         XCTAssertEqual(shippingParams?.address.state, "CA")
         XCTAssertEqual(shippingParams?.address.country, "US")
         XCTAssertEqual(shippingParams?.address.postalCode, "94105")
+    }
+
+    // Tests stp_tokenParameters in StripeApplePay, not StripePayments
+    func testStpTokenParameters() {
+        let applePay = STPFixtures.applePayPayment()
+        let applePayDict = applePay.stp_tokenParameters(apiClient: .shared)
+        XCTAssertNotNil(applePayDict["pk_token"])
+        XCTAssertEqual((applePayDict["card"] as! NSDictionary)["name"] as! String, "Test Testerson")
+        XCTAssertEqual(applePayDict["pk_token_instrument_name"] as! String, "Master Charge")
     }
 }

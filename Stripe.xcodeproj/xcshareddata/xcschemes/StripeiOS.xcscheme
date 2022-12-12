@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1200"
+   LastUpgradeVersion = "1400"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -60,6 +60,12 @@
             <SkippedTests>
                <Test
                   Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
+               </Test>
+               <Test
+                  Identifier = "PaymentMethodMessagingViewFunctionalTest">
+               </Test>
+               <Test
+                  Identifier = "STPCardBINMetadataTests">
                </Test>
                <Test
                   Identifier = "STPCardBINMetadataTests/testAPICall()">

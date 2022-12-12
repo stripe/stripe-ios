@@ -6,13 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
-/**
- A drop-in class that presents a sheet for a user to verify their identity.
- This class is in beta; see https://stripe.com/docs/identity for access
- */
+/// A drop-in class that presents a sheet for a user to verify their identity.
+/// This class is in beta; see https://stripe.com/docs/identity for access
 final public class IdentityVerificationSheet {
 
     /// The result of an attempt to finish an identity verification flow
@@ -27,31 +25,27 @@ final public class IdentityVerificationSheet {
 
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
-        /**
-         An image of your customer-facing business logo.
-
-         - Note: The recommended image size is 32 x 32 points. The image will be
-         displayed in both light and dark modes, if the app supports it. Use a
-         dynamic UIImage to support different images in light vs dark mode.
-         */
+        /// An image of your customer-facing business logo.
+        ///
+        /// - Note: The recommended image size is 32 x 32 points. The image will be
+        /// displayed in both light and dark modes, if the app supports it. Use a
+        /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
 
-        /**
-         Initializes a Configuration.
-         - Parameters:
-           - brandLogo: An image of your customer-facing business logo.
-             The recommended image size is 32 x 32 points. The image will be
-             displayed in both light and dark modes, if the app supports it.
-         */
-        public init(brandLogo: UIImage) {
+        /// Initializes a Configuration.
+        /// - Parameters:
+        ///   - brandLogo: An image of your customer-facing business logo.
+        ///     The recommended image size is 32 x 32 points. The image will be
+        ///     displayed in both light and dark modes, if the app supports it.
+        public init(
+            brandLogo: UIImage
+        ) {
             self.brandLogo = brandLogo
         }
     }
 
-    /**
-     The client secret of the Stripe VerificationSession object.
-     See https://stripe.com/docs/api/identity/verification_sessions
-     */
+    /// The client secret of the Stripe VerificationSession object.
+    /// See https://stripe.com/docs/api/identity/verification_sessions
     public let verificationSessionClientSecret: String
 
     // TODO(mludowise|IDPROD-2542): Make non-optional when native component
@@ -59,14 +53,14 @@ final public class IdentityVerificationSheet {
     // This is required to be non-null for native experience.
     let verificationSheetController: VerificationSheetControllerProtocol?
 
-    /**
-     Initializes a web-based `IdentityVerificationSheet`.
-
-     - Parameters:
-       - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
-     */
+    /// Initializes a web-based `IdentityVerificationSheet`.
+    ///
+    /// - Parameters:
+    ///   - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
     @available(iOS 14.3, *)
-    public convenience init(verificationSessionClientSecret: String) {
+    public convenience init(
+        verificationSessionClientSecret: String
+    ) {
         self.init(
             verificationSessionClientSecret: verificationSessionClientSecret,
             verificationSheetController: nil,
@@ -74,20 +68,19 @@ final public class IdentityVerificationSheet {
         )
     }
 
-    /**
-     Initializes an `IdentityVerificationSheet` from native iOS components.
-
-     - Note: This initializer and creating an ephemeral key for a
-     VerificationSession is available on an invite only basis. Please contact
-     [support+identity@stripe.com](mailto:support+identity@stripe.com) to learn
-     more.
-
-     - Parameters:
-       - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
-       - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
-       - configuration: Configuration for the `IdentityVerificationSheet` including your brand logo.
-     */
-    @available(iOS 13, *)
+    /// Initializes an `IdentityVerificationSheet` from native iOS components.
+    ///
+    /// - Note: This initializer and creating an ephemeral key for a
+    /// VerificationSession is available on an invite only basis. Please contact
+    /// [support+identity@stripe.com](mailto:support+identity@stripe.com) to learn
+    /// more.
+    ///
+    /// - Parameters:
+    ///   - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
+    ///   - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
+    ///   - configuration: Configuration for the `IdentityVerificationSheet` including your brand logo.
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public convenience init(
         verificationSessionId: String,
         ephemeralKeySecret: String,
@@ -112,9 +105,11 @@ final public class IdentityVerificationSheet {
         )
     }
 
-    init(verificationSessionClientSecret: String,
-         verificationSheetController: VerificationSheetControllerProtocol?,
-         analyticsClient: STPAnalyticsClientProtocol) {
+    init(
+        verificationSessionClientSecret: String,
+        verificationSheetController: VerificationSheetControllerProtocol?,
+        analyticsClient: STPAnalyticsClientProtocol
+    ) {
         self.verificationSessionClientSecret = verificationSessionClientSecret
         self.clientSecret = VerificationClientSecret(string: verificationSessionClientSecret)
         self.verificationSheetController = verificationSheetController
@@ -124,23 +119,22 @@ final public class IdentityVerificationSheet {
         verificationSheetController?.delegate = self
     }
 
-    /**
-     Presents a sheet for a customer to verify their identity.
-     - Parameters:
-       - presentingViewController: The view controller to present the identity verification sheet.
-       - completion: Called with the result of the verification session after the identity verification sheet is dismissed.
-     */
+    /// Presents a sheet for a customer to verify their identity.
+    /// - Parameters:
+    ///   - presentingViewController: The view controller to present the identity verification sheet.
+    ///   - completion: Called with the result of the verification session after the identity verification sheet is dismissed.
     @available(iOSApplicationExtension, unavailable)
     public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {
         verificationSheetController?.analyticsClient.startTrackingTimeToScreen(from: nil)
-        
+
         // Overwrite completion closure to retain self until called
         let completion: (VerificationFlowResult) -> Void = { result in
-            let verificationSessionId = self.clientSecret?.verificationSessionId
-            ?? self.verificationSheetController?.apiClient.verificationSessionId
+            let verificationSessionId =
+                self.clientSecret?.verificationSessionId
+                ?? self.verificationSheetController?.apiClient.verificationSessionId
 
             if let verificationSheetController = self.verificationSheetController {
                 verificationSheetController.analyticsClient.logSheetClosedFailedOrCanceled(
@@ -148,10 +142,13 @@ final public class IdentityVerificationSheet {
                     sheetController: verificationSheetController
                 )
             } else {
-                self.analyticsClient.log(analytic: VerificationSheetCompletionAnalytic.make(
-                    verificationSessionId: verificationSessionId,
-                    sessionResult: result
-                ), apiClient: .shared)
+                self.analyticsClient.log(
+                    analytic: VerificationSheetCompletionAnalytic.make(
+                        verificationSessionId: verificationSessionId,
+                        sessionResult: result
+                    ),
+                    apiClient: .shared
+                )
             }
             completion(result)
             self.completion = nil
@@ -194,10 +191,24 @@ final public class IdentityVerificationSheet {
                 clientSecret: clientSecret,
                 delegate: self
             )
-            analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: verificationSessionId), apiClient: .shared)
+            analyticsClient.log(
+                analytic: VerificationSheetPresentedAnalytic(
+                    verificationSessionId: verificationSessionId
+                ),
+                apiClient: .shared
+            )
         } else {
-            assertionFailure("IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")
-            completion(.flowFailed(error: IdentityVerificationSheetError.unknown(debugDescription: "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")))
+            assertionFailure(
+                "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher"
+            )
+            completion(
+                .flowFailed(
+                    error: IdentityVerificationSheetError.unknown(
+                        debugDescription:
+                            "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher"
+                    )
+                )
+            )
             return
         }
         presentingViewController.present(navigationController, animated: true)
@@ -218,23 +229,22 @@ final public class IdentityVerificationSheet {
     // MARK: - Simulator Mocking
 
     #if targetEnvironment(simulator)
-    /// When running on the simulator, mocks the camera output for document scanning with these images
-    public static var simulatorDocumentCameraImages: [UIImage] = []
-    /// When running on the simulator, mocks the camera output for selfie scanning with these images
-    public static var simulatorSelfieCameraImages: [UIImage] = []
+        /// When running on the simulator, mocks the camera output for document scanning with these images
+        public static var simulatorDocumentCameraImages: [UIImage] = []
+        /// When running on the simulator, mocks the camera output for selfie scanning with these images
+        public static var simulatorSelfieCameraImages: [UIImage] = []
     #endif
 
     // MARK: - API Mocking
 
-    /**
-     The version of the VerificationPage API used for all API requests.
-     Modifying this value will use experimental features that are not guaranteed
-     to be production-ready or prevent API requests from being decoded.
-     */
-    @available(iOS 13, *)
+    /// The version of the VerificationPage API used for all API requests.
+    /// Modifying this value will use experimental features that are not guaranteed
+    /// to be production-ready or prevent API requests from being decoded.
+
     @_spi(STP) public var verificationPageAPIVersion: Int {
         get {
-            return verificationSheetController?.apiClient.apiVersion ?? IdentityAPIClientImpl.productionApiVersion
+            return verificationSheetController?.apiClient.apiVersion
+                ?? IdentityAPIClientImpl.productionApiVersion
         }
         set {
             verificationSheetController?.apiClient.apiVersion = newValue
@@ -248,7 +258,10 @@ final public class IdentityVerificationSheet {
 @available(iOS 14.3, *)
 @available(iOSApplicationExtension, unavailable)
 extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
-    func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: VerificationFlowResult) {
+    func verificationFlowWebViewController(
+        _ viewController: VerificationFlowWebViewController,
+        didFinish result: VerificationFlowResult
+    ) {
         completion?(result)
     }
 }
@@ -256,7 +269,10 @@ extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
 // MARK: - VerificationSheetControllerDelegate
 
 extension IdentityVerificationSheet: VerificationSheetControllerDelegate {
-    func verificationSheetController(_ controller: VerificationSheetControllerProtocol, didFinish result: VerificationFlowResult) {
+    func verificationSheetController(
+        _ controller: VerificationSheetControllerProtocol,
+        didFinish result: VerificationFlowResult
+    ) {
         completion?(result)
     }
 }

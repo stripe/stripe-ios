@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Configuration Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+    <script src="../../js/lunr.min.js" defer></script>
+    <script src="../../js/typeahead.jquery.js" defer></script>
+    <script src="../../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Struct/Configuration" class="dashAnchor"></a>
+
+    <a title="Configuration Structure Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../../index.html">
+          Stripe iOS SDKs 23.3.0
+        </a>
+        
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="../../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../../index.html">Stripe iOS SDKs</a>
+      <img class="carat" src="../../img/carat.png" />
+      <a class="breadcrumb" href="../../index.html">StripePaymentSheet</a>
+      <img class="carat" src="../../img/carat.png" />
+      Configuration Structure Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/AddressViewController.html">AddressViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/AddressViewController/AddressDetails.html">– AddressDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/AddressViewController/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/Appearance.html">– Appearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/SavePaymentMethodOptInBehavior.html">– SavePaymentMethodOptInBehavior</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/Address.html">– Address</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/PaymentSheet/BillingDetails.html">– BillingDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/STPAppInfo.html">STPAppInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/STPError.html">STPError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/StripeAPI.html">StripeAPI</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/STPCardErrorCode.html">STPCardErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/STPErrorCode.html">STPErrorCode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/NSError.html">NSError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/View.html">View</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/AddressViewControllerDelegate.html">AddressViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>Configuration</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">Configuration</span></code></pre>
+
+                </div>
+              </div>
+            <p>Configuration for an <code><a href="../../Classes/AddressViewController.html">AddressViewController</a></code> instance.</p>
+
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L71-L160">Show on GitHub</a>
+              </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV13defaultValues16additionalFields16allowedCountries10appearance11buttonTitle5titleA2E07DefaultD7DetailsV_AE010AdditionalK0VSaySSGAA0bC0C10AppearanceVSSSgAUtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(defaultValues:additionalFields:allowedCountries:appearance:buttonTitle:title:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV13defaultValues16additionalFields16allowedCountries10appearance11buttonTitle5titleA2E07DefaultD7DetailsV_AE010AdditionalK0VSaySSGAA0bC0C10AppearanceVSSSgAUtcfc">init(defaultValues:<wbr>additionalFields:<wbr>allowedCountries:<wbr>appearance:<wbr>buttonTitle:<wbr>title:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes a Configuration</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n"><a href="../../Classes/AddressViewController/Configuration.html#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV13defaultValuesAE07DefaultD7DetailsVvp">defaultValues</a></span><span class="p">:</span> <span class="kt"><a href="../../Classes/AddressViewController/Configuration/DefaultAddressDetails.html">DefaultAddressDetails</a></span> <span class="o">=</span> <span class="o">.</span><span class="nf">init</span><span class="p">(),</span> <span class="nv">additionalFields</span><span class="p">:</span> <span class="kt"><a href="../../Classes/AddressViewController.html">AddressViewController</a></span><span class="o">.</span><span class="kt">Configuration</span><span class="o">.</span><span class="kt"><a href="../../Classes/AddressViewController/Configuration/AdditionalFields.html">AdditionalFields</a></span> <span class="o">=</span> <span class="o">.</span><span class="nf">init</span><span class="p">(),</span> <span class="nv">allowedCountries</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">appearance</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="o">.</span><span class="kt">Appearance</span> <span class="o">=</span> <span class="kt"><a href="../../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="o">.</span><span class="kt">Appearance</span><span class="o">.</span><span class="k">default</span><span class="p">,</span>
+            <span class="nv">buttonTitle</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+            <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L73-L82">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV16AdditionalFieldsV"></a>
+                    <a name="//apple_ref/swift/Struct/AdditionalFields" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV16AdditionalFieldsV">AdditionalFields</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Configuration related to the collection of additional fields beyond the physical address.</p>
+
+                        <a href="../../Classes/AddressViewController/Configuration/AdditionalFields.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AdditionalFields</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L85-L108">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV07DefaultD7DetailsV"></a>
+                    <a name="//apple_ref/swift/Struct/DefaultAddressDetails" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV07DefaultD7DetailsV">DefaultAddressDetails</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Default values for the fields collected by <code><a href="../../Classes/AddressViewController.html">AddressViewController</a></code></p>
+
+                        <a href="../../Classes/AddressViewController/Configuration/DefaultAddressDetails.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DefaultAddressDetails</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L111-L132">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV13defaultValuesAE07DefaultD7DetailsVvp"></a>
+                    <a name="//apple_ref/swift/Property/defaultValues" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV13defaultValuesAE07DefaultD7DetailsVvp">defaultValues</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The values to pre-populate address fields with.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">defaultValues</span><span class="p">:</span> <span class="kt"><a href="../../Classes/AddressViewController/Configuration/DefaultAddressDetails.html">DefaultAddressDetails</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L135">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV16additionalFieldsAE010AdditionalI0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/additionalFields" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV16additionalFieldsAE010AdditionalI0Vvp">additionalFields</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fields to collect in addition to the physical address.
+By default, no additional fields are collected.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">additionalFields</span><span class="p">:</span> <span class="kt"><a href="../../Classes/AddressViewController/Configuration/AdditionalFields.html">AdditionalFields</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L139">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV16allowedCountriesSaySSGvp"></a>
+                    <a name="//apple_ref/swift/Property/allowedCountries" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV16allowedCountriesSaySSGvp">allowedCountries</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A list of two-letter country codes representing countries the customers can select.
+If the list is empty (the default), we display all countries.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">allowedCountries</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L143">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV10appearanceAA0bC0C10AppearanceVvp"></a>
+                    <a name="//apple_ref/swift/Property/appearance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV10appearanceAA0bC0C10AppearanceVvp">appearance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Configuration for the look and feel of the UI</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">appearance</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="o">.</span><span class="kt">Appearance</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L146">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV11buttonTitleSSvp"></a>
+                    <a name="//apple_ref/swift/Property/buttonTitle" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV11buttonTitleSSvp">buttonTitle</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The title of the primary button displayed at the bottom of the screen. Defaults to &ldquo;Save address&rdquo;.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">buttonTitle</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L149">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV5titleSSvp"></a>
+                    <a name="//apple_ref/swift/Property/title" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV5titleSSvp">title</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The title of the view controller. Defaults to &ldquo;Shipping address&rdquo;.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L152">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV9apiClient0A4Core12STPAPIClientCvp"></a>
+                    <a name="//apple_ref/swift/Property/apiClient" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV9apiClient0A4Core12STPAPIClientCvp">apiClient</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The APIClient instance used to make requests to Stripe</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">apiClient</span><span class="p">:</span> <span class="kt"><a href="../../Classes/STPAPIClient.html">STPAPIClient</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L155">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV21autocompleteCountriesSaySSGvp"></a>
+                    <a name="//apple_ref/swift/Property/autocompleteCountries" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18StripePaymentSheet21AddressViewControllerC13ConfigurationV21autocompleteCountriesSaySSGvp">autocompleteCountries</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A list of two-letter country codes that support autocomplete
+Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">autocompleteCountries</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/23.3.0/StripePaymentSheet/StripePaymentSheet/PaymentSheet/AddressViewController/AddressViewController+Configuration.swift#L159">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-12-05)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

@@ -1,12 +1,13 @@
 //
 //  STPShippingMethodTableViewCell.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 8/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
 import PassKit
+@_spi(STP) import StripePayments
 import UIKit
 
 class STPShippingMethodTableViewCell: UITableViewCell {
@@ -38,7 +39,8 @@ class STPShippingMethodTableViewCell: UITableViewCell {
         } else {
             let number = NSDecimalNumber.stp_decimalNumber(
                 withAmount: amount,
-                currency: currency)
+                currency: currency
+            )
             amountLabel?.text = numberFormatter?.string(from: number)
         }
         setNeedsLayout()
@@ -51,7 +53,10 @@ class STPShippingMethodTableViewCell: UITableViewCell {
     private var shippingMethod: PKShippingMethod?
     private var numberFormatter: NumberFormatter?
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         theme = STPTheme()
         let titleLabel = UILabel()
@@ -60,7 +65,7 @@ class STPShippingMethodTableViewCell: UITableViewCell {
         self.subtitleLabel = subtitleLabel
         let amountLabel = UILabel()
         self.amountLabel = amountLabel
-        let checkmarkIcon = UIImageView(image: STPImageLibrary.checkmarkIcon())
+        let checkmarkIcon = UIImageView(image: STPLegacyImageLibrary.checkmarkIcon())
         self.checkmarkIcon = checkmarkIcon
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -109,21 +114,34 @@ class STPShippingMethodTableViewCell: UITableViewCell {
         let midY = bounds.midY
         checkmarkIcon?.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
         checkmarkIcon?.center = CGPoint(
-            x: bounds.width - 15 - (checkmarkIcon?.bounds.midX ?? 0.0), y: midY)
+            x: bounds.width - 15 - (checkmarkIcon?.bounds.midX ?? 0.0),
+            y: midY
+        )
         amountLabel?.sizeToFit()
         amountLabel?.center = CGPoint(
-            x: (checkmarkIcon?.frame.minX ?? 0.0) - 15 - (amountLabel?.bounds.midX ?? 0.0), y: midY)
+            x: (checkmarkIcon?.frame.minX ?? 0.0) - 15 - (amountLabel?.bounds.midX ?? 0.0),
+            y: midY
+        )
         let labelWidth = (amountLabel?.frame.minX ?? 0.0) - 30
         titleLabel?.sizeToFit()
         titleLabel?.frame = CGRect(
-            x: 15, y: 8, width: labelWidth, height: titleLabel?.frame.size.height ?? 0.0)
+            x: 15,
+            y: 8,
+            width: labelWidth,
+            height: titleLabel?.frame.size.height ?? 0.0
+        )
         subtitleLabel?.sizeToFit()
         subtitleLabel?.frame = CGRect(
-            x: 15, y: bounds.size.height - 8 - (subtitleLabel?.frame.size.height ?? 0.0),
-            width: labelWidth, height: subtitleLabel?.frame.size.height ?? 0.0)
+            x: 15,
+            y: bounds.size.height - 8 - (subtitleLabel?.frame.size.height ?? 0.0),
+            width: labelWidth,
+            height: subtitleLabel?.frame.size.height ?? 0.0
+        )
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

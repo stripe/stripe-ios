@@ -1,6 +1,6 @@
 //
 //  STPSourceParamsTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Ben Guo on 1/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPSourceParamsTest: XCTestCase {
     // MARK: -
@@ -204,7 +208,8 @@ class STPSourceParamsTest: XCTestCase {
     func testParamsWithMasterPass() {
         let params = STPSourceParams.masterpassParams(
             withCartId: "12345678",
-            transactionId: "87654321")
+            transactionId: "87654321"
+        )
 
         XCTAssertEqual(params.type, .card)
         let sourceCard = params.additionalAPIParameters["card"] as? [AnyHashable: Any]
@@ -217,9 +222,16 @@ class STPSourceParamsTest: XCTestCase {
 
     func testKlarnaParams() {
         let params = STPSourceParams.klarnaParams(
-            withReturnURL: "return_url", currency: "USD", purchaseCountry: "US", items: [],
-            customPaymentMethods: [.none], billingAddress: nil, billingFirstName: nil,
-            billingLastName: nil, billingDOB: nil)
+            withReturnURL: "return_url",
+            currency: "USD",
+            purchaseCountry: "US",
+            items: [],
+            customPaymentMethods: [.none],
+            billingAddress: nil,
+            billingFirstName: nil,
+            billingLastName: nil,
+            billingDOB: nil
+        )
 
         XCTAssertNotNil(params)
     }
@@ -240,36 +252,44 @@ class STPSourceParamsTest: XCTestCase {
             withAmount: 1000,
             returnURL: "test://foo?value=baz",
             country: "DE",
-            statementDescriptor: nil)
+            statementDescriptor: nil
+        )
 
         var params = STPFormEncoder.dictionary(forObject: sourceParams)
         // Should be nil because we have no app name in tests
         XCTAssertNil(
             redirectMerchantNameQueryItemValue(
                 fromURLString: (params["redirect"] as! [String: AnyHashable])["return_url"]
-                    as? String))
+                    as? String
+            )
+        )
 
         sourceParams.redirectMerchantName = "bar"
         params = STPFormEncoder.dictionary(forObject: sourceParams)
         XCTAssertEqual(
             redirectMerchantNameQueryItemValue(
                 fromURLString: (params["redirect"] as! [String: AnyHashable])["return_url"]
-                    as? String),
-            "bar")
+                    as? String
+            ),
+            "bar"
+        )
 
         sourceParams = STPSourceParams.sofortParams(
             withAmount: 1000,
             returnURL: "test://foo?redirect_merchant_name=Manual%20Custom%20Name",
             country: "DE",
-            statementDescriptor: nil)
+            statementDescriptor: nil
+        )
         sourceParams.redirectMerchantName = "bar"
         params = STPFormEncoder.dictionary(forObject: sourceParams)
         // Don't override names set by the user directly in the url
         XCTAssertEqual(
             redirectMerchantNameQueryItemValue(
                 fromURLString: (params["redirect"] as! [String: AnyHashable])["return_url"]
-                    as? String),
-            "Manual Custom Name")
+                    as? String
+            ),
+            "Manual Custom Name"
+        )
 
     }
 

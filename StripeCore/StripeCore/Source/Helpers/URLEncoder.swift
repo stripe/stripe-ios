@@ -3,6 +3,7 @@
 //  StripeCore
 //
 //  Created by Mel Ludowise on 5/26/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -21,10 +22,10 @@ import Foundation
 
         return camelCaseParam
     }
-    
+
     public class func convertToSnakeCase(camelCase input: String) -> String {
         var newString = input
-        
+
         while let range = newString.rangeOfCharacter(from: .uppercaseLetters) {
             let character = newString[range]
             newString = newString.replacingCharacters(in: range, with: character.lowercased())
@@ -127,10 +128,12 @@ private func query(_ parameters: [String: Any]) -> String {
 /// query strings to include a URL. Therefore, all "reserved" characters with the exception of "?" and "/"
 /// should be percent-escaped in the query string.
 private let URLQueryAllowed: CharacterSet = {
-    let generalDelimitersToEncode = ":#[]@"  // does not include "?" or "/" due to RFC 3986 - Section 3.4
+    // does not include "?" or "/" due to RFC 3986 - Section 3.4.
+    let generalDelimitersToEncode = ":#[]@"
     let subDelimitersToEncode = "!$&'()*+,;="
     let encodableDelimiters = CharacterSet(
-        charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)"
+    )
 
     return CharacterSet.urlQueryAllowed.subtracting(encodableDelimiters)
 }()

@@ -1,14 +1,18 @@
 //
 //  STPCardTest.swift
-//  Stripe
+//  StripeiOS Tests
 //
 //  Created by Saikat Chakrabarti on 11/5/12.
-//
+//  Copyright © 2012 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardTest: XCTestCase {
     // MARK: - STPCardBrand Tests
@@ -109,7 +113,8 @@ class STPCardTest: XCTestCase {
             last4: "5556",
             expMonth: 12,
             expYear: 2034,
-            funding: .debit)
+            funding: .debit
+        )
         XCTAssertEqual(card.stripeID, "card_1AVRojEOD54MuFwSxr93QJSx")
         XCTAssertEqual(card.brand, .visa)
         XCTAssertEqual(card.last4, "5556")

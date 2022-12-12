@@ -12,6 +12,8 @@
 
 "BSB number" = "Numru BSB";
 
+"Billing address is same as shipping" = "L-indirizz tal-fatturazzjoni huwa l-istess bħall-indirizz tal-posta";
+
 "Cancel" = "Ikkanċella";
 
 "City" = "Belt";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Bil-lest";
+
+"Edit" = "Editja";
 
 "Eircode" = "Eircode";
 

@@ -33,7 +33,8 @@ public class CardScanSheet {
     @available(macCatalystApplicationExtension, unavailable)
     public func present(
         from presentingViewController: UIViewController,
-        completion: @escaping (CardScanSheetResult) -> ()
+        completion: @escaping (CardScanSheetResult) -> Void,
+        animated: Bool = true
     ) {
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
@@ -49,7 +50,7 @@ public class CardScanSheet {
         vc.delegate = self
 
         // Overwrite completion closure to retain self until called
-        let overwrittenCompletion: (CardScanSheetResult) -> () = { status in
+        let overwrittenCompletion: (CardScanSheetResult) -> Void = { status in
             // Dismiss if necessary
             if vc.presentingViewController != nil {
                 vc.dismiss(animated: true) {
@@ -62,13 +63,13 @@ public class CardScanSheet {
         }
         self.completion = overwrittenCompletion
 
-        presentingViewController.present(vc, animated: true)
+        presentingViewController.present(vc, animated: animated)
     }
 
     // MARK: - Internal Properties
 
     /// A user-supplied completion block. Nil until `present` is called.
-    var completion: ((CardScanSheetResult) -> ())?
+    var completion: ((CardScanSheetResult) -> Void)?
 }
 
 extension CardScanSheet: SimpleScanDelegate {
@@ -78,8 +79,9 @@ extension CardScanSheet: SimpleScanDelegate {
 
     func userDidScanCardSimple(
         _ scanViewController: SimpleScanViewController,
-        creditCard: CreditCard) {
-            let scannedCard = ScannedCard(pan: creditCard.number)
-            completion?(.completed(card: scannedCard))
+        creditCard: CreditCard
+    ) {
+        let scannedCard = ScannedCard(pan: creditCard.number)
+        completion?(.completed(card: scannedCard))
     }
 }

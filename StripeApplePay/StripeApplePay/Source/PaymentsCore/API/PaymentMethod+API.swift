@@ -1,6 +1,6 @@
 //
 //  PaymentMethod+API.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 8/10/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -15,17 +15,21 @@ extension StripeAPI.PaymentMethod {
     /// - Parameters:
     ///   - paymentMethod: The Stripe PaymentMethod from the response. Will be nil if an error occurs. - seealso: PaymentMethod
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias PaymentMethodCompletionBlock = (Result<StripeAPI.PaymentMethod, Error>) -> Void
+    @_spi(STP) public typealias PaymentMethodCompletionBlock = (
+        Result<StripeAPI.PaymentMethod, Error>
+    ) -> Void
 
     static func create(
         apiClient: STPAPIClient = .shared,
         params: StripeAPI.PaymentMethodParams,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
-        STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(paymentMethodType: params.type.rawValue)
+        STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
+            paymentMethodType: params.type.rawValue
+        )
         apiClient.post(resource: Resource, object: params, completion: completion)
     }
-    
+
     /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
@@ -52,6 +56,6 @@ extension StripeAPI.PaymentMethod {
             Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
         }
     }
-        
+
     static let Resource = "payment_methods"
 }

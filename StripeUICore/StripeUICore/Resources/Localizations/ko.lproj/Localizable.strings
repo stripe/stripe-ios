@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB 번호";
 
+"Billing address is same as shipping" = "청구 주소가 배송 주소와 동일함";
+
 "Cancel" = "취소";
 
 "City" = "시";
@@ -33,6 +35,8 @@
 "Do Si" = "도시";
 
 "Done" = "완료";
+
+"Edit" = "편집";
 
 "Eircode" = "우편번호(Eircode)";
 

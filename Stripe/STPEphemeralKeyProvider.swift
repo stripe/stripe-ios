@@ -1,6 +1,6 @@
 //
 //  STPEphemeralKeyProvider.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 5/9/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
@@ -28,7 +28,9 @@ import Foundation
     /// key from your backend. For example, `completion(json, nil)` (if your call succeeds)
     /// or `completion(nil, error)` if an error is returned.
     @objc(createCustomerKeyWithAPIVersion:completion:) func createCustomerKey(
-        withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock)
+        withAPIVersion apiVersion: String,
+        completion: @escaping STPJSONResponseCompletionBlock
+    )
 }
 
 /// You should make your application's API client conform to this interface.
@@ -51,7 +53,9 @@ import Foundation
     /// key from your backend. For example, `completion(json, nil)` (if your call succeeds)
     /// or `completion(nil, error)` if an error is returned.
     @objc(createIssuingCardKeyWithAPIVersion:completion:) func createIssuingCardKey(
-        withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock)
+        withAPIVersion apiVersion: String,
+        completion: @escaping STPJSONResponseCompletionBlock
+    )
 }
 
 /// You should make your application's API client conform to this interface.
@@ -61,7 +65,8 @@ import Foundation
 /// depending on the type of key that will@objc  be fetched.
 
 @available(
-    *, deprecated,
+    *,
+    deprecated,
     message:
         "use `STPCustomerEphemeralKeyProvider` or `STPIssuingCardEphemeralKeyProvider` depending on the type of key that will be fetched."
 )

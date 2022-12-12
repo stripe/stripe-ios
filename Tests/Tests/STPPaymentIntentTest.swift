@@ -6,17 +6,24 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentIntentTest: XCTestCase {
     func testIdentifierFromSecret() {
         XCTAssertEqual(
             STPPaymentIntent.id(fromClientSecret: "pi_123_secret_XYZ"),
-            "pi_123")
+            "pi_123"
+        )
         XCTAssertEqual(
             STPPaymentIntent.id(
-                fromClientSecret: "pi_123_secret_RandomlyContains_secret_WhichIsFine"),
-            "pi_123")
+                fromClientSecret: "pi_123_secret_RandomlyContains_secret_WhichIsFine"
+            ),
+            "pi_123"
+        )
 
         XCTAssertNil(STPPaymentIntent.id(fromClientSecret: ""))
         XCTAssertNil(STPPaymentIntent.id(fromClientSecret: "po_123_secret_HasBadPrefix"))
@@ -38,7 +45,9 @@ class STPPaymentIntentTest: XCTestCase {
         let fullJson = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)
 
         XCTAssertNotNil(
-            STPPaymentIntent.decodedObject(fromAPIResponse: fullJson), "can decode with full json")
+            STPPaymentIntent.decodedObject(fromAPIResponse: fullJson),
+            "can decode with full json"
+        )
 
         let requiredFields = ["id", "client_secret", "amount", "currency", "livemode", "status"]
 
@@ -55,18 +64,25 @@ class STPPaymentIntentTest: XCTestCase {
     func testDecodedObjectFromAPIResponseMapping() {
         let paymentIntentJson = STPTestUtils.jsonNamed("PaymentIntent")!
         let orderedPaymentJson = ["card", "ideal", "sepa_debit"]
-        let paymentIntentResponse = ["payment_intent": paymentIntentJson,
-                                     "ordered_payment_method_types": orderedPaymentJson] as [String : Any]
+        let paymentIntentResponse =
+            [
+                "payment_intent": paymentIntentJson,
+                "ordered_payment_method_types": orderedPaymentJson,
+            ] as [String: Any]
         let unactivatedPaymentMethodTypes = ["sepa_debit"]
-        let response = ["payment_method_preference": paymentIntentResponse,
-                        "unactivated_payment_method_types": unactivatedPaymentMethodTypes] as [String : Any]
-        
+        let response =
+            [
+                "payment_method_preference": paymentIntentResponse,
+                "unactivated_payment_method_types": unactivatedPaymentMethodTypes,
+            ] as [String: Any]
+
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: response)!
 
         XCTAssertEqual(paymentIntent.stripeId, "pi_1Cl15wIl4IdHmuTbCWrpJXN6")
         XCTAssertEqual(
             paymentIntent.clientSecret,
-            "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK")
+            "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK"
+        )
         XCTAssertEqual(paymentIntent.amount, 2345)
         XCTAssertEqual(paymentIntent.canceledAt, Date(timeIntervalSince1970: 1_530_911_045))
         XCTAssertEqual(paymentIntent.captureMethod, .manual)
@@ -81,10 +97,15 @@ class STPPaymentIntentTest: XCTestCase {
         //#pragma clang diagnostic push
         //#pragma clang diagnostic ignored "-Wdeprecated"
         XCTAssertEqual(
-            paymentIntent.nextAction, paymentIntent.nextAction, "Should be the same object.")
+            paymentIntent.nextAction,
+            paymentIntent.nextAction,
+            "Should be the same object."
+        )
         XCTAssertEqual(
-            paymentIntent.nextAction!.redirectToURL!, paymentIntent.nextAction!.redirectToURL,
-            "Should be the same object.")
+            paymentIntent.nextAction!.redirectToURL!,
+            paymentIntent.nextAction!.redirectToURL,
+            "Should be the same object."
+        )
         //#pragma clang diagnostic pop
 
         // nextAction
@@ -103,22 +124,28 @@ class STPPaymentIntentTest: XCTestCase {
             URL(
                 string:
                     "https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"
-            ))
+            )
+        )
         XCTAssertEqual(paymentIntent.sourceId, "src_1Cl1AdIl4IdHmuTbseiDWq6m")
         XCTAssertEqual(paymentIntent.status, .requiresAction)
         XCTAssertEqual(paymentIntent.setupFutureUsage, .none)
 
         XCTAssertEqual(
-            paymentIntent.paymentMethodTypes, [NSNumber(value: STPPaymentMethodType.card.rawValue)])
+            paymentIntent.paymentMethodTypes,
+            [NSNumber(value: STPPaymentMethodType.card.rawValue)]
+        )
 
         // lastPaymentError
 
         XCTAssertNotNil(paymentIntent.lastPaymentError)
         XCTAssertEqual(
-            paymentIntent.lastPaymentError!.code, "payment_intent_authentication_failure")
+            paymentIntent.lastPaymentError!.code,
+            "payment_intent_authentication_failure"
+        )
         XCTAssertEqual(
             paymentIntent.lastPaymentError!.docURL,
-            "https://stripe.com/docs/error-codes#payment-intent-authentication-failure")
+            "https://stripe.com/docs/error-codes#payment-intent-authentication-failure"
+        )
         XCTAssertEqual(
             paymentIntent.lastPaymentError!.message,
             "The provided PaymentMethod has failed authentication. You can provide payment_method_data or a new PaymentMethod to attempt to fulfill this PaymentIntent again."
@@ -141,14 +168,23 @@ class STPPaymentIntentTest: XCTestCase {
         XCTAssertEqual(paymentIntent.shipping!.address!.state, "CA")
 
         // Ordered Payment Method Types
-        XCTAssertEqual(paymentIntent.orderedPaymentMethodTypes.map({$0.displayName}), ["Card", "iDEAL", "SEPA Debit"])
-        
+        XCTAssertEqual(
+            paymentIntent.orderedPaymentMethodTypes.map({ $0.displayName }),
+            ["Card", "iDEAL", "SEPA Debit"]
+        )
+
         // Unactivated Payment Method Types
-        XCTAssertEqual(paymentIntent.unactivatedPaymentMethodTypes.map({$0.displayName}), ["SEPA Debit"])
-        
+        XCTAssertEqual(
+            paymentIntent.unactivatedPaymentMethodTypes.map({ $0.displayName }),
+            ["SEPA Debit"]
+        )
+
         var allResponseFields = paymentIntentJson
         allResponseFields["ordered_payment_method_types"] = orderedPaymentJson
         allResponseFields["unactivated_payment_method_types"] = unactivatedPaymentMethodTypes
-        XCTAssertEqual(paymentIntent.allResponseFields as NSDictionary, allResponseFields as NSDictionary)
+        XCTAssertEqual(
+            paymentIntent.allResponseFields as NSDictionary,
+            allResponseFields as NSDictionary
+        )
     }
 }

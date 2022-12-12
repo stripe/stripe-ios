@@ -34,7 +34,7 @@ final class VerificationFlowWebViewTest: XCTestCase {
             return XCTFail("Could not load mock html file")
         }
         mockFileURL = url
-        
+
         verificationWebView = VerificationFlowWebView(initialURL: url)
         verificationWebView.delegate = self
     }
@@ -56,11 +56,11 @@ extension VerificationFlowWebViewTest: VerificationFlowWebViewDelegate {
         urlFromDelegateCallback = url
     }
 
-    func verificationFlowWebViewDidClose(_ view: VerificationFlowWebView) { }
+    func verificationFlowWebViewDidClose(_ view: VerificationFlowWebView) {}
 
     func verificationFlowWebViewDidFinishLoading(_ view: VerificationFlowWebView) {
         didFinishLoadingExpectation.fulfill()
     }
 
-    func verificationFlowWebView(_ view: VerificationFlowWebView, didOpenURLInNewTarget url: URL) { }
+    func verificationFlowWebView(_ view: VerificationFlowWebView, didOpenURLInNewTarget url: URL) {}
 }

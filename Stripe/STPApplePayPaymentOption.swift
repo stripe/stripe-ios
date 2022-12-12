@@ -1,12 +1,14 @@
 //
 //  STPApplePayPaymentOption.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Ben Guo on 4/19/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 import UIKit
 
 /// An empty class representing that the user wishes to pay via Apple Pay. This can
@@ -28,7 +30,7 @@ import UIKit
     }
 
     @objc public var label: String {
-        return STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+        return String.Localized.apple_pay
     }
 
     @objc public var isReusable: Bool {

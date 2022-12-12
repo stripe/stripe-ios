@@ -1,335 +1,39 @@
-"%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
-
 "%@ - Offline" = "%@ - Ngoại tuyến";
 
-"+ Add" = "+ Thêm";
-
 "3D Secure" = "Bảo mật 3D";
-
-"AU BECS Direct Debit" = "Ghi nợ trực tiếp AU Becs";
 
 "Add New Card…" = "Thêm thẻ mới...";
 
 "Add a Card" = "Thêm thẻ";
 
-"Add a card" = "Thêm một thẻ";
-
-"Add a payment method" = "Thêm phương thức thanh toán";
-
-"Add bank account" = "Thêm tài khoản ngân hàng";
-
-"Add new payment method" = "Thêm phương thức thanh toán mới";
-
-"Add your payment information" = "Thêm thông tin thanh toán của bạn";
-
-"Address line 2 (optional)" = "Dòng địa chỉ 2 (tùy chọn)";
-
-"Affirm" = "Affirm";
-
-"Afterpay" = "Afterpay";
-
-"Alipay" = "Alipay";
-
-"Apple Pay" = "Apple Pay";
-
 "Apt." = "Căn hộ";
 
-"Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
-
-"Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
-
-"BLIK" = "BLIK";
-
-"BSB" = "BSB";
-
-"Back" = "Quay lại";
-
-"Bancontact" = "Bancontact";
-
-"Bank" = "Ngân hàng";
-
-"Bank Account" = "Tài khoản ngân hàng";
-
-"Bank account" = "Tài khoản ngân hàng";
-
-"Billing Address" = "Địa chỉ thanh toán";
-
-"Billing address" = "Địa chỉ thanh toán";
-
-"Boleto" = "Boleto";
-
-"Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
-
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
-
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Bằng việc tiếp tục, quý vị đồng ý xác thực thanh toán tuân theo các <terms>điều khoản</terms> sau.";
-
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Bằng việc cung cấp chi tiết tài khoản ngân hàng của quý vị và xác nhận thanh toán này, quý vị đồng ý với Yêu cầu Ghi nợ Trực tiếp này và <terms>thỏa thuận dịch vụ Yêu cầu Ghi nợ Trực tiếp</terms>, và cho phép Stripe Payments Australia Pty Ltd ACN 160 180 343 ID người dùng Ghi nợ Trực tiếp số 507156 (“Stripe”) ghi nợ tài khoản của quý vị thông qua Bulk Electronic Clearing System (BECS) thay mặt %@ (\"Người bán\") cho bất kỳ số tiền nào được Người bán liên lạc riêng với quý vị. Quý vị chứng nhận rằng quý vị là chủ tài khoản hoặc người ký kết được ủy quyền trên tài khoản được liệt kê ở trên.";
-
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
-
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
-
-"CVC" = "CVC";
-
-"CVV" = "CVV";
-
-"Card" = "Thẻ";
-
-"Card information" = "Thông tin thẻ";
-
-"Card number" = "Số thẻ";
-
-"Change email" = "Đổi email";
-
-"Choose a payment method" = "Chọn phương thức thanh toán";
-
-"Clearpay" = "Clearpay";
-
-"Close card scanner" = "Đóng máy quét thẻ";
-
-"Code field" = "Trường mã";
-
-"Code sent" = "Mã đã được gửi";
-
 "Contact" = "Liên hệ";
-
-"Default" = "Mặc định";
 
 "Delivery" = "Giao hàng";
 
 "Delivery Address" = "Địa chỉ giao hàng";
 
-"Double tap to edit" = "Nhấp chạm đúp để hiệu đính";
-
-"EPS" = "EPS";
-
-"EPS Bank" = "Ngân hàng EPS";
-
-"Edit" = "Sửa";
-
-"Enter address manually" = "Nhập địa chỉ thủ công";
-
-"Enter the code sent to %@ to use Link to pay by default." = "Nhập mã được gửi tới %@ để dùng Link làm phương thức thanh toán mặc định.";
-
-"Enter your verification code" = "Nhập mã xác minh của bạn";
-
-"FPX" = "FPX";
-
-"For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
-
 "Free" = "Miễn phí";
-
-"Giropay" = "Giropay";
-
-"GrabPay" = "GrabPay";
-
-"IBAN" = "IBAN";
 
 "Invalid Shipping Address" = "Địa chỉ vận chuyển không hợp lệ";
 
-"Invalid data." = "Dữ liệu không hợp lệ.";
-
-"Join Link" = "Tham gia Link";
-
-"Klarna" = "Klarna";
-
-"Link" = "Link";
-
 "Loading…" = "Đang tải...";
-
-"Log out of Link" = "Đăng xuất khỏi Link";
-
-"MM / YY" = "Tháng /Năm";
-
-"MM/YY" = "Tháng/Năm";
 
 "Multibanco" = "Multibanco";
 
-"NetBanking" = "Ngân hàng trực tuyến";
-
 "Next" = "Tiếp";
-
-"Not %@?" = "Không phải %@?";
-
-"OXXO" = "OXXO";
 
 "Online Banking (FPX)" = "Ngân hàng Trực tuyến (FPX)";
 
-"Or" = "Hoặc";
-
-"Or pay using" = "Hoặc thanh toán bằng";
-
-"Or pay with a card" = "Hoặc thanh toán bằng thẻ";
-
-"P24" = "P24";
-
-"Pay %@" = "Thanh toán %@";
-
-"Pay another way" = "Thanh toán theo cách khác";
-
-"Pay faster at %@ and thousands of merchants." = "Thanh toán nhanh hơn tại %@ và hàng ngàn người bán.";
-
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Trả bằng <num_installments/> khoản thanh toán không lãi suất là <installment_price/> bằng <img/>";
-
-"Pay later with Klarna." = "Thanh toán sau bằng Klarna.";
-
-"Pay over time with %@" = "Trả dần bằng %@";
-
-"Pay using" = "Thanh toán bằng";
-
-"Pay with %@" = "Thanh toán bằng %@";
-
-"Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
-
-"PayPal" = "PayPal";
-
-"Payment" = "Thanh toán";
-
 "Payment Method" = "Phương thức thanh toán";
-
-"Payment methods" = "Phương thức thanh toán";
-
-"Point the camera at your card." = "Hướng camera vào thẻ.";
-
-"Postal Code" = "Mã bưu điện";
-
-"Processing..." = "Đang xử lý...";
-
-"Przelewy24" = "Przelewy24";
-
-"Przelewy24 Bank" = "Ngân hàng Przelewy24";
-
-"Remove %1$@ ending in %2$@" = "Xóa thẻ %1$@ kết thúc bằng %2$@";
-
-"Remove Card" = "Xóa thẻ";
-
-"Remove card" = "Xóa thẻ";
-
-"Remove linked account" = "Xóa tài khoản liên kết";
-
-"Resend code" = "Gửi lại mã";
-
-"SEPA Debit" = "Ghi nợ SEPA";
-
-"SEPA Direct Debit" = "Ghi nợ trực tiếp SEPA";
-
-"Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
-
-"Save my info for secure 1-click checkout" = "Lưu thông tin của tôi để thanh toán bảo mật bằng 1 cú nhấp chuột";
-
-"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
-
-"Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
-
-"Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
-
-"Select your payment method" = "Chọn phương thức thanh toán của bạn";
-
-"Set as default" = "Đặt làm mặc định";
-
-"Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
-
-"Set up" = "Cài đặt";
 
 "Shipping" = "Vận chuyển";
 
-"Shipping Address" = "Địa chỉ vận chuyển";
-
 "Shipping Method" = "Phương thức vận chuyển";
-
-"Show menu" = "Hiển thị trình đơn";
-
-"Sign in to your Link account" = "Đăng nhập vào tài khoản Link của bạn";
-
-"Sofort" = "Sofort";
-
-"Something went wrong when linking your account.\nPlease try again later." = "Đã xảy ra lỗi khi liên kết tài khoản của bạn.\nVui lòng thử lại sau.";
-
-"State / Province / Region" = "Tiểu bang/Tỉnh/Khu vực";
-
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
-
-"Tap to close" = "Nhấp chạm vào để đóng";
-
-"Tap to expand" = "Nhấp chạm vào để mở rộng";
-
-"The BSB you entered is invalid." = "BSB mà bạn nhập không hợp lệ.";
-
-"The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN quý vị đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
-
-"The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
-
-"The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
-
-"This is your default" = "Đây là thông tin mặc định của bạn";
-
-"Timed out authenticating your payment method -- try again" = "Đã hết thời gian xác thực phương thức thanh toán -- hãy thử lại sau";
-
-"To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
-
-"Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
-
-"UPI" = "UPI";
-
-"US Bank Account" = "Tài khoản ngân hàng Mỹ";
-
-"Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
-
-"Unknown" = "Không biết";
-
-"Update card" = "Cập nhật thẻ";
 
 "Use Billing" = "Sử dụng Hóa đơn";
 
 "Use Delivery" = "Sử dụng Giao hàng";
 
 "Use Shipping" = "Chọn Vận chuyển";
-
-"Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
-
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Chúng tôi không thể xác thực phương thức thanh toán của bạn. Vui lòng chọn phương thức thanh toán khác và thử lại.";
-
-"WeChat Pay" = "WeChat Pay";
-
-"Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
-
-"Your ZIP is invalid." = "Mã ZIP không hợp lệ";
-
-"Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
-
-"Your card number is invalid." = "Số thẻ không hợp lệ.";
-
-"Your card's expiration date is incomplete." = "Ngày hết hạn trên thẻ không hợp lệ.";
-
-"Your card's expiration date is invalid." = "Ngày hết hạn trên thẻ không hợp lệ.";
-
-"Your card's expiration month is invalid." = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
-
-"Your card's expiration year is invalid." = "Năm hết hạn trên thẻ của bạn không hợp lệ.";
-
-"Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
-
-"Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
-
-"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
-
-"ZIP Code" = "Mã ZIP";
-
-"card number" = "số thẻ";
-
-"example@example.com" = "example@example.com";
-
-"expiration date" = "Ngày hết hạn";
-
-"giropay" = "giropay";
-
-"iDEAL" = "iDEAL";
-
-"iDEAL Bank" = "Ngân hàng iDEAL";

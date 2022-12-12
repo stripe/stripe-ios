@@ -1,0 +1,63 @@
+"%1$@ ending in %2$@" = "%1$@ nagtatapos sa %2$@";
+
+"Address line 2 (optional)" = "Pangalawang linya ng adres";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "Account sa Bangko";
+
+"Billing Address" = "Adres para sa Billing";
+
+"Billing address" = "Adres para sa billing";
+
+"CVC" = "CVC";
+
+"CVV" = "CVV";
+
+"Card information" = "Impormasyon ng kard";
+
+"Card number" = "Numero ng kard";
+
+"Invalid data." = "Data na di balido.";
+
+"MM / YY" = "BB / TT";
+
+"MM/YY" = "BB / TT";
+
+"Postal Code" = "Postal Code";
+
+"Shipping Address" = "Adres ng Nagpadala";
+
+"State / Province / Region" = "State / Probinsiya / Rehiyon";
+
+"The BSB you entered is invalid." = "Ang BSB na ipinasok mo ay di balido.";
+
+"To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
+
+"Your ZIP is invalid." = "Ang iyong ZIP ay di balido.";
+
+"Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
+
+"Your card number is invalid." = "Ang numero ng iyong kard ay di balido.";
+
+"Your card's expiration date is incomplete." = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
+
+"Your card's expiration date is invalid." = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
+
+"Your card's expiration month is invalid." = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
+
+"Your card's expiration year is invalid." = "Ang taon ng pagkapaso ng iyong kard ay di balido.";
+
+"Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
+
+"Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
+
+"Your postal code is invalid." = "Ang iyong postal code ay di balido.";
+
+"card number" = "numero ng kard";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "Petsa ng pagkapaso";

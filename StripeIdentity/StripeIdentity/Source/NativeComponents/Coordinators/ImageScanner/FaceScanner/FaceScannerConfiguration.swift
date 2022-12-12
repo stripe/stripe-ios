@@ -3,12 +3,12 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 
-@available(iOS 13, *)
 extension FaceScanner {
     struct Configuration: Equatable {
         // MARK: Face Detector

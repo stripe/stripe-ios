@@ -1,3 +1,4 @@
+//
 //  NSMutableURLRequest+StripeTest.swift
 //  StripeCoreTests
 //
@@ -5,9 +6,8 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
-
 @_spi(STP) import StripeCore
+import XCTest
 
 class NSMutableURLRequest_StripeTest: XCTestCase {
     func testAddParametersToURL_noQuery() {

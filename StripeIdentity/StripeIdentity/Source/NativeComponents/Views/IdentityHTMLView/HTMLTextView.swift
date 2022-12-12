@@ -3,11 +3,12 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/25/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class HTMLTextView: UIView {
     struct ViewModel {
@@ -59,7 +60,9 @@ final class HTMLTextView: UIView {
         self.addAndPinSubview(textView)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -86,7 +89,7 @@ final class HTMLTextView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         guard let viewModel = viewModel,
-              case let .html(makeStyle) = viewModel.style
+            case .html(let makeStyle) = viewModel.style
         else {
             return
         }
@@ -110,7 +113,11 @@ final class HTMLTextView: UIView {
 }
 
 extension HTMLTextView: UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith url: URL,
+        in characterRange: NSRange
+    ) -> Bool {
         viewModel?.didOpenURL(url)
         return false
     }

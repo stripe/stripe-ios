@@ -8,14 +8,21 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPCardCVCInputTextFieldTests: XCTestCase {
 
     func testTruncatingCVCWhenTooLong() {
         let cvcField = STPCardCVCInputTextField()
         cvcField.cardBrand = .amex
-        cvcField.text = String(repeating: "1", count: Int(STPCardValidator.maxCVCLength(for: .amex)))
+        cvcField.text = String(
+            repeating: "1",
+            count: Int(STPCardValidator.maxCVCLength(for: .amex))
+        )
         XCTAssertEqual(cvcField.text?.count, Int(STPCardValidator.maxCVCLength(for: .amex)))
 
         // Switching the card brand to `visa` should truncate the field text to

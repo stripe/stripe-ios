@@ -1,14 +1,14 @@
 //
 //  STPFakeAddPaymentPassViewController.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 9/28/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
 import PassKit
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// This class is a piece of fake UI that is intended to mimic `PKAddPaymentPassViewController`. That class is restricted to apps with a special entitlement from Apple, and as such can be difficult to build and test against. This class implements the same public API as `PKAddPaymentPassViewController`, and can be used to develop against the Stripe API in *testmode only*. (Obviously it will not actually place cards into the user's Apple Pay wallet either.) When it's time to go to production, you may simply replace all references to `STPFakeAddPaymentPassViewController` in your app with `PKAddPaymentPassViewController` and it will continue to function. For more information on developing against this API, please see https://stripe.com/docs/issuing/cards/digital-wallets .
 public class STPFakeAddPaymentPassViewController: UIViewController {
@@ -49,7 +49,10 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
         set(state) {
             _state = state
             let cancelItem = UIBarButtonItem(
-                barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
+                barButtonSystemItem: .cancel,
+                target: self,
+                action: #selector(cancel(_:))
+            )
             let nextButton = UIButton(type: .system)
             nextButton.addTarget(self, action: #selector(next(_:)), for: .touchUpInside)
             var indicatorView: UIActivityIndicatorView?
@@ -66,7 +69,10 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
             nextButton.setTitle(STPNonLocalizedString("Next"), for: .normal)
             let nextItem = UIBarButtonItem(customView: nextButton)
             let doneItem = UIBarButtonItem(
-                barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
+                barButtonSystemItem: .done,
+                target: self,
+                action: #selector(done(_:))
+            )
 
             switch state {
             case .initial:
@@ -100,13 +106,16 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
 
     /// :nodoc:
     @objc public convenience override init(
-        nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?
+        nibName nibNameOrNil: String?,
+        bundle nibBundleOrNil: Bundle?
     ) {
         self.init(requestConfiguration: PKAddPaymentPassRequestConfiguration(), delegate: nil)!
     }
 
     /// :nodoc:
-    @objc public required convenience init?(coder aDecoder: NSCoder) {
+    @objc public required convenience init?(
+        coder aDecoder: NSCoder
+    ) {
         self.init(requestConfiguration: PKAddPaymentPassRequestConfiguration(), delegate: nil)
     }
 
@@ -193,10 +202,14 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
     @objc func cancel(_ sender: Any?) {
         let castedVC = unsafeBitCast(self, to: PKAddPaymentPassViewController.self)
         delegate?.addPaymentPassViewController(
-            castedVC, didFinishAdding: nil,
+            castedVC,
+            didFinishAdding: nil,
             error: NSError(
-                domain: PKPassKitErrorDomain, code: PKAddPaymentPassError.userCancelled.rawValue,
-                userInfo: nil))
+                domain: PKPassKitErrorDomain,
+                code: PKAddPaymentPassError.userCancelled.rawValue,
+                userInfo: nil
+            )
+        )
     }
 
     @objc func next(_ sender: Any?) {
@@ -217,7 +230,8 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
                         "You exceeded the timeout of 10 seconds to call the request completion handler. Please check your PKAddPaymentPassViewControllerDelegate implementation, and make sure you are calling the `completionHandler` in `addPaymentPassViewController:generateRequestWithCertificateChain:nonce:nonceSignature:completionHandler`."
                     self.state = .error
                 }
-            })
+            }
+        )
         if let nonce = nonce, let nonceSignature = nonceSignature {
             let castedVC = unsafeBitCast(self, to: PKAddPaymentPassViewController.self)
             delegate?.addPaymentPassViewController(
@@ -240,7 +254,8 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
                             if error == nil {
                                 error =
                                     (request.stp_error as NSError?)?.userInfo[
-                                        NSLocalizedDescriptionKey] as? String
+                                        NSLocalizedDescriptionKey
+                                    ] as? String
                             }
                             self.errorText = error
                             self.state = .error
@@ -252,7 +267,8 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
                             self.state = .error
                         }
                     }
-                })
+                }
+            )
         }
     }
 

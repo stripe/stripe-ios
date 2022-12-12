@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB numarası";
 
+"Billing address is same as shipping" = "Faturalama adresi, gönderim adresiyle aynı";
+
 "Cancel" = "İptal";
 
 "City" = "Şehir";
@@ -33,6 +35,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Tamam";
+
+"Edit" = "Düzenle";
 
 "Eircode" = "Eircode";
 

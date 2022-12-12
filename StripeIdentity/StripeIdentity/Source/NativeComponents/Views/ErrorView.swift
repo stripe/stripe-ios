@@ -3,15 +3,21 @@
 //  StripeIdentity
 //
 //  Created by Jaime Park on 2/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 class ErrorView: UIView {
     struct Styling {
         static let errorTitleLabelSpacing: CGFloat = 12
-        static let contentInset: NSDirectionalEdgeInsets = .init(top: 132, leading: 16, bottom: 0, trailing: 16)
+        static let contentInset: NSDirectionalEdgeInsets = .init(
+            top: 132,
+            leading: 16,
+            bottom: 0,
+            trailing: 16
+        )
         static let warningIconImageSpacing: CGFloat = 27
     }
 
@@ -62,7 +68,9 @@ class ErrorView: UIView {
         installConstraints()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -72,8 +80,8 @@ class ErrorView: UIView {
     }
 }
 
-private extension ErrorView {
-    func installViews() {
+extension ErrorView {
+    fileprivate func installViews() {
         addAndPinSubview(stackView, insets: Styling.contentInset)
         stackView.addArrangedSubview(warningIconImageView)
         stackView.addArrangedSubview(errorTitleLabel)
@@ -84,7 +92,7 @@ private extension ErrorView {
         stackView.setCustomSpacing(Styling.errorTitleLabelSpacing, after: errorTitleLabel)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         warningIconImageView.setContentHuggingPriority(.required, for: .vertical)
         warningIconImageView.setContentCompressionResistancePriority(.required, for: .vertical)
     }

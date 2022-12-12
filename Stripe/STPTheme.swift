@@ -1,13 +1,15 @@
 //
 //  STPTheme.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 5/3/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeUICore
 import UIKit
 
+// swift-format-ignore: DontRepeatTypeInStaticProperties
 /// STPTheme objects can be used to visually style Stripe-provided UI. See https://stripe.com/docs/mobile/ios/basic#theming for more information.
 final public class STPTheme: NSObject {
 
@@ -34,10 +36,18 @@ final public class STPTheme: NSObject {
             var brightness: CGFloat = 0
             var alpha: CGFloat = 0
             self.primaryBackgroundColor.getHue(
-                &hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+                &hue,
+                saturation: &saturation,
+                brightness: &brightness,
+                alpha: &alpha
+            )
 
             return UIColor(
-                hue: hue, saturation: saturation, brightness: brightness - 0.09, alpha: alpha)
+                hue: hue,
+                saturation: saturation,
+                brightness: brightness - 0.09,
+                alpha: alpha
+            )
         }
         if #available(iOS 13.0, *) {
             return UIColor(dynamicProvider: { _ in
@@ -56,10 +66,18 @@ final public class STPTheme: NSObject {
             var brightness: CGFloat = 0
             var alpha: CGFloat = 0
             self.primaryBackgroundColor.getHue(
-                &hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+                &hue,
+                saturation: &saturation,
+                brightness: &brightness,
+                alpha: &alpha
+            )
 
             return UIColor(
-                hue: hue, saturation: saturation, brightness: brightness - 0.03, alpha: alpha)
+                hue: hue,
+                saturation: saturation,
+                brightness: brightness - 0.03,
+                alpha: alpha
+            )
         }
         if #available(iOS 13.0, *) {
             return UIColor(dynamicProvider: { _ in
@@ -157,7 +175,7 @@ final public class STPTheme: NSObject {
     }
 
     private func barStyle(for color: UIColor) -> UIBarStyle {
-        if STPColorUtils.colorIsBright(color) {
+        if color.isBright {
             return .default
         } else {
             return .black

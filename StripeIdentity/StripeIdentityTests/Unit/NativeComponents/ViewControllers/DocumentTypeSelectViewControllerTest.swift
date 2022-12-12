@@ -3,9 +3,11 @@
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 11/5/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
+
 @testable import StripeIdentity
 
 final class DocumentTypeSelectViewControllerTest: XCTestCase {
@@ -25,19 +27,24 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
             DocumentType.passport.rawValue: "Custom Passport Label",
         ])
         // Verify only passport & id card made it and ordered properly
-        XCTAssertEqual(vc.documentTypeWithLabels, [
-            .init(documentType: .idCard, label: "Custom ID Card Label"),
-            .init(documentType: .passport, label: "Custom Passport Label"),
-        ])
+        XCTAssertEqual(
+            vc.documentTypeWithLabels,
+            [
+                .init(documentType: .idCard, label: "Custom ID Card Label"),
+                .init(documentType: .passport, label: "Custom Passport Label"),
+            ]
+        )
     }
 
     func testOnlyInvalidDocumentTypes() throws {
         do {
             let _ = try makeViewController(withDocTypes: [
-                "invalid_document_type": "foo",
+                "invalid_document_type": "foo"
             ])
             XCTFail("Expected `DocumentTypeSelectViewControllerError`")
-        } catch DocumentTypeSelectViewControllerError.noValidDocumentTypes(let providedDocumentTypes) {
+        } catch DocumentTypeSelectViewControllerError.noValidDocumentTypes(
+            let providedDocumentTypes
+        ) {
             XCTAssertEqual(providedDocumentTypes, ["invalid_document_type"])
         } catch {
             throw error
@@ -48,7 +55,9 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         do {
             let _ = try makeViewController(withDocTypes: [:])
             XCTFail("Expected `DocumentTypeSelectViewControllerError`")
-        } catch DocumentTypeSelectViewControllerError.noValidDocumentTypes(let providedDocumentTypes) {
+        } catch DocumentTypeSelectViewControllerError.noValidDocumentTypes(
+            let providedDocumentTypes
+        ) {
             XCTAssertEqual(providedDocumentTypes, [])
         } catch {
             throw error
@@ -63,7 +72,7 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
                 body: instructionText,
                 buttonText: "",
                 idDocumentTypeAllowlist: [
-                    DocumentType.idCard.rawValue: "ID Card",
+                    DocumentType.idCard.rawValue: "ID Card"
                 ],
                 title: ""
             )
@@ -110,8 +119,10 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
 
 // MARK: - Helpers
 
-private extension DocumentTypeSelectViewControllerTest {
-    func makeViewController(withDocTypes docTypeAllowlist: [String: String]) throws -> DocumentTypeSelectViewController {
+extension DocumentTypeSelectViewControllerTest {
+    fileprivate func makeViewController(
+        withDocTypes docTypeAllowlist: [String: String]
+    ) throws -> DocumentTypeSelectViewController {
         return try DocumentTypeSelectViewController(
             sheetController: mockSheetController,
             staticContent: .init(

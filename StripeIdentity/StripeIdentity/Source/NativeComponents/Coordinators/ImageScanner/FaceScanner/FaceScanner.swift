@@ -3,16 +3,16 @@
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 5/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import CoreVideo
-import Vision
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import Vision
 
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
 
-@available(iOS 13, *)
 final class FaceScanner {
 
     private let faceDetector: FaceDetector
@@ -43,7 +43,6 @@ final class FaceScanner {
     }
 }
 
-@available(iOS 13, *)
 extension FaceScanner: ImageScanner {
     typealias Output = FaceScannerOutput
 

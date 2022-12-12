@@ -37,11 +37,6 @@ class TextFieldView: UIView {
         }
     }
     
-    var currentLogo: UIImage? {
-        let darkMode = viewModel.theme.colors.background.contrastingColor == .white
-        return darkMode ? viewModel.logo?.darkMode : viewModel.logo?.lightMode
-    }
-    
     var didReceiveAutofill = false
 
     // MARK: - Views
@@ -59,12 +54,27 @@ class TextFieldView: UIView {
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
         return FloatingPlaceholderTextFieldView(textField: textField, theme: viewModel.theme)
     }()
-    /// This could be the logo of a network, a bank, etc.
-    lazy var logoIconView: UIImageView = {
-        let imageView = UIImageView(image: currentLogo)
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+
+    let accessoryContainerView = UIView()
+
+    /// This could contain the logos of networks, banks, etc.
+    var accessoryView: UIView? {
+        didSet {
+            // For some reason, the stackview chooses to stretch accessoryContainerView if its
+            // content is nil instead of the text field, so we hide it.
+            accessoryContainerView.setHiddenIfNecessary(accessoryView == nil)
+
+            guard oldValue != accessoryView else {
+                return
+            }
+            oldValue?.removeFromSuperview()
+            if let accessoryView = accessoryView {
+                accessoryContainerView.addAndPinSubview(accessoryView)
+                accessoryView.setContentHuggingPriority(.required, for: .horizontal)
+            }
+        }
+    }
+
     lazy var errorIconView: UIImageView = {
         let imageView = UIImageView(image: Image.icon_error.makeImage(template: true))
         imageView.tintColor = viewModel.theme.colors.danger
@@ -90,6 +100,7 @@ class TextFieldView: UIView {
         self.delegate = delegate
         super.init(frame: .zero)
         isAccessibilityElement = true
+        translatesAutoresizingMaskIntoConstraints = false
         installConstraints()
         updateUI(with: viewModel)
     }
@@ -104,29 +115,29 @@ class TextFieldView: UIView {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
-        
-        // Check if the clear button was tapped, if so foward hit to the view
-        let convertedPoint = clearButton.convert(point, from: self)
-        if let hitView = clearButton.hitTest(convertedPoint, with: event) {
-            return hitView
+        // We override hitTest to forward all events within our bounds to the textfield
+        // ...except for these subviews:
+        for interactableSubview in [clearButton, accessoryView].compactMap({ $0 }) {
+            let convertedPoint = interactableSubview.convert(point, from: self)
+            if let hitView = interactableSubview.hitTest(convertedPoint, with: event) {
+                return hitView
+            }
         }
-        
-        // Forward all events within our bounds to the textfield
         return textField
     }
     
     // MARK: - Private methods
     
     fileprivate func installConstraints() {
-        hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, logoIconView])
+        hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
         clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
                                                       for: .horizontal)
         errorIconView.setContentHuggingPriority(.required, for: .horizontal)
         errorIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
                                                       for: .horizontal)
-        logoIconView.setContentHuggingPriority(.required, for: .horizontal)
-        logoIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
+        accessoryContainerView.setContentHuggingPriority(.required, for: .horizontal)
+        accessoryContainerView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
                                                       for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
@@ -187,17 +198,20 @@ class TextFieldView: UIView {
             accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = isUserInteractionEnabled ? viewModel.theme.colors.textFieldText : CompatibleColor.tertiaryLabel
+            textField.textColor = isUserInteractionEnabled ? viewModel.theme.colors.textFieldText : .tertiaryLabel
             errorIconView.alpha = 0
             accessibilityValue = viewModel.attributedText.string
         }
         if frame != .zero {
             textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.
         }
-        
-        // Update logo image
-        logoIconView.image = currentLogo
-        logoIconView.isHidden = currentLogo == nil // For some reason, the stackview chooses to stretch logoIconView if its image is nil instead of the text field, so we hide it.
+
+        // Update accessory view
+        accessoryView = viewModel.accessoryView
+
+        // Manually call layoutIfNeeded to avoid unintentional animations
+        // in next layout pass
+        layoutIfNeeded()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -13,7 +13,7 @@ extension STPAPIClient {
     func fetchCardImageVerificationDetails(
         cardImageVerificationSecret: String,
         cardImageVerificationId: String
-    ) -> Promise<CardImageVerificationDetailsResponse?> {
+    ) -> Promise<CardImageVerificationDetailsResponse> {
         let parameters: [String: Any] = ["client_secret": cardImageVerificationSecret]
         let endpoint = APIEndpoints.fetchCardImageVerificationDetails(id: cardImageVerificationId)
         return self.post(resource: endpoint, parameters: parameters)
@@ -41,7 +41,8 @@ extension STPAPIClient {
             let jsonVerificationFramesData = try jsonEncoder.encode(verificationFramesData)
 
             /// Turn the JSON data into a string
-            let verificationFramesDataString = String(data: jsonVerificationFramesData, encoding: .utf8) ?? ""
+            let verificationFramesDataString =
+                String(data: jsonVerificationFramesData, encoding: .utf8) ?? ""
 
             /// Create a `VerifyFrames` object
             let verifyFrames = VerifyFrames(
@@ -49,8 +50,11 @@ extension STPAPIClient {
                 verificationFramesData: verificationFramesDataString
             )
 
-            return self.submitVerificationFrames(cardImageVerificationId: cardImageVerificationId, verifyFrames: verifyFrames)
-        } catch(let error) {
+            return self.submitVerificationFrames(
+                cardImageVerificationId: cardImageVerificationId,
+                verifyFrames: verifyFrames
+            )
+        } catch (let error) {
             let promise = Promise<EmptyResponse>()
             promise.reject(with: error)
             return promise
@@ -78,7 +82,7 @@ extension STPAPIClient {
 
 private struct APIEndpoints {
     static func fetchCardImageVerificationDetails(id: String) -> String {
-        return  "card_image_verifications/\(id)/initialize_client"
+        return "card_image_verifications/\(id)/initialize_client"
     }
 
     static func submitVerificationFrames(id: String) -> String {

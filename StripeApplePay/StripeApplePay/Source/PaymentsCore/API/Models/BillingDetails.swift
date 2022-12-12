@@ -1,6 +1,6 @@
 //
 //  BillingDetails.swift
-//  StripeiOS
+//  StripeApplePay
 //
 //  Created by David Estes on 7/15/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -15,7 +15,7 @@ extension StripeAPI {
     public struct BillingDetails: UnknownFieldsCodable {
         /// Billing address.
         public var address: Address?
-        
+
         /// The billing address, a property sent in a PaymentMethod response
         public struct Address: UnknownFieldsCodable {
             /// The first line of the user's street address (e.g. "123 Fake St")
@@ -35,26 +35,28 @@ extension StripeAPI {
 
             /// The ISO country code of the address (e.g. "US")
             public var country: String?
-            
+
             public var _additionalParametersStorage: NonEncodableParameters?
             public var _allResponseFieldsStorage: NonEncodableParameters?
         }
-        
+
         /// Email address.
         public var email: String?
         /// Full name.
         public var name: String?
         /// Billing phone number (including extension).
         public var phone: String?
-        
-        public var _additionalParametersStorage: NonEncodableParameters?    
+
+        public var _additionalParametersStorage: NonEncodableParameters?
         public var _allResponseFieldsStorage: NonEncodableParameters?
     }
 
 }
 
 extension StripeAPI.BillingDetails.Address {
-    init(contact: StripeContact) {
+    init(
+        contact: StripeContact
+    ) {
         self.city = contact.city
         self.country = contact.country
         self.line1 = contact.line1
@@ -63,4 +65,3 @@ extension StripeAPI.BillingDetails.Address {
         self.state = contact.state
     }
 }
-

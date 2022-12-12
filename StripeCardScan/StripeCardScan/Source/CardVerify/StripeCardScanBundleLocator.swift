@@ -18,4 +18,3 @@ final class StripeCardScanBundleLocator: BundleLocatorProtocol {
     #endif
     static let resourcesBundle = StripeCardScanBundleLocator.computeResourcesBundle()
 }
-

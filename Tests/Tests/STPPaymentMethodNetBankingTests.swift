@@ -1,13 +1,18 @@
 //
 //  STPPaymentMethodNetBankingTests.swift
-//  StripeiOS
+//  StripeiOS Tests
 //
 //  Created by Anirudh Bhargava on 11/19/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
 import StripeCoreTestUtils
-@testable import Stripe
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodNetBankingTests: XCTestCase {
     private(set) var netbankingJSON: [AnyHashable: Any]?

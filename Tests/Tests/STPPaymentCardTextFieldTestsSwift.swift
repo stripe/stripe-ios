@@ -8,7 +8,11 @@
 
 import XCTest
 
-@testable import Stripe
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentCardTextFieldTestsSwift: XCTestCase {
 
@@ -16,23 +20,37 @@ class STPPaymentCardTextFieldTestsSwift: XCTestCase {
         let textField = STPPaymentCardTextField()
         let postalCodeEntryDefaultEnabled = textField.postalCodeEntryEnabled
         textField.clear()
-        XCTAssertEqual(postalCodeEntryDefaultEnabled, textField.postalCodeEntryEnabled, "clear overrode default postalCodeEntryEnabled value")
-        
+        XCTAssertEqual(
+            postalCodeEntryDefaultEnabled,
+            textField.postalCodeEntryEnabled,
+            "clear overrode default postalCodeEntryEnabled value"
+        )
+
         // --
         textField.postalCodeEntryEnabled = false
         textField.clear()
-        XCTAssertFalse(textField.postalCodeEntryEnabled, "clear overrode custom postalCodeEntryEnabled false value")
-        
+        XCTAssertFalse(
+            textField.postalCodeEntryEnabled,
+            "clear overrode custom postalCodeEntryEnabled false value"
+        )
+
         // --
         textField.postalCodeEntryEnabled = true
         // The ORs in this test are to handle if these tests are run in an environment
         // where the locale doesn't require postal codes, in which case the calculated
         // value for postalCodeEntryEnabled can be different than the value set
         // (this is a legacy API).
-        let stillTrueOrRequestedButNoPostal = textField.postalCodeEntryEnabled ||
-            (textField.viewModel.postalCodeRequested && STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: textField.viewModel.postalCodeCountryCode))
-        XCTAssertTrue(stillTrueOrRequestedButNoPostal, "clear overrode custom postalCodeEntryEnabled true value")
-        
+        let stillTrueOrRequestedButNoPostal =
+            textField.postalCodeEntryEnabled
+            || (textField.viewModel.postalCodeRequested
+                && STPPostalCodeValidator.postalCodeIsRequired(
+                    forCountryCode: textField.viewModel.postalCodeCountryCode
+                ))
+        XCTAssertTrue(
+            stillTrueOrRequestedButNoPostal,
+            "clear overrode custom postalCodeEntryEnabled true value"
+        )
+
     }
 
     func testPostalCodeIsValidWhenExpirationIsNot() {

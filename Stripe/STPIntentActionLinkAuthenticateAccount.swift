@@ -9,10 +9,12 @@
 import UIKit
 
 class STPIntentActionLinkAuthenticateAccount: NSObject {
-    
+
     let allResponseFields: [AnyHashable: Any]
-    
-    required init(_ allResponseFields: [AnyHashable: Any]) {
+
+    required init(
+        _ allResponseFields: [AnyHashable: Any]
+    ) {
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -25,7 +27,7 @@ extension STPIntentActionLinkAuthenticateAccount: STPAPIResponseDecodable {
         guard let response = response else {
             return nil
         }
-        
+
         return STPIntentActionLinkAuthenticateAccount(response) as? Self
     }
 }

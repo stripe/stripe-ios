@@ -1,11 +1,12 @@
 //
 //  STPPaymentCardTextFieldCell.swift
-//  Stripe
+//  StripeiOS
 //
 //  Created by Jack Flintermann on 6/16/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripePaymentsUI
 import UIKit
 
 class STPPaymentCardTextFieldCell: UITableViewCell {
@@ -32,7 +33,10 @@ class STPPaymentCardTextFieldCell: UITableViewCell {
         return (paymentField?.cardNumber?.count ?? 0) == 0
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let paymentField = STPPaymentCardTextField(frame: bounds)
         paymentField.postalCodeEntryEnabled = false
@@ -79,7 +83,9 @@ class STPPaymentCardTextFieldCell: UITableViewCell {
         return 0
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         super.init(coder: aDecoder)
     }
 }

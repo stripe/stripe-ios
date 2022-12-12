@@ -8,10 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
+extension StripeAPI {
 
     struct VerificationPageDataRequirements: Decodable, Equatable {
         let errors: [VerificationPageDataRequirementError]
+        let missing: Set<VerificationPageFieldType>
     }
 
 }
