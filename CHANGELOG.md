@@ -1,4 +1,4 @@
-## X.Y.Z 2022-xx-xx
+## 23.3.1 2022-12-12
 * [Fixed] Fixed a bug where 3 decimal place currencies were not being formatted properly.
 
 ### PaymentSheet
