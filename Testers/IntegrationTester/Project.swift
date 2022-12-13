@@ -33,6 +33,9 @@ let project = Project(
                 .project(target: "StripeiOS", path: "//Stripe"),
             ],
             settings: .stripeTargetSettings(
+                base: [
+                    "SKIP_INSTALL": true,
+                ],
                 baseXcconfigFilePath: "BuildConfigurations/IntegrationTester"
             )
         ),
