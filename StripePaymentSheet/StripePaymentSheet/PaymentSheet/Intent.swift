@@ -182,7 +182,7 @@ class IntentConfirmParams {
         params.paymentMethodOptions = options
 
         options.setMoto()
-        
+
         return params
     }
 }

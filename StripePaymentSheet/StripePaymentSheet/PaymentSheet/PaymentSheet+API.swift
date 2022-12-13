@@ -252,34 +252,6 @@ extension PaymentSheet {
         }
     }
 
-    private static func dashboardPaymentIntent(
-        configuration: PaymentSheet.Configuration,
-        authenticationContext: STPAuthenticationContext,
-        confirmParams: IntentConfirmParams,
-        paymentIntent: STPPaymentIntent,
-        paymentHandler: STPPaymentHandler,
-        completion: @escaping (PaymentSheetResult) -> Void,
-        paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void
-    ) {
-        configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
-            paymentMethod, error in
-            if let error = error {
-                completion(.failed(error: error))
-                return
-            }
-            let paymentIntentParams = confirmParams.makeDashboardParams(
-                paymentIntentClientSecret: paymentIntent.clientSecret,
-                paymentMethodID: paymentMethod?.stripeId ?? "",
-                configuration: configuration
-            )
-            paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
-            paymentHandler.confirmPayment(
-                paymentIntentParams,
-                with: authenticationContext,
-                completion: paymentHandlerCompletion)
-        }
-    }
-
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         clientSecret: IntentClientSecret,
