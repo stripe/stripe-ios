@@ -309,8 +309,11 @@ extension Settings {
         case developmentTeam = "DEVELOPMENT_TEAM"
     }
 
-    public static func stripeTargetSettings(baseXcconfigFilePath: String) -> Settings {
-        var baseSettings = SettingsDictionary()
+    public static func stripeTargetSettings(
+        base: SettingsDictionary = [:],
+        baseXcconfigFilePath: String
+    ) -> Settings {
+        var baseSettings = base
         if case let .string(codeSignIdentity) = Environment.codeSignIdentity {
             baseSettings[BuildSetting.codeSignIdentity.rawValue] = .string(codeSignIdentity)
         }

@@ -26,6 +26,38 @@ let workspace = Workspace(
         "Example/PaymentSheet Example",
         "Example/AppClipExample",
     ],
+    schemes: [
+        Scheme(
+            name: "AllStripeFrameworks",
+            buildAction: .buildAction(targets: [
+                .project(path: "Stripe", target: "StripeiOS"),
+                .project(path: "StripeApplePay", target: "StripeApplePay"),
+                .project(path: "StripeCameraCore", target: "StripeCameraCore"),
+                .project(path: "StripeCardScan", target: "StripeCardScan"),
+                .project(path: "StripeCore", target: "StripeCore"),
+                .project(path: "StripePayments", target: "StripePayments"),
+                .project(path: "StripePaymentsUI", target: "StripePaymentsUI"),
+                .project(path: "StripePaymentSheet", target: "StripePaymentSheet"),
+                .project(path: "StripeUICore", target: "StripeUICore"),
+                .project(path: "StripeIdentity", target: "StripeIdentity"),
+                .project(path: "StripeFinancialConnections", target: "StripeFinancialConnections"),
+                .project(path: "Stripe3DS2", target: "Stripe3DS2"),
+            ])
+        ),
+        Scheme(
+            name: "AllStripeFrameworksCatalyst",
+            buildAction: .buildAction(targets: [
+                .project(path: "Stripe", target: "StripeiOS"),
+                .project(path: "StripeApplePay", target: "StripeApplePay"),
+                .project(path: "StripeCore", target: "StripeCore"),
+                .project(path: "StripePayments", target: "StripePayments"),
+                .project(path: "StripePaymentsUI", target: "StripePaymentsUI"),
+                .project(path: "StripePaymentSheet", target: "StripePaymentSheet"),
+                .project(path: "StripeUICore", target: "StripeUICore"),
+                .project(path: "Stripe3DS2", target: "Stripe3DS2"),
+            ])
+        ),
+    ],
     additionalFiles: [
         "Package.swift",
     ],
