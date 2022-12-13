@@ -75,8 +75,8 @@ extension PaymentSheet {
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
-                // The Dashboard app's user key (uk_) cannot pass `paymenMethodParams` ie payment_method_data
-                if configuration.apiClient.publishableKey?.hasPrefix("uk_") ?? false {
+                // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
+                if configuration.apiClient.isDashboardPK {
                     configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
                         paymentMethod, error in
                         if let error = error {
@@ -131,7 +131,12 @@ extension PaymentSheet {
                     paymentMethodType: paymentMethod.type,
                     customer: configuration.customer
                 )
-                
+
+                // The Dashboard app requires MOTO
+                if configuration.apiClient.isDashboardPK {
+                    paymentIntentParams.paymentMethodOptions?.setMoto()
+                }
+
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
@@ -244,6 +249,34 @@ extension PaymentSheet {
             case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
                 createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
             }
+        }
+    }
+
+    private static func dashboardPaymentIntent(
+        configuration: PaymentSheet.Configuration,
+        authenticationContext: STPAuthenticationContext,
+        confirmParams: IntentConfirmParams,
+        paymentIntent: STPPaymentIntent,
+        paymentHandler: STPPaymentHandler,
+        completion: @escaping (PaymentSheetResult) -> Void,
+        paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void
+    ) {
+        configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
+            paymentMethod, error in
+            if let error = error {
+                completion(.failed(error: error))
+                return
+            }
+            let paymentIntentParams = confirmParams.makeDashboardParams(
+                paymentIntentClientSecret: paymentIntent.clientSecret,
+                paymentMethodID: paymentMethod?.stripeId ?? "",
+                configuration: configuration
+            )
+            paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+            paymentHandler.confirmPayment(
+                paymentIntentParams,
+                with: authenticationContext,
+                completion: paymentHandlerCompletion)
         }
     }
 
