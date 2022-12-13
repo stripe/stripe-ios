@@ -26,6 +26,7 @@
 		7CD54A47BC36A065ADA952BF /* StripeCoreTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7ECCD70F9CE16A1854F2633E /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; };
 		7F005A0179023A25918D9014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59EF54A49D2FCC743E9EBC5F /* Assets.xcassets */; };
+		84CFB1ACA4915EE5B2E25341 /* EndpointSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8738B92B2B3B97A7A53E6FE9 /* EndpointSelectorViewController.swift */; };
 		8A6DBB641294F9AE6A9C61B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */; };
 		8F5C48FC825539B96F592315 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5259232431E2683DDD05CB84 /* ViewController.swift */; };
 		95B578013869DFEA1C912A10 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; };
@@ -170,6 +171,7 @@
 		82FA4AD9771D68717C0E3B0D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		830255F427E66F475B970A95 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		8542B65BCF43F2EE1B606603 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		8738B92B2B3B97A7A53E6FE9 /* EndpointSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointSelectorViewController.swift; sourceTree = "<group>"; };
 		899A5E37ECAEFAD0178E0A4E /* ExampleCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCheckoutViewController.swift; sourceTree = "<group>"; };
 		89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E99EA900EA73F2B87EC6916 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				132709C10C0114D239ED3FE9 /* Resources */,
 				05E317C6C8459B147C041D93 /* AppDelegate.swift */,
 				5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */,
+				8738B92B2B3B97A7A53E6FE9 /* EndpointSelectorViewController.swift */,
 				899A5E37ECAEFAD0178E0A4E /* ExampleCheckoutViewController.swift */,
 				ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */,
 				447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */,
@@ -583,6 +586,7 @@
 			files = (
 				EB1DCD930408180734A8D7CA /* AppDelegate.swift in Sources */,
 				4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */,
+				84CFB1ACA4915EE5B2E25341 /* EndpointSelectorViewController.swift in Sources */,
 				EB3C76C2A5704F94F0414BEF /* ExampleCheckoutViewController.swift in Sources */,
 				D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */,
 				A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
