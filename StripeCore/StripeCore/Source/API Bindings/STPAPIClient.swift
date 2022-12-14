@@ -40,11 +40,6 @@ import UIKit
     }
     var _publishableKey: String?
 
-    @_spi(STP) public var isDashboardPK: Bool {
-        // The Dashboard app's user key (uk_)
-        publishableKey?.hasPrefix("uk_") ?? false
-    }
-
     /// A publishable key that only contains publishable keys and not secret keys.
     ///
     /// If a secret key is found, returns "[REDACTED_LIVE_KEY]".

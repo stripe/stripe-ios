@@ -76,7 +76,7 @@ extension PaymentSheet {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
                 // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
-                if configuration.apiClient.isDashboardPK {
+                if configuration.apiClient.publishableKeyIsUserKey {
                     configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
                         paymentMethod, error in
                         if let error = error {
@@ -133,7 +133,7 @@ extension PaymentSheet {
                 )
 
                 // The Dashboard app requires MOTO
-                if configuration.apiClient.isDashboardPK {
+                if configuration.apiClient.publishableKeyIsUserKey {
                     paymentIntentParams.paymentMethodOptions?.setMoto()
                 }
 
