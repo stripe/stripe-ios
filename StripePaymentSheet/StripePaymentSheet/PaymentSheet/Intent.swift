@@ -193,9 +193,7 @@ extension STPConfirmPaymentMethodOptions {
         cardOptions.additionalAPIParameters["moto"] = true
         self.cardOptions = cardOptions
     }
-}
 
-extension STPConfirmPaymentMethodOptions {
     /**
      Sets `payment_method_options[x][setup_future_usage]` where x is either "card" or "us_bank_account"
      
