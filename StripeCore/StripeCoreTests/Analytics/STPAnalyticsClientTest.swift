@@ -24,6 +24,14 @@ class STPAnalyticsClientTest: XCTestCase {
 
         XCTAssertEqual("[REDACTED_LIVE_KEY]", payload["publishable_key"] as? String)
     }
+    
+    func testShouldRedactUserKeyFromLog() {
+        let analyticsClient = STPAnalyticsClient()
+
+        let payload = analyticsClient.commonPayload(STPAPIClient(publishableKey: "uk_live_foo"))
+
+        XCTAssertEqual("[REDACTED_LIVE_KEY]", payload["publishable_key"] as? String)
+    }
 
     func testShouldNotRedactLiveKeyFromLog() {
         let analyticsClient = STPAnalyticsClient()
