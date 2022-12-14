@@ -180,15 +180,20 @@ class IntentConfirmParams {
             customer: configuration.customer
         )
         params.paymentMethodOptions = options
-        
-        let cardOptions = options.cardOptions ?? STPConfirmCardOptions()
-        cardOptions.additionalAPIParameters["moto"] = true
-        options.cardOptions = cardOptions
+
+        options.setMoto()
+
         return params
     }
 }
 
 extension STPConfirmPaymentMethodOptions {
+    func setMoto() {
+        let cardOptions = self.cardOptions ?? STPConfirmCardOptions()
+        cardOptions.additionalAPIParameters["moto"] = true
+        self.cardOptions = cardOptions
+    }
+
     /**
      Sets `payment_method_options[x][setup_future_usage]` where x is either "card" or "us_bank_account"
      

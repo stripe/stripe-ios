@@ -75,8 +75,8 @@ extension PaymentSheet {
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
-                // The Dashboard app's user key (uk_) cannot pass `paymenMethodParams` ie payment_method_data
-                if configuration.apiClient.publishableKey?.hasPrefix("uk_") ?? false {
+                // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
+                if configuration.apiClient.publishableKeyIsUserKey {
                     configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
                         paymentMethod, error in
                         if let error = error {
@@ -131,7 +131,12 @@ extension PaymentSheet {
                     paymentMethodType: paymentMethod.type,
                     customer: configuration.customer
                 )
-                
+
+                // The Dashboard app requires MOTO
+                if configuration.apiClient.publishableKeyIsUserKey {
+                    paymentIntentParams.paymentMethodOptions?.setMoto()
+                }
+
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
