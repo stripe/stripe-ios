@@ -44,3 +44,11 @@ fastlane/.env
 
 .build
 .swiftpm
+
+# Xcode Related files
+
+.package.resolved
+Stripe.xcworkspace
+Stripe*/*.xcodeproj
+Example/**/*.xcodeproj
+Testers/**/*.xcodeproj
