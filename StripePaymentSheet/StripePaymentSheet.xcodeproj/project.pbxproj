@@ -235,6 +235,7 @@
 		31DCB12728F62865002EF128 /* icon-pm-upi@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31DCB12628F62865002EF128 /* icon-pm-upi@3x.png */; };
 		31DCB12928F62B07002EF128 /* polling_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31DCB12828F62B07002EF128 /* polling_error_icon@3x.png */; };
 		31DCB12B28F75531002EF128 /* PaymentSheetFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DCB12A28F75531002EF128 /* PaymentSheetFlowController.swift */; };
+		61F7AC44294B8822005E4CC7 /* icon-pm-cashapp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61F7AC43294B8822005E4CC7 /* icon-pm-cashapp@3x.png */; };
 		D06C829B28FEFEC600832267 /* LinkCardEditElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06C829A28FEFEC600832267 /* LinkCardEditElement.swift */; };
 		E237938F291B286900C63FDD /* RotatingCardBrandsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E237938E291B286900C63FDD /* RotatingCardBrandsView.swift */; };
 /* End PBXBuildFile section */
@@ -531,6 +532,7 @@
 		31DCB12628F62865002EF128 /* icon-pm-upi@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-upi@3x.png"; sourceTree = "<group>"; };
 		31DCB12828F62B07002EF128 /* polling_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "polling_error_icon@3x.png"; sourceTree = "<group>"; };
 		31DCB12A28F75531002EF128 /* PaymentSheetFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSheetFlowController.swift; sourceTree = "<group>"; };
+		61F7AC43294B8822005E4CC7 /* icon-pm-cashapp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-cashapp@3x.png"; sourceTree = "<group>"; };
 		D06C829A28FEFEC600832267 /* LinkCardEditElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCardEditElement.swift; sourceTree = "<group>"; };
 		E237938E291B286900C63FDD /* RotatingCardBrandsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingCardBrandsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1183,6 +1185,7 @@
 				3159F72B2888C3A3007C8C3A /* icon-pm-sepa@3x.png */,
 				31DCB12628F62865002EF128 /* icon-pm-upi@3x.png */,
 				3159F72C2888C3A3007C8C3A /* icon-pm-affirm@3x.png */,
+				61F7AC43294B8822005E4CC7 /* icon-pm-cashapp@3x.png */,
 			);
 			path = PaymentMethods;
 			sourceTree = "<group>";
@@ -1437,6 +1440,7 @@
 				3159F7912888C3A4007C8C3A /* bank_icon_boa@3x.png in Resources */,
 				3159F7832888C3A4007C8C3A /* icon-pm-ideal@3x.png in Resources */,
 				3166C0A628DA522C003CAF10 /* icon-pm-link@3x.png in Resources */,
+				61F7AC44294B8822005E4CC7 /* icon-pm-cashapp@3x.png in Resources */,
 				3159F77E2888C3A4007C8C3A /* affirm_mark_dark@3x.png in Resources */,
 				3159F7AD2888C3A4007C8C3A /* Localizable.strings in Resources */,
 				3159F7AC2888C3A4007C8C3A /* afterpay_mark_dark@3x.png in Resources */,

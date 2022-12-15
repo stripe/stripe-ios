@@ -149,6 +149,8 @@ extension STPPaymentMethodType {
                 return .pm_type_us_bank
             case .UPI:
                 return .pm_type_upi
+            case .cashApp:
+                return .pm_type_cashapp
             default:
                 return nil
             }

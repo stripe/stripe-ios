@@ -73,23 +73,11 @@ extension CashAppExampleViewController {
                     return
                 }
 
-                // 2. Collect billing
-                let billingDetails = STPPaymentMethodBillingDetails()
-                billingDetails.name = "Jane Doe"
-                billingDetails.email = "email@email.com"
-                let billingAddress = STPPaymentMethodAddress()
-                billingAddress.country = "US"
-                billingAddress.line1 = "123 Happy St."
-                billingAddress.city = "SF"
-                billingAddress.state = "CA"
-                billingAddress.postalCode = "12345"
-                billingDetails.address = billingAddress
-
-                // 3. Confirm the payment and redirect the user to Klarna
+                // 2. Confirm the payment and redirect the user to Klarna
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     cashApp: STPPaymentMethodCashAppParams(),
-                    billingDetails: billingDetails,
+                    billingDetails: nil,
                     metadata: nil)
                 paymentIntentParams.returnURL = "payments-example://safepay/"
 

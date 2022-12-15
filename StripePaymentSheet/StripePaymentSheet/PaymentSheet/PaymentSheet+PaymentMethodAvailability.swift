@@ -24,7 +24,8 @@ extension PaymentSheet {
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
         .AUBECSDebit,
-        .UPI
+        .UPI,
+        .cashApp
     ]
     
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
@@ -50,7 +51,7 @@ extension PaymentSheet {
             switch paymentMethod {
             case .blik, .card, .cardPresent, .UPI, .weChatPay:
                 return []
-            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit:
+            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit, .cashApp:
                 return [.returnURL]
             case .USBankAccount:
                 return [.userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod]
@@ -68,7 +69,7 @@ extension PaymentSheet {
                 return [.returnURL, .notSettingUp, .userSupportsDelayedPaymentMethods]
             case .afterpayClearpay, .affirm:
                 return [.returnURL, .shippingAddress]
-            case .link, .cashApp, .unknown:
+            case .link, .unknown:
                 return [.unavailable]
             @unknown default:
                 return [.unavailable]
@@ -101,7 +102,7 @@ extension PaymentSheet {
             switch paymentMethod {
             case .card:
                 return []
-            case .alipay:
+            case .alipay, .cashApp:
                 return [.returnURL]
             case .USBankAccount:
                 return [.userSupportsDelayedPaymentMethods]
@@ -115,7 +116,7 @@ extension PaymentSheet {
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .cashApp, .unknown:
+                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .unknown:
                 return [.unavailable]
             @unknown default:
                 return [.unavailable]
