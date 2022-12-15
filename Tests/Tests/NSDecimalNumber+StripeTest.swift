@@ -52,36 +52,36 @@ class NSDecimalNumberStripeTest: XCTestCase {
     
     func testDecimalAmount_twoDecimal() {
         for twoDecimalPointCurrency in twoDecimalPointCurrencies {
-            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: twoDecimalPointCurrency)
-            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "10.00"))
+            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92123, currency: twoDecimalPointCurrency)
+            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "921.23"))
         }
     }
 
     func testDecimalAmount_noDecimal() {
         for currency in noDecimalPointCurrencies {
-            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 1000, currency: currency)
-            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "1000"))
+            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92123, currency: currency)
+            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92123"))
         }
     }
     
     func testDecimalAmount_threeDecimal() {
         for currency in threeDecimalCurrencies {
-            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92000, currency: currency)
-            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92"))
+            let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92123, currency: currency)
+            XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92.123"))
         }
     }
     
     func testAmount_twoDecimal() {
         for twoDecimalPointCurrency in twoDecimalPointCurrencies {
-            let amount = NSDecimalNumber(value: 1000)
+            let amount = NSDecimalNumber(value: 1000.12)
             let decimalNumber = amount.stp_amount(withCurrency: twoDecimalPointCurrency)
-            XCTAssertEqual(decimalNumber, 100000)
+            XCTAssertEqual(decimalNumber, 100012)
         }
     }
     
     func testAmount_noDecimal() {
         for noDecimalPointCurrency in noDecimalPointCurrencies {
-            let amount = NSDecimalNumber(value: 1000)
+            let amount = NSDecimalNumber(value: 1000.12)
             let decimalNumber = amount.stp_amount(withCurrency: noDecimalPointCurrency)
             XCTAssertEqual(decimalNumber, 1000)
         }
@@ -89,9 +89,9 @@ class NSDecimalNumberStripeTest: XCTestCase {
     
     func testAmount_threeDecimal() {
         for threeDecimalPointCurrency in threeDecimalCurrencies {
-            let amount = NSDecimalNumber(value: 1000)
+            let amount = NSDecimalNumber(value: 1000.12)
             let decimalNumber = amount.stp_amount(withCurrency: threeDecimalPointCurrency)
-            XCTAssertEqual(decimalNumber, 1000000)
+            XCTAssertEqual(decimalNumber, 1000120)
         }
     }
 }
