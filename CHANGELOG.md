@@ -1,3 +1,6 @@
+## X.Y.Z 2022-xx-xx
+* [Changed] Using [Tuist](https://tuist.io) to generate Xcode projects. From now on, only release versions of the SDK will include Xcode project files, in case you want to build a non release revision from source, you can follow [these instructions](https://docs.tuist.io/tutorial/get-started) to generate the project files. For Carthage users, this also means that you will only be able to depend on release versions.
+
 ## 23.3.1 2022-12-12
 * [Fixed] Fixed a bug where 3 decimal place currencies were not being formatted properly.
 
