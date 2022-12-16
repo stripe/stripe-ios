@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'release_common'
-require_relative 'cleanup_project_files'
+require_relative 'cleanup_project_files_from_repo'
 
 @version = version_from_file
 
@@ -100,24 +100,24 @@ def cleanup_project_files
   return if @is_dry_run
 
   puts 'Cleanup generated project files from repo'.magenta
-  run_command('ci_scripts/cleanup_project_files_from_repo.rb', @github_client)
+  cleanup_project_files_from_repo(@version, @github_client)
 
   puts 'Done! Have a nice day!'.green
 end
 
 steps = [
-  method(:export_builds),
-  method(:pod_lint),
-  method(:changedoc_approve),
-  method(:approve_pr),
-  method(:push_tag),
-  method(:create_release),
-  method(:upload_framework),
-  method(:push_cocoapods),
-  method(:push_spm_mirror),
-  method(:sync_owner_list),
-  method(:changelog_done),
-  method(:reply_email),
+  # method(:export_builds),
+  # method(:pod_lint),
+  # method(:changedoc_approve),
+  # method(:approve_pr),
+  # method(:push_tag),
+  # method(:create_release),
+  # method(:upload_framework),
+  # method(:push_cocoapods),
+  # method(:push_spm_mirror),
+  # method(:sync_owner_list),
+  # method(:changelog_done),
+  # method(:reply_email),
   method(:cleanup_project_files)
 ]
 execute_steps(steps, @step_index)
