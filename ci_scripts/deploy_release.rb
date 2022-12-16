@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
 
 require_relative 'release_common'
-require_relative 'cleanup_project_files'
 
 @version = version_from_file
 
 @changelog = changelog(@version)
+
+@cleanup_branchname = "releases/#{@version}_cleanup"
 
 def export_builds
   # Compile the build products: bundle install && ./ci_scripts/export_builds.rb
@@ -97,27 +98,43 @@ def reply_email
 end
 
 def cleanup_project_files
-  return if @is_dry_run
+  rputs 'Cleanup generated project files from repo'
+  run_command("git checkout -b #{@cleanup_branchname}")
+  run_command('ci_scripts/delete_project_files.rb')
+  run_command("git add -u && git commit -m \"Remove generated project files for v#{@version}\"")
+  run_command("git push origin #{@cleanup_branchname}")
+end
 
-  puts 'Cleanup generated project files from repo'.magenta
-  run_command('ci_scripts/cleanup_project_files_from_repo.rb', @github_client)
+def create_cleanup_pr
+  unless @is_dry_run
+    @github_client.create_pull_request(
+      'stripe/stripe-ios',
+      'master',
+      @cleanup_branchname,
+      "Remove generated project files for v#{@version}"
+    )
+
+    rputs 'Request review on the PR and merge it.'
+    notify_user
+  end
 
   puts 'Done! Have a nice day!'.green
 end
 
 steps = [
-  method(:export_builds),
-  method(:pod_lint),
-  method(:changedoc_approve),
-  method(:approve_pr),
-  method(:push_tag),
-  method(:create_release),
-  method(:upload_framework),
-  method(:push_cocoapods),
-  method(:push_spm_mirror),
-  method(:sync_owner_list),
-  method(:changelog_done),
-  method(:reply_email),
-  method(:cleanup_project_files)
+  # method(:export_builds),
+  # method(:pod_lint),
+  # method(:changedoc_approve),
+  # method(:approve_pr),
+  # method(:push_tag),
+  # method(:create_release),
+  # method(:upload_framework),
+  # method(:push_cocoapods),
+  # method(:push_spm_mirror),
+  # method(:sync_owner_list),
+  # method(:changelog_done),
+  # method(:reply_email),
+  method(:cleanup_project_files),
+  method(:create_cleanup_pr)
 ]
 execute_steps(steps, @step_index)

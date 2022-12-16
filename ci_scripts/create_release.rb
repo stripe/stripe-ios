@@ -131,13 +131,13 @@ steps = [
   method(:create_branch),
   method(:regenerate_project_files),
   method(:update_version),
-  method(:update_placeholders),
-  method(:build_documentation),
-  method(:pod_lint),
-  method(:commit_changes),
-  method(:push_changes),
-  method(:create_pr),
-  method(:check_for_missing_localizations),
-  method(:propose_release)
+  # method(:update_placeholders),
+  # method(:build_documentation),
+  # method(:pod_lint),
+  method(:commit_changes)
+  # method(:push_changes),
+  # method(:create_pr),
+  # method(:check_for_missing_localizations),
+  # method(:propose_release)
 ]
 execute_steps(steps, @step_index)
