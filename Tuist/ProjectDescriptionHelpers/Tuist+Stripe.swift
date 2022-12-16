@@ -2,6 +2,7 @@ import Foundation
 import ProjectDescription
 
 extension Project {
+    /// Options for test targets inside Stripe frameworks.
     public struct TestOptions {
         public var resources: ResourceFileElements? = nil
         public var dependencies: [TargetDependency] = []
@@ -12,6 +13,22 @@ extension Project {
         public var usesMocks: Bool = false
         public var usesStubs: Bool = false
 
+        /// Creates a `TestOptions` instance.
+        ///
+        /// - Parameters:
+        ///   - resources: The resources for the target, can be `nil` if no resources needed.
+        ///   - dependencies: Any dependencies necessary,
+        ///     the target being tested will be added automatically.
+        ///   - settings: Settings for the target, defaults to base settings for all tests,
+        ///     only override if you need to specify custom settings.
+        ///   - includesSnapshots: Whether this target includes snapshot tests.
+        ///     If `true`, the iOSSnapshotTestCase package will be linked and an environment
+        ///     variable to the default location of reference images will be added.
+        ///   - usesMocks: Whether the tests in this target use mocks.
+        ///     If `true`, the OCMock package will be linked.
+        ///   - usesStubs: Whether the tests in this target use stubs.
+        ///     If `true`, the OHHTTPStubs package will be linked.
+        /// - Returns: A `TestOptions` instance.
         public static func testOptions(
             resources: ResourceFileElements? = nil,
             dependencies: [TargetDependency] = [],
@@ -33,6 +50,43 @@ extension Project {
         }
     }
 
+    /// Utility to create a `Project` that follows the conventions of all Stripe frameworks.
+    ///
+    /// The `Project` will include:
+    /// - A framework `Target` with same name as the project.
+    /// - A framework `Target` if `testUtilsOptions` is included, named (`name`)TestUtils.
+    /// - A unit tests `Target` if `unitTestOptions` is included, named (`name`)Tests.
+    /// - A ui tests `Target` if `uiTestOptions` is included, named (`name`)UITests.
+    ///
+    /// The files for each target **must** be in specific locations:
+    /// - Info.plist: targetName/Info.plist
+    /// - Sources:
+    ///   - Main target: targetName/Source/
+    ///   - Test targets: targetName/
+    /// - Public header: targetName/targetName.h
+    ///
+    /// A `Scheme` with the same name as the `Project` will be created, it will include the
+    /// main target in the build action and the test targets in the test action.
+    /// If `testUtilsOptions` is included, a second `Scheme` will be included, with only the
+    /// test utils target in the build action.
+    ///
+    /// - Parameters:
+    ///   - name: The name that will be used for the `Project`, main `Target` and `Scheme`.
+    ///   - packages: Any SPM packages needed in this project.
+    ///     Note that the iOSSnapshotTestCase, OCMock and OHHTTPStubs packages will be added
+    ///     automatically if they are required by any tests, so they shouldn't be included.
+    ///   - projectSettings: Settings used at project level. Only specify if you need to provide
+    ///     specific properties for this and only this project, if you need to add/change a setting
+    ///     check if it makes sense to change it for all frameworks too.
+    ///   - targetSettings: Settings used at target level. Only specify if you need to provide
+    ///     specific properties for this and only this target, if you need to add/change a setting
+    ///     check if it makes sense to change it for all frameworks too.
+    ///   - resources: Any resources needed by the framework.
+    ///   - dependencies: Any dependencies required by the main target.
+    ///   - testUtilsOptions: Options for the test utils target if one is needed.
+    ///   - unitTestOptions: Options for the unit tests target if one is needed.
+    ///   - uiTestOptions: Options for the ui tests target if one is needed.
+    /// - Returns: A `Project` configured for a Stripe framework.
     public static func stripeFramework(
         name: String,
         packages: [Package] = [],
@@ -309,6 +363,29 @@ extension Settings {
         case developmentTeam = "DEVELOPMENT_TEAM"
     }
 
+    /// Utility to generate settings for a Stripe target.
+    ///
+    /// It will add the `CODE_SIGN_IDENTITY` and `DEVELOPMENT_TEAM` build settings to the target
+    /// based on the `TUIST_CODE_SIGN_IDENTITY` and `TUIST_DEVELOPMENT_TEAM` environment variables.
+    /// This is so these settings don't have to be specified on config files, but can be easily
+    /// added at generation time during development.
+    /// It will also generate the configuration from xcconfig files according to the base file path
+    /// given, with this format:
+    ///
+    /// `\(baseXcconfigFilePath)-\(configuration).xcconfig`
+    /// i.e.
+    /// `\(baseXcconfiFilePath)-Debug.xcconfig`
+    ///
+    /// - Note: Don't use for project level settings.
+    ///
+    /// - Parameters:
+    ///   - base: Any base settings. Use sparringly, prefer to use an xcconfig file.
+    ///   - baseXcconfigFilePath: The xcconfig file path prefix. The final file paths will be
+    ///     generated as follows:
+    ///     `\(baseXcconfigFilePath)-\(configuration).xcconfig`
+    ///     i.e.
+    ///     `\(baseXcconfiFilePath)-Debug.xcconfig`
+    /// - Returns: `Settings` for a Stripe target.
     public static func stripeTargetSettings(
         base: SettingsDictionary = [:],
         baseXcconfigFilePath: String
