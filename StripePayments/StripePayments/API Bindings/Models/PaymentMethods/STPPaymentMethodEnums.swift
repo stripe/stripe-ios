@@ -130,7 +130,7 @@ import Foundation
                 "Payment Method type name for US Bank Account payments."
             )
         case .cashApp:
-            return STPLocalizedString("Cash App", "Payment Method type brand name")
+            return STPLocalizedString("Cash App Pay", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:

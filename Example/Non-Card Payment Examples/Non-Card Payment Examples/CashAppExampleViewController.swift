@@ -35,7 +35,7 @@ class CashAppExampleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Cash App"
+        title = "Cash App Pay"
         [payButton, activityIndicatorView].forEach { subview in
             view.addSubview(subview)
             subview.translatesAutoresizingMaskIntoConstraints = false

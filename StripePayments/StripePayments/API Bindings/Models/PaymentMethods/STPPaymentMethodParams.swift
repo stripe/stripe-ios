@@ -1202,7 +1202,7 @@ extension STPPaymentMethodParams {
         case .USBankAccount:
             return "US Bank Account"
         case .cashApp:
-            return "Cash App"
+            return "Cash App Pay"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:

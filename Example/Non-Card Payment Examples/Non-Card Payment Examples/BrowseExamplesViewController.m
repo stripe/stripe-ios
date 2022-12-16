@@ -122,7 +122,7 @@
             cell.textLabel.text = @"US Bank Account w/ FinancialConnections";
             break;
         case 23:
-            cell.textLabel.text = @"Cash App";
+            cell.textLabel.text = @"Cash App Pay";
             break;
     }
     return cell;
