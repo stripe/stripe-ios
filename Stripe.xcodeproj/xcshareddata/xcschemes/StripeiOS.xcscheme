@@ -68,9 +68,6 @@
                   Identifier = "STPCardBINMetadataTests/testLoadingInBINRange()">
                </Test>
                <Test
-                  Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
-               </Test>
-               <Test
                   Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">
                </Test>
                <Test

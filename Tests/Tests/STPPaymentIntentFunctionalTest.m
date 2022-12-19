@@ -930,6 +930,7 @@
          @"currency": @"pln",
          @"amount": @1000,
      }
+     account: @"be"
      completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
         XCTAssertNotNil(createdClientSecret);
         XCTAssertNil(creationError);
@@ -939,7 +940,7 @@
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingBEPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
 
     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
