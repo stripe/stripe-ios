@@ -59,9 +59,6 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
-               </Test>
-               <Test
                   Identifier = "PaymentMethodMessagingViewFunctionalTest">
                </Test>
                <Test
