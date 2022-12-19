@@ -136,46 +136,50 @@ extension FinancialConnectionsNavigationController {
     static func configureNavigationItemForNative(
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
+        shouldHideStripeLogo: Bool,
         shouldLeftAlignStripeLogo: Bool
     ) {
-        let stripeLogoView: UIView = {
-            let stripeLogoImageView = UIImageView(
-                image: {
-                    if shouldLeftAlignStripeLogo {
-                        return Image
-                            .stripe_logo
-                            .makeImage(template: true)
-                            .withInsets(UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0))
-                    } else {
-                        return Image
-                            .stripe_logo
-                            .makeImage(template: true)
-                    }
-                }()
-            )
-            stripeLogoImageView.tintColor = UIColor.textBrand
-            stripeLogoImageView.contentMode = .scaleAspectFit
-            stripeLogoImageView.sizeToFit()
-            stripeLogoImageView.frame = CGRect(
-                x: 0,
-                y: 0,
-                width: stripeLogoImageView.bounds.width * (16 / stripeLogoImageView.bounds.height),
-                height: 16
-            )
-            // If `titleView` is directly set to the `UIImageView`
-            // we can't control the sizing...so we create a `containerView`
-            // so we can control `UIImageView` sizing.
-            let containerView = UIView()
-            containerView.frame = stripeLogoImageView.bounds
-            containerView.addSubview(stripeLogoImageView)
+        if !shouldHideStripeLogo {
+            let stripeLogoView: UIView = {
+                let stripeLogoImageView = UIImageView(
+                    image: {
+                        if shouldLeftAlignStripeLogo {
+                            return Image
+                                .stripe_logo
+                                .makeImage(template: true)
+                                .withInsets(UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0))
+                        } else {
+                            return Image
+                                .stripe_logo
+                                .makeImage(template: true)
+                        }
+                    }()
+                )
+                stripeLogoImageView.tintColor = UIColor.textBrand
+                stripeLogoImageView.contentMode = .scaleAspectFit
+                stripeLogoImageView.sizeToFit()
+                stripeLogoImageView.frame = CGRect(
+                    x: 0,
+                    y: 0,
+                    width: stripeLogoImageView.bounds.width * (16 / stripeLogoImageView.bounds.height),
+                    height: 16
+                )
+                // If `titleView` is directly set to the `UIImageView`
+                // we can't control the sizing...so we create a `containerView`
+                // so we can control `UIImageView` sizing.
+                let containerView = UIView()
+                containerView.frame = stripeLogoImageView.bounds
+                containerView.addSubview(stripeLogoImageView)
+                
+                stripeLogoImageView.center = containerView.center
+                return containerView
+            }()
             
-            stripeLogoImageView.center = containerView.center
-            return containerView
-        }()
-        if shouldLeftAlignStripeLogo {
-            navigationItem?.leftBarButtonItem = UIBarButtonItem(customView: stripeLogoView)
-        } else {
-            navigationItem?.titleView = stripeLogoView
+            if shouldLeftAlignStripeLogo {
+                navigationItem?.leftBarButtonItem = UIBarButtonItem(customView: stripeLogoView)
+            } else {
+                navigationItem?.titleView = stripeLogoView
+            }
         }
         navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem

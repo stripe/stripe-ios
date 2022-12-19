@@ -10,6 +10,7 @@ import Foundation
 
 protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
+    var visualUpdate: FinancialConnectionsSynchronize.VisualUpdate? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent { get }
     var apiClient: FinancialConnectionsAPIClient { get }
@@ -34,6 +35,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             didUpdateManifest()
         }
     }
+    let visualUpdate: FinancialConnectionsSynchronize.VisualUpdate?
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent
     let apiClient: FinancialConnectionsAPIClient
@@ -49,6 +51,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        visualUpdate: FinancialConnectionsSynchronize.VisualUpdate?,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent,
         apiClient: FinancialConnectionsAPIClient,
@@ -56,6 +59,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
+        self.visualUpdate = visualUpdate
         self.returnURL = returnURL
         self.consentPaneModel = consentPaneModel
         self.apiClient = apiClient
