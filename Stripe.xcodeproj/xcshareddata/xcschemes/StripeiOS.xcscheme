@@ -59,9 +59,6 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "PaymentMethodMessagingViewFunctionalTest">
-               </Test>
-               <Test
                   Identifier = "STPCardBINMetadataTests">
                </Test>
                <Test
