@@ -1277,9 +1277,17 @@ public class STPPaymentHandler: NSObject {
             presentingVC.presentPollingVCForAction(currentAction)
             break
         case .cashAppRedirectToApp:
+            guard
+                let currentAction = self.currentAction
+                    as? STPPaymentHandlerPaymentIntentActionParams,
+                let returnURL = URL(string: currentAction.returnURLString ?? "")
+            else {
+                fatalError()
+            }
+            
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
-                _handleRedirectToExternalBrowser(to: mobileAuthURL,
-                                                 withReturn: nil) // TODO check return URL
+                let resultingRedirectURL = self.followRedirects(to: mobileAuthURL, urlSession: URLSession.shared)
+                _handleRedirect(to: resultingRedirectURL, withReturn: returnURL)
                 
             } else {
                 currentAction.complete(
@@ -1295,6 +1303,28 @@ public class STPPaymentHandler: NSObject {
         @unknown default:
             fatalError()
         }
+    }
+    
+    public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
+        let urlRequest = URLRequest(url: url)
+        let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
+
+        var resultingUrl = url
+        let task = urlSession.dataTask(with: urlRequest) { data, response, error in
+            defer {
+                blockingDataTaskSemaphore.signal()
+            }
+            guard error == nil,
+                  let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode),
+                    let responseURL = response?.url else {
+                return
+            }
+            resultingUrl = responseURL
+        }
+        task.resume()
+        blockingDataTaskSemaphore.wait()
+        return resultingUrl
     }
 
     func _retryWithExponentialDelay(retryCount: Int, block: @escaping STPVoidBlock) {

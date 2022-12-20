@@ -131,28 +131,6 @@ extension STPPaymentHandler {
     func _isPIStatusSpecFinished(paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs) -> Bool {
         return paymentIntentStatusSpec.type == .finished
     }
-
-    func followRedirects(to url: URL, urlSession: URLSession) -> URL {
-        let urlRequest = URLRequest(url: url)
-        let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
-
-        var resultingUrl = url
-        let task = urlSession.dataTask(with: urlRequest) { data, response, error in
-            defer {
-                blockingDataTaskSemaphore.signal()
-            }
-            guard error == nil,
-                  let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode),
-                    let responseURL = response?.url else {
-                return
-            }
-            resultingUrl = responseURL
-        }
-        task.resume()
-        blockingDataTaskSemaphore.wait()
-        return resultingUrl
-    }
 }
 
 class STPPaymentHandlerURLSessionDelegate: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
