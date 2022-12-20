@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol BundleLocatorProtocol {
+@_spi(STP) public protocol BundleLocatorProtocol {
     /// A final class that is internal to the bundle implementing this protocol.
     ///
     /// - Note: The class must be `final` to ensure that it can't be subclassed,
