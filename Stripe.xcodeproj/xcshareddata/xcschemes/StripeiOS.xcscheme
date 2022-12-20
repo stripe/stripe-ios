@@ -59,12 +59,6 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
-               </Test>
-               <Test
-                  Identifier = "PaymentMethodMessagingViewFunctionalTest">
-               </Test>
-               <Test
                   Identifier = "STPCardBINMetadataTests">
                </Test>
                <Test
@@ -72,9 +66,6 @@
                </Test>
                <Test
                   Identifier = "STPCardBINMetadataTests/testLoadingInBINRange()">
-               </Test>
-               <Test
-                  Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
                </Test>
                <Test
                   Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">

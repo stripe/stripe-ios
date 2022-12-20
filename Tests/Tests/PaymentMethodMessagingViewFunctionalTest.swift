@@ -12,11 +12,11 @@
 @_spi(STP)@testable import StripePaymentsUI
 import XCTest
 
-class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
+class PaymentMethodMessagingViewFunctionalTest: STPNetworkStubbingTestCase {
     let mockAnalyticsClient = MockAnalyticsClient()
-    let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
     override func setUp() {
+//        recordingMode = true
         super.setUp()
         mockAnalyticsClient.reset()
         PaymentMethodMessagingView.analyticsClient = mockAnalyticsClient
@@ -24,6 +24,7 @@ class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
     }
 
     func testCreatesViewFromServerResponse() {
+        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let config = PaymentMethodMessagingView.Configuration(
             apiClient: apiClient,
             paymentMethods: PaymentMethodMessagingView.Configuration.PaymentMethod.allCases,
@@ -55,6 +56,7 @@ class PaymentMethodMessagingViewFunctionalTest: XCTestCase {
     }
 
     func testInitializingWithBadConfigurationReturnsError() {
+        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let config = PaymentMethodMessagingView.Configuration(
             apiClient: apiClient,
             paymentMethods: [.klarna],
