@@ -324,6 +324,9 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: '1'
+    - tuist@0:
+        inputs:
+        - command: generate -n
     - cache-pull@2: {}
     - bundler@0: {}
     - cache-push@2:
