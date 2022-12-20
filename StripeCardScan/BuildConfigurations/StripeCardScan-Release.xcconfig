@@ -1,0 +1,7 @@
+//
+// StripeCardScan-Release.xcconfig
+//
+
+#include "../../BuildConfigurations/StripeiOS-Release.xcconfig"
+
+APPLICATION_EXTENSION_API_ONLY = NO

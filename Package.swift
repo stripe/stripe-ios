@@ -45,7 +45,7 @@ let package = Package(
         .target(
             name: "Stripe",
             dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore", "StripePayments", "StripePaymentsUI"],
-            path: "Stripe",
+            path: "Stripe/StripeiOS",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
@@ -59,6 +59,9 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources")
+            ],
+            cSettings: [
+                .headerSearchPath(".")
             ]
         ),
         .target(

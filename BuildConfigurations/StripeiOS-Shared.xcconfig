@@ -30,6 +30,7 @@ CLANG_WARN_ASSIGN_ENUM = YES
 CLANG_WARN_DOCUMENTATION_COMMENTS = YES
 CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 
+
 // Code Signing Identity
 // 
 // The name ("common name") of a valid code-signing certificate in a keychain within your
@@ -110,7 +111,6 @@ INSTALL_PATH = $(LOCAL_LIBRARY_DIR)/Frameworks
 // path begins with '@rpath/'. [-rpath]
 
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
-
 
 // Skip Install
 // 

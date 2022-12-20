@@ -1,0 +1,8 @@
+//
+// Stripe Tests-Release.xcconfig
+//
+
+#include "../../BuildConfigurations/StripeiOS Tests-Release.xcconfig"
+
+SWIFT_OBJC_BRIDGING_HEADER = StripeiOSTests/StripeiOS Tests-Bridging-Header.h
+GCC_PREFIX_HEADER = StripeiOSTests/StripeTests-Prefix.pch

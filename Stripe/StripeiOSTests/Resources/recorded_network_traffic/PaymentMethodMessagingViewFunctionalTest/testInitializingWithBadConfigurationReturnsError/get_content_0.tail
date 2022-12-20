@@ -1,0 +1,18 @@
+GET
+/content\?amount=.*&client=.*&country=.*&currency=.*&locale=.*&logo_color=.*&payment_methods%5B0%5D=.*$
+400
+application/json
+Content-Type: application/json
+Pragma: no-cache
+content-security-policy: report-uri /csp-report?p=%2Fcontent;block-all-mixed-content;default-src 'none' 'report-sample';base-uri 'none';form-action 'none';style-src 'unsafe-inline';frame-ancestors 'self';connect-src 'self';img-src 'self' https://b.stripecdn.com
+Server: nginx
+Expires: 0
+referrer-policy: strict-origin-when-cross-origin
+Cache-Control: max-age=0, no-cache, no-store, must-revalidate
+Date: Tue, 20 Dec 2022 19:39:09 GMT
+x-robots-tag: none
+Content-Length: 25
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+x-content-type-options: nosniff
+
+unsupported_currency: FOO
