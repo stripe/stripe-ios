@@ -176,7 +176,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             )
         }
 
-        barButtonItem?.stp_setTheme(theme)
+        barButtonItem?.stp_setTheme(navigationController?.navigationBar.stp_theme ?? theme)
 
         stp_navigationItemProxy?.setRightBarButton(barButtonItem, animated: animated)
     }
