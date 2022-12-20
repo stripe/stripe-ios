@@ -78,12 +78,12 @@ final class PickerFieldView: UIView {
         }
     }
     
-    var displayTextAccessibilityLabel: String? {
+    var displayTextAccessibilityValue: String? {
         get {
-            return textField.accessibilityLabel
+            return textField.accessibilityValue
         }
         set {
-            textField.accessibilityLabel = newValue
+            textField.accessibilityValue = newValue
         }
     }
     
