@@ -27,7 +27,7 @@ class CashAppExampleViewController: UIViewController {
     }()
     lazy var payButton: UIButton = {
         let button = UIButton(type: .roundedRect)
-        button.setTitle("Pay with Cash App", for: .normal)
+        button.setTitle("Pay with Cash App Pay", for: .normal)
         button.addTarget(self, action: #selector(didTapPayButton), for: .touchUpInside)
         return button
     }()
