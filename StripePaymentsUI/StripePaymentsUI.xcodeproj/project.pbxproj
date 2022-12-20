@@ -105,7 +105,6 @@
 		E097C89AA5D20D6399E59A3E /* StripePaymentsUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 01F8FDBA6B57108EB1A80833 /* StripePaymentsUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E193F62029BD7821D8B6950E /* STPPaymentCardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE99E179BBF1D07A68C6A58B /* STPPaymentCardTextField.swift */; };
 		E1CD37355F5D17A04EE4B0D3 /* STPCardCVCInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6761C35C5BB310D0D40578FB /* STPCardCVCInputTextField.swift */; };
-		E26AD48EF1305B92F740C23E /* StripePaymentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086BB29C580B975796C7D576 /* StripePaymentsUITests.swift */; };
 		E4839BD03F0C43B4703291E5 /* STPGenericInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2AFD8B904D07C7F3E1E473 /* STPGenericInputTextField.swift */; };
 		E554E00B25258B27E60ABB08 /* STPPaymentCardTextFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB874B9887AA34B648473C8 /* STPPaymentCardTextFieldViewModel.swift */; };
 		EA819D76773D30AC3C2E5811 /* bankofmelbourne@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18EBDFD70DAF2CDBA86DA47E /* bankofmelbourne@3x.png */; };
@@ -162,7 +161,6 @@
 		01F8FDBA6B57108EB1A80833 /* StripePaymentsUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripePaymentsUI.h; sourceTree = "<group>"; };
 		037A7BAE734C79C1C7816C65 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		043FF5D07B837B7BF77C7774 /* card_discover@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_discover@3x.png"; sourceTree = "<group>"; };
-		086BB29C580B975796C7D576 /* StripePaymentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentsUITests.swift; sourceTree = "<group>"; };
 		08FDA8CB452D782F948CEB4B /* PaymentMethodMessagingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingView.swift; sourceTree = "<group>"; };
 		09478FB2F62490A3E4C30710 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		0963B4EA2BE7051725E853A7 /* stp_card_jcb_template@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_jcb_template@3x.png"; sourceTree = "<group>"; };
@@ -520,7 +518,6 @@
 			children = (
 				C288719994E9E9D9DEA122E8 /* Info.plist */,
 				E5385E30F06B36FEB36D4266 /* STPAnalyticsClient+PaymentsUITests.swift */,
-				086BB29C580B975796C7D576 /* StripePaymentsUITests.swift */,
 			);
 			path = StripePaymentsUITests;
 			sourceTree = "<group>";
@@ -925,7 +922,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				992E387C98107E7038353D05 /* STPAnalyticsClient+PaymentsUITests.swift in Sources */,
-				E26AD48EF1305B92F740C23E /* StripePaymentsUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

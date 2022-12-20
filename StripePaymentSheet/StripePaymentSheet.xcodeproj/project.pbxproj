@@ -112,7 +112,6 @@
 		6AE406441F49A1D67AA52581 /* bank_icon_suntrust@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DABBEA0C8EFB60E3019F9BF0 /* bank_icon_suntrust@3x.png */; };
 		6C84BC3D0B1AC2AAD98376DE /* PayWithLinkViewController-LoaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62400F4E9BC39F14CFED72A6 /* PayWithLinkViewController-LoaderViewController.swift */; };
 		6DE656DB4CE489C137B79368 /* LinkPaymentMethodPicker-RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641D011DA8FFA3F6F54A40FD /* LinkPaymentMethodPicker-RadioButton.swift */; };
-		6EFB8B486324631C571798B5 /* StripePaymentSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA07603341140B7FCA07BFC2 /* StripePaymentSheetTests.swift */; };
 		7006B4AFDBCC51349EDAA512 /* LinkPaymentMethodPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7596B026ED0E007CE62976C2 /* LinkPaymentMethodPicker.swift */; };
 		71132CE036C3EE0655ECD2DB /* STPStringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEFE8C0CFEAE73F9FD736D3 /* STPStringUtils.swift */; };
 		727874C468C0E1CD3653C91A /* PaymentSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DDBBAAC2892467CED23402 /* PaymentSheetError.swift */; };
@@ -463,7 +462,6 @@
 		A68FBE0A16FE56AAAAF4ABBF /* CircularButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularButton.swift; sourceTree = "<group>"; };
 		A8B687BB60CEAEF918ADE498 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8F7582743930881FEB8C206 /* BottomSheetPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentable.swift; sourceTree = "<group>"; };
-		AA07603341140B7FCA07BFC2 /* StripePaymentSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentSheetTests.swift; sourceTree = "<group>"; };
 		AB2708910427B1BFE7BC5AD1 /* SepaMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SepaMandateView.swift; sourceTree = "<group>"; };
 		AD6EA4BF1E6DA11C944F5001 /* icon-pm-paypal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal@3x.png"; sourceTree = "<group>"; };
 		AE95456617FEEDDAC0CE5231 /* UIColor+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Link.swift"; sourceTree = "<group>"; };
@@ -962,7 +960,6 @@
 				CBB05D43F6A475F28E0BD38D /* DictionaryTests.swift */,
 				BB48D1FD7CD00B3DF85C5FC1 /* Info.plist */,
 				7D8FE374BAAD0EDA9FEEF550 /* STPAnalyticsClient+PaymentSheetTests.swift */,
-				AA07603341140B7FCA07BFC2 /* StripePaymentSheetTests.swift */,
 			);
 			path = StripePaymentSheetTests;
 			sourceTree = "<group>";
@@ -1497,7 +1494,6 @@
 			files = (
 				D90987C72BBD76D20D60CE04 /* DictionaryTests.swift in Sources */,
 				52B734BA0B91706F37025523 /* STPAnalyticsClient+PaymentSheetTests.swift in Sources */,
-				6EFB8B486324631C571798B5 /* StripePaymentSheetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
