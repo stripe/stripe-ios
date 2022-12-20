@@ -91,7 +91,10 @@ let project = Project(
             ],
             settings: .stripeTargetSettings(
                 baseXcconfigFilePath: "BuildConfigurations/Stripe Tests"
-            )
+            ),
+            additionalFiles: [
+                "StripeiOSTests.xctestplan"
+            ]
         ),
         Target(
             name: "StripeiOSTestHostApp",
