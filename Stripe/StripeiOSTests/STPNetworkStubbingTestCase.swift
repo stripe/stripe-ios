@@ -68,9 +68,9 @@ class STPNetworkStubbingTestCase: XCTestCase {
                 return fileName
             }
 
-            // The goal is for `basePath` to be e.g. `~/stripe/stripe-ios/Tests`
+            // The goal is for `basePath` to be e.g. `~/stripe-ios/Stripe/StripeiOSTests`
             // A little gross/hardcoded (but it works fine); feel free to improve this...
-            let testDirectoryName = "stripe-ios/Tests"
+            let testDirectoryName = "stripe-ios/Stripe/StripeiOSTests"
             var basePath = "\(#file)"
             while !basePath.hasSuffix(testDirectoryName) {
                 assert(
@@ -80,7 +80,9 @@ class STPNetworkStubbingTestCase: XCTestCase {
                 basePath = URL(fileURLWithPath: basePath).deletingLastPathComponent().path
             }
 
-            let recordingPath = URL(fileURLWithPath: basePath).appendingPathComponent(relativePath)
+            let recordingPath = URL(fileURLWithPath: basePath)
+                .appendingPathComponent("Resources")
+                .appendingPathComponent(relativePath)
                 .path
             // Delete existing stubs
             do {
