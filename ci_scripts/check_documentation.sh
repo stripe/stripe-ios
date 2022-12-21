@@ -23,7 +23,7 @@ mkdir "${temp_docs_dir}"
 # Check if a module was specified
 module_param=""
 if [ -n "$1" ]; then
-  module_param="--module ${1}"
+  module_param="--only ${1}"
 fi
 
 # Build docs

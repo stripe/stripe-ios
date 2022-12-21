@@ -306,7 +306,7 @@ end
 modules = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules'].select { |m| !m['docs'].nil? }
 release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
 check_modules_in_bitrise(modules)
-modules = m.select { |m| m['framework_name'] == only_module } unless only_module.nil?
+modules = modules.select { |m| m['framework_name'] == only_module } unless only_module.nil?
 build_module_docs(modules, release_version, docs_root_directory)
 build_index_page(modules, release_version, docs_root_directory)
 fix_assets(modules, docs_root_directory)
