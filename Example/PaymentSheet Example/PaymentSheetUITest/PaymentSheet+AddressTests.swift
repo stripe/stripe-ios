@@ -159,7 +159,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.toolbars.buttons["Done"].tap()
         
         // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support New Zealand
-        XCTAssertNil(app.buttons["autocomplete_affordance"])
+        XCTAssertFalse(app.buttons["autocomplete_affordance"].exists)
         
         // Tapping the address line 1 field...
         app.textFields["Address line 1"].tap()

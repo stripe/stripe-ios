@@ -69,6 +69,7 @@ class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.isHidden = false
         let vc = AutoCompleteViewController(
             configuration: configuration,
+            initialLine1Text: nil,
             addressSpecProvider: addressSpecProvider
         )
         vc.results = mockSearchResults
@@ -84,6 +85,7 @@ class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.overrideUserInterfaceStyle = .dark
         let vc = AutoCompleteViewController(
             configuration: configuration,
+            initialLine1Text: nil,
             addressSpecProvider: addressSpecProvider
         )
 
@@ -111,6 +113,7 @@ class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
 
         let vc = AutoCompleteViewController(
             configuration: config,
+            initialLine1Text: nil,
             addressSpecProvider: addressSpecProvider
         )
         vc.results = mockSearchResults
