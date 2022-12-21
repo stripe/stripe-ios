@@ -64,6 +64,8 @@ def get_docs_root_directory
       docs_root_directory = File.expand_path(dir, Dir.getwd)
     end
   end.parse!
+
+  docs_root_directory
 end
 
 def docs_title(release_version)
