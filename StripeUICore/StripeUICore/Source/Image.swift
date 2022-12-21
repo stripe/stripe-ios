@@ -17,7 +17,6 @@ import Foundation
     // Icons/symbols
     case icon_chevron_down = "icon_chevron_down"
     case icon_clear = "icon_clear"
-    case icon_autocomplete_search = "icon_autocomplete_search"
     
     // Brand Icons
     case brand_stripe = "brand_stripe"

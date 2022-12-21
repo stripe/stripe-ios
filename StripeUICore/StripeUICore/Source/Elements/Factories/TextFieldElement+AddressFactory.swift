@@ -59,7 +59,10 @@ import UIKit
             func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
                 if case .line1Autocompletable(let didTapAutocomplete) = lineType {
                     let autocompleteIconButton = UIButton.make(type: .system, didTap: didTapAutocomplete)
-                    autocompleteIconButton.setImage(Image.icon_autocomplete_search.makeImage(), for: .normal)
+                    let configuration = UIImage.SymbolConfiguration(pointSize: CGFloat(10), weight: .bold)
+                    let image = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)?
+                        .withTintColor(theme.colors.primary, renderingMode: .alwaysOriginal)
+                    autocompleteIconButton.setImage(image, for: .normal)
                     autocompleteIconButton.accessibilityLabel = String.Localized.search
                     autocompleteIconButton.accessibilityIdentifier = "autocomplete_affordance"
                     return autocompleteIconButton
