@@ -116,6 +116,20 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
+### Building from source
+
+We use [Tuist](https://tuist.io) to generate Xcode projects, and all Xcode related files have been removed from the master branch of the repository. Note that project files are still available on tagged releases.
+
+If you want to build from the master branch you need to follow these steps:
+
+- Clone the repository and `cd` into its directory.
+- Install Tuist by running `curl -Ls https://install.tuist.io | bash`
+- Run `tuist generate`, optionally pass the `-n` option if you don't want to open Xcode automatically.
+
+You can build any of the generated targets as you normally would.
+
+For more information about Tuist, visit https://tuist.io.
+
 ## Card scanning
 
 [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
