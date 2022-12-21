@@ -24,6 +24,7 @@ Table of contents
    * [Getting started](#getting-started)
       * [Integration](#integration)
       * [Examples](#examples)
+      * [Building from source](#building-from-source)
    * [Card scanning](#card-scanning)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
