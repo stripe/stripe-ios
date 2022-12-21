@@ -325,6 +325,7 @@ workflows:
         inputs:
         - clone_depth: '1'
     - tuist@0:
+        run_if: .IsCI
         inputs:
         - command: generate -n
     - cache-pull@2: {}
