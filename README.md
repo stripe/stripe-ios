@@ -1,8 +1,8 @@
 # Stripe iOS SDK
 
-[![Travis](https://img.shields.io/travis/stripe/stripe-ios/master.svg?style=flat)](https://travis-ci.org/stripe/stripe-ios)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 [![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
@@ -24,6 +24,7 @@ Table of contents
    * [Getting started](#getting-started)
       * [Integration](#integration)
       * [Examples](#examples)
+      * [Building from source](#building-from-source)
    * [Card scanning](#card-scanning)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
@@ -116,6 +117,20 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
+### Building from source
+
+We use [Tuist](https://tuist.io) to generate Xcode projects, and all Xcode related files have been removed from the master branch of the repository. Note that project files are still available on tagged releases.
+
+If you want to build from the master branch you need to follow these steps:
+
+- Clone the repository and `cd` into its directory.
+- Install Tuist by running `curl -Ls https://install.tuist.io | bash`
+- Run `tuist generate`, optionally pass the `-n` option if you don't want to open Xcode automatically.
+
+You can build any of the generated targets as you normally would.
+
+For more information about Tuist, visit https://tuist.io.
+
 ## Card scanning
 
 [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
@@ -130,7 +145,7 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 
 1. Install Carthage 0.37 or later (if you have homebrew installed, `brew install carthage`)
 2. From the root of the repo, run `bundle install && bundle exec fastlane stripeios_tests`. This will install the test dependencies and run the tests.
-3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`. Make sure to use the iPhone 12 mini, iOS 15.4 simulator so the snapshot tests will pass.
+3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`. Make sure to use the iPhone 12 mini, iOS 16.1 simulator so the snapshot tests will pass.
 
 ## Migrating from older versions
 

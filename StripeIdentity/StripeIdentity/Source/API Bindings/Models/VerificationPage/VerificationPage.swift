@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
+extension StripeAPI {
 
     /// A VerificationPage contains the static content and initial state that is required for Stripe Identity's native mobile SDKs to render the verification flow.
 

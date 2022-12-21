@@ -5,8 +5,9 @@
 //  Created by Mel Ludowise on 2/18/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
-import Foundation
+
 import CoreGraphics
+import Foundation
 @_spi(STP) import StripeCore
 
 final class MotionBlurDetector {
@@ -27,7 +28,6 @@ final class MotionBlurDetector {
     /// Amount of time the IOU must stay under the threshold
     let minTime: TimeInterval
 
-
     /// The document bounding box from the last camera frame
     private var lastBoundingBox: CGRect? = nil
 
@@ -45,51 +45,49 @@ final class MotionBlurDetector {
         self.minTime = minTime
     }
 
-    /**
-     Checks if the document has shifted bounds enough to create motion blur.
-
-     - Parameters:
-       - documentBounds: The bounds of the document in image coordinates.
-     */
+    /// Checks if the document has shifted bounds enough to create motion blur.
+    ///
+    /// - Parameters:
+    ///   - documentBounds: The bounds of the document in image coordinates.
     func determineMotionBlur(
-         documentBounds: CGRect
-     ) -> Output {
+        documentBounds: CGRect
+    ) -> Output {
         let timestamp = Date()
 
-         // Perform all operations in serial queue to modify instance properties.
-         var output: Output!
-         serialQueue.sync {
-             defer {
-                 lastBoundingBox = documentBounds
-                 firstFrameTimestamp = firstFrameTimestamp ?? timestamp
-             }
+        // Perform all operations in serial queue to modify instance properties.
+        var output: Output!
+        serialQueue.sync {
+            defer {
+                lastBoundingBox = documentBounds
+                firstFrameTimestamp = firstFrameTimestamp ?? timestamp
+            }
 
-             guard let firstFrameTimestamp = firstFrameTimestamp,
-                   let lastBoundingBox = lastBoundingBox 
-             else {
-                 output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
-                 return
-             }
+            guard let firstFrameTimestamp = firstFrameTimestamp,
+                let lastBoundingBox = lastBoundingBox
+            else {
+                output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
+                return
+            }
 
-             let iou = IOU(documentBounds, lastBoundingBox)
-             guard iou >= minIOU else {
-                 self.numFramesUnderThreshold = 0
-                 self.firstFrameTimestamp = nil
-                 output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
-                 return
-             }
+            let iou = IOU(documentBounds, lastBoundingBox)
+            guard iou >= minIOU else {
+                self.numFramesUnderThreshold = 0
+                self.firstFrameTimestamp = nil
+                output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
+                return
+            }
 
-             numFramesUnderThreshold += 1
-             let duration = timestamp.timeIntervalSince(firstFrameTimestamp)
-             output = .init(
+            numFramesUnderThreshold += 1
+            let duration = timestamp.timeIntervalSince(firstFrameTimestamp)
+            output = .init(
                 hasMotionBlur: duration < minTime,
                 iou: iou,
                 frameCount: numFramesUnderThreshold,
                 duration: duration
-             )
-         }
-         return output
-     }
+            )
+        }
+        return output
+    }
 
     func reset() {
         serialQueue.async { [weak self] in

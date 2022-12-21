@@ -3,11 +3,11 @@
 //  StripeCore
 //
 
+import CoreGraphics
 import Foundation
 import UIKit
-import CoreGraphics
 
-/// For internal SDK use only
+/// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
 @_spi(STP) public class DownloadManager: NSObject, URLSessionDelegate {
     public typealias UpdateImageHandler = (UIImage) -> Void
@@ -19,33 +19,41 @@ import CoreGraphics
     let session: URLSession!
 
     var imageCache: [String: UIImage]
-    var pendingRequests: [String:URLSessionTask]
+    var pendingRequests: [String: URLSessionTask]
     var updateHandlers: [String: [UpdateImageHandler]]
 
     let imageCacheSemaphore: DispatchSemaphore
     let pendingRequestsSemaphore: DispatchSemaphore
 
-    let STPCacheExpirationInterval = (60 * 60 * 24 * 7); // 1 week
+    let STPCacheExpirationInterval = (60 * 60 * 24 * 7)  // 1 week
     var urlCache: URLCache? = nil
 
-    public init(urlSessionConfiguration: URLSessionConfiguration = .default) {
+    public init(
+        urlSessionConfiguration: URLSessionConfiguration = .default
+    ) {
         downloadQueue = DispatchQueue(label: "Stripe Download Cache", attributes: .concurrent)
         downloadOperationQueue = OperationQueue()
         downloadOperationQueue.underlyingQueue = downloadQueue
 
         let configuration = urlSessionConfiguration
         if #available(iOS 13.0, *) {
-            if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
+            if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+                .first
+            {
                 let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
                 //5MB memory cache, 30MB Disk cache
-                let cache = URLCache(memoryCapacity: 5000000, diskCapacity: 30000000, directory: diskCacheURL)
+                let cache = URLCache(
+                    memoryCapacity: 5_000_000,
+                    diskCapacity: 30_000_000,
+                    directory: diskCacheURL
+                )
                 configuration.urlCache = cache
                 configuration.requestCachePolicy = .useProtocolCachePolicy
                 self.urlCache = cache
             }
         }
 
-        session =  URLSession(configuration: configuration)
+        session = URLSession(configuration: configuration)
 
         imageCache = [:]
         pendingRequests = [:]
@@ -83,13 +91,17 @@ extension DownloadManager {
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
         let task = self.session.downloadTask(with: url) { tempURL, response, error in
             guard let tempURL = tempURL,
-                  let response = response,
-                  let data = self.getDataFromURL(tempURL),
-                  let image = self.persistToMemory(data, forImageName: imageName) else {
+                let response = response,
+                let data = self.getDataFromURL(tempURL),
+                let image = self.persistToMemory(data, forImageName: imageName)
+            else {
                 blockingDownloadSemaphore.signal()
                 return
             }
-            self.urlCache?.storeCachedResponse(CachedURLResponse(response: response, data: data), for: urlRequest)
+            self.urlCache?.storeCachedResponse(
+                CachedURLResponse(response: response, data: data),
+                for: urlRequest
+            )
             updateHandler(image)
             blockingDownloadSemaphore.signal()
         }
@@ -106,15 +118,19 @@ extension DownloadManager {
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
         let task = self.session.downloadTask(with: url) { tempURL, response, error in
             guard let tempURL = tempURL,
-                  let response = response,
-                  let data = self.getDataFromURL(tempURL),
-                  let image = self.persistToMemory(data, forImageName: imageName) else {
+                let response = response,
+                let data = self.getDataFromURL(tempURL),
+                let image = self.persistToMemory(data, forImageName: imageName)
+            else {
                 self.pendingRequestsSemaphore.wait()
                 self.pendingRequests.removeValue(forKey: imageName)
                 self.pendingRequestsSemaphore.signal()
                 return
             }
-            self.urlCache?.storeCachedResponse(CachedURLResponse(response: response, data: data), for: urlRequest)
+            self.urlCache?.storeCachedResponse(
+                CachedURLResponse(response: response, data: data),
+                for: urlRequest
+            )
 
             self.pendingRequestsSemaphore.wait()
             self.pendingRequests.removeValue(forKey: imageName)
@@ -145,7 +161,10 @@ extension DownloadManager {
         return url.lastPathComponent
     }
 
-    func addUpdateHandlerWithoutLocking(_ handler: UpdateImageHandler?, forImageName imageName: String) {
+    func addUpdateHandlerWithoutLocking(
+        _ handler: UpdateImageHandler?,
+        forImageName imageName: String
+    ) {
         guard let handler = handler else {
             return
         }

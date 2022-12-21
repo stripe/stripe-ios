@@ -9,11 +9,15 @@ import UIKit
 
 @available(iOS 13.0, *)
 class AppleCreditCardOcr: CreditCardOcrImplementation {
-    override func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
-        guard let (image, roiForOcr) = fullImage.croppedImageForSsd(roiRectangle: roiRectangle) else {
+    override func recognizeCard(
+        in fullImage: CGImage,
+        roiRectangle: CGRect
+    ) -> CreditCardOcrPrediction {
+        guard let (image, roiForOcr) = fullImage.croppedImageForSsd(roiRectangle: roiRectangle)
+        else {
             return CreditCardOcrPrediction.emptyPrediction(cgImage: fullImage)
         }
-        
+
         var pan: String?
         var expiryMonth: String?
         var expiryYear: String?
@@ -41,25 +45,25 @@ class AppleCreditCardOcr: CreditCardOcrImplementation {
                     pan = predictedPan
                     numberBox = result.rect
                 }
-                
+
                 let predictedName = AppleCreditCardOcr.likelyName(result.text)
                 if predictedName != nil {
                     nameCandidates.append(result)
                 }
             }
-            
-            let minY = numberBox.map({ $0.minY - $0.height}) ?? expiryBox?.minY
+
+            let minY = numberBox.map({ $0.minY - $0.height }) ?? expiryBox?.minY
             let names = nameCandidates.filter { name in
                 let isInExpectedLocation = minY.map({ name.rect.minY >= ($0 - 5.0) }) ?? false
                 return name.confidence >= 0.5 && isInExpectedLocation
             }
-            
+
             // just pick the first one for now
             if let nameResult = names.first {
                 name = AppleCreditCardOcr.likelyName(nameResult.text)
                 nameBox = nameResult.rect
             }
-            
+
             semaphore.signal()
         }
         semaphore.wait()
@@ -67,14 +71,27 @@ class AppleCreditCardOcr: CreditCardOcrImplementation {
         self.computationTime += duration
         self.frames += 1
 
-        return CreditCardOcrPrediction(image: image, ocrCroppingRectangle: roiForOcr, number: pan, expiryMonth: expiryMonth, expiryYear: expiryYear, name: name, computationTime: duration, numberBoxes: numberBox.map { [$0] }, expiryBoxes: expiryBox.map { [$0] }, nameBoxes: nameBox.map { [$0] })
+        return CreditCardOcrPrediction(
+            image: image,
+            ocrCroppingRectangle: roiForOcr,
+            number: pan,
+            expiryMonth: expiryMonth,
+            expiryYear: expiryYear,
+            name: name,
+            computationTime: duration,
+            numberBoxes: numberBox.map { [$0] },
+            expiryBoxes: expiryBox.map { [$0] },
+            nameBoxes: nameBox.map { [$0] }
+        )
     }
-    
+
     static func likelyName(_ text: String) -> String? {
         let words = text.split(separator: " ").map { String($0) }
-        let validWords = words.filter { !NameWords.nonNameWordMatch($0) && NameWords.onlyLettersAndSpaces($0) }
+        let validWords = words.filter {
+            !NameWords.nonNameWordMatch($0) && NameWords.onlyLettersAndSpaces($0)
+        }
         let validWordCount = validWords.count >= 2
-        
+
         return validWordCount ? validWords.joined(separator: " ") : nil
     }
 }

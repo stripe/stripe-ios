@@ -34,15 +34,13 @@ extension StripeAPI {
     }
 }
 
-/**
- All mutating functions needs to pass all values explicitly to the new object, as the default value would be nil.
- */
+/// All mutating functions needs to pass all values explicitly to the new object, as the default value would be nil.
 extension StripeAPI.VerificationPageCollectedData {
-    /**
-     Returns a new `VerificationPageCollectedData`, merging the data from this
-     one with the provided one.
-     */
-    func merging(_ otherData: StripeAPI.VerificationPageCollectedData) -> StripeAPI.VerificationPageCollectedData {
+    /// Returns a new `VerificationPageCollectedData`, merging the data from this
+    /// one with the provided one.
+    func merging(
+        _ otherData: StripeAPI.VerificationPageCollectedData
+    ) -> StripeAPI.VerificationPageCollectedData {
         return StripeAPI.VerificationPageCollectedData(
             biometricConsent: otherData.biometricConsent ?? self.biometricConsent,
             face: otherData.face ?? self.face,
@@ -52,13 +50,11 @@ extension StripeAPI.VerificationPageCollectedData {
         )
     }
 
-    /**
-     Merges the data from the provided `VerificationPageCollectedData` into this one.
-     */
+    /// Merges the data from the provided `VerificationPageCollectedData` into this one.
     mutating func merge(_ otherData: StripeAPI.VerificationPageCollectedData) {
         self = self.merging(otherData)
     }
-    
+
     mutating func clearData(field: StripeAPI.VerificationPageFieldType) {
         switch field {
         case .biometricConsent:
@@ -73,12 +69,12 @@ extension StripeAPI.VerificationPageCollectedData {
             self.idDocumentType = nil
         }
     }
-    
+
     /// Helper to determine the front document score for analytics purposes
     var frontDocumentScore: TwoDecimalFloat? {
         switch idDocumentType {
         case .drivingLicense,
-             .idCard:
+            .idCard:
             return idDocumentFront?.frontCardScore
         case .passport:
             return idDocumentFront?.passportScore
@@ -86,7 +82,7 @@ extension StripeAPI.VerificationPageCollectedData {
             return nil
         }
     }
-    
+
     var collectedTypes: Set<StripeAPI.VerificationPageFieldType> {
         var ret = Set<StripeAPI.VerificationPageFieldType>()
         if self.biometricConsent != nil {

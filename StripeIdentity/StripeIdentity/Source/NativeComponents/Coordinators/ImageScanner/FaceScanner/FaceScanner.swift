@@ -7,12 +7,11 @@
 //
 
 import CoreVideo
-import Vision
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import Vision
 
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
-
 
 final class FaceScanner {
 
@@ -43,7 +42,6 @@ final class FaceScanner {
         )
     }
 }
-
 
 extension FaceScanner: ImageScanner {
     typealias Output = FaceScannerOutput

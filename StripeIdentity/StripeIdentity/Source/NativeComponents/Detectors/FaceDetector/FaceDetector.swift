@@ -6,15 +6,13 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreVideo
-import Vision
+import Foundation
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCore
+import Vision
 
-/**
- Scans an image using the FaceDetector ML model.
- */
+/// Scans an image using the FaceDetector ML model.
 
 final class FaceDetector: VisionBasedDetector {
     typealias Output = FaceDetectorOutput
@@ -25,12 +23,10 @@ final class FaceDetector: VisionBasedDetector {
     let configuration: Configuration
     let metricsTracker: MLDetectorMetricsTracker? = .init(modelName: "face_detector_v1")
 
-    /**
-     Initializes an `FaceDetector`
-     - Parameters:
-       - model: The FaceDetector ML model loaded into a `VNCoreMLModel`
-       - configuration: The configuration for this detector
-     */
+    /// Initializes an `FaceDetector`
+    /// - Parameters:
+    ///   - model: The FaceDetector ML model loaded into a `VNCoreMLModel`
+    ///   - configuration: The configuration for this detector
     init(
         model: VNCoreMLModel,
         configuration: Configuration

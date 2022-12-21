@@ -5,12 +5,12 @@
 // https://github.com/swagger-api/swagger-codegen
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
-    
+extension StripeAPI {
+
     struct VerificationPageStaticContentDocumentCapturePage: Decodable, Equatable {
         let autocaptureTimeout: Int
         let filePurpose: String
@@ -18,7 +18,7 @@ extension StripeAPI {
         let highResImageCropPadding: CGFloat
         let highResImageMaxDimension: Int
         let iosIdCardBackBarcodeTimeout: Int
-        let iosIdCardBackCountryBarcodeSymbologies: [String:String]
+        let iosIdCardBackCountryBarcodeSymbologies: [String: String]
         let lowResImageCompressionQuality: CGFloat
         let lowResImageMaxDimension: Int
         let models: VerificationPageStaticContentDocumentCaptureModels
@@ -26,5 +26,5 @@ extension StripeAPI {
         let motionBlurMinIou: Decimal
         let requireLiveCapture: Bool
     }
-    
+
 }

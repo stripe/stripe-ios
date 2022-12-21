@@ -11,58 +11,52 @@ import UIKit
 @_spi(STP) public typealias ImageDataAndSize = (imageData: Data, imageSize: CGSize)
 
 extension UIImage {
-     @_spi(STP) public static let defaultCompressionQuality: CGFloat = 0.5
+    @_spi(STP) public static let defaultCompressionQuality: CGFloat = 0.5
 
-    /**
-     Encodes the image to jpeg at the specified compression quality. The image
-     will be scaled down, if needed, to ensure its size does not exceed
-     `maxBytes`.
-
-     :nodoc:
-
-     - Parameters:
-       - maxBytes: The maximum size of the allowed file. If value is nil, then
-         the image will not be scaled down.
-       - compressionQuality: The compression quality to use when encoding the jpeg.
-
-     - Returns: A tuple containing the following properties.
-       - `imageData`: Data object of the jpeg encoded image.
-       - `imageSize`: The dimensions of the the image that was encoded.
-          This size may be smaller than the original image size if the image
-          needed to be scaled down to fit the specified `maxBytes`.
-     */
+    /// Encodes the image to jpeg at the specified compression quality.
+    ///
+    /// The image will be scaled down, if needed, to ensure its size does not exceed `maxBytes`.
+    ///
+    /// - Parameters:
+    ///   - maxBytes: The maximum size of the allowed file. If value is nil, then
+    ///     the image will not be scaled down.
+    ///   - compressionQuality: The compression quality to use when encoding the jpeg.
+    /// - Returns: A tuple containing the following properties.
+    ///   - `imageData`: Data object of the jpeg encoded image.
+    ///   - `imageSize`: The dimensions of the the image that was encoded.
+    ///      This size may be smaller than the original image size if the image
+    ///      needed to be scaled down to fit the specified `maxBytes`.
     @_spi(STP) public func jpegDataAndDimensions(
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
     ) -> ImageDataAndSize {
-        dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) { image, quality in
+        dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) {
+            image,
+            quality in
             image.jpegData(compressionQuality: quality)
         }
     }
 
-    /**
-     Encodes the image to heic at the specified compression quality. The image
-     will be scaled down, if needed, to ensure its size does not exceed
-     `maxBytes`.
-
-     :nodoc:
-
-     - Parameters:
-       - maxBytes: The maximum size of the allowed file. If value is nil, then
-         the image will not be scaled down.
-       - compressionQuality: The compression quality to use when encoding the jpeg.
-
-     - Returns: A tuple containing the following properties.
-       - `imageData`: Data object of the jpeg encoded image.
-       - `imageSize`: The dimensions of the the image that was encoded.
-          This size may be smaller than the original image size if the image
-          needed to be scaled down to fit the specified `maxBytes`.
-     */
+    /// Encodes the image to heic at the specified compression quality.
+    ///
+    /// The image will be scaled down, if needed, to ensure its size does not exceed `maxBytes`.
+    ///
+    /// - Parameters:
+    ///   - maxBytes: The maximum size of the allowed file. If value is nil, then
+    ///     the image will not be scaled down.
+    ///   - compressionQuality: The compression quality to use when encoding the jpeg.
+    /// - Returns: A tuple containing the following properties.
+    ///   - `imageData`: Data object of the jpeg encoded image.
+    ///   - `imageSize`: The dimensions of the the image that was encoded.
+    ///      This size may be smaller than the original image size if the image
+    ///      needed to be scaled down to fit the specified `maxBytes`.
     @_spi(STP) public func heicDataAndDimensions(
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
     ) -> ImageDataAndSize {
-        dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) { image, quality in
+        dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) {
+            image,
+            quality in
             image.heicData(compressionQuality: quality)
         }
     }
@@ -82,7 +76,8 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 
-    private func heicData(compressionQuality: CGFloat = UIImage.defaultCompressionQuality) -> Data? {
+    private func heicData(compressionQuality: CGFloat = UIImage.defaultCompressionQuality) -> Data?
+    {
         [self].heicData(compressionQuality: compressionQuality)
     }
 
@@ -93,7 +88,7 @@ extension UIImage {
     ) -> ImageDataAndSize {
         var imageData = imageDataProvider(self, compressionQuality)
 
-        guard let _ = imageData else {
+        guard imageData != nil else {
             return (imageData: Data(), imageSize: .zero)
         }
 
@@ -101,7 +96,8 @@ extension UIImage {
 
         // Try something smarter first
         if let maxBytes = maxBytes,
-           (imageData?.count ?? 0) > maxBytes {
+            (imageData?.count ?? 0) > maxBytes
+        {
             var scale = CGFloat(1.0)
 
             // Assuming jpeg file size roughly scales linearly with area of the image
@@ -129,16 +125,26 @@ extension UIImage {
 }
 
 extension Array where Element: UIImage {
-    @_spi(STP) public func heicData(compressionQuality: CGFloat = UIImage.defaultCompressionQuality) -> Data? {
+    @_spi(STP) public func heicData(
+        compressionQuality: CGFloat = UIImage.defaultCompressionQuality
+    ) -> Data? {
         guard let mutableData = CFDataCreateMutable(nil, 0) else {
             return nil
         }
 
-        guard let destination = CGImageDestinationCreateWithData(mutableData, AVFileType.heic as CFString, self.count, nil) else {
+        guard
+            let destination = CGImageDestinationCreateWithData(
+                mutableData,
+                AVFileType.heic as CFString,
+                self.count,
+                nil
+            )
+        else {
             return nil
         }
 
-        let properties = [kCGImageDestinationLossyCompressionQuality: compressionQuality] as CFDictionary
+        let properties =
+            [kCGImageDestinationLossyCompressionQuality: compressionQuality] as CFDictionary
 
         for image in self {
             let cgImage = image.cgImage!

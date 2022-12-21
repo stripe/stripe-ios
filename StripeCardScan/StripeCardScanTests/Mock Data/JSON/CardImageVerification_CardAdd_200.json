@@ -1,2 +1,31 @@
 {
+    "accepted_image_configs": {
+        "default_settings": {
+            "compression_ratio": 0.6,
+            "image_count": 5,
+            "image_size": [
+                1080,
+                1920
+            ]
+        },
+        "format_settings": {
+            "heic": {
+                "compression_ratio": 0.5
+            },
+            "jpeg": {},
+            "webp": {
+                "image_count": 3
+            }
+        },
+        "preferred_formats": [
+            "heic",
+            "webp",
+            "jpeg"
+        ]
+    },
+    "expected_card": {
+        "issuer": null,
+        "last4": null
+    },
+    "use_api_version": 2
 }

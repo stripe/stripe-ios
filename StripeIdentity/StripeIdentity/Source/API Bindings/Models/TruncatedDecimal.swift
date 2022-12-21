@@ -8,10 +8,8 @@
 
 import Foundation
 
-/**
- Truncates the decimal number to a specific number of decimal places when
- encoding it.
- */
+/// Truncates the decimal number to a specific number of decimal places when
+/// encoding it.
 protocol TruncatedDecimal: Codable, Equatable {
     /// The value type this decimal is wrapping (e.g. Float, Double, CGFloat)
     associatedtype ValueType: (FloatingPoint & CVarArg & Codable & LosslessStringConvertible)
@@ -28,7 +26,9 @@ protocol TruncatedDecimal: Codable, Equatable {
 // MARK: - Codable
 
 extension TruncatedDecimal {
-    init(from decoder: Decoder) throws {
+    init(
+        from decoder: Decoder
+    ) throws {
         self.init(try ValueType(from: decoder))
     }
 
@@ -47,11 +47,15 @@ struct TwoDecimalFloat: TruncatedDecimal {
 
     let value: Float
 
-    init(_ value: Float) {
+    init(
+        _ value: Float
+    ) {
         self.value = value
     }
 
-    init(double: Double) {
+    init(
+        double: Double
+    ) {
         self.init(Float(double))
     }
 }

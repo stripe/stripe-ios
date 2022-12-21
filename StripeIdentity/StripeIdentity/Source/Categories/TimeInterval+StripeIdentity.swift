@@ -9,7 +9,9 @@
 import Foundation
 
 extension TimeInterval {
-    init(milliseconds: Int) {
+    init(
+        milliseconds: Int
+    ) {
         self = Double(milliseconds) / 1000
     }
 

@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-import Foundation
 @_spi(STP) import StripeCameraCore
 
 @_spi(STP) public class MockAppSettingsHelper: AppSettingsHelperProtocol {
@@ -15,7 +13,7 @@ import Foundation
     public var canOpenAppSettings = false
     public private(set) var didOpenAppSettings = false
 
-    public init() { }
+    public init() {}
 
     public func openAppSettings() {
         didOpenAppSettings = true

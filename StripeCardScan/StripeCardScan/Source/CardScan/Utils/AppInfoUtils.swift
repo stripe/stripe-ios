@@ -25,7 +25,8 @@ struct AppInfoUtils {
     }
 
     static func getSdkVersion() -> String {
-        return Bundle.main.infoDictionary?["CFBundleShortVersionString"].flatMap { $0 as? String } ?? "unknown"
+        return Bundle.main.infoDictionary?["CFBundleShortVersionString"].flatMap { $0 as? String }
+            ?? "unknown"
     }
 
     static func getBuildVersion() -> String {

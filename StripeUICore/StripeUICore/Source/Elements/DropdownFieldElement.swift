@@ -20,10 +20,10 @@ import UIKit
     public typealias DidUpdateSelectedIndex = (Int) -> Void
     
     public struct DropdownItem {
-        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityLabel: String, rawData: String) {
+        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String) {
             self.pickerDisplayName = pickerDisplayName
             self.labelDisplayName = labelDisplayName
-            self.accessibilityLabel = accessibilityLabel
+            self.accessibilityValue = accessibilityValue
             self.rawData = rawData
         }
         
@@ -33,8 +33,8 @@ import UIKit
         /// Item label displayed in inline label when item has been selected
         public let labelDisplayName: String
         
-        /// Accessibility label to use when this is in the inline label
-        public let accessibilityLabel: String
+        /// Accessibility value to use when this is in the inline label
+        public let accessibilityValue: String
         
         /// The underlying data for this dropdown item.
         /// e.g., A country dropdown item might display "United States" but its `rawData` is "US".
@@ -131,7 +131,7 @@ private extension DropdownFieldElement {
         }
 
         pickerFieldView.displayText = items[selectedIndex].labelDisplayName
-        pickerFieldView.displayTextAccessibilityLabel = items[selectedIndex].accessibilityLabel
+        pickerFieldView.displayTextAccessibilityValue = items[selectedIndex].accessibilityValue
     }
 
 }

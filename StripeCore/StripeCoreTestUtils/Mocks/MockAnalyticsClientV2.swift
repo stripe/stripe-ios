@@ -17,7 +17,7 @@ import Foundation
         return loggedAnalyticsPayloads.filter { ($0["event_name"] as? String) == eventName }
     }
 
-    public init() { }
+    public init() {}
 
     public func log(eventName: String, parameters: [String: Any]) {
         loggedAnalyticsPayloads.append(payload(withEventName: eventName, parameters: parameters))

@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import UIKit
 
 final class IdentityImageUploader {
     typealias LowHighResFiles = (lowRes: StripeFile, highRes: StripeFile)
@@ -71,10 +71,12 @@ final class IdentityImageUploader {
         ).chained { highResFile in
             return lowResUploadFuture.chained { lowResFile in
                 // Convert promise to a tuple of file IDs
-                return Promise(value: (
-                    lowRes: lowResFile,
-                    highRes: highResFile
-                ))
+                return Promise(
+                    value: (
+                        lowRes: lowResFile,
+                        highRes: highResFile
+                    )
+                )
             }
         }
     }
@@ -97,10 +99,12 @@ final class IdentityImageUploader {
                 )
             }
 
-            let resizedImage = try imageToResize.scaledDown(toMaxPixelDimension: CGSize(
-                width: configuration.highResImageMaxDimension,
-                height: configuration.highResImageMaxDimension
-            ))
+            let resizedImage = try imageToResize.scaledDown(
+                toMaxPixelDimension: CGSize(
+                    width: configuration.highResImageMaxDimension,
+                    height: configuration.highResImageMaxDimension
+                )
+            )
 
             return uploadJPEG(
                 image: resizedImage,
@@ -118,10 +122,12 @@ final class IdentityImageUploader {
         fileName: String
     ) -> Future<StripeFile> {
         do {
-            let resizedImage = try image.scaledDown(toMaxPixelDimension: CGSize(
-                width: configuration.lowResImageMaxDimension,
-                height: configuration.lowResImageMaxDimension
-            ))
+            let resizedImage = try image.scaledDown(
+                toMaxPixelDimension: CGSize(
+                    width: configuration.lowResImageMaxDimension,
+                    height: configuration.lowResImageMaxDimension
+                )
+            )
 
             return uploadJPEG(
                 image: resizedImage,
@@ -153,7 +159,8 @@ final class IdentityImageUploader {
                 promise.fullfill(with: result.map { $0.file })
 
                 if let self = self,
-                   case let .success((file, metrics)) = result {
+                    case .success((let file, let metrics)) = result
+                {
                     self.analyticsClient.logImageUpload(
                         idDocumentType: self.idDocumentType,
                         timeToUpload: metrics.timeToUpload,

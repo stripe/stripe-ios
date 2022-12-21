@@ -46,7 +46,8 @@ extension DocumentCaptureViewController {
         for side: DocumentSide,
         foundClassification: IDDetectorOutput.Classification?
     ) -> String {
-        let matchesClassification = foundClassification?.matchesDocument(type: documentType, side: side) ?? false
+        let matchesClassification =
+            foundClassification?.matchesDocument(type: documentType, side: side) ?? false
 
         switch (documentType, side, matchesClassification) {
         case (.drivingLicense, .front, false):

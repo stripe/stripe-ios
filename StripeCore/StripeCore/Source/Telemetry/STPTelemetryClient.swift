@@ -13,7 +13,8 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
 @_spi(STP) public final class STPTelemetryClient: NSObject {
     @_spi(STP) public static var shared: STPTelemetryClient = STPTelemetryClient(
-        sessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
+        sessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration
+    )
 
     @_spi(STP) public func addTelemetryFields(toParams params: inout [String: Any]) {
         params["muid"] = fraudDetectionData.muid
@@ -22,7 +23,9 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         params["sid"] = fraudDetectionData.sid
     }
 
-    @_spi(STP) public func paramsByAddingTelemetryFields(toParams params: [String: Any]) -> [String: Any] {
+    @_spi(STP) public func paramsByAddingTelemetryFields(
+        toParams params: [String: Any]
+    ) -> [String: Any] {
         var mutableParams = params
         mutableParams["muid"] = fraudDetectionData.muid
         mutableParams["guid"] = fraudDetectionData.guid
@@ -31,14 +34,14 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         return mutableParams
     }
 
-    /**
-     Sends a payload of telemetry to the Stripe telemetry service.
-     - Parameter forceSend: ⚠️ Always send the request. Only pass this for testing purposes.
-     - Parameter completion: Called with the result of the telemetry network request.
-     */
+    /// Sends a payload of telemetry to the Stripe telemetry service.
+    ///
+    /// - Parameters:
+    ///   - forceSend: ⚠️ Always send the request. Only pass this for testing purposes.
+    ///   - completion: Called with the result of the telemetry network request.
     @_spi(STP) public func sendTelemetryData(
         forceSend: Bool = false,
-        completion: ((Result<[String: Any], Error>) -> ())? = nil
+        completion: ((Result<[String: Any], Error>) -> Void)? = nil
     ) {
         guard forceSend || STPTelemetryClient.shouldSendTelemetry() else {
             completion?(.failure(NSError.stp_genericConnectionError()))
@@ -47,7 +50,9 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         sendTelemetryRequest(jsonPayload: payload, completion: completion)
     }
 
-    @_spi(STP) public func updateFraudDetectionIfNecessary(completion: @escaping ((Result<FraudDetectionData, Error>) -> ())) {
+    @_spi(STP) public func updateFraudDetectionIfNecessary(
+        completion: @escaping ((Result<FraudDetectionData, Error>) -> Void)
+    ) {
         fraudDetectionData.resetSIDIfExpired()
         if fraudDetectionData.muid == nil || fraudDetectionData.sid == nil {
             sendTelemetryRequest(
@@ -56,13 +61,13 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
                     "guid": fraudDetectionData.guid ?? "",
                     "sid": fraudDetectionData.sid ?? "",
                 ]) { result in
-                switch result {
-                case .failure(let error):
-                    completion(.failure(error))
-                case .success:
-                    completion(.success(self.fraudDetectionData))
+                    switch result {
+                    case .failure(let error):
+                        completion(.failure(error))
+                    case .success:
+                        completion(.success(self.fraudDetectionData))
+                    }
                 }
-            }
         } else {
             completion(.success(fraudDetectionData))
         }
@@ -78,7 +83,9 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         #endif
     }
 
-    @_spi(STP) public init(sessionConfiguration config: URLSessionConfiguration) {
+    @_spi(STP) public init(
+        sessionConfiguration config: URLSessionConfiguration
+    ) {
         urlSession = URLSession(configuration: config)
         super.init()
     }
@@ -162,7 +169,10 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         return payload
     }
 
-    private func sendTelemetryRequest(jsonPayload: [String: Any], completion: ((Result<[String: Any], Error>) -> ())? = nil) {
+    private func sendTelemetryRequest(
+        jsonPayload: [String: Any],
+        completion: ((Result<[String: Any], Error>) -> Void)? = nil
+    ) {
         var request = URLRequest(url: TelemetryURL)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -177,7 +187,8 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
                 let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
-                let responseDict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                let responseDict = try? JSONSerialization.jsonObject(with: data, options: [])
+                    as? [String: Any]
             else {
                 completion?(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
@@ -191,7 +202,8 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
                 self.fraudDetectionData.guid = guid
             }
             if self.fraudDetectionData.sid == nil,
-               let sid = responseDict["sid"] as? String {
+                let sid = responseDict["sid"] as? String
+            {
                 self.fraudDetectionData.sid = sid
                 self.fraudDetectionData.sidCreationDate = Date()
             }

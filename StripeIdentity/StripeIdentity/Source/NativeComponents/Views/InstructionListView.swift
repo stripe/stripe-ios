@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class InstructionListView: UIView {
 
@@ -69,7 +69,9 @@ final class InstructionListView: UIView {
         installViews()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -88,8 +90,8 @@ final class InstructionListView: UIView {
     }
 }
 
-private extension InstructionListView {
-    func installViews() {
+extension InstructionListView {
+    fileprivate func installViews() {
         labelInsetView.addAndPinSubview(label, insets: Styling.labelInsets)
         vStack.addArrangedSubview(labelInsetView)
         vStack.addArrangedSubview(listView)

@@ -6,8 +6,8 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) import StripeCore
+import XCTest
 
 class Array_StripeCoreTest: XCTestCase {
     func test_boundSafeObjectAtIndex_emptyArray() {

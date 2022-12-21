@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Stores common UI values used throughout Identity
 struct IdentityUI {
@@ -61,7 +61,7 @@ struct IdentityUI {
 
     // MARK: Scanning View
 
-    static let documentCameraPreviewAspectRatio: CGFloat = 1.25 // 5:4
+    static let documentCameraPreviewAspectRatio: CGFloat = 1.25  // 5:4
     static let scanningViewLabelMinHeightNumberOfLines: Int = 3
     static let scanningViewLabelBottomPadding: CGFloat = 24
 }

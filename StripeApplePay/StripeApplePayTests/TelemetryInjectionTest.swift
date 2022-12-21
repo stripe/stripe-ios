@@ -6,35 +6,45 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import AVFoundation
 import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeApplePay
-@_spi(STP) @testable import StripeCore
-import AVFoundation
 import XCTest
+
+// swift-format-ignore
+@_spi(STP) @testable import StripeApplePay
+
+// swift-format-ignore
+@_spi(STP) @testable import StripeCore
 
 class TelemetryInjectionTest: APIStubbedTestCase {
     func testIntentConfirmAddsTelemetry() {
         let apiClient = stubbedAPIClient()
-        
+
         let piTelemetryExpectation = self.expectation(description: "saw pi telemetry")
         let siTelemetryExpectation = self.expectation(description: "saw si telemetry")
-        
+
         // As an implementation detail, OHHTTPStubs will run this block in `canInitWithRequest` in addition to
         // `initWithRequest`. So it could be called more times than we expect.
         // We don't have control over this behavior (CFNetwork drives it), so let's not worry
         // about overfulfillment.
         piTelemetryExpectation.assertForOverFulfill = false
         siTelemetryExpectation.assertForOverFulfill = false
-        
+
         stub { urlRequest in
             if urlRequest.url!.absoluteString.contains("_intent") {
-                let ua = urlRequest.queryItems!.first(where: { $0.name == "payment_method_data[payment_user_agent]" })!.value!
+                let ua = urlRequest.queryItems!.first(where: {
+                    $0.name == "payment_method_data[payment_user_agent]"
+                })!.value!
                 XCTAssertTrue(ua.hasPrefix("stripe-ios/"))
-                let muid = urlRequest.queryItems!.first(where: { $0.name == "payment_method_data[muid]" })!.value!
-                let guid = urlRequest.queryItems!.first(where: { $0.name == "payment_method_data[guid]" })!.value!
+                let muid = urlRequest.queryItems!.first(where: {
+                    $0.name == "payment_method_data[muid]"
+                })!.value!
+                let guid = urlRequest.queryItems!.first(where: {
+                    $0.name == "payment_method_data[guid]"
+                })!.value!
                 XCTAssertNotNil(muid)
                 XCTAssertNotNil(guid)
                 if urlRequest.url!.absoluteString.contains("payment_intent") {
@@ -50,7 +60,7 @@ class TelemetryInjectionTest: APIStubbedTestCase {
             // We don't care about the response
             return HTTPStubsResponse()
         }
-        
+
         var params = StripeAPI.PaymentMethodParams(type: .card)
         var card = StripeAPI.PaymentMethodParams.Card()
         card.number = "4242424242424242"
@@ -65,14 +75,14 @@ class TelemetryInjectionTest: APIStubbedTestCase {
         FraudDetectionData.shared.muid = "muid"
         FraudDetectionData.shared.guid = "guid"
         FraudDetectionData.shared.sidCreationDate = Date()
-        
+
         let piExpectation = self.expectation(description: "PI Confirmed")
         var pip = StripeAPI.PaymentIntentParams(clientSecret: "pi_123_secret_abc")
         pip.paymentMethodData = params
         StripeAPI.PaymentIntent.confirm(apiClient: apiClient, params: pip) { _ in
             piExpectation.fulfill()
         }
-        
+
         let siExpectation = self.expectation(description: "SI Confirmed")
         var sip = StripeAPI.SetupIntentConfirmParams(clientSecret: "seti_123_secret_abc")
         sip.paymentMethodData = params
@@ -83,5 +93,3 @@ class TelemetryInjectionTest: APIStubbedTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 }
-
-

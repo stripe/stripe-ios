@@ -5,10 +5,10 @@
 //  Created by Scott Grant on 5/11/22.
 //
 
-@testable @_spi(STP) import StripeCardScan
-@testable @_spi(STP) import StripeCore
-
 import XCTest
+
+@testable@_spi(STP) import StripeCardScan
+@testable@_spi(STP) import StripeCore
 
 class CardImageVerificationDetailsResponseTest: XCTestCase {
 
@@ -62,7 +62,7 @@ class CardImageVerificationDetailsResponseTest: XCTestCase {
             XCTAssertEqual(heicSettings.imageSize!, [1080.0, 1920.0])
         }
 
-        let jpegSettings =  acceptedImageConfigs?.imageSettings(format: .jpeg)
+        let jpegSettings = acceptedImageConfigs?.imageSettings(format: .jpeg)
         XCTAssertNotNil(jpegSettings)
 
         if let jpegSettings = jpegSettings {
@@ -70,7 +70,7 @@ class CardImageVerificationDetailsResponseTest: XCTestCase {
             XCTAssertEqual(jpegSettings.imageSize!, [1080.0, 1920.0])
         }
 
-        let webpSettings =  acceptedImageConfigs?.imageSettings(format: .webp)
+        let webpSettings = acceptedImageConfigs?.imageSettings(format: .webp)
         XCTAssertNotNil(webpSettings)
 
         if let webpSettings = webpSettings {

@@ -16,17 +16,13 @@
 default_platform(:ios)
 
 DEFAULT_TEST_DEVICE = 'iPhone 12 mini'.freeze
-DEFAULT_TEST_VERSION = '15.4'.freeze
+DEFAULT_TEST_VERSION = '16.1'.freeze
 # SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
 # set Fastlane's timeout to a more reasonable value.
 ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = '60'
 
 platform :ios do
   use_cache = false
-
-  before_all do
-    setup_circle_ci
-  end
 
   desc 'Generate new localized screenshots'
   lane :screenshots do
@@ -203,14 +199,14 @@ platform :ios do
 
   lane :size_report do
     Dir.chdir('..') do
-      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb master #{ENV['CIRCLE_BRANCH']}")
+      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} master")
       unless ENV['EMERGE_API_TOKEN'].nil?
         archive_path = Dir.pwd + '/build/size_tests/'
-        arguments = { repo_name: "#{ENV['CIRCLE_PROJECT_USERNAME']}/#{ENV['CIRCLE_PROJECT_REPONAME']}",
-                      sha: `git rev-parse HEAD`.to_s,
+        arguments = { repo_name: "#{ENV['BITRISEIO_GIT_REPOSITORY_OWNER']}/#{ENV['BITRISEIO_GIT_REPOSITORY_SLUG']}",
+                      sha: "#{ENV['BITRISE_GIT_COMMIT']}",
                       build_type: 'release' }
-        unless ENV['CIRCLE_PULL_REQUEST'].nil?
-          arguments[:pr_number] = ENV['CIRCLE_PULL_REQUEST'].partition('/').last.to_s # get the PR number from the PR URL
+        unless ENV['BITRISE_PULL_REQUEST'].nil?
+          arguments[:pr_number] = ENV['BITRISE_PULL_REQUEST']
           arguments[:base_sha] = `git rev-parse master`.to_s
         end
         emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
@@ -230,7 +226,7 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
@@ -240,7 +236,7 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
@@ -250,7 +246,7 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
@@ -260,14 +256,14 @@ platform :ios do
     end
     run_tests(
       project: './Tests/installation_tests/carthage/CarthageTest.xcodeproj',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
     )
   end
 
   lane :installation_spm_objc do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
       scheme: 'SPMTest'
     )
   end
@@ -275,7 +271,7 @@ platform :ios do
   lane :installation_spm_swift do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_swift/SPMTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
       scheme: 'SPMTest'
     )
   end

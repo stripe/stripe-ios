@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeUICore
+import UIKit
 
 final class DocumentScanningView: UIView {
     struct Styling {
@@ -20,7 +20,7 @@ final class DocumentScanningView: UIView {
 
         static let cutoutOverlayColor = UIColor(red: 0.412, green: 0.451, blue: 0.525, alpha: 1)
         static let cutoutCornerRadius: CGFloat = 12
-        static let cutoutAspectRatio: CGFloat = 1.5 // 3:2
+        static let cutoutAspectRatio: CGFloat = 1.5  // 3:2
         static let cutoutBorderWidth: CGFloat = 4
         static let cutoutBorderStaticColor = UIColor.white
         static let cutoutBorderAnimatedColor1 = IdentityUI.stripeBlurple
@@ -81,12 +81,16 @@ final class DocumentScanningView: UIView {
         installConstraints()
     }
 
-    convenience init(from viewModel: ViewModel) {
+    convenience init(
+        from viewModel: ViewModel
+    ) {
         self.init()
         configure(with: viewModel)
     }
 
-    required init(coder: NSCoder) {
+    required init(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -101,7 +105,6 @@ final class DocumentScanningView: UIView {
         cameraPreviewView.isHidden = true
         cutoutOverlayView.isHidden = true
         cutoutBorderView.isHidden = true
-
 
         switch viewModel {
         case .blank:
@@ -119,13 +122,17 @@ final class DocumentScanningView: UIView {
             cameraPreviewView.session = cameraSession
             cutoutOverlayView.isHidden = false
             cutoutBorderView.isHidden = false
-            cutoutBorderView.configure(with: .init(
-                color1: shouldAnimateBorder ? Styling.cutoutBorderAnimatedColor1 : Styling.cutoutBorderStaticColor,
-                color2: shouldAnimateBorder ? Styling.cutoutBorderAnimatedColor2 : Styling.cutoutBorderStaticColor,
-                borderWidth: Styling.cutoutBorderWidth,
-                cornerRadius: Styling.cutoutCornerRadius,
-                isAnimating: shouldAnimateBorder
-            ))
+            cutoutBorderView.configure(
+                with: .init(
+                    color1: shouldAnimateBorder
+                        ? Styling.cutoutBorderAnimatedColor1 : Styling.cutoutBorderStaticColor,
+                    color2: shouldAnimateBorder
+                        ? Styling.cutoutBorderAnimatedColor2 : Styling.cutoutBorderStaticColor,
+                    borderWidth: Styling.cutoutBorderWidth,
+                    cornerRadius: Styling.cutoutCornerRadius,
+                    isAnimating: shouldAnimateBorder
+                )
+            )
         }
     }
 
@@ -139,8 +146,8 @@ final class DocumentScanningView: UIView {
 
 // MARK: - Helpers
 
-private extension DocumentScanningView {
-    func installViews() {
+extension DocumentScanningView {
+    fileprivate func installViews() {
         addAndPinSubview(containerView)
         containerView.contentView.addAndPinSubview(imageView)
         containerView.contentView.addAndPinSubview(scannedOverlayIconView)
@@ -149,23 +156,32 @@ private extension DocumentScanningView {
         containerView.contentView.addSubview(cutoutBorderView)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         cutoutBorderView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // Aspect ratio of overlay
             widthAnchor.constraint(equalTo: heightAnchor, multiplier: Styling.containerAspectRatio),
             // Aspect ratio of cutout
-            cutoutBorderView.widthAnchor.constraint(equalTo: cutoutBorderView.heightAnchor, multiplier: Styling.cutoutAspectRatio),
+            cutoutBorderView.widthAnchor.constraint(
+                equalTo: cutoutBorderView.heightAnchor,
+                multiplier: Styling.cutoutAspectRatio
+            ),
             // Horizontal insets of cutout
-            cutoutBorderView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Styling.cutoutHorizontalPadding),
-            cutoutBorderView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Styling.cutoutHorizontalPadding),
+            cutoutBorderView.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: Styling.cutoutHorizontalPadding
+            ),
+            cutoutBorderView.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: -Styling.cutoutHorizontalPadding
+            ),
             // Vertically center cutout
             cutoutBorderView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 
-    func updateCutoutBounds() {
+    fileprivate func updateCutoutBounds() {
         // Compute the frame of the cut out for the new view size
         let width = bounds.width - (Styling.cutoutHorizontalPadding * 2)
         let height = width / Styling.cutoutAspectRatio

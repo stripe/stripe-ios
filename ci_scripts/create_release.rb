@@ -22,6 +22,12 @@ def create_branch
   run_command("git checkout -b #{@branchname}")
 end
 
+def regenerate_project_files
+  run_command('ci_scripts/delete_project_files.rb')
+  puts 'Generating project files'
+  run_command('tuist generate -n')
+end
+
 def update_version
   # Overwrite the VERSION file with version
   File.open('VERSION', 'w') do |f|
@@ -49,8 +55,16 @@ end
 
 def commit_changes
   # Commit and push the changes
+  # Xcode project files are added to ensure compatibility with Carthage,
+  # -f is used because this files are included in .gitignore.
   # Manually add the docs directory to pick up any new docs files generated as part of release
-  run_command("git add -u && git add docs && git commit -m \"Update version to #{@version}\"")
+  run_command("git add Stripe.xcworkspace -f &&
+    git add Stripe*/*.xcodeproj -f &&
+    git add Example/**/*.xcodeproj -f &&
+    git add Testers/**/*.xcodeproj -f &&
+    git add -u &&
+    git add docs &&
+    git commit -m \"Update version to #{@version}\"")
 end
 
 def push_changes
@@ -115,6 +129,7 @@ end
 
 steps = [
   method(:create_branch),
+  method(:regenerate_project_files),
   method(:update_version),
   method(:update_placeholders),
   method(:build_documentation),

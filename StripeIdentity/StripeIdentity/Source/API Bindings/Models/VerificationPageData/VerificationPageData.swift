@@ -8,13 +8,13 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
-    
+extension StripeAPI {
+
     /// VerificationPageData contains the state of a verification, including what information needs to be collected to complete the verification flow.
-    
+
     struct VerificationPageData: Decodable, Equatable {
         typealias Status = VerificationPage.Status
-        
+
         /// Unique identifier for the object.
         let id: String
         let requirements: VerificationPageDataRequirements
@@ -23,5 +23,5 @@ extension StripeAPI {
         /// If true, the associated VerificationSession has been submitted for processing.
         let submitted: Bool
     }
-    
+
 }

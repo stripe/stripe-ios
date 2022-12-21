@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCore
-@testable import StripeIdentity
 @_spi(STP) import StripeCameraCoreTestUtils
+import iOSSnapshotTestCase
+
+@testable import StripeIdentity
 
 final class DocumentScanningViewSnapshotTest: FBSnapshotTestCase {
-    /*
-     NOTE(mludowise): Snapshot tests don't seem to respect setting the overlay
-     layer's `compositingFilter` to "multiplyBlendMode". The result is the
-     resulting snapshot images all have a solid-opaque color for the overlay.
-     */
+    // NOTE(mludowise): Snapshot tests don't seem to respect setting the overlay
+    // layer's `compositingFilter` to "multiplyBlendMode". The result is the
+    // resulting snapshot images all have a solid-opaque color for the overlay.
 
     let scanningView = DocumentScanningView()
     let mockImage = CapturedImageMock.frontDriversLicense.image
@@ -34,7 +33,7 @@ final class DocumentScanningViewSnapshotTest: FBSnapshotTestCase {
         scanningView.tintColor = .systemPink
 
         AnimatedBorderView.isAnimationEnabled = false
-//        recordMode = true
+        //        recordMode = true
     }
 
     override func tearDown() {
@@ -59,8 +58,8 @@ final class DocumentScanningViewSnapshotTest: FBSnapshotTestCase {
     }
 }
 
-private extension DocumentScanningViewSnapshotTest {
-    func verifyView(
+extension DocumentScanningViewSnapshotTest {
+    fileprivate func verifyView(
         with viewModel: DocumentScanningView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line

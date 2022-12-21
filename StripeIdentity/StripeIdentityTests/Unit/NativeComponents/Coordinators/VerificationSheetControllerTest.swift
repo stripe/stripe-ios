@@ -6,12 +6,12 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@testable import StripeIdentity
+import UIKit
+import XCTest
 
+@testable import StripeIdentity
 
 final class VerificationSheetControllerTest: XCTestCase {
 
@@ -39,7 +39,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockMLModelLoader = IdentityMLModelLoaderMock()
         mockFlowController = VerificationSheetFlowControllerMock()
         mockAnalyticsClient = MockAnalyticsClientV2()
-        identityAnalyticsClient = .init(verificationSessionId: "", analyticsClient: mockAnalyticsClient)
+        identityAnalyticsClient = .init(
+            verificationSessionId: "",
+            analyticsClient: mockAnalyticsClient
+        )
         controller = VerificationSheetController(
             apiClient: mockAPIClient,
             flowController: mockFlowController,
@@ -106,7 +109,10 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
-        XCTAssertEqual(try? mockFlowController.transitionedWithStaticContentResult?.get(), mockResponse)
+        XCTAssertEqual(
+            try? mockFlowController.transitionedWithStaticContentResult?.get(),
+            mockResponse
+        )
     }
 
     func testSaveDataValidResponse() throws {
@@ -143,7 +149,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
-        
+
         let submitRequestExp = expectation(description: "submit request made")
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
@@ -162,7 +168,10 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
-        XCTAssertEqual(try? mockFlowController.transitionedWithUpdateDataResult?.get(), mockResponse)
+        XCTAssertEqual(
+            try? mockFlowController.transitionedWithUpdateDataResult?.get(),
+            mockResponse
+        )
     }
 
     func testSaveDataErrorResponse() throws {
@@ -195,13 +204,13 @@ final class VerificationSheetControllerTest: XCTestCase {
             return XCTFail("Expected failure")
         }
     }
-    
+
     func testSaveDocumentFrontNotNeedbackSuccess() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
-        
+
         let mockResponse = try VerificationPageDataMock.noErrors.make()
         let mockDocumentUploader = DocumentUploaderMock()
 
@@ -227,7 +236,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify save data request was made
         wait(for: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront, frontFileData)
+        XCTAssertEqual(
+            mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront,
+            frontFileData
+        )
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
@@ -240,26 +252,26 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
-        
+
         // Verify completion block is called
         wait(for: [notNeedbackExp], timeout: 1)
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
-        
+
         // Verify values cached locally
         XCTAssertEqual(controller.collectedData.idDocumentFront, frontFileData)
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
     }
-    
+
     func testSaveDocumentFrontNeedbackSuccess() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
-        
+
         let mockResponse = try VerificationPageDataMock.noErrorsNeedback.make()
         let mockDocumentUploader = DocumentUploaderMock()
 
@@ -285,18 +297,21 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify save data request was made
         wait(for: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront, frontFileData)
+        XCTAssertEqual(
+            mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront,
+            frontFileData
+        )
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
-        
+
         // Verify completion block is called
         wait(for: [needBackExp], timeout: 1)
 
         // Verify values cached locally
         XCTAssertEqual(controller.collectedData.idDocumentFront, frontFileData)
     }
-    
+
     func testSaveDocumentFrontFailure() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
@@ -324,13 +339,13 @@ final class VerificationSheetControllerTest: XCTestCase {
             return XCTFail("Expected failure")
         }
     }
-    
+
     func testSaveDocumentBackSuccess() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
-        
+
         let mockResponse = try VerificationPageDataMock.noErrors.make()
         let mockDocumentUploader = DocumentUploaderMock()
 
@@ -341,21 +356,25 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         controller.saveDocumentBackAndTransition(
             from: .biometricConsent,
-            documentUploader: mockDocumentUploader) {
-                self.exp.fulfill()
+            documentUploader: mockDocumentUploader
+        ) {
+            self.exp.fulfill()
         }
-        
+
         // Mock that document upload succeeded
         mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
 
         // Verify save data request was made
         wait(for: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentBack, backFileData)
+        XCTAssertEqual(
+            mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentBack,
+            backFileData
+        )
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
-        
+
         let submitRequestExp = expectation(description: "submit request made")
         mockAPIClient.verificationSessionSubmit.callBackOnRequest {
             submitRequestExp.fulfill()
@@ -365,22 +384,22 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
         mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
-        
+
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
 
         // Verify analytics client updated
         XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
-        
+
         // Verify values cached locally
         XCTAssertEqual(controller.collectedData.idDocumentBack, backFileData)
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
     }
-    
+
     func testSaveDocumentBackFailure() throws {
-            // Mock initial VerificationPage request successful
+        // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
@@ -388,8 +407,9 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         controller.saveDocumentBackAndTransition(
             from: .biometricConsent,
-            documentUploader: mockDocumentUploader) {}
-        
+            documentUploader: mockDocumentUploader
+        ) {}
+
         // Mock that document upload failed
         mockDocumentUploader.backUploadPromise.reject(with: mockError)
 
@@ -438,7 +458,9 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify submit request
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
-        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockSubmitResponse))
+        mockAPIClient.verificationSessionSubmit.respondToRequests(
+            with: .success(mockSubmitResponse)
+        )
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
@@ -452,7 +474,11 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify succeed analytic
         XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 1)
         let analytic = mockAnalyticsClient.loggedAnalyticsPayloads.first
-        XCTAssert(analytic: analytic, hasProperty: "event_name", withValue: "verification_succeeded")
+        XCTAssert(
+            analytic: analytic,
+            hasProperty: "event_name",
+            withValue: "verification_succeeded"
+        )
         XCTAssert(analytic: analytic, hasMetadata: "doc_front_model_score", withValue: Float(1))
         XCTAssert(analytic: analytic, hasMetadata: "doc_back_model_score", withValue: Float(1))
         XCTAssert(analytic: analytic, hasMetadata: "selfie_model_score", withValue: Float(0.9))
@@ -462,7 +488,10 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
-        XCTAssertEqual(try? mockFlowController.transitionedWithUpdateDataResult?.get(), mockSubmitResponse)
+        XCTAssertEqual(
+            try? mockFlowController.transitionedWithUpdateDataResult?.get(),
+            mockSubmitResponse
+        )
     }
 
     func testSaveDataSubmitsErrorResponse() throws {

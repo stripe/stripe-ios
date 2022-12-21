@@ -31,27 +31,27 @@ class OcrMainLoopStateMachine: NSObject, MainLoopStateMachine {
     var state: MainLoopState = .initial
     var startTimeForCurrentState = Date()
     let errorCorrectionDurationSeconds = 2.0
-    
+
     override init() {}
-    
+
     func loopState() -> MainLoopState {
         return state
     }
-    
+
     func event(prediction: CreditCardOcrPrediction) -> MainLoopState {
         let newState = transition(prediction: prediction)
         if let newState = newState {
             startTimeForCurrentState = Date()
             state = newState
         }
-        
+
         return newState ?? state
     }
-    
+
     func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         let timeInCurrentStateSeconds = -startTimeForCurrentState.timeIntervalSinceNow
         let frameHasOcr = prediction.number != nil
-        
+
         switch (state, timeInCurrentStateSeconds, frameHasOcr) {
         case (.initial, _, true):
             return .ocrOnly
@@ -62,7 +62,7 @@ class OcrMainLoopStateMachine: NSObject, MainLoopStateMachine {
             return nil
         }
     }
-    
+
     func reset() -> MainLoopStateMachine {
         return OcrMainLoopStateMachine()
     }
@@ -72,20 +72,22 @@ class OcrAccurateMainLoopStateMachine: NSObject, MainLoopStateMachine {
     var state: MainLoopState = .initial
     var startTimeForCurrentState = Date()
     var hasExpiryPrediction = false
-    
+
     let minimumErrorCorrection = 2.0
     var maximumErrorCorrection = 4.0
-    
+
     func loopState() -> MainLoopState {
         return state
     }
-    
-    override init() { }
-    
-    init(maxErrorCorrection: Double) {
+
+    override init() {}
+
+    init(
+        maxErrorCorrection: Double
+    ) {
         self.maximumErrorCorrection = maxErrorCorrection
     }
-    
+
     func event(prediction: CreditCardOcrPrediction) -> MainLoopState {
         let newState = transition(prediction: prediction)
         if let newState = newState {
@@ -94,7 +96,7 @@ class OcrAccurateMainLoopStateMachine: NSObject, MainLoopStateMachine {
         }
         return newState ?? state
     }
-    
+
     func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         let timeInCurrentStateSeconds = -startTimeForCurrentState.timeIntervalSinceNow
         let frameHasOcr = prediction.number != nil

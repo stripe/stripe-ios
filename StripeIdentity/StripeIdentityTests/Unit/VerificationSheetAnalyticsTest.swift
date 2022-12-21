@@ -6,25 +6,34 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import XCTest
 
 @testable import StripeIdentity
-@_spi(STP) import StripeCore
 
 final class VerificationSheetAnalyticsTest: XCTestCase {
 
     func testVerificationSheetFailedAnalyticEncoding() {
-        let analytic = VerificationSheetFailedAnalytic(verificationSessionId: nil, error: IdentityVerificationSheetError.unknown(debugDescription: "some description"))
+        let analytic = VerificationSheetFailedAnalytic(
+            verificationSessionId: nil,
+            error: IdentityVerificationSheetError.unknown(debugDescription: "some description")
+        )
         XCTAssertNotNil(analytic.error)
 
         let errorDict = analytic.error.serializeForLogging()
         XCTAssertNil(errorDict["user_info"])
         XCTAssertEqual(errorDict["code"] as? Int, 1)
-        XCTAssertEqual(errorDict["domain"] as? String, "StripeIdentity.IdentityVerificationSheetError")
+        XCTAssertEqual(
+            errorDict["domain"] as? String,
+            "StripeIdentity.IdentityVerificationSheetError"
+        )
     }
 
     func testVerificationSheetCompletionAnalyticCompleted() {
-        let analytic = VerificationSheetCompletionAnalytic.make(verificationSessionId: "session_id", sessionResult: .flowCompleted)
+        let analytic = VerificationSheetCompletionAnalytic.make(
+            verificationSessionId: "session_id",
+            sessionResult: .flowCompleted
+        )
         guard let closedAnalytic = analytic as? VerificationSheetClosedAnalytic else {
             return XCTFail("Expected `VerificationSheetClosedAnalytic`")
         }
@@ -34,7 +43,10 @@ final class VerificationSheetAnalyticsTest: XCTestCase {
     }
 
     func testVerificationSheetCompletionAnalyticCanceled() {
-        let analytic = VerificationSheetCompletionAnalytic.make(verificationSessionId: "session_id", sessionResult: .flowCanceled)
+        let analytic = VerificationSheetCompletionAnalytic.make(
+            verificationSessionId: "session_id",
+            sessionResult: .flowCanceled
+        )
         guard let closedAnalytic = analytic as? VerificationSheetClosedAnalytic else {
             return XCTFail("Expected `VerificationSheetClosedAnalytic`")
         }
@@ -44,7 +56,12 @@ final class VerificationSheetAnalyticsTest: XCTestCase {
     }
 
     func testVerificationSheetCompletionAnalyticFailed() {
-        let analytic = VerificationSheetCompletionAnalytic.make(verificationSessionId: "session_id", sessionResult: .flowFailed(error: IdentityVerificationSheetError.unknown(debugDescription: "some description")))
+        let analytic = VerificationSheetCompletionAnalytic.make(
+            verificationSessionId: "session_id",
+            sessionResult: .flowFailed(
+                error: IdentityVerificationSheetError.unknown(debugDescription: "some description")
+            )
+        )
         guard let failedAnalytic = analytic as? VerificationSheetFailedAnalytic else {
             return XCTFail("Expected `VerificationSheetFailedAnalytic`")
         }

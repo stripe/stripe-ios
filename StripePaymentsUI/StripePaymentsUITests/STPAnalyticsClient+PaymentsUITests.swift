@@ -7,9 +7,15 @@
 
 import Foundation
 import XCTest
-@_spi(STP) @testable import StripePaymentsUI
-@_spi(STP) @testable import StripePayments
+
+// swift-format-ignore
 @_spi(STP) @testable import StripeCore
+
+// swift-format-ignore
+@_spi(STP) @testable import StripePayments
+
+// swift-format-ignore
+@_spi(STP) @testable import StripePaymentsUI
 
 class STPAnalyticsClientPaymentsUITest: XCTestCase {
     func testPaymentsUISDKVariantPayload() throws {

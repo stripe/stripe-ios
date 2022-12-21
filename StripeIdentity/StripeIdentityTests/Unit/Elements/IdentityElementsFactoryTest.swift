@@ -7,16 +7,26 @@
 //
 
 import XCTest
-@_spi(STP) @testable import StripeIdentity
-@_spi(STP) @testable import StripeUICore
 
+// swift-format-ignore
+@_spi(STP) @testable import StripeIdentity
+
+// swift-format-ignore
+@_spi(STP) @testable import StripeUICore
 
 final class IdentityElementsFactoryTest: XCTestCase {
 
     let addressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
-            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin)
+            "US": AddressSpec(
+                format: "ACSZP",
+                require: "AZ",
+                cityNameType: .post_town,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .pin
+            )
         ]
         return specProvider
     }()
@@ -25,7 +35,6 @@ final class IdentityElementsFactoryTest: XCTestCase {
         locale: Locale(identifier: "en_US"),
         addressSpecProvider: addressSpecProvider
     )
-
 
     // MARK: - ID Number
 
@@ -44,7 +53,11 @@ final class IdentityElementsFactoryTest: XCTestCase {
             "IT": .init(type: nil, label: "IT"),
         ]
 
-        guard let section = factory.makeIDNumberSection(countryToIDNumberTypes: countryToIDNumberTypes) else {
+        guard
+            let section = factory.makeIDNumberSection(
+                countryToIDNumberTypes: countryToIDNumberTypes
+            )
+        else {
             return XCTFail("Expected section to be returned")
         }
         guard let countryDropdown = section.elements.first as? DropdownFieldElement else {
@@ -64,17 +77,23 @@ final class IdentityElementsFactoryTest: XCTestCase {
 
 // MARK: - Helpers
 
-private extension IdentityElementsFactoryTest {
-    func verifyIDTextInput(section: SectionElement,
-                           expectedLabel: String,
-                           expectedType: IDNumberTextFieldConfiguration.IDNumberType?,
-                           file: StaticString = #filePath,
-                           line: UInt = #line) {
+extension IdentityElementsFactoryTest {
+    fileprivate func verifyIDTextInput(
+        section: SectionElement,
+        expectedLabel: String,
+        expectedType: IDNumberTextFieldConfiguration.IDNumberType?,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         guard let idElement = section.elements.last as? TextFieldElement else {
             return XCTFail("Expected TextFieldElement", file: file, line: line)
         }
         guard let idNumConfig = idElement.configuration as? IDNumberTextFieldConfiguration else {
-            return XCTFail("Expected TextFieldElement configuration to be 'IDNumberTextFieldConfiguration' but was '\(type(of: idElement.configuration))'", file: file, line: line)
+            return XCTFail(
+                "Expected TextFieldElement configuration to be 'IDNumberTextFieldConfiguration' but was '\(type(of: idElement.configuration))'",
+                file: file,
+                line: line
+            )
         }
 
         XCTAssertEqual(idNumConfig.label, expectedLabel, file: file, line: line)

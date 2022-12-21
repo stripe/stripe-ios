@@ -56,7 +56,9 @@ class TrackableTask {
     var duration: TimeInterval?
     var result: ScanAnalyticsEvent?
 
-    init(startTime: Date = Date()) {
+    init(
+        startTime: Date = Date()
+    ) {
         self.startTime = startTime
     }
 

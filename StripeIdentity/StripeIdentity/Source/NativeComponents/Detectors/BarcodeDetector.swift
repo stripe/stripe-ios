@@ -24,7 +24,7 @@ extension BarcodeDetectorOutput: VisionBasedDetectorOutput {
     ) throws {
         let barcodeObservations: [VNBarcodeObservation] = observations.compactMap {
             guard let observation = $0 as? VNBarcodeObservation,
-                  detector.configuration.symbology == observation.symbology
+                detector.configuration.symbology == observation.symbology
             else {
                 return nil
             }
@@ -61,7 +61,9 @@ final class BarcodeDetector: VisionBasedDetector {
     let configuration: Configuration
     let metricsTracker: MLDetectorMetricsTracker? = nil
 
-    init(configuration: Configuration) {
+    init(
+        configuration: Configuration
+    ) {
         self.configuration = configuration
     }
 

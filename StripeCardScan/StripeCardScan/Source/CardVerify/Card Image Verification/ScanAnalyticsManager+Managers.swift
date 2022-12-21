@@ -20,7 +20,12 @@ struct NonRepeatingTasksManager {
     /// Create API model
     func generateNonRepeatingTasks() -> NonRepeatingTasks {
         func unwrapTaskOrDefault(_ task: TrackableTask) -> ScanAnalyticsNonRepeatingTask {
-            return task.toAPIModel() ?? .init(result: ScanAnalyticsEvent.unknown.rawValue, startedAtMs: -1, durationMs: -1)
+            return task.toAPIModel()
+                ?? .init(
+                    result: ScanAnalyticsEvent.unknown.rawValue,
+                    startedAtMs: -1,
+                    durationMs: -1
+                )
         }
 
         return .init(

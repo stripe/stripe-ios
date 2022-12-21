@@ -6,19 +6,21 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-@testable import StripeIdentity
+import UIKit
+import iOSSnapshotTestCase
 
+@testable import StripeIdentity
 
 class IdentityFlowViewSnapshotTest: FBSnapshotTestCase {
     let idFlowView = IdentityFlowView()
 
-    let headerViewModel: HeaderView.ViewModel = .init(backgroundColor: .lightGray,
-                                                      headerType: .banner(iconViewModel: .none),
-                                                      titleText: "Title Text")
+    let headerViewModel: HeaderView.ViewModel = .init(
+        backgroundColor: .lightGray,
+        headerType: .banner(iconViewModel: .none),
+        titleText: "Title Text"
+    )
 
     let contentView: UILabel = {
         let label = UILabel()
@@ -29,33 +31,39 @@ class IdentityFlowViewSnapshotTest: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testFlowView_HeaderView() {
-        verifyView(with: .init(
-            headerViewModel: headerViewModel,
-            contentView:  contentView,
-            buttonText: "Continue",
-            didTapButton: {}
-        ))
+        verifyView(
+            with: .init(
+                headerViewModel: headerViewModel,
+                contentView: contentView,
+                buttonText: "Continue",
+                didTapButton: {}
+            )
+        )
     }
 
     func testFlowView_NoHeaderView() {
-        verifyView(with: .init(
-            headerViewModel: nil,
-            contentView:  contentView,
-            buttonText: "Continue",
-            didTapButton: {}
-        ))
+        verifyView(
+            with: .init(
+                headerViewModel: nil,
+                contentView: contentView,
+                buttonText: "Continue",
+                didTapButton: {}
+            )
+        )
     }
 
     func testFlowView_ZeroInset() {
-        verifyView(with: .init(
-            headerViewModel: nil,
-            contentViewModel: .init(view: contentView, inset: .zero),
-            buttons: []
-        ))
+        verifyView(
+            with: .init(
+                headerViewModel: nil,
+                contentViewModel: .init(view: contentView, inset: .zero),
+                buttons: []
+            )
+        )
     }
 
     func testFlowView_Reconfigured() {
@@ -74,18 +82,22 @@ class IdentityFlowViewSnapshotTest: FBSnapshotTestCase {
         }()
 
         // Configure once with the pre-configuration content view
-        idFlowView.configure(with: .init(
-            headerViewModel: nil,
-            contentView:  preConfigureContentView,
-            buttonText: "Continue",
-            didTapButton: {}
-        ))
+        idFlowView.configure(
+            with: .init(
+                headerViewModel: nil,
+                contentView: preConfigureContentView,
+                buttonText: "Continue",
+                didTapButton: {}
+            )
+        )
 
         // Verify view with reconfigured content view
-        verifyView(with: .init(
-            headerViewModel: headerViewModel,
-            contentViewModel: .init(view: postConfigureContentView, inset: nil),
-            buttons: [])
+        verifyView(
+            with: .init(
+                headerViewModel: headerViewModel,
+                contentViewModel: .init(view: postConfigureContentView, inset: nil),
+                buttons: []
+            )
         )
     }
 

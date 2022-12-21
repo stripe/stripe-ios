@@ -14,7 +14,10 @@ class MachineLearningResult {
         return Double(frames) / duration
     }
 
-    init(duration: Double, frames: Int) {
+    init(
+        duration: Double,
+        frames: Int
+    ) {
         self.duration = duration
         self.frames = frames
     }

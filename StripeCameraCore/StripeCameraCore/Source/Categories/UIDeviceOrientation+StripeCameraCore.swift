@@ -6,12 +6,12 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import AVKit
+import Foundation
 import UIKit
 
-@_spi(STP) public extension UIDeviceOrientation {
-    var videoOrientation: AVCaptureVideoOrientation {
+@_spi(STP) extension UIDeviceOrientation {
+    public var videoOrientation: AVCaptureVideoOrientation {
         switch UIDevice.current.orientation {
         case .portraitUpsideDown:
             return .portraitUpsideDown

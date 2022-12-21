@@ -8,13 +8,13 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
-    
+extension StripeAPI {
+
     struct VerificationPageStaticContentDocumentSelectPage: Decodable, Equatable {
         let body: String?
         let buttonText: String
-        let idDocumentTypeAllowlist: [String:String]
+        let idDocumentTypeAllowlist: [String: String]
         let title: String
     }
-    
+
 }

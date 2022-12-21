@@ -7,12 +7,13 @@
 //
 
 import Foundation
-import UIKit
 import StripeCoreTestUtils
+import UIKit
+
 @testable import StripeIdentity
 
 // Dummy class to determine this bundle
-private class ClassForBundle { }
+private class ClassForBundle {}
 
 enum VerificationPageMock: String, MockData {
     typealias ResponseType = StripeAPI.VerificationPage
@@ -31,7 +32,7 @@ enum VerificationPageDataMock: String, MockData {
     case noErrors = "VerificationPageData_no_errors"
     case noErrorsNeedback = "VerificationPageData_no_errors_needback"
     case submitted = "VerificationPageData_submitted"
-    
+
     static func noErrorsWithMissings(
         with missingRequirements: Set<StripeAPI.VerificationPageFieldType>
     ) throws -> ResponseType {
@@ -125,8 +126,7 @@ enum VerificationPageDataUpdateMock {
             idDocumentType: .drivingLicense
         )
     )
-    
-    
+
     static let frontOnly = StripeAPI.VerificationPageDataUpdate(
         clearData: nil,
         collectedData: .init(

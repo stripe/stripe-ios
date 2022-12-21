@@ -7,10 +7,10 @@
 
 import CoreML
 
-extension UxModel : MLModelClassType {
+extension UxModel: MLModelClassType {
 }
 
-extension UxModel : AsyncMLModelLoading {
+extension UxModel: AsyncMLModelLoading {
     typealias ModelClassType = UxModel
 
     static func createModelClass(using model: MLModel) -> UxModel {

@@ -70,6 +70,12 @@ import UIKit
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
 
+    /// Checks if the theme is bright.
+    public var isBright: Bool { colors.background.isBright }
+
+    /// Checks if the theme is dark.
+    public var isDark: Bool { !isBright }
+
     public struct Font {
         public init() {}
 

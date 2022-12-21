@@ -9,6 +9,7 @@
 import Foundation
 
 /// Encoder class to generate the HTTP body data for a multipart/form-data request.
+///
 /// - seealso: https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
 class STPMultipartFormDataEncoder: NSObject {
     /// Generates the HTTP body data from an array of parts.

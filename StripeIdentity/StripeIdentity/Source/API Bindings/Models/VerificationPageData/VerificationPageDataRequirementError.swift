@@ -8,8 +8,8 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
-    
+extension StripeAPI {
+
     struct VerificationPageDataRequirementError: Decodable, Equatable {
         let backButtonText: String?
         let body: String
@@ -17,5 +17,5 @@ extension StripeAPI {
         let requirement: VerificationPageFieldType
         let title: String
     }
-    
+
 }

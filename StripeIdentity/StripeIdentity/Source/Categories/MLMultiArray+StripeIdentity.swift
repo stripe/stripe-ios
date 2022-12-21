@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreML
+import Foundation
 
 extension MLMultiArray {
     subscript(key: [Int]) -> NSNumber {

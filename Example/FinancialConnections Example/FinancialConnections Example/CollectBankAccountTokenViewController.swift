@@ -86,7 +86,11 @@ class CollectBankAccountTokenViewController: UIViewController {
                         self?.displayAlert("Completed, but no token was returned")
                         return
                     }
-                    let info = "\(token.bankAccount.bankName ?? "") ....\(token.bankAccount.last4)"
+                    guard let bankAccount = token.bankAccount else {
+                        self?.displayAlert("Completed, but no bankAccount was returned")
+                        return
+                    }
+                    let info = "\(bankAccount.bankName ?? "") ....\(bankAccount.last4)"
                     self?.displayAlert("Completed with account \(info) and token \(token.id) ")
                 case .canceled:
                     self?.displayAlert("Canceled!")

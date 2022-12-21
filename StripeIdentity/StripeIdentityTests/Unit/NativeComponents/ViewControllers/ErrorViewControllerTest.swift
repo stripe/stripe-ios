@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import XCTest
 @_spi(STP) import StripeCoreTestUtils
+import XCTest
+
 @testable import StripeIdentity
 
 final class ErrorViewControllerTest: XCTestCase {
@@ -37,7 +38,9 @@ final class ErrorViewControllerTest: XCTestCase {
             line: 123
         )
 
-        let errorAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "generic_error")
+        let errorAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "generic_error"
+        )
         XCTAssertEqual(errorAnalytics.count, 1)
 
         let metadata = errorAnalytics.first?["event_metadata"] as? [String: Any]

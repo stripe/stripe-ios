@@ -14,7 +14,12 @@ class CardBase: NSObject {
     var expYear: String?
     var isNewCard: Bool = false
 
-    init(last4: String, bin: String?, expMonth: String? = nil, expYear: String? = nil) {
+    init(
+        last4: String,
+        bin: String?,
+        expMonth: String? = nil,
+        expYear: String? = nil
+    ) {
         self.last4 = last4
         self.bin = bin
         self.expMonth = expMonth

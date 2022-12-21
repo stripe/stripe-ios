@@ -27,7 +27,7 @@ public extension StripeAPI {
         }
 
         public let id: String
-        public let bankAccount: BankAccountToken.BankAccount
+        public let bankAccount: BankAccountToken.BankAccount?
         public let clientIp: String?
         public let livemode: Bool
         public let used: Bool

@@ -5,11 +5,11 @@
 // https://github.com/swagger-api/swagger-codegen
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
+extension StripeAPI {
 
     struct VerificationPageStaticContentSelfiePage: Decodable, Equatable {
         let autocaptureTimeout: Int

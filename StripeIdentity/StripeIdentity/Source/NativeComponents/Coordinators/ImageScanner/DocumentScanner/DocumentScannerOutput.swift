@@ -9,24 +9,20 @@
 import Foundation
 @_spi(STP) import StripeCameraCore
 
-/**
- Consolidated output from all ML models / detectors that make up document
- scanning. The combination of this output will determine if the image captured
- is high enough quality to accept.
- */
+/// Consolidated output from all ML models / detectors that make up document
+/// scanning. The combination of this output will determine if the image captured
+/// is high enough quality to accept.
 struct DocumentScannerOutput: Equatable {
     let idDetectorOutput: IDDetectorOutput
     let barcode: BarcodeDetectorOutput?
     let motionBlur: MotionBlurDetector.Output
     let cameraProperties: CameraSession.DeviceProperties?
 
-    /**
-     Determines if the document is high quality and matches the desired
-     document type and side.
-     - Parameters:
-       - type: Type of the desired document
-       - side: Side of the desired document.
-     */
+    /// Determines if the document is high quality and matches the desired
+    /// document type and side.
+    /// - Parameters:
+    ///   - type: Type of the desired document
+    ///   - side: Side of the desired document.
     func isHighQuality(
         matchingDocumentType type: DocumentType,
         side: DocumentSide
@@ -35,7 +31,7 @@ struct DocumentScannerOutput: Equatable {
         // that fails to decode on backend
         // TODO(ccen|IDPROD-4697): Implement better heuristic to decode the back of ID.
         return idDetectorOutput.classification.matchesDocument(type: type, side: side)
-        && cameraProperties?.isAdjustingFocus != true
-        && !motionBlur.hasMotionBlur
+            && cameraProperties?.isAdjustingFocus != true
+            && !motionBlur.hasMotionBlur
     }
 }

@@ -6,16 +6,20 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCameraCore
 import SafariServices
+@_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import UIKit
 
 protocol VerificationSheetFlowControllerDelegate: AnyObject {
     /// Invoked when the user has dismissed the navigation controller
-    func verificationSheetFlowControllerDidDismissNativeView(_ flowController: VerificationSheetFlowControllerProtocol)
+    func verificationSheetFlowControllerDidDismissNativeView(
+        _ flowController: VerificationSheetFlowControllerProtocol
+    )
 
-    func verificationSheetFlowControllerDidDismissWebView(_ flowController: VerificationSheetFlowControllerProtocol)
+    func verificationSheetFlowControllerDidDismissWebView(
+        _ flowController: VerificationSheetFlowControllerProtocol
+    )
 }
 
 protocol VerificationSheetFlowControllerProtocol: AnyObject {
@@ -55,17 +59,20 @@ final class VerificationSheetFlowController: NSObject {
 
     private(set) var isUsingWebView = false
 
-    init(brandLogo: UIImage) {
+    init(
+        brandLogo: UIImage
+    ) {
         self.brandLogo = brandLogo
     }
 
     private(set) lazy var navigationController: UINavigationController = {
-        let navigationController = IdentityFlowNavigationController(rootViewController: LoadingViewController())
+        let navigationController = IdentityFlowNavigationController(
+            rootViewController: LoadingViewController()
+        )
         navigationController.identityDelegate = self
         return navigationController
     }()
 }
-
 
 @available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
@@ -121,12 +128,20 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         shouldResetViewController: Bool,
         animated: Bool
     ) {
-        guard let index = navigationController.viewControllers.lastIndex(where: { ($0 as? IdentityDataCollecting)?.collectedFields.contains(field) == true }) else {
+        guard
+            let index = navigationController.viewControllers.lastIndex(where: {
+                ($0 as? IdentityDataCollecting)?.collectedFields.contains(field) == true
+            })
+        else {
             return
         }
 
-        let viewControllers = Array(navigationController.viewControllers.dropLast(navigationController.viewControllers.count - index - 1))
-        
+        let viewControllers = Array(
+            navigationController.viewControllers.dropLast(
+                navigationController.viewControllers.count - index - 1
+            )
+        )
+
         // Reset all ViewControllers to be popped
         if shouldResetViewController {
             for i in index..<navigationController.viewControllers.count {
@@ -147,7 +162,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     ) {
         // If the only view in the stack is a loading screen, they should not be
         // able to hit the back button to get back into a loading state.
-        let isInitialLoadingState = navigationController.viewControllers.count == 1
+        let isInitialLoadingState =
+            navigationController.viewControllers.count == 1
             && navigationController.viewControllers.first is LoadingViewController
 
         // If the user is seeing the success screen, it means their session has
@@ -163,7 +179,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         // Call completion block after navigation controller animation, if possible
         guard shouldAnimate,
-              let coordinator = navigationController.transitionCoordinator
+            let coordinator = navigationController.transitionCoordinator
         else {
             DispatchQueue.main.async {
                 completion()
@@ -189,78 +205,101 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             staticContent = try staticContentResult.get()
             updateDataResponse = try updateDataResult?.get()
         } catch {
-            return completion(ErrorViewController(
-                sheetController: sheetController,
-                error: .error(error)
-            ))
+            return completion(
+                ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(error)
+                )
+            )
         }
 
         // Check for validation errors
         if let inputError = updateDataResponse?.requirements.errors.first {
-            return completion(ErrorViewController(
-                sheetController: sheetController,
-                error: .inputError(inputError)
-            ))
+            return completion(
+                ErrorViewController(
+                    sheetController: sheetController,
+                    error: .inputError(inputError)
+                )
+            )
         }
 
         // If client is unsupported, fallback to web
         if staticContent.unsupportedClient {
             isUsingWebView = true
-            return completion(makeWebViewController(
-                staticContent: staticContent,
-                sheetController: sheetController
-            ))
+            return completion(
+                makeWebViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
         }
 
         // If updateDataResponse is not nil, then this transition is triggered by a
         // VerificationPageDataUpdate request, get missing requirements from the response.
         // Otherwise, this is the transition to initial page, nothing is collected yet,
         // return missing requirement from staticContent.
-        let missingRequirements = updateDataResponse?.requirements.missing ?? staticContent.requirements.missing
-        
+        let missingRequirements =
+            updateDataResponse?.requirements.missing ?? staticContent.requirements.missing
+
         // Show success screen if submitted
         if updateDataResponse?.submitted == true {
-            return completion(SuccessViewController(
-                successContent: staticContent.success,
-                sheetController: sheetController
-            ))
+            return completion(
+                SuccessViewController(
+                    successContent: staticContent.success,
+                    sheetController: sheetController
+                )
+            )
         } else if missingRequirements.contains(.biometricConsent) {
-            return completion(makeBiometricConsentViewController(
-                staticContent: staticContent,
-                sheetController: sheetController
-            ))
-        } else if missingRequirements.contains(.idDocumentType) {
-            return completion(makeDocumentTypeSelectViewController(
-                sheetController: sheetController,
-                staticContent: staticContent
-            ))
-        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
-            return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                completion(self.makeDocumentCaptureViewController(
-                    documentScannerResult: result,
+            return completion(
+                makeBiometricConsentViewController(
                     staticContent: staticContent,
                     sheetController: sheetController
-                ))
+                )
+            )
+        } else if missingRequirements.contains(.idDocumentType) {
+            return completion(
+                makeDocumentTypeSelectViewController(
+                    sheetController: sheetController,
+                    staticContent: staticContent
+                )
+            )
+        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
+            return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {
+                [weak self] result in
+                guard let self = self else { return }
+                completion(
+                    self.makeDocumentCaptureViewController(
+                        documentScannerResult: result,
+                        staticContent: staticContent,
+                        sheetController: sheetController
+                    )
+                )
             }
         } else if missingRequirements.contains(.face) {
-            return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) { [weak self] result in
+            return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) {
+                [weak self] result in
                 guard let self = self else { return }
-                completion(self.makeSelfieCaptureViewController(
-                    faceScannerResult: result,
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                ))
+                completion(
+                    self.makeSelfieCaptureViewController(
+                        faceScannerResult: result,
+                        staticContent: staticContent,
+                        sheetController: sheetController
+                    )
+                )
             }
         }
 
         // The client cannot create a screen for the missing requirement
-        return completion(ErrorViewController(
-            sheetController: sheetController,
-            error: .error(
-                VerificationSheetFlowControllerError.noScreenForRequirements(missingRequirements)
+        return completion(
+            ErrorViewController(
+                sheetController: sheetController,
+                error: .error(
+                    VerificationSheetFlowControllerError.noScreenForRequirements(
+                        missingRequirements
+                    )
+                )
             )
-        ))
+        )
     }
 
     func makeBiometricConsentViewController(
@@ -418,7 +457,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
-            return MockSimulatorCameraSession(images: IdentityVerificationSheet.simulatorDocumentCameraImages)
+            return MockSimulatorCameraSession(
+                images: IdentityVerificationSheet.simulatorDocumentCameraImages
+            )
         #else
             return CameraSession()
         #endif
@@ -426,7 +467,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     private func makeSelfieCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
-            return MockSimulatorCameraSession(images: IdentityVerificationSheet.simulatorSelfieCameraImages)
+            return MockSimulatorCameraSession(
+                images: IdentityVerificationSheet.simulatorSelfieCameraImages
+            )
         #else
             return CameraSession()
         #endif
@@ -436,7 +479,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     /// Set of fields the view controllers in the navigation stack are collecting from the user
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
-        return navigationController.viewControllers.reduce(Set<StripeAPI.VerificationPageFieldType>()) { partialResult, vc in
+        return navigationController.viewControllers.reduce(
+            Set<StripeAPI.VerificationPageFieldType>()
+        ) { partialResult, vc in
             guard let dataCollectingVC = vc as? IdentityDataCollecting else {
                 return partialResult
             }
@@ -453,10 +498,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
 // MARK: - IdentityFlowNavigationControllerDelegate
 
-
 @available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
-    func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
+    func identityFlowNavigationControllerDidDismiss(
+        _ navigationController: IdentityFlowNavigationController
+    ) {
         // Only call DidDismissNativeView if the user did not dismiss a web view
         guard !isUsingWebView else {
             return

@@ -13,10 +13,10 @@ class PaymentCard: CardBase {
     var cvv: String?
     var zip: String?
     var network: CardNetwork
-    
+
     enum Network: Int {
         case VISA, MASTERCARD, AMEX, DISCOVER, UNIONPAY, UNKNOWN
-           
+
         func toCardNetwork() -> CardNetwork {
             switch self {
             case .VISA: return CardNetwork.VISA
@@ -28,24 +28,41 @@ class PaymentCard: CardBase {
             }
         }
     }
-    
-    init(number: String, expiryMonth: String?, expiryYear: String?, network: Network?) {
+
+    init(
+        number: String,
+        expiryMonth: String?,
+        expiryYear: String?,
+        network: Network?
+    ) {
         self.number = number
-        self.network = network?.toCardNetwork() ?? CreditCardUtils.determineCardNetwork(cardNumber: number)
-        super.init(last4: String(number.suffix(4)), bin: nil, expMonth: expiryMonth, expYear: expiryYear)
+        self.network =
+            network?.toCardNetwork() ?? CreditCardUtils.determineCardNetwork(cardNumber: number)
+        super.init(
+            last4: String(number.suffix(4)),
+            bin: nil,
+            expMonth: expiryMonth,
+            expYear: expiryYear
+        )
     }
-    
-    init(last4: String, bin: String?, expiryMonth: String?, expiryYear: String?, network: Network?) {
+
+    init(
+        last4: String,
+        bin: String?,
+        expiryMonth: String?,
+        expiryYear: String?,
+        network: Network?
+    ) {
         self.number = last4
         self.network = network?.toCardNetwork() ?? CardNetwork.UNKNOWN
         super.init(last4: last4, bin: bin, expMonth: expiryMonth, expYear: expiryYear)
     }
-    
+
     func isValidCvv() -> Bool {
-        guard let cvv = self.cvv  else {
+        guard let cvv = self.cvv else {
             return false
         }
-        
+
         return CreditCardUtils.isValidCvv(cvv: cvv, network: self.network)
     }
 
@@ -53,7 +70,7 @@ class PaymentCard: CardBase {
         guard let month = self.expMonth, let year = self.expYear else {
             return false
         }
-    
+
         return CreditCardUtils.isValidDate(expMonth: month, expYear: year)
     }
 }

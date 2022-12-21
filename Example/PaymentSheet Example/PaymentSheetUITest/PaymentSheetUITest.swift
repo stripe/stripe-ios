@@ -392,7 +392,7 @@ class PaymentSheetUITest: XCTestCase {
         loadPlayground(app, settings: [
             "customer_mode": "new", // new customer
             "automatic_payment_methods": "off",
-            "shipping_info": "provided" // enable shipping info
+            "shipping": "on w/ defaults" // collect shipping
         ])
 
         app.buttons["Checkout (Complete)"].tap()

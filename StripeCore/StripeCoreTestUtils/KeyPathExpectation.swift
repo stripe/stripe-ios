@@ -16,12 +16,14 @@ public class KeyPathExpectation: XCTNSPredicateExpectation {
         equalsToValue value: Value,
         description: String? = nil
     ) {
-        let description = description ?? "Expect predicate `\(keyPath)` == \(value) for \(String(describing: object))"
+        let description =
+            description
+            ?? "Expect predicate `\(keyPath)` == \(value) for \(String(describing: object))"
 
         self.init(
             object: object,
             keyPath: keyPath,
-            evaluatedWith: { $0 == value},
+            evaluatedWith: { $0 == value },
             description: description
         )
     }
@@ -32,12 +34,14 @@ public class KeyPathExpectation: XCTNSPredicateExpectation {
         notEqualsToValue value: Value,
         description: String? = nil
     ) {
-        let description = description ?? "Expect predicate `\(keyPath)` != \(value) for \(String(describing: object))"
+        let description =
+            description
+            ?? "Expect predicate `\(keyPath)` != \(value) for \(String(describing: object))"
 
         self.init(
             object: object,
             keyPath: keyPath,
-            evaluatedWith: { $0 != value},
+            evaluatedWith: { $0 != value },
             description: description
         )
     }
@@ -58,7 +62,8 @@ public class KeyPathExpectation: XCTNSPredicateExpectation {
 
         super.init(predicate: predicate, object: object)
 
-        expectationDescription = description
+        expectationDescription =
+            description
             ?? "Expect `\(keyPath)` to return `true` when evaluated with block."
     }
 

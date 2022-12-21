@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Displays either a header with some icons and title or a header with just the title
 class HeaderView: UIView {
@@ -62,8 +62,12 @@ class HeaderView: UIView {
         return label
     }()
 
-    private lazy var topAnchorConstraint: NSLayoutConstraint = stackView.topAnchor.constraint(equalTo: topAnchor)
-    private lazy var bottomAnchorConstraint: NSLayoutConstraint = stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+    private lazy var topAnchorConstraint: NSLayoutConstraint = stackView.topAnchor.constraint(
+        equalTo: topAnchor
+    )
+    private lazy var bottomAnchorConstraint: NSLayoutConstraint = stackView.bottomAnchor.constraint(
+        equalTo: bottomAnchor
+    )
 
     // MARK: Configure
     func configure(with viewModel: ViewModel) {
@@ -78,14 +82,16 @@ class HeaderView: UIView {
         installStackView()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-private extension HeaderView {
+extension HeaderView {
     // Set the all the header dependent styling
-    func configureStyle(with viewModel: ViewModel) {
+    fileprivate func configureStyle(with viewModel: ViewModel) {
         backgroundColor = viewModel.backgroundColor
 
         titleLabel.text = viewModel.titleText
@@ -93,7 +99,7 @@ private extension HeaderView {
     }
 
     // Reconfigure subviews and reset constraint constants
-    func installHeaderView(with viewModel: ViewModel) {
+    fileprivate func installHeaderView(with viewModel: ViewModel) {
         // Stack view combinations
         // Banner header: icon + title
         // Plain header: title
@@ -108,7 +114,7 @@ private extension HeaderView {
     }
 
     // Call on init to set stack view in view
-    func installStackView() {
+    fileprivate func installStackView() {
         stackView.addArrangedSubview(iconView)
         stackView.addArrangedSubview(titleLabel)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -117,8 +123,14 @@ private extension HeaderView {
         NSLayoutConstraint.activate([
             topAnchorConstraint,
             bottomAnchorConstraint,
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Styling.leadingTrailingConstraint),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Styling.leadingTrailingConstraint),
+            stackView.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: Styling.leadingTrailingConstraint
+            ),
+            stackView.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: -Styling.leadingTrailingConstraint
+            ),
         ])
     }
 }

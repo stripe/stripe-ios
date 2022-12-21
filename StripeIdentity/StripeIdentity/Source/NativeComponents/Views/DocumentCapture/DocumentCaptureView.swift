@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Displays either an instructional camera scanning view or an error message
 final class DocumentCaptureView: UIView {
@@ -36,12 +36,16 @@ final class DocumentCaptureView: UIView {
         installViews()
     }
 
-    convenience init(from viewModel: ViewModel) {
+    convenience init(
+        from viewModel: ViewModel
+    ) {
         self.init()
         configure(with: viewModel)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -63,8 +67,8 @@ final class DocumentCaptureView: UIView {
 
 // MARK: - Private Helpers
 
-private extension DocumentCaptureView {
-    func installViews() {
+extension DocumentCaptureView {
+    fileprivate func installViews() {
         addAndPinSubview(stackView)
         stackView.addArrangedSubview(scanningView)
         stackView.addArrangedSubview(errorView)

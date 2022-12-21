@@ -9,15 +9,11 @@
 import Foundation
 
 struct MLDetectorConfiguration {
-    /**
-     Minimum score threshold used when performing non-maximum suppression
-     on the model's output
-     */
+    /// Minimum score threshold used when performing non-maximum suppression
+    /// on the model's output
     let minScore: Float
 
-    /**
-     Minimum IOU threshold used when performing non-maximum suppression on
-     the model's output
-     */
+    /// Minimum IOU threshold used when performing non-maximum suppression on
+    /// the model's output
     let minIOU: Float
 }

@@ -60,10 +60,13 @@ extension DocumentFileUploadViewController {
         }
     }
 
-    func accessibilityLabel(for side: DocumentSide, uploadStatus: DocumentUploader.UploadStatus) -> String {
+    func accessibilityLabel(
+        for side: DocumentSide,
+        uploadStatus: DocumentUploader.UploadStatus
+    ) -> String {
         switch uploadStatus {
         case .notStarted,
-                .error:
+            .error:
             return selectAccessibilityLabel(for: side)
         case .inProgress:
             return uploadingAccessibilityLabel(for: side)

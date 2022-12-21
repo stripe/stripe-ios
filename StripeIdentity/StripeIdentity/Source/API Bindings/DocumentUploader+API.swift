@@ -7,11 +7,13 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCameraCore
+import UIKit
 
 extension IdentityImageUploader.Configuration {
-    init(from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage) {
+    init(
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
+    ) {
         self.init(
             filePurpose: capturePageConfig.filePurpose,
             highResImageCompressionQuality: capturePageConfig.highResImageCompressionQuality,

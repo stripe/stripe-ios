@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import CoreMedia
 import Foundation
 import ImageIO
-import CoreMedia
 
 /// A helper to extract properties from an EXIF metadata dictionary
 @_spi(STP) public struct CameraExifMetadata: Equatable {
@@ -17,8 +17,10 @@ import CoreMedia
     public let lensModel: String?
 }
 
-public extension CameraExifMetadata {
-    init?(exifDictionary: [CFString: Any]?) {
+extension CameraExifMetadata {
+    public init?(
+        exifDictionary: [CFString: Any]?
+    ) {
         guard let exifDictionary = exifDictionary else {
             return nil
         }
@@ -30,7 +32,15 @@ public extension CameraExifMetadata {
         )
     }
 
-    init?(sampleBuffer: CMSampleBuffer) {
-        self.init(exifDictionary: CMGetAttachment(sampleBuffer, key: kCGImagePropertyExifDictionary, attachmentModeOut: nil) as? [CFString: Any])
+    public init?(
+        sampleBuffer: CMSampleBuffer
+    ) {
+        self.init(
+            exifDictionary: CMGetAttachment(
+                sampleBuffer,
+                key: kCGImagePropertyExifDictionary,
+                attachmentModeOut: nil
+            ) as? [CFString: Any]
+        )
     }
 }

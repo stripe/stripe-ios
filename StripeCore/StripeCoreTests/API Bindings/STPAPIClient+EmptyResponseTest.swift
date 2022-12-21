@@ -6,12 +6,13 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) import StripeCore
+import XCTest
 
 class STPAPIClient_EmptyResponseTest: XCTestCase {
-    /// Response is an error; Error is nil
-    /// Should result in a failure
+    /// Response is an error; Error is nil.
+    ///
+    /// Should result in a failure.`
     func testEmptyResponse_WithErrorResponse() throws {
         let response = [
             "error": [
@@ -44,11 +45,16 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
         }
     }
 
-    /// Response is an empty response; Error is not nil
-    /// Should result in a failure
+    /// Response is an empty response; Error is not nil.
+    ///
+    /// Should result in a failure.
     func testEmptyResponse_WithError() throws {
         let responseData = try JSONSerialization.data(withJSONObject: [:], options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: NSError.stp_genericConnectionError(), response: nil)
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+            data: responseData,
+            error: NSError.stp_genericConnectionError(),
+            response: nil
+        )
 
         guard case .failure = result else {
             XCTFail("The request should not have succeeded")
@@ -56,11 +62,16 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
         }
     }
 
-    /// Response is an empty response; Error is nil
-    /// Should result in a success
+    /// Response is an empty response; Error is nil.
+    ///
+    /// Should result in a success.
     func testEmptyResponse_NoError() throws {
         let responseData = try JSONSerialization.data(withJSONObject: [:], options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil, response: nil)
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+            data: responseData,
+            error: nil,
+            response: nil
+        )
 
         guard case .success = result else {
             XCTFail("The request should have succeeded")

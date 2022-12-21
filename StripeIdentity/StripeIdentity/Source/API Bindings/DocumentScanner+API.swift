@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import Vision
 @_spi(STP) import StripeCore
-
+import Vision
 
 extension DocumentScanner.Configuration {
     init(
@@ -22,7 +21,8 @@ extension DocumentScanner.Configuration {
             motionBlurMinIOU: capturePageConfig.motionBlurMinIou.floatValue,
             motionBlurMinDuration: TimeInterval(capturePageConfig.motionBlurMinDuration) / 1000,
             backIdCardBarcodeSymbology: capturePageConfig.symbology(for: locale),
-            backIdCardBarcodeTimeout: TimeInterval(capturePageConfig.iosIdCardBackBarcodeTimeout) / 1000
+            backIdCardBarcodeTimeout: TimeInterval(capturePageConfig.iosIdCardBackBarcodeTimeout)
+                / 1000
         )
     }
 }
@@ -30,7 +30,7 @@ extension DocumentScanner.Configuration {
 extension StripeAPI.VerificationPageStaticContentDocumentCapturePage {
     func symbology(for locale: Locale) -> VNBarcodeSymbology? {
         guard let regionCode = locale.regionCode,
-              let symbologyString = iosIdCardBackCountryBarcodeSymbologies[regionCode]
+            let symbologyString = iosIdCardBackCountryBarcodeSymbologies[regionCode]
         else {
             return nil
         }

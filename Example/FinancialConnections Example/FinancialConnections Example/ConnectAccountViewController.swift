@@ -92,6 +92,7 @@ class ConnectAccountViewController: UIViewController {
                     self?.displayAlert("Failed!")
                     print(error)
                 }
+                self?.financialConnectionsSheet = nil // clear out strong reference
             })
         // Re-enable button
         updateButtonState(isLoading: false)

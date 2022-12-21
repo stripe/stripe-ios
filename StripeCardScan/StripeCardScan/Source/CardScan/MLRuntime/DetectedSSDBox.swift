@@ -13,7 +13,15 @@ struct DetectedSSDBox {
     let confidence: Float
     let imgSize: CGSize
 
-    init(category: Int, conf: Float, XMin: Double, YMin: Double, XMax: Double, YMax: Double, imageSize: CGSize){
+    init(
+        category: Int,
+        conf: Float,
+        XMin: Double,
+        YMin: Double,
+        XMax: Double,
+        YMax: Double,
+        imageSize: CGSize
+    ) {
 
         let XMin_ = XMin * Double(imageSize.width)
         let XMax_ = XMax * Double(imageSize.width)
@@ -31,11 +39,13 @@ struct DetectedSSDBox {
         // compared to the previous versions and this line
         // serves to retain the consistency. This label
         // correction should be removed in the future.
-        return ["x_min": self.rect.minX/self.imgSize.width,
-                "y_min": self.rect.minY/self.imgSize.height,
-                "height": self.rect.height/self.imgSize.height,
-                "width":self.rect.width/self.imgSize.width,
-                "label": self.label - 1,
-                "confidence": self.confidence]
+        return [
+            "x_min": self.rect.minX / self.imgSize.width,
+            "y_min": self.rect.minY / self.imgSize.height,
+            "height": self.rect.height / self.imgSize.height,
+            "width": self.rect.width / self.imgSize.width,
+            "label": self.label - 1,
+            "confidence": self.confidence,
+        ]
     }
 }

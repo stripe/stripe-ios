@@ -6,10 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
+import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 class HeaderViewSnapshotTest: FBSnapshotTestCase {
@@ -26,57 +27,97 @@ class HeaderViewSnapshotTest: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testPlainHeaderShortTitle() {
-        verifyView(with: .init(backgroundColor: plainHeaderBackgroundColor,
-                               headerType: .plain,
-                               titleText: shortTitleText))
+        verifyView(
+            with: .init(
+                backgroundColor: plainHeaderBackgroundColor,
+                headerType: .plain,
+                titleText: shortTitleText
+            )
+        )
     }
 
     func testPlainHeaderLongTitle() {
-        verifyView(with: .init(backgroundColor: plainHeaderBackgroundColor,
-                               headerType: .plain,
-                               titleText: longTitleText))
+        verifyView(
+            with: .init(
+                backgroundColor: plainHeaderBackgroundColor,
+                headerType: .plain,
+                titleText: longTitleText
+            )
+        )
     }
 
     func testBannerHeaderShortTitle_NoIcons() {
-        verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconViewModel: nil),
-                               titleText: shortTitleText))
+        verifyView(
+            with: .init(
+                backgroundColor: bannerHeaderBackgroundColor,
+                headerType: .banner(iconViewModel: nil),
+                titleText: shortTitleText
+            )
+        )
     }
 
     func testBannerHeaderLongTitle_NoIcons() {
-        verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconViewModel: nil),
-                               titleText: longTitleText))
+        verifyView(
+            with: .init(
+                backgroundColor: bannerHeaderBackgroundColor,
+                headerType: .banner(iconViewModel: nil),
+                titleText: longTitleText
+            )
+        )
     }
 
     func testBannerHeaderShortTitle_PlainIcon() {
-        let viewModel = IconViewModel(iconType: .plain, iconImage: iconImage, iconImageContentMode: .scaleAspectFill)
-        verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconViewModel: viewModel),
-                               titleText: shortTitleText))
+        let viewModel = IconViewModel(
+            iconType: .plain,
+            iconImage: iconImage,
+            iconImageContentMode: .scaleAspectFill
+        )
+        verifyView(
+            with: .init(
+                backgroundColor: bannerHeaderBackgroundColor,
+                headerType: .banner(iconViewModel: viewModel),
+                titleText: shortTitleText
+            )
+        )
     }
 
     func testBannerHeaderLongTitle_BrandIcon() {
-        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage, iconImageContentMode: .scaleAspectFill)
-        verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconViewModel: viewModel),
-                               titleText: longTitleText))
+        let viewModel = IconViewModel(
+            iconType: .brand,
+            iconImage: iconImage,
+            iconImageContentMode: .scaleAspectFill
+        )
+        verifyView(
+            with: .init(
+                backgroundColor: bannerHeaderBackgroundColor,
+                headerType: .banner(iconViewModel: viewModel),
+                titleText: longTitleText
+            )
+        )
     }
 
     func testHeaderReconfigure() {
         let headerView = HeaderView()
-        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage, iconImageContentMode: .scaleAspectFill)
+        let viewModel = IconViewModel(
+            iconType: .brand,
+            iconImage: iconImage,
+            iconImageContentMode: .scaleAspectFill
+        )
 
-        let firstConfigurationVersion: HeaderView.ViewModel = .init(backgroundColor: .red,
-                                                                   headerType: .plain,
-                                                                   titleText: "First Configured Header Title")
-        let secondConfigurationVersion: HeaderView.ViewModel = .init(backgroundColor: .blue,
-                                                                     headerType: .banner(iconViewModel: viewModel),
-                                                                     titleText: "Second Configured Header Title")
+        let firstConfigurationVersion: HeaderView.ViewModel = .init(
+            backgroundColor: .red,
+            headerType: .plain,
+            titleText: "First Configured Header Title"
+        )
+        let secondConfigurationVersion: HeaderView.ViewModel = .init(
+            backgroundColor: .blue,
+            headerType: .banner(iconViewModel: viewModel),
+            titleText: "Second Configured Header Title"
+        )
 
         // Configure the header view multiple times to check if the view updates properly
         headerView.configure(with: firstConfigurationVersion)
@@ -85,8 +126,8 @@ class HeaderViewSnapshotTest: FBSnapshotTestCase {
     }
 }
 
-private extension HeaderViewSnapshotTest {
-    func verifyView(
+extension HeaderViewSnapshotTest {
+    fileprivate func verifyView(
         with viewModel: HeaderView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line

@@ -1,3 +1,36 @@
+## X.Y.Z 2022-xx-xx
+* [Changed] Using [Tuist](https://tuist.io) to generate Xcode projects. From now on, only release versions of the SDK will include Xcode project files, in case you want to build a non release revision from source, you can follow [these instructions](https://docs.tuist.io/tutorial/get-started) to generate the project files. For Carthage users, this also means that you will only be able to depend on release versions.
+
+## 23.3.1 2022-12-12
+* [Fixed] Fixed a bug where 3 decimal place currencies were not being formatted properly.
+
+### PaymentSheet
+* [Fixed] Fixed an issue that caused animations of the card logos in the Card input field to glitch.
+* [Fixed] Fixed a layout issue in the "Save my info" checkbox.
+
+### CardScan
+* [Fixed] Fixed UX model loading from the wrong bundle. [#2078](https://github.com/stripe/stripe-ios/issues/2078) (Thanks [nickm01](https://github.com/nickm01))
+
+## 23.3.0 2022-12-05
+### PaymentSheet
+* [Added] Added logos of accepted card brands on Card input field.
+* [Fixed] Fixed erroneously displaying the card scan button when card scanning is not available.
+
+### Financial Connections
+* [Changed] FinancialConnectionsSheet methods now require to be called from non-extensions. 
+* [Changed] BankAccountToken.bankAccount was changed to an optional.
+
+## 23.2.0 2022-11-14
+### PaymentSheet
+* [Added] Added `AddressViewController`, a customizable view controller that collects local and international addresses for your customers. See https://stripe.com/docs/elements/address-element?platform=ios.
+* [Added] Added `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress`. Previously, to allow payment methods that require a shipping address (e.g. Afterpay and Affirm) in PaymentSheet, you attached a shipping address to the PaymentIntent before initializing PaymentSheet. Now, you can instead set this property to `true` and set `PaymentSheet.Configuration.shippingDetails` to a closure that returns your customers' shipping address. The shipping address will be attached to the PaymentIntent when the customer completes the checkout.
+* [Fixed] Fixed user facing error messages for card related errors.
+* [Fixed] Fixed `setup_future_usage` value being set when there's no customer.
+
+## 23.1.1 2022-11-07
+### Payments
+* [Fixed] Fixed an issue with linking the StripePayments SDK in certain configurations.
+
 ## 23.1.0 2022-10-31
 ### CardScan
 * [Added] Added a README.md for the `CardScanSheet` integration.

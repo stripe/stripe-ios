@@ -6,9 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 final class ListItemViewSnapshotTest: FBSnapshotTestCase {
@@ -25,7 +26,7 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
 
         ActivityIndicator.isAnimationEnabled = false
 
-//        recordMode = true
+        //        recordMode = true
     }
 
     override func tearDown() {
@@ -74,7 +75,8 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
                 accessibilityLabel: nil,
                 accessory: .icon(
                     Image.icon_chevron_down.makeImage(template: true)
-                ), onTap: nil
+                ),
+                onTap: nil
             ),
             tintColor: .purple
         )
@@ -121,15 +123,16 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
                 accessibilityLabel: nil,
                 accessory: .icon(
                     Image.icon_chevron_down.makeImage()
-                ), onTap: nil
+                ),
+                onTap: nil
             ),
             tintColor: .systemBlue
         )
     }
 }
 
-private extension ListItemViewSnapshotTest {
-    func verifyView(
+extension ListItemViewSnapshotTest {
+    fileprivate func verifyView(
         with viewModel: ListItemView.ViewModel,
         tintColor: UIColor,
         file: StaticString = #filePath,

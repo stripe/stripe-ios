@@ -6,20 +6,20 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 enum DocumentTypeSelectViewControllerError: AnalyticLoggableError {
     case noValidDocumentTypes(providedDocumentTypes: [String])
 
-    func analyticLoggableSerializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any]
         switch self {
         case .noValidDocumentTypes(let providedDocumentTypes):
             payload = [
                 "type": "no_valid_document_types",
-                "provided_document_types": providedDocumentTypes
+                "provided_document_types": providedDocumentTypes,
             ]
         }
         payload["domain"] = (self as NSError).domain
@@ -37,14 +37,12 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
     }
 
     var documentTypeWithLabels: [DocumentTypeAndLabel] {
-        /*
-         Translate the dictionary returned by the server into a `DocumentType`
-         with a display label.
-
-         The results should be:
-         - Sorted by display order
-         - Filtered such that document types recognized by the client are represented
-         */
+        // Translate the dictionary returned by the server into a `DocumentType`
+        // with a display label.
+        //
+        // The results should be:
+        // - Sorted by display order
+        // - Filtered such that document types recognized by the client are represented
 
         return DocumentType.allCases.compactMap {
             guard let label = staticContent.idDocumentTypeAllowlist[$0.rawValue] else {
@@ -121,8 +119,10 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
     let staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage
 
-    init(sheetController: VerificationSheetControllerProtocol,
-         staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage) throws {
+    init(
+        sheetController: VerificationSheetControllerProtocol,
+        staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage
+    ) throws {
 
         self.staticContent = staticContent
         super.init(sheetController: sheetController, analyticsScreenName: .documentTypeSelect)
@@ -136,7 +136,9 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         updateUI()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -166,9 +168,12 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         // Disable tap and show activity indicator while we're saving
         currentlySavingSelectedDocument = documentType
 
-        sheetController?.saveAndTransition(from: analyticsScreenName, collectedData: .init(
-            idDocumentType: documentType
-        )) { [weak self] in
+        sheetController?.saveAndTransition(
+            from: analyticsScreenName,
+            collectedData: .init(
+                idDocumentType: documentType
+            )
+        ) { [weak self] in
             // Re-enable tap & stop activity indicator so the user can
             // make a different selection if they come back to this
             // screen after hitting the back button.

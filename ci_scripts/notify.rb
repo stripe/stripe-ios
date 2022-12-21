@@ -20,8 +20,8 @@ env_sdk_failure_notif_endpoint = ENV['SDK_FAILURE_NOTIFICATION_ENDPOINT']
 env_sdk_failure_notif_endpoint_hmac_key = ENV['SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY']
 
 if !env_sdk_failure_notif_endpoint || !env_sdk_failure_notif_endpoint_hmac_key
-  puts "Two environment variables required: `SDK_FAILURE_NOTIFICATION_ENDPOINT` and `SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY`"
-  puts "Visit http://go/ios-sdk-failure-notification-endpoint for details"
+  puts 'Two environment variables required: `SDK_FAILURE_NOTIFICATION_ENDPOINT` and `SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY`'
+  puts 'Visit http://go/ios-sdk-failure-notification-endpoint for details'
   exit 102
 end
 
@@ -36,15 +36,15 @@ req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
 # Set up base params for tickets created under either
 # success or failure cases
 params = {
-  project: "RUN_MOBILESDK",
+  project: 'RUN_MOBILESDK'
 }
 
 if passed
-  params[:summary] = "iOS end-to-end test passed."
-  params[:description] = "No action needed. #{ENV['CIRCLE_BUILD_URL']}"
+  params[:summary] = 'iOS end-to-end test passed.'
+  params[:description] = "No action needed. #{ENV['BITRISE_BUILD_URL']}"
 else
-  params[:summary] = "iOS end-to-end test failed."
-  params[:description] = "Please ack this ticket, investigate within 1 business day, and resolve within 5 business days. #{ENV['CIRCLE_BUILD_URL']}"
+  params[:summary] = 'iOS end-to-end test failed.'
+  params[:description] = "Please ack this ticket, investigate within 1 business day, and resolve within 5 business days. #{ENV['BITRISE_BUILD_URL']}"
   params[:labels] = ENV['SDK_FAILURE_NOTIFICATION_LABELS'].split(',')
 end
 

@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// View model used to customize the text on the alert shown
 /// when asking a user to confirm whether they want to go back
@@ -20,7 +20,9 @@ struct WarningAlertViewModel {
 
 protocol IdentityFlowNavigationControllerDelegate: AnyObject {
     /// Invoked when the user has dismissed the navigation controller
-    func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController)
+    func identityFlowNavigationControllerDidDismiss(
+        _ navigationController: IdentityFlowNavigationController
+    )
 }
 
 final class IdentityFlowNavigationController: UINavigationController {
@@ -35,14 +37,18 @@ final class IdentityFlowNavigationController: UINavigationController {
         return .portrait
     }
 
-    override init(rootViewController: UIViewController) {
+    override init(
+        rootViewController: UIViewController
+    ) {
         super.init(rootViewController: rootViewController)
 
         // Only full screen presentation style disables landscape
         self.modalPresentationStyle = .fullScreen
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -77,43 +83,51 @@ final class IdentityFlowNavigationController: UINavigationController {
 
 // MARK: - IdentityFlowNavigationController Helpers
 
-private extension IdentityFlowNavigationController {
-    var previousViewController: UIViewController? {
+extension IdentityFlowNavigationController {
+    fileprivate var previousViewController: UIViewController? {
         viewControllers.dropLast().last
     }
-    
-    func configureAndPresentWarningAlert(with viewModel: WarningAlertViewModel) {
+
+    fileprivate func configureAndPresentWarningAlert(with viewModel: WarningAlertViewModel) {
         let alertController = UIAlertController(
             title: viewModel.titleText,
             message: viewModel.messageText,
             preferredStyle: .alert
         )
 
-        alertController.addAction(.init(
-            title: viewModel.acceptButtonText,
-            style: .cancel,
-            handler: { [weak self] _ in
-                self?.popViewController(animated: true)
-            }
-        ))
+        alertController.addAction(
+            .init(
+                title: viewModel.acceptButtonText,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.popViewController(animated: true)
+                }
+            )
+        )
 
-        alertController.addAction(.init(
-            title: viewModel.declineButtonText,
-            style: .default,
-            handler: nil
-        ))
+        alertController.addAction(
+            .init(
+                title: viewModel.declineButtonText,
+                style: .default,
+                handler: nil
+            )
+        )
 
         present(alertController, animated: true, completion: nil)
-     }
+    }
 }
 
 // MARK: - IdentityFlowNavigationController: UINavigationBarDelegate Delegate
 
 @available(iOSApplicationExtension, unavailable)
 extension IdentityFlowNavigationController: UINavigationBarDelegate {
-    public func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool {
+    public func navigationBar(
+        _ navigationBar: UINavigationBar,
+        shouldPop item: UINavigationItem
+    ) -> Bool {
         guard
-            let vc = self.viewControllers.last(where: { $0.navigationItem === item}) as? IdentityFlowViewController,
+            let vc = self.viewControllers.last(where: { $0.navigationItem === item })
+                as? IdentityFlowViewController,
             let warningAlertViewModel = vc.warningAlertViewModel
         else {
             return true

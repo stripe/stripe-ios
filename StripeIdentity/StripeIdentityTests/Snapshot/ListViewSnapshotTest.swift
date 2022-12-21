@@ -6,8 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 @_spi(STP) import StripeUICore
+import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 final class ListViewSnapshotTest: FBSnapshotTestCase {
@@ -59,7 +60,7 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
 
         listView.tintColor = .systemBlue
 
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testNoItems() {
@@ -89,8 +90,8 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
     }
 }
 
-private extension ListViewSnapshotTest {
-    func verifyView(
+extension ListViewSnapshotTest {
+    fileprivate func verifyView(
         with viewModel: ListView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line

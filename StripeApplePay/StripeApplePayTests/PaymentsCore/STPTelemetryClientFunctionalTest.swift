@@ -7,7 +7,11 @@
 //
 
 import XCTest
+
+// swift-format-ignore
 @testable @_spi(STP) import StripeApplePay
+
+// swift-format-ignore
 @testable @_spi(STP) import StripeCore
 
 class STPTelemetryClientFunctionalTest: XCTestCase {
@@ -43,7 +47,8 @@ class STPTelemetryClientFunctionalTest: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertTrue(sidCreationDate > Date(timeIntervalSinceNow: -10)) // sanity check creation date looks right
+        // sanity check creation date looks right
+        XCTAssertTrue(sidCreationDate > Date(timeIntervalSinceNow: -10))
         waitForExpectations(timeout: 10, handler: nil)
 
         // Expiring the FraudDetectionData

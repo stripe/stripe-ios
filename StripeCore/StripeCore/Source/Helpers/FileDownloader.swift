@@ -8,33 +8,27 @@
 
 import Foundation
 
-/**
- Downloads files using a downloadTask.
- */
+/// Downloads files using a downloadTask.
 @_spi(STP) public final class FileDownloader {
     let urlSession: URLSession
 
-    /**
-     - Parameters:
-       - urlSession: The session to use to download files with
-     */
+    /// Initializes the `FileDownloader`.
+    ///
+    /// - Parameter urlSession: The session to use to download files with
     public init(
         urlSession: URLSession
     ) {
         self.urlSession = urlSession
     }
 
-    /**
-     Downloads a file from the specified URL and returns a promise that will
-     resolve to the temporary local file location where the file was downloaded to.
-
-     The temporary file will be deleted by the file system immediately after the
-     promise is observed. If the promise must not be observed on another
-     DispatchQueue or the file will be deleted before it can be observed.
-
-     - Parameters:
-       - remoteURL: The URL to download the file from
-     */
+    /// Downloads a file from the specified URL and returns a promise that will
+    /// resolve to the temporary local file location where the file was downloaded to.
+    ///
+    /// The temporary file will be deleted by the file system immediately after the
+    /// promise is observed. If the promise must not be observed on another
+    /// DispatchQueue or the file will be deleted before it can be observed.
+    ///
+    /// - Parameter remoteURL: The URL to download the file from.
     public func downloadFileTemporarily(from remoteURL: URL) -> Future<URL> {
         let promise = Promise<URL>()
 
@@ -57,14 +51,12 @@ import Foundation
         return promise
     }
 
-    /**
-     Downloads a file from the specified URL and returns a promise that will
-     resolve to the data contents of the file.
-
-     - Parameters:
-       - remoteURL: The URL to download the file from
-       - fileReadingOptions: Options for reading the file after it's been downloaded locally.
-     */
+    /// Downloads a file from the specified URL and returns a promise that will
+    /// resolve to the data contents of the file.
+    ///
+    /// - Parameters:
+    ///   - remoteURL: The URL to download the file from
+    ///   - fileReadingOptions: Options for reading the file after it's been downloaded locally.
     public func downloadFile(
         from remoteURL: URL,
         fileReadingOptions: Data.ReadingOptions = []

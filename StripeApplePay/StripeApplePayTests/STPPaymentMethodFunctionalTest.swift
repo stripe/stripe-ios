@@ -7,8 +7,10 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore  // for StripeError
 import XCTest
-@_spi(STP) import StripeCore // for StripeError
+
+// swift-format-ignore
 @_spi(STP) @testable import StripeApplePay
 
 let STPTestingDefaultPublishableKey = "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"
@@ -31,7 +33,7 @@ class STPPaymentMethodModernTest: XCTestCase {
         billingAddress.line2 = "4th Floor"
         billingAddress.postalCode = "94103"
         billingAddress.state = "CA"
-        
+
         var billingDetails = StripeAPI.BillingDetails()
         billingDetails.address = billingAddress
         billingDetails.email = "email@email.com"
@@ -40,7 +42,7 @@ class STPPaymentMethodModernTest: XCTestCase {
 
         params.card = card
         params.billingDetails = billingDetails
-        
+
         StripeAPI.PaymentMethod.create(apiClient: apiClient, params: params) { result in
             let paymentMethod = try! result.get()
             XCTAssertEqual(paymentMethod.card?.last4, "4242")
@@ -48,7 +50,7 @@ class STPPaymentMethodModernTest: XCTestCase {
         }
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
-    
+
     func testCreateCardPaymentMethodWithAdditionalAPIStuff() {
         let expectation = self.expectation(description: "Created")
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -66,7 +68,7 @@ class STPPaymentMethodModernTest: XCTestCase {
         billingAddress.postalCode = "94103"
         billingAddress.state = "CA"
         billingAddress.additionalParameters = ["invalid_thing": "yes"]
-        
+
         var billingDetails = StripeAPI.BillingDetails()
         billingDetails.address = billingAddress
         billingDetails.email = "email@email.com"
@@ -75,13 +77,12 @@ class STPPaymentMethodModernTest: XCTestCase {
 
         params.card = card
         params.billingDetails = billingDetails
-        
+
         StripeAPI.PaymentMethod.create(apiClient: apiClient, params: params) { result in
             do {
                 _ = try result.get()
                 XCTFail("This request should fail")
-            }
-            catch {
+            } catch {
                 let stripeError = error as? StripeError
                 if case .apiError(let apiError) = stripeError {
                     XCTAssertEqual(apiError.code, "parameter_unknown")

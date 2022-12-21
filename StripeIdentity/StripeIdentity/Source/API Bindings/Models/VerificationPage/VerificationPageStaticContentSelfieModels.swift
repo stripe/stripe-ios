@@ -8,12 +8,12 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension StripeAPI { 
-    
+extension StripeAPI {
+
     struct VerificationPageStaticContentSelfieModels: Decodable, Equatable {
         let faceDetectorMinIou: Decimal
         let faceDetectorMinScore: Decimal
         let faceDetectorUrl: String
     }
-    
+
 }

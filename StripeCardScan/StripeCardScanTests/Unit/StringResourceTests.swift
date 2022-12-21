@@ -5,12 +5,12 @@
 //  Created by Scott Grant on 05/18/22.
 //
 
-@testable @_spi(STP) import StripeCore
-
 import CoreServices
-import UniformTypeIdentifiers.UTType
 import UniformTypeIdentifiers
+import UniformTypeIdentifiers.UTType
 import XCTest
+
+@testable@_spi(STP) import StripeCore
 
 class StringResourceTests: XCTestCase {
     let privacyLinkExpectedSha = "lv51crZ0rBIUPUOnQm9zFlMPCrUEI+GVsa4QyHifTw0="

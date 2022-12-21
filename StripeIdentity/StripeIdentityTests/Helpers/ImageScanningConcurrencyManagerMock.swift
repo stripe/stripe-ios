@@ -6,10 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import CoreVideo
-@_spi(STP) import StripeCore
+import Foundation
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+
 @testable import StripeIdentity
 
 final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManagerProtocol {

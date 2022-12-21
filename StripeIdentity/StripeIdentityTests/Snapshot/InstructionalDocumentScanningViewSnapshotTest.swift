@@ -8,6 +8,7 @@
 
 import Foundation
 import iOSSnapshotTestCase
+
 @testable import StripeIdentity
 
 final class InstructionalDocumentScanningViewSnapshotTest: FBSnapshotTestCase {
@@ -16,34 +17,46 @@ final class InstructionalDocumentScanningViewSnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testOneLineText() {
         // NOTE: This image should be the same height as `testMaxLinesText`
-        verifyView(with: .init(
-            scanningViewModel: .blank,
-            instructionalText: makeText(withNumberOfLines: 1)
-        ))
+        verifyView(
+            with: .init(
+                scanningViewModel: .blank,
+                instructionalText: makeText(withNumberOfLines: 1)
+            )
+        )
     }
 
     func testMaxLinesText() {
-        verifyView(with: .init(
-            scanningViewModel: .blank,
-            instructionalText: makeText(withNumberOfLines: InstructionalDocumentScanningView.Styling.labelMinHeightNumberOfLines)
-        ))
+        verifyView(
+            with: .init(
+                scanningViewModel: .blank,
+                instructionalText: makeText(
+                    withNumberOfLines: InstructionalDocumentScanningView.Styling
+                        .labelMinHeightNumberOfLines
+                )
+            )
+        )
     }
 
     func testExceedMaxLinesText() {
-        verifyView(with: .init(
-            scanningViewModel: .blank,
-            instructionalText: makeText(withNumberOfLines: InstructionalDocumentScanningView.Styling.labelMinHeightNumberOfLines * 2)
-        ))
+        verifyView(
+            with: .init(
+                scanningViewModel: .blank,
+                instructionalText: makeText(
+                    withNumberOfLines:
+                        InstructionalDocumentScanningView.Styling.labelMinHeightNumberOfLines * 2
+                )
+            )
+        )
     }
 }
 
-private extension InstructionalDocumentScanningViewSnapshotTest {
-    func verifyView(
+extension InstructionalDocumentScanningViewSnapshotTest {
+    fileprivate func verifyView(
         with viewModel: InstructionalDocumentScanningView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -53,7 +66,7 @@ private extension InstructionalDocumentScanningViewSnapshotTest {
         STPSnapshotVerifyView(view, file: file, line: line)
     }
 
-    func makeText(withNumberOfLines numberOfLines: Int) -> String {
+    fileprivate func makeText(withNumberOfLines numberOfLines: Int) -> String {
         return Array(repeating: "A line of text", count: numberOfLines).joined(separator: "\n")
     }
 }

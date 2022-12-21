@@ -10,7 +10,9 @@ import Foundation
 
 extension NSURLComponents {
     /// Returns or sets self.queryItems as a dictionary where all the keys are the item
-    /// names and the values are the values. When reading, if there are duplicate
+    /// names and the values are the values.
+    ///
+    /// When reading, if there are duplicate
     /// names, earlier ones are overwritten by later ones.
     @objc var stp_queryItemsDictionary: [String: String] {
         get {

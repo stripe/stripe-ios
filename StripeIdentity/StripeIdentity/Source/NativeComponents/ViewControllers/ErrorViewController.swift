@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class ErrorViewController: IdentityFlowViewController {
     enum Model {
@@ -30,26 +30,29 @@ final class ErrorViewController: IdentityFlowViewController {
         logError(filePath: filePath, line: line)
     }
 
-    required init?(coder: NSCoder) {
+    required init?(
+        coder: NSCoder
+    ) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        errorView.configure(with: .init(
-            titleText: model.title ?? String.Localized.error,
-            bodyText: model.body
-        ))
 
-        /*
-         This error screen will be the first screen in the navigation
-         stack if the only screen before it is the loading screen. The loading
-         screen will be removed from the stack after the animation has finished.
-         */
-        let isFirstViewController = navigationController?.viewControllers.first === self
-        || (navigationController?.viewControllers.first is LoadingViewController
-            && navigationController?.viewControllers.stp_boundSafeObject(at: 1) === self)
+        errorView.configure(
+            with: .init(
+                titleText: model.title ?? String.Localized.error,
+                bodyText: model.body
+            )
+        )
+
+        // This error screen will be the first screen in the navigation
+        // stack if the only screen before it is the loading screen. The loading
+        // screen will be removed from the stack after the animation has finished.
+        let isFirstViewController =
+            navigationController?.viewControllers.first === self
+            || (navigationController?.viewControllers.first is LoadingViewController
+                && navigationController?.viewControllers.stp_boundSafeObject(at: 1) === self)
 
         configure(
             backButtonTitle: String.Localized.error,
@@ -73,8 +76,8 @@ final class ErrorViewController: IdentityFlowViewController {
     }
 }
 
-private extension ErrorViewController {
-    func didTapButton() {
+extension ErrorViewController {
+    fileprivate func didTapButton() {
         // If this is the only view in the stack, dismiss the nav controller
         guard navigationController?.viewControllers.first !== self else {
             dismiss(animated: true, completion: nil)
@@ -84,7 +87,9 @@ private extension ErrorViewController {
         switch model {
 
         case .inputError(let inputError):
-            if sheetController?.flowController.canPopToScreen(withField: inputError.requirement) == true {
+            if sheetController?.flowController.canPopToScreen(withField: inputError.requirement)
+                == true
+            {
                 // Attempt to go back to the view that has the error
                 sheetController?.flowController.popToScreen(
                     withField: inputError.requirement,
@@ -101,8 +106,8 @@ private extension ErrorViewController {
         }
     }
 
-    func logError(filePath: StaticString, line: UInt) {
-        guard case let .error(error) = model else {
+    fileprivate func logError(filePath: StaticString, line: UInt) {
+        guard case .error(let error) = model else {
             return
         }
         sheetController?.analyticsClient.logGenericError(

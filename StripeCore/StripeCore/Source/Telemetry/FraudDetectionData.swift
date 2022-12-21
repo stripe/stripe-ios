@@ -8,11 +8,12 @@
 
 import Foundation
 
-fileprivate let SIDLifetime: TimeInterval = 30 * 60 // 30 minutes
+private let SIDLifetime: TimeInterval = 30 * 60  // 30 minutes
 
-/// Contains encoded values returned from m.stripe.com
+/// Contains encoded values returned from m.stripe.com.
+///
 /// - Note: See `STPTelemetryClient`.
-/// - Note: See `StripeAPI.advancedFraudSignalsEnabled`
+/// - Note: See `StripeAPI.advancedFraudSignalsEnabled`.
 @_spi(STP) public final class FraudDetectionData: Codable {
     @_spi(STP) public static let shared: FraudDetectionData =
         // Load initial value from UserDefaults
@@ -65,9 +66,7 @@ fileprivate let SIDLifetime: TimeInterval = 30 * 60 // 30 minutes
 extension FraudDetectionData: Equatable {
     @_spi(STP) public static func == (lhs: FraudDetectionData, rhs: FraudDetectionData) -> Bool {
         return
-            lhs.muid == rhs.muid &&
-            lhs.sid == rhs.sid &&
-            lhs.guid == rhs.guid &&
-            lhs.sidCreationDate == rhs.sidCreationDate
+            lhs.muid == rhs.muid && lhs.sid == rhs.sid && lhs.guid == rhs.guid
+            && lhs.sidCreationDate == rhs.sidCreationDate
     }
 }

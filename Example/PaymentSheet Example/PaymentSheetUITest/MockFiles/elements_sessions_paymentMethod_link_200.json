@@ -15,6 +15,9 @@
     "instant_debits_inline_institution": true,
     "link_bank_onboarding_enabled": false,
     "link_financial_incentives_experiment_enabled": false,
+    "link_funding_sources": [
+        "CARD"
+    ],
     "link_local_storage_login_enabled": true
   },
   "merchant_country": "US",

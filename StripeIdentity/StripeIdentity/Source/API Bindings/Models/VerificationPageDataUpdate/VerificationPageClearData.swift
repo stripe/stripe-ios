@@ -20,7 +20,9 @@ extension StripeAPI {
 }
 
 extension StripeAPI.VerificationPageClearData {
-    init(clearFields fields: Set<StripeAPI.VerificationPageFieldType>) {
+    init(
+        clearFields fields: Set<StripeAPI.VerificationPageFieldType>
+    ) {
         self.init(
             biometricConsent: fields.contains(.biometricConsent),
             face: fields.contains(.face),

@@ -2,17 +2,17 @@
 
 # This is a support file for the other release scripts.
 
+require_relative 'common'
 require 'fileutils'
 require 'optparse'
 require 'colorize'
 require 'octokit'
 require 'erb'
 
-
 # This should generally be the minimum Xcode version supported by the App Store, as the
 # compiled XCFrameworks won't be usable on older versions.
 # We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
-MIN_SUPPORTED_XCODE_VERSION = '13.2.1'
+MIN_SUPPORTED_XCODE_VERSION = '13.2.1'.freeze
 
 SCRIPT_DIR = __dir__
 abort 'Unable to find SCRIPT_DIR' if SCRIPT_DIR.nil? || SCRIPT_DIR.empty?
@@ -28,17 +28,17 @@ Dir.chdir(ROOT_DIR)
 OptionParser.new do |opts|
   opts.banner = "Release scripts\n Usage: script.rb [options]"
 
-  opts.on("--version VERSION",
-    "Version to release (e.g. 21.2.0)") do |t|
+  opts.on('--version VERSION',
+          'Version to release (e.g. 21.2.0)') do |t|
     @specified_version = t
   end
 
-  opts.on("--dry-run", "Don't do any real deployment, just build") do |s|
+  opts.on('--dry-run', "Don't do any real deployment, just build") do |s|
     @is_dry_run = s
   end
 
-  opts.on("--continue-from NUMBER",
-    "Continue from a specified step") do |t|
+  opts.on('--continue-from NUMBER',
+          'Continue from a specified step') do |t|
     @step_index = t.to_i
   end
 end.parse!
@@ -49,10 +49,10 @@ def File.join_if_safe(arg1, *otherArgs)
 
   # Check for empty or nil strings
   args.each do |arg|
-    raise "Cannot join nil or empty string." if arg.nil? || arg.empty?
+    raise 'Cannot join nil or empty string.' if arg.nil? || arg.empty?
   end
 
-  return File.join(args)
+  File.join(args)
 end
 
 def prompt_user(prompt)
@@ -61,7 +61,7 @@ def prompt_user(prompt)
 end
 
 def notify_user
-  prompt_user "Press enter to continue..."
+  prompt_user 'Press enter to continue...'
 end
 
 def open_url(url)
@@ -69,21 +69,10 @@ def open_url(url)
 end
 
 def get_current_release_version_of_repo(repo)
-  begin
-    latest_version = Octokit.latest_release(repo)
-    latest_version.tag_name
-  rescue
-    raise "No releases found."
-  end
-end
-
-def run_command(command)
-  puts "> #{command}".blue
-  system("#{command}")
-  if $?.exitstatus != 0
-    rputs "Command failed: #{command} \a"
-    raise
-  end
+  latest_version = Octokit.latest_release(repo)
+  latest_version.tag_name
+rescue StandardError
+  raise 'No releases found.'
 end
 
 def changelog(version)
@@ -125,10 +114,6 @@ def version_from_file
     version = f.read.chomp
   end
   version
-end
-
-def rputs(string)
-  puts string.red
 end
 
 def github_login

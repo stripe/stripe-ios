@@ -6,11 +6,12 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
-import XCTest
 import CoreVideo
-@_spi(STP) import StripeCore
+import Foundation
 @_spi(STP) import StripeCameraCore
+@_spi(STP) import StripeCore
+import XCTest
+
 @testable import StripeIdentity
 
 final class ImageScannerMock<Output>: ImageScanner {
@@ -20,7 +21,9 @@ final class ImageScannerMock<Output>: ImageScanner {
 
     private(set) var didReset = false
 
-    init(scanResult: Result<Output, Error> = .failure(NSError(domain: "", code: 0))) {
+    init(
+        scanResult: Result<Output, Error> = .failure(NSError(domain: "", code: 0))
+    ) {
         self.scanResult = scanResult
     }
 

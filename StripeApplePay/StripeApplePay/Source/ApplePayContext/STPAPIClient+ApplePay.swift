@@ -34,7 +34,10 @@ extension STPAPIClient {
             userInfo[PKPaymentErrorKey.postalAddressUserInfoKey.rawValue] =
                 CNPostalAddressPostalCodeKey
             return NSError(
-                domain: STPError.stripeDomain, code: errorCode.rawValue, userInfo: userInfo)
+                domain: STPError.stripeDomain,
+                code: errorCode.rawValue,
+                userInfo: userInfo
+            )
         }
         return stripeError
     }
