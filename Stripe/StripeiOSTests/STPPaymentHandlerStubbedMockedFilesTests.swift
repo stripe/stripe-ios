@@ -557,5 +557,5 @@ public class ClassForBundle {}
     public typealias ResponseType = StripeFile
     public var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
-    case paymentIntentResponse = "paymentIntentResponse"
+    case paymentIntentResponse = "MockFiles/paymentIntentResponse"
 }
