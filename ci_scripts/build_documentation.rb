@@ -43,28 +43,41 @@ end
 $SCRIPT_DIR = __dir__
 $ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
 $JAZZY_CONFIG_FILE = File.join_if_safe($ROOT_DIR, '.jazzy.yaml')
+$BITRISE_CONFIG_FILE = File.join_if_safe($ROOT_DIR, 'bitrise.yml')
 $JAZZY_CONFIG = YAML.load_file($JAZZY_CONFIG_FILE)
+$BITRISE_CONFIG = YAML.load_file($BITRISE_CONFIG_FILE)
 $TEMP_DIR = Dir.mktmpdir('stripe-docs')
 
 # Cleanup
 at_exit { FileUtils.remove_entry($TEMP_DIR) }
+
+# MARK: - check if all docs entries are checked by CI
+def check_modules_in_bitrise(modules)
+  ci_jobs = $BITRISE_CONFIG['stages']['stage-trigger-run-all']['workflows'].map { |a| a.keys.first }
+  modules.each do |m|
+    module_job_name = 'check-docs-' + m['framework_name'].downcase
+    unless ci_jobs.include? module_job_name
+      die "Missing required Bitrise job \`#{module_job_name}\`. Add a job in bitrise.yml under stage-trigger-run-all."
+    end
+  end
+end
 
 # MARK: - build docs
 
 # Note(mludowise): When `check_documentation.sh` locally, we want to save docs
 # to a temp directory so we can check undocumented.json and grep for `@_spi`,
 # without unintentially committing changes to the `/docs` folder.
-def get_docs_root_directory
-  docs_root_directory = $ROOT_DIR
+docs_root_directory = $ROOT_DIR
+only_module = nil
 
-  OptionParser.new do |opts|
-    opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
-      docs_root_directory = File.expand_path(dir, Dir.getwd)
-    end
-  end.parse!
-
-  docs_root_directory
-end
+OptionParser.new do |opts|
+  opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
+    docs_root_directory = File.expand_path(dir, Dir.getwd)
+  end
+  opts.on('--only MODULE', 'Only generate docs for MODULE.') do |m|
+    only_module = m
+  end
+end.parse!
 
 def docs_title(release_version)
   "Stripe iOS SDKs #{release_version}"
@@ -289,11 +302,11 @@ end
 
 # MARK: - main
 
-docs_root_directory = get_docs_root_directory
-
 # Load modules from yaml and filter out any which don't have docs configured
 modules = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules'].select { |m| !m['docs'].nil? }
 release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
+check_modules_in_bitrise(modules)
+modules = m.select { |m| m['framework_name'] == only_module } unless only_module.nil?
 build_module_docs(modules, release_version, docs_root_directory)
 build_index_page(modules, release_version, docs_root_directory)
 fix_assets(modules, docs_root_directory)

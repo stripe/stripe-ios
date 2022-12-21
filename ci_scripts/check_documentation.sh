@@ -20,8 +20,14 @@ function die {
 rm -rf "${temp_docs_dir}"
 mkdir "${temp_docs_dir}"
 
+# Check if a module was specified
+module_param=""
+if [ -n "$1" ]; then
+  module_param="--module ${1}"
+fi
+
 # Build docs
-ruby ${script_dir}/build_documentation.rb --docs-root-dir ${temp_docs_dir}
+ruby ${script_dir}/build_documentation.rb --docs-root-dir ${temp_docs_dir} ${module_param}
 
 if [[ "$?" != 0 ]]
 then
