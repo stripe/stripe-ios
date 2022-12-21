@@ -76,6 +76,13 @@ workflows:
         inputs:
         - lane: check_docs
         title: fastlane check_docs
+    - deploy-to-bitrise-io@2:
+        inputs:
+        - notify_user_groups: none
+        - is_compress: 'true'
+        - deploy_path: 'temp_docs'
+        - is_enable_public_page: 'false'
+        title: Deploy docs
     before_run:
     - prep_all
   data-theorem-sast:
