@@ -41,21 +41,6 @@ let project = Project(
             )
         ),
         Target(
-            name: "AppClipExampleTests iOS",
-            platform: .iOS,
-            product: .uiTests,
-            productName: "AppClipExampleTestsiOS",
-            bundleId: "com.stripe.AppClipExampleTests",
-            infoPlist: "Tests iOS/Info.plist",
-            sources: "Tests iOS/*.swift",
-            dependencies: [
-                .target(name: "AppClipExample"),
-            ],
-            settings: .stripeTargetSettings(
-                baseXcconfigFilePath: "BuildConfigurations/AppClipExampleTests-iOS"
-            )
-        ),
-        Target(
             name: "AppClipExampleClip",
             platform: .iOS,
             product: .appClip,
@@ -75,56 +60,16 @@ let project = Project(
                 baseXcconfigFilePath: "BuildConfigurations/AppClipExampleClip"
             )
         ),
-        Target(
-            name: "AppClipExampleClipTests",
-            platform: .iOS,
-            product: .unitTests,
-            bundleId: "com.stripe.AppClipExample.AppClipExampleClipTests",
-            infoPlist: "AppClipExampleClipTests/Info.plist",
-            sources: "AppClipExampleClipTests/*.swift",
-            dependencies: [
-                .target(name: "AppClipExampleClip"),
-            ],
-            settings: .stripeTargetSettings(
-                baseXcconfigFilePath: "BuildConfigurations/AppClipExampleClipTests"
-            )
-        ),
-        Target(
-            name: "AppClipExampleClipUITests",
-            platform: .iOS,
-            product: .uiTests,
-            bundleId: "com.stripe.AppClipExample.AppClipExampleClipUITests",
-            infoPlist: "AppClipExampleClipUITests/Info.plist",
-            sources: "AppClipExampleClipUITests/*.swift",
-            dependencies: [
-                .target(name: "AppClipExampleClip"),
-            ],
-            settings: .stripeTargetSettings(
-                baseXcconfigFilePath: "BuildConfigurations/AppClipExampleClipUITests"
-            )
-        ),
     ],
     schemes: [
         Scheme(
             name: "AppClipExample",
-            buildAction: .buildAction(targets: [
-                "AppClipExample",
-                "AppClipExampleTests iOS",
-            ]),
-            testAction: .targets(["AppClipExampleTests iOS"]),
+            buildAction: .buildAction(targets: ["AppClipExample"]),
             runAction: .runAction(executable: "AppClipExample")
         ),
         Scheme(
             name: "AppClipExampleClip",
-            buildAction: .buildAction(targets: [
-                "AppClipExampleClip",
-                "AppClipExampleClipTests",
-                "AppClipExampleClipUITests",
-            ]),
-            testAction: .targets([
-                "AppClipExampleClipTests",
-                "AppClipExampleClipUITests",
-            ]),
+            buildAction: .buildAction(targets: ["AppClipExampleClip"]),
             runAction: .runAction(executable: "AppClipExampleClip")
         )
     ]
