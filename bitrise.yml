@@ -27,14 +27,7 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
-    - check-docs-stripe: {}
-    - check-docs-stripepayments: {}
-    - check-docs-stripepaymentsui: {}
-    - check-docs-stripepaymentsheet: {}
-    - check-docs-stripeidentity: {}
-    - check-docs-stripeapplepay: {}
-    - check-docs-stripecardscan: {}
-    - check-docs-stripefinancialconnections: {}
+    - check-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -72,102 +65,19 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  check-docs-stripe:
+  check-docs:
     steps:
     - script@1:
         inputs:
         - content: brew install sourcekitten
         is_always_run: true
         title: Install sourcekitten
-    - script@1:
+    - fastlane@3:
         inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh Stripe
+        - lane: check_docs
+        title: fastlane check_docs
     before_run:
     - prep_all
-  check-docs-stripepayments:
-    steps:
-    - script@1:
-        inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh StripePayments
-    before_run:
-    - prep_all
-  check-docs-stripepaymentsui:
-    steps:
-    - script@1:
-        inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh StripePaymentsUI
-    before_run:
-    - prep_all
-  check-docs-stripepaymentsheet:
-    steps:
-    - script@1:
-        inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh StripePaymentSheet
-    before_run:
-    - prep_all
-  check-docs-stripeidentity:
-    steps:
-    - script@1:
-        inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh StripeIdentity
-    before_run:
-    - prep_all
-  check-docs-stripeapplepay:
-    steps:
-    - script@1:
-        inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh StripeApplePay
-    before_run:
-    - prep_all
-  check-docs-stripecardscan:
-    steps:
-    - script@1:
-        inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh StripeCardScan
-    before_run:
-    - prep_all
-  check-docs-stripefinancialconnections:
-    steps:
-    - script@1:
-        inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/check_docs.sh StripeFinancialConnections
-    before_run:
-    - prep_all    
   data-theorem-sast:
     steps:
     - script@1:

@@ -43,41 +43,28 @@ end
 $SCRIPT_DIR = __dir__
 $ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
 $JAZZY_CONFIG_FILE = File.join_if_safe($ROOT_DIR, '.jazzy.yaml')
-$BITRISE_CONFIG_FILE = File.join_if_safe($ROOT_DIR, 'bitrise.yml')
 $JAZZY_CONFIG = YAML.load_file($JAZZY_CONFIG_FILE)
-$BITRISE_CONFIG = YAML.load_file($BITRISE_CONFIG_FILE)
 $TEMP_DIR = Dir.mktmpdir('stripe-docs')
+$TEMP_BUILD_DIR = Dir.mktmpdir('stripe-docs-build')
+$ALL_MODULES = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules']
 
 # Cleanup
 at_exit { FileUtils.remove_entry($TEMP_DIR) }
-
-# MARK: - check if all docs entries are checked by CI
-def check_modules_in_bitrise(modules)
-  ci_jobs = $BITRISE_CONFIG['stages']['stage-trigger-run-all']['workflows'].map { |a| a.keys.first }
-  modules.each do |m|
-    module_job_name = 'check-docs-' + m['framework_name'].downcase
-    unless ci_jobs.include? module_job_name
-      die "Missing required Bitrise job \`#{module_job_name}\`. Add a job in bitrise.yml under stage-trigger-run-all."
-    end
-  end
-end
 
 # MARK: - build docs
 
 # Note(mludowise): When `check_documentation.sh` locally, we want to save docs
 # to a temp directory so we can check undocumented.json and grep for `@_spi`,
 # without unintentially committing changes to the `/docs` folder.
-docs_root_directory = $ROOT_DIR
-only_module = nil
+def get_docs_root_directory
+  docs_root_directory = $ROOT_DIR
 
-OptionParser.new do |opts|
-  opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
-    docs_root_directory = File.expand_path(dir, Dir.getwd)
-  end
-  opts.on('--only MODULE', 'Only generate docs for MODULE.') do |m|
-    only_module = m
-  end
-end.parse!
+  OptionParser.new do |opts|
+    opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
+      docs_root_directory = File.expand_path(dir, Dir.getwd)
+    end
+  end.parse!
+end
 
 def docs_title(release_version)
   "Stripe iOS SDKs #{release_version}"
@@ -125,8 +112,28 @@ def copy_readme_and_fix_relative_links(readme_file, github_file_prefix, github_r
   new_file.path
 end
 
-# Runs SourceKitten and returns the absolute paths to the generated files.
-def run_sourcekitten(sdk_module)
+# Runs SourceKitten on all files
+def run_sourcekitten
+  schemes = []
+  $ALL_MODULES.each do |sdk_module|
+    schemes << { module: sdk_module['framework_name'], scheme: sdk_module['scheme'] }
+  end
+
+  sourcekitten_files = []
+
+  schemes.each do |s|
+    output_file = File.join_if_safe($TEMP_DIR, "#{s[:scheme]}.json")
+
+    `sourcekitten doc --module-name #{s[:module]} -- build CONFIGURATION_BUILD_DIR="#{$TEMP_BUILD_DIR}" -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
+
+    sourcekitten_files << output_file
+  end
+
+  sourcekitten_files
+end
+
+# Returns the absolute paths to the generated files.
+def get_sourcekitten_files(sdk_module)
   schemes = []
   schemes << { module: sdk_module['framework_name'], scheme: sdk_module['scheme'] }
 
@@ -141,8 +148,6 @@ def run_sourcekitten(sdk_module)
   schemes.each do |s|
     output_file = File.join_if_safe($TEMP_DIR, "#{s[:scheme]}.json")
 
-    `sourcekitten doc --module-name #{s[:module]} -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
-
     sourcekitten_files << output_file
   end
 
@@ -155,13 +160,15 @@ def build_module_docs(modules, release_version, docs_root_directory)
   github_raw_file_prefix = "https://github.com/stripe/stripe-ios/raw/#{release_version}"
   jazzy_exit_code = 0
 
+  run_sourcekitten
+
   modules.each do |m|
     # Note: If we don't check for empty string/nil, then jazzy will silently
     # overwrite the entire git repo directory.
     output = m['docs']['output'].to_s
     die "Missing required docs config \`output\`. Update modules.yaml." if output.empty?
 
-    sourcekitten_files = run_sourcekitten(m)
+    sourcekitten_files = get_sourcekitten_files(m)
 
     # Prepend `docs_root_directory`
     output = File.expand_path(output, docs_root_directory).to_s
@@ -302,11 +309,11 @@ end
 
 # MARK: - main
 
+docs_root_directory = get_docs_root_directory
+
 # Load modules from yaml and filter out any which don't have docs configured
-modules = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules'].select { |m| !m['docs'].nil? }
+modules = $ALL_MODULES.select { |m| !m['docs'].nil? }
 release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
-check_modules_in_bitrise(modules)
-modules = modules.select { |m| m['framework_name'] == only_module } unless only_module.nil?
 build_module_docs(modules, release_version, docs_root_directory)
 build_index_page(modules, release_version, docs_root_directory)
 fix_assets(modules, docs_root_directory)
