@@ -19,7 +19,7 @@ public enum PaymentSheetError: Error {
     case unknown(debugDescription: String)
     
     /// No payment method types available error.
-    case noPaymentMethodTypesAvailable(paymentIntentPaymentMethods: [STPPaymentMethodType])
+    case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
 
     /// Localized description of the error
     public var localizedDescription: String {
@@ -37,8 +37,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "An error ocurred in PaymentSheet. " + {
             switch self {
-            case .noPaymentMethodTypesAvailable(let paymentIntentPaymentMethods):
-                return "No payment method types are available. You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` in your PaymentSheet.Configuration object. The PaymentIntent has the following types: \(paymentIntentPaymentMethods)"
+            case .noPaymentMethodTypesAvailable(let intentPaymentMethods):
+                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` in your PaymentSheet.Configuration object."
             case .unknown(let debugDescription):
                 return debugDescription
             }
