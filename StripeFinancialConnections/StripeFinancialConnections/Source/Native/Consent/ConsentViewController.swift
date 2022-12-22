@@ -28,7 +28,8 @@ class ConsentViewController: UIViewController {
             font: .stripeFont(forTextStyle: .subtitle),
             boldFont: .stripeFont(forTextStyle: .subtitle),
             linkFont: .stripeFont(forTextStyle: .subtitle),
-            textColor: .textPrimary
+            textColor: .textPrimary,
+            alignCenter: dataSource.merchantLogo != nil
         )
         titleLabel.setText(
             dataSource.consent.title,
@@ -69,13 +70,29 @@ class ConsentViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         let paneLayoutView = PaneWithCustomHeaderLayoutView(
-            headerView: titleLabel,
+            headerView: {
+                if let merchantLogo = dataSource.merchantLogo {
+                    let stackView = UIStackView(
+                        arrangedSubviews: [
+                            ConsentLogoView(merchantLogo: merchantLogo),
+                            titleLabel,
+                        ]
+                    )
+                    stackView.axis = .vertical
+                    stackView.spacing = 20
+                    stackView.alignment = .center
+                    return stackView
+                } else {
+                    return titleLabel
+                }
+            }(),
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consent.body.bullets,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURL(url)
                 }
             ),
+            headerAndContentSpacing: 28.0,
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
