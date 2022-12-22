@@ -180,7 +180,7 @@ extension PaymentSheetFormFactory {
     }
     
     func makeBillingAddressSection(
-        collectionMode: AddressSectionElement.CollectionMode = .all,
+        collectionMode: AddressSectionElement.CollectionMode = .all(),
         countries: [String]?
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let displayBillingSameAsShippingCheckbox: Bool

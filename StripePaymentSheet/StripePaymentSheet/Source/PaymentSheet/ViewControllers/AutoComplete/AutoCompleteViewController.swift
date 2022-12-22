@@ -23,6 +23,7 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
 @objc(STP_Internal_AutoCompleteViewController)
 class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
+    let initialLine1Text: String?
     let addressSpecProvider: AddressSpecProvider
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
@@ -43,12 +44,14 @@ class AutoCompleteViewController: UIViewController {
             latestError = nil // reset latest error whenever we get new results
         }
     }
-    
     private var latestError: Error? {
         didSet {
             errorLabel.text = latestError?.localizedDescription
             errorLabel.isHidden = latestError == nil
         }
+    }
+    private var theme: ElementsUITheme {
+        return configuration.appearance.asElementsTheme
     }
     
     // MARK: - Views
@@ -89,13 +92,10 @@ class AutoCompleteViewController: UIViewController {
         label.isHidden = true
         return label
     }()
-    private var theme: ElementsUITheme {
-        return configuration.appearance.asElementsTheme
-    }
     
     // MARK: - Elements
     lazy var autoCompleteLine: TextFieldElement = {
-        let autoCompleteLine = TextFieldElement.Address.makeAutoCompleteLine(theme: theme)
+        let autoCompleteLine = TextFieldElement.Address.makeAutoCompleteLine(defaultValue: initialLine1Text, theme: theme)
         autoCompleteLine.delegate = self
         return autoCompleteLine
     }()
@@ -111,11 +111,16 @@ class AutoCompleteViewController: UIViewController {
     // MARK: - Initializers
     required init(
         configuration: AddressViewController.Configuration,
+        initialLine1Text: String?,
         addressSpecProvider: AddressSpecProvider = .shared
     ) {
         self.configuration = configuration
+        self.initialLine1Text = initialLine1Text
         self.addressSpecProvider = addressSpecProvider
         super.init(nibName: nil, bundle: nil)
+        if let initialLine1Text = initialLine1Text {
+            self.addressSearchCompleter.queryFragment = initialLine1Text
+        }
     }
     
     required init?(coder: NSCoder) {
