@@ -3,6 +3,7 @@
 
 ### PaymentSheet
 * [Added] `PaymentSheetError` now conforms to `CustomDebugStringConvertible` and has a more useful description when no payment method types are available.
+* [Changed] Customers can now re-enter the autocomplete flow of `AddressViewController` by tapping an icon in the line 1 text field.
 
 ## 23.3.1 2022-12-12
 * [Fixed] Fixed a bug where 3 decimal place currencies were not being formatted properly.
@@ -18,7 +19,6 @@
 ### PaymentSheet
 * [Added] Added logos of accepted card brands on Card input field.
 * [Fixed] Fixed erroneously displaying the card scan button when card scanning is not available.
-* [Changed] Customers can now re-enter the autocomplete flow of `AddressViewController` by tapping an icon in the line 1 text field.
 
 ### Financial Connections
 * [Changed] FinancialConnectionsSheet methods now require to be called from non-extensions. 
