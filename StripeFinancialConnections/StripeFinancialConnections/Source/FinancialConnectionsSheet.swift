@@ -62,6 +62,8 @@ final public class FinancialConnectionsSheet {
     @available(iOSApplicationExtension, unavailable)
     private var hostController: HostController?
 
+    private var wrapperViewController: ModalPresentationWrapperViewController?
+
     // Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
@@ -158,10 +160,23 @@ final public class FinancialConnectionsSheet {
 
         analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret), apiClient: apiClient)
         let navigationController = hostController!.navigationController
+        present(navigationController, presentingViewController)
+    }
+
+    private func present(_ navigationController: FinancialConnectionsNavigationController, _ presentingViewController: UIViewController) {
+        let toPresent: UIViewController
+        let animated: Bool
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationController.modalPresentationStyle = .formSheet
+            toPresent = navigationController
+            animated = true
+        } else {
+            wrapperViewController = ModalPresentationWrapperViewController(vc: navigationController)
+            wrapperViewController?.modalPresentationStyle = .overFullScreen
+            toPresent = wrapperViewController!
+            animated = false
         }
-        presentingViewController.present(navigationController, animated: true)
+        presentingViewController.present(toPresent, animated: animated, completion: nil)
     }
 }
 
@@ -172,7 +187,14 @@ final public class FinancialConnectionsSheet {
 extension FinancialConnectionsSheet: HostControllerDelegate {
     func hostController(_ hostController: HostController, viewController: UIViewController, didFinish result: Result) {
         viewController.dismiss(animated: true, completion: {
-            self.completion?(result)
+            if let wrapperViewController = self.wrapperViewController {
+                wrapperViewController.dismiss(animated: false, completion: {
+                    self.completion?(result)
+                })
+                self.wrapperViewController = nil
+            } else {
+                self.completion?(result)
+            }
         })
     }
 }

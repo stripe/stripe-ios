@@ -111,8 +111,6 @@ final class PlaygroundMainViewModel: ObservableObject {
                         )
                     }
                 }
-            } else {
-                
             }
             self?.isLoading = false
         }
