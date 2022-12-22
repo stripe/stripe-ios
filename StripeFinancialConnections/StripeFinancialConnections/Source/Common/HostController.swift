@@ -70,7 +70,10 @@ extension HostController: HostViewControllerDelegate {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
-        guard let consentPaneModel = synchronizePayload.text?.consentPane else {
+        guard
+            let consentPaneModel = synchronizePayload.text?.consentPane,
+            let visualUpdate = synchronizePayload.visual
+        else {
             continueWithWebFlow(synchronizePayload.manifest)
             return
         }
@@ -92,7 +95,7 @@ extension HostController: HostViewControllerDelegate {
 
         let dataManager = NativeFlowAPIDataManager(
             manifest: synchronizePayload.manifest,
-            visualUpdate: synchronizePayload.visual,
+            visualUpdate: visualUpdate,
             returnURL: returnURL,
             consentPaneModel: consentPaneModel,
             apiClient: api,

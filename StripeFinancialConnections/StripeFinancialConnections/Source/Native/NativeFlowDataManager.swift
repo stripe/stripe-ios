@@ -10,7 +10,7 @@ import Foundation
 
 protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
-    var visualUpdate: FinancialConnectionsSynchronize.VisualUpdate? { get }
+    var reducedBranding: Bool { get }
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent { get }
@@ -36,13 +36,14 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             didUpdateManifest()
         }
     }
-    let visualUpdate: FinancialConnectionsSynchronize.VisualUpdate?
+    // don't expose `visualUpdate` because we don't want anyone to directly
+    // access `visualUpdate.merchantLogo`; we have custom logic for it
+    private let visualUpdate: FinancialConnectionsSynchronize.VisualUpdate
+    var reducedBranding: Bool {
+        return visualUpdate.reducedBranding
+    }
     var merchantLogo: [String]? {
-        if let visualUpdate = visualUpdate {
-            return visualUpdate.merchantLogo
-        } else {
-            return nil
-        }
+        return visualUpdate.merchantLogo
     }
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent
@@ -59,7 +60,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        visualUpdate: FinancialConnectionsSynchronize.VisualUpdate?,
+        visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent,
         apiClient: FinancialConnectionsAPIClient,

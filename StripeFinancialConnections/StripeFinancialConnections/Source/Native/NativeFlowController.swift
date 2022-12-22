@@ -93,7 +93,7 @@ extension NativeFlowController {
                 closeItem: navigationBarCloseBarButtonItem,
                 shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
                     forViewController: viewController,
-                    reducedBranding: dataManager.visualUpdate!.reducedBranding,
+                    reducedBranding: dataManager.reducedBranding,
                     merchantLogo: dataManager.merchantLogo
                 ),
                 shouldLeftAlignStripeLogo: viewControllers.first == viewController && viewController is ConsentViewController
@@ -109,7 +109,7 @@ extension NativeFlowController {
                 closeItem: navigationBarCloseBarButtonItem,
                 shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
                     forViewController: viewController,
-                    reducedBranding: dataManager.visualUpdate!.reducedBranding,
+                    reducedBranding: dataManager.reducedBranding,
                     merchantLogo: dataManager.merchantLogo
                 ),
                 shouldLeftAlignStripeLogo: false // if we `push`, this is not the first VC
