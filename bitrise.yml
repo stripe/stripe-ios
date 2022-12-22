@@ -66,6 +66,8 @@ workflows:
     after_run:
     - notify_ci
   check-docs:
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     steps:
     - script@1:
         inputs:
