@@ -73,7 +73,7 @@ class FlowRouter {
 
         analyticsClient.logExposure(experimentName: Constants.nativeExperiment,
                                     assignmentEventId: assignmentEventId,
-                                    parameters: ["account_holder_id": accountHolder])
+                                    accountholderToken: accountHolder)
 
     }
 }
