@@ -126,7 +126,7 @@ def run_sourcekitten
   schemes.each do |s|
     output_file = File.join_if_safe($TEMP_DIR, "#{s[:scheme]}.json")
 
-    `sourcekitten doc --module-name #{s[:module]} -- build CONFIGURATION_BUILD_DIR="#{$TEMP_BUILD_DIR}" -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
+    `sourcekitten doc --module-name #{s[:module]} -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
 
     sourcekitten_files << output_file
   end
