@@ -104,9 +104,7 @@ let package = Package(
             name: "StripePayments",
             dependencies: ["StripeCore", "Stripe3DS2"],
             path: "StripePayments/StripePayments",
-            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources")
             ]
         ),
@@ -114,9 +112,7 @@ let package = Package(
             name: "StripePaymentsUI",
             dependencies: ["StripeCore", "Stripe3DS2", "StripePayments", "StripeUICore"],
             path: "StripePaymentsUI/StripePaymentsUI",
-            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources/Images"),
                 .process("Resources/JSON")
             ]
@@ -125,9 +121,7 @@ let package = Package(
             name: "StripePaymentSheet",
             dependencies: ["StripePaymentsUI", "StripeApplePay", "StripePayments", "StripeCore", "StripeUICore"],
             path: "StripePaymentSheet/StripePaymentSheet",
-            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources/Images"),
                 .process("Resources/JSON")
             ]
