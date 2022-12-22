@@ -86,6 +86,7 @@ class ConsentViewController: UIViewController {
                     return titleLabel
                 }
             }(),
+            headerTopMargin: (dataSource.merchantLogo == nil) ? 16 : 4,
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consent.body.bullets,
                 didSelectURL: { [weak self] url in

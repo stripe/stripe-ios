@@ -11,6 +11,7 @@ import Foundation
 protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
     var visualUpdate: FinancialConnectionsSynchronize.VisualUpdate? { get }
+    var merchantLogo: [String]? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent { get }
     var apiClient: FinancialConnectionsAPIClient { get }
@@ -36,6 +37,13 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         }
     }
     let visualUpdate: FinancialConnectionsSynchronize.VisualUpdate?
+    var merchantLogo: [String]? {
+        if let visualUpdate = visualUpdate {
+            return visualUpdate.merchantLogo
+        } else {
+            return nil
+        }
+    }
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent
     let apiClient: FinancialConnectionsAPIClient
