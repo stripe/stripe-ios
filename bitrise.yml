@@ -69,13 +69,8 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - fastlane@3:
-        inputs:
-        - lane: check_docs
-        title: fastlane check_docs
+        - content: bundle exec ./ci_scripts/build_documentation.rb --docs-root-dir temp_docs
+        title: Build documentation
     - deploy-to-bitrise-io@2:
         inputs:
         - notify_user_groups: none
@@ -83,7 +78,6 @@ workflows:
         - deploy_path: 'temp_docs'
         - is_enable_public_page: 'false'
         title: Deploy docs
-        # Maybe upload these to the git branch here if on a release branch && the docs have changed?
     before_run:
     - prep_all
   data-theorem-sast:

@@ -199,7 +199,10 @@ extension Project {
                 product: .framework,
                 bundleId: "com.stripe.\(name.casedToDashed)",
                 infoPlist: "\(name)/Info.plist",
-                sources: "\(name)/Source/**/*.swift",
+                sources: [
+                    "\(name)/Source/**/*.swift",
+                    "\(name)/*.docc",
+                ],
                 resources: resources,
                 headers: .headers(
                     public: "\(name)/\(name).h"
