@@ -20,12 +20,17 @@ app:
 trigger_map:
 - push_branch: master
   pipeline: main-trigger-pipeline
+- pull_request_source_branch: 'releases/*'
+  pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
     stages:
     - stage-trigger-run-all: {}
+  releases-trigger-pipeline:
+    stages:
+    - stage-releases-run-all: {}
   nightly-pipeline:
     stages:
     - stage-nightly-all: {}
@@ -33,14 +38,28 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
-    - check-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
+  stage-releases-run-all:
+    workflows:
+    - framework-tests: {}
+    - build-docs: {}
+    - install-tests-non-carthage: {}
+    - lint-tests: {}
+    - size-report: {}
+    - basic-integration-tests: {}
+    - ui-tests: {}
+    - legacy-tests-13: {}
+    - legacy-tests-14: {}
+    - carthage-install-test: {}
+    - pod-lint-tests: {}
+    - integration-all: {}
   stage-nightly-all:
     workflows:
     - basic-integration-tests: {}
     - ui-tests: {}
+    - build-docs: {}
     - legacy-tests-13: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
@@ -72,27 +91,14 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  check-docs:
-    envs:
-    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
+  build-docs:
     steps:
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/build_documentation.rb --docs-root-dir $BITRISE_SOURCE_DIR/temp_docs
+        - content: bundle exec ./ci_scripts/build_documentation.rb --publish
         title: Build documentation
-    - deploy-to-bitrise-io@2:
-        inputs:
-        - notify_user_groups: none
-        - is_compress: 'true'
-        - deploy_path: 'temp_docs'
-        - is_enable_public_page: 'false'
-        title: Deploy docs
     before_run:
     - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.2.x
-        machine_type_id: g2-m1.8core
   data-theorem-sast:
     steps:
     - script@1:
