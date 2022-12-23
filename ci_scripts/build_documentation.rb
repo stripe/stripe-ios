@@ -46,6 +46,7 @@ $JAZZY_CONFIG_FILE = File.join_if_safe($ROOT_DIR, '.jazzy.yaml')
 $JAZZY_CONFIG = YAML.load_file($JAZZY_CONFIG_FILE)
 $TEMP_DIR = Dir.mktmpdir('stripe-docs')
 $TEMP_BUILD_DIR = Dir.mktmpdir('stripe-docs-build')
+$TEMP_PUBLISH_DIR = Dir.mktmpdir('stripe-docs-publish')
 $ALL_MODULES = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules']
 # The base path for the generated docs: e.g. https://stripe.dev/stripe-ios
 $HOSTING_BASE_PATH = '/docc-test/stripe-ios/'
@@ -55,26 +56,23 @@ at_exit { FileUtils.remove_entry($TEMP_DIR) }
 
 # MARK: - build docs
 
+docs_root_directory = $TEMP_PUBLISH_DIR
+should_publish = false
+
+OptionParser.new do |opts|
+  opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
+    docs_root_directory = File.expand_path(dir, Dir.getwd)
+  end
+  opts.on('--publish', 'Publish docs to GitHub') do |b|
+    should_publish = b
+  end
+end.parse!
+
 # Clean up docs
 def clean_existing_docs(docs_root_directory)
   docs_dir = File.expand_path('docs', docs_root_directory)
   FileUtils.remove_entry_secure(docs_dir) if File.exist?(docs_dir)
   FileUtils.mkdir(docs_dir)
-end
-
-# Note(mludowise): When `check_documentation.sh` locally, we want to save docs
-# to a temp directory so we can check undocumented.json and grep for `@_spi`,
-# without unintentially committing changes to the `/docs` folder.
-def get_docs_root_directory
-  docs_root_directory = $ROOT_DIR
-
-  OptionParser.new do |opts|
-    opts.on('--docs-root-dir DIRECTORY', "Generate docs to this directory instead of the repo's root directory.") do |dir|
-      docs_root_directory = File.expand_path(dir, Dir.getwd)
-    end
-  end.parse!
-
-  docs_root_directory
 end
 
 def docs_title(release_version)
@@ -227,9 +225,23 @@ def build_index_page(modules, release_version, docs_root_directory)
   File.delete("#{docs_root_directory}/docs/index.html")
 end
 
-# MARK: - main
+def publish(release_version, docs_root_directory)
+  git_publish_dir = Dir.mktmpdir('stripe-docs-git')
+  docs_branchname = "docs-publish/#{release_version}"
+  `cp -a "#{$ROOT_DIR}/.git" "#{git_publish_dir}"`
+  Dir.chdir(git_publish_dir) do
+    `git checkout docs`
+  end
+  `cp -a #{docs_root_directory}/docs/* #{git_publish_dir}/`
+  Dir.chdir(git_publish_dir) do
+    `git checkout -b #{docs_branchname}`
+    `git add . && git commit -m "Update docs for v#{release_version}"`
+    # Overwrite the existing branch for this version
+    `git push -f origin #{docs_branchname}`
+  end
+end
 
-docs_root_directory = get_docs_root_directory
+# MARK: - main
 
 clean_existing_docs(docs_root_directory)
 
@@ -238,3 +250,4 @@ modules = $ALL_MODULES.select { |m| !m['docs'].nil? }
 release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
 build_module_docs(modules, release_version, docs_root_directory)
 build_index_page(modules, release_version, docs_root_directory)
+publish(release_version, docs_root_directory) if should_publish

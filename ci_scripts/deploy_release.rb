@@ -134,7 +134,6 @@ steps = [
   method(:push_spm_mirror),
   method(:sync_owner_list),
   method(:changelog_done),
-  method(:reply_email),
   method(:cleanup_project_files),
   method(:create_cleanup_pr)
 ]

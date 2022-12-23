@@ -69,7 +69,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/build_documentation.rb --docs-root-dir "$BITRISE_SOURCE_DIR/temp_docs"
+        - content: bundle exec ./ci_scripts/build_documentation.rb --publish
         title: Build documentation
     - deploy-to-bitrise-io@2:
         inputs:
@@ -289,10 +289,10 @@ workflows:
         inputs:
         - lane: analyze
         title: fastlane analyze
-    - fastlane@3:
+    - script@1:
         inputs:
-        - lane: objc_symbol_check
-        title: fastlane objc_symbol_check
+        - content: "pod lib lint --include-podspecs=\'*.podspec\'"
+        title: pod lib lint
     before_run:
     - prep_all
   notify_ci:
