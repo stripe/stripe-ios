@@ -36,6 +36,13 @@ require 'terminal-table'
 #
 ################################################################################
 
+# Local runs don't set this env variable, defaulting to the stripe repo so the report is run.
+pr_repo_url = ENV["BITRISEIO_PULL_REQUEST_REPOSITORY_URL"] ||= 'https://github.com/stripe/stripe-ios.git'
+unless pr_repo_url.include? 'github.com/stripe/stripe-ios'
+  puts 'Size report can only be run on Stripe PRs, skipping.'
+  exit 0
+end
+
 # MARK: - Helpers
 
 # Redefine backtick to exit the script on failure.
