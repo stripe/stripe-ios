@@ -49,7 +49,7 @@ $TEMP_BUILD_DIR = Dir.mktmpdir('stripe-docs-build')
 $TEMP_PUBLISH_DIR = Dir.mktmpdir('stripe-docs-publish')
 $ALL_MODULES = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules']
 # The base path for the generated docs: e.g. https://stripe.dev/stripe-ios
-$HOSTING_BASE_PATH = '/docc-test/stripe-ios/'
+$HOSTING_BASE_PATH = '/stripe-ios/'
 
 # Cleanup
 at_exit { FileUtils.remove_entry($TEMP_DIR) }

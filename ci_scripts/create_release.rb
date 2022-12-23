@@ -18,9 +18,6 @@ puts "Proposing version: #{@version}".red
 # Create a new branch for the release, e.g. bg/release-9.0.0
 @branchname = "releases/#{@version}"
 
-# Create a docs branch
-@docs_branchname = "docs-updates/#{Random.uuid}"
-
 def create_branch
   run_command("git checkout -b #{@branchname}")
 end
@@ -45,20 +42,6 @@ def update_placeholders
   # Replace placeholder version in CHANGELOG.md with this version and date
   update_placeholder(@version, 'CHANGELOG.md')
   update_placeholder(@version, 'MIGRATING.md')
-end
-
-def create_docs_pr
-  unless @is_dry_run
-    pr = @github_client.create_pull_request(
-      'stripe/stripe-ios',
-      'docs',
-      "docs-publish/#{@version}",
-      "Publish docs for v#{@version}"
-    )
-
-    rputs "Docs PR created at #{pr.html_url}"
-    rputs 'Request review on the PR and merge it.'
-  end
 end
 
 def commit_changes
@@ -144,7 +127,6 @@ steps = [
   method(:push_changes),
   method(:create_pr),
   method(:check_for_missing_localizations),
-  method(:create_docs_pr),
   method(:propose_release)
 ]
 execute_steps(steps, @step_index)
