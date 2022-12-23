@@ -17,15 +17,29 @@ final class ConsentLogoView: UIView {
         horizontalStackView.axis = .horizontal
         horizontalStackView.spacing = 16.0
         horizontalStackView.alignment = .center
-        for i in 0..<merchantLogo.count {
-            let urlString = merchantLogo[i]
-            horizontalStackView.addArrangedSubview(
-                CreateSingleLogoView(urlString: urlString)
-            )
-            
-            let isLastLogo = (i == merchantLogo.count - 1)
-            if !isLastLogo {
-                horizontalStackView.addArrangedSubview(CreateEllipsisView())
+        // display one logo
+        if merchantLogo.isEmpty {
+            let imageView = UIImageView(image: Image.stripe_logo.makeImage(template: true))
+            imageView.tintColor = .textBrand
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 60),
+                imageView.heightAnchor.constraint(equalToConstant: 25),
+            ])
+            horizontalStackView.addArrangedSubview(imageView)
+        }
+        // display multiple logos
+        else {
+            for i in 0..<merchantLogo.count {
+                let urlString = merchantLogo[i]
+                horizontalStackView.addArrangedSubview(
+                    CreateCircularLogoView(urlString: urlString)
+                )
+                
+                let isLastLogo = (i == merchantLogo.count - 1)
+                if !isLastLogo {
+                    horizontalStackView.addArrangedSubview(CreateEllipsisView())
+                }
             }
         }
         addAndPinSubview(horizontalStackView)
@@ -36,7 +50,7 @@ final class ConsentLogoView: UIView {
     }
 }
 
-private func CreateSingleLogoView(urlString: String) -> UIView {
+private func CreateCircularLogoView(urlString: String) -> UIView {
     let radius: CGFloat = 40.0
     let imageView = UIImageView()
     imageView.clipsToBounds = true

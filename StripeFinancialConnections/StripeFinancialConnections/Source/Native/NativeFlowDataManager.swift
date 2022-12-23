@@ -52,12 +52,11 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var merchantLogo: [String]? {
         if consentCombinedLogoExperiment.isEnabled(logExposure: true) {
             let merchantLogo = visualUpdate.merchantLogo
-            if merchantLogo.count == 2 || merchantLogo.count == 3 {
+            if merchantLogo.isEmpty || merchantLogo.count == 2 || merchantLogo.count == 3 {
                 // show merchant logo inside of consent pane
                 return visualUpdate.merchantLogo
             } else {
-                // if `merchantLogo.isEmpty`, then we want the "control" experience
-                // if `merchantLogo.count` is NOT 2 or 3, that is an invalid case
+                // if `merchantLogo.count > 3`, that is an invalid case
                 //
                 // we want to log experiment exposure regardless because
                 // if experiment is not working fine (ex. returns 1 or 4 logos)
