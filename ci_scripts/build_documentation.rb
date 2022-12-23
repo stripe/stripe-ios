@@ -235,7 +235,7 @@ def publish(release_version, docs_root_directory)
   `cp -a #{docs_root_directory}/docs/* #{git_publish_dir}/`
   Dir.chdir(git_publish_dir) do
     `git checkout -b #{docs_branchname}`
-    `git add . && git commit -m "Update docs for v#{release_version}"`
+    `git add . && git commit -m "Update docs for #{release_version}"`
     # Overwrite the existing branch for this version
     `git push -f origin #{docs_branchname}`
   end
