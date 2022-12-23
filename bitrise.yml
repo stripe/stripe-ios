@@ -73,6 +73,8 @@ workflows:
     after_run:
     - notify_ci
   check-docs:
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=13.7"
     steps:
     - script@1:
         inputs:
@@ -87,6 +89,10 @@ workflows:
         title: Deploy docs
     before_run:
     - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-13.2.x
+        machine_type_id: g2-m1.8core
   data-theorem-sast:
     steps:
     - script@1:
