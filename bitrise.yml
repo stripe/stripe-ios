@@ -14,6 +14,8 @@ app:
       is_expand: false
     FASTLANE_LANE: ios integration_all
 trigger_map:
+- push_branch: master
+  pipeline: main-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
