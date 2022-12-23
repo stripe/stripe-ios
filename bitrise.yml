@@ -7,6 +7,10 @@ app:
   - FASTLANE_XCODE_LIST_TIMEOUT: '120'
   - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
+  - GIT_AUTHOR_NAME: Bitrise CI
+  - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
+  - GIT_COMMITTER_NAME: Bitrise CI
+  - GIT_COMMITTER_EMAIL: mobile-sdk-team@stripe.com
   - opts:
       is_expand: false
     FASTLANE_WORK_DIR: "."
@@ -32,6 +36,7 @@ stages:
     - check-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
+    - pod-lint-tests: {}
     - size-report: {}
   stage-nightly-all:
     workflows:
@@ -291,6 +296,10 @@ workflows:
         inputs:
         - lane: analyze
         title: fastlane analyze
+    before_run:
+    - prep_all
+  pod-lint-tests:
+    steps:
     - script@1:
         inputs:
         - content: "pod lib lint --include-podspecs='*.podspec'"

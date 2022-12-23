@@ -127,11 +127,6 @@ def github_login
   client
 end
 
-def pod_lint_common
-  # Validate the Stripe pods
-  run_command('pod lib lint --include-podspecs=\'*.podspec\'')
-end
-
 def execute_steps(steps, step_index)
   step_count = steps.length
 
