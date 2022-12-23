@@ -69,7 +69,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/build_documentation.rb --docs-root-dir temp_docs
+        - content: bundle exec ./ci_scripts/build_documentation.rb --docs-root-dir "$BITRISE_SOURCE_DIR/temp_docs"
         title: Build documentation
     - deploy-to-bitrise-io@2:
         inputs:
