@@ -26,7 +26,6 @@
     {
       "skippedTests" : [
         "STPCardBINMetadataTests",
-        "STPSourceFunctionalTest\/testCreateSource_wechatPay",
         "TextFieldElementCardTest\/testBINRangeThatRequiresNetworkCallToValidate()"
       ],
       "target" : {

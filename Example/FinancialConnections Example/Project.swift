@@ -29,7 +29,7 @@ let project = Project(
             productName: "FinancialConnectionsExample",
             bundleId: "com.stripe.example.Connections-Example",
             infoPlist: "FinancialConnections Example/Info.plist",
-            sources: "FinancialConnections Example/*.swift",
+            sources: "FinancialConnections Example/**/*.swift",
             resources: [
                 "FinancialConnections Example/Assets.xcassets",
                 "FinancialConnections Example/Base.lproj/**",
@@ -45,12 +45,39 @@ let project = Project(
             settings: .stripeTargetSettings(
                 baseXcconfigFilePath: "BuildConfigurations/FinancialConnections-Example"
             )
+        ),
+        Target(
+            name: "FinancialConnectionsUITests",
+            platform: .iOS,
+            product: .uiTests,
+            productName: "FinancialConnectionsUITests",
+            bundleId: "com.stripe.FinancialConnectionsUITests",
+            infoPlist: "FinancialConnectionsUITests/Info.plist",
+            sources: "FinancialConnectionsUITests/*.swift",
+            dependencies: [
+                .target(name: "FinancialConnections Example"),
+                .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
+            ],
+            settings: .stripeTargetSettings(
+                baseXcconfigFilePath: "BuildConfigurations/FinancialConnectionsUITests"
+            )
         )
     ],
     schemes: [
         Scheme(
             name: "FinancialConnections Example",
-            buildAction: .buildAction(targets: ["FinancialConnections Example"]),
+            buildAction: .buildAction(
+                targets: [
+                    "FinancialConnections Example",
+                    "FinancialConnectionsUITests",
+                ]
+            ),
+            testAction: .targets(
+                [
+                    "FinancialConnectionsUITests",
+                ],
+                expandVariableFromTarget: "FinancialConnections Example"
+            ),
             runAction: .runAction(executable: "FinancialConnections Example")
         )
     ]

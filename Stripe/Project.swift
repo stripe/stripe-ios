@@ -72,10 +72,10 @@ let project = Project(
                 "StripeiOSTests/**/*.m",
             ],
             resources: .init(resources: [
-                "StripeiOSTests/Resources/MockFiles/**",
                 "StripeiOSTests/Resources/*.*",
                 "StripeiOSTests/Resources/Images.xcassets",
                 .folderReference(path: "StripeiOSTests/Resources/recorded_network_traffic"),
+                .folderReference(path: "StripeiOSTests/Resources/MockFiles"),
             ]),
             headers: .headers(
                 project: "StripeiOSTests/*.h"
