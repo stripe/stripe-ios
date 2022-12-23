@@ -9,14 +9,14 @@ import UIKit
 
 class ModalPresentationWrapperViewController: UIViewController {
 
-    weak var vc: UIViewController?
-    var observation: NSKeyValueObservation?
+    private weak var vc: UIViewController?
 
     // MARK: - Init
 
     init(vc: UIViewController) {
         self.vc = vc
         super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .overFullScreen
     }
 
     required init?(coder: NSCoder) {
@@ -28,15 +28,23 @@ class ModalPresentationWrapperViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Make wrapper to pass touches through
-        view.isUserInteractionEnabled = false
-        view.alpha = 0
+        view.alpha = 0.15
+        view.backgroundColor = .black
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         if let vc = vc, presentedViewController == nil {
             self.present(vc, animated: true)
         }
+    }
+
+    // MARK: - Touch Handler
+
+    @objc
+    private func didTap() {
+        dismiss(animated: false)
     }
 }

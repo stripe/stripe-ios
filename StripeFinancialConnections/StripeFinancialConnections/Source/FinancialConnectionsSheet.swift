@@ -172,7 +172,6 @@ final public class FinancialConnectionsSheet {
             animated = true
         } else {
             wrapperViewController = ModalPresentationWrapperViewController(vc: navigationController)
-            wrapperViewController?.modalPresentationStyle = .overFullScreen
             toPresent = wrapperViewController!
             animated = false
         }
