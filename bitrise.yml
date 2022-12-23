@@ -36,7 +36,6 @@ stages:
     - check-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
-    - pod-lint-tests: {}
     - size-report: {}
   stage-nightly-all:
     workflows:
@@ -47,6 +46,7 @@ stages:
     - carthage-install-test: {}
     - data-theorem-sast: {}
     - deploy-dry-run: {}
+    - pod-lint-tests: {}
     - integration-all: {}
 workflows:
   basic-integration-tests:
