@@ -126,7 +126,7 @@ def run_sourcekitten
   schemes.each do |s|
     output_file = File.join_if_safe($TEMP_DIR, "#{s[:scheme]}.json")
 
-    `sourcekitten doc --module-name #{s[:module]} -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
+    # `sourcekitten doc --module-name #{s[:module]} -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s[:scheme]} > #{output_file}`
 
     sourcekitten_files << output_file
   end
@@ -173,7 +173,7 @@ def build_module_docs(modules, release_version, docs_root_directory)
     sourcekitten_files = get_sourcekitten_files(m)
 
     # Prepend `docs_root_directory`
-    output = File.expand_path(output, docs_root_directory).to_s
+    # output_with_root = File.expand_path(output, docs_root_directory).to_s
 
     # If no readme was specified in modules.yaml, let jazzy do it's default thing
     readme = m['docs']['readme'].to_s
@@ -184,20 +184,25 @@ def build_module_docs(modules, release_version, docs_root_directory)
       readme_args = "--readme '#{readme_temp_file}'"
     end
 
-    info "Executing jazzy for #{m['framework_name']}..."
-    `jazzy \
-      --config "#{$JAZZY_CONFIG_FILE}" \
-      --output "#{output}" \
-      #{readme_args} \
-      --github-file-prefix "#{github_file_prefix}" \
-      --title "#{docs_title(release_version)}" \
-      --module #{m['framework_name']} \
-      --sourcekitten-sourcefile "#{sourcekitten_files.join(',')}" \
-      --xcodebuild-arguments -destination,'generic/platform=iOS'`
+    info "Executing xcodebuild for #{m['framework_name']}..."
+    # `jazzy \
+    #   --config "#{$JAZZY_CONFIG_FILE}" \
+    #   --output "#{output}" \
+    #   #{readme_args} \
+    #   --github-file-prefix "#{github_file_prefix}" \
+    #   --title "#{docs_title(release_version)}" \
+    #   --module #{m['framework_name']} \
+    #   --sourcekitten-sourcefile "#{sourcekitten_files.join(',')}" \
+    #   --xcodebuild-arguments -destination,'generic/platform=iOS'`
+
+    `xcodebuild docbuild \
+     -scheme #{m['scheme']} \
+     -destination generic/platform=iOS \
+     OTHER_DOCC_FLAGS="--transform-for-static-hosting --hosting-base-path /docc-test/stripe-ios/ --output-path #{$TEMP_BUILD_DIR}/#{m['output']}"`
 
     # Delete temp readme file
     File.delete(readme_temp_file) unless readme_temp_file.nil? || !File.exist?(readme_temp_file)
-
+    `rsync -av #{$TEMP_BUILD_DIR}/#{m['output']} #{docs_root_directory}/docs/`
     # Verify jazzy exit code
     jazzy_exit_code = $?.exitstatus
 
