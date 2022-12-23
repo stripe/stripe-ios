@@ -43,6 +43,7 @@ fastlane/test_output
 fastlane/.env
 
 .build
+.docc_build
 .swiftpm
 
 # Xcode Related files
