@@ -72,7 +72,7 @@ end.parse!
 def clean_existing_docs(docs_root_directory)
   docs_dir = File.expand_path('docs', docs_root_directory)
   FileUtils.remove_entry_secure(docs_dir) if File.exist?(docs_dir)
-  FileUtils.mkdir(docs_dir)
+  FileUtils.mkdir_p(docs_dir)
 end
 
 def docs_title(release_version)
