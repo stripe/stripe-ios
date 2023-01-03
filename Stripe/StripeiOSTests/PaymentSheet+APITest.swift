@@ -117,7 +117,7 @@ class PaymentSheetAPITest: XCTestCase {
                         let cardParams = STPPaymentMethodCardParams()
                         cardParams.number = "4242424242424242"
                         cardParams.cvc = "123"
-                        cardParams.expYear = 22
+                        cardParams.expYear = 32
                         cardParams.expMonth = 12
                         let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
                             confirmParams: .init(
