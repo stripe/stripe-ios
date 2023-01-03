@@ -102,11 +102,11 @@ def cleanup_project_files
   run_command("git checkout -b #{@cleanup_branchname}")
   run_command('ci_scripts/delete_project_files.rb')
   run_command("git add -u && git commit -m \"Remove generated project files for v#{@version}\"")
-  run_command("git push origin #{@cleanup_branchname}")
 end
 
 def create_cleanup_pr
   unless @is_dry_run
+    run_command("git push origin #{@cleanup_branchname}")
     pr = @github_client.create_pull_request(
       'stripe/stripe-ios',
       'master',
