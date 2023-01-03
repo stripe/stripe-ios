@@ -93,6 +93,7 @@ workflows:
     - notify_ci
   build-docs:
     steps:
+    - activate-ssh-key@4: {}
     - script@1:
         inputs:
         - content: bundle exec ./ci_scripts/build_documentation.rb --publish
