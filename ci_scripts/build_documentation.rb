@@ -237,6 +237,7 @@ def publish(release_version, docs_root_directory)
     `git checkout -b #{docs_branchname}`
     `git add . && git commit -m "Update docs for #{release_version}"`
     # Overwrite the existing branch for this version
+    `git remote set-url origin git@github.com:stripe/stripe-ios.git`
     `git push -f origin #{docs_branchname}`
   end
 end
