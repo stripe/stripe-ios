@@ -187,7 +187,7 @@ end
 def build_index_page(modules, release_version, docs_root_directory)
   # Copy the docc bundle template
   temp_docc_dir = Dir.mktmpdir('stripe-docs-index-build')
-  `rsync -av #{$SCRIPT_DIR}/docs/Stripe.docc #{temp_docc_dir}/`
+  `rsync -av "#{$SCRIPT_DIR}/docs/Stripe.docc" "#{temp_docc_dir}/"`
   index_path = "#{temp_docc_dir}/Stripe.docc/Stripe.md"
   # Add the `@TechnologyRoot` attribute, which instructs docc to make this the landing page.
   index_content = ''"
@@ -217,9 +217,9 @@ def build_index_page(modules, release_version, docs_root_directory)
    --transform-for-static-hosting \
    --hosting-base-path #{$HOSTING_BASE_PATH}`
 
-  `rsync -av #{temp_docc_dir}/build/* #{docs_root_directory}/docs/`
+  `rsync -av "#{temp_docc_dir}/build/"* "#{docs_root_directory}/docs/"`
   # Copy 404 redirect page
-  `cp #{$SCRIPT_DIR}/docs/404.html #{docs_root_directory}/docs/404.html`
+  `cp "#{$SCRIPT_DIR}/docs/404.html" "#{docs_root_directory}/docs/404.html"`
 
   # Clean up the bogus index.html file created by DocC
   File.delete("#{docs_root_directory}/docs/index.html")
@@ -232,7 +232,7 @@ def publish(release_version, docs_root_directory)
   Dir.chdir(git_publish_dir) do
     `git checkout docs`
   end
-  `cp -a #{docs_root_directory}/docs/* #{git_publish_dir}/`
+  `cp -a "#{docs_root_directory}/docs/"* "#{git_publish_dir}/"`
   Dir.chdir(git_publish_dir) do
     `git checkout -b #{docs_branchname}`
     `git add . && git commit -m "Update docs for #{release_version}"`
