@@ -11,6 +11,14 @@ function die {
   exit 1
 }
 
+# Commit generated xcode project files.
+git add Stripe.xcworkspace -f &&
+  git add Stripe*/*.xcodeproj -f &&
+  git add Example/**/*.xcodeproj -f &&
+  git add Testers/**/*.xcodeproj -f &&
+  git add -u &&
+  git commit -m "Commit xcode project files temporarily"
+
 # Clean carthage artifacts
 info "Cleaning carthage artifacts..."
 
@@ -35,6 +43,9 @@ cd "${script_dir}" || die "Executing \`cd\` failed"
 carthage bootstrap --platform ios --configuration Debug --no-use-binaries --cache-builds --use-xcframeworks
 
 carthage_exit_code="$?"
+
+# Undo the temporarily committed xcode project files.
+git reset HEAD~
 
 if [[ "${carthage_exit_code}" != 0 ]]; then
   die "Executing carthage bootstrap failed with status code: ${carthage_exit_code}"
