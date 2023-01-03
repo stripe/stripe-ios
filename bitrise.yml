@@ -263,6 +263,7 @@ workflows:
     - prep_all
     after_run:
     - upload_logs
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-13.3.x
@@ -279,6 +280,7 @@ workflows:
     - prep_all
     after_run:
     - upload_logs
+    - notify_ci
   lint-tests:
     steps:
     - fastlane@3:
