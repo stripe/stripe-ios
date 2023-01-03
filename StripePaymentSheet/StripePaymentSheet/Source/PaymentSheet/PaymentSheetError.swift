@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+import StripePayments
 
 /// Errors specific to PaymentSheet itself
 ///
@@ -18,7 +19,7 @@ public enum PaymentSheetError: Error {
     case unknown(debugDescription: String)
     
     /// No payment method types available error.
-    case noPaymentMethodTypesAvailable
+    case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
 
     /// Localized description of the error
     public var localizedDescription: String {
@@ -26,19 +27,21 @@ public enum PaymentSheetError: Error {
     }
 }
 
-extension PaymentSheetError {
+extension PaymentSheetError: CustomDebugStringConvertible {
     /// Returns true if the error is un-fixable; e.g. no amount of retrying or customer action will result in something different
     static func isUnrecoverable(error: Error) -> Bool {
         // TODO: Expired ephemeral key
         return false
     }
     
-    var debugDescription: String {
-        switch self {
-        case .noPaymentMethodTypesAvailable:
-            return "No payment method types available"
-        case .unknown(let debugDescription):
-            return debugDescription
-        }
+    public var debugDescription: String {
+        return "An error ocurred in PaymentSheet. " + {
+            switch self {
+            case .noPaymentMethodTypesAvailable(let intentPaymentMethods):
+                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` in your PaymentSheet.Configuration object."
+            case .unknown(let debugDescription):
+                return debugDescription
+            }
+        }()
     }
 }
