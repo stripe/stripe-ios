@@ -186,7 +186,7 @@ extension PaymentSheet {
                         from: intent,
                         configuration: configuration)
                     guard !paymentMethodTypes.isEmpty else {
-                        completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable))
+                        completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
                         return
                     }
 

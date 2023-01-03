@@ -114,7 +114,7 @@ public class PaymentSheet {
                 // Verify that there are payment method types available for the intent and configuration.
                 let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: self.configuration)
                 guard !paymentMethodTypes.isEmpty else {
-                    completion(.failed(error: PaymentSheetError.noPaymentMethodTypesAvailable))
+                    completion(.failed(error: PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
                     return
                 }
                 
