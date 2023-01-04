@@ -16,7 +16,7 @@ class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        //        self.recordMode = true
+//                self.recordMode = true
     }
 
     /// - Note: This mock HTML should include all HTML tags the server can send down
@@ -34,7 +34,7 @@ class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
         guard
             let mockAttributedString = try? await PaymentMethodMessagingView.makeAttributedString(
                 from: mockHTML,
-                font: configuration.font
+                configuration: configuration
             )
         else {
             XCTFail()
@@ -55,7 +55,7 @@ class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
         guard
             let mockAttributedString = try? await PaymentMethodMessagingView.makeAttributedString(
                 from: self.mockHTML,
-                font: configuration.font
+                configuration: configuration
             )
         else {
             XCTFail()
