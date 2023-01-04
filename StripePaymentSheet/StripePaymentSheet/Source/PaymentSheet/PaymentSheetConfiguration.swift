@@ -230,10 +230,10 @@ extension PaymentSheet {
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            public let authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            public let authorizationResultHandler: ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
             
             /// Initializes the ApplePayConfiguration Handlers.
-            public init(paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil, authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)? = nil) {
+            public init(paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil, authorizationResultHandler: ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)? = nil) {
                 self.paymentRequestHandler = paymentRequestHandler
                 self.authorizationResultHandler = authorizationResultHandler
             }

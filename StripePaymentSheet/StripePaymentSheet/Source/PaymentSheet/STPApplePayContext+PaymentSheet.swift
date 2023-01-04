@@ -22,10 +22,10 @@ extension STPApplePayContext {
         let completion: PaymentSheetResultCompletionBlock
         /// Retain this class until Apple Pay completes
         var selfRetainer: ApplePayContextClosureDelegate?
-        let authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+        let authorizationResultHandler: ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
         let clientSecret: String
 
-        init(clientSecret: String, authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?, completion: @escaping PaymentSheetResultCompletionBlock) {
+        init(clientSecret: String, authorizationResultHandler: ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?, completion: @escaping PaymentSheetResultCompletionBlock) {
             self.completion = completion
             self.authorizationResultHandler = authorizationResultHandler
             self.clientSecret = clientSecret
