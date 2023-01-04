@@ -73,7 +73,7 @@ extension CashAppExampleViewController {
                     return
                 }
 
-                // 2. Confirm the payment and redirect the user to Klarna
+                // 2. Confirm the payment and redirect the user to Cash App
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     cashApp: STPPaymentMethodCashAppParams(),

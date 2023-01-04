@@ -86,7 +86,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var affirm: STPPaymentMethodAffirmParams?
     /// If this is a US Bank Account PaymentMethod, this contains additional details.
     @objc public var usBankAccount: STPPaymentMethodUSBankAccountParams?
-    /// If this is an Cash App PaymentMethod, this contains additional details.
+    /// If this is a Cash App PaymentMethod, this contains additional details.
     @objc public var cashApp: STPPaymentMethodCashAppParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
