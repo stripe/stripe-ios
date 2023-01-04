@@ -632,7 +632,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .link,
             .linkInstantDebit,
             .USBankAccount,
-            .cashApp, // TODO confirm this
+            .cashApp,
             .unknown:
             return nil
         }
