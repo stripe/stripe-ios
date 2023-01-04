@@ -413,6 +413,7 @@ class PaymentSheetUITest: XCTestCase {
             
     }
     
+    // TODO(porter) Enable when Cash App is enabled on the backend
     func testCashAppPaymentMethod() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new", // new customer
