@@ -30,6 +30,21 @@ def approve_pr
   notify_user
 end
 
+def create_docs_pr
+  unless @is_dry_run
+    pr = @github_client.create_pull_request(
+      'stripe/stripe-ios',
+      'docs',
+      "docs-publish/#{@version}",
+      "Publish docs for v#{@version}"
+    )
+
+    rputs "Docs PR created at #{pr.html_url}"
+    rputs 'Request review on the PR and merge it.'
+    notify_user
+  end
+end
+
 def push_tag
   unless @is_dry_run
     # Create a signed git tag and push to GitHub: git tag -s X.Y.Z -m "Version X.Y.Z" && git push origin --tags
@@ -127,6 +142,7 @@ steps = [
   method(:pod_lint),
   method(:changedoc_approve),
   method(:approve_pr),
+  method(:create_docs_pr),
   method(:push_tag),
   method(:create_release),
   method(:upload_framework),
@@ -134,7 +150,6 @@ steps = [
   method(:push_spm_mirror),
   method(:sync_owner_list),
   method(:changelog_done),
-  method(:reply_email),
   method(:cleanup_project_files),
   method(:create_cleanup_pr)
 ]

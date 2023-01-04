@@ -44,15 +44,6 @@ def update_placeholders
   update_placeholder(@version, 'MIGRATING.md')
 end
 
-def build_documentation
-  # Rebuild documentation
-  run_command('ci_scripts/build_documentation.rb')
-end
-
-def pod_lint
-  pod_lint_common
-end
-
 def commit_changes
   # Commit and push the changes
   # Xcode project files are added to ensure compatibility with Carthage,
@@ -80,7 +71,7 @@ def create_pr
     - [ ] Version.xcconfig
     - [ ] All *.podspec files
     - [ ] StripeAPIConfiguration+Version.swift
-  - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section and re-run `pod lib lint`.
+  - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
   }
 
   unless @is_dry_run
@@ -121,7 +112,7 @@ def propose_release
     new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
     File.open(new_dir_file, 'w') { |file| file.puts new_dirs }
 
-    rputs "Complete the pull request checklist at #{pr.html_url}, then run `bundle exec ruby ci_scripts/propose_release.rb`"
+    rputs "Complete the pull request checklist at #{pr.html_url} and the above docs PR, then run `bundle exec ruby ci_scripts/propose_release.rb`"
     rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"
     notify_user
   end
@@ -132,8 +123,6 @@ steps = [
   method(:regenerate_project_files),
   method(:update_version),
   method(:update_placeholders),
-  method(:build_documentation),
-  method(:pod_lint),
   method(:commit_changes),
   method(:push_changes),
   method(:create_pr),

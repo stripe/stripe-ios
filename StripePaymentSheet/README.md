@@ -1,9 +1,8 @@
-StripePaymentSheet iOS SDK module
-======
+# StripePaymentSheet iOS SDK module
 
 PaymentSheet is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment - into a single sheet that displays on top of your app.
 
-# Table of contents
+## Table of contents
 
 <!--ts-->
 * [Features](#features)

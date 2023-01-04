@@ -1,5 +1,4 @@
-StripePaymentsUI iOS SDK module
-======
+# StripePaymentsUI iOS SDK module
 
 The StripePaymentsUI module contains UI elements and API bindings for building a custom payment flow using Stripe.
 
@@ -9,7 +8,7 @@ It contains:
 * [STPCardFormView](https://stripe.dev/stripe-ios/stripe-payments-ui/Classes/STPCardFormView.html), a multi-line interface for users to input their credit card details.
 * [STPAUBECSDebitFormView](https://stripe.dev/stripe-ios/stripe-payments-ui/Classes/STPAUBECSDebitFormView.html), a UIControl that contains all of the necessary fields and legal text for collecting AU BECS Debit payments.
 
-# Table of contents
+## Table of contents
 
 <!--ts-->
 * [Requirements](#requirements)

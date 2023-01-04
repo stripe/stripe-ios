@@ -40,7 +40,10 @@ let project = Project(
             productName: "Stripe",
             bundleId: "com.stripe.stripe-ios",
             infoPlist: "StripeiOS/Info.plist",
-            sources: "StripeiOS/Source/**/*.swift",
+            sources: [
+                "StripeiOS/Source/**/*.swift",
+                "StripeiOS/*.docc",
+            ],
             resources: "StripeiOS/Resources/**",
             headers: .headers(
                 public: "StripeiOS/Stripe-umbrella.h"

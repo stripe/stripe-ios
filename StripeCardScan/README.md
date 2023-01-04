@@ -1,8 +1,8 @@
-# Stripe iOS SDK
+# Stripe CardScan iOS SDK
 
 This library provides support for the standalone Stripe CardScan product.
 
-# Overview
+## Overview
 
 This library provides a user interface through which users can scan payment cards and extract information from them. It uses the Stripe Publishable Key to authenticate with Stripe services.
 
@@ -10,16 +10,16 @@ Note that this is a standalone SDK and, while compatible with, does not directly
 
 This library can be used entirely outside of a Stripe integration and with other payment processing providers.
 
-# Requirements
+## Requirements
 
 - iOS 13.0 or higher
 - XCode 13.2.1 or higher
 
-# Example
+## Example
 
 See the [CardImageVerification Example](https://github.com/stripe/stripe-ios/tree/master/Example/CardImageVerification%20Example) directory for an example application that you can try for yourself!
 
-# Installation
+## Installation
 
 - Cocoapod
     - `pod install StripeCardScan`
@@ -28,8 +28,8 @@ See the [CardImageVerification Example](https://github.com/stripe/stripe-ios/tre
     - Select the latest version number from our releases page.
     - Add the `StripeCardScan` product to the target of your app.
 
-# Integration
-## Credit Card OCR
+## Integration
+### Credit Card OCR
 Add `CardScanSheet` in your view controller where you want to invoke the credit card scanning flow.
 
 1. Set up camera permissions
