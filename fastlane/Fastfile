@@ -199,10 +199,11 @@ platform :ios do
 
   lane :size_report do
     Dir.chdir('..') do
+      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} master")
       unless ENV['EMERGE_API_TOKEN'].nil?
         archive_path = Dir.pwd + '/build/size_tests/'
         arguments = { repo_name: "#{ENV['BITRISEIO_GIT_REPOSITORY_OWNER']}/#{ENV['BITRISEIO_GIT_REPOSITORY_SLUG']}",
-                      sha: `git rev-parse HEAD`.to_s,
+                      sha: "#{ENV['BITRISE_GIT_COMMIT']}",
                       build_type: 'release' }
         unless ENV['BITRISE_PULL_REQUEST'].nil?
           arguments[:pr_number] = ENV['BITRISE_PULL_REQUEST']

@@ -1,8 +1,8 @@
 # Stripe iOS SDK
 
-[![Travis](https://img.shields.io/travis/stripe/stripe-ios/master.svg?style=flat)](https://travis-ci.org/stripe/stripe-ios)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 [![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
@@ -24,6 +24,7 @@ Table of contents
    * [Getting started](#getting-started)
       * [Integration](#integration)
       * [Examples](#examples)
+      * [Building from source](#building-from-source)
    * [Card scanning](#card-scanning)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
@@ -115,6 +116,20 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
+
+### Building from source
+
+We use [Tuist](https://tuist.io) to generate Xcode projects, and all Xcode related files have been removed from the master branch of the repository. Note that project files are still available on tagged releases.
+
+If you want to build from the master branch you need to follow these steps:
+
+- Clone the repository and `cd` into its directory.
+- Install Tuist by running `curl -Ls https://install.tuist.io | bash`
+- Run `tuist generate`, optionally pass the `-n` option if you don't want to open Xcode automatically.
+
+You can build any of the generated targets as you normally would.
+
+For more information about Tuist, visit https://tuist.io.
 
 ## Card scanning
 

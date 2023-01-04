@@ -16,3 +16,9 @@ import Foundation
         return self[index]
     }
 }
+
+extension Array where Element == String {
+    public func caseInsensitiveContains(_ other: String) -> Bool {
+        return self.map { $0.uppercased() }.contains(other.uppercased())
+    }
+}

@@ -92,6 +92,7 @@ extension HostController: HostViewControllerDelegate {
 
         let dataManager = NativeFlowAPIDataManager(
             manifest: synchronizePayload.manifest,
+            visualUpdate: synchronizePayload.visual,
             returnURL: returnURL,
             consentPaneModel: consentPaneModel,
             apiClient: api,

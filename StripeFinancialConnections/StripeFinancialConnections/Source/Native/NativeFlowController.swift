@@ -91,6 +91,7 @@ extension NativeFlowController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
                 closeItem: navigationBarCloseBarButtonItem,
+                shouldHideStripeLogo: (dataManager.visualUpdate?.reducedBranding ?? false),
                 shouldLeftAlignStripeLogo: viewControllers.first == viewController && viewController is ConsentViewController
             )
         }
@@ -102,6 +103,7 @@ extension NativeFlowController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
                 closeItem: navigationBarCloseBarButtonItem,
+                shouldHideStripeLogo: (dataManager.visualUpdate?.reducedBranding ?? false),
                 shouldLeftAlignStripeLogo: false // if we `push`, this is not the first VC
             )
             navigationController.pushViewController(viewController, animated: animated)

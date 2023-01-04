@@ -8,7 +8,7 @@
 
 @import Stripe;
 @import StripeCore;
-#import "Non_Card_Payment_Examples-Swift.h"
+#import "NonCardPaymentExamples-Swift.h"
 
 #import "BrowseExamplesViewController.h"
 

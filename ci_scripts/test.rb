@@ -100,10 +100,10 @@ end
 if skip_snapshot_tests
   skip_tests += [
     # Subset of tests that don't end with 'Snapshot(Test|Tests)'.
-    'StripeiOS Tests/STPAddCardViewControllerLocalizationTests',
-    'StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests',
-    'StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests',
-    'StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests'
+    'StripeiOSTests/STPAddCardViewControllerLocalizationTests',
+    'StripeiOSTests/STPPaymentOptionsViewControllerLocalizationTests',
+    'StripeiOSTests/STPShippingAddressViewControllerLocalizationTests',
+    'StripeiOSTests/STPShippingMethodsViewControllerLocalizationTests'
   ]
 
   skip_tests += discover_snapshot_tests()

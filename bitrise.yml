@@ -14,9 +14,9 @@ app:
       is_expand: false
     FASTLANE_LANE: ios integration_all
 trigger_map:
-- push_branch: "*"
+- push_branch: master
   pipeline: main-trigger-pipeline
-- pull_request_source_branch: "*"
+- pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
@@ -49,6 +49,8 @@ workflows:
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: Basic Integration
     - deploy-to-bitrise-io@2: {}
     before_run:
@@ -91,6 +93,10 @@ workflows:
         title: Set bundler to ignore development and test gems
     - git-clone@6: {}
     - cache-pull@2: {}
+    - tuist@0:
+        run_if: .IsCI
+        inputs:
+        - command: generate -n
     - bundler@0: {}
     - cache-push@2:
         inputs:
@@ -144,46 +150,68 @@ workflows:
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeiOS
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripePayments
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripePaymentsUI
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripePaymentSheet
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeCameraCore
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeCore
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeIdentity
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeFinancialConnections
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeCardScan
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeApplePay
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: StripeUICore
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
@@ -219,6 +247,8 @@ workflows:
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: IntegrationTester
     - deploy-to-bitrise-io@2: {}
     before_run:
@@ -237,6 +267,7 @@ workflows:
     - prep_all
     after_run:
     - upload_logs
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-13.3.x
@@ -253,6 +284,7 @@ workflows:
     - prep_all
     after_run:
     - upload_logs
+    - notify_ci
   lint-tests:
     steps:
     - fastlane@3:
@@ -300,6 +332,10 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: '1'
+    - tuist@0:
+        run_if: .IsCI
+        inputs:
+        - command: generate -n
     - cache-pull@2: {}
     - bundler@0: {}
     - cache-push@2:
@@ -318,6 +354,7 @@ workflows:
         title: Set Bundler to use local vendor directory
     - git-clone@6:
         inputs:
+        - merge_pr: 'no'
         - fetch_tags: 'yes'
     - cache-pull@2: {}
     - bundler@0: {}
@@ -333,19 +370,28 @@ workflows:
         title: Fetch full branch history
     - script@1:
         inputs:
-        - content: bundle exec ruby Tests/installation_tests/size_test/size_report.rb
-            master $BITRISE_GIT_BRANCH
+        - content: bundle exec fastlane size_report
         title: Generate size report
   ui-tests:
     steps:
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: LocalizationTester
     - xcode-test@4:
         inputs:
         - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
+    - xcode-test@4:
+        inputs:
+        - destination: "$DEFAULT_TEST_DEVICE"
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
+        - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -396,6 +442,22 @@ workflows:
       bitrise.io:
         stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
+  financial-connections-stability-tests:
+    before_run:
+    - prep_all
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: '5'
+        - scheme: FinancialConnections Example
+    - slack@3:
+        is_always_run: true
+        inputs:
+        - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
+        - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
+    - deploy-to-bitrise-io@2: {}
 meta:
   bitrise.io:
     stack: osx-xcode-14.1.x-ventura

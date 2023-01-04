@@ -28,7 +28,6 @@ CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 
 CODE_SIGN_IDENTITY = iPhone Developer
 
-
 // Framework Search Paths
 // 
 // This is a list of paths to folders containing frameworks to be searched by the
@@ -87,3 +86,5 @@ OTHER_CFLAGS =
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 
 LIBRARY_SEARCH_PATHS = $(inherited)
+
+DEFINES_MODULE = YES
