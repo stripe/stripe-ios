@@ -213,7 +213,7 @@ extension PaymentMethodMessagingView {
     ) async throws -> NSAttributedString {
         // <img> tags don't work with `NSAttributedString.loadFromHTML` on iOS 13/14. As a workaround, we'll replace <img> with <a href> in this String, and manually replace them with images later:
         // 1. Replace the <img> tags with <a href> and pull out the image URLs
-        let (html, imageURLs) = HTMLReplacingImageTags(html: html)
+        let (html, imageURLs) = htmlReplacingImageTags(html: html)
         // 2. Construct the attributed string
         let css = makeCSS(for: configuration.font)
         let (attributedString, _) = try await NSAttributedString.fromHTML(css + html, options: [:])
