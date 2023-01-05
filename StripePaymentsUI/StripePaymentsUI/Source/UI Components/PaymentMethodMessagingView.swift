@@ -174,8 +174,8 @@ extension PaymentMethodMessagingView {
     static let imgTagRegex = try! NSRegularExpression(pattern: "<img src=\"(.*?)\">")
     
     /// - Returns: The given `html` string with <img> tags replaced with <a href> tags, and a list of the URLs contained in the replaced tags
-    static func HTMLReplacingImageTags(html: String) -> (String, [URL]) {
-        var html_with_img_tags_replaced = html
+    static func htmlReplacingImageTags(html: String) -> (String, [URL]) {
+        var html = html
         var images = [URL]()
         for match in imgTagRegex.matches(in: html, range: NSRange(html.startIndex..., in: html)).reversed() {
             guard
@@ -185,12 +185,12 @@ extension PaymentMethodMessagingView {
                 continue
             }
             let url = html[rangeOfURL]
-            html_with_img_tags_replaced.replaceSubrange(rangeOfImgTag, with: "<a href=\"\(url)\">_</a>")
+            html.replaceSubrange(rangeOfImgTag, with: "<a href=\"\(url)\">_</a>")
             // Fetch the image
             guard let URL = URL(string: String(url)) else { continue }
             images.append(URL)
         }
-        return (html_with_img_tags_replaced, images)
+        return (html, images)
     }
     
     static func makeCSS(for font: UIFont) -> String {
