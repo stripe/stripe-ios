@@ -491,5 +491,14 @@
     "async": false,
     "fields": [
     ]
+},
+{
+  "type": "cashapp",
+  "async": false,
+  "fields": [],
+  "selector_icon": {
+    "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
+    "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
+  }
 }
 ]

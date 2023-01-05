@@ -91,8 +91,6 @@ class PaymentSheetFormFactory {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
             return makeUPI()
-        } else if paymentMethod == .cashApp {
-            return FormElement(autoSectioningElements: [], theme: theme)
         }
 
         // 2. Element-based forms defined in JSON
