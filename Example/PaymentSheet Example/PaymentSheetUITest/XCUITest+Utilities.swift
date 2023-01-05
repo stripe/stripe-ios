@@ -132,4 +132,20 @@ extension XCTestCase {
 
         reload(app)
     }
+    
+    func selectEndpoint(_ app: XCUIApplication, endpoint: String) {
+        app.buttons["Endpoint"].tap()
+        
+        app.buttons["Set Manually"].tap()
+        
+        guard let currentEndpoint = app.textFields["endpoint-field"].value as? String else { return }
+        let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: currentEndpoint.count)
+        app.typeText(deleteString)
+        
+        app.typeText(endpoint)
+        
+        app.buttons["Submit"].tap()
+        
+        reload(app)
+    }
 }
