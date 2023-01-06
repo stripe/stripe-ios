@@ -53,6 +53,7 @@ final class ConsentLogoView: UIView {
 private func CreateCircularLogoView(urlString: String) -> UIView {
     let radius: CGFloat = 40.0
     let imageView = UIImageView()
+    imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
     imageView.layer.cornerRadius = radius / 2.0
     imageView.setImage(with: urlString)
