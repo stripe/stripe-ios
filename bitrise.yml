@@ -91,11 +91,11 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  build-docs:
+  check-docs:
     steps:
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/build_documentation.rb --publish
+        - content: bundle exec ./ci_scripts/build_documentation.rb
         title: Build documentation
     before_run:
     - prep_all
