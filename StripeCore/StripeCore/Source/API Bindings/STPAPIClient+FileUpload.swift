@@ -124,8 +124,7 @@ extension STPAPIClient {
             purpose: purpose
         )
 
-        let ownedByPart: STPMultipartFormDataPart? = ownedBy?.data(using: .utf8).map {
-            ownedByData in
+        let ownedByPart: STPMultipartFormDataPart? = ownedBy?.data(using: .utf8).map { ownedByData in
             let part = STPMultipartFormDataPart()
             part.name = "owned_by"
             part.data = ownedByData

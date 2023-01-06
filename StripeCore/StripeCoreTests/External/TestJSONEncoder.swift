@@ -909,7 +909,7 @@ class TestJSONEncoder: XCTestCase {
 
         let decoder = StripeJSONDecoder()
         do {
-            let _ = try decoder.decode(Array<PaymentMethod>.self, from: json.data(using: .utf8)!)
+            _ = try decoder.decode(Array<PaymentMethod>.self, from: json.data(using: .utf8)!)
         } catch DecodingError.dataCorrupted(let context) {
             XCTAssert(context.debugDescription.hasPrefix("Could not convert"))
         }
@@ -922,7 +922,7 @@ class TestJSONEncoder: XCTestCase {
 
     private func _testEncodeFailure<T: Encodable>(of value: T) {
         do {
-            let _ = try StripeJSONEncoder().encode(value)
+            _ = try StripeJSONEncoder().encode(value)
             XCTFail("Encode of top-level \(T.self) was expected to fail.")
         } catch {}
     }
@@ -1001,9 +1001,9 @@ class TestJSONEncoder: XCTestCase {
     }
 
     enum Format: String, SafeEnumCodable {
-        case format1 = "format1"
-        case format2 = "format2"
-        case format3 = "format3"
+        case format1
+        case format2
+        case format3
         case unparsable
     }
 

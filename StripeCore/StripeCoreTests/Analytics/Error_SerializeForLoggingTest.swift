@@ -16,7 +16,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
     struct CustomLoggableError: Error, AnalyticLoggableError {
         func analyticLoggableSerializeForLogging() -> [String: Any] {
             return [
-                "foo": "value"
+                "foo": "value",
             ]
         }
     }

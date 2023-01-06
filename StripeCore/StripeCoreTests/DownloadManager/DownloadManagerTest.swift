@@ -33,7 +33,7 @@ class DownloadManagerTest: APIStubbedTestCase {
     func testSynchronous_validImage() {
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
-        }) { request in
+        }) { _ in
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
@@ -46,7 +46,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
-        }) { request in
+        }) { _ in
             expectedRequest.fulfill()
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
@@ -67,7 +67,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
-        }) { request in
+        }) { _ in
             if numTimesCalled == 0 {
                 expectedRequest1.fulfill()
                 numTimesCalled += 1
@@ -93,7 +93,7 @@ class DownloadManagerTest: APIStubbedTestCase {
     func testSynchronous_invalidImage() {
         stub(condition: { request in
             return request.url?.path.contains("/invalidImage.png") ?? false
-        }) { request in
+        }) { _ in
             return HTTPStubsResponse(error: NotFoundError())
         }
 
@@ -107,7 +107,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
-        }) { request in
+        }) { _ in
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
@@ -129,7 +129,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
-        }) { request in
+        }) { _ in
             if !stickyFlag {
                 stickyFlag = true
             } else {
@@ -155,7 +155,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         expected2.isInverted = true
         let imageCached = rm.downloadImage(
             url: validURL,
-            updateHandler: { image in
+            updateHandler: { _ in
                 expected2.fulfill()
             }
         )
@@ -169,7 +169,7 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
-        }) { request in
+        }) { _ in
             if numTimesCalled != 0 && numTimesCalled != 1 {
                 XCTFail("Request called more than 2 times")
             }
@@ -209,7 +209,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         expected.isInverted = true
         stub(condition: { request in
             return request.url?.path.contains("/invalidImage.png") ?? false
-        }) { request in
+        }) { _ in
             return HTTPStubsResponse(error: NotFoundError())
         }
 
@@ -231,13 +231,13 @@ class DownloadManagerTest: APIStubbedTestCase {
 
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
-        }) { request in
+        }) { _ in
             return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
         }
 
         stub(condition: { request in
             return request.url?.path.contains("/validImage2.png") ?? false
-        }) { request in
+        }) { _ in
             return HTTPStubsResponse(data: self.validImageData2(), statusCode: 200, headers: nil)
         }
 
@@ -314,7 +314,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertNotNil(rm.imageCache["imgName"])
     }
 
-    // MARK - Helper functions
+    // MARK: - Helper functions
     private func validImageData() -> Data {
         return generateUIImage(size: validImageSize).pngData()!
     }

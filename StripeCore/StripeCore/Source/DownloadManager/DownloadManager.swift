@@ -26,7 +26,7 @@ import UIKit
     let pendingRequestsSemaphore: DispatchSemaphore
 
     let STPCacheExpirationInterval = (60 * 60 * 24 * 7)  // 1 week
-    var urlCache: URLCache? = nil
+    var urlCache: URLCache?
 
     public init(
         urlSessionConfiguration: URLSessionConfiguration = .default
@@ -41,7 +41,7 @@ import UIKit
                 .first
             {
                 let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
-                //5MB memory cache, 30MB Disk cache
+                // 5MB memory cache, 30MB Disk cache
                 let cache = URLCache(
                     memoryCapacity: 5_000_000,
                     diskCapacity: 30_000_000,
@@ -82,14 +82,14 @@ extension DownloadManager {
             return image
         }
 
-        var blockingDownloadedImage: UIImage? = nil
+        var blockingDownloadedImage: UIImage?
         let updateHandler: UpdateImageHandler = { image in
             blockingDownloadedImage = image
         }
         let blockingDownloadSemaphore = DispatchSemaphore(value: 0)
 
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { tempURL, response, error in
+        let task = self.session.downloadTask(with: url) { tempURL, response, _ in
             guard let tempURL = tempURL,
                 let response = response,
                 let data = self.getDataFromURL(tempURL),
@@ -116,7 +116,7 @@ extension DownloadManager {
             return image
         }
         let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
-        let task = self.session.downloadTask(with: url) { tempURL, response, error in
+        let task = self.session.downloadTask(with: url) { tempURL, response, _ in
             guard let tempURL = tempURL,
                 let response = response,
                 let data = self.getDataFromURL(tempURL),
@@ -208,7 +208,7 @@ extension DownloadManager {
     }
 
     func cachedImageNamed(_ imageName: String) -> UIImage? {
-        var image: UIImage? = nil
+        var image: UIImage?
         imageCacheSemaphore.wait()
         image = imageCache[imageName]
         imageCacheSemaphore.signal()
