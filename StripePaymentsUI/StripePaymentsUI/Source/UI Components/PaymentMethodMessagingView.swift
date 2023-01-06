@@ -220,8 +220,7 @@ extension PaymentMethodMessagingView {
         // 3. Fetch the images
         var images = [URL: UIImage]()
         for imageURL in imageURLs {
-            let (data, _) = try await configuration.apiClient.urlSession.data(for: configuration.apiClient.configuredRequest(for: imageURL))
-            images[imageURL] = UIImage(data: data, scale: 3)?.withRenderingMode(.alwaysOriginal)
+            images[imageURL] = try await loadImage(url: imageURL, apiClient: configuration.apiClient)
         }
         // 4. Replace the links in the attributed string with image attachments
         let mAttributedString = NSMutableAttributedString(attributedString: attributedString)
@@ -291,6 +290,11 @@ extension PaymentMethodMessagingView {
             "logo_color": logoColor,
             "locale": Locale.canonicalLanguageIdentifier(from: configuration.locale.identifier),
         ]
+    }
+    
+    static func loadImage(url: URL, apiClient: STPAPIClient) async throws -> UIImage? {
+        let (data, _) = try await apiClient.urlSession.stp_data(for: apiClient.configuredRequest(for: url))
+        return UIImage(data: data, scale: 3)?.withRenderingMode(.alwaysOriginal)
     }
 }
 
