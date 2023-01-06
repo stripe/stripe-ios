@@ -2,6 +2,19 @@
 
 require_relative 'release_common'
 
+# This should generally be the minimum Xcode version supported by the App Store, as the
+# compiled XCFrameworks won't be usable on older versions.
+# We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
+MIN_SUPPORTED_XCODE_VERSION = '13.2.1'.freeze
+
+# Verify that xcode-select -p returns the correct version for building Stripe.xcframework.
+unless `xcodebuild -version`.include?("Xcode #{MIN_SUPPORTED_XCODE_VERSION}")
+  rputs "Xcode #{MIN_SUPPORTED_XCODE_VERSION} is required to build Stripe.xcframework."
+  rputs 'Use `xcode-select -s` to select the correct version, or download it from https://developer.apple.com/download/more/.'
+  rputs "If you believe this is no longer the correct version, update `MIN_SUPPORTED_XCODE_VERSION` in `#{__FILE__}`."
+  abort
+end
+
 @version = version_from_file
 
 @changelog = changelog(@version)
@@ -11,10 +24,6 @@ require_relative 'release_common'
 def export_builds
   # Compile the build products: bundle install && ./ci_scripts/export_builds.rb
   run_command('ci_scripts/export_builds.rb')
-end
-
-def pod_lint
-  pod_lint_common
 end
 
 def changedoc_approve
@@ -139,7 +148,6 @@ end
 
 steps = [
   method(:export_builds),
-  method(:pod_lint),
   method(:changedoc_approve),
   method(:approve_pr),
   method(:create_docs_pr),
