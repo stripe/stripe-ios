@@ -76,6 +76,7 @@ struct FinancialConnectionsAuthSession: Decodable {
     let skipAccountSelection: Bool?
     let url: String?
     let isOauth: Bool?
+    let display: Display?
 
     var isOauthNonOptional: Bool {
         return isOauth ?? false
@@ -88,6 +89,14 @@ struct FinancialConnectionsAuthSession: Decodable {
 
     var partner: FinancialConnectionsPartner? {
         return (showPartnerDisclosure ?? false) ? flow?.toPartner() : nil
+    }
+    
+    struct Display: Decodable {
+        let text: Text?
+        
+        struct Text: Decodable {
+            let oauthPrepane: FinancialConnectionsOAuthPrepane?
+        }
     }
 }
 
