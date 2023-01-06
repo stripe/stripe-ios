@@ -439,12 +439,6 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "5"
-        - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all

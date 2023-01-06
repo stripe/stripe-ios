@@ -48,6 +48,7 @@ class FeaturedInstitutionGridView: UIView {
                 fatalError("Couldn't find cell with reuseIdentifier \(cellIdentifier)")
             }
             cell.customize(with: institution)
+            cell.accessibilityLabel = institution.name // used for UI tests
             return cell
         }
         self.dataSource = dataSource
