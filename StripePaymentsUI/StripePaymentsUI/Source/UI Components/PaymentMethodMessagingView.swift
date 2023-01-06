@@ -293,7 +293,24 @@ extension PaymentMethodMessagingView {
     }
     
     static func loadImage(url: URL, apiClient: STPAPIClient) async throws -> UIImage? {
-        let (data, _) = try await apiClient.urlSession.stp_data(for: apiClient.configuredRequest(for: url))
+        let request = apiClient.configuredRequest(for: url)
+        let data: Data
+        // An Xcode 13 compatible version of `data(for:)`
+        if #available(iOS 15.0, *) {
+            (data, _) = try await apiClient.urlSession.data(for: request)
+        } else {
+            /// Adapted from https://www.swiftbysundell.com/articles/making-async-system-apis-backward-compatible/
+            data = try await withCheckedThrowingContinuation { continuation in
+                let task = apiClient.urlSession.dataTask(with: request) { data, response, error in
+                    guard let data = data else {
+                        let error = error ?? URLError(.badServerResponse)
+                        return continuation.resume(throwing: error)
+                    }
+                    continuation.resume(returning: data)
+                }
+                task.resume()
+            }
+        }
         return UIImage(data: data, scale: 3)?.withRenderingMode(.alwaysOriginal)
     }
 }
