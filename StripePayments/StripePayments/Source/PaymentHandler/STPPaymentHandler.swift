@@ -1278,8 +1278,6 @@ public class STPPaymentHandler: NSObject {
             break
         case .cashAppRedirectToApp:
             guard
-                let currentAction = self.currentAction
-                    as? STPPaymentHandlerPaymentIntentActionParams,
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
             else {
                 fatalError()
