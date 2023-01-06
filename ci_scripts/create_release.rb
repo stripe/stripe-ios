@@ -54,7 +54,6 @@ def commit_changes
     git add Example/**/*.xcodeproj -f &&
     git add Testers/**/*.xcodeproj -f &&
     git add -u &&
-    git add docs &&
     git commit -m \"Update version to #{@version}\"")
 end
 

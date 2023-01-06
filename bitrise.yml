@@ -44,7 +44,7 @@ stages:
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
-    - build-docs: {}
+    - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -59,7 +59,7 @@ stages:
     workflows:
     - basic-integration-tests: {}
     - ui-tests: {}
-    - build-docs: {}
+    - check-docs: {}
     - legacy-tests-13: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
@@ -91,15 +91,44 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  build-docs:
+  check-docs:
+    steps:
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/build_documentation.rb
+        title: Build documentation
+    before_run:
+    - prep_all
+    after_run:
+    - notify_ci
+  deploy-docs:
     steps:
     - activate-ssh-key@4: {}
     - script@1:
         inputs:
+        - content: bundle config set path 'vendor/bundle'
+        is_always_run: true
+        title: Set Bundler to use local vendor directory
+    - git-clone@6:
+        inputs:
+        - merge_pr: 'no'
+        - fetch_tags: 'yes'
+    - cache-pull@2: {}
+    - bundler@0: {}
+    - cache-push@2:
+        inputs:
+        - compress_archive: 'true'
+        - cache_paths: |
+            vendor
+            SourcePackages
+    - script@1:
+        inputs:
+        - content: git fetch origin
+        title: Fetch full branch history
+    - script@1:
+        inputs:
         - content: bundle exec ./ci_scripts/build_documentation.rb --publish
         title: Build documentation
-    before_run:
-    - prep_all
   data-theorem-sast:
     steps:
     - script@1:
