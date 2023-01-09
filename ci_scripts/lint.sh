@@ -16,7 +16,7 @@ lint_dirs=(
 
 exit_code=0
 for dir in $lint_dirs; do
-	swiftlint --strict "$dir/"
+	swiftlint --strict --config .swiftlint.yml "$dir/"
 	code=$?
 	if [ "$code" != "0" ]; then
 		exit_code=$code
