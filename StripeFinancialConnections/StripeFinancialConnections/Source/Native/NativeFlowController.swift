@@ -91,7 +91,11 @@ extension NativeFlowController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
                 closeItem: navigationBarCloseBarButtonItem,
-                shouldHideStripeLogo: (dataManager.visualUpdate?.reducedBranding ?? false),
+                shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    forViewController: viewController,
+                    reducedBranding: dataManager.reducedBranding,
+                    merchantLogo: dataManager.merchantLogo
+                ),
                 shouldLeftAlignStripeLogo: viewControllers.first == viewController && viewController is ConsentViewController
             )
         }
@@ -103,7 +107,11 @@ extension NativeFlowController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
                 closeItem: navigationBarCloseBarButtonItem,
-                shouldHideStripeLogo: (dataManager.visualUpdate?.reducedBranding ?? false),
+                shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                    forViewController: viewController,
+                    reducedBranding: dataManager.reducedBranding,
+                    merchantLogo: dataManager.merchantLogo
+                ),
                 shouldLeftAlignStripeLogo: false // if we `push`, this is not the first VC
             )
             navigationController.pushViewController(viewController, animated: animated)
@@ -608,6 +616,7 @@ private func CreatePaneViewController(
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,
             consent: dataManager.consentPaneModel,
+            merchantLogo: dataManager.merchantLogo,
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient
@@ -751,4 +760,24 @@ private func CreatePaneViewController(
     }
     
     return viewController
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func ShouldHideStripeLogoInNavigationBar(
+    forViewController viewController: UIViewController,
+    reducedBranding: Bool,
+    merchantLogo: [String]?
+) -> Bool {
+    if viewController is ConsentViewController {
+        let willShowMerchantLogoInConsentScreen = (merchantLogo != nil)
+        if willShowMerchantLogoInConsentScreen {
+            // if we are going to show merchant logo in consent screen,
+            // do not show the logo in the navigation bar
+            return true
+        } else {
+            return reducedBranding
+        }
+    } else {
+        return reducedBranding
+    }
 }

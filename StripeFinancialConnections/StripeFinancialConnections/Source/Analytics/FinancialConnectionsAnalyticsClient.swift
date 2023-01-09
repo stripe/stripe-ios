@@ -45,17 +45,12 @@ final class FinancialConnectionsAnalyticsClient {
     public func logExposure(
         experimentName: String,
         assignmentEventId: String,
-        parameters: [String: Any] = [:]
+        accountholderToken: String
     ) {
-        var parameters = parameters.merging(
-            additionalParameters,
-            uniquingKeysWith: { eventParameter, _ in
-                // prioritize event `parameters` over `additionalParameters`
-                return eventParameter
-            }
-        )
+        var parameters = additionalParameters
         parameters["experiment_retrieved"] = experimentName
         parameters["arb_id"] = assignmentEventId
+        parameters["account_holder_id"] = accountholderToken
         analyticsClient.log(eventName: "preloaded_experiment_retrieved", parameters: parameters)
     }
 }

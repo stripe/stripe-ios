@@ -10,7 +10,8 @@ import Foundation
 
 protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
-    var visualUpdate: FinancialConnectionsSynchronize.VisualUpdate? { get }
+    var reducedBranding: Bool { get }
+    var merchantLogo: [String]? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent { get }
     var apiClient: FinancialConnectionsAPIClient { get }
@@ -29,13 +30,44 @@ protocol NativeFlowDataManager: AnyObject {
 }
 
 class NativeFlowAPIDataManager: NativeFlowDataManager {
-
+    
+    private lazy var consentCombinedLogoExperiment: ExperimentHelper = {
+        return ExperimentHelper(
+            experimentName: "connections_consent_combined_logo",
+            manifest: manifest,
+            analyticsClient: analyticsClient
+        )
+    }()
     var manifest: FinancialConnectionsSessionManifest {
         didSet {
             didUpdateManifest()
         }
     }
-    let visualUpdate: FinancialConnectionsSynchronize.VisualUpdate?
+    // don't expose `visualUpdate` because we don't want anyone to directly
+    // access `visualUpdate.merchantLogo`; we have custom logic for `merchantLogo`
+    private let visualUpdate: FinancialConnectionsSynchronize.VisualUpdate
+    var reducedBranding: Bool {
+        return visualUpdate.reducedBranding
+    }
+    var merchantLogo: [String]? {
+        if consentCombinedLogoExperiment.isEnabled(logExposure: true) {
+            let merchantLogo = visualUpdate.merchantLogo
+            if merchantLogo.isEmpty || merchantLogo.count == 2 || merchantLogo.count == 3 {
+                // show merchant logo inside of consent pane
+                return visualUpdate.merchantLogo
+            } else {
+                // if `merchantLogo.count > 3`, that is an invalid case
+                //
+                // we want to log experiment exposure regardless because
+                // if experiment is not working fine (ex. returns 1 or 4 logos)
+                // then the "cost" of those bugs should show up in the `treatment` data
+                return nil
+            }
+        } else {
+            // show the "control" experience of showing logo in the nav bar
+            return nil
+        }
+    }
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent
     let apiClient: FinancialConnectionsAPIClient
@@ -51,7 +83,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        visualUpdate: FinancialConnectionsSynchronize.VisualUpdate?,
+        visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent,
         apiClient: FinancialConnectionsAPIClient,
