@@ -90,10 +90,10 @@ struct FinancialConnectionsAuthSession: Decodable {
     var partner: FinancialConnectionsPartner? {
         return (showPartnerDisclosure ?? false) ? flow?.toPartner() : nil
     }
-    
+
     struct Display: Decodable {
         let text: Text?
-        
+
         struct Text: Decodable {
             let oauthPrepane: FinancialConnectionsOAuthPrepane?
         }
