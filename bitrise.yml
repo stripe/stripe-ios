@@ -27,19 +27,14 @@ trigger_map:
 pipelines:
   main-trigger-pipeline:
     stages:
-    - stage-lint: {}
     - stage-trigger-run-all: {}
   releases-trigger-pipeline:
     stages:
-    - stage-lint: {}
     - stage-releases-run-all: {}
   nightly-pipeline:
     stages:
     - stage-nightly-all: {}
 stages:
-  stage-lint:
-    workflows:
-    - swift-lint: {}
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
@@ -358,6 +353,10 @@ workflows:
     - notify_ci
   lint-tests:
     steps:
+    - script@1:
+        inputs:
+        - content: "./ci_scripts/lint.sh"
+        title: Run swiftlint
     - fastlane@3:
         inputs:
         - lane: build_extras
@@ -376,15 +375,6 @@ workflows:
         title: pod lib lint
     before_run:
     - prep_all
-  swift-lint:
-    steps:
-    - git-clone@6:
-        inputs:
-        - clone_depth: '1'
-    - script@1:
-        inputs:
-        - content: "./ci_scripts/lint.sh"
-        title: Run swiftlint
   notify_ci:
     steps:
     - script@1:
