@@ -5,8 +5,8 @@
 //  Created by Krisjanis Gaidis on 10/5/22.
 //
 
-import XCTest
 @testable import StripeFinancialConnections
+import XCTest
 
 class AuthFlowHelpersTests: XCTestCase {
 

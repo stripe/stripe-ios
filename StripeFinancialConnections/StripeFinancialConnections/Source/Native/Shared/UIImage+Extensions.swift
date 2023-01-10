@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UIImage {
-    
+
     // create a new image with transparent insets around it
     func withInsets(_ insets: UIEdgeInsets) -> UIImage? {
         let newSize = CGSize(

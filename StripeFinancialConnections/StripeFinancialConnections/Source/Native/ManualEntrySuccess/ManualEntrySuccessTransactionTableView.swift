@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 private struct Label {
     let title: String
     let isHighlighted: Bool
-    
+
     init(title: String, isHighlighted: Bool = false) {
         self.title = title
         self.isHighlighted = isHighlighted
@@ -20,7 +20,7 @@ private struct Label {
 }
 
 final class ManualEntrySuccessTransactionTableView: UIView {
-    
+
     init(
         microdepositVerificationMethod: MicrodepositVerificationMethod?,
         accountNumberLast4: String
@@ -53,7 +53,7 @@ final class ManualEntrySuccessTransactionTableView: UIView {
         verticalStackView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -69,23 +69,23 @@ private func CreateRows(
         rows.append([
             Label(title: "SMXXXX", isHighlighted: true),
             Label(title: "$0.01"),
-            Label(title: "ACH CREDIT")
+            Label(title: "ACH CREDIT"),
         ])
     } else {
         for _ in 0..<2 {
             rows.append([
                 Label(title: "AMTS"),
                 Label(title: "$0.XX", isHighlighted: true),
-                Label(title: "ACH CREDIT")
+                Label(title: "ACH CREDIT"),
             ])
         }
     }
     rows.append([
         Label(title: "GROCERIES"),
         Label(title: "$56.12"),
-        Label(title: "VISA")
+        Label(title: "VISA"),
     ])
-    
+
     return rows
 }
 
@@ -97,13 +97,13 @@ private func CreateTableTitleView(title: String) -> UIView {
         iconImageView.widthAnchor.constraint(equalToConstant: 16),
         iconImageView.heightAnchor.constraint(equalToConstant: 16),
     ])
-    
+
     let titleLabel = UILabel()
     titleLabel.font = .stripeFont(forTextStyle: .monospaced)
     titleLabel.textColor = .textSecondary
     titleLabel.numberOfLines = 0
     titleLabel.text = title
-    
+
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
             iconImageView,
@@ -129,7 +129,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
         title: STPLocalizedString("Type", "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Type' column displays the type of transaction, for example, 'VISA' or 'ACH CREDIT'"),
         rowLabels: rows.compactMap { $0[2] }
     )
-    
+
     let columnHorizontalStackView = UIStackView(
         arrangedSubviews: [
             transactionColumnTuple.stackView,
@@ -139,7 +139,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
     )
     columnHorizontalStackView.axis = .horizontal
     columnHorizontalStackView.distribution = .fillProportionally
-    
+
     // Add spacing between columns.
     //
     // "Amount" column is `.trailing` aligned, so
@@ -147,7 +147,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
     // with "Type" column.
     columnHorizontalStackView.setCustomSpacing(10, after: amountColumnTuple.stackView)
     columnHorizontalStackView.spacing = 1 // otherwise..have "1" spacing
-    
+
     // Add separator to each column.
     //
     // The sparator needs to be the width of `UIStackView`,
@@ -157,7 +157,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
     for columnTuple in [transactionColumnTuple, amountColumnTuple, typeColumnTuple] {
         let separatorView = UIView()
         separatorView.backgroundColor = .borderNeutral
-        
+
         separatorView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         columnTuple.stackView.insertArrangedSubview(separatorView, at: 1)
@@ -167,7 +167,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
             separatorView.widthAnchor.constraint(equalTo: columnTuple.stackView.widthAnchor),
         ])
     }
-    
+
     // Make all rows equal height.
     //
     // UIStackView can't align content across multiple
@@ -182,7 +182,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
         let transactionRowView = transactionColumnTuple.rowViews[i]
         let amountRowView = amountColumnTuple.rowViews[i]
         let typeRowView = typeColumnTuple.rowViews[i]
-        
+
         NSLayoutConstraint.activate([
             transactionRowView.heightAnchor.constraint(equalTo: amountRowView.heightAnchor),
             amountRowView.heightAnchor.constraint(equalTo: typeRowView.heightAnchor),
@@ -201,7 +201,7 @@ private func CreateColumnView(
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 4 // spacing for rows
     verticalStackView.alignment = alignment
-    
+
     // Title
     let titleLabel = UILabel()
     titleLabel.font = .stripeFont(forTextStyle: .monospaced)
@@ -210,7 +210,7 @@ private func CreateColumnView(
     titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     verticalStackView.addArrangedSubview(titleLabel)
     verticalStackView.setCustomSpacing(5, after: titleLabel)
-    
+
     // Rows
     var rowViews: [UIView] = []
     for label in rowLabels {
@@ -224,13 +224,12 @@ private func CreateColumnView(
         verticalStackView.addArrangedSubview(rowLabel)
         rowViews.append(rowLabel)
     }
-    
+
     // Spacer
     verticalStackView.addArrangedSubview(UIView())
-    
+
     return (verticalStackView, rowViews)
 }
-
 
 #if DEBUG
 
@@ -238,17 +237,17 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIViewRepresentable {
-    
-    let microdepositVerificationMethod:  MicrodepositVerificationMethod
+
+    let microdepositVerificationMethod: MicrodepositVerificationMethod
     let accountNumberLast4: String
-    
+
     func makeUIView(context: Context) -> ManualEntrySuccessTransactionTableView {
         ManualEntrySuccessTransactionTableView(
             microdepositVerificationMethod: microdepositVerificationMethod,
             accountNumberLast4: accountNumberLast4
         )
     }
-    
+
     func updateUIView(_ uiView: ManualEntrySuccessTransactionTableView, context: Context) {}
 }
 

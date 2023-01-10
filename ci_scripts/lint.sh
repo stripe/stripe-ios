@@ -13,6 +13,7 @@ fi
 lint_dirs=(
 	"StripeCore"
 	"StripeUICore"
+	"StripeFinancialConnections"
 )
 
 exit_code=0

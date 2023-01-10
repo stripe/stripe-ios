@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class ManualEntryFooterView: UIView {
-    
+
     private let didSelectContinue: () -> Void
-    
+
     private(set) lazy var continueButton: Button = {
         let continueButton = Button(configuration: .financialConnectionsPrimary)
         continueButton.title = "Continue" // TODO: replace with String.Localized.continue when we localize
@@ -23,11 +23,11 @@ final class ManualEntryFooterView: UIView {
         ])
         return continueButton
     }()
-    
+
     init(didSelectContinue: @escaping () -> Void) {
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)
-        
+
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 continueButton,
@@ -36,15 +36,15 @@ final class ManualEntryFooterView: UIView {
         verticalStackView.axis = .vertical
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc private func didSelectContinueButton() {
         didSelectContinue()
     }
-    
+
     func setIsLoading(_ isLoading: Bool) {
         continueButton.isLoading = isLoading
     }

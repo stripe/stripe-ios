@@ -6,16 +6,16 @@
 //
 
 import Foundation
-import UIKit
 import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class PrepaneView: UIView {
-    
+
     private let didSelectContinue: () -> Void
-    
+
     init(
         institutionName: String,
         institutionImageUrl: String?,
@@ -26,7 +26,7 @@ final class PrepaneView: UIView {
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        
+
         let paneLayoutView = PaneWithHeaderLayoutView(
             icon: .view({
                 let institutionIconView = InstitutionIconView(size: .large)
@@ -48,11 +48,11 @@ final class PrepaneView: UIView {
         )
         paneLayoutView.addTo(view: self)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc fileprivate func didSelectContinueButton() {
         didSelectContinue()
     }
@@ -71,7 +71,7 @@ private func CreateFooterView(
     NSLayoutConstraint.activate([
         continueButton.heightAnchor.constraint(equalToConstant: 56),
     ])
-    
+
     let footerStackView = UIStackView()
     footerStackView.axis = .vertical
     footerStackView.spacing = 20
@@ -105,7 +105,7 @@ private func CreatePartnerDisclosureView(
     horizontalStackView.alignment = .center
     horizontalStackView.backgroundColor = .backgroundContainer
     horizontalStackView.layer.cornerRadius = 8
-    
+
     if let partnerIcon = partner.icon {
         horizontalStackView.addArrangedSubview({
             let partnerIconImageView = UIImageView()
@@ -119,7 +119,7 @@ private func CreatePartnerDisclosureView(
             return partnerIconImageView
         }())
     }
-    
+
     horizontalStackView.addArrangedSubview({
         let partnerDisclosureLabel = ClickableLabel(
             font: .stripeFont(forTextStyle: .captionTight),
@@ -135,7 +135,7 @@ private func CreatePartnerDisclosureView(
         )
         return partnerDisclosureLabel
     }())
-    
+
     return horizontalStackView
 }
 
@@ -161,7 +161,7 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
-    
+
     func makeUIView(context: Context) -> PrepaneView {
         PrepaneView(
             institutionName: "Chase",
@@ -171,7 +171,7 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
             didSelectContinue: {}
         )
     }
-    
+
     func updateUIView(_ uiView: PrepaneView, context: Context) {}
 }
 

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol InstitutionSearchBarDelegate: AnyObject {
     func institutionSearchBar(
@@ -17,7 +17,7 @@ protocol InstitutionSearchBarDelegate: AnyObject {
 }
 
 final class InstitutionSearchBar: UIView {
-    
+
     weak var delegate: InstitutionSearchBarDelegate?
     var text: String {
         get {
@@ -30,7 +30,7 @@ final class InstitutionSearchBar: UIView {
             textFieldTextDidChange()
         }
     }
-    
+
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
         textField.textColor = .textPrimary
@@ -74,11 +74,11 @@ final class InstitutionSearchBar: UIView {
         ])
         return textFieldClearButton
     }()
-    
+
     init() {
         super.init(frame: .zero)
         layer.cornerRadius = 8
-        
+
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
                 CreateSearchIconView(),
@@ -97,32 +97,32 @@ final class InstitutionSearchBar: UIView {
             trailing: 16
         )
         addAndPinSubview(horizontalStackView)
-        
+
         highlightBorder(false)
         adjustClearButtonVisibility()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @discardableResult override func resignFirstResponder() -> Bool {
         return textField.resignFirstResponder()
     }
-    
+
     @objc private func textFieldTextDidChange() {
         adjustClearButtonVisibility()
         delegate?.institutionSearchBar(self, didChangeText: text)
     }
-    
+
     @objc private func didSelectClearButton() {
         text = ""
     }
-    
+
     private func adjustClearButtonVisibility() {
         textFieldClearButton.isHidden = text.isEmpty
     }
-    
+
     private func highlightBorder(_ shouldHighlightBorder: Bool) {
         let searchBarBorderColor: UIColor
         let searchBarBorderWidth: CGFloat
@@ -141,15 +141,15 @@ final class InstitutionSearchBar: UIView {
 // MARK: - UITextFieldDelegate
 
 extension InstitutionSearchBar: UITextFieldDelegate {
-    
+
     func textFieldDidBeginEditing(_ textField: UITextField) {
         highlightBorder(true)
     }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField) {
         highlightBorder(false)
     }
-    
+
     // called when user presses "Search" button in the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -182,13 +182,13 @@ private class IncreasedHitTestTextField: UITextField {
 import SwiftUI
 
 private struct InstitutionSearchBarUIViewRepresentable: UIViewRepresentable {
-    
+
     let text: String
-    
+
     func makeUIView(context: Context) -> InstitutionSearchBar {
         InstitutionSearchBar()
     }
-    
+
     func updateUIView(_ searchBar: InstitutionSearchBar, context: Context) {
         searchBar.text = text
     }
@@ -200,11 +200,11 @@ struct InstitutionSearchBar_Previews: PreviewProvider {
             InstitutionSearchBarUIViewRepresentable(text: "")
                 .frame(width: 327)
                 .frame(height: 56)
-            
+
             InstitutionSearchBarUIViewRepresentable(text: "Chase")
                 .frame(width: 327)
                 .frame(height: 56)
-            
+
             Spacer()
         }
         .frame(maxWidth: .infinity)
@@ -214,7 +214,7 @@ struct InstitutionSearchBar_Previews: PreviewProvider {
 #endif
 
 private class TextFieldClearButton: UIButton {
-    
+
     // increase hit-test area of the clear button
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let largerBounds = bounds.insetBy(

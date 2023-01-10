@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerViewControllerDelegate: AnyObject {
@@ -18,12 +18,12 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 class InstitutionPickerViewController: UIViewController {
-    
+
     // MARK: - Properties
-    
+
     private let dataSource: InstitutionDataSource
     weak var delegate: InstitutionPickerViewControllerDelegate?
-    
+
     private lazy var loadingView: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.color = .textDisabled
@@ -50,38 +50,38 @@ class InstitutionPickerViewController: UIViewController {
         institutionSearchTableView.delegate = self
         return institutionSearchTableView
     }()
-    
+
     // MARK: - Debouncing Support
-    
+
     private var fetchInstitutionsDispatchWorkItem: DispatchWorkItem?
     private var lastInstitutionSearchFetchDate = Date()
-    
+
     // MARK: - Init
-    
+
     init(dataSource: InstitutionDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - UIViewController
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        
+
         showLoadingView(true)
         fetchFeaturedInstitutions { [weak self] in
             self?.showLoadingView(false)
         }
     }
-    
+
     private func setupView() {
         view.backgroundColor = UIColor.customBackgroundColor
-        
+
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
             CreateMainView(
@@ -91,24 +91,24 @@ class InstitutionPickerViewController: UIViewController {
         )
         contentContainerView.addAndPinSubview(featuredInstitutionGridView)
         contentContainerView.addAndPinSubview(institutionSearchTableView)
-        
+
         toggleContentContainerViewVisbility()
-        
+
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
     }
-    
+
     private func toggleContentContainerViewVisbility() {
         let isUserCurrentlySearching = !searchBar.text.isEmpty
         featuredInstitutionGridView.isHidden = isUserCurrentlySearching
         institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
     }
-    
+
     @IBAction private func didTapOutsideOfSearchBar() {
         searchBar.resignFirstResponder()
     }
-    
+
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
         searchBar.resignFirstResponder()
         // clear search results
@@ -117,7 +117,7 @@ class InstitutionPickerViewController: UIViewController {
         toggleContentContainerViewVisbility()
         delegate?.institutionPickerViewController(self, didSelect: institution)
     }
-    
+
     private func showLoadingView(_ show: Bool) {
         loadingView.isHidden = !show
         if show {
@@ -133,14 +133,14 @@ class InstitutionPickerViewController: UIViewController {
 
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController {
-    
+
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         assertMainQueue()
         dataSource
             .fetchFeaturedInstitutions()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
-                switch(result) {
+                switch result {
                 case .success(let institutions):
                     self.featuredInstitutionGridView.loadInstitutions(institutions)
                     self.dataSource
@@ -158,21 +158,21 @@ extension InstitutionPickerViewController {
                 completionHandler()
             }
     }
-    
+
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
         institutionSearchTableView.showError(false)
-        
+
         guard !searchQuery.isEmpty else {
             // clear data because search query is empty
             institutionSearchTableView.loadInstitutions([])
             return
         }
-        
+
         institutionSearchTableView.showLoadingView(true)
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
-            
+
             let lastInstitutionSearchFetchDate = Date()
             self.lastInstitutionSearchFetchDate = lastInstitutionSearchFetchDate
             self.dataSource
@@ -184,7 +184,7 @@ extension InstitutionPickerViewController {
                         // the lastest search attempt
                         return
                     }
-                    switch(result) {
+                    switch result {
                     case .success(let institutions):
                         self.institutionSearchTableView.loadInstitutions(institutions)
                         if institutions.isEmpty {
@@ -224,7 +224,7 @@ extension InstitutionPickerViewController {
 
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
-    
+
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
         toggleContentContainerViewVisbility()
         fetchInstitutions(searchQuery: text)
@@ -235,7 +235,7 @@ extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         let touchPoint = touch.location(in: view)
         return !searchBar.frame.contains(touchPoint) && !contentContainerView.frame.contains(touchPoint)
@@ -246,7 +246,7 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
-    
+
     func featuredInstitutionGridView(
         _ view: FeaturedInstitutionGridView,
         didSelectInstitution institution: FinancialConnectionsInstitution
@@ -266,7 +266,7 @@ extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
-    
+
     func institutionSearchTableView(
         _ tableView: InstitutionSearchTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
@@ -280,7 +280,7 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
         )
         didSelectInstitution(institution)
     }
-    
+
     func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView) {
         delegate?.institutionPickerViewControllerDidSelectManuallyAddYourAccount(self)
     }

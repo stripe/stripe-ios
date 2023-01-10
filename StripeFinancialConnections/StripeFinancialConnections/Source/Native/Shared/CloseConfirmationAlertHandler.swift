@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 final class CloseConfirmationAlertHandler {
-    
+
     private init() {}
-    
+
     @available(iOSApplicationExtension, unavailable)
     static func present(
         businessName: String?,

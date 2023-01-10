@@ -16,7 +16,7 @@ final class AccountPickerHelpers {
             return (account.name, nil)
         }
     }
-    
+
     static func rowSubtitle(forAccount account: FinancialConnectionsPartnerAccount) -> String? {
         if let balanceInfo = account.balanceInfo {
             return currencyString(currency: balanceInfo.currency, balanceAmount: balanceInfo.balanceAmount)
@@ -28,7 +28,7 @@ final class AccountPickerHelpers {
             }
         }
     }
-    
+
     static func currencyString(currency: String, balanceAmount: Int) -> String? {
         let numberFormatter = NumberFormatter()
         numberFormatter.currencyCode = currency
@@ -46,7 +46,7 @@ extension NSDecimalNumber {
     ) -> NSDecimalNumber {
         let isAmountNegative = amount < 0
         let amount = abs(amount)
-        
+
         let noDecimalCurrencies = self.stp_fn_currenciesWithNoDecimal()
         let number = self.init(mantissa: UInt64(amount), exponent: 0, isNegative: isAmountNegative)
         if noDecimalCurrencies.contains(currency?.lowercased() ?? "") {

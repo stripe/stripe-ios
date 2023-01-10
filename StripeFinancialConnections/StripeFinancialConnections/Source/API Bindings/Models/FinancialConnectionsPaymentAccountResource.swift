@@ -10,7 +10,7 @@ import Foundation
 
 typealias MicrodepositVerificationMethod = FinancialConnectionsPaymentAccountResource.MicrodepositVerificationMethod
 struct FinancialConnectionsPaymentAccountResource: Decodable {
-    
+
     enum MicrodepositVerificationMethod: String, SafeEnumCodable, Equatable {
         case descriptorCode = "descriptor_code"
         case amounts = "amounts"

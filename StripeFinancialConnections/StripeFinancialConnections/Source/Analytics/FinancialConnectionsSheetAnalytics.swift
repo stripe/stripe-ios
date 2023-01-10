@@ -17,7 +17,7 @@ protocol FinancialConnectionsSheetAnalytic: Analytic {
 
 @available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsSheetAnalytic {
-    var params: [String : Any] {
+    var params: [String: Any] {
         var params = additionalParams
         params["las_client_secret"] = clientSecret
         return params
@@ -29,7 +29,7 @@ extension FinancialConnectionsSheetAnalytic {
 struct FinancialConnectionsSheetPresentedAnalytic: FinancialConnectionsSheetAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetPresented
     let clientSecret: String
-    let additionalParams: [String : Any] = [:]
+    let additionalParams: [String: Any] = [:]
 }
 
 /// Logged when the sheet is closed by the end-user
@@ -39,7 +39,7 @@ struct FinancialConnectionsSheetClosedAnalytic: FinancialConnectionsSheetAnalyti
     let clientSecret: String
     let result: String
 
-    var additionalParams: [String : Any] {
+    var additionalParams: [String: Any] {
         return [
             "session_result": result,
         ]
@@ -51,7 +51,7 @@ struct FinancialConnectionsSheetClosedAnalytic: FinancialConnectionsSheetAnalyti
 struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalytic, ErrorAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetFailed
     let clientSecret: String
-    let additionalParams: [String : Any] = [:]
+    let additionalParams: [String: Any] = [:]
     let error: Error
 }
 
@@ -64,7 +64,7 @@ struct FinancialConnectionsSheetCompletionAnalytic {
         result: FinancialConnectionsSheet.Result
     ) -> FinancialConnectionsSheetAnalytic {
         switch result {
-        case .completed(session: _):
+        case .completed:
             return FinancialConnectionsSheetClosedAnalytic(
                 clientSecret: clientSecret,
                 result: "completed"

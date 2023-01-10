@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol AccountPickerSelectionViewDelegate: AnyObject {
     func accountPickerSelectionView(
@@ -17,10 +17,10 @@ protocol AccountPickerSelectionViewDelegate: AnyObject {
 }
 
 final class AccountPickerSelectionView: UIView {
-    
+
     private weak var delegate: AccountPickerSelectionViewDelegate?
     private let listView: AccountPickerSelectionListView
-    
+
     init(
         accountPickerType: AccountPickerType,
         enabledAccounts: [FinancialConnectionsPartnerAccount],
@@ -38,11 +38,11 @@ final class AccountPickerSelectionView: UIView {
         listView.delegate = self
         addAndPinSubviewToSafeArea(listView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
         listView.selectAccounts(selectedAccounts)
     }
@@ -51,7 +51,7 @@ final class AccountPickerSelectionView: UIView {
 // MARK: - AccountPickerSelectionListViewDelegate
 
 extension AccountPickerSelectionView: AccountPickerSelectionListViewDelegate {
-    
+
     func accountPickerSelectionListView(
         _ view: AccountPickerSelectionListView,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]

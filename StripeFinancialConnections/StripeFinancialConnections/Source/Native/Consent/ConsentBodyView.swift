@@ -6,15 +6,15 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 class ConsentBodyView: UIView {
-    
+
     private let bulletItems: [FinancialConnectionsBulletPoint]
-    
+
     init(
         bulletItems: [FinancialConnectionsBulletPoint],
         didSelectURL: @escaping (URL) -> Void
@@ -22,7 +22,7 @@ class ConsentBodyView: UIView {
         self.bulletItems = bulletItems
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        
+
         let verticalStackView = HitTestStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
@@ -38,7 +38,7 @@ class ConsentBodyView: UIView {
         }
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -59,7 +59,7 @@ private func CreateLabelView(
         imageView.widthAnchor.constraint(equalToConstant: 16),
         imageView.heightAnchor.constraint(equalToConstant: 16),
     ])
-    
+
     let labelView = BulletPointLabelView(
         title: title,
         content: content,
@@ -84,7 +84,7 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
-    
+
     func makeUIView(context: Context) -> ConsentBodyView {
         ConsentBodyView(
             bulletItems: [
@@ -104,7 +104,7 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
             didSelectURL: { _ in }
         )
     }
-    
+
     func updateUIView(_ uiView: ConsentBodyView, context: Context) {}
 }
 

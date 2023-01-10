@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class AccountPickerLabelRowView: UIView {
-    
+
     private lazy var topLevelHorizontalStackView: UIStackView = {
         let topLevelHorizontalStackView = UIStackView()
         topLevelHorizontalStackView.axis = .horizontal
@@ -20,7 +20,7 @@ final class AccountPickerLabelRowView: UIView {
         topLevelHorizontalStackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return topLevelHorizontalStackView
     }()
-    
+
     private lazy var labelStackView: UIStackView = {
         let labelStackView = UIStackView()
         labelStackView.axis = .vertical
@@ -28,7 +28,7 @@ final class AccountPickerLabelRowView: UIView {
         labelStackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return labelStackView
     }()
-    
+
     private lazy var leadingTitleLabel: UILabel = {
         let leadingTitleLabel = UILabel()
         leadingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
@@ -38,7 +38,7 @@ final class AccountPickerLabelRowView: UIView {
         leadingTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return leadingTitleLabel
     }()
-    
+
     private lazy var trailingTitleLabel: UILabel = {
         let trailingTitleLabel = UILabel()
         trailingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
@@ -46,14 +46,14 @@ final class AccountPickerLabelRowView: UIView {
         trailingTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return trailingTitleLabel
     }()
-    
+
     private lazy var subtitleLabel: UILabel = {
         let subtitleLabel = UILabel()
         subtitleLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
         subtitleLabel.textColor = .textSecondary
         return subtitleLabel
     }()
-    
+
     private var linkedView: UIView?
 
     init() {
@@ -73,15 +73,15 @@ final class AccountPickerLabelRowView: UIView {
             horizontalStackView.spacing = 4
             return horizontalStackView
         }())
-        
+
         topLevelHorizontalStackView.addArrangedSubview(labelStackView)
         addAndPinSubview(topLevelHorizontalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setLeadingTitle(
         _ leadingTitle: String,
         trailingTitle: String?,
@@ -90,13 +90,13 @@ final class AccountPickerLabelRowView: UIView {
     ) {
         leadingTitleLabel.text = leadingTitle
         trailingTitleLabel.text = trailingTitle
-        
+
         subtitleLabel.removeFromSuperview()
         if let subtitle = subtitle {
             subtitleLabel.text = subtitle
             labelStackView.addArrangedSubview(subtitleLabel)
         }
-        
+
         linkedView?.removeFromSuperview()
         linkedView = nil
         if isLinked {
@@ -106,7 +106,7 @@ final class AccountPickerLabelRowView: UIView {
             linkedLabel.textColor = .textSuccess
             linkedLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             linkedLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            
+
             // stack views make re-sizing and adding padding really easy
             // so we don't NEED a stack view for a single label but it
             // simplifies work
@@ -123,7 +123,7 @@ final class AccountPickerLabelRowView: UIView {
             linkedLabelStackView.layer.cornerRadius = 4
             linkedLabelStackView.backgroundColor = .success100
             topLevelHorizontalStackView.addArrangedSubview(linkedLabelStackView)
-            
+
             self.linkedView = linkedLabelStackView
         }
     }

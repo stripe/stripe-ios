@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
@@ -22,10 +22,10 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 final class AttachLinkedPaymentAccountViewController: UIViewController {
-    
+
     private let dataSource: AttachLinkedPaymentAccountDataSource
     weak var delegate: AttachLinkedPaymentAccountViewControllerDelegate?
-    
+
     private var didSelectAnotherBank: () -> Void {
         return { [weak self] in
             guard let self = self else { return }
@@ -49,28 +49,28 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
         } : nil
     }
     private var errorView: UIView?
-    
+
     init(dataSource: AttachLinkedPaymentAccountDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
-        
+
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .attachLinkedPaymentAccount)
-        
+
         attachLinkedAccountIdToLinkAccountSession()
     }
-    
+
     private func attachLinkedAccountIdToLinkAccountSession() {
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
             // the `AttachLinkedPaymentAccount` flow will only ever
@@ -79,7 +79,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
             businessName: dataSource.manifest.businessName
         )
         view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
-        
+
         let pollingStartDate = Date()
         dataSource.attachLinkedAccountIdToLinkAccountSession()
             .observe { [weak self] result in
@@ -95,7 +95,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                                 "authSessionId": self.dataSource.authSessionId ?? "unknown",
                             ]
                         )
-                    
+
                     self.delegate?.attachLinkedPaymentAccountViewController(
                         self,
                         didFinishWithPaymentAccountResource: paymentAccountResource
@@ -109,7 +109,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                     if
                         let error = error as? StripeError,
                         case .apiError(let apiError) = error,
-                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String:Any],
+                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
                         let reason = extraFields["reason"] as? String,
                         reason == "account_number_retrieval_failed"
                     {
@@ -146,7 +146,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                 }
             }
     }
-    
+
     private func showErrorView(_ errorView: UIView?) {
         if let errorView = errorView {
             view.addAndPinSubview(errorView)

@@ -13,19 +13,19 @@ protocol ConsentDataSource: AnyObject {
     var consent: FinancialConnectionsConsent { get }
     var merchantLogo: [String]? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    
+
     func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest>
 }
 
 final class ConsentDataSourceImplementation: ConsentDataSource {
-    
+
     let manifest: FinancialConnectionsSessionManifest
     let consent: FinancialConnectionsConsent
     let merchantLogo: [String]?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    
+
     init(
         manifest: FinancialConnectionsSessionManifest,
         consent: FinancialConnectionsConsent,
@@ -41,7 +41,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
-    
+
     func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest> {
         return apiClient.markConsentAcquired(clientSecret: clientSecret)
     }

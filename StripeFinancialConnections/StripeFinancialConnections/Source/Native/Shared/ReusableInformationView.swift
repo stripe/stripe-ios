@@ -6,26 +6,26 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A reusable view that allows developers to quickly
 /// render information.
 final class ReusableInformationView: UIView {
-    
+
     enum IconType {
         case view(UIView)
         case loading
     }
-    
+
     struct ButtonConfiguration {
         let title: String
         let action: () -> Void
     }
-    
+
     private let primaryButtonAction: (() -> Void)?
     private let secondaryButtonAction: (() -> Void)?
-    
+
     init(
         iconType: IconType,
         title: String,
@@ -38,7 +38,7 @@ final class ReusableInformationView: UIView {
         self.secondaryButtonAction = secondaryButtonConfiguration?.action
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        
+
         let paneLayoutView = PaneWithHeaderLayoutView(
             icon: .view(CreateIconView(iconType: iconType)),
             title: title,
@@ -52,22 +52,22 @@ final class ReusableInformationView: UIView {
         )
         paneLayoutView.addTo(view: self)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc fileprivate func didSelectPrimaryButton() {
         primaryButtonAction?()
     }
-    
+
     @objc fileprivate func didSelectSecondaryButton() {
         secondaryButtonAction?()
     }
 }
 
 private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIView {
-    
+
     switch iconType {
     case .view(let iconView):
         return iconView
@@ -117,10 +117,10 @@ private func CreateFooterView(
 import SwiftUI
 
 private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
-    
+
     let primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?
     let secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?
-    
+
     func makeUIView(context: Context) -> ReusableInformationView {
         ReusableInformationView(
             iconType: .loading,
@@ -130,7 +130,7 @@ private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
             secondaryButtonConfiguration: secondaryButtonConfiguration
         )
     }
-    
+
     func updateUIView(_ uiView: ReusableInformationView, context: Context) {}
 }
 
@@ -151,7 +151,7 @@ struct ReusableInformationView_Previews: PreviewProvider {
         }
         .frame(maxWidth: .infinity)
         .background(Color.gray.opacity(0.1))
-        
+
         VStack {
             ReusableInformationViewUIViewRepresentable(
                 primaryButtonConfiguration: nil,

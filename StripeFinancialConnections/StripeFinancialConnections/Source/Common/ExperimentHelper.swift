@@ -9,19 +9,19 @@ import Foundation
 
 /// Abstracts experimentation logic for a specific experiment.
 final class ExperimentHelper {
-    
+
     private let experimentName: String
     private let manifest: FinancialConnectionsSessionManifest
     private let analyticsClient: FinancialConnectionsAnalyticsClient
     private var didLogExposure = false
-    
+
     private var isExperimentValid: Bool {
         return experimentVariant != nil && manifest.assignmentEventId != nil && manifest.accountholderToken != nil
     }
     private var experimentVariant: String? {
         return manifest.experimentAssignments?[experimentName]
     }
-    
+
     init(
         experimentName: String,
         manifest: FinancialConnectionsSessionManifest,
@@ -31,7 +31,7 @@ final class ExperimentHelper {
         self.manifest = manifest
         self.analyticsClient = analyticsClient
     }
-    
+
     // Helper where we assume that we have two groups: "control" and "treatment."
     // If user is in "treatment" group, we return `true`.
     func isEnabled(logExposure: Bool) -> Bool {
@@ -43,7 +43,7 @@ final class ExperimentHelper {
         }
         return experimentVariant == "treatment"
     }
-    
+
     private func logExposureIfNeeded() {
         guard isExperimentValid else {
             return
@@ -56,7 +56,7 @@ final class ExperimentHelper {
             assertionFailure("`isExperimentValid` should ensure `accountholderToken` is non-null")
             return
         }
-        
+
         if !didLogExposure {
             didLogExposure = true
             analyticsClient.logExposure(

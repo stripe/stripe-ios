@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol ResetFlowViewControllerDelegate: AnyObject {
     func resetFlowViewController(
@@ -25,35 +25,35 @@ protocol ResetFlowViewControllerDelegate: AnyObject {
 // 1) User presses "Link another account" in Consent Pane
 // 2) User selects "Select another bank" in an Error screen from Institution Picker
 final class ResetFlowViewController: UIViewController {
-    
+
     private let dataSource: ResetFlowDataSource
-    
+
     weak var delegate: ResetFlowViewControllerDelegate?
-    
+
     init(dataSource: ResetFlowDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
-        
+
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .resetFlow)
-        
+
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.color = .textDisabled
         activityIndicator.backgroundColor = .customBackgroundColor
         view.addAndPinSubviewToSafeArea(activityIndicator)
         activityIndicator.startAnimating()
-        
+
         dataSource.markLinkingMoreAccounts()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }

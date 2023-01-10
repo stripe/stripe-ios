@@ -5,19 +5,19 @@
 //  Created by Vardges Avetisyan on 10/5/22.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 class ContinueStateView: UIView {
-    
+
     // MARK: - Properties
 
     private let didSelectContinue: () -> Void
 
     // MARK: - UIView
-    
+
     init(
         institutionImageUrl: String?,
         didSelectContinue: @escaping () -> Void
@@ -45,7 +45,7 @@ class ContinueStateView: UIView {
         )
         paneLayoutView.addTo(view: self)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

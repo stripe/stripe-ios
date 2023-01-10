@@ -29,6 +29,8 @@ disabled_rules:
   - xctfail_message
   - empty_count
   - overridden_super_call
+  - redundant_string_enum_value
+  - no_fallthrough_only
 
 opt_in_rules:
   - colon
@@ -66,6 +68,7 @@ excluded:
 identifier_name:
   allowed_symbols: _
   min_length: 1
+  max_length: 100
   validates_start_with_lowercase: false
 
 large_tuple:
@@ -79,6 +82,8 @@ nesting:
 
 type_name:
   allowed_symbols: _`
+  min_length: 1
+  max_length: 100
   validates_start_with_lowercase: false
 
 vertical_whitespace:

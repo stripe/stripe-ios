@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 struct FinancialConnectionsSessionManifest: Decodable {
-    
+
     // MARK: - Types
-    
+
     enum NextPane: String, SafeEnumCodable, Equatable {
         case accountPicker = "account_picker"
         case attachLinkedPaymentAccount = "attach_linked_payment_account"
@@ -31,12 +31,12 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case success = "success"
         case unexpectedError = "unexpected_error"
         case unparsable
-        
+
         // client-side only panes
         case resetFlow = "reset_flow"
         case terminalError = "terminal_error"
     }
-    
+
     enum AccountDisconnectionMethod: String, SafeEnumCodable, Equatable {
         case dashboard = "dashboard"
         case support = "support"
@@ -44,9 +44,9 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case link = "link"
         case unparsable
     }
-    
+
     // MARK: - Properties
-    
+
     let accountholderIsLinkConsumer: Bool?
     let activeInstitution: FinancialConnectionsInstitution?
     let allowManualEntry: Bool

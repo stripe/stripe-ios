@@ -16,49 +16,49 @@ protocol FinancialConnectionsAPIClient {
                                            startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList>
 
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
-    
+
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
-    
+
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList>
-    
+
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList>
-    
+
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession>
-    
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
-    
+
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams>
-    
+
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
                               publicToken: String?) -> Promise<FinancialConnectionsAuthSession>
-    
+
     func fetchAuthSessionAccounts(
         clientSecret: String,
         authSessionId: String,
         initialPollDelay: TimeInterval
     ) -> Future<FinancialConnectionsAuthSessionAccounts>
-    
+
     func selectAuthSessionAccounts(clientSecret: String,
                                    authSessionId: String,
                                    selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts>
-    
+
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
-    
+
     func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession>
-    
+
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
         routingNumber: String
     ) -> Future<FinancialConnectionsPaymentAccountResource>
-    
+
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
         consumerSessionClientSecret: String?
     ) -> Future<FinancialConnectionsPaymentAccountResource>
-    
+
     func recordAuthSessionEvent(
         clientSecret: String,
         authSessionId: String,
@@ -83,12 +83,12 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.get(resource: APIEndpointSessionReceipt,
                         parameters: ["client_secret": clientSecret])
     }
-    
+
     func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
             "mobile": {
-                var mobileParameters: [String:Any] = [
+                var mobileParameters: [String: Any] = [
                     "fullscreen": true,
                     "hide_close_button": true,
                 ]
@@ -102,7 +102,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             parameters: parameters
         )
     }
-    
+
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let parameters = [
             "client_secret": clientSecret,
@@ -116,24 +116,24 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
         let parameters = [
             "client_secret": clientSecret,
-            "limit": "10"
+            "limit": "10",
         ]
         return self.get(resource: APIEndpointFeaturedInstitutions,
                         parameters: parameters)
     }
-    
+
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
         let parameters = [
             "client_secret": clientSecret,
             "query": query,
-            "limit": "20"
+            "limit": "20",
         ]
         return self.get(resource: APIEndpointSearchInstitutions,
                         parameters: parameters)
     }
-    
+
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
-        let body: [String:Any] = [
+        let body: [String: Any] = [
             "client_secret": clientSecret,
             "institution": institutionId,
             "use_mobile_handoff": "false",
@@ -142,7 +142,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.post(resource: APIEndpointAuthSessions, parameters: body)
     }
-    
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
         let body = [
             "client_secret": clientSecret,
@@ -150,7 +150,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.post(resource: APIEndpointAuthSessionsCancel, object: body)
     }
-    
+
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
         let body = [
             "client_secret": clientSecret,
@@ -171,7 +171,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
         return pollingHelper.startPollingApiCall()
     }
-    
+
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
                               publicToken: String? = nil) -> Promise<FinancialConnectionsAuthSession> {
@@ -182,7 +182,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         body["public_token"] = publicToken // not all integrations require public_token
         return self.post(resource: APIEndpointAuthSessionsAuthorized, object: body)
     }
-    
+
     func fetchAuthSessionAccounts(
         clientSecret: String,
         authSessionId: String,
@@ -205,7 +205,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
         return pollingHelper.startPollingApiCall()
     }
-    
+
     func selectAuthSessionAccounts(clientSecret: String,
                                    authSessionId: String,
                                    selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
@@ -216,14 +216,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.post(resource: APIEndpointAuthSessionsSelectedAccounts, parameters: body)
     }
-    
+
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let body = [
             "client_secret": clientSecret,
         ]
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
-    
+
     func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
         let body = [
             "client_secret": clientSecret,
@@ -261,7 +261,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 }
             }
     }
-    
+
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
@@ -273,7 +273,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             routingNumber: routingNumber
         )
     }
-    
+
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
@@ -285,7 +285,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
-    
+
     private func attachPaymentAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String? = nil,
@@ -293,7 +293,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         linkedAccountId: String? = nil,
         consumerSessionClientSecret: String? = nil
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
-        var body: [String:Any] = [
+        var body: [String: Any] = [
             "client_secret": clientSecret,
         ]
         if let accountNumber = accountNumber, let routingNumber = routingNumber {
@@ -315,7 +315,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                     .unknown(debugDescription: "Invalid usage of \(#function).")
             )
         }
-        
+
         let pollingHelper = APIPollingHelper(
             apiCall: { [weak self] in
                 guard let self = self else {
@@ -329,7 +329,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
         return pollingHelper.startPollingApiCall()
     }
-    
+
     func recordAuthSessionEvent(
         clientSecret: String,
         authSessionId: String,
@@ -337,7 +337,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         eventName: String
     ) -> Future<EmptyResponse> {
         let clientTimestamp = Date().timeIntervalSince1970.milliseconds
-        var body: [String:Any] = [
+        var body: [String: Any] = [
             "id": authSessionId,
             "client_secret": clientSecret,
             "client_timestamp": clientTimestamp,
@@ -347,8 +347,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                     "event_name": eventName,
                     "client_timestamp": clientTimestamp,
                     "raw_event_details": "{}",
-                ]
-            ]
+                ],
+            ],
         ]
         body["key"] = publishableKey
         return self.post(

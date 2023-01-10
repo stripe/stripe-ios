@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Reusable view that separates panes into three parts:
 /// 1. A header that is part of a "content scroll view" and that can only be customized with specific parameters.
@@ -17,16 +17,16 @@ import UIKit
 /// Purposefully NOT a `UIView` subclass because it should only be used via
 /// `addToView` helper function.
 final class PaneWithHeaderLayoutView {
-    
+
     enum Icon {
         case view(UIView)
     }
-    
+
     private let paneWithCustomHeaderLayoutView: PaneWithCustomHeaderLayoutView
     var scrollView: UIScrollView {
         return paneWithCustomHeaderLayoutView.scrollView
     }
-    
+
     init(
         icon: Icon? = nil,
         title: String,
@@ -41,7 +41,7 @@ final class PaneWithHeaderLayoutView {
             footerView: footerView
         )
     }
-    
+
     func addTo(view: UIView) {
         paneWithCustomHeaderLayoutView.addTo(view: view)
     }
@@ -81,14 +81,14 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
     let labelStackView = HitTestStackView()
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
-    
+
     let titleLabel = UILabel()
     titleLabel.font = .stripeFont(forTextStyle: .subtitle)
     titleLabel.textColor = .textPrimary
     titleLabel.numberOfLines = 0
     titleLabel.text = title
     labelStackView.addArrangedSubview(titleLabel)
-    
+
     if let subtitle = subtitle {
         let subtitleLabel = UILabel()
         subtitleLabel.font = .stripeFont(forTextStyle: .body)
@@ -97,6 +97,6 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
         subtitleLabel.text = subtitle
         labelStackView.addArrangedSubview(subtitleLabel)
     }
-    
+
     return labelStackView
 }

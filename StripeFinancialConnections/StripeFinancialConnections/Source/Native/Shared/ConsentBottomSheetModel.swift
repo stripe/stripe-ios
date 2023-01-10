@@ -14,7 +14,7 @@ struct ConsentBottomSheetModel {
     let extraNotice: String?
     let learnMore: String
     let cta: String
-    
+
     struct Body: Decodable {
         let bullets: [FinancialConnectionsBulletPoint]
     }

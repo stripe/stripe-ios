@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol SuccessViewControllerDelegate: AnyObject {
@@ -18,24 +18,24 @@ protocol SuccessViewControllerDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 final class SuccessViewController: UIViewController {
-    
+
     private let dataSource: SuccessDataSource
     weak var delegate: SuccessViewControllerDelegate?
-    
+
     init(dataSource: SuccessDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
-        
+
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
             icon: .view(SuccessIconView()),
             title: STPLocalizedString("Success!", "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."),
@@ -95,7 +95,7 @@ final class SuccessViewController: UIViewController {
             )
         )
         paneWithHeaderLayoutView.addTo(view: view)
-        
+
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .success)

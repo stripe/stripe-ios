@@ -6,18 +6,18 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
 import SwiftUI
+import UIKit
 
 protocol ManualEntryFormViewDelegate: AnyObject {
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView)
 }
 
 final class ManualEntryFormView: UIView {
-    
+
     weak var delegate: ManualEntryFormViewDelegate?
-    
+
     private lazy var checkView: ManualEntryCheckView = {
         let checkView = ManualEntryCheckView()
         checkView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,11 +71,11 @@ final class ManualEntryFormView: UIView {
         accountNumberConfirmationTextField.delegate = self
         return accountNumberConfirmationTextField
     }()
-    
+
     private var didEndEditingOnceRoutingNumberTextField = false
     private var didEndEditingOnceAccountNumberTextField = false
     private var didEndEditingOnceAccountNumberConfirmationTextField = false
-    
+
     var routingAndAccountNumber: (routingNumber: String, accountNumber: String)? {
         guard
             ManualEntryValidator.validateRoutingNumber(routingNumberTextField.text) == nil
@@ -86,7 +86,7 @@ final class ManualEntryFormView: UIView {
         }
         return (routingNumberTextField.text, accountNumberTextField.text)
     }
-    
+
     init() {
         super.init(frame: .zero)
         let contentVerticalStackView = UIStackView(
@@ -99,16 +99,16 @@ final class ManualEntryFormView: UIView {
         contentVerticalStackView.spacing = 2
         addAndPinSubview(contentVerticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc private func textFieldTextDidChange() {
         delegate?.manualEntryFormViewTextDidChange(self)
         updateTextFieldErrorStates()
     }
-    
+
     private func updateCheckViewState() {
         checkView.highlightState = .none
         if routingNumberTextField.textField.isFirstResponder {
@@ -117,18 +117,18 @@ final class ManualEntryFormView: UIView {
             checkView.highlightState = .accountNumber
         }
     }
-    
+
     private func updateTextFieldErrorStates() {
         // we only show errors if user has previously ended editing the field
-        
+
         if didEndEditingOnceRoutingNumberTextField {
             routingNumberTextField.errorText = ManualEntryValidator.validateRoutingNumber(routingNumberTextField.text)
         }
-        
+
         if didEndEditingOnceAccountNumberTextField {
             accountNumberTextField.errorText = ManualEntryValidator.validateAccountNumber(accountNumberTextField.text)
         }
-        
+
         if didEndEditingOnceAccountNumberConfirmationTextField {
             accountNumberConfirmationTextField.errorText = ManualEntryValidator.validateAccountNumberConfirmation(
                 accountNumberConfirmationTextField.text,
@@ -136,7 +136,7 @@ final class ManualEntryFormView: UIView {
             )
         }
     }
-    
+
     func setError(text: String?) {
         if let text = text {
             let errorView = ManualEntryErrorView(text: text)
@@ -152,7 +152,7 @@ final class ManualEntryFormView: UIView {
 // MARK: - ManualEntryTextFieldDelegate
 
 extension ManualEntryFormView: ManualEntryTextFieldDelegate {
-    
+
     func manualEntryTextField(
         _ manualEntryTextField: ManualEntryTextField,
         shouldChangeCharactersIn range: NSRange,
@@ -163,22 +163,22 @@ extension ManualEntryFormView: ManualEntryTextFieldDelegate {
             return false
         }
         let updatedText = currentText.replacingCharacters(in: currentTextChangeRange, with: string)
-        
+
         // don't allow the user to type more characters than possible
         if manualEntryTextField === routingNumberTextField {
             return updatedText.count <= ManualEntryValidator.routingNumberLength
         } else if manualEntryTextField === accountNumberTextField || manualEntryTextField === accountNumberConfirmationTextField {
             return updatedText.count <= ManualEntryValidator.accountNumberMaxLength
         }
-        
+
         assertionFailure("we should never have an unhandled case")
         return true
     }
-    
+
     func manualEntryTextFieldDidBeginEditing(_ textField: ManualEntryTextField) {
         updateCheckViewState()
     }
-    
+
     func manualEntryTextFieldDidEndEditing(_ manualEntryTextField: ManualEntryTextField) {
         if manualEntryTextField === routingNumberTextField {
             didEndEditingOnceRoutingNumberTextField = true
@@ -190,7 +190,7 @@ extension ManualEntryFormView: ManualEntryTextFieldDelegate {
             assertionFailure("we should always be able to reference a textfield")
         }
         updateTextFieldErrorStates()
-        
+
         updateCheckViewState()
     }
 }

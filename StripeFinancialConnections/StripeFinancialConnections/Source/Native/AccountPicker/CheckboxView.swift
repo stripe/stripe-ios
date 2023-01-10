@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class CheckboxView: UIView {
-    
+
     private let checkboxImageView: UIImageView = {
         let checkboxImageView = UIImageView()
         checkboxImageView.contentMode = .scaleAspectFit
@@ -18,7 +18,7 @@ final class CheckboxView: UIView {
             .withTintColor(.customBackgroundColor, renderingMode: .alwaysOriginal)
         return checkboxImageView
     }()
-    
+
     var isSelected: Bool = false {
         didSet {
             checkboxImageView.isHidden = !isSelected
@@ -34,17 +34,17 @@ final class CheckboxView: UIView {
             }
         }
     }
-    
+
     init() {
         super.init(frame: .zero)
         isSelected = false // fire off setter to draw
         addSubview(checkboxImageView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         let checkmarkSize = CGSize(width: 12, height: 12)
         checkboxImageView.frame = CGRect(
