@@ -26,9 +26,9 @@ class STPMultipartFormDataPart: NSObject {
     /// When omitted, the multipart/form-data standard assumes text/plain.
     var contentType: String?
 
-    /// Returns the fully-composed data for this part.
     // MARK: - Data Composition
 
+    /// Returns the fully-composed data for this part.
     func composedData() -> Data {
         var data = Data()
 

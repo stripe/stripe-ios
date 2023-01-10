@@ -18,7 +18,7 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
             "error": [
                 "type": "api_error",
                 "message": "some message",
-            ]
+            ],
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
@@ -34,7 +34,7 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
         )
 
         switch result {
-        case .success(_):
+        case .success:
             XCTFail("The request should not have succeeded")
         case .failure(let error):
             if let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError {

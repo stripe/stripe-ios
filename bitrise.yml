@@ -353,6 +353,10 @@ workflows:
     - notify_ci
   lint-tests:
     steps:
+    - script@1:
+        inputs:
+        - content: "./ci_scripts/lint.sh"
+        title: Run swiftlint
     - fastlane@3:
         inputs:
         - lane: build_extras

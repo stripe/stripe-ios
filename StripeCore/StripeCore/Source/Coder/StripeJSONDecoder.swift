@@ -548,7 +548,7 @@ extension STPDecodingContainerProtocol {
                 return -Double.infinity as! T
             case UnknownFieldsCodableFloats.NaN.rawValue:
                 return Double.nan as! T
-            case .none, .some(_):
+            case .none, .some:
                 guard let value = object as? Double, let returnValue = value as? T else {
                     throw DecodingError.dataCorrupted(
                         .init(
@@ -569,7 +569,7 @@ extension STPDecodingContainerProtocol {
                 return -Float.infinity as! T
             case UnknownFieldsCodableFloats.NaN.rawValue:
                 return Float.nan as! T
-            case .none, .some(_):
+            case .none, .some:
                 guard let value = object as? Float, let returnValue = value as? T else {
                     throw DecodingError.dataCorrupted(
                         .init(

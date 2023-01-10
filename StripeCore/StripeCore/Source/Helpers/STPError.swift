@@ -146,7 +146,7 @@ extension NSError {
         var code = 0
 
         var userInfo: [AnyHashable: Any] = [
-            NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage()
+            NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage(),
         ]
         userInfo[STPError.stripeErrorCodeKey] = stripeErrorCode ?? ""
         userInfo[STPError.stripeErrorTypeKey] = errorType ?? ""
@@ -285,23 +285,23 @@ public enum STPCardErrorCode: String {
 // swift-format-ignore: DontRepeatTypeInStaticProperties
 @objc extension STPError {
     /// The card number is not a valid credit card number.
-    @objc public static let invalidNumber = STPCardErrorCode.invalidNumber.rawValue
+    public static let invalidNumber = STPCardErrorCode.invalidNumber.rawValue
     /// The card has an invalid expiration month.
-    @objc public static let invalidExpMonth = STPCardErrorCode.invalidExpMonth.rawValue
+    public static let invalidExpMonth = STPCardErrorCode.invalidExpMonth.rawValue
     /// The card has an invalid expiration year.
-    @objc public static let invalidExpYear = STPCardErrorCode.invalidExpYear.rawValue
+    public static let invalidExpYear = STPCardErrorCode.invalidExpYear.rawValue
     /// The card has an invalid CVC.
-    @objc public static let invalidCVC = STPCardErrorCode.invalidCVC.rawValue
+    public static let invalidCVC = STPCardErrorCode.invalidCVC.rawValue
     /// The card number is incorrect.
-    @objc public static let incorrectNumber = STPCardErrorCode.incorrectNumber.rawValue
+    public static let incorrectNumber = STPCardErrorCode.incorrectNumber.rawValue
     /// The card is expired.
-    @objc public static let expiredCard = STPCardErrorCode.expiredCard.rawValue
+    public static let expiredCard = STPCardErrorCode.expiredCard.rawValue
     /// The card was declined.
-    @objc public static let cardDeclined = STPCardErrorCode.cardDeclined.rawValue
+    public static let cardDeclined = STPCardErrorCode.cardDeclined.rawValue
     /// An error occured while processing this card.
-    @objc public static let processingError = STPCardErrorCode.processingError.rawValue
+    public static let processingError = STPCardErrorCode.processingError.rawValue
     /// The card has an incorrect CVC.
-    @objc public static let incorrectCVC = STPCardErrorCode.incorrectCVC.rawValue
+    public static let incorrectCVC = STPCardErrorCode.incorrectCVC.rawValue
     /// The postal code is incorrect.
-    @objc public static let incorrectZip = STPCardErrorCode.incorrectZip.rawValue
+    public static let incorrectZip = STPCardErrorCode.incorrectZip.rawValue
 }

@@ -75,9 +75,9 @@ class StripeAPIRequestTest: APIStubbedTestCase {
         let encodedData = try? JSONSerialization.data(withJSONObject: encodedDict, options: [])
 
         let apiClient = stubbedAPIClient()
-        stub { r in
+        stub { _ in
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: encodedData!, statusCode: 200, headers: nil)
         }
 
@@ -91,7 +91,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
     func testValidEnum() {
         var codable = TestCodable(topProperty: "hello1")
         codable.additionalParameters = ["test_enum": "hey", "test_enums": ["hello", "hey"]]
-        codableTest(codable: codable) { encodedDict, result in
+        codableTest(codable: codable) { _, result in
             let resultObject = try! result.get()
             XCTAssertEqual(resultObject.testEnum, .hey)
             XCTAssertEqual(resultObject.testEnums, [.hello, .hey])
@@ -100,7 +100,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
 
     func testNonOptionalValidEnum() {
         let codable = TestNonOptionalEnumCodable(testEnum: .hey, testEnums: [.hello, .hey])
-        codableTest(codable: codable) { encodedDict, result in
+        codableTest(codable: codable) { _, result in
             let resultObject = try! result.get()
             XCTAssertEqual(resultObject.testEnum, .hey)
             XCTAssertEqual(resultObject.testEnums, [.hello, .hey])
@@ -113,7 +113,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
             "test_enum": "hellooo", "test_enums": ["hello", "helloooo"],
             "test_enum_dict": ["item1": "hello", "item2": "this_will_not_parse"],
         ]
-        codableTest(codable: codable) { encodedDict, result in
+        codableTest(codable: codable) { _, result in
             let resultObject = try! result.get()
             XCTAssertEqual(resultObject.testEnum, .unparsable)
             XCTAssertEqual(resultObject.testEnumDict!["item1"], .hello)
@@ -123,7 +123,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
 
     func testEmptyEnum() {
         let codable = TestCodable(topProperty: "hello1")
-        codableTest(codable: codable) { encodedDict, result in
+        codableTest(codable: codable) { _, result in
             let resultObject = try! result.get()
             XCTAssertNil(resultObject.testEnum)
         }
@@ -131,7 +131,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
 
     func testUnpopulatedFieldsAreNil() {
         let codable = TestCodable(topProperty: "hello1")
-        codableTest(codable: codable) { encodedDict, result in
+        codableTest(codable: codable) { _, result in
             let resultObject = try! result.get()
             // wrappedValues will sometimes be populated but empty. We want them to be nil.
             XCTAssertNil(resultObject.nested)
@@ -144,7 +144,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
         codable.arrayProperty = [
             TestCodable.Nested(nestedProperty: "hi"), TestCodable.Nested(nestedProperty: "there"),
         ]
-        codableTest(codable: codable) { codableDict, result in
+        codableTest(codable: codable) { _, result in
             let resultObject = try! result.get()
             XCTAssert(resultObject.arrayProperty![0].nestedProperty == "hi")
         }
@@ -181,7 +181,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
                 "hello": "world",
                 "deepest": [
                     "deep":
-                        ["wow": "very deep"]
+                        ["wow": "very deep"],
                 ],
             ],
         ]

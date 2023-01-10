@@ -66,7 +66,7 @@ import Foundation
         // Merge in the additional parameters we collected in our encoder userInfo's NSMutableDictionary during encoding
         try jsonDictionary.merge(
             dictionary as! [String: Any],
-            uniquingKeysWith: Dictionary<String, Any>.stp_deepMerge
+            uniquingKeysWith: [String: Any].stp_deepMerge
         )
 
         return jsonDictionary

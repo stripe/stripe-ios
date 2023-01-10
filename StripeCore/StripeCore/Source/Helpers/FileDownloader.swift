@@ -34,7 +34,7 @@ import Foundation
 
         let request = URLRequest(url: remoteURL)
 
-        let downloadTask = urlSession.downloadTask(with: request) { url, response, error in
+        let downloadTask = urlSession.downloadTask(with: request) { url, _, error in
 
             if let error = error {
                 return promise.reject(with: error)

@@ -8,9 +8,9 @@
 
 import Foundation
 
-public extension StripeAPIConfiguration {
+extension StripeAPIConfiguration {
     /// The current version of this library.
-    static let STPSDKVersion = "23.3.2"
+    public static let STPSDKVersion = "23.3.2"
 
     /*
      NOTE: `STPSDKVersion` must be a hard-coded static string instead of

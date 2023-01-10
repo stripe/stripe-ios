@@ -48,7 +48,8 @@ import UIKit
             return nil
         }
 
-        return (publishableKey.isSecretKey || publishableKeyIsUserKey) ? "[REDACTED_LIVE_KEY]" : publishableKey
+        return (publishableKey.isSecretKey || publishableKeyIsUserKey)
+            ? "[REDACTED_LIVE_KEY]" : publishableKey
     }
 
     // Stored STPPaymentConfiguration: Type checking handled in STPAPIClient+Payments.swift.
@@ -127,7 +128,7 @@ import UIKit
         defaultHeaders["X-Stripe-User-Agent"] = STPAPIClient.stripeUserAgentDetails(with: appInfo)
         var stripeVersion = APIVersion
         for beta in betas {
-            stripeVersion = stripeVersion + "; \(beta)"
+            stripeVersion += "; \(beta)"
         }
         defaultHeaders["Stripe-Version"] = stripeVersion
         defaultHeaders["Stripe-Account"] = stripeAccount
@@ -411,8 +412,11 @@ extension STPAPIClient {
         ephemeralKeySecret: String? = nil
     ) -> Promise<O> {
         let promise = Promise<O>()
-        self.post(resource: resource, object: object, ephemeralKeySecret: ephemeralKeySecret) {
-            result in
+        self.post(
+            resource: resource,
+            object: object,
+            ephemeralKeySecret: ephemeralKeySecret
+        ) { result in
             promise.fullfill(with: result)
         }
         return promise
