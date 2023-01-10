@@ -416,11 +416,8 @@ class PaymentSheetUITest: XCTestCase {
     func testCashAppPaymentMethod() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new", // new customer
-            "automatic_payment_methods": "off"
+            "automatic_payment_methods": "on"
         ])
-        
-        // TODO(porter): Use v6 playground endpoint once it is updated to support Cash App
-        selectEndpoint(app, endpoint: "https://synonymous-elfin-brace.glitch.me/checkout")
 
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $50.99"]
