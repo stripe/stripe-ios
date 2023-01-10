@@ -47,7 +47,7 @@ class FlowRouter {
         ) as? Bool {
             return isNativeEnabled
         }
-        
+
         // if this version is killswitched by server, fallback to webview.
         if killswitchActive { return false }
 

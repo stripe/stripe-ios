@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchFooterView: UIView {
-    
+
     init(didSelectManuallyAddYourAccount: (() -> Void)?) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
@@ -52,7 +52,7 @@ final class InstitutionSearchFooterView: UIView {
             )
         )
         addAndPinSubview(verticalStackView)
-        
+
         // Add top/bottom separators
         let topSeparatorView = UIView()
         topSeparatorView.backgroundColor = .borderNeutral
@@ -67,14 +67,14 @@ final class InstitutionSearchFooterView: UIView {
             topSeparatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
             topSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
             topSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
-            
+
             bottomSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
             bottomSeparatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
             bottomSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
             bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
         ])
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -124,18 +124,18 @@ private func CreateRowIconView(image: Image, isHighlighted: Bool) -> UIView {
         .withTintColor(
             isHighlighted ? .textBrand : .textSecondary
         )
-    
+
     let iconContainerView = UIView()
     iconContainerView.backgroundColor = isHighlighted ? .info100 : .borderNeutral
     iconContainerView.layer.cornerRadius = 4
     iconContainerView.addSubview(iconImageView)
-    
+
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         iconContainerView.widthAnchor.constraint(equalToConstant: 32),
         iconContainerView.heightAnchor.constraint(equalToConstant: 32),
-        
+
         iconImageView.heightAnchor.constraint(equalToConstant: 16),
         iconImageView.centerXAnchor.constraint(equalTo: iconContainerView.centerXAnchor),
         iconImageView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor),
@@ -173,11 +173,11 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentable {
-    
+
     func makeUIView(context: Context) -> InstitutionSearchFooterView {
         InstitutionSearchFooterView(didSelectManuallyAddYourAccount: {})
     }
-    
+
     func updateUIView(_ uiView: InstitutionSearchFooterView, context: Context) {
         uiView.sizeToFit()
     }

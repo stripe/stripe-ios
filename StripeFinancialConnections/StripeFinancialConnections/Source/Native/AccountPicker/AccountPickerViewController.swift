@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol AccountPickerViewControllerDelegate: AnyObject {
@@ -28,7 +28,7 @@ enum AccountPickerType {
 
 @available(iOSApplicationExtension, unavailable)
 final class AccountPickerViewController: UIViewController {
-    
+
     private let dataSource: AccountPickerDataSource
     private let accountPickerType: AccountPickerType
     // a special case where some institutions have an
@@ -63,7 +63,7 @@ final class AccountPickerViewController: UIViewController {
         } : nil
     }
     private var errorView: UIView?
-    
+
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
             isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
@@ -92,7 +92,7 @@ final class AccountPickerViewController: UIViewController {
             }
         )
     }()
-    
+
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
@@ -100,11 +100,11 @@ final class AccountPickerViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // account picker ALWAYS hides the back button
@@ -112,7 +112,7 @@ final class AccountPickerViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         pollAuthSessionAccounts()
     }
-    
+
     private func pollAuthSessionAccounts() {
         // Load accounts
         let retreivingAccountsLoadingView = ReusableInformationView(
@@ -121,7 +121,7 @@ final class AccountPickerViewController: UIViewController {
             subtitle: STPLocalizedString("Please wait while Stripe loads your accounts.", "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments.")
         )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
-        
+
         let pollingStartDate = Date()
         dataSource
             .pollAuthSessionAccounts()
@@ -130,7 +130,7 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accountsPayload):
                     let accounts = accountsPayload.data
-                    
+
                     if !accounts.isEmpty {
                         self.dataSource
                             .analyticsClient
@@ -145,7 +145,7 @@ final class AccountPickerViewController: UIViewController {
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .accountPicker)
-                    
+
                     if accounts.isEmpty {
                         // if there were no accounts returned, API should have thrown an error
                         // ...handle it here since API did not throw error
@@ -192,7 +192,7 @@ final class AccountPickerViewController: UIViewController {
                     if
                         let error = error as? StripeError,
                         case .apiError(let apiError) = error,
-                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String:Any],
+                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
                         let reason = extraFields["reason"] as? String,
                         reason == "no_supported_payment_method_type_accounts_found",
                         let numberOfIneligibleAccounts = extraFields["total_accounts_count"] as? Int,
@@ -228,7 +228,7 @@ final class AccountPickerViewController: UIViewController {
                 retreivingAccountsLoadingView.removeFromSuperview()
             }
     }
-    
+
     private func displayAccounts(
         _ enabledAccounts: [FinancialConnectionsPartnerAccount],
         _ disabledAccounts: [FinancialConnectionsPartnerAccount]
@@ -264,7 +264,7 @@ final class AccountPickerViewController: UIViewController {
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
-        
+
         switch accountPickerType {
         case .checkbox:
             // select all accounts
@@ -279,7 +279,7 @@ final class AccountPickerViewController: UIViewController {
             }
         }
     }
-    
+
     private func showAccountLoadErrorView(error: Error) {
         let errorView = AccountPickerAccountLoadErrorView(
             institution: dataSource.institution,
@@ -296,7 +296,7 @@ final class AccountPickerViewController: UIViewController {
                 pane: .accountPicker
             )
     }
-    
+
     private func showErrorView(_ errorView: UIView?) {
         if let errorView = errorView {
             view.addAndPinSubview(errorView)
@@ -306,7 +306,7 @@ final class AccountPickerViewController: UIViewController {
         }
         self.errorView = errorView
     }
-    
+
     private func didSelectLinkAccounts() {
         let numberOfSelectedAccounts = dataSource.selectedAccounts.count
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
@@ -314,7 +314,7 @@ final class AccountPickerViewController: UIViewController {
             businessName: businessName
         )
         view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
-        
+
         dataSource
             .selectAuthSessionAccounts()
             .observe(on: .main) { [weak self] result in
@@ -343,7 +343,7 @@ final class AccountPickerViewController: UIViewController {
 
 @available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
-    
+
     func accountPickerSelectionView(
         _ view: AccountPickerSelectionView,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]

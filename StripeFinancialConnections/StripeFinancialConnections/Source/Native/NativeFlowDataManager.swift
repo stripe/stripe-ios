@@ -17,20 +17,20 @@ protocol NativeFlowDataManager: AnyObject {
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    
+
     var institution: FinancialConnectionsInstitution? { get set }
     var authSession: FinancialConnectionsAuthSession? { get set }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
     var terminalError: Error? { get set }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get set }
     var accountNumberLast4: String? { get set }
-    
+
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
 }
 
 class NativeFlowAPIDataManager: NativeFlowDataManager {
-    
+
     private lazy var consentCombinedLogoExperiment: ExperimentHelper = {
         return ExperimentHelper(
             experimentName: "connections_consent_combined_logo",
@@ -73,7 +73,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    
+
     var institution: FinancialConnectionsInstitution?
     var authSession: FinancialConnectionsAuthSession?
     var linkedAccounts: [FinancialConnectionsPartnerAccount]?
@@ -99,7 +99,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.analyticsClient = analyticsClient
         didUpdateManifest()
     }
-    
+
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
         return apiClient.completeFinancialConnectionsSession(clientSecret: clientSecret)
     }
@@ -112,7 +112,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         linkedAccounts = nil
         manifest = newManifest
     }
-    
+
     private func didUpdateManifest() {
         analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }

@@ -5,10 +5,10 @@
 //  Created by Vardges Avetisyan on 1/20/22.
 //
 
-import XCTest
-@testable import StripeFinancialConnections
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
+@testable import StripeFinancialConnections
+import XCTest
 
 class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
 
@@ -44,7 +44,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
                                                                       bankAccountToken: nil)
         return Promise(value: sessionWithFullAccountList)
     }
-    
+
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
@@ -52,7 +52,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
         return Promise<FinancialConnectionsInstitutionList>()
     }
-    
+
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
         return Promise<FinancialConnectionsInstitutionList>()
     }
@@ -60,19 +60,19 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
         return Promise<FinancialConnectionsMixedOAuthParams>()
     }
-    
+
     func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func fetchAuthSessionAccounts(
         clientSecret: String,
         authSessionId: String,
@@ -80,19 +80,19 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsAuthSessionAccounts> {
         return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
-    
+
     func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
         return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
-    
+
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
-    
+
     func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
-    
+
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
@@ -100,7 +100,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
-    
+
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
@@ -108,7 +108,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
-    
+
     func recordAuthSessionEvent(
         clientSecret: String,
         authSessionId: String,
@@ -130,7 +130,7 @@ class SessionFetcherTests: XCTestCase {
             switch result {
             case .success(let session):
                 XCTAssertEqual(session.accounts.data.count, 0)
-            case .failure(_):
+            case .failure:
                 XCTFail()
             }
         }
@@ -145,7 +145,7 @@ class SessionFetcherTests: XCTestCase {
             switch result {
             case .success(let session):
                 XCTAssertEqual(session.accounts.data.count, 1)
-            case .failure(_):
+            case .failure:
                 XCTFail()
             }
         }

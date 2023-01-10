@@ -6,16 +6,16 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 class ConsentFooterView: HitTestView {
-    
+
     private let agreeButtonText: String
     private let didSelectAgree: () -> Void
-    
+
     private lazy var agreeButton: StripeUICore.Button = {
         let agreeButton = Button(configuration: .financialConnectionsPrimary)
         agreeButton.title = agreeButtonText
@@ -26,7 +26,7 @@ class ConsentFooterView: HitTestView {
         ])
         return agreeButton
     }()
-    
+
     init(
         aboveCtaText: String,
         ctaText: String,
@@ -38,7 +38,7 @@ class ConsentFooterView: HitTestView {
         self.didSelectAgree = didSelectAgree
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        
+
         let termsAndPrivacyPolicyLabel = ClickableLabel(
             font: UIFont.stripeFont(forTextStyle: .detail),
             boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
@@ -50,7 +50,7 @@ class ConsentFooterView: HitTestView {
             aboveCtaText,
             action: didSelectURL
         )
-        
+
         let verticalStackView = HitTestStackView(
             arrangedSubviews: [
                 termsAndPrivacyPolicyLabel,
@@ -59,7 +59,7 @@ class ConsentFooterView: HitTestView {
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 20
-            
+
         if let belowCtaText = belowCtaText {
             let manuallyVerifyLabel = ClickableLabel(
                 font: UIFont.stripeFont(forTextStyle: .detail),
@@ -75,18 +75,18 @@ class ConsentFooterView: HitTestView {
             verticalStackView.addArrangedSubview(manuallyVerifyLabel)
             verticalStackView.setCustomSpacing(24, after: agreeButton)
         }
-        
+
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc private func didSelectAgreeButton() {
         didSelectAgree()
     }
-    
+
     func setIsLoading(_ isLoading: Bool) {
         agreeButton.isLoading = isLoading
     }

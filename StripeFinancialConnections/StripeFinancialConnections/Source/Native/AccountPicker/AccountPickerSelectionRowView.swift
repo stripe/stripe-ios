@@ -6,19 +6,19 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class AccountPickerSelectionRowView: UIView {
-    
+
     enum SelectionType {
         case checkbox
         case radioButton
     }
-    
+
     private let selectionType: SelectionType
     private let didSelect: () -> Void
-    
+
     private var isSelected: Bool = false {
         didSet {
             layer.cornerRadius = 8
@@ -32,7 +32,7 @@ final class AccountPickerSelectionRowView: UIView {
             selectionView.isSelected = isSelected
         }
     }
-    
+
     private lazy var selectionView: SelectionView = {
         let selectionView: SelectionView
         switch selectionType {
@@ -48,11 +48,11 @@ final class AccountPickerSelectionRowView: UIView {
         ])
         return selectionView
     }()
-    
+
     private lazy var labelRowView: AccountPickerLabelRowView = {
        return AccountPickerLabelRowView()
     }()
-    
+
     init(
         selectionType: SelectionType,
         isDisabled: Bool,
@@ -61,7 +61,7 @@ final class AccountPickerSelectionRowView: UIView {
         self.selectionType = selectionType
         self.didSelect = didSelect
         super.init(frame: .zero)
-        
+
         let horizontalStackView = CreateHorizontalStackView(
             arrangedSubviews: [
                 selectionView,
@@ -72,17 +72,17 @@ final class AccountPickerSelectionRowView: UIView {
             horizontalStackView.alpha = 0.25
         }
         addAndPinSubviewToSafeArea(horizontalStackView)
-        
+
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGestureRecognizer)
-        
+
         isSelected = false // activate the setter to draw border
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setLeadingTitle(
         _ leadingTitle: String,
         trailingTitle: String?,
@@ -98,7 +98,7 @@ final class AccountPickerSelectionRowView: UIView {
         )
         self.isSelected = isSelected
     }
-    
+
     @objc private func didTapView() {
         self.didSelect()
     }
@@ -133,7 +133,7 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresentable {
-    
+
     let type: AccountPickerSelectionRowView.SelectionType
     let leadingTitle: String
     let trailingTitle: String?
@@ -141,7 +141,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
     let isSelected: Bool
     let isDisabled: Bool
     let isLinked: Bool
-    
+
     func makeUIView(context: Context) -> AccountPickerSelectionRowView {
         let view = AccountPickerSelectionRowView(
             selectionType: type,
@@ -157,7 +157,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
         )
         return view
     }
-    
+
     func updateUIView(_ uiView: AccountPickerSelectionRowView, context: Context) {
         uiView.setLeadingTitle(
             leadingTitle,

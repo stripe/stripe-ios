@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 // Same as Stripe.js `AccountNoneEligibleForPaymentMethodFailure`
 final class AccountPickerNoAccountEligibleErrorView: UIView {
-    
+
     init(
         institution: FinancialConnectionsInstitution,
         bussinessName: String?,
@@ -24,7 +24,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
     ) {
         super.init(frame: .zero)
         assert(numberOfIneligibleAccounts >= 1, "this error should never be displayed if 0 accounts were selected by the user")
-        
+
         // Financial Connections support credit cards, but not in all flows
         // (ex. ACH only supports checking/savings).
         let supportedAccountTypes: String = {
@@ -65,7 +65,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                 return STPLocalizedString("Please try selecting another bank.", "The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at a different bank.")
             }
         }()
-        
+
         let reusableInformationView = ReusableInformationView(
             iconType: .view({
                 let institutionIconView = InstitutionIconView(
@@ -110,7 +110,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         )
         addAndPinSubview(reusableInformationView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -122,14 +122,14 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIViewRepresentable {
-    
+
     let institutionName: String
     let businessName: String?
     let institutionSkipAccountSelection: Bool
     let numberOfIneligibleAccounts: Int
     let paymentMethodType: FinancialConnectionsPaymentMethodType
     let didSelectEnterBankDetailsManually: (() -> Void)?
-    
+
     func makeUIView(context: Context) -> AccountPickerNoAccountEligibleErrorView {
         AccountPickerNoAccountEligibleErrorView(
             institution: FinancialConnectionsInstitution(id: "123", name: institutionName, url: nil),
@@ -141,7 +141,7 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
             didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
         )
     }
-    
+
     func updateUIView(_ uiView: AccountPickerNoAccountEligibleErrorView, context: Context) {}
 }
 
@@ -156,7 +156,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             paymentMethodType: .link,
             didSelectEnterBankDetailsManually: {}
         )
-        
+
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
             institutionName: "Chase",
             businessName: "The Coca-Cola Company",
@@ -165,7 +165,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             paymentMethodType: .usBankAccount,
             didSelectEnterBankDetailsManually: nil
         )
-        
+
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
             institutionName: "Chase",
             businessName: nil,
@@ -174,7 +174,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             paymentMethodType: .link,
             didSelectEnterBankDetailsManually: {}
         )
-        
+
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
             institutionName: "Chase",
             businessName: nil,

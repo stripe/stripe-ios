@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class BulletPointLabelView: HitTestView {
-    
+
     init(
         title: String?,
         content: String?,
@@ -45,7 +45,7 @@ final class BulletPointLabelView: HitTestView {
         }
         addAndPinSubview(verticalLabelStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

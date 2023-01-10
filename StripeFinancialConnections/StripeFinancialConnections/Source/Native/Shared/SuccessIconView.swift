@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class SuccessIconView: UIView {
-    
+
     private lazy var iconImageView: UIImageView = {
         let iconImageView = UIImageView()
         let image = Image.check.makeImage()
@@ -18,7 +18,7 @@ final class SuccessIconView: UIView {
         iconImageView.image = image
         return iconImageView
     }()
-    
+
     init() {
         super.init(frame: .zero)
         backgroundColor = UIColor.textSuccess
@@ -30,11 +30,11 @@ final class SuccessIconView: UIView {
             heightAnchor.constraint(equalToConstant: 40),
         ])
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         iconImageView.sizeToFit()
@@ -42,7 +42,7 @@ final class SuccessIconView: UIView {
             x: bounds.midX,
             y: bounds.midY
         )
-        
+
         layer.cornerRadius = bounds.size.width / 2.0
     }
 }
@@ -53,11 +53,11 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct SuccessIconViewUIViewRepresentable: UIViewRepresentable {
-    
+
     func makeUIView(context: Context) -> SuccessIconView {
         SuccessIconView()
     }
-    
+
     func updateUIView(_ uiView: SuccessIconView, context: Context) {}
 }
 

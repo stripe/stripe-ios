@@ -30,12 +30,12 @@ public extension StripeAPI {
 
         public struct CashBalance {
             /** The funds available to the account holder. Typically this is the current balance less any holds.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is an integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
-            public let available: [String:Int]?
+            public let available: [String: Int]?
         }
 
         public struct CreditBalance {
             /** The credit that has been used by the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
-            public let used: [String:Int]?
+            public let used: [String: Int]?
         }
 
         public struct Balance {
@@ -49,10 +49,10 @@ public extension StripeAPI {
             public let cash: CashBalance?
             public let credit: CreditBalance?
             /** The balances owed to (or by) the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
-            public let current: [String:Int]
+            public let current: [String: Int]
             public let type: ModelType
         }
-        
+
         public struct OwnershipRefresh: Codable, Equatable {
             @frozen public enum Status: String, SafeEnumCodable, Equatable {
                 case failed = "failed"
@@ -65,7 +65,7 @@ public extension StripeAPI {
             /// The status of the last refresh attempt.
             public let status: OwnershipRefresh.Status
         }
-        
+
         @frozen public enum Category: String, SafeEnumCodable, Equatable {
             case cash = "cash"
             case credit = "credit"
@@ -136,4 +136,3 @@ public extension StripeAPI {
 @_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Decodable {}
 @_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Decodable {}
 @_spi(STP) extension StripeAPI.FinancialConnectionsAccount.Balance: Decodable {}
-

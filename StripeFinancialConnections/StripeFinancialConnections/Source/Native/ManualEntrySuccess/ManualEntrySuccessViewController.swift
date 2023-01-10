@@ -6,21 +6,21 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol ManualEntrySuccessViewControllerDelegate: AnyObject {
     func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController)
 }
 
 final class ManualEntrySuccessViewController: UIViewController {
-    
+
     private let microdepositVerificationMethod: MicrodepositVerificationMethod?
     private let accountNumberLast4: String
     private let analyticsClient: FinancialConnectionsAnalyticsClient
-    
+
     weak var delegate: ManualEntrySuccessViewControllerDelegate?
-    
+
     init(
         microdepositVerificationMethod: MicrodepositVerificationMethod?,
         accountNumberLast4: String,
@@ -31,16 +31,16 @@ final class ManualEntrySuccessViewController: UIViewController {
         self.analyticsClient = analyticsClient
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
-        
+
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
             icon: .view(SuccessIconView()),
             title: STPLocalizedString("Micro-deposits initiated", "The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account."),
@@ -60,10 +60,10 @@ final class ManualEntrySuccessViewController: UIViewController {
             footerView: CreateFooterView(self)
         )
         paneWithHeaderLayoutView.addTo(view: view)
-        
+
         analyticsClient.logPaneLoaded(pane: .manualEntrySuccess)
     }
-    
+
     @objc fileprivate func didSelectDone() {
         delegate?.manualEntrySuccessViewControllerDidFinish(self)
     }

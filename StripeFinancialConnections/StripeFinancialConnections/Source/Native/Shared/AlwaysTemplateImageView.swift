@@ -15,22 +15,22 @@ import UIKit
 //
 // This is helpful when images are returned from backend and we want to tint them.
 final class AlwaysTemplateImageView: UIImageView {
-    
+
     init(tintColor: UIColor) {
         super.init(image: nil)
         self.tintColor = tintColor
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override var image: UIImage? {
-        set {
-            super.image = newValue?.withRenderingMode(.alwaysTemplate)
-        }
         get {
             return super.image
+        }
+        set {
+            super.image = newValue?.withRenderingMode(.alwaysTemplate)
         }
     }
 }

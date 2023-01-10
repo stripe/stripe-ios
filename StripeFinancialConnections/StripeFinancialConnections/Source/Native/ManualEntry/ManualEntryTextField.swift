@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol ManualEntryTextFieldDelegate: AnyObject {
     func manualEntryTextField(
@@ -20,7 +20,7 @@ protocol ManualEntryTextFieldDelegate: AnyObject {
 }
 
 final class ManualEntryTextField: UIView {
-    
+
     private lazy var verticalStackView: UIStackView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -64,7 +64,7 @@ final class ManualEntryTextField: UIView {
         return textField
     }()
     private var currentFooterView: UIView?
-    
+
     var text: String {
         get {
             return textField.text ?? ""
@@ -84,7 +84,7 @@ final class ManualEntryTextField: UIView {
         }
     }
     weak var delegate: ManualEntryTextFieldDelegate?
-    
+
     init(title: String, placeholder: String, footerText: String? = nil) {
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
@@ -100,17 +100,17 @@ final class ManualEntryTextField: UIView {
         didUpdateFooterText() // simulate `didSet`. it not get called in `init`
         updateBorder(highlighted: false)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func didUpdateFooterText() {
         currentFooterView?.removeFromSuperview()
         currentFooterView = nil
-        
+
         let footerTextLabel: UIView?
-        if let errorText = errorText, let _ = footerText {
+        if let errorText = errorText, footerText != nil {
             footerTextLabel = ManualEntryErrorView(text: errorText)
         } else if let errorText = errorText {
             footerTextLabel = ManualEntryErrorView(text: errorText)
@@ -127,13 +127,13 @@ final class ManualEntryTextField: UIView {
             verticalStackView.addArrangedSubview(footerTextLabel)
             currentFooterView = footerTextLabel
         }
-        
+
         updateBorder(highlighted: textField.isFirstResponder)
     }
-    
+
     private func updateBorder(highlighted: Bool) {
         let highlighted = textField.isFirstResponder
-        
+
         if errorText != nil && !highlighted {
             textFieldContainerView.layer.borderColor = UIColor.borderCritical.cgColor
             textFieldContainerView.layer.borderWidth = 1.0
@@ -152,7 +152,7 @@ final class ManualEntryTextField: UIView {
 // MARK: - UITextFieldDelegate
 
 extension ManualEntryTextField: UITextFieldDelegate {
-    
+
     func textField(
         _ textField: UITextField,
         shouldChangeCharactersIn range: NSRange,
@@ -164,12 +164,12 @@ extension ManualEntryTextField: UITextFieldDelegate {
             replacementString: string
         ) ?? true
     }
-    
+
     func textFieldDidBeginEditing(_ textField: UITextField) {
         updateBorder(highlighted: true)
         delegate?.manualEntryTextFieldDidBeginEditing(self)
     }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField) {
         updateBorder(highlighted: false)
         delegate?.manualEntryTextFieldDidEndEditing(self)
@@ -190,12 +190,12 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct ManualEntryTextFieldUIViewRepresentable: UIViewRepresentable {
-    
+
     let title: String
     let placeholder: String
     let footerText: String?
     let errorText: String?
-    
+
     func makeUIView(context: Context) -> ManualEntryTextField {
         ManualEntryTextField(
             title: title,
@@ -203,7 +203,7 @@ private struct ManualEntryTextFieldUIViewRepresentable: UIViewRepresentable {
             footerText: footerText
         )
     }
-    
+
     func updateUIView(_ uiView: ManualEntryTextField, context: Context) {
         uiView.errorText = errorText
     }

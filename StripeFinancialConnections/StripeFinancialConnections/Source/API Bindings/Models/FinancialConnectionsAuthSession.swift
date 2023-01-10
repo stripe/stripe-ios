@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 struct FinancialConnectionsAuthSession: Decodable {
     enum Flow: String, SafeEnumCodable, Equatable {
@@ -28,7 +28,7 @@ struct FinancialConnectionsAuthSession: Decodable {
         case truelayerOauth = "truelayer_oauth"
         case wellsFargo = "wells_fargo"
         case unparsable
-        
+
         func toPartner() -> FinancialConnectionsPartner? {
             switch self {
             case .finicityConnectV2Oauth:
@@ -76,7 +76,7 @@ struct FinancialConnectionsAuthSession: Decodable {
     let skipAccountSelection: Bool?
     let url: String?
     let isOauth: Bool?
-    
+
     var isOauthNonOptional: Bool {
         return isOauth ?? false
     }
@@ -97,7 +97,7 @@ enum FinancialConnectionsPartner {
     case mx
     case trueLayer
     case wellsFargo
-    
+
     var name: String {
         switch self {
         case .finicity:
@@ -110,7 +110,7 @@ enum FinancialConnectionsPartner {
             return "Wells Fargo"
         }
     }
-    
+
     var icon: UIImage? {
         switch self {
         case .finicity:

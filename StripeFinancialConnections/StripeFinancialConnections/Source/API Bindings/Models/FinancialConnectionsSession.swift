@@ -121,7 +121,6 @@ public extension StripeAPI {
     }
 }
 
-
 // MARK: - Decodable
 
 @_spi(STP) extension StripeAPI.FinancialConnectionsSession: Decodable {}

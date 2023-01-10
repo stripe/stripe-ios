@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Reusable view that separates panes into two parts:
 /// 1. A scroll view for content
@@ -16,18 +16,18 @@ import UIKit
 /// Purposefully NOT a `UIView` subclass because it should only be used via
 /// `addToView` helper function.
 final class PaneLayoutView {
-    
+
     private weak var scrollViewContentView: UIView?
     private let paneLayoutView: UIView
     let scrollView: UIScrollView
-    
+
     init(contentView: UIView, footerView: UIView?) {
         self.scrollViewContentView = contentView
 
         let scrollView = UIScrollView()
         self.scrollView = scrollView
         scrollView.addAndPinSubview(contentView)
-        
+
         let verticalStackView = HitTestStackView(
             arrangedSubviews: [
                 scrollView,
@@ -40,7 +40,7 @@ final class PaneLayoutView {
         verticalStackView.axis = .vertical
         self.paneLayoutView = verticalStackView
     }
-    
+
     func addTo(view: UIView) {
         // this function encapsulates an error-prone sequence where we
         // must add `paneLayoutView` (and all it's subviews) to the `view`

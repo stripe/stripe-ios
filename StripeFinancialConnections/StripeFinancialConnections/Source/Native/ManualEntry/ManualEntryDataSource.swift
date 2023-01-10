@@ -9,20 +9,20 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol ManualEntryDataSource: AnyObject {
-    
+
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    
+
     func attachBankAccountToLinkAccountSession(routingNumber: String, accountNumber: String) -> Future<FinancialConnectionsPaymentAccountResource>
 }
 
 final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
-    
+
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    
+
     init(
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
@@ -34,7 +34,7 @@ final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
         self.manifest = manifest
         self.analyticsClient = analyticsClient
     }
-    
+
     func attachBankAccountToLinkAccountSession(
         routingNumber: String,
         accountNumber: String

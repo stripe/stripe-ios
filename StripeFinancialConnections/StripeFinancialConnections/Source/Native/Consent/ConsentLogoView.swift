@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class ConsentLogoView: UIView {
-    
+
     init(merchantLogo: [String]) {
         super.init(frame: .zero)
         let horizontalStackView = UIStackView()
@@ -35,7 +35,7 @@ final class ConsentLogoView: UIView {
                 horizontalStackView.addArrangedSubview(
                     CreateCircularLogoView(urlString: urlString)
                 )
-                
+
                 let isLastLogo = (i == merchantLogo.count - 1)
                 if !isLastLogo {
                     horizontalStackView.addArrangedSubview(CreateEllipsisView())
@@ -44,7 +44,7 @@ final class ConsentLogoView: UIView {
         }
         addAndPinSubview(horizontalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

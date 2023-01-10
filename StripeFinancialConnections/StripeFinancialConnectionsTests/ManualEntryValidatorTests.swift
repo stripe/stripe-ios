@@ -5,8 +5,8 @@
 //  Created by Krisjanis Gaidis on 8/26/22.
 //
 
-import XCTest
 @testable import StripeFinancialConnections
+import XCTest
 
 class ManualEntryValidatorTests: XCTestCase {
 
@@ -32,7 +32,7 @@ class ManualEntryValidatorTests: XCTestCase {
         XCTAssert(ManualEntryValidator.validateRoutingNumber("-21000021") != nil)
         XCTAssert(ManualEntryValidator.validateRoutingNumber(":21000021") != nil)
     }
-    
+
     func testValidateAccountingNumber() throws {
         XCTAssert(ManualEntryValidator.validateAccountNumber("") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumber("1") == nil)
@@ -60,7 +60,7 @@ class ManualEntryValidatorTests: XCTestCase {
         XCTAssert(ManualEntryValidator.validateAccountNumber("0000000012345678x") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumber("0000000x123456789") != nil)
     }
-    
+
     func testValidateAccountNumberConfirmation() throws {
         XCTAssert(ManualEntryValidator.validateAccountNumberConfirmation("", accountNumber: "") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumberConfirmation("1", accountNumber: "1") == nil)
