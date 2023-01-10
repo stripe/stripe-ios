@@ -85,9 +85,8 @@ private func CreateContentView(
             label.setText(text, action: didSelectURL)
             verticalStackView.addArrangedSubview(label)
         } else if let imageUrl = entry.image?.default {
-            let imageView = UIImageView()
-            imageView.setImage(with: imageUrl)
-            verticalStackView.addArrangedSubview(imageView)
+            let prepaneImageView = PrepaneImageView(imageURLString: imageUrl)
+            verticalStackView.addArrangedSubview(prepaneImageView)
         }
     }
 
@@ -108,7 +107,7 @@ private func CreateFooterView(
     prepaneCtaModel: FinancialConnectionsOAuthPrepane.OauthPrepaneCTA,
     view: PrepaneView
 ) -> UIView {
-    let continueButton = Button(configuration: .financialConnectionsPrimary)
+    let continueButton = Button(configuration: .primary())  // Button(configuration: .financialConnectionsPrimary)
     continueButton.title = prepaneCtaModel.text
     continueButton.addTarget(view, action: #selector(PrepaneView.didSelectContinueButton), for: .touchUpInside)
     continueButton.translatesAutoresizingMaskIntoConstraints = false
@@ -192,8 +191,7 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
                         .init(
                             type: .image,
                             content: FinancialConnectionsImage(
-                                default:
-                                    "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--capitalone-4x.png"
+                                default: "https://js.stripe.com/v3/f0620405e3235ff4736f6876f4d3d045.gif"
                             )
                         ),
                         .init(
@@ -229,15 +227,20 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: PrepaneView, context: Context) {}
 }
 
+@available(iOS 14.0, *)
 @available(iOSApplicationExtension, unavailable)
 struct PrepaneView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            PrepaneViewUIViewRepresentable()
-                .frame(width: 320)
+        NavigationView {
+            VStack {
+                PrepaneViewUIViewRepresentable()
+            }
+            .frame(maxWidth: .infinity)
+            .background(Color.purple.opacity(0.1))
+            .navigationTitle("Stripe")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .frame(maxWidth: .infinity)
-        .background(Color.purple.opacity(0.1))
+
     }
 }
 
