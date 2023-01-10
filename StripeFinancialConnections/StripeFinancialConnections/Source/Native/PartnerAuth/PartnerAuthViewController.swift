@@ -550,6 +550,7 @@ final class PartnerAuthViewController: UIViewController {
                     {
                         let consentBottomSheetModel = ConsentBottomSheetModel(
                             title: dataAccessNoticeModel.title,
+                            subtitle: dataAccessNoticeModel.subtitle,
                             body: ConsentBottomSheetModel.Body(
                                 bullets: dataAccessNoticeModel.body.bullets
                             ),

@@ -214,6 +214,7 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
                 ),
                 dataAccessNotice: FinancialConnectionsDataAccessNotice(
                     title: "",
+                    subtitle: nil,
                     body: FinancialConnectionsDataAccessNotice.Body(bullets: []),
                     connectedAccountNotice: nil,
                     learnMore: "",
