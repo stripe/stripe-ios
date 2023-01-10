@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public extension TextFieldElement {
 
@@ -30,7 +30,7 @@ import UIKit
                 if text.isEmpty {
                     return isOptional ? .valid : .invalid(Error.empty)
                 }
-                
+
                 let bsbNumber = BSBNumber(number: text)
                 return bsbNumber.isComplete ? .valid :
                     .invalid(Account.BSBConfiguration.incompleteError)
@@ -45,7 +45,7 @@ import UIKit
                 return NSAttributedString(string: bsbNumber.formattedNumber())
             }
         }
-        
+
         public static func makeBSB(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
             return TextFieldElement(configuration: BSBConfiguration(defaultValue: defaultValue), theme: theme)
         }
@@ -57,7 +57,7 @@ import UIKit
             let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 9
-            
+
             func maxLength(for text: String) -> Int {
                 return numberOfDigitsRequired
             }

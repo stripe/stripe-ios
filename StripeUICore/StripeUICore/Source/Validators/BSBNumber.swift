@@ -20,7 +20,7 @@ import Foundation
     public var isComplete: Bool {
         return formattedNumber().count >= pattern.count
     }
-    
+
     public func formattedNumber() -> String {
         guard let formatter = TextFieldFormatter(format: pattern) else {
             return number
@@ -30,14 +30,14 @@ import Foundation
         let result = formatter.applyFormat(
             to: number.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted),
             shouldAppendRemaining: true
-        )        
-        guard result.count > 0 else {
+        )
+        guard !result.isEmpty else {
             return ""
         }
         return result
     }
 
     public func bsbNumberText() -> String {
-        return number.filter {$0 != "-"}
+        return number.filter { $0 != "-" }
     }
 }

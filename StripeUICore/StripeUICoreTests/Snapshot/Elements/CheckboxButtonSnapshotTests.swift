@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
+import UIKit
 
 @testable @_spi(STP) import StripeUICore
 
@@ -45,7 +45,7 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
         verify(checkbox)
     }
-    
+
     func testCustomFont() throws {
         var theme = ElementsUITheme.default
         theme.fonts.footnote = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))

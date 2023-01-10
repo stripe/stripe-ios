@@ -31,14 +31,14 @@ import UIKit
             }
         )
     }
-    
+
     var rootParent: UIViewController {
         if let parent = parent {
             return parent.rootParent
         }
         return self
     }
-    
+
     /// Walks the presented view controller hierarchy and return the top most presented controller.
     /// - Returns: Returns the top most presented view controller, or `nil` if this view controller is not presenting another controller.
     func findTopMostPresentedViewController() -> UIViewController? {

@@ -213,7 +213,7 @@ private extension ActivityIndicator {
         // Tint color gradient from 0% to 100% alpha
         cometLayer.colors = [
             tintColor.withAlphaComponent(0).cgColor,
-            tintColor.cgColor
+            tintColor.cgColor,
         ]
     }
 

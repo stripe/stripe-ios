@@ -9,11 +9,11 @@
 import Foundation
 
 struct TextFieldFormatter {
-    
+
     // NOTE(mludowise): If we ever have a case where we need to display `#` or `*`
     // inside a formatted string, we should probably change `format` to something
     // more structured other than a `String`.
-    
+
     static let redactedNumberCharacter: Character = "•"
     static let digitPatternCharacter: Character = "#"
     static let letterPatternCharacter: Character = "*"
@@ -87,17 +87,17 @@ struct TextFieldFormatter {
                     break
                 }
 
-                if (token == TextFieldFormatter.digitPatternCharacter ||
-                        token == TextFieldFormatter.letterPatternCharacter) {
+                if token == TextFieldFormatter.digitPatternCharacter ||
+                        token == TextFieldFormatter.letterPatternCharacter {
                     // Discard unmatched token
                     cursor = input.index(after: cursor)
                 } else {
                     resultBuffer.append(token)
                     break
                 }
-            } while cursor < input.endIndex;
+            } while cursor < input.endIndex
         }
-        
+
         if shouldAppendRemaining,
            cursor < input.endIndex {
             result += " " + String(input[cursor...])

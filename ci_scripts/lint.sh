@@ -12,10 +12,11 @@ fi
 
 lint_dirs=(
 	"StripeCore"
+	"StripeUICore"
 )
 
 exit_code=0
-for dir in $lint_dirs; do
+for dir in ${lint_dirs[@]}; do
 	swiftlint --strict --config .swiftlint.yml "$dir/"
 	code=$?
 	if [ "$code" != "0" ]; then

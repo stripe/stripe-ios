@@ -5,8 +5,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) @testable import StripeUICore
+import XCTest
 
 class BSBNumberProviderTest: XCTestCase {
     var sut: BSBNumberProvider! = nil

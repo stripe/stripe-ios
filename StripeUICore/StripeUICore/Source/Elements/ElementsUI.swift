@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public enum ElementsUI {
-    
+
     /// The distances between an Element's content and its containing view
     public static let contentViewInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
     public static let fieldBorderColor: UIColor = .systemGray3
@@ -62,10 +62,10 @@ import UIKit
 
     /// The default appearance used for Elements
     public static let `default` = ElementsUITheme()
-    
+
     public var fonts = Font()
     public var colors = Color()
-    
+
     public var borderWidth = ElementsUI.fieldBorderWidth
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()

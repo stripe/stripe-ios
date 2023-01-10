@@ -15,23 +15,23 @@ import UIKit
         case top, bottom
     }
     let pinnedDirection: PinnedDirection
-    private var pinnedDirectionConstraint: NSLayoutConstraint? = nil
-    
+    private var pinnedDirectionConstraint: NSLayoutConstraint?
+
     // MARK: - Initializers
 
     public required init(pinnedDirection optionalPinnedDirection: PinnedDirection? = nil) {
         // TODO: After switching to Xcode 12.5 (which fixed @_spi default initailizers)
         // we can make this into a default initializer instead of an optional.
         let pinnedDirection: PinnedDirection = optionalPinnedDirection ?? .bottom
-        
+
         self.pinnedDirection = pinnedDirection
         super.init(frame: .zero)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Internal methods
 
     /// Adds a subview and pins it to the top or bottom. It leaves the other end unpinned, thus not affecting the view's height.

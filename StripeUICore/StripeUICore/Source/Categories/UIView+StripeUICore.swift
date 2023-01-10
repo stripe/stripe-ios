@@ -16,15 +16,15 @@ import UIKit
         self.directionalLayoutMargins = directionalLayoutMargins
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
-        
+
         NSLayoutConstraint.activate([
             view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
     }
-    
+
     func addAndPinSubview(_ view: UIView, insets: NSDirectionalEdgeInsets = .zero) {
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)

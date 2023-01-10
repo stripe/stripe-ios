@@ -14,17 +14,17 @@ import UIKit
     class var doneButtonTitle: String {
         return STPLocalizedString("Done", "Done button title")
     }
-    
+
     class var editButtonTitle: String {
         return STPLocalizedString("Edit", "Button title to enter editing mode")
     }
-    
+
     /// A helper method that returns a UIButton that:
     /// 1. Retains the provided `didTap` closure and calls it when the button is tapped.
     /// 2. Expands the tap target area to be 44x44
-    class func make(type buttonType: UIButton.ButtonType, didTap: @escaping () -> ()) -> UIButton {
+    class func make(type buttonType: UIButton.ButtonType, didTap: @escaping () -> Void) -> UIButton {
         class ClosureButton: UIButton {
-            var didTap: () -> () = {}
+            var didTap: () -> Void = {}
             public override init(frame: CGRect) {
                 super.init(frame: frame)
                 addTarget(self, action: #selector(didTapSelector), for: .touchUpInside)
@@ -48,4 +48,3 @@ import UIKit
         return button
     }
 }
-

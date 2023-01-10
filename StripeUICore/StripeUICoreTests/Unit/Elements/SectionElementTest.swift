@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable @_spi(STP) import StripeUICore
+import XCTest
 
 class SectionElementTest: XCTestCase {
     struct DummyTextFieldElementConfiguration: TextFieldElementConfiguration {
@@ -17,11 +17,11 @@ class SectionElementTest: XCTestCase {
             return validationState
         }
     }
-    
+
     enum Error: TextFieldValidationError {
         case undisplayableError
         case displayableError
-        
+
         var localizedDescription: String {
             switch self {
             case .undisplayableError:
@@ -30,7 +30,7 @@ class SectionElementTest: XCTestCase {
                 return "displayable error"
             }
         }
-        
+
         func shouldDisplay(isUserEditing: Bool) -> Bool {
             switch self {
             case .undisplayableError:
@@ -40,7 +40,7 @@ class SectionElementTest: XCTestCase {
             }
         }
     }
-    
+
     func testValidationStateAndError() {
         // Given an invalid element whose error shouldn't be displayed...
         let element1 = TextFieldElement(
@@ -51,12 +51,11 @@ class SectionElementTest: XCTestCase {
         let element2 = TextFieldElement(
             configuration: DummyTextFieldElementConfiguration(validationState: .invalid(Error.displayableError))
         )
-        
+
         // ...a section with these two elements....
         let section = SectionElement(title: "Foo", elements: [element1, element2])
-        
+
         // ...should display the first invalid element with a *displayable* error
         XCTAssertEqual(section.errorText, "displayable error")
     }
 }
-

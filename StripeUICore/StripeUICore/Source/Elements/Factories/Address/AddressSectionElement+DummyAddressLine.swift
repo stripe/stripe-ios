@@ -35,31 +35,31 @@ extension AddressSectionElement {
         public var validationState: ElementValidationState {
             return .invalid(error: TextFieldElement.Error.empty, shouldDisplay: false)
         }
-        public var didTap: () -> () = {}
+        public var didTap: () -> Void = {}
         public let theme: ElementsUITheme
         private lazy var autocompleteLineTapRecognizer: UITapGestureRecognizer = {
             let tap = UITapGestureRecognizer(target: self, action: #selector(_didTap))
             tap.delegate = self
             return tap
         }()
-        
+
         @objc func _didTap() {
             didTap()
         }
-        
+
         func textFieldViewDidUpdate(view: TextFieldView) {
             // no-op
         }
-        
+
         func textFieldViewContinueToNextField(view: TextFieldView) {
             // no-op
         }
-        
+
         public func beginEditing() -> Bool {
             // no-op but pretend we did begin editing
             return true
         }
-        
+
         public init(theme: ElementsUITheme) {
             self.theme = theme
             super.init()
