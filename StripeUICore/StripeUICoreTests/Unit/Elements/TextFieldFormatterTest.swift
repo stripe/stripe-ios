@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) @testable import StripeUICore
+import XCTest
 
 final class TextFieldFormatterTest: XCTestCase {
     // TODO: Test that we don't get lagging characters (e.g. `###-##-` should always drop the last `-` when formatted

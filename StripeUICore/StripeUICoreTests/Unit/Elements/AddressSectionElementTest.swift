@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) @testable import StripeUICore
+import XCTest
 
 class AddressSectionElementTest: XCTestCase {
     let locale_enUS = Locale(identifier: "us_EN")
@@ -19,7 +19,6 @@ class AddressSectionElementTest: XCTestCase {
         ]
         return specProvider
     }()
-
 
     func testAddressFieldsMapsSpecs() throws {
         let specProvider = AddressSpecProvider()
@@ -48,7 +47,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(fields.map { $0.configuration.label }, expected.map { $0.label })
         XCTAssertEqual(fields.map { $0.configuration.isOptional }, expected.map { $0.isOptional })
     }
-    
+
     func testAddressFieldsWithDefaults() {
         // An address section with defaults...
         let specProvider = AddressSpecProvider()
@@ -72,7 +71,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(addressSection.state?.rawData, defaultAddress.address.state)
         XCTAssertEqual(addressSection.selectedCountryCode, defaultAddress.address.country)
     }
-    
+
     func testAddressFieldsChangeWithCountry() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -120,7 +119,7 @@ class AddressSectionElementTest: XCTestCase {
     func testCountries() {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
-            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin)
+            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
         ]
 
         // Use spec provider's country codes if no countries explicitly specified
@@ -130,7 +129,7 @@ class AddressSectionElementTest: XCTestCase {
         // Countries not in spec
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
     }
-    
+
     func test_additionalFields() {
         for isOptional in [true, false] { // Test when the field is optional and when it's required
             // AddressSectionElement configured to collect a name and phone field...
@@ -156,9 +155,9 @@ class AddressSectionElementTest: XCTestCase {
             XCTAssertEqual(name.configuration.isOptional, isOptional)
             XCTAssertEqual(phone.textFieldElement.configuration.isOptional, isOptional)
         }
-        
+
     }
-    
+
     func test_additionalFields_hidden_by_default() {
         // By default, the AddressSectionElement doesn't have additional fields
         let sut = AddressSectionElement(
@@ -167,7 +166,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNil(sut.name)
         XCTAssertNil(sut.phone)
     }
-    
+
     func test_billing_same_as_shipping_checkbox_hidden_if_invalid_country() {
         // AddressSectionElement with 'checkbox' field enabled but with an invalid default country...
         let sut = AddressSectionElement(
@@ -177,11 +176,11 @@ class AddressSectionElementTest: XCTestCase {
                 billingSameAsShippingCheckbox: .enabled(isOptional: false)
             )
         )
-        
+
         // ...should not display the checkbox
         XCTAssertTrue(sut.sameAsCheckbox.view.isHidden)
     }
-    
+
     func test_billing_same_as_shipping_checkbox_deselected_upon_edit() {
         // AddressSectionElement with 'checkbox' field enabled...
         let sut = AddressSectionElement(
@@ -191,7 +190,7 @@ class AddressSectionElementTest: XCTestCase {
                 billingSameAsShippingCheckbox: .enabled(isOptional: false)
             )
         )
-        
+
         // ...should display the checkbox
         guard !sut.sameAsCheckbox.view.isHidden else {
             XCTFail("Missing checkbox element")
@@ -203,7 +202,7 @@ class AddressSectionElementTest: XCTestCase {
         // ...should deselect the checkbox
         XCTAssertFalse(sut.sameAsCheckbox.isSelected)
     }
-    
+
     func test_phone_country_updates_with_country_picker() {
         let sut = AddressSectionElement(
             addressSpecProvider: dummyAddressSpecProvider,
@@ -211,21 +210,21 @@ class AddressSectionElementTest: XCTestCase {
                 phone: .enabled(isOptional: false)
             )
         )
-        
+
         // Country and phone should have same inital value
         XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
-        
+
         // Phone field should default to empty
         XCTAssertTrue(sut.phone?.textFieldElement.text.isEmpty ?? false)
-        
+
         // Country and phone should update together when country changes and phone text is empty
         sut.country.select(index: 0)
         XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
-        
+
         // Country and phone should update together when country changes and phone text is empty
         sut.country.select(index: 1)
         XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
-        
+
         // Phone country should not change once it has text populated
         sut.phone?.textFieldElement.setText("555")
         sut.country.select(index: 0)

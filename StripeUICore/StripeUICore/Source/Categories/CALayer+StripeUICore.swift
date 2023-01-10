@@ -16,7 +16,7 @@ import UIKit
             shadowOpacity = 0
             return
         }
-        
+
         shadowColor = shadow.color.cgColor
         shadowOpacity = Float(shadow.opacity)
         shadowOffset = shadow.offset

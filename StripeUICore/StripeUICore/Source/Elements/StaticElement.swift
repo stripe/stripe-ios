@@ -19,7 +19,7 @@ import UIKit
             view.isHidden = isHidden
         }
     }
-    
+
     public init(view: UIView) {
         self.view = view
     }

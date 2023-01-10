@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /**
  A textfield whose input view is a `UIPickerView` with a list of the strings.
@@ -18,7 +18,7 @@ import UIKit
 @objc(STP_Internal_DropdownFieldElement)
 @_spi(STP) public class DropdownFieldElement: NSObject {
     public typealias DidUpdateSelectedIndex = (Int) -> Void
-    
+
     public struct DropdownItem {
         public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String) {
             self.pickerDisplayName = pickerDisplayName
@@ -26,16 +26,16 @@ import UIKit
             self.accessibilityValue = accessibilityValue
             self.rawData = rawData
         }
-        
+
         /// Item label displayed in the picker
         public let pickerDisplayName: String
-        
+
         /// Item label displayed in inline label when item has been selected
         public let labelDisplayName: String
-        
+
         /// Accessibility value to use when this is in the inline label
         public let accessibilityValue: String
-        
+
         /// The underlying data for this dropdown item.
         /// e.g., A country dropdown item might display "United States" but its `rawData` is "US".
         /// This is ignored by `DropdownFieldElement`, and is intended as a convenience to be used in conjunction with `selectedItem`
@@ -116,7 +116,7 @@ import UIKit
             updatePickerField()
         }
     }
-    
+
     public func select(index: Int) {
         selectedIndex = index
         didFinish(pickerFieldView)
@@ -142,7 +142,7 @@ extension DropdownFieldElement: Element {
     public var view: UIView {
         return pickerFieldView
     }
-    
+
     public func beginEditing() -> Bool {
         return pickerFieldView.becomeFirstResponder()
     }

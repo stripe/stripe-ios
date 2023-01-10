@@ -36,7 +36,7 @@ class BSBNumberTests: XCTestCase {
         XCTAssertEqual(bsbNumber.formattedNumber(), "012-3")
         XCTAssertEqual(bsbNumber.bsbNumberText(), "0123")
     }
-    
+
     func testBSBNumber_01234() {
         let bsbNumber = BSBNumber(number: "01234")
         XCTAssertFalse(bsbNumber.isComplete)
@@ -64,7 +64,7 @@ class BSBNumberTests: XCTestCase {
         XCTAssertEqual(bsbNumber.formattedNumber(), "012-3")
         XCTAssertEqual(bsbNumber.bsbNumberText(), "0123")
     }
-    
+
     func testBSBNumber_01234_withdash() {
         let bsbNumber = BSBNumber(number: "012-34")
         XCTAssertFalse(bsbNumber.isComplete)

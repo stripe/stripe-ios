@@ -5,28 +5,27 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) @testable import StripeUICore
-
+import XCTest
 
 class TextFieldElementAccountFactoryTest: XCTestCase {
     // MARK: - BSB
     func testBSBConfiguration_validBSB() {
         let bsb = TextFieldElement.Account.BSBConfiguration(defaultValue: nil)
-        
+
         bsb.test(text: "000000", isOptional: false, matches: .valid)
         bsb.test(text: "082902", isOptional: false, matches: .valid)
     }
 
     func testBSBConfiguration_empty() {
         let bsb = TextFieldElement.Account.BSBConfiguration(defaultValue: nil)
-        
+
         bsb.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty))
     }
 
     func testBSBConfiguration_incomplete() {
         let bsb = TextFieldElement.Account.BSBConfiguration(defaultValue: nil)
-        
+
         bsb.test(text: "0", isOptional: false, matches: .invalid(TextFieldElement.Account.BSBConfiguration.incompleteError))
         bsb.test(text: "00", isOptional: false, matches: .invalid(TextFieldElement.Account.BSBConfiguration.incompleteError))
         bsb.test(text: "000", isOptional: false, matches: .invalid(TextFieldElement.Account.BSBConfiguration.incompleteError))
@@ -61,4 +60,3 @@ class TextFieldElementAccountFactoryTest: XCTestCase {
     }
 
 }
-

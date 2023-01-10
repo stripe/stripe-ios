@@ -18,39 +18,39 @@ import UIKit
         case national
         /// Formatted for display an an international number with country code, e.g. +1 (555) 555-5555
         case international
-        
+
         static let e164FormatMaxDigits = 15
     }
-    
+
     public func string(as format: Format) -> String {
         return metadata.formattedNumber(number, format: format)
     }
-    
+
     /// The country that matches this phone number, e.g. "US"
     public var countryCode: String {
         return metadata.regionCode
     }
-    
+
     /// The phone number prefix for the country of this phone number, e.g. "+1"
     public var prefix: String {
         return metadata.prefix
     }
-    
+
     /// Whether this represents a complete phone number
     public var isComplete: Bool {
         return string(as: .national).count >= metadata.pattern.count
     }
-    
+
     /// The phone number without the country prefix and containing only digits
     public let number: String
     private let metadata: Metadata
-    
+
     public init?(number: String, countryCode: String?) {
         guard let countryCode = countryCode,
               let metadata = Metadata.metadata(for: countryCode) else {
             return nil
         }
-              
+
         self.number = number
         self.metadata = metadata
     }
@@ -114,9 +114,9 @@ import UIKit
 
 @_spi(STP) public extension PhoneNumber {
     struct Metadata: RegionCodeProvider {
-                
+
         private static var metadataByCountryCodeCache: [String: Metadata] = [:]
-        
+
         public static func metadata(for countryCode: String) -> Metadata? {
             if let cached = metadataByCountryCodeCache[countryCode] {
                 return cached
@@ -127,32 +127,32 @@ import UIKit
             }
             return nil
         }
-        
+
         public let prefix: String
         public let regionCode: String
         internal let pattern: String
-        
+
         public var sampleFilledPattern: String {
             let numDigitsInPattern = pattern.filter({ $0 == "#" }).count
             return formattedNumber(String(repeating: "5", count: numDigitsInPattern), format: .national)
         }
-        
+
         func formattedNumber(_ number: String, format: Format) -> String {
             guard let formatter = TextFieldFormatter(format: pattern) else {
                 return number
             }
-            
+
             let allowedCharacterSet: CharacterSet = CharacterSet.stp_asciiDigit.union(CharacterSet(charactersIn: String(TextFieldFormatter.redactedNumberCharacter))) // allow '•' for redacted numbers
-            
+
            let result = formatter.applyFormat(
                 to: number.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted),
                 shouldAppendRemaining: true
             )
-            
-            guard result.count > 0 else {
+
+            guard !result.isEmpty else {
                 return ""
             }
-            
+
             switch format {
             case .e164:
                 var resultDigits = result.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted)
@@ -160,13 +160,13 @@ import UIKit
                 if resultDigits.hasPrefix("0") {
                     resultDigits = String(resultDigits.suffix(resultDigits.count - 1))
                 }
-                
+
                 resultDigits = prefix.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted) + resultDigits
                 // e164 doesn't accept more than 15 digits
                 if resultDigits.count > Format.e164FormatMaxDigits {
                     resultDigits = String(resultDigits.prefix(Format.e164FormatMaxDigits))
                 }
-                
+
                 return "+" + resultDigits
             case .national:
                 return result
@@ -174,7 +174,7 @@ import UIKit
                 return prefix + " " + result
             }
         }
-        
+
         // Note: The patterns here are not complete in some cases, e.g.
         // JP where the first group of numbers will sometimes have 3 digits
         // for mobile but we only expect 2. In these cases the input should
