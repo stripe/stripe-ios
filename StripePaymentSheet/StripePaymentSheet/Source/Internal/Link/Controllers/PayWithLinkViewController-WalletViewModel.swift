@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
 
@@ -143,7 +144,7 @@ extension PayWithLinkViewController {
 
         /// CTA
         var confirmButtonCallToAction: ConfirmButton.CallToActionType {
-            return context.intent.callToAction
+            return context.shouldPayInFlow ? context.intent.callToAction : .customWithLock(title: String.Localized.continue)
         }
 
         var confirmButtonStatus: ConfirmButton.Status {

@@ -64,6 +64,7 @@ final class PayWithLinkViewController: UINavigationController {
         let configuration: PaymentSheet.Configuration
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
+        let shouldPayInFlow: Bool
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
 
         /// Creates a new Context object.
@@ -72,16 +73,19 @@ final class PayWithLinkViewController: UINavigationController {
         ///   - configuration: PaymentSheet configuration.
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
+        ///   - shouldPayInFlow: Whether or not Link should process payment within the Link flow
         init(
             intent: Intent,
             configuration: PaymentSheet.Configuration,
             shouldOfferApplePay: Bool,
-            shouldFinishOnClose: Bool
+            shouldFinishOnClose: Bool,
+            shouldPayInFlow: Bool
         ) {
             self.intent = intent
             self.configuration = configuration
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
+            self.shouldPayInFlow = shouldPayInFlow
         }
     }
 
@@ -114,14 +118,16 @@ final class PayWithLinkViewController: UINavigationController {
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         shouldOfferApplePay: Bool = false,
-        shouldFinishOnClose: Bool = false
+        shouldFinishOnClose: Bool = false,
+        shouldPayInFlow: Bool = true
     ) {
         self.init(
             context: Context(
                 intent: intent,
                 configuration: configuration,
                 shouldOfferApplePay: shouldOfferApplePay,
-                shouldFinishOnClose: shouldFinishOnClose
+                shouldFinishOnClose: shouldFinishOnClose,
+                shouldPayInFlow: shouldPayInFlow
             )
         )
     }
