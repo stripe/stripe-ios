@@ -15,7 +15,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
 
     let validator: STPInputTextFieldValidator
 
-    weak var formContainer: STPFormContainer? = nil
+    weak var formContainer: STPFormContainer?
 
     var wantsAutoFocus: Bool {
         return true
@@ -90,7 +90,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         let text = self.text ?? ""
         let formatted = formatter.formattedText(from: text, with: defaultTextAttributes)
         if formatted != attributedText {
-            var updatedCursorPosition: UITextPosition? = nil
+            var updatedCursorPosition: UITextPosition?
             if let selection = selectedTextRange {
                 let cursorPosition = offset(from: beginningOfDocument, to: selection.start)
                 updatedCursorPosition = position(
@@ -250,7 +250,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
                 input: "\u{08}",
                 modifierFlags: .command,
                 action: #selector(commandDeleteBackwards)
-            )
+            ),
         ]
     }
 

@@ -217,7 +217,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     @objc
     public override func becomeFirstResponder() -> Bool {
         // grab the next first responder before calling super (which will cause any current first responder to resign)
-        var firstResponder: STPFormInput? = nil
+        var firstResponder: STPFormInput?
         if currentFirstResponderField() != nil {
             // we are already first responder, move to next field sequentially
             firstResponder = nextInSequenceFirstResponderField() ?? sequentialFields.first
@@ -250,7 +250,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     var sequentialFields: [STPFormInput] {
         return sections.reduce(into: [STPFormInput]()) { (result, section) in
             result.append(
-                contentsOf: section.rows.reduce(into: [STPInputTextField]()) { (innerResult, row) in
+                contentsOf: section.rows.reduce(into: [STPInputTextField]()) { (_, row) in
                     for input in row {
                         if !input.isHidden {
                             result.append(input)

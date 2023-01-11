@@ -107,6 +107,17 @@ public class STPCardFormView: STPFormView {
     /// :nodoc:
     @objc
     public override var backgroundColor: UIColor? {
+        get {
+            switch style {
+
+            case .standard:
+                return sectionViews.first?.stackView.customBackgroundColor
+
+            case .borderless:
+                return _backgroundColor
+
+            }
+        }
         set {
             switch style {
 
@@ -120,36 +131,15 @@ public class STPCardFormView: STPFormView {
 
             }
         }
-        get {
-            switch style {
-
-            case .standard:
-                return sectionViews.first?.stackView.customBackgroundColor
-
-            case .borderless:
-                return _backgroundColor
-
-            }
-        }
     }
 
-    var _disabledBackgroundColor: UIColor? = nil
+    var _disabledBackgroundColor: UIColor?
 
     /// The background color that is automatically applied to the input fields when  `isUserInteractionEnabled` is set to `false.
     /// @note `STPCardFormView` uses text colors, most of which are iOS system colors, that are designed to be as
     /// accessible as possible, so any customization should avoid decreasing contrast between the text and background.
     @objc
     public var disabledBackgroundColor: UIColor? {
-        set {
-            switch style {
-
-            case .standard:
-                sectionViews.forEach({ $0.stackView.customBackgroundDisabledColor = newValue })
-
-            case .borderless:
-                _disabledBackgroundColor = disabledBackgroundColor
-            }
-        }
         get {
             switch style {
 
@@ -159,6 +149,16 @@ public class STPCardFormView: STPFormView {
             case .borderless:
                 return _disabledBackgroundColor
 
+            }
+        }
+        set {
+            switch style {
+
+            case .standard:
+                sectionViews.forEach({ $0.stackView.customBackgroundDisabledColor = newValue })
+
+            case .borderless:
+                _disabledBackgroundColor = disabledBackgroundColor
             }
         }
     }
@@ -228,7 +228,7 @@ public class STPCardFormView: STPFormView {
         self.cardParams = params
     }
 
-    var _bindedPaymentMethodParams: STPPaymentMethodParams? = nil {
+    var _bindedPaymentMethodParams: STPPaymentMethodParams? {
         didSet {
             updateBindedPaymentMethodParams()
         }
@@ -365,7 +365,7 @@ public class STPCardFormView: STPFormView {
             self.numberField.isUserInteractionEnabled = false
         }
 
-        var scanButton: UIButton? = nil
+        var scanButton: UIButton?
         if includeCardScanning {
             if #available(iOS 13.0, macCatalyst 14.0, *) {
                 let cardScanningAvailable: Bool = {

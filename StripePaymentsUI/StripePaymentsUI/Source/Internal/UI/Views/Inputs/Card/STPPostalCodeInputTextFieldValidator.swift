@@ -62,7 +62,7 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
             // primarily a backup for missing api error strings)
             validationState = .invalid(errorMessage: defaultErrorMessage)
         case .incomplete:
-            var incompleteDescription: String? = nil
+            var incompleteDescription: String?
             if let inputValue = inputValue, !inputValue.isEmpty {
                 if countryCode?.uppercased() == "US" {
                     incompleteDescription = String.Localized.your_zip_is_incomplete
