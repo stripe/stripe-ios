@@ -20,8 +20,7 @@ import UIKit
     private var configuration: PaymentSheet.Configuration
 
     private var intent: Intent?
-    private var flowController: PaymentSheet.FlowController?
-    private var payWithLinkContinuation: CheckedContinuation<PaymentSheetResult, Swift.Error>?
+    private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
     private var paymentOption: PaymentOption?
 
     /// Initializes a new `LinkPaymentController` instance.
@@ -104,7 +103,7 @@ import UIKit
             : .overFullScreen
 
         defer { linkController.dismiss(animated: true) }
-        _ = try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             payWithLinkContinuation = continuation
             presentingViewController.present(linkController, animated: true)
         }
@@ -213,8 +212,10 @@ extension LinkPaymentController: PayWithLinkViewControllerDelegate {
         switch result {
         case .canceled:
             payWithLinkContinuation?.resume(throwing: Error.canceled)
-        case .completed, .failed:
-            payWithLinkContinuation?.resume(returning: result)
+        case .failed(let error):
+            payWithLinkContinuation?.resume(throwing: error)
+        case .completed:
+            payWithLinkContinuation?.resume()
         }
     }
 }
