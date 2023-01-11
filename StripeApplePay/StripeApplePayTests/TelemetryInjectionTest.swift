@@ -56,7 +56,7 @@ class TelemetryInjectionTest: APIStubbedTestCase {
                 return true
             }
             return false
-        } response: { urlRequest in
+        } response: { _ in
             // We don't care about the response
             return HTTPStubsResponse()
         }
