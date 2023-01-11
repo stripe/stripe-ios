@@ -103,7 +103,7 @@ import UIKit
             : .overFullScreen
 
         defer { linkController.dismiss(animated: true) }
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             payWithLinkContinuation = continuation
             presentingViewController.present(linkController, animated: true)
         }
@@ -155,7 +155,7 @@ import UIKit
             assertionFailure("`confirm` should not be called without the customer authorizing Link. Make sure to call `present` first if your customer hasn't previously selected Link as a payment method.")
             throw PaymentSheetError.unknown(debugDescription: "confirm called without authorizing Link")
         }
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default),
