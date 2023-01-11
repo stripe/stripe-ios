@@ -35,6 +35,8 @@ disabled_rules:
   - class_delegate_protocol
   - closure_parameter_position
   - reduce_boolean
+  - unused_setter_value
+  - notification_center_detachment
 
 opt_in_rules:
   - colon

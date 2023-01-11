@@ -29,7 +29,7 @@ extension ConsumerSession {
             super.init()
         }
 
-        static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
             guard
                 let response = response,
                 let consumerSession = ConsumerSession.decodedObject(fromAPIResponse: response),

@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import PassKit
 import SafariServices
+import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -99,7 +99,7 @@ extension PayWithLinkViewController {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPicker,
                 instantDebitMandateView,
-                expiredCardNoticeView
+                expiredCardNoticeView,
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -118,7 +118,7 @@ extension PayWithLinkViewController {
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
                 errorLabel,
-                confirmButton
+                confirmButton,
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -331,7 +331,7 @@ private extension PayWithLinkViewController.WalletViewController {
                     switch result {
                     case .success:
                         self.paymentPicker.removePaymentMethod(at: index, animated: true)
-                    case .failure(_):
+                    case .failure:
                         break
                     }
 
@@ -342,7 +342,7 @@ private extension PayWithLinkViewController.WalletViewController {
 
         present(alertController, animated: true)
     }
-    
+
     func updatePaymentMethod(at index: Int) {
         let paymentMethod = viewModel.paymentMethods[index]
         let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
@@ -351,7 +351,7 @@ private extension PayWithLinkViewController.WalletViewController {
             paymentMethod: paymentMethod
         )
         updatePaymentMethodVC.delegate = self
-        
+
         navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
     }
 
@@ -490,7 +490,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
             // If this business is bank-only, bypass the new payment method flow and go straight to connections
             confirmButton.update(state: .processing)
             pickerView.setAddPaymentMethodButtonEnabled(false)
-            coordinator?.startInstantDebits() { [weak self] result in
+            coordinator?.startInstantDebits { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let paymentDetails):
@@ -535,7 +535,7 @@ extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandat
 // MARK: - UpdatePaymentViewControllerDelegate
 
 extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewControllerDelegate {
-    
+
     func didUpdate(paymentMethod: ConsumerPaymentDetails) {
         if let index = viewModel.updatePaymentMethod(paymentMethod) {
             self.paymentPicker.selectedIndex = index

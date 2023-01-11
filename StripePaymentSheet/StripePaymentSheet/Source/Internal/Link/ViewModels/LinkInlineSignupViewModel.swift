@@ -8,8 +8,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
@@ -88,7 +88,7 @@ final class LinkInlineSignupViewModel {
             }
         }
     }
-    
+
     private(set) var lookupFailed: Bool = false {
         didSet {
             if lookupFailed != oldValue {
@@ -205,7 +205,7 @@ private extension LinkInlineSignupViewModel {
     func onEmailUpdate() {
         linkAccount = nil
         lookupFailed = false
-        
+
         guard let emailAddress = emailAddress else {
             accountLookupDebouncer.cancel()
             isLookingUpLinkAccount = false
@@ -228,7 +228,7 @@ private extension LinkInlineSignupViewModel {
                 case .success(let account):
                     self?.linkAccount = account
                     self?.lookupFailed = false
-                case .failure(_):
+                case .failure:
                     self?.linkAccount = nil
                     self?.lookupFailed = true
                 }

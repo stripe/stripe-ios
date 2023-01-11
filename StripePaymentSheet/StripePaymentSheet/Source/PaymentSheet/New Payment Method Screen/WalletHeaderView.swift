@@ -10,8 +10,8 @@ import Foundation
 import PassKit
 import UIKit
 
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 protocol WalletHeaderViewDelegate: AnyObject {
     func walletHeaderViewApplePayButtonTapped(
@@ -59,7 +59,7 @@ extension PaymentSheetViewController {
         private let appearance: PaymentSheet.Appearance
         private let applePayButtonType: PKPaymentButtonType
         private var stackView = UIStackView()
-        
+
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
             button.cornerRadius = appearance.cornerRadius
@@ -76,7 +76,7 @@ extension PaymentSheetViewController {
         private var supportsPayWithLink: Bool {
             return options.contains(.link)
         }
-        
+
         init(options: WalletOptions,
              appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
              applePayButtonType: PKPaymentButtonType = .plain,
@@ -99,35 +99,35 @@ extension PaymentSheetViewController {
         @objc func handleTapApplePay() {
             delegate?.walletHeaderViewApplePayButtonTapped(self)
         }
-        
+
         @objc func handleTapPayWithLink() {
             delegate?.walletHeaderViewPayWithLinkTapped(self)
         }
-        
+
         private func buildAndPinStackView() {
             stackView.removeFromSuperview()
 
             var buttons: [UIView] = []
-            
+
             if supportsApplePay {
                 buttons.append(buildApplePayButton())
             }
-            
+
             if supportsPayWithLink {
                 buttons.append(payWithLinkButton)
             }
-            
+
             stackView = UIStackView(arrangedSubviews: buttons + [separatorLabel])
             stackView.axis = .vertical
             stackView.spacing = Constants.buttonSpacing
-            
+
             if let lastButton = buttons.last {
                 stackView.setCustomSpacing(Constants.labelSpacing, after: lastButton)
             }
-            
+
             addAndPinSubview(stackView)
         }
-        
+
         private func buildApplePayButton() -> PKPaymentButton {
             let buttonStyle: PKPaymentButtonStyle = appearance.colors.background.contrastingColor == .black ? .black : .white
             let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: buttonStyle)
@@ -159,11 +159,11 @@ extension PaymentSheetViewController {
                 )
             }
         }
-        
+
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             buildAndPinStackView()
             updateSeparatorLabel()
-            
+
         }
     }
 }

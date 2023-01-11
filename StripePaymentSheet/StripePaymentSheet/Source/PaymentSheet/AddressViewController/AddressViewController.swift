@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A delegate for `AddressViewController`
 public protocol AddressViewControllerDelegate: AnyObject {
@@ -28,7 +28,7 @@ public class AddressViewController: UIViewController {
     /// A valid address or nil.
     private var addressDetails: AddressDetails? {
         guard let addressSection = addressSection else { return nil }
-        
+
         guard case .valid = addressSection.validationState,
               let line1 = addressSection.line1?.text.nonEmpty
         else {
@@ -53,7 +53,7 @@ public class AddressViewController: UIViewController {
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
-    
+
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
@@ -65,7 +65,7 @@ public class AddressViewController: UIViewController {
     lazy var scrollViewBottomConstraint: NSLayoutConstraint = {
         return scrollView.frameLayoutGuide.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
     }()
-    
+
     // MARK: - Views
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
@@ -106,7 +106,7 @@ public class AddressViewController: UIViewController {
             isSelectedByDefault: configuration.defaultValues.isCheckboxSelected ?? false,
             didToggle: nil
         )
-        
+
         return element
     }()
     fileprivate lazy var closeButton: UIButton = {
@@ -114,7 +114,7 @@ public class AddressViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         return button
     }()
-    
+
     private lazy var activityIndicator: UIActivityIndicatorView = {
         if #available(iOS 13.0, *) {
             return UIActivityIndicatorView(style: .medium)
@@ -124,7 +124,7 @@ public class AddressViewController: UIViewController {
     }()
 
     private var hasLoadedSpecs = false
-    
+
     // MARK: - Initializers
     /// Initializes an `AddressViewController`.
     /// - Note: Make sure you put this in a `UINavigationController` before presenting or pushing it.
@@ -136,7 +136,7 @@ public class AddressViewController: UIViewController {
     ) {
         self.init(addressSpecProvider: .shared, configuration: configuration, delegate: delegate)
     }
-    
+
     init(
         addressSpecProvider: AddressSpecProvider,
         configuration: Configuration,
@@ -148,16 +148,16 @@ public class AddressViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Overrides
     override public func viewDidLoad() {
         super.viewDidLoad()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: AddressViewController.self)
-        
+
         view.backgroundColor = configuration.appearance.colors.background
         // Tapping on the background view should dismiss the keyboard
         let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
@@ -176,15 +176,15 @@ public class AddressViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.centerYAnchor),
         ])
-        
+
         loadSpecsIfNeeded()
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
     }
-    
+
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         if !didLogAddressShow {
@@ -193,7 +193,7 @@ public class AddressViewController: UIViewController {
         }
         addressSection?.beginEditing()
     }
-    
+
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
@@ -207,7 +207,7 @@ extension AddressViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
-    
+
     @objc private func adjustForKeyboard(notification: Notification) {
         guard
             let keyboardScreenEndFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
@@ -222,7 +222,7 @@ extension AddressViewController {
         } else {
             scrollViewBottomConstraint.constant = -keyboardInViewHeight
         }
-        
+
         // Animate the scrollView above the keyboard
         view.setNeedsLayout()
         UIView.animateAlongsideKeyboard(notification) {
@@ -233,23 +233,23 @@ extension AddressViewController {
 
 // MARK: - Internal methods
 extension AddressViewController {
-    
+
     func didContinue() {
         logAddressCompleted()
         delegate?.addressViewControllerDidFinish(self, with: addressDetails)
     }
-    
+
     @objc func didTapBackground() {
         view.endEditing(false)
     }
-    
+
     @objc func presentAutocomplete() {
         assert(navigationController != nil)
         let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, addressSpecProvider: addressSpecProvider)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
-    
+
     @objc func didTapCloseButton() {
         delegate?.addressViewControllerDidFinish(self, with: addressDetails)
     }
@@ -265,10 +265,10 @@ extension AddressViewController {
             addressSection.collectionMode = .all(autocompletableCountries: configuration.autocompleteCountries)
         }
     }
-    
+
     private func initAddressSection() {
         guard hasLoadedSpecs else { return }
-        
+
         let additionalFields = configuration.additionalFields
         let defaultValues = configuration.defaultValues
         let allowedCountries = configuration.allowedCountries
@@ -287,10 +287,10 @@ extension AddressViewController {
             self?.presentAutocomplete()
         }
     }
-    
+
     private func loadUI() {
         initAddressSection()
-        
+
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -319,10 +319,10 @@ extension AddressViewController {
             button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
             button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.leading),
             button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
-            button.heightAnchor.constraint(equalToConstant: 44)
+            button.heightAnchor.constraint(equalToConstant: 44),
         ])
     }
-    
+
     private func loadSpecsIfNeeded() {
         if addressSpecProvider.countries.isEmpty {
             activityIndicator.startAnimating()
@@ -340,13 +340,13 @@ extension AddressViewController {
             self.loadUI()
         }
     }
-    
+
     private func logAddressCompleted() {
-        var editDistance: Int? = nil
+        var editDistance: Int?
         if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
             editDistance = PaymentSheet.Address(from: selectedAddress).editDistance(from: autoCompleteAddress)
         }
-        
+
         STPAnalyticsClient.sharedClient.logAddressCompleted(
             addressCountyCode: addressSection?.selectedCountryCode ?? "",
             autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
@@ -365,7 +365,7 @@ extension AddressViewController {
          button.update(state: enabled ? .enabled : .disabled, animated: true)
          expandAddressSectionIfNeeded()
      }
-     
+
      @_spi(STP) public func continueToNextField(element: Element) {
         // no-op
     }
@@ -380,7 +380,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         addressSection.collectionMode = .all(autocompletableCountries: configuration.autocompleteCountries)
         addressSection.line1?.setText(line1)
     }
-    
+
     func didSelectAddress(_ address: PaymentSheet.Address?) {
         guard let addressSection = addressSection else { assertionFailure(); return }
         navigationController?.popViewController(animated: true)
@@ -390,8 +390,8 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
             return
         }
 
-        let autocompleteCountryIndex = addressSection.countryCodes.firstIndex(where: {$0 == address.country})
-        
+        let autocompleteCountryIndex = addressSection.countryCodes.firstIndex(where: { $0 == address.country })
+
         if let country = address.country, autocompleteCountryIndex == nil {
             // Merchant doesn't support shipping to selected country
             let errorMsg = String.Localized.does_not_support_shipping_to(countryCode: country)
@@ -407,7 +407,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         addressSection.postalCode?.setText(address.postalCode ?? "")
         addressSection.state?.setRawData(address.state ?? "")
         addressSection.state?.view.resignFirstResponder()
-        
+
         self.selectedAutoCompleteResult = address
     }
 }
@@ -460,4 +460,3 @@ extension AddressSectionElement.AdditionalFields {
 @_spi(STP) extension AddressViewController: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
 }
-

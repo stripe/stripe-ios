@@ -14,16 +14,16 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_ConsumerSession)
 class ConsumerSession: NSObject, STPAPIResponseDecodable {
-    
+
     let clientSecret: String
     let emailAddress: String
     let redactedPhoneNumber: String
     let verificationSessions: [VerificationSession]
     let authSessionClientSecret: String?
-    
+
     let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]?
-    
-    let allResponseFields: [AnyHashable : Any]
+
+    let allResponseFields: [AnyHashable: Any]
 
     init(
         clientSecret: String,
@@ -32,7 +32,7 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
         verificationSessions: [VerificationSession],
         authSessionClientSecret: String?,
         supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]?,
-        allResponseFields: [AnyHashable : Any]
+        allResponseFields: [AnyHashable: Any]
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
@@ -43,8 +43,8 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
         self.allResponseFields = allResponseFields
         super.init()
     }
-    
-    static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+
+    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response,
               let dict = response["consumer_session"] as? [AnyHashable: Any],
               let clientSecret = dict["client_secret"] as? String,
@@ -53,7 +53,7 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
         else {
             return nil
         }
-        
+
         var verificationSessions = [VerificationSession]()
         if let sessions = dict["verification_sessions"] as? [[AnyHashable: Any]] {
             for session in sessions {
@@ -104,7 +104,6 @@ extension ConsumerSession {
         verificationSessions.isVerifiedForSignup
     }
 }
-
 
 // MARK: - API methods
 extension ConsumerSession {
@@ -210,7 +209,7 @@ extension ConsumerSession {
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
-    
+
     func createLinkAccountSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,

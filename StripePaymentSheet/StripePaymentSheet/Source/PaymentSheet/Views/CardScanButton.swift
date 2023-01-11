@@ -6,11 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 import CloudKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension UIButton {
     @available(iOS 13, macCatalyst 14, *)

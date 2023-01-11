@@ -6,11 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 // TODO(ramont): Remove after migrating to modern bindings
 fileprivate extension ConsumerPaymentDetails {
@@ -109,7 +109,7 @@ final class LinkCardEditElement: Element {
             elements: [
                 cardSection,
                 billingAddressSection,
-                checkboxElement
+                checkboxElement,
             ],
             theme: theme
         )
@@ -121,7 +121,7 @@ final class LinkCardEditElement: Element {
         title: String.Localized.card_information,
         elements: [
             panElement,
-            SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
+            SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ],
         theme: theme
     )

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeApplePay
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 extension STPAnalyticsClient {
@@ -36,12 +36,12 @@ extension STPAnalyticsClient {
         case .canceled:
             // We don't report these to analytics, bail out.
             return
-        case .failed(error: _):
+        case .failed:
             success = false
         case .completed:
             success = true
         }
-        
+
         logPaymentSheetEvent(
             event: paymentSheetPaymentEventValue(
                 isCustom: isCustom,
@@ -71,7 +71,7 @@ extension STPAnalyticsClient {
             currency: currency
         )
     }
-    
+
     func logPaymentSheetPaymentOptionSelect(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
@@ -81,15 +81,14 @@ extension STPAnalyticsClient {
                                 paymentMethod: paymentMethod))
     }
 
-
     // MARK: - String builders
-    enum AnalyticsPaymentMethodType : String {
+    enum AnalyticsPaymentMethodType: String {
         case newPM = "newpm"
         case savedPM = "savedpm"
         case applePay = "applepay"
         case link = "link"
     }
-    
+
     func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
         -> STPAnalyticEvent
     {
@@ -97,33 +96,33 @@ extension STPAnalyticsClient {
             if configuration.customer == nil && configuration.applePay == nil {
                 return .mcInitCustomDefault
             }
-            
+
             if configuration.customer != nil && configuration.applePay == nil {
                 return .mcInitCustomCustomer
             }
-            
+
             if configuration.customer == nil && configuration.applePay != nil {
                 return .mcInitCustomApplePay
             }
-            
+
             return .mcInitCustomCustomerApplePay
         } else {
             if configuration.customer == nil && configuration.applePay == nil {
                 return .mcInitCompleteDefault
             }
-            
+
             if configuration.customer != nil && configuration.applePay == nil {
                 return .mcInitCompleteCustomer
             }
-            
+
             if configuration.customer == nil && configuration.applePay != nil {
                 return .mcInitCompleteApplePay
             }
-            
+
             return .mcInitCompleteCustomerApplePay
         }
     }
-    
+
     func paymentSheetShowEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
@@ -153,7 +152,7 @@ extension STPAnalyticsClient {
             }
         }
     }
-    
+
     func paymentSheetPaymentEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
@@ -184,7 +183,7 @@ extension STPAnalyticsClient {
             }
         }
     }
-    
+
     func paymentSheetPaymentOptionSelectEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
@@ -243,10 +242,10 @@ extension STPAnalyticsClient {
         let analytic = PaymentSheetAnalytic(event: event,
                                             productUsage: productUsage,
                                             additionalParams: additionalParams)
-        
+
         log(analytic: analytic)
     }
-    
+
     var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
             return true
@@ -254,11 +253,11 @@ extension STPAnalyticsClient {
             return NSClassFromString("XCTest") != nil
         #endif
     }
-    
+
 }
 
 extension PaymentSheetViewController.Mode {
-    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
         switch self {
         case .addingNew:
             return .newPM
@@ -269,7 +268,7 @@ extension PaymentSheetViewController.Mode {
 }
 
 extension ChoosePaymentOptionViewController.Mode {
-    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
         switch self {
         case .addingNew:
             return .newPM
@@ -280,11 +279,11 @@ extension ChoosePaymentOptionViewController.Mode {
 }
 
 extension SavedPaymentOptionsViewController.Selection {
-    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
         switch self {
         case .add:
             return .newPM
-        case .saved(paymentMethod: _):
+        case .saved:
             return .savedPM
         case .applePay:
             return .applePay
@@ -295,7 +294,7 @@ extension SavedPaymentOptionsViewController.Selection {
 }
 
 extension PaymentSheet.PaymentOption {
-    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+    var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
         switch self {
         case .applePay:
             return .applePay
@@ -312,11 +311,11 @@ extension PaymentSheet.PaymentOption {
 struct PaymentSheetAnalytic: StripePayments.PaymentAnalytic {
     let event: STPAnalyticEvent
     let productUsage: Set<String>
-    let additionalParams: [String : Any]
+    let additionalParams: [String: Any]
 }
 
 extension PaymentSheet.Configuration {
-    
+
     /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
     var analyticPayload: [String: Any] {
         var payload = [String: Any]()
@@ -333,7 +332,7 @@ extension PaymentSheet.Configuration {
         payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
         payload["appearance"] = appearance.analyticPayload
-        
+
         return payload
     }
 }
@@ -360,10 +359,10 @@ extension PaymentSheet.Appearance {
         payload["font"] = font != PaymentSheet.Appearance.default.font
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
-        
+
         // Convenience payload item to make querying high level appearance usage easier
         payload["usage"] = payload.values.contains(true)
-        
+
         return payload
     }
 }

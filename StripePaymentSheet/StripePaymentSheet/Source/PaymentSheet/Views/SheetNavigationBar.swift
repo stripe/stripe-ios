@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol SheetNavigationBarDelegate: AnyObject {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar)
@@ -29,7 +29,7 @@ class SheetNavigationBar: UIView {
         button.accessibilityIdentifier = "UIButton.Close"
         return button
     }()
-    
+
     fileprivate lazy var backButton: UIButton = {
         let button = SheetNavigationButton(type: .custom)
         button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
@@ -38,7 +38,7 @@ class SheetNavigationBar: UIView {
         button.accessibilityIdentifier = "UIButton.Back"
         return button
     }()
-    
+
     lazy var additionalButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(appearance.colors.icon, for: .normal)
@@ -47,10 +47,10 @@ class SheetNavigationBar: UIView {
 
         return button
     }()
-    
+
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
-    
+
     override var isUserInteractionEnabled: Bool {
         didSet {
             // Explicitly disable buttons to update their appearance
@@ -59,7 +59,7 @@ class SheetNavigationBar: UIView {
             additionalButton.isEnabled = isUserInteractionEnabled
         }
     }
-    
+
     init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         super.init(frame: .zero)
@@ -82,11 +82,11 @@ class SheetNavigationBar: UIView {
                 equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
-        
+
         if isTestMode {
             testModeView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(testModeView)
-            
+
             NSLayoutConstraint.activate([
                 testModeView.leadingAnchor.constraint(
                     equalTo: closeButton.trailingAnchor, constant: PaymentSheetUI.defaultPadding),

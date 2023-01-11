@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+import UIKit
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(
@@ -19,7 +19,7 @@ protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
 @objc(STP_Internal_BottomSheet3DS2ViewController)
 class BottomSheet3DS2ViewController: UIViewController {
 
-    weak var delegate: BottomSheet3DS2ViewControllerDelegate? = nil
+    weak var delegate: BottomSheet3DS2ViewControllerDelegate?
 
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,

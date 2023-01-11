@@ -24,7 +24,7 @@ extension STPPaymentIntentShippingDetailsParams {
         addressParams.state = address.state
         addressParams.postalCode = address.postalCode
         addressParams.country = address.country
-        
+
         self.init(address: addressParams, name: name)
         phone = shippingDetails.phone
     }

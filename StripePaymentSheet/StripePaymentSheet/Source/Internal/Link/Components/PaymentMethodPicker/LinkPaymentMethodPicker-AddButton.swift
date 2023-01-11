@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkPaymentMethodPicker {
 
@@ -78,7 +78,7 @@ extension LinkPaymentMethodPicker {
                 stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
                 stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
                 stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+                stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             ])
         }
 
