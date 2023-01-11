@@ -54,7 +54,7 @@ extension STPAPIClient {
                 cardImageVerificationId: cardImageVerificationId,
                 verifyFrames: verifyFrames
             )
-        } catch (let error) {
+        } catch let error {
             let promise = Promise<EmptyResponse>()
             promise.reject(with: error)
             return promise

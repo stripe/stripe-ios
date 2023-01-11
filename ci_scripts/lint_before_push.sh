@@ -15,9 +15,6 @@ function suggest_no_verify() {
 
 if which swiftlint >/dev/null; then
 
-  SCRIPTDIR=$(cd "$(dirname $0)" ; pwd)
-  STRIPE_IOS_ROOT=$(cd "$SCRIPTDIR/../"; pwd)
-
   START=`date +%s`
 
   z40=0000000000000000000000000000000000000000
@@ -31,10 +28,10 @@ if which swiftlint >/dev/null; then
     echo "Can't lint on master branch"
     exit 1
   else
-    for file in $(git diff --diff-filter=AM --name-only origin/master  | grep ".swift$"); do
-      export SCRIPT_INPUT_FILE_$count=$file
+    while IFS= read -r file; do
+      export SCRIPT_INPUT_FILE_$count="$file"
       count=$((count + 1))
-    done
+    done < <(git diff --diff-filter=AM --name-only origin/master  | grep ".swift$")
   fi
 
   export SCRIPT_INPUT_FILE_COUNT=$count

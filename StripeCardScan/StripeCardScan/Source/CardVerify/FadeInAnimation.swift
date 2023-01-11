@@ -15,7 +15,7 @@ extension UIView {
         UIView.animate(
             withDuration: duration!,
             animations: { self.alpha = 1 },
-            completion: { (value: Bool) in
+            completion: { (_: Bool) in
                 if let complete = onCompletion { complete() }
             }
         )
@@ -30,7 +30,7 @@ extension UIView {
         UIView.animate(
             withDuration: duration!,
             animations: { self.layer.borderColor = withColor.cgColor },
-            completion: { (value: Bool) in
+            completion: { (_: Bool) in
                 if let complete = onCompletion { complete() }
             }
         )
@@ -42,7 +42,7 @@ extension UIView {
         UIView.animate(
             withDuration: duration!,
             animations: { self.alpha = 0 },
-            completion: { (value: Bool) in
+            completion: { (_: Bool) in
                 if let complete = onCompletion { complete() }
             }
         )
@@ -59,7 +59,7 @@ extension UILabel {
         UIView.animate(
             withDuration: duration!,
             animations: { self.textColor = withColor },
-            completion: { (value: Bool) in
+            completion: { (_: Bool) in
                 if let complete = onCompletion { complete() }
             }
         )

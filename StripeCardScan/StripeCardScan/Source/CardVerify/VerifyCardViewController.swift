@@ -118,7 +118,7 @@ class VerifyCardViewController: SimpleScanViewController {
         return uxAndOcrMainLoop
     }
 
-    // MARK: -UI effects and customizations for the VerifyCard flow
+    // MARK: - UI effects and customizations for the VerifyCard flow
 
     override func setupUiComponents() {
         if let closeButton = VerifyCardViewController.closeButton {
@@ -140,9 +140,9 @@ class VerifyCardViewController: SimpleScanViewController {
     }
 
     func setupCardDescriptionTextUI() {
-        ///TODO(jaimepark): Update text ui with viewmodel
-        //let network = bin.map { CreditCardUtils.determineCardNetwork(cardNumber: $0) }
-        //var text = "\(network.map { $0.toString() } ?? cardNetwork?.toString() ?? "")"
+        // TODO(jaimepark): Update text ui with viewmodel
+        // let network = bin.map { CreditCardUtils.determineCardNetwork(cardNumber: $0) }
+        // var text = "\(network.map { $0.toString() } ?? cardNetwork?.toString() ?? "")"
         let text = "\(expectedCardIssuer ?? "") •••• \(expectedCardLast4)"
 
         cardDescriptionText.textColor = .white
@@ -153,7 +153,7 @@ class VerifyCardViewController: SimpleScanViewController {
 
     }
 
-    // MARK: -Autolayout constraints
+    // MARK: - Autolayout constraints
     override func setupConstraints() {
         let children: [UIView] = [cardDescriptionText]
         for child in children {
@@ -185,7 +185,7 @@ class VerifyCardViewController: SimpleScanViewController {
         ).isActive = true
     }
 
-    // MARK: -Override some ScanBase functions
+    // MARK: - Override some ScanBase functions
     override func onScannedCard(
         number: String,
         expiryYear: String?,
@@ -299,7 +299,7 @@ class VerifyCardViewController: SimpleScanViewController {
         }
     }
 
-    // MARK: -UI event handlers
+    // MARK: - UI event handlers
     override func cancelButtonPress() {
         /// User canceled the scan before the main loop completed, log with a failure
         mainLoopDurationTask.trackResult(.failure)

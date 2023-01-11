@@ -92,7 +92,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK: -Torch Logic
+    // MARK: - Torch Logic
     func toggleTorch() {
         self.ocrMainLoop()?.scanStats.torchOn = !(self.ocrMainLoop()?.scanStats.torchOn ?? false)
         self.videoFeed.toggleTorch()
@@ -289,7 +289,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         self.previewView?.videoPreviewLayer.session = self.videoFeed.session
 
         self.videoFeed.pauseSession()
-        //Apple example app sets up in viewDidLoad: https://developer.apple.com/documentation/avfoundation/cameras_and_media_capture/avcam_building_a_camera_app
+        // Apple example app sets up in viewDidLoad: https://developer.apple.com/documentation/avfoundation/cameras_and_media_capture/avcam_building_a_camera_app
         self.videoFeed.setup(
             captureDelegate: self,
             initialVideoOrientation: self.initialVideoOrientation,
@@ -469,7 +469,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         }
     }
 
-    // MARK: -OcrMainLoopComplete logic
+    // MARK: - OcrMainLoopComplete logic
     func complete(creditCardOcrResult: CreditCardOcrResult) {
         ocrMainLoop()?.mainLoopDelegate = nil
         /// Stop the previewing when we are done

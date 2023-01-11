@@ -15,6 +15,8 @@ lint_dirs=(
 	"StripeUICore"
 	"StripeFinancialConnections"
 	"StripeApplePay"
+	"StripeCameraCore"
+	"StripeCardScan"
 )
 
 exit_code=0
