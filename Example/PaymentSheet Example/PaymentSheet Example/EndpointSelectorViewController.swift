@@ -52,7 +52,6 @@ class EndpointSelectorViewController: UITableViewController {
         let alertController = UIAlertController(title: "Set Endpoint Manually", message: nil, preferredStyle: .alert)
         alertController.addTextField { textField in
             textField.text = self.currentCheckoutEndpoint
-            textField.accessibilityIdentifier = "endpoint-field"
         }
 
         let submitAction = UIAlertAction(title: "Submit", style: .default) { [unowned alertController] _ in
