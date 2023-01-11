@@ -104,7 +104,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
     }
 
     func testAnalyticsWebProductUsage() {
-        let _ = sheetWithWebUI()
+        _ = sheetWithWebUI()
         XCTAssertEqual(mockAnalyticsClientV1.productUsage, ["IdentityVerificationSheet"])
     }
 

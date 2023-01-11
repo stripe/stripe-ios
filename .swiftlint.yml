@@ -95,3 +95,6 @@ vertical_whitespace:
 
 trailing_comma:
   mandatory_comma: true
+
+generic_type_name:
+  max_length: 30          # Maybe remove after initial cleanup.

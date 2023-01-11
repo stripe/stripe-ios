@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-import iOSSnapshotTestCase
 
 @testable import StripeIdentity
 

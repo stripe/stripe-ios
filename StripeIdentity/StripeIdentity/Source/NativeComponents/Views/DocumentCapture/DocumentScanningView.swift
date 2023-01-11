@@ -109,7 +109,6 @@ final class DocumentScanningView: UIView {
         switch viewModel {
         case .blank:
             cutoutBorderView.isAnimating = false
-            break
 
         case .scanned(let image):
             imageView.isHidden = false

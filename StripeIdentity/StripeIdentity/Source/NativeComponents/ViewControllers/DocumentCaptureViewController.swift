@@ -141,7 +141,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return [
                 .continueButton { [weak self] in
                     self?.saveOrFlipDocument(scannedImage: image, documentSide: documentSide)
-                }
+                },
             ]
 
         case .noCameraAccess:
@@ -174,7 +174,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
-                )
+                ),
             ]
         case .timeout(let documentSide):
             return [
