@@ -5,9 +5,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol BankAccountInfoViewDelegate {
     func didTapXIcon()
@@ -21,7 +21,7 @@ class BankAccountInfoView: UIView {
     }
 
     private let theme: ElementsUITheme
-    
+
     lazy var bankNameLabel: UILabel = {
         let label = UILabel()
         label.font = theme.fonts.subheadline

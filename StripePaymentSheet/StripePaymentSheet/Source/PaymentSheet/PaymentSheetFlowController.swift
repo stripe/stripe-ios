@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 typealias PaymentOption = PaymentSheet.PaymentOption
 
@@ -22,17 +22,17 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
-        
+
         var name: String {
             switch self {
-                
+
             case .applePay:
                 return "applepay"
             case .saved(paymentMethod: let paymentMethod):
                 return paymentMethod.type.displayName.lowercased()
             case .new(confirmParams: let confirmParams):
                 return confirmParams.paymentMethodType.displayName.lowercased()
-            case .link(option: _):
+            case .link:
                 return "link"
             }
         }
@@ -76,7 +76,7 @@ extension PaymentSheet {
             }
             return nil
         }
-        
+
         // MARK: - Private properties
 
         private var intent: Intent
@@ -105,7 +105,7 @@ extension PaymentSheet {
             #endif
             return vc
         }()
-        private var presentPaymentOptionsCompletion: (() -> ())? = nil
+        private var presentPaymentOptionsCompletion: (() -> Void)?
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         private var _paymentOption: PaymentOption? {
@@ -115,7 +115,7 @@ extension PaymentSheet {
 
             return paymentOptionsViewController.selectedPaymentOption
         }
-        
+
         // MARK: - Initializer (Internal)
 
         required init(
@@ -206,14 +206,14 @@ extension PaymentSheet {
                 }
             }
         }
-        
+
         /// Presents a sheet where the customer chooses how to pay, either by selecting an existing payment method or adding a new one
         /// Call this when your "Select a payment method" button is tapped
         /// - Parameter presentingViewController: The view controller that presents the sheet.
         /// - Parameter completion: This is called after the sheet is dismissed. Use the `paymentOption` property to get the customer's desired payment option.
         public func presentPaymentOptions(
             from presentingViewController: UIViewController,
-            completion: (() -> ())? = nil
+            completion: (() -> Void)? = nil
         ) {
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
@@ -262,7 +262,7 @@ extension PaymentSheet {
         /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
         public func confirm(
             from presentingViewController: UIViewController,
-            completion: @escaping (PaymentSheetResult) -> ()
+            completion: @escaping (PaymentSheetResult) -> Void
         ) {
             guard let paymentOption = _paymentOption else {
                 assertionFailure("`confirmPayment` should only be called when `paymentOption` is not nil")
@@ -298,12 +298,12 @@ extension PaymentSheet {
                 completion(result)
             }
         }
-        
+
         // MARK: Internal helper methods
         static func makeBottomSheetViewController(
             _ contentViewController: BottomSheetContentViewController,
             configuration: Configuration,
-            didCancelNative3DS2: (() -> ())? = nil
+            didCancelNative3DS2: (() -> Void)? = nil
         ) -> BottomSheetViewController {
             let sheet = BottomSheetViewController(
                 contentViewController: contentViewController,
@@ -311,7 +311,7 @@ extension PaymentSheet {
                 isTestMode: configuration.apiClient.isTestmode,
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
             )
-            
+
             // Workaround to silence a warning in the Catalyst target
             #if targetEnvironment(macCatalyst)
             configuration.style.configure(sheet)
@@ -360,17 +360,17 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         presentingViewController.present(authenticationViewController, animated: true, completion: nil)
     }
-    
+
     func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams) {
         let pollingVC = PollingViewController(currentAction: action,
                                                       appearance: self.appearance)
         presentingViewController.present(pollingVC, animated: true, completion: nil)
     }
-    
+
     func dismiss(_ authenticationViewController: UIViewController) {
         authenticationViewController.dismiss(animated: true, completion: nil)
     }
-    
+
     let presentingViewController: UIViewController
     let appearance: PaymentSheet.Appearance
 

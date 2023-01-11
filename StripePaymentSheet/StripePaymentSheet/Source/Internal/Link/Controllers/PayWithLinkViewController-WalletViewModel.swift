@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 protocol PayWithLinkWalletViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel)
@@ -64,7 +64,7 @@ extension PayWithLinkViewController {
         /// Whether or not the view should show the instant debit mandate text.
         var shouldShowInstantDebitMandate: Bool {
             switch selectedPaymentMethod?.details {
-            case .bankAccount(_):
+            case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
                 return true
             default:
@@ -135,7 +135,7 @@ extension PayWithLinkViewController {
             switch selectedPaymentMethod?.details {
             case .card(let card):
                 return card.hasExpired
-            case .bankAccount(_), .none:
+            case .bankAccount, .none:
                 // Only cards have expiry date.
                 return false
             }
@@ -206,7 +206,7 @@ extension PayWithLinkViewController {
                 case .success:
                     paymentMethods.remove(at: index)
                     delegate?.viewModelDidChange(self)
-                case .failure(_):
+                case .failure:
                     break
                 }
 
@@ -234,7 +234,7 @@ extension PayWithLinkViewController {
         }
 
         func updatePaymentMethod(_ paymentMethod: ConsumerPaymentDetails) -> Int? {
-            guard let index = paymentMethods.firstIndex(where: {$0.stripeID == paymentMethod.stripeID}) else {
+            guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethod.stripeID }) else {
                 return nil
             }
 

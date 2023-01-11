@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension Error {
-    
+
     /// If the `localizedDescription` contains a generic error message this returns the raw error message within `userInfo`
     /// Otherwise returns the `localizedDescription`
     var nonGenericDescription: String {
@@ -19,7 +19,7 @@ extension Error {
         }
         // If the `localizedDescription` is not generic, return the `localizedDescription`
         if localizedDescription != NSError.stp_unexpectedErrorMessage() { return localizedDescription }
-        
+
         // If error message is generic, return raw value for error message instead
         let errorMessage = (self as NSError).userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
         return errorMessage

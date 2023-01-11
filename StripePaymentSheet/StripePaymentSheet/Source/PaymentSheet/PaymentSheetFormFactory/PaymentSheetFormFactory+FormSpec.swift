@@ -50,7 +50,7 @@ extension PaymentSheetFormFactory {
             )
             return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
                 let selectedValue = dropdown.selectedItem.rawData
-                //TODO: Determine how to handle multiple versions
+                // TODO: Determine how to handle multiple versions
                 if let apiPathKey = selectorSpec.apiPath?["v1"] {
                     params.paymentMethodParams.additionalAPIParameters[apiPathKey] = selectedValue
                 }

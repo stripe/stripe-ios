@@ -6,14 +6,14 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 import Foundation
-import UIKit
 import SafariServices
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 @objc(STP_Internal_AUBECSLegalTermsView)
 final class AUBECSLegalTermsView: UIView {
-    
+
     private let links: [String: URL] = [
         "terms": URL(string: "https://stripe.com/au-becs-dd-service-agreement/legal")!
     ]
@@ -22,7 +22,7 @@ final class AUBECSLegalTermsView: UIView {
     private var theme: ElementsUITheme {
         return configuration.appearance.asElementsTheme
     }
-    
+
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.isScrollEnabled = false

@@ -5,9 +5,9 @@
 //  Created by Reshma Karthikeyan on 2/22/22.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_AffirmCopyLabel)
@@ -29,16 +29,16 @@ class AffirmCopyLabel: UIView {
         affirmLabel.sizeToFit()
         addAndPinSubview(affirmLabel)
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         logo.image = PaymentSheetImageLibrary.affirmLogo()
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

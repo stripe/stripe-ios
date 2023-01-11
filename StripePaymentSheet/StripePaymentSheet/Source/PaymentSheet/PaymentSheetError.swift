@@ -17,7 +17,7 @@ import StripePayments
 public enum PaymentSheetError: Error {
     /// An unknown error.
     case unknown(debugDescription: String)
-    
+
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
 
@@ -33,7 +33,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
         // TODO: Expired ephemeral key
         return false
     }
-    
+
     public var debugDescription: String {
         return "An error ocurred in PaymentSheet. " + {
             switch self {

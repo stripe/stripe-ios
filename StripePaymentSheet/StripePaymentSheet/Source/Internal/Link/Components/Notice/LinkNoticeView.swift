@@ -71,7 +71,7 @@ final class LinkNoticeView: UIView {
     private func setupUI() {
         let stackView = UIStackView(arrangedSubviews: [
             iconView,
-            textLabel
+            textLabel,
         ])
 
         stackView.axis = .horizontal

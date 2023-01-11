@@ -20,14 +20,14 @@ extension STPAPIClient {
         let header = authorizationHeader(using: ephemeralKeySecret)
         // Unfortunately, this API only supports fetching saved pms for one type at a time
         var shared_allPaymentMethods = [STPPaymentMethod]()
-        var shared_lastError: Error? = nil
+        var shared_lastError: Error?
         let group = DispatchGroup()
-        
+
         for type in types {
             group.enter()
             let params = [
                 "customer": customerID,
-                "type": STPPaymentMethod.string(from: type)
+                "type": STPPaymentMethod.string(from: type),
             ]
             APIRequest<STPPaymentMethodListDeserializer>.getWith(
                 self,
@@ -47,14 +47,15 @@ extension STPAPIClient {
                 }
             }
         }
-        
+
         group.notify(queue: DispatchQueue.main) {
             completion(shared_allPaymentMethods, shared_lastError)
         }
     }
-    
+
     internal func detachPaymentMethod(
-        _ paymentMethodID: String, fromCustomerUsing ephemeralKeySecret: String,
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
         completion: @escaping STPErrorBlock
     ) {
         let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
@@ -67,11 +68,13 @@ extension STPAPIClient {
             completion(error)
         }
     }
-    
+
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    func retrieveCustomer(_ customerID: String,
-        using ephemeralKey: String, completion: @escaping STPCustomerCompletionBlock
+    func retrieveCustomer(
+        _ customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPCustomerCompletionBlock
     ) {
         let endpoint = "\(APIEndpointCustomers)/\(customerID)"
         APIRequest<STPCustomer>.getWith(

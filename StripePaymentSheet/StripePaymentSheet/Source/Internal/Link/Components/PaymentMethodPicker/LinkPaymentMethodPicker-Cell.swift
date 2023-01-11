@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkPaymentMethodPickerCellDelegate: AnyObject {
     func savedPaymentPickerCellDidSelect(_ cell: LinkPaymentMethodPicker.Cell)
@@ -200,7 +200,7 @@ extension LinkPaymentMethodPicker {
                 switch paymentMethod.details {
                 case .card(let card):
                     return card.hasExpired
-                case .bankAccount(_):
+                case .bankAccount:
                     return false
                 }
             }
@@ -235,7 +235,7 @@ extension LinkPaymentMethodPicker {
                     name: String.Localized.show_menu,
                     target: self,
                     selector: #selector(onShowMenuAction(_:))
-                )
+                ),
             ]
         }
 

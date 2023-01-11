@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
 @frozen public enum PaymentSheetResult {
@@ -22,10 +22,10 @@ import PassKit
     /// fulfill the order (e.g. ship the product to the customer) after receiving a successful payment event from Stripe -
     /// see https://stripe.com/docs/payments/handling-payment-events
     case completed
-    
+
     /// The customer canceled the payment or setup attempt
     case canceled
-    
+
     /// The attempt failed.
     /// - Parameter error: The error encountered by the customer. You can display its `localizedDescription` to the customer.
     case failed(error: Error)
@@ -35,10 +35,10 @@ import PassKit
 public class PaymentSheet {
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
-    
+
     /// The most recent error encountered by the customer, if any.
     public private(set) var mostRecentError: Error?
-    
+
     /// Initializes a PaymentSheet
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
@@ -49,7 +49,7 @@ public class PaymentSheet {
             configuration: configuration
         )
     }
-    
+
     /// Initializes a PaymentSheet
     /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
@@ -59,7 +59,7 @@ public class PaymentSheet {
             configuration: configuration
         )
     }
-    
+
     required init(intentClientSecret: IntentClientSecret, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
@@ -67,7 +67,7 @@ public class PaymentSheet {
         self.configuration = configuration
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration)
     }
-    
+
     /// Presents a sheet for a customer to complete their payment
     /// - Parameter presentingViewController: The view controller to present a payment sheet
     /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed
@@ -75,10 +75,10 @@ public class PaymentSheet {
     @available(macCatalystApplicationExtension, unavailable)
     public func present(
         from presentingViewController: UIViewController,
-        completion: @escaping (PaymentSheetResult) -> ()
+        completion: @escaping (PaymentSheetResult) -> Void
     ) {
         // Overwrite completion closure to retain self until called
-        let completion: (PaymentSheetResult) -> () = { status in
+        let completion: (PaymentSheetResult) -> Void = { status in
             // Dismiss if necessary
             if let presentingViewController = self.bottomSheetViewController.presentingViewController {
                 // Calling `dismiss()` on the presenting view controller causes
@@ -93,7 +93,7 @@ public class PaymentSheet {
             self.completion = nil
         }
         self.completion = completion
-        
+
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
@@ -103,7 +103,7 @@ public class PaymentSheet {
             completion(.failed(error: error))
             return
         }
-        
+
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
             clientSecret: intentClientSecret,
@@ -117,7 +117,7 @@ public class PaymentSheet {
                     completion(.failed(error: PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
                     return
                 }
-                
+
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
 
@@ -181,7 +181,7 @@ public class PaymentSheet {
                 completion(.failed(error: error))
             }
         }
-        
+
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
@@ -205,20 +205,20 @@ public class PaymentSheet {
     public static func resetCustomer() {
         LinkAccountService.defaultCookieStore.clear()
     }
-    
+
     // MARK: - Internal Properties
 
     /// The client secret this instance was initialized with
     let intentClientSecret: IntentClientSecret
-    
+
     /// A user-supplied completion block. Nil until `present` is called.
-    var completion: ((PaymentSheetResult) -> ())?
-    
+    var completion: ((PaymentSheetResult) -> Void)?
+
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
-    
+
     /// The parent view controller to present
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
@@ -229,7 +229,7 @@ public class PaymentSheet {
             appearance: configuration.appearance,
             isTestMode: isTestMode
         )
-        
+
         let vc = BottomSheetViewController(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
@@ -244,7 +244,7 @@ public class PaymentSheet {
         }
         return vc
     }()
-    
+
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -254,10 +254,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewController,
         with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> ()
+        completion: @escaping (PaymentSheetResult) -> Void
     ) {
         let presentingViewController = paymentSheetViewController.presentingViewController
-        let confirm: (@escaping (PaymentSheetResult) -> ()) -> () = { completion in
+        let confirm: (@escaping (PaymentSheetResult) -> Void) -> Void = { completion in
             PaymentSheet.confirm(
                 configuration: self.configuration,
                 authenticationContext: self.bottomSheetViewController,
@@ -271,11 +271,11 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 completion(result)
             }
         }
-        
+
         if case .applePay = paymentOption {
             // Don't present the Apple Pay sheet on top of the Payment Sheet
             paymentSheetViewController.dismiss(animated: true) {
-                confirm() { result in
+                confirm { result in
                     if case .completed = result {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
@@ -289,7 +289,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         } else {
             verifyLinkSessionIfNeeded(with: paymentOption, intent: paymentSheetViewController.intent) { shouldConfirm in
                 if shouldConfirm {
-                    confirm() { result in
+                    confirm { result in
                         completion(result)
                     }
                 } else {
@@ -298,19 +298,19 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             }
         }
     }
-    
+
     func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: PaymentSheetViewController, result: PaymentSheetResult) {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(result)
         }
     }
-    
+
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewController) {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(.canceled)
         }
     }
-    
+
     func paymentSheetViewControllerDidSelectPayWithLink(
         _ paymentSheetViewController: PaymentSheetViewController
     ) {
@@ -372,7 +372,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
         payWithLinkViewController.dismiss(animated: true)
     }
-    
+
     func payWithLinkViewControllerDidFinish(
         _ payWithLinkViewController: PayWithLinkViewController,
         result: PaymentSheetResult
@@ -386,7 +386,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
                 return paymentSheetVC
             }
         }
-        
+
         return nil
     }
 }

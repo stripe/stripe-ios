@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A simple button that increases the tap target for small buttons used in the navigation bar of PaymentSheet
 /// For internal SDK use only

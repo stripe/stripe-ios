@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 // MARK: - PAN Configuration
 extension TextFieldElement {
@@ -52,7 +52,7 @@ extension TextFieldElement {
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: .creditCardNumber, autocapitalization: .none)
         }
-        
+
         func maxLength(for text: String) -> Int {
             if binController.hasBINRanges(forPrefix: text) {
                 return Int(binController.mostSpecificBINRange(forNumber: text).panLength)
@@ -60,13 +60,13 @@ extension TextFieldElement {
                 return binController.maxCardNumberLength()
             }
         }
-        
+
         enum Error: TextFieldValidationError {
             case empty
             case incomplete
             case invalidBrand
             case invalidLuhn
-            
+
             func shouldDisplay(isUserEditing: Bool) -> Bool {
                 switch self {
                 case .empty:
@@ -77,7 +77,7 @@ extension TextFieldElement {
                     return true
                 }
             }
-            
+
             var localizedDescription: String {
                 switch self {
                 case .empty:
@@ -89,20 +89,20 @@ extension TextFieldElement {
                 }
             }
         }
-        
+
         func validate(text: String, isOptional: Bool) -> ValidationState {
             // Is it empty?
             if text.isEmpty {
                 return .invalid(Error.empty)
             }
-            
+
             // Is the card brand valid?
             // We assume our hardcoded mapping of BIN to brand is correct, so if we don't know the brand, the number must be invalid.
             let binRange = binController.mostSpecificBINRange(forNumber: text)
             if binRange.brand == .unknown {
                 return .invalid(Error.invalidBrand)
             }
-            
+
             // Is the PAN the correct length?
             // First, get the minimum valid length
             let minimumValidLength: Int = {
@@ -119,15 +119,15 @@ extension TextFieldElement {
             if text.count < minimumValidLength {
                 return .invalid(Error.incomplete)
             }
-            
+
             // Does it fail a luhn check?
             if !STPCardValidator.stringIsValidLuhn(text) {
                 return .invalid(Error.invalidLuhn)
             }
-            
+
             return .valid
         }
-        
+
         func makeDisplayText(for text: String) -> NSAttributedString {
             let kerningValue = 5
             // Add kerning in between groups of digits
@@ -172,11 +172,11 @@ extension TextFieldElement {
             if text.isEmpty {
                 return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
             }
-            
+
             if text.count < STPCardValidator.minCVCLength() {
                 return .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_cards_security_code_is_incomplete))
             }
-            
+
             return .valid
         }
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
@@ -210,13 +210,13 @@ extension TextFieldElement {
         func maxLength(for text: String) -> Int {
             return 4
         }
-        
+
         enum Error: TextFieldValidationError {
             case empty
             case incomplete
             case invalidMonth
             case invalid
-            
+
             public func shouldDisplay(isUserEditing: Bool) -> Bool {
                 switch self {
                 case .empty:                    return false
@@ -224,7 +224,7 @@ extension TextFieldElement {
                 case .invalidMonth, .invalid:   return true
                 }
             }
-            
+
             public var localizedDescription: String {
                 switch self {
                 case .empty:
@@ -238,12 +238,12 @@ extension TextFieldElement {
                 }
             }
         }
-        
+
         func validate(text: String, isOptional: Bool) -> ValidationState {
             // Validate the month here so we can reuse the result later
             let validMonths = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
             let textHasValidMonth = validMonths.contains { text.hasPrefix($0) }
-            
+
             switch text.count {
             case 0:
                 return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
@@ -270,7 +270,7 @@ extension TextFieldElement {
             if let firstDigit = text.first?.wholeNumberValue, (2...9).contains(firstDigit) {
                 text = "0" + text
             }
-            
+
             // Insert a "/" after two digits
             if text.count > 2 {
                 text.insert("/", at: text.index(text.startIndex, offsetBy: 2))

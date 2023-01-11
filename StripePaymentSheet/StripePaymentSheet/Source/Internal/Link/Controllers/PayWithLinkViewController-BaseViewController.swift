@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension PayWithLinkViewController {
 
@@ -75,7 +75,7 @@ extension PayWithLinkViewController {
                 contentView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor),
                 contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         }
 
