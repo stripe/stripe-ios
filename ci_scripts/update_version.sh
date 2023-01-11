@@ -34,15 +34,13 @@ cat > "${script_dir}/../StripeCore/StripeCore/Source/API Bindings/StripeAPIConfi
 
 import Foundation
 
-public extension StripeAPIConfiguration {
+extension StripeAPIConfiguration {
     /// The current version of this library.
-    static let STPSDKVersion = "${release_version}"
+    public static let STPSDKVersion = "${release_version}"
 
-    /*
-     NOTE: \`STPSDKVersion\` must be a hard-coded static string instead of
-     dynamically generated from the bundle's \`CFBundleShortVersionString\` to
-     ensure the correct value is returned when the SDK is statically linked.
-     */
+    // NOTE: \`STPSDKVersion\` must be a hard-coded static string instead of
+    // dynamically generated from the bundle's \`CFBundleShortVersionString\` to
+    // ensure the correct value is returned when the SDK is statically linked.
 
 }
 EOF

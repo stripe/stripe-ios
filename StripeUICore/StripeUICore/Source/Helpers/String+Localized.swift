@@ -38,7 +38,7 @@ import Foundation
     static var country: String {
         STPLocalizedString("Country", "Caption for Country field on address form")
     }
-    
+
     static var email: String {
         STPLocalizedString("Email", "Label for Email field on form")
     }
@@ -46,7 +46,7 @@ import Foundation
     static var name: String {
         STPLocalizedString("Name", "Label for Name field on form")
     }
-    
+
     static var full_name: String {
         STPLocalizedString("Full name", "Label for Full name field on form")
     }
@@ -62,7 +62,7 @@ import Foundation
     static var nameOnAccount: String {
         STPLocalizedString("Name on account", "Label for Name on account field on form")
     }
-    
+
     static var company: String {
         STPLocalizedString("Company", "Label for Company field on form")
     }
@@ -70,21 +70,21 @@ import Foundation
     static var invalid_email: String {
         STPLocalizedString("Your email is invalid.", "Error message when email is invalid")
     }
-    
+
     static var billing_same_as_shipping: String {
         STPLocalizedString("Billing address is same as shipping", "Label for a checkbox that makes customers billing address same as their shipping address")
     }
-    
+
     // MARK: - Phone number
-    
+
     static var phone: String {
         STPLocalizedString("Phone", "Caption for Phone field on address form")
     }
-    
+
     static var incomplete_phone_number: String {
         STPLocalizedString("Incomplete phone number", "Error description for incomplete phone number")
     }
-    
+
     static var invalid_phone_number: String {
         STPLocalizedString("Unable to parse phone number", "Error string when we can't parse a phone number")
     }
@@ -95,7 +95,7 @@ import Foundation
             "The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional)"
         )
     }
-    
+
     static var other: String {
         STPLocalizedString("Other", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
     }
@@ -152,11 +152,11 @@ import Foundation
             """
         )
     }
-    
+
     static var your_zip_is_incomplete: String {
         STPLocalizedString("Your ZIP is incomplete.", "Error message for when ZIP code in form is incomplete (US only)")
     }
-    
+
     static var your_postal_code_is_incomplete: String {
         STPLocalizedString("Your postal code is incomplete.", "Error message for when postal code in form is incomplete")
     }
@@ -224,7 +224,7 @@ import Foundation
             """
         )
     }
-    
+
     // MARK: - Account
     static var accountNumber: String {
         STPLocalizedString(
@@ -272,7 +272,7 @@ import Foundation
     static var remove: String {
         STPLocalizedString("Remove", "Button title for confirmation alert to remove a saved payment method")
     }
-    
+
     static var search: String {
         STPLocalizedString("Search", "Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped")
     }
@@ -283,13 +283,13 @@ import Foundation
             "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
         )
     }
-    
+
     // MARK: - UPI
-    
+
     static var upi_id: String {
         STPLocalizedString("UPI ID", "Label for UPI ID number field on form")
     }
-    
+
     static var invalid_upi_id: String {
         STPLocalizedString("Invalid UPI ID", "Error message when UPI ID is invalid")
     }

@@ -33,7 +33,7 @@ import Foundation
             }
             let defaultCountry = defaultCountry ?? locale.regionCode ?? ""
             let defaultCountryIndex = countryCodes.firstIndex(of: defaultCountry) ?? 0
-            
+
             return DropdownFieldElement(
                 items: dropdownItems,
                 defaultIndex: defaultCountryIndex,

@@ -38,7 +38,7 @@ where Self: RawRepresentable, Self.RawValue == String {
         let nsError = self as NSError
 
         var payload: [String: Any] = [
-            "domain": nsError.domain
+            "domain": nsError.domain,
         ]
 
         if let stringError = self as? AnalyticLoggableStringError {

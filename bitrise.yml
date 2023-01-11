@@ -38,13 +38,14 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
+    - framework-tests-xcode-13: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
-    - build-docs: {}
+    - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -59,7 +60,7 @@ stages:
     workflows:
     - basic-integration-tests: {}
     - ui-tests: {}
-    - build-docs: {}
+    - check-docs: {}
     - legacy-tests-13: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
@@ -91,15 +92,44 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  build-docs:
+  check-docs:
+    steps:
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/build_documentation.rb
+        title: Build documentation
+    before_run:
+    - prep_all
+    after_run:
+    - notify_ci
+  deploy-docs:
     steps:
     - activate-ssh-key@4: {}
     - script@1:
         inputs:
+        - content: bundle config set path 'vendor/bundle'
+        is_always_run: true
+        title: Set Bundler to use local vendor directory
+    - git-clone@6:
+        inputs:
+        - merge_pr: 'no'
+        - fetch_tags: 'yes'
+    - cache-pull@2: {}
+    - bundler@0: {}
+    - cache-push@2:
+        inputs:
+        - compress_archive: 'true'
+        - cache_paths: |
+            vendor
+            SourcePackages
+    - script@1:
+        inputs:
+        - content: git fetch origin
+        title: Fetch full branch history
+    - script@1:
+        inputs:
         - content: bundle exec ./ci_scripts/build_documentation.rb --publish
         title: Build documentation
-    before_run:
-    - prep_all
   data-theorem-sast:
     steps:
     - script@1:
@@ -238,6 +268,22 @@ workflows:
     before_run:
     - prep_all
     after_run: []
+  framework-tests-xcode-13:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: legacy_tests_14
+        title: fastlane legacy_tests_14
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=14.5"
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
+    meta:
+      bitrise.io:
+        stack: osx-xcode-13.2.x
+        machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
     - fastlane@3:
@@ -307,6 +353,10 @@ workflows:
     - notify_ci
   lint-tests:
     steps:
+    - script@1:
+        inputs:
+        - content: "./ci_scripts/lint.sh"
+        title: Run swiftlint
     - fastlane@3:
         inputs:
         - lane: build_extras
@@ -410,12 +460,6 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "5"
-        - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all

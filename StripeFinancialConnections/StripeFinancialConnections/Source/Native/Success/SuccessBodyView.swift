@@ -7,12 +7,12 @@
 
 import Foundation
 import SafariServices
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class SuccessBodyView: HitTestView {
-    
+
     init(
         institution: FinancialConnectionsInstitution,
         linkedAccounts: [FinancialConnectionsPartnerAccount],
@@ -29,7 +29,7 @@ final class SuccessBodyView: HitTestView {
         let verticalStackView = HitTestStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 12
-        
+
         if linkedAccounts.count > 0 {
             verticalStackView.addArrangedSubview(
                 CreateInformationBoxView(
@@ -54,10 +54,10 @@ final class SuccessBodyView: HitTestView {
                 didSelectDisconnectYourAccounts: didSelectDisconnectYourAccounts
             )
         )
-        
+
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -101,7 +101,7 @@ private func CreateDataAccessDisclosureView(
     NSLayoutConstraint.activate([
         separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.nativeScale),
     ])
-    
+
     let verticalStackView = HitTestStackView(
         arrangedSubviews: [
             separatorView,
@@ -137,7 +137,7 @@ private func CreateDisconnectAccountLabel(
         accountDisconnectionMethod: accountDisconnectionMethod,
         isEndUserFacing: isEndUserFacing
     )
-    
+
     let disconnectAccountLabel = ClickableLabel(
         font: .stripeFont(forTextStyle: .captionTight),
         boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),

@@ -17,45 +17,47 @@ import UIKit
 /// ```
 @objc(STPBottomSheetTransitioningDelegate)
 class BottomSheetTransitioningDelegate: NSObject {
-    
+
     static var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
-    
+
     /**
      Returns an instance of the delegate, retained for the duration of presentation
      */
     static var `default`: BottomSheetTransitioningDelegate = {
         return BottomSheetTransitioningDelegate()
     }()
-    
+
 }
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetTransitioningDelegate: UIViewControllerTransitioningDelegate {
-    
+
     /**
      Returns a modal presentation animator configured for the presenting state
      */
     func animationController(
-        forPresented presented: UIViewController, presenting: UIViewController,
+        forPresented presented: UIViewController,
+        presenting: UIViewController,
         source: UIViewController
     ) -> UIViewControllerAnimatedTransitioning? {
         return BottomSheetPresentationAnimator(transitionStyle: .presentation)
     }
-    
+
     /**
      Returns a modal presentation animator configured for the dismissing state
      */
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return BottomSheetPresentationAnimator(transitionStyle: .dismissal)
     }
-    
+
     /**
      Returns a modal presentation controller to coordinate the transition from the presenting
      view controller to the presented view controller.
      */
     func presentationController(
-        forPresented presented: UIViewController, presenting: UIViewController?,
+        forPresented presented: UIViewController,
+        presenting: UIViewController?,
         source: UIViewController
     ) -> UIPresentationController? {
         let controller = BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
@@ -63,4 +65,3 @@ extension BottomSheetTransitioningDelegate: UIViewControllerTransitioningDelegat
         return controller
     }
 }
-

@@ -9,9 +9,9 @@
 import UIKit
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 /// A button for paying with Link.
 /// For internal SDK use only
@@ -80,7 +80,7 @@ final class PayWithLinkButton: UIControl {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             Self.makeLogoView(),
-            emailLabelContainer
+            emailLabelContainer,
         ])
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -150,7 +150,7 @@ private extension PayWithLinkButton {
 
         NSLayoutConstraint.activate([
             logoView.widthAnchor.constraint(equalToConstant: Constants.logoSize.width),
-            logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height)
+            logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
         ])
 
         return logoView
@@ -169,7 +169,7 @@ private extension PayWithLinkButton {
             stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
     }
 

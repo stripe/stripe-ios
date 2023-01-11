@@ -30,7 +30,7 @@ struct AppleOcr {
     }
 
     static func performOcr(image: CGImage, completion: @escaping ([OcrObject]) -> Void) {
-        let textRequest = VNRecognizeTextRequest { request, error in
+        let textRequest = VNRecognizeTextRequest { request, _ in
             let imageSize = CGSize(width: image.width, height: image.height)
 
             guard let results = request.results as? [VNRecognizedTextObservation], !results.isEmpty

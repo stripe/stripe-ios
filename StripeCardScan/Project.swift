@@ -12,7 +12,7 @@ let project = Project.stripeFramework(
             .release(
                 name: "Release",
                 xcconfig: "BuildConfigurations/StripeCardScan-Release.xcconfig"
-            )
+            ),
         ],
         defaultSettings: .none
     ),

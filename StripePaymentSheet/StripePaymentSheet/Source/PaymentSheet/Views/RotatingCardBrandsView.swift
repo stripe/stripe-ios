@@ -69,7 +69,7 @@ class RotatingCardBrandsView: UIView {
         }
     }
 
-    var stackView: UIStackView? = nil {
+    var stackView: UIStackView? {
         didSet {
             if oldValue != stackView {
                 oldValue?.removeFromSuperview()
@@ -111,7 +111,7 @@ class RotatingCardBrandsView: UIView {
         }
         let animation = UIViewPropertyAnimator(duration: Self.AnimationDuration,
                                                controlPoint1: CGPoint(x: 0.19, y: 0.22),
-                                               controlPoint2: CGPoint(x: 1, y:1))
+                                               controlPoint2: CGPoint(x: 1, y: 1))
         animation.addAnimations {
             UIView.transition(with: self.rotatingCardBrandView,
                               duration: Self.AnimationDuration,
@@ -179,16 +179,16 @@ class RotatingCardBrandsView: UIView {
             self.stackView = stackView
         }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func didMoveToWindow() {
         super.didMoveToWindow()
         if window != nil {

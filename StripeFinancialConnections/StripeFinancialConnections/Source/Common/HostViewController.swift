@@ -5,9 +5,9 @@
 //  Created by Vardges Avetisyan on 6/3/22.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol HostViewControllerDelegate: AnyObject {
 
@@ -22,10 +22,10 @@ protocol HostViewControllerDelegate: AnyObject {
     )
 }
 
-final class HostViewController : UIViewController {
+final class HostViewController: UIViewController {
 
     // MARK: - UI
-    
+
     private lazy var closeItem: UIBarButtonItem = {
         let item = UIBarButtonItem(image: Image.close.makeImage(template: false),
                                    style: .plain,
@@ -39,17 +39,17 @@ final class HostViewController : UIViewController {
     private let loadingView = LoadingView(frame: .zero)
 
     // MARK: - Properties
-    
+
     weak var delegate: HostViewControllerDelegate?
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
     private let returnURL: String?
 
-    private var lastError: Error? = nil
+    private var lastError: Error?
 
     // MARK: - Init
-    
+
     init(clientSecret: String,
          returnURL: String?,
          apiClient: FinancialConnectionsAPIClient,
@@ -67,7 +67,7 @@ final class HostViewController : UIViewController {
     }
 
     // MARK: - UIViewController
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

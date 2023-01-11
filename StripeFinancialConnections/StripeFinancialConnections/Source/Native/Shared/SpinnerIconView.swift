@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class SpinnerIconView: UIView {
-    
+
     private lazy var iconImageView: UIImageView = {
         let iconImageView = UIImageView()
         iconImageView.backgroundColor = .clear
@@ -18,7 +18,7 @@ final class SpinnerIconView: UIView {
         iconImageView.image = image
         return iconImageView
     }()
-    
+
     init() {
         super.init(frame: .zero)
         backgroundColor = UIColor.clear
@@ -29,18 +29,18 @@ final class SpinnerIconView: UIView {
             widthAnchor.constraint(equalToConstant: 40),
             heightAnchor.constraint(equalToConstant: 40),
         ])
-        
+
         startRotating()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         stopRotating()
     }
-    
+
     private func startRotating() {
         let animationKey = "transform.rotation.z"
         let animation = CABasicAnimation(keyPath: animationKey)
@@ -52,7 +52,7 @@ final class SpinnerIconView: UIView {
         animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         layer.add(animation, forKey: animationKey)
     }
-    
+
     private func stopRotating() {
         layer.removeAllAnimations()
     }
@@ -64,11 +64,11 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct SpinnerIconViewUIViewRepresentable: UIViewRepresentable {
-    
+
     func makeUIView(context: Context) -> SpinnerIconView {
         SpinnerIconView()
     }
-    
+
     func updateUIView(_ uiView: SpinnerIconView, context: Context) {}
 }
 

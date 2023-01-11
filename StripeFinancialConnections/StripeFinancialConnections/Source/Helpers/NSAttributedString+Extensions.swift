@@ -11,7 +11,7 @@ import UIKit
 // MARK: - Markdown Bold
 
 extension NSMutableAttributedString {
-    
+
     /// Adds `boldFont` as an attribute in all the places that are surrounded by asterisks (ex. `**bold string here**).
     ///
     /// For example, `Click **here**` returns `Click here` with "here" being applied the `boldFont` as attribute.
@@ -22,7 +22,7 @@ extension NSMutableAttributedString {
         else {
             return
         }
-        
+
         while
             let textCheckingResult = regularExpression.firstMatch(
                 in: string,
@@ -33,19 +33,19 @@ extension NSMutableAttributedString {
             let markdownBoldRange = textCheckingResult.range
             // the string `**bold string here**`
             let markdownBoldString = attributedSubstring(from: markdownBoldRange)
-            
+
             // the string `bold string here`
             let nonmarkdownBoldString = markdownBoldString.extractStringInAsterisks()
-            
+
             if let nonmarkdownBoldString = nonmarkdownBoldString?.mutableCopy() as? NSMutableAttributedString {
                 // apply a "bold font attribute to the string `bold string here`
                 nonmarkdownBoldString
                     .addAttribute(
                         .font,
                         value: boldFont,
-                        range: NSMakeRange(0, nonmarkdownBoldString.length)
+                        range: NSRange(location: 0, length: nonmarkdownBoldString.length)
                     )
-                
+
                 replaceCharacters(in: markdownBoldRange, with: nonmarkdownBoldString)
             }
         }
@@ -53,7 +53,7 @@ extension NSMutableAttributedString {
 }
 
 extension NSAttributedString {
-    
+
     /// Extracts a substring out of the first set of asterisks.
     ///
     /// For example,  `Bold Text` out of `**Bold Text**`.

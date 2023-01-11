@@ -46,7 +46,7 @@ import WebKit
                 let response = try await loadContent(configuration: configuration)
                 let attributedString = try await makeAttributedString(
                     from: response.display_l_html,
-                    font: configuration.font
+                    configuration: configuration
                 )
                 let view = PaymentMethodMessagingView(
                     attributedString: attributedString,
@@ -114,7 +114,7 @@ import WebKit
                 let content = try await Self.loadContent(configuration: configuration)
                 attributedString = try await Self.makeAttributedString(
                     from: content.display_l_html,
-                    font: configuration.font
+                    configuration: configuration
                 )
             }
             if adjustsFontForContentSizeCategory {
@@ -170,47 +170,72 @@ import WebKit
 // MARK: - Helpers
 
 extension PaymentMethodMessagingView {
-    static func makeAttributedString(
-        from html: String,
-        font: UIFont
-    ) async throws -> NSAttributedString {
+    /// A regex that matches <img> tags and captures its url
+    static let imgTagRegex = try! NSRegularExpression(pattern: "<img src=\"(.*?)\">")
+    
+    /// - Returns: The given `html` string with <img> tags replaced with <a href> tags, and a list of the URLs contained in the replaced tags
+    static func htmlReplacingImageTags(html: String) -> (String, [URL]) {
+        var html = html
+        var images = [URL]()
+        for match in imgTagRegex.matches(in: html, range: NSRange(html.startIndex..., in: html)).reversed() {
+            guard
+                let rangeOfImgTag = Range(match.range, in: html),
+                let rangeOfURL = Range(match.range(at: 1), in: html)
+            else {
+                continue
+            }
+            let url = html[rangeOfURL]
+            html.replaceSubrange(rangeOfImgTag, with: "<a href=\"\(url)\">_</a>")
+            // Fetch the image
+            guard let URL = URL(string: String(url)) else { continue }
+            images.append(URL)
+        }
+        return (html, images)
+    }
+    
+    static func makeCSS(for font: UIFont) -> String {
         // To set the font, we prepend CSS to the given `html` before converting it to an NSAttributedString
         let isSystemFont = font.familyName == UIFont.systemFont(ofSize: font.pointSize).familyName
         // If the specified font is the same family as the system font, use "-apple-system" as the family name. Otherwise, the html renderer will only use the non-bold variation of the system font, breaking any bold font configurations.
         let fontFamily = isSystemFont ? "-apple-system" : font.familyName
-        let css = """
+        return """
                 <style>
                 body {
                     font-family: "\(fontFamily)";
                 }
                 </style>
             """
-        return try await withCheckedThrowingContinuation { continuation in
-            NSAttributedString.loadFromHTML(string: css + html, options: [:]) {
-                attributedString,
-                attributeDict,
-                error in
-                guard let attributedString = attributedString else {
-                    continuation.resume(
-                        with: .failure(error ?? Error.failedToInitializeAttributedString)
-                    )
-                    return
-                }
-                // Set images to 3x
-                attributedString.enumerateAttribute(
-                    .attachment,
-                    in: NSRange(0..<attributedString.length)
-                ) { value, range, stop in
-                    guard
-                        let value = value as? NSTextAttachment,
-                        let imageData = value.fileWrapper?.regularFileContents,
-                        let scaledImage = UIImage(data: imageData, scale: 3)
-                    else { return }
-                    value.image = scaledImage
-                }
-                continuation.resume(with: .success(attributedString.withFontSize(font.pointSize)))
-            }
+    }
+    
+    static func makeAttributedString(
+        from html: String,
+        configuration: Configuration
+    ) async throws -> NSAttributedString {
+        // <img> tags don't work with `NSAttributedString.loadFromHTML` on iOS 13/14. As a workaround, we'll replace <img> with <a href> in this String, and manually replace them with images later:
+        // 1. Replace the <img> tags with <a href> and pull out the image URLs
+        let (html, imageURLs) = htmlReplacingImageTags(html: html)
+        // 2. Construct the attributed string
+        let css = makeCSS(for: configuration.font)
+        let (attributedString, _) = try await NSAttributedString.fromHTML(css + html, options: [:])
+        // 3. Fetch the images
+        var images = [URL: UIImage]()
+        for imageURL in imageURLs {
+            images[imageURL] = try await loadImage(url: imageURL, apiClient: configuration.apiClient)
         }
+        // 4. Replace the links in the attributed string with image attachments
+        let mAttributedString = NSMutableAttributedString(attributedString: attributedString)
+        mAttributedString.enumerateAttribute(.link, in: NSRange(0..<mAttributedString.length)) { value, range, stop in
+            guard
+                let url = value as? URL,
+                let image = images[url]
+            else { return }
+            mAttributedString.deleteCharacters(in: range)
+            let textAttachment = NSTextAttachment() // Note: We don't use the NSTextAttachment(image: ) initializer b/c it has a bug where the image is always tinted to the foreground (text) color
+            textAttachment.image = image
+            let imageAttachment = NSAttributedString(attachment: textAttachment)
+            mAttributedString.insert(imageAttachment, at: range.lowerBound)
+        }
+        return mAttributedString.withFontSize(configuration.font.pointSize)
     }
 
     // MARK: - Network helpers
@@ -265,6 +290,28 @@ extension PaymentMethodMessagingView {
             "logo_color": logoColor,
             "locale": Locale.canonicalLanguageIdentifier(from: configuration.locale.identifier),
         ]
+    }
+    
+    static func loadImage(url: URL, apiClient: STPAPIClient) async throws -> UIImage? {
+        let request = apiClient.configuredRequest(for: url)
+        let data: Data
+        // An Xcode 13 compatible version of `data(for:)`
+        if #available(iOS 15.0, *) {
+            (data, _) = try await apiClient.urlSession.data(for: request)
+        } else {
+            /// Adapted from https://www.swiftbysundell.com/articles/making-async-system-apis-backward-compatible/
+            data = try await withCheckedThrowingContinuation { continuation in
+                let task = apiClient.urlSession.dataTask(with: request) { data, response, error in
+                    guard let data = data else {
+                        let error = error ?? URLError(.badServerResponse)
+                        return continuation.resume(throwing: error)
+                    }
+                    continuation.resume(returning: data)
+                }
+                task.resume()
+            }
+        }
+        return UIImage(data: data, scale: 3)?.withRenderingMode(.alwaysOriginal)
     }
 }
 

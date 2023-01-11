@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /**
  A textfield whose input view is a `UIDatePicker`
@@ -115,7 +115,7 @@ extension DateFieldElement: Element {
     public var view: UIView {
         return pickerFieldView
     }
-    
+
     public func beginEditing() -> Bool {
         return pickerFieldView.becomeFirstResponder()
     }

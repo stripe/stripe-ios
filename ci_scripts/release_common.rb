@@ -9,11 +9,6 @@ require 'colorize'
 require 'octokit'
 require 'erb'
 
-# This should generally be the minimum Xcode version supported by the App Store, as the
-# compiled XCFrameworks won't be usable on older versions.
-# We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
-MIN_SUPPORTED_XCODE_VERSION = '13.2.1'.freeze
-
 SCRIPT_DIR = __dir__
 abort 'Unable to find SCRIPT_DIR' if SCRIPT_DIR.nil? || SCRIPT_DIR.empty?
 
@@ -148,11 +143,3 @@ def execute_steps(steps, step_index)
 end
 
 @github_client = github_login unless @is_dry_run
-
-# Verify that xcode-select -p returns the correct version for building Stripe.xcframework.
-unless `xcodebuild -version`.include?("Xcode #{MIN_SUPPORTED_XCODE_VERSION}")
-  rputs "Xcode #{MIN_SUPPORTED_XCODE_VERSION} is required to build Stripe.xcframework and propose the deploy."
-  rputs 'Use `xcode-select -s` to select the correct version, or download it from https://developer.apple.com/download/more/.'
-  rputs "If you believe this is no longer the correct version, update `MIN_SUPPORTED_XCODE_VERSION` in `#{__FILE__}`."
-  abort
-end

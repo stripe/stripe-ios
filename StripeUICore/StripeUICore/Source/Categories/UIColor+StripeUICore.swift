@@ -40,7 +40,7 @@ import UIKit
             }
         })
     }
-    
+
     /// The relative luminance of the color.
     ///
     /// # Reference
@@ -82,13 +82,13 @@ import UIKit
         let luminanceB = other.luminance
         return (max(luminanceA, luminanceB) + 0.05) / (min(luminanceA, luminanceB) + 0.05)
     }
-    
+
     /// Returns a contrasting color to this color
     /// - Returns: Either white or black color depending on which will contrast best with this color
     var contrastingColor: UIColor {
         let contrastRatioToWhite = contrastRatio(to: .white)
         let contrastRatioToBlack = contrastRatio(to: .black)
-        
+
         let isDarkMode = UITraitCollection.current.isDarkMode
 
         // Prefer using a white foreground as long as a minimum contrast threshold is met.
@@ -98,16 +98,16 @@ import UIKit
         if contrastRatioToWhite > threshold {
             return .white
         }
-        
+
         // Pick the foreground color that offers the best contrast ratio
         return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
     }
-    
+
     /// Returns this color in a "disabled" state by reducing the alpha by 40%
     var disabledColor: UIColor {
         return self.withAlphaComponent(0.6)
     }
-    
+
     /// The rgba space of the color
     var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0

@@ -7,14 +7,14 @@
 
 import Foundation
 import SafariServices
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class ConsentBottomSheetView: UIView {
-    
+
     private let didSelectOKAction: () -> Void
-    
+
     init(
         model: ConsentBottomSheetModel,
         didSelectOK: @escaping () -> Void,
@@ -23,7 +23,7 @@ final class ConsentBottomSheetView: UIView {
         self.didSelectOKAction = didSelectOK
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        
+
         let padding: CGFloat = 24
         let verticalStackView = HitTestStackView(
             arrangedSubviews: [
@@ -51,16 +51,16 @@ final class ConsentBottomSheetView: UIView {
         )
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         roundCorners() // needs to be in `layoutSubviews` to get the correct size for the mask
     }
-    
+
     private func roundCorners() {
         clipsToBounds = true
         let path = UIBezierPath(
@@ -72,7 +72,7 @@ final class ConsentBottomSheetView: UIView {
         mask.path = path.cgPath
         layer.mask = mask
     }
-    
+
     @IBAction fileprivate func didSelectOK() {
         didSelectOKAction()
     }
@@ -164,7 +164,7 @@ private func CreateBulletinView(
         imageView.widthAnchor.constraint(equalToConstant: 16),
         imageView.heightAnchor.constraint(equalToConstant: 16),
     ])
-    
+
     let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
             imageView,
@@ -217,7 +217,7 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
-    
+
     func makeUIView(context: Context) -> ConsentBottomSheetView {
         ConsentBottomSheetView(
             model: ConsentBottomSheetModel(
@@ -228,7 +228,7 @@ private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
                             icon: FinancialConnectionsImage(default: nil),
                             title: "...",
                             content: "..."
-                        )
+                        ),
                     ]
                 ),
                 extraNotice: nil,
@@ -239,7 +239,7 @@ private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
             didSelectURL: { _ in }
         )
     }
-    
+
     func updateUIView(_ uiView: ConsentBottomSheetView, context: Context) {
         uiView.sizeToFit()
     }
@@ -253,7 +253,7 @@ struct ConsentBottomSheetView_Previews: PreviewProvider {
                     ConsentBottomSheetViewUIViewRepresentable()
                         .frame(width: 320)
                         .frame(height: 350)
-                
+
             }
             .frame(maxWidth: .infinity)
             .background(Color.red.opacity(0.1))

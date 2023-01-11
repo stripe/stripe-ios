@@ -5,10 +5,10 @@
 //  Created by Vardges Avetisyan on 12/30/21.
 //
 
-import XCTest
-@testable import StripeFinancialConnections
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
+@testable import StripeFinancialConnections
+import XCTest
 
 class PaginatedAPIClient: FinancialConnectionsAPIClient {
 
@@ -24,21 +24,23 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     private let count: Int
     private let limit: Int
     private lazy var accounts: [StripeAPI.FinancialConnectionsAccount] = (0...count-1).map {
-        StripeAPI.FinancialConnectionsAccount(balance: nil,
-                                              balanceRefresh: nil,
-                                              ownership: nil,
-                                              ownershipRefresh: nil,
-                                              displayName: "\($0)",
-                                              institutionName: "TestBank",
-                                              last4: "\($0)",
-                                              category: .cash,
-                                              created: 1,
-                                              id: "\($0)",
-                                              livemode: false,
-                                              permissions: nil,
-                                              status: .active,
-                                              subcategory: .checking,
-                                              supportedPaymentMethodTypes: [.usBankAccount])
+        StripeAPI.FinancialConnectionsAccount(
+            balance: nil,
+            balanceRefresh: nil,
+            ownership: nil,
+            ownershipRefresh: nil,
+            displayName: "\($0)",
+            institutionName: "TestBank",
+            last4: "\($0)",
+            category: .cash,
+            created: 1,
+            id: "\($0)",
+            livemode: false,
+            permissions: nil,
+            status: .active,
+            subcategory: .checking,
+            supportedPaymentMethodTypes: [.usBankAccount]
+        )
     }
 
     // MARK: - FinancialConnectionsAPIClient
@@ -47,8 +49,10 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsSynchronize>()
     }
 
-    func fetchFinancialConnectionsAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
+    func fetchFinancialConnectionsAccounts(
+        clientSecret: String,
+        startingAfterAccountId: String?
+    ) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
         guard let startingAfterAccountId = startingAfterAccountId, let index = Int(startingAfterAccountId) else {
             let list = StripeAPI.FinancialConnectionsSession.AccountList(data: subarray(start: 0),
                                                    hasMore: true)
@@ -65,7 +69,7 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
-    
+
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
@@ -73,27 +77,27 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
         return Promise<FinancialConnectionsInstitutionList>()
     }
-    
+
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
         return Promise<FinancialConnectionsInstitutionList>()
     }
-    
+
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
         return Promise<FinancialConnectionsMixedOAuthParams>()
     }
-    
+
     func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func fetchAuthSessionAccounts(
         clientSecret: String,
         authSessionId: String,
@@ -101,19 +105,19 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsAuthSessionAccounts> {
         return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
-    
+
     func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
         return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
-    
+
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
-    
+
     func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
-    
+
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
         accountNumber: String,
@@ -121,7 +125,7 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
-    
+
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
@@ -129,7 +133,7 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
-    
+
     func recordAuthSessionEvent(
         clientSecret: String,
         authSessionId: String,
@@ -138,14 +142,14 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<EmptyResponse> {
         return Promise<EmptyResponse>()
     }
-    
+
     // MARK: - Helpers
 
     private func subarray(start: Int) -> [StripeAPI.FinancialConnectionsAccount] {
         guard start + limit < accounts.count else {
-            return Array<StripeAPI.FinancialConnectionsAccount>(accounts[start...])
+            return [StripeAPI.FinancialConnectionsAccount](accounts[start...])
         }
-        return Array<StripeAPI.FinancialConnectionsAccount>(accounts[start...start + limit])
+        return [StripeAPI.FinancialConnectionsAccount](accounts[start...start + limit])
     }
 }
 
@@ -157,7 +161,7 @@ class AccountFetcherTests: XCTestCase {
             switch result {
             case .success(let linkedAccounts):
                 XCTAssertEqual(linkedAccounts.count, 100)
-            case .failure(_):
+            case .failure:
                 XCTFail()
             }
         }
@@ -169,7 +173,7 @@ class AccountFetcherTests: XCTestCase {
             switch result {
             case .success(let linkedAccounts):
                 XCTAssertEqual(linkedAccounts.count, 3)
-            case .failure(_):
+            case .failure:
                 XCTFail()
             }
         }
@@ -183,7 +187,7 @@ class AccountFetcherTests: XCTestCase {
                 let info = linkedAccounts.map { $0.id }
                 print(info)
                 XCTAssertEqual(linkedAccounts.count, 3)
-            case .failure(_):
+            case .failure:
                 XCTFail()
             }
         }
@@ -195,7 +199,7 @@ class AccountFetcherTests: XCTestCase {
             switch result {
             case .success(let linkedAccounts):
                 XCTAssertEqual(linkedAccounts.count, 80)
-            case .failure(_):
+            case .failure:
                 XCTFail()
             }
         }

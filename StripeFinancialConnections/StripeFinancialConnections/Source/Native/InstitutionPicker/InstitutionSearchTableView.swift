@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 private enum Section {
     case main
@@ -22,7 +22,7 @@ protocol InstitutionSearchTableViewDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchTableView: UIView {
-    
+
     private let allowManualEntry: Bool
     private let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
@@ -32,8 +32,8 @@ final class InstitutionSearchTableView: UIView {
             self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
         } : nil
     }()
-    weak var delegate: InstitutionSearchTableViewDelegate? = nil
-    
+    weak var delegate: InstitutionSearchTableViewDelegate?
+
     private lazy var tableFooterView: UIView = {
         let footerView =  InstitutionSearchFooterView(didSelectManuallyAddYourAccount: didSelectManualEntry)
         let footerContainerView = UIView()
@@ -62,12 +62,12 @@ final class InstitutionSearchTableView: UIView {
         activityIndicator.backgroundColor = .customBackgroundColor
         return activityIndicator
     }()
-    
+
     init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
         let cellIdentifier = "\(InstitutionSearchTableViewCell.self)"
         tableView = UITableView(frame: frame)
-        self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, institution in
+        self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? InstitutionSearchTableViewCell else {
                 fatalError("Unable to dequeue cell \(InstitutionSearchTableViewCell.self) with cell identifier \(cellIdentifier)")
             }
@@ -90,7 +90,7 @@ final class InstitutionSearchTableView: UIView {
         tableView.register(InstitutionSearchTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
-        
+
         addAndPinSubview(loadingContainerView)
         loadingContainerView.addSubview(loadingView)
         loadingView.translatesAutoresizingMaskIntoConstraints = false
@@ -100,14 +100,14 @@ final class InstitutionSearchTableView: UIView {
             loadingView.leadingAnchor.constraint(equalTo: loadingContainerView.leadingAnchor),
             loadingView.trailingAnchor.constraint(equalTo: loadingContainerView.trailingAnchor),
         ])
-        
+
         showTableFooterView(true)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         // `UITableView` does not automatically resize `tableHeaderView`
@@ -124,7 +124,7 @@ final class InstitutionSearchTableView: UIView {
                 tableView.tableHeaderView = tableHeaderView
             }
         }
-        
+
         // `UITableView` does not automatically resize `tableFooterView`
         // so here we do it manually
         if let tableFooterView = tableView.tableFooterView {
@@ -140,20 +140,20 @@ final class InstitutionSearchTableView: UIView {
             }
         }
     }
-    
+
     func loadInstitutions(_ institutions: [FinancialConnectionsInstitution]) {
         assertMainQueue()
-        
+
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([Section.main])
         snapshot.appendItems(institutions, toSection: Section.main)
         dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
-        
+
         // clear state (some of this is defensive programming)
         showNoResultsNotice(query: nil)
         showError(false)
     }
-    
+
     func showLoadingView(_ show: Bool) {
         loadingContainerView.isHidden = !show
         if show {
@@ -167,7 +167,7 @@ final class InstitutionSearchTableView: UIView {
         }
         bringSubviewToFront(loadingContainerView) // defensive programming to avoid loadingView being hiddden
     }
-    
+
     func showNoResultsNotice(query: String?) {
         if let query = query {
             let noResultsLabel = UILabel()
@@ -190,7 +190,7 @@ final class InstitutionSearchTableView: UIView {
             tableView.tableHeaderView = nil
         }
     }
-    
+
     func showError(_ show: Bool) {
         if show {
             tableView.setTableHeaderViewWithCompressedFrameSize(InstitutionSearchErrorView(
@@ -201,7 +201,7 @@ final class InstitutionSearchTableView: UIView {
         }
         showTableFooterView(!show)
     }
-    
+
     // the footer is always shown, except for when there is an error searching
     private func showTableFooterView(_ show: Bool) {
         if show {

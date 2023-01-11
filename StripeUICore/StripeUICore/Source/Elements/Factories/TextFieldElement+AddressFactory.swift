@@ -7,23 +7,23 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public extension TextFieldElement {
     enum Address {
-        
+
         // MARK: - Line1, Line2
-        
+
         struct LineConfiguration: TextFieldElementConfiguration {
-            
+
             enum LineType {
                 case line1
                 case line2
                 // Label is "Address" and shows a clear button
                 case autoComplete
                 // Same as .line1, but shows a 􀊫 autocomplete button accessory view
-                case line1Autocompletable(didTapAutocomplete: () -> ())
+                case line1Autocompletable(didTapAutocomplete: () -> Void)
             }
             let lineType: LineType
             var label: String {
@@ -41,7 +41,7 @@ import UIKit
                 if case .autoComplete = lineType { return true }
                 return false
             }
-            
+
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 switch lineType {
                 case .line1, .line1Autocompletable, .autoComplete:
@@ -50,12 +50,12 @@ import UIKit
                     return .init(type: .default, textContentType: .streetAddressLine2, autocapitalization: .words)
                 }
             }
-            
+
             var isOptional: Bool {
                 if case .line2 = lineType { return true } // Hardcode all line2 as optional
                 return false
             }
-            
+
             func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
                 if case .line1Autocompletable(let didTapAutocomplete) = lineType {
                     let autocompleteIconButton = UIButton.make(type: .system, didTap: didTapAutocomplete)
@@ -70,52 +70,52 @@ import UIKit
                 return nil
             }
         }
-        
+
         public static func makeLine1(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
             return TextFieldElement(
                 configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue), theme: theme
             )
         }
-        
+
         static func makeLine2(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
             let line2 = TextFieldElement(
                 configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue), theme: theme
             )
             return line2
         }
-        
+
         public static func makeAutoCompleteLine(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
             return TextFieldElement(
                 configuration: LineConfiguration(lineType: .autoComplete, defaultValue: defaultValue), theme: theme
             )
         }
-        
+
         // MARK: - City/Locality
-        
+
         struct CityConfiguration: TextFieldElementConfiguration {
             let label: String
             let defaultValue: String?
             let isOptional: Bool
-            
+
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
             }
         }
-        
+
         // MARK: - State/Province/Administrative area/etc.
-        
+
         struct StateConfiguration: TextFieldElementConfiguration {
             let label: String
             let defaultValue: String?
             let isOptional: Bool
-            
+
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
             }
         }
-        
+
         // MARK: - Postal code/Zip code
-        
+
         struct PostalCodeConfiguration: TextFieldElementConfiguration {
             let countryCode: String
             let label: String
@@ -124,7 +124,7 @@ import UIKit
             public var disallowedCharacters: CharacterSet {
                 return countryCode == "US" ? .decimalDigits.inverted : .newlines
             }
-            
+
             func maxLength(for text: String) -> Int {
                 return countryCode == "US" ? 5 : .max
             }
@@ -138,7 +138,7 @@ import UIKit
                 }
                 return .valid
             }
-            
+
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: countryCode == "US" ? .numberPad : .default, textContentType: .postalCode, autocapitalization: .allCharacters)
             }

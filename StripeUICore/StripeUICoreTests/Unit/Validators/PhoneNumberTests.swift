@@ -116,8 +116,8 @@ class PhoneNumberTests: XCTestCase {
             format: .national,
             formattedNumber: "(671) 123-1234"
           ),
-        ];
-        
+        ]
+
         for c in cases {
             guard let phoneNumber = PhoneNumber(number: c.number, countryCode: c.country) else {
                 XCTFail("Could not create phone number for \(c.country), \(c.number)")
@@ -126,7 +126,7 @@ class PhoneNumberTests: XCTestCase {
             XCTAssertEqual(phoneNumber.string(as: c.format), c.formattedNumber)
         }
     }
-    
+
     func teste164FormatDropsLeadingZeros() {
         guard let phoneNumber = PhoneNumber(number: "08022223333", countryCode: "JP") else {
             XCTFail("Could not create phone number")
@@ -134,7 +134,7 @@ class PhoneNumberTests: XCTestCase {
         }
         XCTAssertEqual(phoneNumber.string(as: .e164), "+818022223333")
     }
-    
+
     func teste164MaxLength() {
         guard let phoneNumber = PhoneNumber(number: "123456789123456789", countryCode: "US") else {
             XCTFail("Could not create phone number")

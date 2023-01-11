@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension PaymentSheetFormFactory {
     func makeCard(theme: ElementsUITheme = .default) -> PaymentMethodElement {
@@ -24,7 +24,7 @@ extension PaymentSheetFormFactory {
             CardSection(theme: theme),
             makeBillingAddressSection(collectionMode: .countryAndPostal(),
                                       countries: nil),
-            shouldDisplaySaveCheckbox ? saveCheckbox : nil
+            shouldDisplaySaveCheckbox ? saveCheckbox : nil,
         ], theme: theme)
         if isLinkEnabled {
             return LinkEnabledPaymentMethodElement(

@@ -5,11 +5,11 @@
 //  Created by Krisjanis Gaidis on 7/25/22.
 //
 
-import Foundation
-import UIKit
 import AuthenticationServices
-@_spi(STP) import StripeUICore
+import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol PartnerAuthViewControllerDelegate: AnyObject {
@@ -40,9 +40,9 @@ final class PartnerAuthViewController: UIViewController {
         return dataSource.institution
     }
     private var webAuthenticationSession: ASWebAuthenticationSession?
-    private var lastHandledAuthenticationSessionReturnUrl: URL? = nil
+    private var lastHandledAuthenticationSessionReturnUrl: URL?
     weak var delegate: PartnerAuthViewControllerDelegate?
-    
+
     private lazy var establishingConnectionLoadingView: UIView = {
         let establishingConnectionLoadingView = ReusableInformationView(
             iconType: .loading,
@@ -52,16 +52,16 @@ final class PartnerAuthViewController: UIViewController {
         establishingConnectionLoadingView.isHidden = true
         return establishingConnectionLoadingView
     }()
-    
+
     init(dataSource: PartnerAuthDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
@@ -70,7 +70,7 @@ final class PartnerAuthViewController: UIViewController {
             .logPaneLoaded(pane: .partnerAuth)
         createAuthSession()
     }
-    
+
     private func createAuthSession() {
         assertMainQueue()
 
@@ -89,13 +89,13 @@ final class PartnerAuthViewController: UIViewController {
                 }
             }
     }
-    
+
     private func createdAuthSession(_ authSession: FinancialConnectionsAuthSession) {
         dataSource.recordAuthSessionEvent(
             eventName: "launched",
             authSessionId: authSession.id
         )
-        
+
         if authSession.isOauthNonOptional {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
@@ -111,7 +111,7 @@ final class PartnerAuthViewController: UIViewController {
                 }
             )
             view.addAndPinSubview(prepaneView)
-            
+
             dataSource.recordAuthSessionEvent(
                 eventName: "loaded",
                 authSessionId: authSession.id
@@ -125,22 +125,22 @@ final class PartnerAuthViewController: UIViewController {
             activityIndicator.backgroundColor = .customBackgroundColor
             activityIndicator.startAnimating()
             view.addAndPinSubview(activityIndicator)
-            
+
             openInstitutionAuthenticationWebView(authSession: authSession)
         }
     }
-    
+
     private func showErrorView(_ error: Error) {
         // all Partner Auth errors hide the back button
         // and all errors end up in user having to exit
         // PartnerAuth to try again
         navigationItem.hidesBackButton = true
-        
+
         let errorView: UIView?
         if
             let error = error as? StripeError,
             case .apiError(let apiError) = error,
-            let extraFields = apiError.allResponseFields["extra_fields"] as? [String:Any],
+            let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
             let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
             institutionUnavailable
         {
@@ -227,17 +227,17 @@ final class PartnerAuthViewController: UIViewController {
                 errorName: "PartnerAuthError",
                 pane: .partnerAuth
             )
-            
+
             // if we didn't get specific errors back, we don't know
             // what's wrong, so show a generic error
             delegate?.partnerAuthViewController(self, didReceiveTerminalError: error)
             errorView = nil
-            
+
             // keep showing the loading view while we transition to
             // terminal error
             showEstablishingConnectionLoadingView(true)
         }
-        
+
         if let errorView = errorView {
             view.addAndPinSubviewToSafeArea(errorView)
         }
@@ -286,7 +286,7 @@ final class PartnerAuthViewController: UIViewController {
             self.navigateBack()
         }
     }
-    
+
     private func handleAuthSessionCompletionWithNoStatus(_ authSession: FinancialConnectionsAuthSession, _ error: Error?) {
         if authSession.isOauthNonOptional {
             // on "manual cancels" (for OAuth) we log retry event:
@@ -348,7 +348,7 @@ final class PartnerAuthViewController: UIViewController {
         self.view.addAndPinSubview(self.continueStateView!)
 
         self.subscribeToURLAndAppActiveNotifications()
-        UIApplication.shared.open(url, options: [:], completionHandler:  nil)
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     private func openInstitutionAuthenticationWebView(authSession: FinancialConnectionsAuthSession) {
@@ -356,7 +356,7 @@ final class PartnerAuthViewController: UIViewController {
             assertionFailure("Expected to get a URL back from authorization session.")
             return
         }
-        
+
         lastHandledAuthenticationSessionReturnUrl = nil
         let webAuthenticationSession = ASWebAuthenticationSession(
             url: url,
@@ -391,11 +391,11 @@ final class PartnerAuthViewController: UIViewController {
                 else {
                     self.handleAuthSessionCompletionWithNoStatus(authSession, error)
                 }
-                
+
                 self.webAuthenticationSession = nil
         })
         self.webAuthenticationSession = webAuthenticationSession
-        
+
         webAuthenticationSession.presentationContextProvider = self
         webAuthenticationSession.prefersEphemeralWebBrowserSession = true
 
@@ -410,7 +410,7 @@ final class PartnerAuthViewController: UIViewController {
                 return // skip starting
             }
         }
-        
+
         if !webAuthenticationSession.start() {
             // navigate back to bank picker so user can try again
             //
@@ -428,7 +428,7 @@ final class PartnerAuthViewController: UIViewController {
             }
         }
     }
-    
+
     private func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) {
         showEstablishingConnectionLoadingView(true)
         dataSource
@@ -438,7 +438,7 @@ final class PartnerAuthViewController: UIViewController {
                 switch result {
                 case .success(let authSession):
                     self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
-                    
+
                     // hide the loading view after a delay to prevent
                     // the screen from flashing _while_ the transition
                     // to the next screen takes place
@@ -457,17 +457,17 @@ final class PartnerAuthViewController: UIViewController {
                 }
             }
     }
-    
+
     private func navigateBack() {
         delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
     }
-    
+
     private func showEstablishingConnectionLoadingView(_ show: Bool) {
         if establishingConnectionLoadingView.superview == nil {
             view.addAndPinSubviewToSafeArea(establishingConnectionLoadingView)
         }
         view.bringSubviewToFront(establishingConnectionLoadingView) // bring to front in-case something else is covering it
-        
+
         navigationItem.hidesBackButton = show
         establishingConnectionLoadingView.isHidden = !show
     }

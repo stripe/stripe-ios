@@ -6,20 +6,20 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 final class FinancialConnectionsAnalyticsClient {
-    
+
     private let analyticsClient: AnalyticsClientV2
-    private var additionalParameters: [String:Any] = [:]
-    
+    private var additionalParameters: [String: Any] = [:]
+
     init(analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(clientId: "mobile-clients-linked-accounts", origin: "stripe-linked-accounts-ios")) {
         self.analyticsClient = analyticsClient
         additionalParameters["is_webview"] = false
         additionalParameters["navigator_language"] = Locale.current.identifier
     }
-    
+
     public func log(eventName: String, parameters: [String: Any] = [:]) {
         let eventName = "linked_accounts.\(eventName)"
         let parameters = parameters.merging(
@@ -45,17 +45,12 @@ final class FinancialConnectionsAnalyticsClient {
     public func logExposure(
         experimentName: String,
         assignmentEventId: String,
-        parameters: [String: Any] = [:]
+        accountholderToken: String
     ) {
-        var parameters = parameters.merging(
-            additionalParameters,
-            uniquingKeysWith: { eventParameter, _ in
-                // prioritize event `parameters` over `additionalParameters`
-                return eventParameter
-            }
-        )
+        var parameters = additionalParameters
         parameters["experiment_retrieved"] = experimentName
         parameters["arb_id"] = assignmentEventId
+        parameters["account_holder_id"] = accountholderToken
         analyticsClient.log(eventName: "preloaded_experiment_retrieved", parameters: parameters)
     }
 }
@@ -63,11 +58,11 @@ final class FinancialConnectionsAnalyticsClient {
 // MARK: - Helpers
 
 extension FinancialConnectionsAnalyticsClient {
-    
+
     func logPaneLoaded(pane: FinancialConnectionsSessionManifest.NextPane) {
         log(eventName: "pane.loaded", parameters: ["pane": pane.rawValue])
     }
-    
+
     func logExpectedError(
         _ error: Error,
         errorName: String?,
@@ -80,7 +75,7 @@ extension FinancialConnectionsAnalyticsClient {
             pane: pane
         )
     }
-    
+
     func logUnexpectedError(
         _ error: Error,
         errorName: String?,
@@ -93,14 +88,14 @@ extension FinancialConnectionsAnalyticsClient {
             pane: pane
         )
     }
-    
+
     private func log(
         error: Error,
         errorName: String?,
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane?
     ) {
-        var parameters: [String:Any] = [:]
+        var parameters: [String: Any] = [:]
         parameters["pane"] = pane?.rawValue
         parameters["error"] = errorName
         if
@@ -117,14 +112,14 @@ extension FinancialConnectionsAnalyticsClient {
         }
         log(eventName: eventName, parameters: parameters)
     }
-    
+
     func logMerchantDataAccessLearnMore(pane: FinancialConnectionsSessionManifest.NextPane) {
         log(
             eventName: "click.data_access.learn_more",
             parameters: ["pane": pane.rawValue]
         )
     }
-    
+
     func setAdditionalParameters(
         linkAccountSessionClientSecret: String,
         publishableKey: String?,
@@ -134,7 +129,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["key"] = publishableKey
         additionalParameters["stripe_account"] = stripeAccount
     }
-    
+
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
         additionalParameters["livemode"] = manifest.livemode
         additionalParameters["product"] = manifest.product
@@ -143,7 +138,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["allow_manual_entry"] = manifest.allowManualEntry
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
-    
+
     @available(iOSApplicationExtension, unavailable)
     static func paneFromViewController(
         _ viewController: UIViewController?

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol AccountPickerSelectionListViewDelegate: AnyObject {
     func accountPickerSelectionListView(
@@ -17,19 +17,19 @@ protocol AccountPickerSelectionListViewDelegate: AnyObject {
 }
 
 final class AccountPickerSelectionListView: UIView {
-    
+
     private let selectionType: AccountPickerSelectionRowView.SelectionType
     private let enabledAccounts: [FinancialConnectionsPartnerAccount]
     private let disabledAccounts: [FinancialConnectionsPartnerAccount]
     weak var delegate: AccountPickerSelectionListViewDelegate?
-    
+
     private lazy var verticalStackView: UIStackView = {
         let verticalStackView = UIStackView()
         verticalStackView.spacing = 12
         verticalStackView.axis = .vertical
         return verticalStackView
     }()
-    
+
     init(
         selectionType: AccountPickerSelectionRowView.SelectionType,
         enabledAccounts: [FinancialConnectionsPartnerAccount],
@@ -41,17 +41,17 @@ final class AccountPickerSelectionListView: UIView {
         super.init(frame: .zero)
         addAndPinSubviewToSafeArea(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
         // clear all previous state
         verticalStackView.arrangedSubviews.forEach { arrangedSubview in
             arrangedSubview.removeFromSuperview()
         }
-        
+
         if selectionType == .checkbox {
             // show a "all accounts" cell
             let allAccountsCellView = AccountPickerSelectionRowView(
@@ -78,7 +78,7 @@ final class AccountPickerSelectionListView: UIView {
             )
             verticalStackView.addArrangedSubview(allAccountsCellView)
         }
-        
+
         // list enabled accounts
         enabledAccounts.forEach { account in
             let accountCellView = AccountPickerSelectionRowView(
@@ -109,7 +109,7 @@ final class AccountPickerSelectionListView: UIView {
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }
-        
+
         // list disabled accounts
         disabledAccounts.forEach { disabledAccount in
             let accountCellView = AccountPickerSelectionRowView(

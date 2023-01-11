@@ -121,7 +121,7 @@ class StrictFramesTests: XCTestCase {
 
 extension StrictFramesTests {
     func transition(stateMachine: CardVerifyStateMachine, prediction: CreditCardOcrPrediction) {
-        let _ = stateMachine.event(prediction: prediction)
+        _ = stateMachine.event(prediction: prediction)
     }
 
     func mismatchNumberPrediction(cardVisible: Bool) -> CreditCardOcrPrediction {

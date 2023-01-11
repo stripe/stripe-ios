@@ -21,17 +21,17 @@ import UIKit
      - Note: This is set by your parent.
      */
     var delegate: ElementDelegate? { get set }
-    
+
     /**
      Return your UIView instance.
      */
     var view: UIView { get }
-    
+
     /**
      - Returns: Whether or not this Element began editing.
      */
     func beginEditing() -> Bool
-    
+
     /**
      Whether this element contains valid user input or not.
      */
@@ -47,7 +47,7 @@ public extension Element {
     func beginEditing() -> Bool {
         return false
     }
-    
+
     var validationState: ElementValidationState {
         return .valid
     }
@@ -68,7 +68,7 @@ public extension Element {
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
     func didUpdate(element: Element)
-    
+
     /**
      This method is called when the user finishes editing the caller e.g., by pressing the 'return' key.
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
@@ -101,7 +101,7 @@ extension Element {
 @_spi(STP) @frozen public enum ElementValidationState {
     case valid
     case invalid(error: ElementValidationError, shouldDisplay: Bool)
-    
+
     /// A convenience property to check if the state is valid because it's hard to make this type Equatable
     public var isValid: Bool {
         if case .valid = self {

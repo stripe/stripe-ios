@@ -9,17 +9,17 @@ import Foundation
 import UIKit
 
 extension UIImageView {
-    
+
     func setImage(with urlString: String?, placeholder: UIImage? = nil, completionHandler: ((_ didDownloadImage: Bool) -> Void)? = nil) {
         if let placeholder = placeholder {
             image = placeholder
         }
-        
+
         guard let urlString = urlString else {
             completionHandler?(false)
             return
         }
-        
+
         // We use `tag` to ensure that if we call `setImage(with:)` multiple times,
         // we ONLY set the image from the `urlString` for the last `urlString` passed.
         //
@@ -52,7 +52,7 @@ private func DownloadImage(
         completionHandler(nil)
         return
     }
-    URLSession.shared.dataTask(with: url) { data, response, error in
+    URLSession.shared.dataTask(with: url) { data, response, _ in
         guard let response = response as? HTTPURLResponse else {
             assertionFailure("we always expect to get back `HTTPURLResponse`")
             completionHandler(nil)

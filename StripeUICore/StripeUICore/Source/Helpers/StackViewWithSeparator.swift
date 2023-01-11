@@ -11,14 +11,14 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_StackViewWithSeparator)
 @_spi(STP) public class StackViewWithSeparator: UIStackView {
-    
+
     public static let borderlessInset: CGFloat = 10
 
     public enum SeparatoryStyle {
         case full
         case partial
     }
-    
+
     public var separatorStyle: SeparatoryStyle = .full {
         didSet {
             for view in arrangedSubviews {
@@ -28,14 +28,14 @@ import UIKit
             }
         }
     }
-    
+
     public var separatorColor: UIColor = .clear {
         didSet {
             separatorLayer.strokeColor = separatorColor.cgColor
             backgroundView.layer.borderColor = separatorColor.cgColor
         }
     }
-    
+
     /// Commonly referred to as `borderWidth`
     public override var spacing: CGFloat {
         didSet {
@@ -66,7 +66,7 @@ import UIKit
             backgroundView.layer.cornerRadius = newValue
         }
     }
-    
+
     public var borderColor: UIColor = .systemGray3 {
         didSet {
             backgroundView.layer.borderColor = borderColor.cgColor
@@ -83,7 +83,7 @@ import UIKit
             }
         }
     }
-    
+
     public var hideShadow: Bool = false {
         didSet {
             if hideShadow {
@@ -97,7 +97,7 @@ import UIKit
             }
         }
     }
-    
+
     public var customBackgroundColor: UIColor? = InputFormColors.backgroundColor {
         didSet {
             if isUserInteractionEnabled {
@@ -105,7 +105,7 @@ import UIKit
             }
         }
     }
-    
+
     public var customBackgroundDisabledColor: UIColor? = InputFormColors.disabledBackgroundColor {
         didSet {
             if isUserInteractionEnabled {
@@ -126,7 +126,7 @@ import UIKit
         view.layer.shadowRadius = 4
         return view
     }()
-    
+
     func configureDefaultShadow() {
         backgroundView.layer.shadowOffset = CGSize(width: 0, height: 2)
         backgroundView.layer.shadowColor = UIColor.black.cgColor
@@ -156,7 +156,7 @@ import UIKit
             for view in nonHiddenArrangedSubviews {
 
                 if axis == .vertical {
-                   
+
                     switch separatorStyle {
                     case .full:
                         if view == nonHiddenArrangedSubviews.last {
@@ -169,10 +169,9 @@ import UIKit
                         // no-op in partial
                         break
                     }
-                    
+
                 } else {  // .horizontal
-                    
-                    
+
                     switch separatorStyle {
                     case .full:
                         if (!isRTL && view == nonHiddenArrangedSubviews.first)
@@ -193,7 +192,7 @@ import UIKit
                         path.addLine(
                             to: CGPoint(x: view.frame.maxX -  StackViewWithSeparator.borderlessInset * spacing, y: view.frame.maxY))
                     }
-                    
+
                 }
 
             }
@@ -203,7 +202,7 @@ import UIKit
         backgroundView.layer.shadowPath = hideShadow ? nil :
             UIBezierPath(roundedRect: bounds, cornerRadius: borderCornerRadius).cgPath
     }
-    
+
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         // CGColor's must be manually updated when the trait collection changes

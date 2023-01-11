@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension STPAnalyticsClient {
-    
+
     func logAddressControllerEvent(
         event: STPAnalyticEvent,
         addressAnalyticData: AddressAnalyticData?,
@@ -20,13 +20,13 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             additionalParams["is_development"] = true
         }
-        
+
         additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
-        
+
         let analytic = AddressAnalytic(event: event,
                                        productUsage: productUsage,
                                        params: additionalParams)
-        
+
         log(analytic: analytic, apiClient: apiClient)
     }
 
@@ -37,7 +37,7 @@ extension STPAnalyticsClient {
         let analyticData = AddressAnalyticData(addressCountryCode: defaultCountryCode,
                                                autoCompleteResultedSelected: nil,
                                                editDistance: nil)
-        
+
         self.logAddressControllerEvent(event: .addressShow, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
@@ -46,7 +46,7 @@ extension STPAnalyticsClient {
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountyCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
                                                editDistance: editDistance)
-        
+
         self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 }
@@ -55,11 +55,11 @@ struct AddressAnalyticData {
     let addressCountryCode: String
     let autoCompleteResultedSelected: Bool?
     let editDistance: Int?
-    
+
     var analyticsPayload: [String: Any?] {
         return ["address_country_code": addressCountryCode,
                 "auto_complete_result_selected": autoCompleteResultedSelected,
-                "edit_distance": editDistance]
+                "edit_distance": editDistance, ]
     }
 }
 
@@ -72,7 +72,7 @@ extension PaymentSheet.Address {
         country = address.country
         postalCode = address.postalCode
     }
-    
+
     func editDistance(from otherAddress: PaymentSheet.Address) -> Int {
         var editDistance = 0
         editDistance += (line1 ?? "").editDistance(to: otherAddress.line1 ?? "")
@@ -81,7 +81,7 @@ extension PaymentSheet.Address {
         editDistance += (state ?? "").editDistance(to: otherAddress.state ?? "")
         editDistance += (country ?? "").editDistance(to: otherAddress.country ?? "")
         editDistance += (postalCode ?? "").editDistance(to: otherAddress.postalCode ?? "")
-        
+
         return editDistance
     }
 }
@@ -89,5 +89,5 @@ extension PaymentSheet.Address {
 struct AddressAnalytic: Analytic {
     let event: STPAnalyticEvent
     let productUsage: Set<String>
-    let params: [String : Any]
+    let params: [String: Any]
 }

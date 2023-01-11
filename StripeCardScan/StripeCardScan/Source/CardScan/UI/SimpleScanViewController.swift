@@ -75,7 +75,7 @@ class SimpleScanViewController: ScanBaseViewController {
     // our UI components
     var descriptionText = UILabel()
     var privacyLinkText = UITextView()
-    var privacyLinkTextHeightConstraint: NSLayoutConstraint? = nil
+    var privacyLinkTextHeightConstraint: NSLayoutConstraint?
 
     var closeButton: UIButton = {
         var button = UIButton(type: .system)
@@ -178,7 +178,7 @@ class SimpleScanViewController: ScanBaseViewController {
         }
     }
 
-    // MARK: -Visual and UI event setup for UI components
+    // MARK: - Visual and UI event setup for UI components
     func setupUiComponents() {
         view.backgroundColor = .white
         regionOfInterestCornerRadius = 15.0
@@ -325,7 +325,7 @@ class SimpleScanViewController: ScanBaseViewController {
         self.view.addSubview(debugView)
     }
 
-    // MARK: -Autolayout constraints
+    // MARK: - Autolayout constraints
     func setupConstraints() {
         let children: [UIView] = [
             previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText,
@@ -453,7 +453,7 @@ class SimpleScanViewController: ScanBaseViewController {
             true
     }
 
-    // MARK: -Override some ScanBase functions
+    // MARK: - Override some ScanBase functions
     override func onScannedCard(
         number: String,
         expiryYear: String?,
@@ -513,7 +513,7 @@ class SimpleScanViewController: ScanBaseViewController {
         privacyLinkTextHeightConstraint?.isActive = true
     }
 
-    // MARK: -UI event handlers
+    // MARK: - UI event handlers
     @objc func cancelButtonPress() {
         delegate?.userDidCancelSimple(self)
         self.cancelScan()

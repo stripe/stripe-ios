@@ -7,13 +7,13 @@
 
 import Foundation
 import SafariServices
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class MerchantDataAccessView: HitTestView {
-    
+
     init(
         isStripeDirect: Bool,
         businessName: String?,
@@ -21,7 +21,7 @@ final class MerchantDataAccessView: HitTestView {
         didSelectLearnMore: @escaping () -> Void
     ) {
         super.init(frame: .zero)
-        
+
         // the asterisks are to bold the text via "markdown"
         let leadingString: String
         if isStripeDirect {
@@ -36,14 +36,14 @@ final class MerchantDataAccessView: HitTestView {
                 leadingString = "**\(localizedLeadingString)**"
             }
         }
-        
+
         // `payment_method` is "subsumed" by `account_numbers`
         //
         // BOTH (payment_method and account_numbers are valid permissions),
         // but we want to "combine" them for better UX
-        let permissions = permissions.contains(.accountNumbers) ? permissions.filter({ $0 != .paymentMethod}) : permissions
+        let permissions = permissions.contains(.accountNumbers) ? permissions.filter({ $0 != .paymentMethod }) : permissions
         let permissionString = FormPermissionListString(permissions)
-        
+
         let learnMoreUrlString: String
         if isStripeDirect {
             learnMoreUrlString = "https://stripe.com/docs/linked-accounts/faqs"
@@ -51,7 +51,7 @@ final class MerchantDataAccessView: HitTestView {
             learnMoreUrlString = "https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account"
         }
         let learnMoreString = "[\(String.Localized.learn_more)](\(learnMoreUrlString))"
-        
+
         let finalString: String
         if isStripeDirect {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
@@ -59,7 +59,7 @@ final class MerchantDataAccessView: HitTestView {
             let localizedPermissionFullString = String(format: STPLocalizedString("%@ through Stripe.", "A sentence that describes what users banking data is accessible to Stripe. For example, the full sentence may say 'Account details, transactions, balances through Stripe.'"), permissionString)
             finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
         }
-        
+
         let label = ClickableLabel(
             font: .stripeFont(forTextStyle: .captionTight),
             boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
@@ -75,7 +75,7 @@ final class MerchantDataAccessView: HitTestView {
         )
         addAndPinSubview(label)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -89,7 +89,7 @@ private func FormPermissionListString(
     let permissionListString = permissions
         .map { LocalizedStringFromPermission($0) }
         .joined(separator: ", ")
-    
+
     let capitalizedFirstLetter = permissionListString.prefix(1).uppercased()
     let restOfString = String(permissionListString.dropFirst())
     return capitalizedFirstLetter + restOfString
@@ -124,11 +124,11 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
-    
+
     let isStripeDirect: Bool
     let businessName: String?
     let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
-    
+
     func makeUIView(context: Context) -> MerchantDataAccessView {
         MerchantDataAccessView(
             isStripeDirect: isStripeDirect,
@@ -137,7 +137,7 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
             didSelectLearnMore: {}
         )
     }
-    
+
     func updateUIView(_ uiView: MerchantDataAccessView, context: Context) {}
 }
 
@@ -151,56 +151,56 @@ struct MerchantDataAccessView_Previews: PreviewProvider {
                 permissions: [.accountNumbers]
             )
                 .frame(height: 30)
-            
+
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.accountNumbers]
             )
                 .frame(height: 30)
-            
+
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: nil,
                 permissions: [.accountNumbers]
             )
                 .frame(height: 30)
-            
+
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.accountNumbers]
             )
                 .frame(height: 30)
-            
+
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
-                permissions: [.accountNumbers,.paymentMethod]
+                permissions: [.accountNumbers, .paymentMethod]
             )
                 .frame(height: 30)
-            
+
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.accountNumbers, .paymentMethod, .transactions, .ownership, .balances]
             )
                 .frame(height: 50)
-            
+
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.unparsable]
             )
                 .frame(height: 30)
-            
+
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: true,
                 businessName: nil,
                 permissions: []
             )
                 .frame(height: 30)
-            
+
             Spacer()
         }
         .padding()

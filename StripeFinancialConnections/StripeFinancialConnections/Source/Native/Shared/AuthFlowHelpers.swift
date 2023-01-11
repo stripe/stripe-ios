@@ -8,7 +8,7 @@
 import Foundation
 
 final class AuthFlowHelpers {
-    
+
     static func formatUrlString(_ urlString: String?) -> String? {
         guard var urlString = urlString else {
             return nil

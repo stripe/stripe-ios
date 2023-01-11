@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// The custom button used throughout the Stripe SDK.
 /// For internal SDK use only
@@ -65,14 +65,14 @@ import UIKit
         public var borderWidth: CGFloat = 0
 
         // Normal state
-        public var foregroundColor: UIColor? = nil
-        public var backgroundColor: UIColor? = nil
-        public var borderColor: UIColor? = nil
+        public var foregroundColor: UIColor?
+        public var backgroundColor: UIColor?
+        public var borderColor: UIColor?
 
         // Disabled state
-        public var disabledForegroundColor: UIColor? = nil
-        public var disabledBackgroundColor: UIColor? = nil
-        public var disabledBorderColor: UIColor? = nil
+        public var disabledForegroundColor: UIColor?
+        public var disabledBackgroundColor: UIColor?
+        public var disabledBorderColor: UIColor?
 
         // Color transforms
         public var colorTransforms: ColorTransformConfiguration = .init()
@@ -84,12 +84,12 @@ import UIKit
     }
 
     public struct ColorTransformConfiguration {
-        public var disabledForeground: ColorTransform? = nil
-        public var disabledBackground: ColorTransform? = nil
-        public var disabledBorder: ColorTransform? = nil
-        public var highlightedForeground: ColorTransform? = nil
-        public var highlightedBackground: ColorTransform? = nil
-        public var highlightedBorder: ColorTransform? = nil
+        public var disabledForeground: ColorTransform?
+        public var disabledBackground: ColorTransform?
+        public var disabledBorder: ColorTransform?
+        public var highlightedForeground: ColorTransform?
+        public var highlightedBackground: ColorTransform?
+        public var highlightedBorder: ColorTransform?
     }
 
     public enum ColorTransform {
@@ -286,7 +286,7 @@ import UIKit
 
             // Center activity indicator
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 
@@ -330,7 +330,7 @@ public extension Button {
                         lessThanOrEqualTo: titleLabel.leadingAnchor,
                         constant: Constants.minItemSpacing
                     ),
-                    titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor)
+                    titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor),
                 ])
             case .trailing:
                 dynamicConstraints.append(contentsOf: [
@@ -339,14 +339,14 @@ public extension Button {
                         lessThanOrEqualTo: iconView.leadingAnchor,
                         constant: Constants.minItemSpacing
                     ),
-                    iconView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+                    iconView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
                 ])
             }
         } else {
             // Pin the leading and trailing edges of the label to the edges of the button.
             dynamicConstraints.append(contentsOf: [
                 titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor),
-                titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor)
+                titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor),
             ])
         }
 

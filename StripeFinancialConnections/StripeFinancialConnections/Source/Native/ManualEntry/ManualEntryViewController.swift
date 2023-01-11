@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol ManualEntryViewControllerDelegate: AnyObject {
     func manualEntryViewController(
@@ -19,10 +19,10 @@ protocol ManualEntryViewControllerDelegate: AnyObject {
 }
 
 final class ManualEntryViewController: UIViewController {
-    
+
     private let dataSource: ManualEntryDataSource
-    weak var delegate: ManualEntryViewControllerDelegate? = nil
-    
+    weak var delegate: ManualEntryViewControllerDelegate?
+
     private lazy var manualEntryFormView: ManualEntryFormView = {
         let manualEntryFormView = ManualEntryFormView()
         manualEntryFormView.delegate = self
@@ -36,20 +36,20 @@ final class ManualEntryViewController: UIViewController {
         )
         return manualEntryFooterView
     }()
-    
+
     init(dataSource: ManualEntryDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
             title: STPLocalizedString("Enter bank account details", "The title of a screen that allows a user to manually enter their bank account information."),
             subtitle: dataSource.manifest.manualEntryUsesMicrodeposits ? STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.") : nil,
@@ -59,21 +59,21 @@ final class ManualEntryViewController: UIViewController {
         paneWithHeaderLayoutView.addTo(view: view)
         paneWithHeaderLayoutView.scrollView.keyboardDismissMode = .onDrag
         stp_beginObservingKeyboardAndInsettingScrollView(paneWithHeaderLayoutView.scrollView, onChange: nil)
-        
+
         adjustContinueButtonStateIfNeeded()
-        
+
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .manualEntry)
     }
-    
+
     private func didSelectContinue() {
         guard let routingAndAccountNumber = manualEntryFormView.routingAndAccountNumber else {
             assertionFailure("user should never be able to press continue if we have no routing/account number")
             return
         }
         manualEntryFormView.setError(text: nil) // clear previous error
-        
+
         footerView.setIsLoading(true)
         dataSource.attachBankAccountToLinkAccountSession(
             routingNumber: routingAndAccountNumber.routingNumber,
@@ -107,7 +107,7 @@ final class ManualEntryViewController: UIViewController {
             self.footerView.setIsLoading(false)
         }
     }
-    
+
     private func adjustContinueButtonStateIfNeeded() {
         footerView.continueButton.isEnabled = (manualEntryFormView.routingAndAccountNumber != nil)
     }
@@ -116,7 +116,7 @@ final class ManualEntryViewController: UIViewController {
 // MARK: - ManualEntryFormViewDelegate
 
 extension ManualEntryViewController: ManualEntryFormViewDelegate {
-    
+
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView) {
         adjustContinueButtonStateIfNeeded()
     }

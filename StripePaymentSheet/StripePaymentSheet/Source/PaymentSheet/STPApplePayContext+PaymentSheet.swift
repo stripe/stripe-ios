@@ -62,7 +62,7 @@ extension STPApplePayContext {
             }
         }
     }
-    
+
     static func create(
         intent: Intent,
         configuration: PaymentSheet.Configuration,

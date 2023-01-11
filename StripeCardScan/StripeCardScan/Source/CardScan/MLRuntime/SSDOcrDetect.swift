@@ -12,13 +12,13 @@ import UIKit
 /// Documentation for SSD OCR
 
 @_spi(STP) public class SSDOcrDetect {
-    @AtomicProperty var ssdOcrModel: SSDOcr? = nil
-    static var priors: [CGRect]? = nil
+    @AtomicProperty var ssdOcrModel: SSDOcr?
+    static var priors: [CGRect]?
 
     static var ssdOcrResource = "SSDOcr"
     static let ssdOcrExtension = "mlmodelc"
 
-    //SSD Model parameters
+    // SSD Model parameters
     static let sigma: Float = 0.5
     let ssdOcrImageWidth = 600
     let ssdOcrImageHeight = 375
@@ -30,7 +30,7 @@ import UIKit
     let candidateSize = 200
     let topK = 20
 
-    //Statistics about last prediction
+    // Statistics about last prediction
     var lastDetectedBoxes: [CGRect] = []
     static var hasPrintedInitError = false
 
@@ -62,7 +62,7 @@ import UIKit
             height: ssdOcrImageHeight
         ) {
             let input = SSDOcrInput(_0: pixelBuffer)
-            let _ = try? ssdOcrModel.prediction(input: input)
+            _ = try? ssdOcrModel.prediction(input: input)
         }
     }
 

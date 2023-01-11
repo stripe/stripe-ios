@@ -5,9 +5,9 @@
 //  Created by Vardges Avetisyan on 12/3/21.
 //
 
-import UIKit
 import AuthenticationServices
 @_spi(STP) import StripeCore
+import UIKit
 
 final class AuthenticationSessionManager: NSObject {
 
@@ -37,19 +37,19 @@ final class AuthenticationSessionManager: NSObject {
 
     func start(additionalQueryParameters: String? = nil) -> Promise<AuthenticationSessionManager.Result> {
         let promise = Promise<AuthenticationSessionManager.Result>()
-        
+
         guard let hostedAuthUrl = manifest.hostedAuthUrl else {
             promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "NULL `hostedAuthUrl`"))
             return promise
         }
-        
+
         let urlString = hostedAuthUrl + (additionalQueryParameters ?? "")
 
         guard let url = URL(string: urlString) else {
             promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Malformed hosted auth URL"))
             return promise
         }
-        
+
         guard let successUrl = manifest.successUrl else {
             promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "NULL `successUrl`"))
             return promise

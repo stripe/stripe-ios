@@ -6,15 +6,15 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class SuccessFooterView: UIView {
-    
+
     private let didSelectDone: (SuccessFooterView) -> Void
     private let didSelectLinkAnotherAccount: (() -> Void)?
-    
+
     private lazy var doneButton: Button = {
         let doneButton = Button(configuration: .financialConnectionsPrimary)
         doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
@@ -25,7 +25,7 @@ final class SuccessFooterView: UIView {
         ])
         return doneButton
     }()
-    
+
     init(
         didSelectDone: @escaping (SuccessFooterView) -> Void,
         didSelectLinkAnotherAccount: (() -> Void)?
@@ -33,7 +33,7 @@ final class SuccessFooterView: UIView {
         self.didSelectDone = didSelectDone
         self.didSelectLinkAnotherAccount = didSelectLinkAnotherAccount
         super.init(frame: .zero)
-        
+
         let footerStackView = UIStackView()
         footerStackView.axis = .vertical
         footerStackView.spacing = 12
@@ -53,19 +53,19 @@ final class SuccessFooterView: UIView {
 
         addAndPinSubviewToSafeArea(footerStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc private func didSelectDoneButton() {
         didSelectDone(self)
     }
-    
+
     @objc private func didSelectLinkAnotherAccountButton() {
         didSelectLinkAnotherAccount?()
     }
-    
+
     func setIsLoading(_ isLoading: Bool) {
         doneButton.isLoading = isLoading
     }

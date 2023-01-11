@@ -34,9 +34,9 @@ public enum FinancialConnectionsSheetError: Error, LocalizedError {
 
     /// Serializes this error
     /// - Returns: an error with a domain and code
-    public func analyticLoggableSerializeForLogging() -> [String : Any] {
+    public func analyticLoggableSerializeForLogging() -> [String: Any] {
         return [
             "domain": "Stripe.\(FinancialConnectionsSheetError.self)",
-            "code": errorCode]
+            "code": errorCode, ]
     }
 }

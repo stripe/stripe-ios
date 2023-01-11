@@ -23,7 +23,7 @@ extension Button.Configuration {
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return primaryButtonConfiguration
     }
-    
+
     static var financialConnectionsSecondary: Button.Configuration {
         var secondaryButtonConfiguration = Button.Configuration.secondary()
         secondaryButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)

@@ -42,7 +42,7 @@ import UIKit
     ) -> UIImage {
 
         let darkMode: Bool = darkMode ?? isDarkMode()
-        
+
         let image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
         assert(image.size != .zero, "Failed to find an image named \(imageName)")
         // Vend a dark variant if available

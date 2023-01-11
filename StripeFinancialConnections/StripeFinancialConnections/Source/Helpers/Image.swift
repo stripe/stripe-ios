@@ -22,6 +22,7 @@ enum Image: String, ImageMaker {
     case chevron_down = "chevron_down"
     case close = "close"
     case edit = "edit"
+    case ellipsis = "ellipsis"
     case email = "email"
     case generic_error = "generic_error"
     case search = "search"

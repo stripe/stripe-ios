@@ -30,9 +30,10 @@ extension UIImage {
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
     ) -> ImageDataAndSize {
-        dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) {
-            image,
-            quality in
+        dataAndDimensions(
+            maxBytes: maxBytes,
+            compressionQuality: compressionQuality
+        ) { image, quality in
             image.jpegData(compressionQuality: quality)
         }
     }
@@ -54,9 +55,10 @@ extension UIImage {
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
     ) -> ImageDataAndSize {
-        dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) {
-            image,
-            quality in
+        dataAndDimensions(
+            maxBytes: maxBytes,
+            compressionQuality: compressionQuality
+        ) { image, quality in
             image.heicData(compressionQuality: quality)
         }
     }
@@ -116,7 +118,7 @@ extension UIImage {
                 }
 
                 // If the smart thing doesn't work, just start scaling down a bit on a loop until we get there
-                scale = scale * 0.7
+                scale *= 0.7
             } while (imageData?.count ?? 0) > maxBytes
         }
 

@@ -5,10 +5,10 @@
 //  Created by Vardges Avetisyan on 12/1/21.
 //
 
-import UIKit
 import CoreMedia
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
@@ -20,7 +20,7 @@ protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 }
 
 @available(iOSApplicationExtension, unavailable)
-final class FinancialConnectionsWebFlowViewController : UIViewController {
+final class FinancialConnectionsWebFlowViewController: UIViewController {
 
     // MARK: - Properties
 
@@ -28,7 +28,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
     private var authSessionManager: AuthenticationSessionManager?
     private var fetchSessionError: Error?
-    
+
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
@@ -38,7 +38,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
         }
         return view
     }()
-    
+
     /**
      Unfortunately there is a need for this state-full parameter. When we get url callback the app might not be in foreground state.
      If we then restart authentication session ASWebAuthenticationSession will fail as you can't start it in a non-foreground state.
@@ -53,7 +53,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
-    
+
     // MARK: - UI
 
     private lazy var closeItem: UIBarButtonItem = {
@@ -100,12 +100,12 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
         continueStateView.isHidden = true
         view.addSubview(continueStateView)
         view.addAndPinSubviewToSafeArea(continueStateView)
-        
+
         // start authentication session
         loadingView.errorView.isHidden = true
         startAuthenticationSession(manifest: manifest)
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -134,26 +134,26 @@ extension FinancialConnectionsWebFlowViewController {
                 guard let self = self else { return }
                 self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
-                   case .success(.success):
-                      self.fetchSession()
-                   case .success(.webCancelled):
-                      self.notifyDelegate(result: .canceled)
-                   case .success(.nativeCancelled):
-                      self.fetchSession(userDidCancelInNative: true)
-                   case .failure(let error):
-                      self.notifyDelegate(result: .failed(error: error))
-                   case .success(.redirect(url: let url)):
-                      self.redirect(to: url)
+                case .success(.success):
+                    self.fetchSession()
+                case .success(.webCancelled):
+                    self.notifyDelegate(result: .canceled)
+                case .success(.nativeCancelled):
+                    self.fetchSession(userDidCancelInNative: true)
+                case .failure(let error):
+                    self.notifyDelegate(result: .failed(error: error))
+                case .success(.redirect(url: let url)):
+                    self.redirect(to: url)
                 }
                 self.authSessionManager = nil
         })
     }
-    
+
     private func redirect(to url: URL) {
         DispatchQueue.main.async {
             self.continueStateView.isHidden = false
             self.subscribeToURLAndAppActiveNotifications()
-            UIApplication.shared.open(url, options: [:], completionHandler:  nil)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
 
@@ -200,7 +200,6 @@ extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
     }
 }
 
-
 // MARK: - UI Helpers
 
 @available(iOSApplicationExtension, unavailable)
@@ -215,7 +214,7 @@ private extension FinancialConnectionsWebFlowViewController {
     private func didTapClose() {
         manuallyCloseWebFlowViewController()
     }
-    
+
     private func manuallyCloseWebFlowViewController() {
         if let fetchSessionError = fetchSessionError {
             notifyDelegate(result: .failed(error: fetchSessionError))
@@ -229,10 +228,10 @@ private extension FinancialConnectionsWebFlowViewController {
 
 @available(iOSApplicationExtension, unavailable)
 private extension FinancialConnectionsWebFlowViewController {
-    
+
     private func restartAuthenticationIfNeeded() {
         dispatchPrecondition(condition: .onQueue(.main))
-        
+
         guard UIApplication.shared.applicationState == .active, let parameters = unprocessedReturnURLParameters else {
             /**
              When we get url callback the app might not be in foreground state.
@@ -245,7 +244,7 @@ private extension FinancialConnectionsWebFlowViewController {
         continueStateView.isHidden = true
         unsubscribeFromNotifications()
     }
-    
+
     private func subscribeToURLAndAppActiveNotifications() {
         dispatchPrecondition(condition: .onQueue(.main))
 
@@ -259,7 +258,7 @@ private extension FinancialConnectionsWebFlowViewController {
                 object: nil)
         }
     }
-    
+
     private func subscribeToURLNotifications() {
         dispatchPrecondition(condition: .onQueue(.main))
 
@@ -273,13 +272,13 @@ private extension FinancialConnectionsWebFlowViewController {
                 for: url)
         }
     }
-    
+
     @objc func handleDidBecomeActiveNotification() {
         DispatchQueue.main.async {
             self.restartAuthenticationIfNeeded()
         }
     }
-    
+
     private func unsubscribeFromNotifications() {
         dispatchPrecondition(condition: .onQueue(.main))
 

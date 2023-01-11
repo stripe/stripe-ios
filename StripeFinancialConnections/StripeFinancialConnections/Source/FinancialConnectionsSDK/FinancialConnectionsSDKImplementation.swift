@@ -5,8 +5,8 @@
 //  Created by Vardges Avetisyan on 2/24/22.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /**
  NOTE: If you change the name of this class, make sure to also change it FinancialConnectionsSDKAvailability file
@@ -21,7 +21,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         clientSecret: String,
         returnURL: String?,
         from presentingViewController: UIViewController,
-        completion: @escaping (FinancialConnectionsSDKResult) -> ()
+        completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
         let financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret, returnURL: returnURL)
         financialConnectionsSheet.apiClient = apiClient
@@ -47,11 +47,13 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                 }
             })
     }
-    
+
     // MARK: - Helpers
-    
-    private func linkedBankFor(paymentAccount: StripeAPI.FinancialConnectionsSession.PaymentAccount,
-                                   session: StripeAPI.FinancialConnectionsSession) -> LinkedBank? {
+
+    private func linkedBankFor(
+        paymentAccount: StripeAPI.FinancialConnectionsSession.PaymentAccount,
+        session: StripeAPI.FinancialConnectionsSession
+    ) -> LinkedBank? {
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):
             return LinkedBankImplementation(with: session.id,
@@ -71,7 +73,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
             return nil
         }
     }
-    
+
 }
 
 // MARK: - LinkedBank Implementation
@@ -82,7 +84,7 @@ struct LinkedBankImplementation: LinkedBank {
     public let bankName: String?
     public let last4: String?
     public let instantlyVerified: Bool
-    
+
     public init(with sessionId: String,
                 accountId: String,
                 displayName: String?,

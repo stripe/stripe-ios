@@ -30,7 +30,7 @@ struct AddressSpec: Decodable {
             case .province: return String.Localized.province
             }
         }
-        
+
         init(from decoder: Decoder) throws {
             let state_name_type = try decoder.singleValueContainer().decode(String.self)
             self = StateNameType(rawValue: state_name_type) ?? .prefecture
@@ -46,7 +46,7 @@ struct AddressSpec: Decodable {
             case .postal_code: return String.Localized.postal_code
             }
         }
-        
+
         init(from decoder: Decoder) throws {
             let zip_name_type = try decoder.singleValueContainer().decode(String.self)
             self = ZipNameType(rawValue: zip_name_type) ?? .postal_code
@@ -76,7 +76,7 @@ struct AddressSpec: Decodable {
         case state = "S"
         case postal = "Z"
     }
-    
+
     /// The order to display the fields.
     let fieldOrdering: [FieldType]
     let requiredFields: [FieldType]
@@ -86,7 +86,7 @@ struct AddressSpec: Decodable {
     let zipNameType: ZipNameType
     let subKeys: [String]? // e.g. state abbreviations - "CA"
     let subLabels: [String]? // e.g. state display names - "California"
-    
+
     enum CodingKeys: String, CodingKey {
         case format = "fmt"
         case require = "require"
@@ -97,11 +97,11 @@ struct AddressSpec: Decodable {
         case subKeys = "sub_keys"
         case subLabels = "sub_labels"
     }
-    
+
     static var `default`: AddressSpec {
         return AddressSpec()
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.init(
@@ -115,7 +115,7 @@ struct AddressSpec: Decodable {
             subLabels: try? container.decode([String].self, forKey: .subLabels)
         )
     }
-    
+
     init(
         format: String? = nil,
         require: String? = nil,

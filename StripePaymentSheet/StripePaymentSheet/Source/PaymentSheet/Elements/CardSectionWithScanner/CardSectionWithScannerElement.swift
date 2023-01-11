@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// A Element that contains a SectionElement for card details, whose view depends on the availability of card scanning:
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.
@@ -20,7 +20,7 @@ final class CardSection: ContainerElement {
     var elements: [Element] {
         return [cardSection]
     }
-    
+
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
         if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
@@ -30,20 +30,20 @@ final class CardSection: ContainerElement {
         }
     }()
     let cardSection: SectionElement
-    
+
     // References to the underlying TextFieldElements
     let panElement: TextFieldElement
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsUITheme
-    
+
     init(theme: ElementsUITheme = .default) {
         self.theme = theme
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(), theme: theme) {  field, params in
             cardParams(for: params).number = field.text
             return params
         }
-        let cvcElementConfiguration = TextFieldElement.CVCConfiguration() {
+        let cvcElementConfiguration = TextFieldElement.CVCConfiguration {
             return STPCardValidator.brand(forNumber: panElement.element.text)
         }
         let cvcElement = PaymentMethodElementWrapper(cvcElementConfiguration, theme: theme) { field, params in
@@ -52,14 +52,14 @@ final class CardSection: ContainerElement {
         }
         let expiryElement = PaymentMethodElementWrapper(TextFieldElement.ExpiryDateConfiguration(), theme: theme) { field, params in
             if let month = Int(field.text.prefix(2)) {
-                cardParams(for: params).expMonth = NSNumber(integerLiteral: month)
+                cardParams(for: params).expMonth = NSNumber(value: month)
             }
             if let year = Int(field.text.suffix(2)) {
-                cardParams(for: params).expYear = NSNumber(integerLiteral: year)
+                cardParams(for: params).expYear = NSNumber(value: year)
             }
             return params
         }
-        
+
         let sectionTitle: String? = {
             if #available(iOS 13.0, macCatalyst 14, *) {
                 return nil
@@ -71,16 +71,16 @@ final class CardSection: ContainerElement {
             title: sectionTitle,
             elements: [
                 panElement,
-                SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme)
+                SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
             ], theme: theme
         )
-        
+
         self.panElement = panElement.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
         cardSection.delegate = self
     }
-    
+
     // MARK: - ElementDelegate
     private var cardBrand: STPCardBrand = .unknown
     func didUpdate(element: Element) {
@@ -96,7 +96,7 @@ final class CardSection: ContainerElement {
 
 // MARK: - Helpers
 /// A DRY helper to ensure `STPPaymentMethodCardParams` is present on `intentConfirmParams.paymentMethodParams`.
-fileprivate func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMethodCardParams {
+private func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMethodCardParams {
     guard let cardParams = intentParams.paymentMethodParams.card else {
         let cardParams = STPPaymentMethodCardParams()
         intentParams.paymentMethodParams.card = cardParams
@@ -116,11 +116,11 @@ extension CardSection: CardSectionWithScannerViewDelegate {
             }
             return String(format: "%02d%02d", expMonth.intValue, expYear.intValue)
         }()
-        
+
         // Populate the fields with the card params we scanned
         panElement.setText(cardParams.number ?? "")
         expiryElement.setText(expiryString)
-        
+
         // Slightly hacky way to focus the next un-populated field
         if let lastCompletedElement = [panElement, expiryElement].last(where: { !$0.text.isEmpty }) {
             lastCompletedElement.delegate?.continueToNextField(element: lastCompletedElement)

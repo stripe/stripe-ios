@@ -56,7 +56,7 @@ extension ScannedCardImageData {
         /// Convert CGImage to UIImage
         let uiImage = UIImage(cgImage: image)
 
-        ///TODO(jaimepark): Resize with aspect ratio maintained if image is bigger than 1080 x 1920
+        /// TODO(jaimepark): Resize with aspect ratio maintained if image is bigger than 1080 x 1920
 
         for format in imageConfig.preferredFormats ?? [] {
             if !isImageFormatSupported(format: format) {
