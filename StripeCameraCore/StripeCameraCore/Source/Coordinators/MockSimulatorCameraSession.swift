@@ -12,8 +12,8 @@
 
 #if targetEnvironment(simulator)
 
-import Foundation
 import AVKit
+import Foundation
 @_spi(STP) import StripeCore
 
 /// Mocks a CameraSession on the simulator.

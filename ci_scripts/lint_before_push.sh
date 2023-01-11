@@ -31,8 +31,8 @@ if which swiftlint >/dev/null; then
     echo "Can't lint on master branch"
     exit 1
   else
-    for file in $(git diff --diff-filter=AM --name-only origin/master  | grep ".swift$"); do
-      export SCRIPT_INPUT_FILE_$count=$file
+    git diff --diff-filter=AM --name-only origin/master  | grep ".swift$" | while read -r file; do
+      export SCRIPT_INPUT_FILE_$count="$file"
       count=$((count + 1))
     done
   fi

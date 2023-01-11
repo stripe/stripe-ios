@@ -112,7 +112,7 @@ extension UIImage {
         let height = CVPixelBufferGetHeight(pixelBuffer)
         let pixels = CVPixelBufferGetBaseAddress(pixelBuffer)
         let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-        //let pixelBufferIndex = x + y * bytesPerRow
+        // let pixelBufferIndex = x + y * bytesPerRow
         var pixelValue = pixels?.load(fromByteOffset: 0, as: UInt8.self) ?? 0
         result = result && pixelValue == 0
         pixelValue = pixels?.load(fromByteOffset: (width - 1), as: UInt8.self) ?? 0

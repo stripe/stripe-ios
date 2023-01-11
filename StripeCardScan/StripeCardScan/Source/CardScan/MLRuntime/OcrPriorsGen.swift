@@ -10,10 +10,10 @@
 import CoreGraphics
 import Foundation
 
+/// This struct represents the logic to generate initiail bounding boxes or priors for our implementation of SSD.
+/// We use outputs from two layers of MobileNet V2. In the existing implementation the input size = 300, and
+/// repective feature map sizes are 19 x 19 at output layer 1 and 10 x 10 at output layer 2.
 struct OcrPriorsGen {
-    /// This struct represents the logic to generate initiail bounding boxes or priors for our implementation of SSD.
-    /// We use outputs from two layers of MobileNet V2. In the existing implementation the input size = 300, and
-    /// repective feature map sizes are 19 x 19 at output layer 1 and 10 x 10 at output layer 2.
 
     // At output layer 1 the feature map size = 19 x 19
     static let featureMapSizeBigHeight = 24

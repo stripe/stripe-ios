@@ -34,12 +34,12 @@ disabled_rules:
   - no_fallthrough_only
   - class_delegate_protocol
   - closure_parameter_position
+  - reduce_boolean
 
 opt_in_rules:
   - colon
   - comma
   - control_statement
-  - discouraged_object_literal
   - empty_count
   # - force_unwrapping  # Enable one day...
   - joined_default_parameter
@@ -58,10 +58,11 @@ opt_in_rules:
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace
-  - unowned_variable_capture
   - closure_spacing
   # Rules to enable after initial cleanup.
   # - weak_delegate
+  # - discouraged_object_literal
+  # - unowned_variable_capture
 
 excluded:
   - Pods

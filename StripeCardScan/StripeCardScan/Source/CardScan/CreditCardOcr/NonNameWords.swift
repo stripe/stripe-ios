@@ -33,7 +33,7 @@ struct NameWords {
         let lettersAndSpace = text.reduce(true) { acc, value in
             let capitalLetter = value >= "A" && value <= "Z"
             // for now we're only going to accept upper case names
-            //let lowerCaseLetter = value >= "a" && value <= "z"
+            // let lowerCaseLetter = value >= "a" && value <= "z"
             let space = value == " "
             return acc && (capitalLetter || space)
         }

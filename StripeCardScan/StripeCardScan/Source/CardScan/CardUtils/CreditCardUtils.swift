@@ -26,7 +26,7 @@ struct CreditCardUtils {
 
     static var prefixesRegional: [String] = []
 
-    private static var cardTypeMap: [(ClosedRange<Int>, CardType)]? = nil
+    private static var cardTypeMap: [(ClosedRange<Int>, CardType)]?
 
     ///    Adds the BINs implemented by the MIR network in Russia as regional cards
     static func addMirSupport() {
@@ -309,7 +309,7 @@ struct CreditCardUtils {
         return prefixes.filter { cardNumber.hasPrefix($0) }.count > 0
     }
 
-    //TODO: Will be replaced with `formatCardNumber` in future version
+    // TODO: Will be replaced with `formatCardNumber` in future version
     static func format(number: String) -> String {
         return formatCardNumber(cardNumber: number)
     }
@@ -366,7 +366,7 @@ struct CreditCardUtils {
     }
 }
 
-//TODO: Added extension to make older network changes available, will remove in future version
+// TODO: Added extension to make older network changes available, will remove in future version
 extension CreditCardUtils {
     static func isVisa(number: String) -> Bool {
         return determineCardNetwork(cardNumber: number) == CardNetwork.VISA

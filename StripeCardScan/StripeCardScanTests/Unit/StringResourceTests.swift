@@ -7,7 +7,6 @@
 
 import CoreServices
 import UniformTypeIdentifiers
-import UniformTypeIdentifiers.UTType
 import XCTest
 
 @testable@_spi(STP) import StripeCore

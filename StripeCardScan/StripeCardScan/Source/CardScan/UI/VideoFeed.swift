@@ -32,8 +32,6 @@ class VideoFeed {
             DispatchQueue.main.async {
                 permissionDelegate?.permissionDidComplete(granted: true, showedPrompt: false)
             }
-            break
-
         case .notDetermined:
             AVCaptureDevice.requestAccess(
                 for: .video,
@@ -140,7 +138,7 @@ class VideoFeed {
             videoDeviceOutput.videoSettings = [
                 kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: Int(
                     kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
-                )
+                ),
             ]
 
             videoDeviceOutput.alwaysDiscardsLateVideoFrames = true
@@ -178,7 +176,7 @@ class VideoFeed {
             return
         }
 
-        guard let _ = try? videoDevice.lockForConfiguration() else {
+        guard (try? videoDevice.lockForConfiguration()) != nil else {
             return
         }
 
@@ -203,7 +201,7 @@ class VideoFeed {
         videoDevice.unlockForConfiguration()
     }
 
-    //MARK: -Torch Logic
+    // MARK: - Torch Logic
     func toggleTorch() {
         self.torch?.toggle()
     }
@@ -222,7 +220,7 @@ class VideoFeed {
         self.torch?.level = level
     }
 
-    //MARK: -VC Lifecycle Logic
+    // MARK: - VC Lifecycle Logic
     func willAppear() {
         sessionQueue.async {
             switch self.setupResult {
