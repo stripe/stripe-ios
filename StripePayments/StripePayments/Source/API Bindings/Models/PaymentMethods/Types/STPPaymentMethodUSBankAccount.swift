@@ -78,7 +78,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
         else {
             return nil
         }
-        var networks: STPPaymentMethodUSBankAccountNetworks? = nil
+        var networks: STPPaymentMethodUSBankAccountNetworks?
         if let networksHash = response["networks"] as? [AnyHashable: Any],
             let supported = networksHash["supported"] as? [String]
         {

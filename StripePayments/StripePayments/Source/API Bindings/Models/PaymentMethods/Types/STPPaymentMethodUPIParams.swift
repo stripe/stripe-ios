@@ -23,7 +23,7 @@ public class STPPaymentMethodUPIParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:vpa)): "vpa"
+            NSStringFromSelector(#selector(getter: vpa)): "vpa"
         ]
     }
 }

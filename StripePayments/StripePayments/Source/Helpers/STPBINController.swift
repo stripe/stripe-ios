@@ -289,7 +289,7 @@ extension STPBINRange {
                                     self.sAllRanges + ((try? ranges.get()) ?? [])
                             })
 
-                            if case .failure(_) = ranges {
+                            if case .failure = ranges {
                                 STPAnalyticsClient.sharedClient.logCardMetadataResponseFailure()
                             }
 

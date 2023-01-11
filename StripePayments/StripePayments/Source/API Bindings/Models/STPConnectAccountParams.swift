@@ -152,10 +152,10 @@ extension STPConnectAccountParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:tosShownAndAccepted)): "tos_shown_and_accepted",
-            NSStringFromSelector(#selector(getter:individual)): "individual",
-            NSStringFromSelector(#selector(getter:company)): "company",
-            NSStringFromSelector(#selector(getter:businessTypeString)): "business_type",
+            NSStringFromSelector(#selector(getter: tosShownAndAccepted)): "tos_shown_and_accepted",
+            NSStringFromSelector(#selector(getter: individual)): "individual",
+            NSStringFromSelector(#selector(getter: company)): "company",
+            NSStringFromSelector(#selector(getter: businessTypeString)): "business_type",
         ]
     }
 }

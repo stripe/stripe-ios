@@ -17,6 +17,7 @@ lint_dirs=(
 	"StripeApplePay"
 	"StripeCameraCore"
 	"StripeCardScan"
+	"StripePayments"
 )
 
 exit_code=0

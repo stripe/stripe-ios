@@ -101,7 +101,7 @@ extension STPPaymentMethodOptions {
         if let usBankAccount = usBankAccount {
             dictionaryValue["us_bank_account"] = usBankAccount.dictionaryValue
         }
-        return dictionaryValue.merging(allResponseFields) { a, b in
+        return dictionaryValue.merging(allResponseFields) { a, _ in
             a
         }
     }
@@ -113,7 +113,7 @@ extension STPPaymentMethodOptions.USBankAccount {
         if let setupFutureUsage = setupFutureUsage {
             dictionaryValue["setup_future_usage"] = setupFutureUsage.stringValue
         }
-        return dictionaryValue.merging(allResponseFields) { a, b in
+        return dictionaryValue.merging(allResponseFields) { a, _ in
             a
         }
     }

@@ -77,11 +77,11 @@ extension STPPaymentIntentShippingDetailsParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:address)): "address",
-            NSStringFromSelector(#selector(getter:name)): "name",
-            NSStringFromSelector(#selector(getter:carrier)): "carrier",
-            NSStringFromSelector(#selector(getter:phone)): "phone",
-            NSStringFromSelector(#selector(getter:trackingNumber)): "tracking_number",
+            NSStringFromSelector(#selector(getter: address)): "address",
+            NSStringFromSelector(#selector(getter: name)): "name",
+            NSStringFromSelector(#selector(getter: carrier)): "carrier",
+            NSStringFromSelector(#selector(getter: phone)): "phone",
+            NSStringFromSelector(#selector(getter: trackingNumber)): "tracking_number",
         ]
     }
 
