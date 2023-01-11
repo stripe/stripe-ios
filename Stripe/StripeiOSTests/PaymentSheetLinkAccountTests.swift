@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 final class PaymentSheetLinkAccountTests: XCTestCase {
@@ -80,7 +80,7 @@ extension PaymentSheetLinkAccountTests {
                     "email_address": "user@example.com",
                     "redacted_phone_number": "+1********55",
                     "support_payment_details_types": ["CARD"],
-                ]
+                ],
             ]),
             publishableKey: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),

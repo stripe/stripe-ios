@@ -44,7 +44,7 @@ public class STPPinManagementService: NSObject {
             "verification": [
                 "id": verificationId,
                 "one_time_code": oneTimeCode,
-            ]
+            ],
         ]
         keyManager?.getOrCreateKey({ ephemeralKey, keyError in
             if ephemeralKey == nil {

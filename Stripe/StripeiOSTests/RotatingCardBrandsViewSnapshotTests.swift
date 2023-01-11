@@ -6,16 +6,15 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) import StripePayments
+import XCTest
 
-@testable @_spi(STP) import StripePaymentSheet
 @testable import Stripe
+@testable @_spi(STP) import StripePaymentSheet
 
 class RotatingCardBrandsViewSnapshotTests: FBSnapshotTestCase {
-
 
     override func setUp() {
         super.setUp()

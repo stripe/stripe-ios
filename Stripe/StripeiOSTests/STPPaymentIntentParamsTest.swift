@@ -8,8 +8,8 @@
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentIntentParamsTest: XCTestCase {
@@ -28,10 +28,10 @@ class STPPaymentIntentParamsTest: XCTestCase {
             XCTAssertNil(params.sourceParams)
             XCTAssertNil(params.sourceId)
             XCTAssertNil(params.receiptEmail)
-            //#pragma clang diagnostic push
-            //#pragma clang diagnostic ignored "-Wdeprecated"
+            // #pragma clang diagnostic push
+            // #pragma clang diagnostic ignored "-Wdeprecated"
             XCTAssertNil(params.saveSourceToCustomer)
-            //#pragma clang diagnostic pop
+            // #pragma clang diagnostic pop
             XCTAssertNil(params.savePaymentMethod)
             XCTAssertNil(params.returnURL)
             XCTAssertNil(params.setupFutureUsage)
@@ -49,8 +49,8 @@ class STPPaymentIntentParamsTest: XCTestCase {
 
     // MARK: Deprecated Property
 
-    //#pragma clang diagnostic push
-    //#pragma clang diagnostic ignored "-Wdeprecated"
+    // #pragma clang diagnostic push
+    // #pragma clang diagnostic ignored "-Wdeprecated"
     func testReturnURLRenaming() {
         let params = STPPaymentIntentParams()
 
@@ -111,7 +111,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
         }
     }
 
-    //#pragma clang diagnostic pop
+    // #pragma clang diagnostic pop
 
     // MARK: STPFormEncodable Tests
     func testRootObjectName() {

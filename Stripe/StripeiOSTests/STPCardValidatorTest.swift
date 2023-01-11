@@ -11,8 +11,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPCardValidatorTest: XCTestCase {
@@ -336,6 +336,7 @@ class STPCardValidatorTest: XCTestCase {
     }
 
     func testCardValidation() {
+        // swiftlint:disable:next large_tuple
         let tests: [(String, UInt, UInt, String, STPCardValidationState)] = [
             (
                 "4242424242424242",

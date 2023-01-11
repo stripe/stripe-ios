@@ -11,8 +11,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class StripeErrorTest: XCTestCase {
@@ -27,7 +27,7 @@ class StripeErrorTest: XCTestCase {
             "error": [
                 "type": "foo",
                 "code": "error_code",
-            ]
+            ],
         ]
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
@@ -56,7 +56,7 @@ class StripeErrorTest: XCTestCase {
             "error": [
                 "type": "api_error",
                 "message": "some message",
-            ]
+            ],
         ]
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
@@ -81,7 +81,7 @@ class StripeErrorTest: XCTestCase {
                 "type": "invalid_request_error",
                 "message": "The payment method `card` requires the parameter: card[exp_year].",
                 "param": "card[exp_year]",
-            ]
+            ],
         ]
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
@@ -107,7 +107,7 @@ class StripeErrorTest: XCTestCase {
             "error": [
                 "type": "invalid_request_error",
                 "message": "Invalid API Key provided: pk_test_***************************00",
-            ]
+            ],
         ]
 
         // with a `401` HTTP status code
@@ -135,7 +135,7 @@ class StripeErrorTest: XCTestCase {
                 "code": "api_key_expired",
                 "type": "invalid_request_error",
                 "message": "Expired API Key provided: pk_test_***************************00",
-            ]
+            ],
         ]
 
         // with a `401` HTTP status code
@@ -162,7 +162,7 @@ class StripeErrorTest: XCTestCase {
                 "type": "invalid_request_error",
                 "message": "Your card number is incorrect.",
                 "code": "incorrect_number",
-            ]
+            ],
         ]
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
@@ -196,7 +196,7 @@ class StripeErrorTest: XCTestCase {
                 "type": "card_error",
                 "message": "Your card number is incorrect.",
                 "code": "incorrect_number",
-            ]
+            ],
         ]
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
@@ -229,7 +229,7 @@ class StripeErrorTest: XCTestCase {
                 "type": "card_error",
                 "code": "card_declined",
                 "decline_code": "insufficient_funds",
-            ]
+            ],
         ]
         guard let error = NSError.stp_error(fromStripeResponse: response) else {
             XCTFail()

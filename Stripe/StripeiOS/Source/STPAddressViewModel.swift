@@ -178,7 +178,7 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
                     contents: "",
                     lastInList: true,
                     delegate: self
-                )
+                ),
             ]
         default:
             fatalError()

@@ -238,7 +238,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
         // This is the recommended pixel buffer format for Vision:
         videoDataOutput?.videoSettings = [
             kCVPixelBufferPixelFormatTypeKey as String:
-                kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+                kCVPixelFormatType_420YpCbCr8BiPlanarFullRange,
         ]
 
         if let videoDataOutput = videoDataOutput {

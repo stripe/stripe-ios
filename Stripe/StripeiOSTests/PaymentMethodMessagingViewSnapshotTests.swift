@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentsUI
 import UIKit
-import iOSSnapshotTestCase
 
 @MainActor
 class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {

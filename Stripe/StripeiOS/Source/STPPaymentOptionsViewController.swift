@@ -346,7 +346,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                         // Retrieve the last selected payment method saved by STPCustomerContext
                         (apiAdapter as? STPCustomerContext)?
                             .retrieveLastSelectedPaymentMethodIDForCustomer(
-                                completion: { paymentMethodID, `_` in
+                                completion: { paymentMethodID, _ in
                                     var paymentTuple: STPPaymentOptionTuple?
                                     if let paymentMethods = paymentMethods {
                                         paymentTuple = STPPaymentOptionTuple.init(
