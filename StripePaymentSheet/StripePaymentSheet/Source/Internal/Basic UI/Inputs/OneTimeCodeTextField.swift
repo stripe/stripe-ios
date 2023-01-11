@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A field for collecting one-time codes (OTCs).
 /// For internal SDK use only
@@ -366,7 +366,7 @@ extension OneTimeCodeTextField: UITextInput {
         return nil
     }
 
-    var markedTextStyle: [NSAttributedString.Key : Any]? {
+    var markedTextStyle: [NSAttributedString.Key: Any]? {
         get {
             return nil
         }

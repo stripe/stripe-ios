@@ -7,14 +7,14 @@
 //
 
 import SafariServices
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol BottomSheetContentViewController: UIViewController {
-    
+
     /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
     var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
@@ -66,7 +66,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentViewController = toVC
         return popped
     }
-    
+
     let isTestMode: Bool
     let appearance: PaymentSheet.Appearance
 
@@ -94,18 +94,18 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
         }
     }
-    
+
     var contentRequiresFullScreen: Bool {
         return contentViewController.requiresFullScreen
     }
 
-    let didCancelNative3DS2: () -> ()
-    
+    let didCancelNative3DS2: () -> Void
+
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
         isTestMode: Bool,
-        didCancelNative3DS2: @escaping () -> ()
+        didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
@@ -128,7 +128,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     // MARK: -
-    private var scrollViewHeightConstraint: NSLayoutConstraint? = nil
+    private var scrollViewHeightConstraint: NSLayoutConstraint?
 
     /// :nodoc:
     public override func viewDidLoad() {
@@ -200,7 +200,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             scrollView.contentInset.bottom = view.convert(keyboardFrame.cgRectValue, from: nil).size.height
             return
         }
-        
+
         if let firstResponder = view.firstResponder() {
             let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
                 dx: -Constants.keyboardAvoidanceEdgePadding,
@@ -209,7 +209,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
         }
     }
-    
+
     @objc
     private func keyboardDidHide(notification: Notification) {
         if let firstResponder = view.firstResponder() {
@@ -257,7 +257,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
-    
+
     func authenticationPresentingViewController() -> UIViewController {
         return findTopMostPresentedViewController() ?? self
     }
@@ -280,7 +280,7 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         pushContentViewController(threeDS2ViewController)
         completion()
     }
-    
+
     func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams) {
         let pollingVC = PollingViewController(currentAction: action,
                                                       appearance: self.appearance)

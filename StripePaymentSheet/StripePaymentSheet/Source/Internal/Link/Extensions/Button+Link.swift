@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension Button.Configuration {
 
@@ -34,7 +34,7 @@ extension Button.Configuration {
         // Colors
         configuration.foregroundColor = .linkSecondaryButtonForeground
         configuration.backgroundColor = .linkSecondaryButtonBackground
-        configuration.disabledBackgroundColor = .linkSecondaryButtonBackground 
+        configuration.disabledBackgroundColor = .linkSecondaryButtonBackground
 
         return configuration
     }

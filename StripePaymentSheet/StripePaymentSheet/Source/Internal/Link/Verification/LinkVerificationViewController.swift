@@ -96,7 +96,7 @@ final class LinkVerificationViewController: UIViewController {
             verificationView.widthAnchor.constraint(equalTo: view.widthAnchor),
             // Activity indicator
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
         if mode.requiresModalPresentation {
@@ -170,7 +170,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
             view.sendingCode = false
 
             switch result {
-            case .success(_):
+            case .success:
                 let toast = LinkToast(
                     type: .success,
                     text: STPLocalizedString(

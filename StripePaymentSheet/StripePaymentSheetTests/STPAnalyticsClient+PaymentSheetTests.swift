@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import XCTest
-@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripeCore
+@_spi(STP) @testable import StripePaymentSheet
+import XCTest
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     func testPaymentSheetSDKVariantPayload() throws {

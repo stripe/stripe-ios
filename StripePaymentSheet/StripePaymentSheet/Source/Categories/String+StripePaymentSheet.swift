@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 extension String {
     var sha256: String? {
         guard let stringData = self.data(using: .utf8) else {

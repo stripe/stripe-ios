@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripePayments
+import UIKit
 
 extension OneTimeCodeTextField {
     final class TextStorage {
@@ -114,7 +114,7 @@ extension OneTimeCodeTextField {
         override var description: String {
             let props: [String] = [
                 String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
-                "index = \(String(describing: index))"
+                "index = \(String(describing: index))",
             ]
             return "<\(props.joined(separator: "; "))>"
         }
@@ -185,7 +185,7 @@ extension OneTimeCodeTextField {
             let props: [String] = [
                 String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
                 "start = \(String(describing: start))",
-                "end = \(String(describing: end))"
+                "end = \(String(describing: end))",
             ]
             return "<\(props.joined(separator: "; "))>"
         }

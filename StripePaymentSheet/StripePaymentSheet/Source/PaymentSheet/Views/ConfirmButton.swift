@@ -8,11 +8,11 @@
 
 import Foundation
 import PassKit
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
@@ -22,7 +22,7 @@ private let checkmarkStrokeDuration = 0.2
 @objc(STP_Internal_ConfirmButton)
 class ConfirmButton: UIView {
     let applePayButtonType: PKPaymentButtonType
-    
+
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -221,7 +221,7 @@ class ConfirmButton: UIView {
         private static let minimumButtonHeight: CGFloat = 44
         private var status: Status = .enabled
         private let appearance: PaymentSheet.Appearance
-        
+
         override var intrinsicContentSize: CGSize {
             let height = Self.minimumLabelHeight
                 + directionalLayoutMargins.top
@@ -294,7 +294,7 @@ class ConfirmButton: UIView {
                 foregroundColorDidChange()
             }
         }
-        
+
         var overriddenForegroundColor: UIColor?
 
         init(appearance: PaymentSheet.Appearance = .default) {
@@ -323,7 +323,7 @@ class ConfirmButton: UIView {
                 // Add icon
                 addIcon.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
                 addIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-                
+
                 // Label
                 titleLabelCenterXConstraint,
                 titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -338,7 +338,7 @@ class ConfirmButton: UIView {
                 spinnerCenteredToLockConstraint,
                 spinner.centerYAnchor.constraint(equalTo: lockIcon.centerYAnchor),
                 spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width),
-                spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height)
+                spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height),
             ])
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
             overriddenForegroundColor = appearance.primaryButton.textColor
@@ -399,20 +399,19 @@ class ConfirmButton: UIView {
                     return nil
                 }
             }()
-            
+
             // Show/hide lock and add icons
             switch callToAction {
-              case .add(let paymentMethodType):
+            case .add(let paymentMethodType):
                 lockIcon.isHidden = true
                 addIcon.isHidden = paymentMethodType != .linkInstantDebit
-              case .custom:
+            case .custom:
                 lockIcon.isHidden = true
                 addIcon.isHidden = true
             case .customWithLock:
                 lockIcon.isHidden = false
                 addIcon.isHidden = true
-              case .pay,
-                   .setup:
+            case .pay, .setup:
                 lockIcon.isHidden = false
                 addIcon.isHidden = true
             }
@@ -478,7 +477,6 @@ class ConfirmButton: UIView {
                     self.lockIcon.alpha = self.titleLabel.alpha
                     self.addIcon.alpha = self.titleLabel.alpha
                     self.spinner.alpha = 0
-                    break
                 case .processing:
                     self.lockIcon.alpha = 0
                     self.addIcon.alpha = 0
@@ -517,7 +515,7 @@ class ConfirmButton: UIView {
                 return succeededBackgroundColor
             }
         }
-        
+
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
@@ -525,7 +523,7 @@ class ConfirmButton: UIView {
                 // always use hardcoded color for foreground color when in success state
                 return .white
             }
-            
+
             // if foreground is set prefer that over a dynamic constrasting color in all othe states
             return overriddenForegroundColor ?? background.contrastingColor
         }

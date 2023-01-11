@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import SafariServices
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView)
@@ -25,13 +25,13 @@ final class LinkInlineSignupView: UIView {
     private var theme: ElementsUITheme {
         return viewModel.configuration.appearance.asElementsTheme
     }
-    
+
     private(set) lazy var checkboxElement = CheckboxElement(
         merchantName: viewModel.configuration.merchantDisplayName,
         appearance: viewModel.configuration.appearance
     )
 
-    private(set) lazy var emailElement : LinkEmailElement = {
+    private(set) lazy var emailElement: LinkEmailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
         element.indicatorTintColor = theme.colors.primary
         return element
@@ -60,7 +60,7 @@ final class LinkInlineSignupView: UIView {
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
-        
+
         return StaticElement(
             view: legalView
         )
@@ -104,9 +104,9 @@ final class LinkInlineSignupView: UIView {
             formElement.view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             formElement.view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             formElement.view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            formElement.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            formElement.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
-        
+
         updateAppearance()
     }
 
@@ -136,7 +136,7 @@ final class LinkInlineSignupView: UIView {
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked
     }
-    
+
     private func updateAppearance() {
         backgroundColor = viewModel.configuration.appearance.colors.background
         layer.cornerRadius = viewModel.configuration.appearance.cornerRadius
@@ -148,7 +148,7 @@ final class LinkInlineSignupView: UIView {
                 .colors.background.contrastingColor.withAlphaComponent(0.2).cgColor
         }
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateAppearance()

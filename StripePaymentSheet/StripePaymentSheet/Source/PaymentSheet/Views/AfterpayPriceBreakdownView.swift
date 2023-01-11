@@ -6,11 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 import Foundation
-import UIKit
 import SafariServices
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_AfterpayPriceBreakdownView)
@@ -44,7 +44,7 @@ class AfterpayPriceBreakdownView: UIView {
     }
 
     let locale: Locale
-    
+
     init(amount: Int, currency: String, locale: Locale = Locale.autoupdatingCurrent, theme: ElementsUITheme = .default) {
         self.locale = locale
         self.theme = theme
@@ -52,7 +52,7 @@ class AfterpayPriceBreakdownView: UIView {
         let numInstallments = Self.numberOfInstallments(currency: currency)
         let installmentAmount = amount / numInstallments
         let installmentAmountDisplayString = String.localizedAmountDisplayString(for: installmentAmount, currency: currency)
-        
+
         afterPayClearPayLabel.attributedText = generateAfterPayClearPayString(numInstallments: numInstallments,
                                                                               installmentAmountString: installmentAmountDisplayString)
         afterPayClearPayLabel.numberOfLines = 0
@@ -68,10 +68,10 @@ class AfterpayPriceBreakdownView: UIView {
             afterPayClearPayLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             afterPayClearPayLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
-        
+
         afterPayClearPayLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapInfoButton)))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -83,11 +83,11 @@ class AfterpayPriceBreakdownView: UIView {
     private func generateAfterPayClearPayString(numInstallments: Int, installmentAmountString: String) -> NSMutableAttributedString {
         let amountStringAttributes = [
             NSAttributedString.Key.font: theme.fonts.subheadlineBold,
-            .foregroundColor: theme.colors.bodyText
+            .foregroundColor: theme.colors.bodyText,
         ]
         let stringAttributes = [
             NSAttributedString.Key.font: theme.fonts.subheadline,
-            .foregroundColor: theme.colors.bodyText
+            .foregroundColor: theme.colors.bodyText,
         ]
         let template = STPLocalizedString("Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>",
                                           "Pay in templated string for afterpay/clearpay")
@@ -162,7 +162,7 @@ class AfterpayPriceBreakdownView: UIView {
             parentViewController?.present(safariController, animated: true)
         }
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         afterpayMarkImageView.tintColor = theme.colors.parentBackground.contrastingColor

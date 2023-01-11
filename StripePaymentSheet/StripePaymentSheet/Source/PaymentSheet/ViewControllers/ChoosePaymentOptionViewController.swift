@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
     func choosePaymentOptionViewControllerShouldClose(
@@ -98,7 +98,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     private lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
-    private lazy var confirmButton: ConfirmButton = {        
+    private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
             appearance: configuration.appearance,
@@ -130,7 +130,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
-        
+
         self.configuration = configuration
         self.delegate = delegate
 
@@ -199,7 +199,7 @@ class ChoosePaymentOptionViewController: UIViewController {
 
         updateUI()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
@@ -421,7 +421,7 @@ extension ChoosePaymentOptionViewController: BottomSheetContentViewController {
     }
 }
 
-//MARK: - SavedPaymentOptionsViewControllerDelegate
+// MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDelegate {
     func didUpdateSelection(
@@ -495,7 +495,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
     }
 }
 
-//MARK: - AddPaymentMethodViewControllerDelegate
+// MARK: - AddPaymentMethodViewControllerDelegate
 /// :nodoc:
 extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
@@ -532,7 +532,7 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
         // no-op: No current use case for this
     }
 }
-//MARK: - SheetNavigationBarDelegate
+// MARK: - SheetNavigationBarDelegate
 /// :nodoc:
 extension ChoosePaymentOptionViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {

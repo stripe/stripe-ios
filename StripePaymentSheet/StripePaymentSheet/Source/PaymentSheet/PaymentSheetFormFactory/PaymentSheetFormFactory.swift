@@ -6,12 +6,12 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-import SwiftUI
-@_spi(STP) import StripeUICore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import SwiftUI
+import UIKit
 
 /**
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
@@ -79,7 +79,7 @@ class PaymentSheetFormFactory {
         self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
         self.linkAccount = linkAccount
     }
-    
+
     func make() -> PaymentMethodElement {
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
@@ -103,7 +103,7 @@ class PaymentSheetFormFactory {
 
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
-    
+
     func makeName(label: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.makeName(label: label, defaultValue: configuration.defaultBillingDetails.name, theme: theme)
         return PaymentMethodElementWrapper(element) { textField, params in
@@ -160,10 +160,10 @@ extension PaymentSheetFormFactory {
     func makeSepaMandate() -> StaticElement {
         return StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme))
     }
-    
+
     func makeSaveCheckbox(
         label: String = String.Localized.save_for_future_payments,
-        didToggle: ((Bool) -> ())? = nil
+        didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
@@ -178,7 +178,7 @@ extension PaymentSheetFormFactory {
             return params
         }
     }
-    
+
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .all(),
         countries: [String]?
@@ -384,7 +384,6 @@ extension AddressSectionElement.AddressDetails.Address {
         )
     }
 }
-
 
 private extension PaymentSheet.Address {
     var addressSectionDefaults: AddressSectionElement.AddressDetails {

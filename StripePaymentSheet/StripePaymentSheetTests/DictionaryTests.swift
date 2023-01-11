@@ -11,7 +11,7 @@ import XCTest
 @_spi(STP) @testable import StripePaymentSheet
 
 class DictionaryTests: XCTestCase {
-    
+
     func testParseLUXEJSONPath() {
         XCTAssertEqual(Dictionary.stp_parseLUXEJSONPath(""), [])
         XCTAssertEqual(Dictionary.stp_parseLUXEJSONPath("next_action"), ["next_action"])
@@ -19,13 +19,13 @@ class DictionaryTests: XCTestCase {
     }
 
     func testForLUXEJSONPath() {
-        let input: [AnyHashable: Any] = [ "next_action" : ["display_details":
+        let input: [AnyHashable: Any] = [ "next_action": ["display_details":
                                                             [
-                                                                "hosted_voucher_url":"https://payments.stripe.com/pm/v/test",
-                                                                "expires_at": 123456
-                                                            ]
+                                                                "hosted_voucher_url": "https://payments.stripe.com/pm/v/test",
+                                                                "expires_at": 123456,
+                                                            ],
                                                           ],
-                                          "other_key": "value2"]
+                                          "other_key": "value2", ]
 
         XCTAssertEqual(input.stp_forLUXEJSONPath("other_key") as? String, "value2")
         XCTAssertEqual(input.stp_forLUXEJSONPath("next_action[display_details][hosted_voucher_url]") as? String, "https://payments.stripe.com/pm/v/test")

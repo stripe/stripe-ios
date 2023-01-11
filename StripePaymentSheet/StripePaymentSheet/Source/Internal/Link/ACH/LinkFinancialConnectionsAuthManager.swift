@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import AuthenticationServices
+import UIKit
 
 @_spi(STP) import StripeCore
 
@@ -70,7 +70,7 @@ extension LinkFinancialConnectionsAuthManager {
                 parameters: [
                     "client_secret": clientSecret,
                     "fullscreen": true,
-                    "hide_close_button": true
+                    "hide_close_button": true,
                 ],
                 ephemeralKeySecret: linkAccount.publishableKey
             ).observe { result in
