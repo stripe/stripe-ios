@@ -91,6 +91,9 @@ class PaymentSheetFormFactory {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
             return makeUPI()
+        } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
+            // special case, display mandate for Cash App when setting up or pi+sfu
+            return FormElement(autoSectioningElements: [makeCashAppMandate()], theme: theme)
         }
 
         // 2. Element-based forms defined in JSON
@@ -159,6 +162,10 @@ extension PaymentSheetFormFactory {
 
     func makeSepaMandate() -> StaticElement {
         return StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme))
+    }
+    
+    func makeCashAppMandate() -> StaticElement {
+        return StaticElement(view: CashAppMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme))
     }
     
     func makeSaveCheckbox(
