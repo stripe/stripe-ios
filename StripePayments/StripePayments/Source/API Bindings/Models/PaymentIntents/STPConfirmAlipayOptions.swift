@@ -45,8 +45,8 @@ extension STPConfirmAlipayOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:appBundleID)): "app_bundle_id",
-            NSStringFromSelector(#selector(getter:appVersionKey)): "app_version_key",
+            NSStringFromSelector(#selector(getter: appBundleID)): "app_bundle_id",
+            NSStringFromSelector(#selector(getter: appVersionKey)): "app_version_key",
         ]
     }
 

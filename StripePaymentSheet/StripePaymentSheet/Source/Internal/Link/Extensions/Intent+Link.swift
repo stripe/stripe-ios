@@ -25,7 +25,7 @@ extension Intent {
         switch self {
         case .paymentIntent(let paymentIntent):
             return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
-        case .setupIntent(_):
+        case .setupIntent:
             return .setup
         }
     }

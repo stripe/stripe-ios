@@ -29,7 +29,7 @@ final class MotionBlurDetector {
     let minTime: TimeInterval
 
     /// The document bounding box from the last camera frame
-    private var lastBoundingBox: CGRect? = nil
+    private var lastBoundingBox: CGRect?
 
     /// The number of consecutive camera frames the bounding box IOU has remained under the threshold
     private var numFramesUnderThreshold: Int = 0

@@ -85,18 +85,18 @@ extension STPConnectAccountCompanyParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:address)): "address",
-            NSStringFromSelector(#selector(getter:kanaAddress)): "address_kana",
-            NSStringFromSelector(#selector(getter:kanjiAddress)): "address_kanji",
-            NSStringFromSelector(#selector(getter:directorsProvided)): "directors_provided",
-            NSStringFromSelector(#selector(getter:name)): "name",
-            NSStringFromSelector(#selector(getter:kanaName)): "name_kana",
-            NSStringFromSelector(#selector(getter:kanjiName)): "name_kanji",
-            NSStringFromSelector(#selector(getter:ownersProvided)): "owners_provided",
-            NSStringFromSelector(#selector(getter:phone)): "phone",
-            NSStringFromSelector(#selector(getter:taxID)): "tax_id",
-            NSStringFromSelector(#selector(getter:taxIDRegistrar)): "tax_id_registrar",
-            NSStringFromSelector(#selector(getter:vatID)): "vat_id",
+            NSStringFromSelector(#selector(getter: address)): "address",
+            NSStringFromSelector(#selector(getter: kanaAddress)): "address_kana",
+            NSStringFromSelector(#selector(getter: kanjiAddress)): "address_kanji",
+            NSStringFromSelector(#selector(getter: directorsProvided)): "directors_provided",
+            NSStringFromSelector(#selector(getter: name)): "name",
+            NSStringFromSelector(#selector(getter: kanaName)): "name_kana",
+            NSStringFromSelector(#selector(getter: kanjiName)): "name_kanji",
+            NSStringFromSelector(#selector(getter: ownersProvided)): "owners_provided",
+            NSStringFromSelector(#selector(getter: phone)): "phone",
+            NSStringFromSelector(#selector(getter: taxID)): "tax_id",
+            NSStringFromSelector(#selector(getter: taxIDRegistrar)): "tax_id_registrar",
+            NSStringFromSelector(#selector(getter: vatID)): "vat_id",
         ]
     }
 

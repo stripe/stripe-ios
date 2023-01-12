@@ -48,8 +48,8 @@ extension STPConfirmWeChatPayOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:client)): "client",
-            NSStringFromSelector(#selector(getter:appId)): "app_id",
+            NSStringFromSelector(#selector(getter: client)): "client",
+            NSStringFromSelector(#selector(getter: appId)): "app_id",
         ]
     }
 

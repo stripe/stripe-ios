@@ -65,7 +65,7 @@ extension String {
     }
 
     /// Function to determine if this string is the country code of the United State
-    ///@param caseSensitive - Whether this string should only be considered the US country code if it matches the expected capitalization
+    /// @param caseSensitive - Whether this string should only be considered the US country code if it matches the expected capitalization
     @_spi(STP) public func isUSCountryCode(_ caseSensitive: Bool = false) -> Bool {
         return caseSensitive ? self == "US" : self.caseInsensitiveCompare("US") == .orderedSame
     }

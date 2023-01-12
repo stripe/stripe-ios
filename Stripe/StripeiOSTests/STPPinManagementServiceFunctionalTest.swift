@@ -11,8 +11,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
@@ -29,7 +29,7 @@ class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
                     [
                         "type": "issuing.card",
                         "id": "ic_token",
-                    ]
+                    ],
                 ],
                 "created": NSNumber(value: 1_556_656_558),
                 "expires": NSNumber(value: 1_556_660_158),

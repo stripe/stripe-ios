@@ -41,8 +41,8 @@ extension STPConfirmCardOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:cvc)): "cvc",
-            NSStringFromSelector(#selector(getter:network)): "network",
+            NSStringFromSelector(#selector(getter: cvc)): "cvc",
+            NSStringFromSelector(#selector(getter: network)): "network",
         ]
     }
 

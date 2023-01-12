@@ -6,12 +6,12 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import XCTest
 
 class Dictionary_StripeTest: XCTestCase {
     // MARK: - dictionaryByRemovingNullsValidatingRequiredFields
@@ -210,7 +210,7 @@ class Dictionary_StripeTest: XCTestCase {
             [
                 "a": [
                     "foo": "bar"
-                ]
+                ],
             ] as [AnyHashable: Any]
 
         XCTAssertEqual(

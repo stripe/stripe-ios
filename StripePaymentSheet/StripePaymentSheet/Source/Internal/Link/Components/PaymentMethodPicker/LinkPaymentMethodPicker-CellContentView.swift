@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkPaymentMethodPicker {
 
@@ -45,15 +45,15 @@ extension LinkPaymentMethodPicker {
                 }
             }
         }
-        
+
         private lazy var bankIconView: UIImageView = {
             let iconView = UIImageView()
             iconView.contentMode = .scaleAspectFit
             return iconView
         }()
-        
+
         private lazy var cardBrandView: CardBrandView = CardBrandView(centerHorizontally: true)
-        
+
         private let primaryLabel: UILabel = {
             let label = UILabel()
             label.adjustsFontForContentSizeCategory = true
@@ -61,45 +61,45 @@ extension LinkPaymentMethodPicker {
             label.textColor = .linkPrimaryText
             return label
         }()
-        
+
         private let secondaryLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .caption, maximumPointSize: Constants.maxFontSize)
             label.textColor = .linkSecondaryText
             return label
         }()
-                
+
         private lazy var iconContainerView: UIView = {
             let view = UIView()
             bankIconView.translatesAutoresizingMaskIntoConstraints = false
             cardBrandView.translatesAutoresizingMaskIntoConstraints = false
-            
+
             view.addSubview(bankIconView)
             view.addSubview(cardBrandView)
-            
+
             let cardBrandSize = cardBrandView.size(for: Constants.iconSize)
             NSLayoutConstraint.activate([
                 view.widthAnchor.constraint(equalToConstant: max(Constants.iconSize.width, cardBrandSize.width)),
                 view.heightAnchor.constraint(equalToConstant: max(Constants.iconSize.height, cardBrandSize.height)),
-                
+
                 bankIconView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
                 bankIconView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor),
                 bankIconView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor),
                 bankIconView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
                 bankIconView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 bankIconView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                
+
                 cardBrandView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
                 cardBrandView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor),
                 cardBrandView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor),
                 cardBrandView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
                 cardBrandView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 cardBrandView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                
+
                 cardBrandView.widthAnchor.constraint(equalToConstant: cardBrandSize.width),
                 cardBrandView.heightAnchor.constraint(equalToConstant: cardBrandSize.height),
             ])
-                        
+
             return view
         }()
 
@@ -111,7 +111,6 @@ extension LinkPaymentMethodPicker {
             labelStackView.axis = .vertical
             labelStackView.alignment = .leading
             labelStackView.spacing = 0
-            
 
             let stackView = UIStackView(arrangedSubviews: [
                 iconContainerView,

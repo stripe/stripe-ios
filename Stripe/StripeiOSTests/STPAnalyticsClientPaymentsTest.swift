@@ -11,8 +11,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 
 class STPAnalyticsClientPaymentsTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -111,7 +111,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     // MARK: - Tests various classes report usage
 
     func testCardTextFieldAddsUsage() {
-        let _ = STPPaymentCardTextField()
+        _ = STPPaymentCardTextField()
         XCTAssertTrue(
             STPAnalyticsClient.sharedClient.productUsage.contains("STPPaymentCardTextField")
         )
@@ -125,12 +125,12 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         )
         let apiClient = STPAPIClient()
         let customerContext = STPCustomerContext.init(keyManager: keyManager, apiClient: apiClient)
-        let _ = STPPaymentContext(customerContext: customerContext)
+        _ = STPPaymentContext(customerContext: customerContext)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
     }
 
     func testApplePayContextAddsUsage() {
-        let _ = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: nil)
+        _ = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: nil)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPApplePayContext"))
     }
 
@@ -141,19 +141,19 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
             performsEagerFetching: false
         )
         let apiClient = STPAPIClient()
-        let _ = STPCustomerContext(keyManager: keyManager, apiClient: apiClient)
+        _ = STPCustomerContext(keyManager: keyManager, apiClient: apiClient)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
     }
 
     func testAddCardVCAddsUsage() {
-        let _ = STPAddCardViewController()
+        _ = STPAddCardViewController()
         XCTAssertTrue(
             STPAnalyticsClient.sharedClient.productUsage.contains("STPAddCardViewController")
         )
     }
 
     func testBankSelectionVCAddsUsage() {
-        let _ = STPBankSelectionViewController()
+        _ = STPBankSelectionViewController()
         XCTAssertTrue(
             STPAnalyticsClient.sharedClient.productUsage.contains("STPBankSelectionViewController")
         )
@@ -162,7 +162,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     func testShippingVCAddsUsage() {
         let config = STPFixtures.paymentConfiguration()
         config.requiredShippingAddressFields = [STPContactField.postalAddress]
-        let _ = STPShippingAddressViewController(
+        _ = STPShippingAddressViewController(
             configuration: config,
             theme: .defaultTheme,
             currency: nil,
@@ -178,7 +178,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 }
 
-// MARK - Helpers
+// MARK: - Helpers
 
 extension STPAnalyticsClientPaymentsTest {
     fileprivate func buildTokenParams<T: STPFormEncodable & NSObject>(_ object: T) -> [String: Any]

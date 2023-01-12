@@ -87,13 +87,13 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
     func testPaymentSheetAddsUsage() {
         let client = STPAnalyticsClient.sharedClient
-        let _ = PaymentSheet(
+        _ = PaymentSheet(
             paymentIntentClientSecret: "",
             configuration: PaymentSheet.Configuration()
         )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
 
-        let _ = PaymentSheet.FlowController(
+        _ = PaymentSheet.FlowController(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
             savedPaymentMethods: [],
             isLinkEnabled: false,

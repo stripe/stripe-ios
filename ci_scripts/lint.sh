@@ -11,13 +11,17 @@ if ! command -v swiftlint &> /dev/null; then
 fi
 
 lint_dirs=(
+	"Stripe"
 	"StripeCore"
 	"StripeUICore"
 	"StripeFinancialConnections"
 	"StripeApplePay"
 	"StripeCameraCore"
 	"StripeCardScan"
+	"StripePayments"
 	"StripePaymentsUI"
+	"StripePaymentSheet"
+	"StripeIdentity"
 )
 
 exit_code=0

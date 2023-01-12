@@ -35,6 +35,8 @@ disabled_rules:
   - class_delegate_protocol
   - closure_parameter_position
   - reduce_boolean
+  - unused_setter_value
+  - notification_center_detachment
   - private_outlet
 
 opt_in_rules:
@@ -96,3 +98,6 @@ vertical_whitespace:
 
 trailing_comma:
   mandatory_comma: true
+
+generic_type_name:
+  max_length: 30          # Maybe remove after initial cleanup.

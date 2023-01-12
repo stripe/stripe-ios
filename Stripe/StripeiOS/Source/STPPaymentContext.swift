@@ -428,7 +428,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                             (strongSelf2.apiAdapter as? STPCustomerContext)?
                                 .retrieveLastSelectedPaymentMethodIDForCustomer(completion: {
                                     paymentMethodID,
-                                    `_` in
+                                    _ in
                                     guard let strongSelf3 = weakSelf else {
                                         return
                                     }

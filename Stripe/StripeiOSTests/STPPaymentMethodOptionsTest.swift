@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentMethodOptionsTest: XCTestCase {
@@ -27,7 +27,7 @@ class STPPaymentMethodOptionsTest: XCTestCase {
             "instant_or_skip",
         ]
         for verificationMethod in verificationMethods {
-            var clientSecret: String? = nil
+            var clientSecret: String?
             let createPIExpectation = expectation(description: "Create PaymentIntent")
             STPTestingAPIClient.shared().createPaymentIntent(
                 withParams: [
@@ -84,7 +84,7 @@ class STPPaymentMethodOptionsTest: XCTestCase {
             "instant_or_skip",
         ]
         for verificationMethod in verificationMethods {
-            var clientSecret: String? = nil
+            var clientSecret: String?
             let createPIExpectation = expectation(description: "Create SetupIntent")
             STPTestingAPIClient.shared().createSetupIntent(
                 withParams: [

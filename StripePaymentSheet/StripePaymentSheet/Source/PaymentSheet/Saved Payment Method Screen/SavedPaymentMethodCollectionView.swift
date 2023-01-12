@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 // MARK: - Constants
 /// Entire cell size
@@ -94,7 +94,7 @@ extension SavedPaymentMethodCollectionView {
             return button
         }()
 
-        fileprivate var viewModel: SavedPaymentOptionsViewController.Selection? = nil
+        fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
 
         var isRemovingPaymentMethods: Bool = false {
             didSet {
@@ -102,7 +102,7 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
-        weak var delegate: PaymentOptionCellDelegate? = nil
+        weak var delegate: PaymentOptionCellDelegate?
         var appearance = PaymentSheet.Appearance.default {
             didSet {
                 update()
@@ -198,15 +198,15 @@ extension SavedPaymentMethodCollectionView {
                 update()
             }
         }
-        
+
         override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
             let translatedPoint = deleteButton.convert(point, from: self)
-            
+
             // Ensures taps on the delete button are handled properly as it lives outside its cells' bounds
-            if (deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden) {
+            if deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden {
                 return deleteButton.hitTest(translatedPoint, with: event)
             }
-            
+
             return super.hitTest(point, with: event)
         }
 
@@ -374,7 +374,7 @@ extension SavedPaymentMethodCollectionView {
     // A circle with an image in the middle
     class CircleIconView: UIView {
         let imageView: UIImageView
-        
+
         override var backgroundColor: UIColor? {
             didSet {
                 imageView.tintColor = backgroundColor?.contrastingColor

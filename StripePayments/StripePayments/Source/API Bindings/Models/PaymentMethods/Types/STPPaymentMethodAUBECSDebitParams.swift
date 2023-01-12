@@ -24,8 +24,8 @@ public class STPPaymentMethodAUBECSDebitParams: NSObject, STPFormEncodable {
 
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:accountNumber)): "account_number",
-            NSStringFromSelector(#selector(getter:bsbNumber)): "bsb_number",
+            NSStringFromSelector(#selector(getter: accountNumber)): "account_number",
+            NSStringFromSelector(#selector(getter: bsbNumber)): "bsb_number",
         ]
     }
 }

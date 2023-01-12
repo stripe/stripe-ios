@@ -113,11 +113,11 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:accountNumber)): "account_number",
-            NSStringFromSelector(#selector(getter:routingNumber)): "routing_number",
-            NSStringFromSelector(#selector(getter:country)): "country",
-            NSStringFromSelector(#selector(getter:currency)): "currency",
-            NSStringFromSelector(#selector(getter:accountHolderName)): "account_holder_name",
+            NSStringFromSelector(#selector(getter: accountNumber)): "account_number",
+            NSStringFromSelector(#selector(getter: routingNumber)): "routing_number",
+            NSStringFromSelector(#selector(getter: country)): "country",
+            NSStringFromSelector(#selector(getter: currency)): "currency",
+            NSStringFromSelector(#selector(getter: accountHolderName)): "account_holder_name",
             NSStringFromSelector(#selector(accountHolderTypeString)): "account_holder_type",
         ]
     }

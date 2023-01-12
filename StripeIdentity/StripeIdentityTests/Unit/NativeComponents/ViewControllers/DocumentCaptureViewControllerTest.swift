@@ -649,7 +649,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
                     postProcess: 0.01
                 ),
                 mockNumFrames: 50
-            )
+            ),
         ]
 
         // Mock that vc is scanning

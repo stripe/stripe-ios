@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkVerificationViewController {
 
@@ -148,7 +148,7 @@ extension LinkVerificationViewController {
 
         override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
             super.willTransition(to: newCollection, with: coordinator)
-            
+
             coordinator.animate { context in
                 self.presentedView?.frame = self.calculateModalFrame(
                     forContainerSize: context.containerView.bounds.size

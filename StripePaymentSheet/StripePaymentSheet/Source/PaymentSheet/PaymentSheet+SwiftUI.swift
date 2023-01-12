@@ -301,11 +301,10 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
-
         class Coordinator {
             var parent: PaymentSheetFlowControllerPresenter
             let view = UIView()
-            
+
             var presented: Bool {
                 didSet {
                     switch (oldValue, presented) {
@@ -328,7 +327,7 @@ extension PaymentSheet {
                     }
                 }
             }
-            
+
             init(parent: PaymentSheetFlowControllerPresenter) {
                 self.parent = parent
                 self.presented = parent.presented

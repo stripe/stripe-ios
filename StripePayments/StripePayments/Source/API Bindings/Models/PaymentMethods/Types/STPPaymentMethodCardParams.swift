@@ -77,11 +77,11 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:number)): "number",
-            NSStringFromSelector(#selector(getter:expMonth)): "exp_month",
-            NSStringFromSelector(#selector(getter:expYear)): "exp_year",
-            NSStringFromSelector(#selector(getter:cvc)): "cvc",
-            NSStringFromSelector(#selector(getter:token)): "token",
+            NSStringFromSelector(#selector(getter: number)): "number",
+            NSStringFromSelector(#selector(getter: expMonth)): "exp_month",
+            NSStringFromSelector(#selector(getter: expYear)): "exp_year",
+            NSStringFromSelector(#selector(getter: cvc)): "cvc",
+            NSStringFromSelector(#selector(getter: token)): "token",
         ]
     }
 

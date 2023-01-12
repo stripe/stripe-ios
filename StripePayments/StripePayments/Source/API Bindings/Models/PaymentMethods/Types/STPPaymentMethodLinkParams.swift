@@ -28,8 +28,8 @@ public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:credentials)): "credentials",
-            NSStringFromSelector(#selector(getter:paymentDetailsID)): "payment_details_id",
+            NSStringFromSelector(#selector(getter: credentials)): "credentials",
+            NSStringFromSelector(#selector(getter: paymentDetailsID)): "payment_details_id",
         ]
     }
 }

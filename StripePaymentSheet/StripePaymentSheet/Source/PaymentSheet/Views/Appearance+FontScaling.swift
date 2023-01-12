@@ -9,7 +9,7 @@
 import UIKit
 
 extension PaymentSheet.Appearance {
-    
+
     /// Computes a font scaled to be used in PaymentSheet
     /// - Parameters:
     ///   - font: The font to be scaled
@@ -20,7 +20,7 @@ extension PaymentSheet.Appearance {
         let defaultTraitCollection = UITraitCollection(preferredContentSizeCategory: .large) // large is the default content size category
         let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: defaultTraitCollection)
         let customFont = font.withSize(fontDescriptor.pointSize * self.font.sizeScaleFactor)
-        
+
         // scale the custom font for dynamic type
         return UIFontMetrics.default.scaledFont(for: customFont, maximumPointSize: maximumPointSize)
     }

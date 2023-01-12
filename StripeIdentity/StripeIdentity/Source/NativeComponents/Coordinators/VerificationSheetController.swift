@@ -245,7 +245,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 self.checkSubmitAndTransition(updateDataResult: result) {
                     onCompletion(false)
                 }
-            case .failure(_):
+            case .failure:
                 self.transitionWithVerificaionPageDataResult(result)
             }
         }
