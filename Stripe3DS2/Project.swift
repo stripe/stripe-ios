@@ -12,7 +12,7 @@ let project = Project(
         .remote(
             url: "https://github.com/uber/ios-snapshot-test-case",
             requirement: .upToNextMajor(from: "8.0.0")
-        )
+        ),
     ],
     settings: .settings(
         configurations: [

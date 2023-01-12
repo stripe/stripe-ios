@@ -33,7 +33,9 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
     }
 
     func createPaymentIntent(
-        products: [Product], shippingMethod: PKShippingMethod?, country: String? = nil,
+        products: [Product],
+        shippingMethod: PKShippingMethod?,
+        country: String? = nil,
         completion: @escaping ((Result<String, Error>) -> Void)
     ) {
         let url = self.baseURL.appendingPathComponent("create_payment_intent")
@@ -41,7 +43,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             "metadata": [
                 // example-mobile-backend allows passing metadata through to Stripe
                 "payment_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB"
-            ]
+            ],
         ]
         params["products"] = products.map({ (p) -> String in
             return p.emoji

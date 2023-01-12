@@ -69,7 +69,6 @@ class ExampleListViewController: UITableViewController {
         navigationController?.pushViewController(viewController, animated: true)
     }
 
-
 }
 
 // MARK: - Constants
@@ -79,7 +78,6 @@ extension ExampleListViewController {
         static let cellIdentifier = "cellIdentifier"
     }
 }
-
 
 // MARK: - Version Info
 

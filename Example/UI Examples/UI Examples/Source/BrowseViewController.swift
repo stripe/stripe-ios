@@ -7,8 +7,8 @@
 //
 
 import PassKit
-import UIKit
 import SwiftUI
+import UIKit
 
 @testable import Stripe
 
@@ -24,7 +24,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                 return 10
             }
         }
-        
+
         case STPPaymentCardTextField
         case STPAddCardViewController
         case STPAddCardViewControllerWithAddress
@@ -217,7 +217,8 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     func addCardViewController(
         _ addCardViewController: STPAddCardViewController,
-        didCreatePaymentMethod paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        completion: @escaping STPErrorBlock
     ) {
         dismiss(animated: true, completion: nil)
     }
@@ -253,14 +254,16 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     func shippingAddressViewController(
         _ addressViewController: STPShippingAddressViewController,
-        didFinishWith address: STPAddress, shippingMethod method: PKShippingMethod?
+        didFinishWith address: STPAddress,
+        shippingMethod method: PKShippingMethod?
     ) {
         self.customerContext.updateCustomer(withShippingAddress: address, completion: nil)
         dismiss(animated: true, completion: nil)
     }
 
     func shippingAddressViewController(
-        _ addressViewController: STPShippingAddressViewController, didEnter address: STPAddress,
+        _ addressViewController: STPShippingAddressViewController,
+        didEnter address: STPAddress,
         completion: @escaping STPShippingMethodsCompletionBlock
     ) {
         let upsGround = PKShippingMethod()

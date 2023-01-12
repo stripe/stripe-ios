@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class BoletoExampleViewController: UIViewController {
 
@@ -111,7 +111,7 @@ class BoletoExampleViewController: UIViewController {
         ("Address", addressField),
         ("City", cityField),
         ("State", stateField),
-        ("Postal code", postalCodeField)
+        ("Postal code", postalCodeField),
     ]
 
     private let scrollView: UIScrollView = {
@@ -182,7 +182,7 @@ class BoletoExampleViewController: UIViewController {
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
         ])
 
         for (title, field) in allFields {
@@ -200,7 +200,7 @@ class BoletoExampleViewController: UIViewController {
 
             NSLayoutConstraint.activate([
                 fieldContainer.leadingAnchor.constraint(equalTo: stackView.layoutMarginsGuide.leadingAnchor),
-                fieldContainer.trailingAnchor.constraint(equalTo: stackView.layoutMarginsGuide.trailingAnchor)
+                fieldContainer.trailingAnchor.constraint(equalTo: stackView.layoutMarginsGuide.trailingAnchor),
             ])
         }
 

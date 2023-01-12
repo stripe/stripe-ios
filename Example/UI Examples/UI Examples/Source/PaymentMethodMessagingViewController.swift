@@ -46,14 +46,14 @@ class PaymentMethodMessagingViewController: UIViewController {
     @objc func done() {
         dismiss(animated: true, completion: nil)
     }
-    
+
     private func addPaymentMethodMessagingView(_ paymentMethodMessagingView: PaymentMethodMessagingView) {
         view.addSubview(paymentMethodMessagingView)
         paymentMethodMessagingView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             paymentMethodMessagingView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15),
             paymentMethodMessagingView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15),
-            paymentMethodMessagingView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+            paymentMethodMessagingView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
         ])
     }
 }

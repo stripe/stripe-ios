@@ -355,7 +355,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: "./ci_scripts/lint.sh"
+        - content: "./ci_scripts/lint_modified_files.sh"
         title: Run swiftlint
     - fastlane@3:
         inputs:

@@ -55,7 +55,6 @@ opt_in_rules:
   - prohibited_super_call
   - redundant_nil_coalescing
   - return_arrow_whitespace
-  - single_test_class
   - sorted_imports
   - statement_position
   - trailing_newline
@@ -67,6 +66,7 @@ opt_in_rules:
   # - discouraged_object_literal
   # - unowned_variable_capture
   # - indentation_width
+  # - single_test_class
 
 excluded:
   - Package.swift

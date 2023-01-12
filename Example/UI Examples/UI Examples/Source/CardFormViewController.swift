@@ -24,7 +24,7 @@ class CardFormViewController: UIViewController {
         let cardForm = STPCardFormView()
         cardForm.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(cardForm)
-                
+
         NSLayoutConstraint.activate([
             cardForm.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 4),
             view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: cardForm.trailingAnchor, multiplier: 4),
@@ -34,11 +34,11 @@ class CardFormViewController: UIViewController {
             view.safeAreaLayoutGuide.bottomAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: cardForm.bottomAnchor, multiplier: 1),
             cardForm.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
-        
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .done, target: self, action: #selector(done))
     }
-    
+
     @objc func done() {
         dismiss(animated: true, completion: nil)
     }

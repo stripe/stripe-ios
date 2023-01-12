@@ -5,17 +5,17 @@
 //  Created by David Estes on 1/7/22.
 //
 
-import SwiftUI
 import StripeApplePay
+import SwiftUI
 
 struct ContentView: View {
     @StateObject var model = MyApplePayBackendModel()
     @State var ready = false
-    
+
     var body: some View {
         if ready {
             VStack {
-                PaymentButton() {
+                PaymentButton {
                   model.pay()
                 }
                 .padding()
