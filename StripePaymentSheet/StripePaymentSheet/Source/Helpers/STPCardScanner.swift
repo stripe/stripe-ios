@@ -8,11 +8,11 @@
 
 import AVFoundation
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 import UIKit
 import Vision
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripePayments
 
 enum STPCardScannerError: Int {
     /// Camera not available.
@@ -22,7 +22,9 @@ enum STPCardScannerError: Int {
 @available(iOS 13, macCatalyst 14, *)
 @objc protocol STPCardScannerDelegate: NSObjectProtocol {
     @objc(cardScanner:didFinishWithCardParams:error:) func cardScanner(
-        _ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?,
+        _ scanner: STPCardScanner,
+        didFinishWith cardParams:
+        STPPaymentMethodCardParams?,
         error: Error?)
 }
 
@@ -223,7 +225,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
         // This is the recommended pixel buffer format for Vision:
         videoDataOutput?.videoSettings = [
             kCVPixelBufferPixelFormatTypeKey as String:
-                kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+                kCVPixelFormatType_420YpCbCr8BiPlanarFullRange,
         ]
 
         if let videoDataOutput = videoDataOutput {
@@ -249,7 +251,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
 
     // MARK: Processing
     func captureOutput(
-        _ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
+        _ output: AVCaptureOutput,
+        didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
         if !isScanning {

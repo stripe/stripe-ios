@@ -23,7 +23,7 @@ class FormSpecProvider {
     private lazy var formSpecsUpdateQueue: DispatchQueue = {
         DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
     }()
-    
+
     /// Loads the JSON form spec from disk into memory
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
@@ -32,7 +32,7 @@ class FormSpecProvider {
             do {
                 let data = try Data(contentsOf: formSpecsURL)
                 let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
-                self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map{ ($0.type, $0) })
+                self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
                 completion?(true)
             } catch {
                 completion?(false)
@@ -67,7 +67,7 @@ class FormSpecProvider {
         }
         return true
     }
-    
+
     func formSpec(for paymentMethodType: String) -> FormSpec? {
         assert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
         return formSpecs[paymentMethodType]

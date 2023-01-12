@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LoadingViewControllerDelegate: AnyObject {
     func shouldDismiss(_ loadingViewController: LoadingViewController)
@@ -24,7 +24,7 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         navigationBar.delegate = self
         return navigationBar
     }()
-    
+
     let appearance: PaymentSheet.Appearance
     let isTestMode: Bool
 
@@ -53,7 +53,7 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         activityIndicator.color = appearance.colors.background.contrastingColor
         [activityIndicator].forEach {
             view.addSubview($0)

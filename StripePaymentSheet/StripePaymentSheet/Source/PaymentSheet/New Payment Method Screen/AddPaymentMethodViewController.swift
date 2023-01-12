@@ -7,16 +7,15 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool
     func updateErrorLabel(for: Error?)
 }
-
 
 enum OverrideableBuyButtonBehavior {
     case LinkUSBankAccount
@@ -185,7 +184,7 @@ class AddPaymentMethodViewController: UIViewController {
     deinit {
         LinkAccountContext.shared.removeObserver(self)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if configuration.defaultBillingDetails == .init(),
@@ -204,7 +203,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     // MARK: - Internal
-    
+
     /// Returns true iff we could map the error to one of the displayed fields
     func setErrorIfNecessary(for error: Error?) -> Bool {
         // TODO
@@ -275,7 +274,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
-        switch(behavior) {
+        switch behavior {
         case .LinkUSBankAccount:
             handleCollectBankAccount(from: viewController)
         }
@@ -297,8 +296,8 @@ class AddPaymentMethodViewController: UIViewController {
                                            "Error message when an error case happens when linking your account")
         let genericError = PaymentSheetError.unknown(debugDescription: errorText)
 
-        let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, linkAccountSession, error in
-            if let _ = error {
+        let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, _, error in
+            if error != nil {
                 self.delegate?.updateErrorLabel(for: genericError)
                 return
             }
@@ -307,7 +306,7 @@ class AddPaymentMethodViewController: UIViewController {
                 return
             }
 
-            switch(financialConnectionsResult) {
+            switch financialConnectionsResult {
             case .cancelled:
                 break
             case .completed(let linkedBank):
@@ -316,7 +315,7 @@ class AddPaymentMethodViewController: UIViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
-        switch(intent) {
+        switch intent {
         case .paymentIntent:
             client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
                                                 returnURL: configuration.returnURL,
@@ -348,7 +347,7 @@ extension AddPaymentMethodViewController: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.didUpdate(self)
     }
-    
+
     func didUpdate(element: Element) {
         delegate?.didUpdate(self)
         animateHeightChange()

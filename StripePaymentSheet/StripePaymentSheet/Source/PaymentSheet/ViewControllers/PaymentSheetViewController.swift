@@ -8,14 +8,15 @@
 
 import Foundation
 import PassKit
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
-        _ paymentSheetViewController: PaymentSheetViewController, with paymentOption: PaymentOption,
+        _ paymentSheetViewController: PaymentSheetViewController,
+        with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult) -> Void)
     func paymentSheetViewControllerDidFinish(
         _ paymentSheetViewController: PaymentSheetViewController, result: PaymentSheetResult)
@@ -138,7 +139,7 @@ class PaymentSheetViewController: UIViewController {
             if let customCtaLabel = configuration.primaryButtonLabel {
                 return .customWithLock(title: customCtaLabel)
             }
-            
+
             switch intent {
             case .paymentIntent(let paymentIntent):
                 return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
@@ -186,7 +187,7 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
-        
+
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 
@@ -243,7 +244,7 @@ class PaymentSheetViewController: UIViewController {
             currency: intent.currency
         )
     }
-    
+
     func set(error: Error?) {
         self.error = error
         self.errorLabel.text = error?.nonGenericDescription

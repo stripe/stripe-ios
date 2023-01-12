@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeApplePay
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -207,7 +207,7 @@ extension PaymentSheet {
                     switch result {
                     case .success(let paymentDetails):
                         confirmWithPaymentDetails(linkAccount, paymentDetails)
-                    case .failure(_):
+                    case .failure:
                         assertionFailure("Failed to create payment details")
                         // Attempt to confirm directly with params
                         confirmWithPaymentMethodParams(paymentMethodParams)
@@ -222,7 +222,7 @@ extension PaymentSheet {
             case .signUp(let linkAccount, let phoneNumber, let legalName, let paymentMethodParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: .checkbox) { result in
                     switch result {
-                    case .success():
+                    case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
                     case .failure(let error as NSError):
@@ -261,7 +261,7 @@ extension PaymentSheet {
         let intentPromise = Promise<Intent>()
         let paymentMethodsPromise = Promise<[STPPaymentMethod]>()
         let loadSpecsPromise = Promise<Void>()
-        
+
         intentPromise.observe { result in
             switch result {
             case .success(let intent):
@@ -283,7 +283,7 @@ extension PaymentSheet {
                             if case .paymentIntent(let paymentIntent) = intent {
                                if let payment_method_specs = paymentIntent.allResponseFields["payment_method_specs"] {
                                    // Over-write the form specs that were already loaded from disk
-                                   let _ = FormSpecProvider.shared.loadFrom(payment_method_specs)
+                                   _ = FormSpecProvider.shared.loadFrom(payment_method_specs)
                                }
                             }
                             linkAccountPromise.observe { linkAccountResult in
@@ -296,7 +296,7 @@ extension PaymentSheet {
                                         savedPaymentMethods: savedPaymentMethods,
                                         isLinkEnabled: intent.supportsLink
                                     ))
-                                case .failure(_):
+                                case .failure:
                                     LinkAccountContext.shared.account = nil
 
                                     // Move forward without Link
@@ -331,7 +331,7 @@ extension PaymentSheet {
             }
             let additionalParameters = [
                 "merchant_support_async": configuration.allowsDelayedPaymentMethods,
-                "merchant_support_shipping": configuration.allowsPaymentMethodsRequiringShippingAddress
+                "merchant_support_shipping": configuration.allowsPaymentMethodsRequiringShippingAddress,
             ]
             configuration.apiClient.retrievePaymentIntentWithPreferences(
                 withClientSecret: clientSecret,
@@ -339,7 +339,7 @@ extension PaymentSheet {
                 switch result {
                 case .success(let paymentIntent):
                     paymentIntentHandlerCompletionBlock(paymentIntent)
-                case .failure(_):
+                case .failure:
                     // Fallback to regular retrieve PI when retrieve PI with preferences fails
                     configuration.apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
                         paymentIntent, error in
@@ -371,7 +371,7 @@ extension PaymentSheet {
                 switch result {
                 case .success(let setupIntent):
                     setupIntentHandlerCompletionBlock(setupIntent)
-                case .failure(_):
+                case .failure:
                     // Fallback to regular retrieve SI when retrieve SI with preferences fails
                     configuration.apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
                         guard let setupIntent = setupIntent, error == nil else {
@@ -409,12 +409,12 @@ extension PaymentSheet {
         } else {
             paymentMethodsPromise.resolve(with: [])
         }
-        
+
         // Load configuration
         AddressSpecProvider.shared.loadAddressSpecs {
             // Load form specs
             FormSpecProvider.shared.load { _ in
-                //Load BSB data
+                // Load BSB data
                 BSBNumberProvider.shared.loadBSBData {
                     loadSpecsPromise.resolve(with: ())
                 }
@@ -468,19 +468,19 @@ extension PaymentSheet {
 
         return promise
     }
-    
+
     // MARK: - Helper methods
-    
+
     private static func warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: [STPPaymentMethodType]) {
         guard !unactivatedPaymentMethodTypes.isEmpty else { return }
-        
+
         let message = """
-            [Stripe SDK] Warning: Your Intent contains the following payment method types which are activated for test mode but not activated for live mode: \(unactivatedPaymentMethodTypes.map({$0.displayName}).joined(separator: ",")). These payment method types will not be displayed in live mode until they are activated. To activate these payment method types visit your Stripe dashboard.
+            [Stripe SDK] Warning: Your Intent contains the following payment method types which are activated for test mode but not activated for live mode: \(unactivatedPaymentMethodTypes.map({ $0.displayName }).joined(separator: ",")). These payment method types will not be displayed in live mode until they are activated. To activate these payment method types visit your Stripe dashboard.
             More information: https://support.stripe.com/questions/activate-a-new-payment-method
             """
         print(message)
     }
-    
+
     static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentSheet.Configuration) -> STPPaymentIntentShippingDetailsParams? {
        let params = STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration)
         // If a merchant attaches shipping to the PI on their server, the /confirm endpoint will error if we update shipping with a “requires secret key” error message.
@@ -508,6 +508,6 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
 
     let lhsConverted = STPPaymentIntentShippingDetailsParams(address: addressParams, name: lhs.name ?? "")
     lhsConverted.phone = lhs.phone
-    
+
     return rhs == lhsConverted
 }

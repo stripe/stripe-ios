@@ -18,6 +18,7 @@ lint_dirs=(
 	"StripeCameraCore"
 	"StripeCardScan"
 	"StripePayments"
+	"StripePaymentSheet"
 )
 
 exit_code=0
