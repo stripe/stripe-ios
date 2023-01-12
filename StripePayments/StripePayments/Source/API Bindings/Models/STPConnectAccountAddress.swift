@@ -65,13 +65,13 @@ extension STPConnectAccountAddress: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:line1)): "line1",
-            NSStringFromSelector(#selector(getter:line2)): "line2",
-            NSStringFromSelector(#selector(getter:town)): "town",
-            NSStringFromSelector(#selector(getter:city)): "city",
-            NSStringFromSelector(#selector(getter:country)): "country",
-            NSStringFromSelector(#selector(getter:state)): "state",
-            NSStringFromSelector(#selector(getter:postalCode)): "postal_code",
+            NSStringFromSelector(#selector(getter: line1)): "line1",
+            NSStringFromSelector(#selector(getter: line2)): "line2",
+            NSStringFromSelector(#selector(getter: town)): "town",
+            NSStringFromSelector(#selector(getter: city)): "city",
+            NSStringFromSelector(#selector(getter: country)): "country",
+            NSStringFromSelector(#selector(getter: state)): "state",
+            NSStringFromSelector(#selector(getter: postalCode)): "postal_code",
         ]
     }
 

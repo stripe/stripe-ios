@@ -29,7 +29,7 @@ extension STPMandateDataParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:customerAcceptance)): "customer_acceptance"
+            NSStringFromSelector(#selector(getter: customerAcceptance)): "customer_acceptance"
         ]
     }
 

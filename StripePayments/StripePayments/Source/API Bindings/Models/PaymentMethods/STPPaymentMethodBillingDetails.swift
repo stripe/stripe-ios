@@ -47,10 +47,10 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:address)): "address",
-            NSStringFromSelector(#selector(getter:email)): "email",
-            NSStringFromSelector(#selector(getter:name)): "name",
-            NSStringFromSelector(#selector(getter:phone)): "phone",
+            NSStringFromSelector(#selector(getter: address)): "address",
+            NSStringFromSelector(#selector(getter: email)): "email",
+            NSStringFromSelector(#selector(getter: name)): "name",
+            NSStringFromSelector(#selector(getter: phone)): "phone",
         ]
     }
 

@@ -23,7 +23,7 @@ public class STPPaymentMethodSofortParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:country)): "country"
+            NSStringFromSelector(#selector(getter: country)): "country"
         ]
     }
 }

@@ -58,8 +58,8 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:typeString)): "type",
-            NSStringFromSelector(#selector(getter:onlineParams)): "online",
+            NSStringFromSelector(#selector(getter: typeString)): "type",
+            NSStringFromSelector(#selector(getter: onlineParams)): "online",
         ]
     }
 

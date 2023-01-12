@@ -127,9 +127,6 @@ public class STPPaymentIntentParams: NSObject {
     /// Details about the Mandate to create.
     /// @note If this value is null and the (self.paymentMethod.type == STPPaymentMethodTypeSEPADebit | | self.paymentMethodParams.type == STPPaymentMethodTypeAUBECSDebit || self.paymentMethodParams.type == STPPaymentMethodTypeBacsDebit) && self.mandate == nil`, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context.
     @objc public var mandateData: STPMandateDataParams? {
-        set {
-            _mandateData = newValue
-        }
         get {
             if let _mandateData = _mandateData {
                 return _mandateData
@@ -150,6 +147,9 @@ public class STPPaymentIntentParams: NSObject {
             default: break
             }
             return nil
+        }
+        set {
+            _mandateData = newValue
         }
     }
 
@@ -252,19 +252,19 @@ extension STPPaymentIntentParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:clientSecret)): "client_secret",
-            NSStringFromSelector(#selector(getter:paymentMethodParams)): "payment_method_data",
-            NSStringFromSelector(#selector(getter:paymentMethodId)): "payment_method",
-            NSStringFromSelector(#selector(getter:setupFutureUsageRawString)): "setup_future_usage",
-            NSStringFromSelector(#selector(getter:sourceParams)): "source_data",
-            NSStringFromSelector(#selector(getter:sourceId)): "source",
-            NSStringFromSelector(#selector(getter:receiptEmail)): "receipt_email",
-            NSStringFromSelector(#selector(getter:savePaymentMethod)): "save_payment_method",
-            NSStringFromSelector(#selector(getter:returnURL)): "return_url",
-            NSStringFromSelector(#selector(getter:useStripeSDK)): "use_stripe_sdk",
-            NSStringFromSelector(#selector(getter:mandateData)): "mandate_data",
-            NSStringFromSelector(#selector(getter:paymentMethodOptions)): "payment_method_options",
-            NSStringFromSelector(#selector(getter:shipping)): "shipping",
+            NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
+            NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
+            NSStringFromSelector(#selector(getter: paymentMethodId)): "payment_method",
+            NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage",
+            NSStringFromSelector(#selector(getter: sourceParams)): "source_data",
+            NSStringFromSelector(#selector(getter: sourceId)): "source",
+            NSStringFromSelector(#selector(getter: receiptEmail)): "receipt_email",
+            NSStringFromSelector(#selector(getter: savePaymentMethod)): "save_payment_method",
+            NSStringFromSelector(#selector(getter: returnURL)): "return_url",
+            NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
+            NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
+            NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
+            NSStringFromSelector(#selector(getter: shipping)): "shipping",
         ]
     }
 }

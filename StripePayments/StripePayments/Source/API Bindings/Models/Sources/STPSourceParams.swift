@@ -107,7 +107,7 @@ extension STPSourceParams {
             params.additionalAPIParameters = [
                 "bancontact": [
                     "statement_descriptor": statementDescriptor
-                ]
+                ],
             ]
         }
         return params
@@ -188,7 +188,7 @@ extension STPSourceParams {
             params.additionalAPIParameters = [
                 "giropay": [
                     "statement_descriptor": statementDescriptor
-                ]
+                ],
             ]
         }
         return params
@@ -288,7 +288,7 @@ extension STPSourceParams {
         params.additionalAPIParameters = [
             "sepa_debit": [
                 "iban": iban
-            ]
+            ],
         ]
         return params
     }
@@ -610,7 +610,7 @@ extension STPSourceParams {
         params.additionalAPIParameters = [
             "three_d_secure": [
                 "card": card
-            ]
+            ],
         ]
         params.redirect = [
             "return_url": returnURL
@@ -647,7 +647,7 @@ extension STPSourceParams {
                 "alipay": [
                     "app_bundle_id": bundleID ?? "",
                     "app_version_key": versionKey ?? "",
-                ]
+                ],
             ]
         }
         return params
@@ -726,8 +726,8 @@ extension STPSourceParams {
             "card": [
                 "visa_checkout": [
                     "callid": callId
-                ]
-            ]
+                ],
+            ],
         ]
         return params
     }
@@ -752,8 +752,8 @@ extension STPSourceParams {
                 "masterpass": [
                     "cart_id": cartId,
                     "transaction_id": transactionId,
-                ]
-            ]
+                ],
+            ],
         ]
         return params
     }
@@ -944,15 +944,15 @@ extension STPSourceParams {
 
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:rawTypeString)): "type",
-            NSStringFromSelector(#selector(getter:amount)): "amount",
-            NSStringFromSelector(#selector(getter:currency)): "currency",
+            NSStringFromSelector(#selector(getter: rawTypeString)): "type",
+            NSStringFromSelector(#selector(getter: amount)): "amount",
+            NSStringFromSelector(#selector(getter: currency)): "currency",
             NSStringFromSelector(#selector(flowString)): "flow",
-            NSStringFromSelector(#selector(getter:metadata)): "metadata",
-            NSStringFromSelector(#selector(getter:owner)): "owner",
+            NSStringFromSelector(#selector(getter: metadata)): "metadata",
+            NSStringFromSelector(#selector(getter: owner)): "owner",
             NSStringFromSelector(#selector(redirectDictionaryWithMerchantNameIfNecessary)):
                 "redirect",
-            NSStringFromSelector(#selector(getter:token)): "token",
+            NSStringFromSelector(#selector(getter: token)): "token",
             NSStringFromSelector(#selector(usageString)): "usage",
         ]
     }

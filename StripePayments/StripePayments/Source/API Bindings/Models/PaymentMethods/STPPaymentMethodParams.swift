@@ -626,31 +626,31 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:rawTypeString)): "type",
-            NSStringFromSelector(#selector(getter:billingDetails)): "billing_details",
-            NSStringFromSelector(#selector(getter:card)): "card",
-            NSStringFromSelector(#selector(getter:iDEAL)): "ideal",
-            NSStringFromSelector(#selector(getter:eps)): "eps",
-            NSStringFromSelector(#selector(getter:fpx)): "fpx",
-            NSStringFromSelector(#selector(getter:sepaDebit)): "sepa_debit",
-            NSStringFromSelector(#selector(getter:bacsDebit)): "bacs_debit",
-            NSStringFromSelector(#selector(getter:auBECSDebit)): "au_becs_debit",
-            NSStringFromSelector(#selector(getter:giropay)): "giropay",
-            NSStringFromSelector(#selector(getter:grabPay)): "grabpay",
-            NSStringFromSelector(#selector(getter:przelewy24)): "p24",
-            NSStringFromSelector(#selector(getter:bancontact)): "bancontact",
-            NSStringFromSelector(#selector(getter:netBanking)): "netbanking",
-            NSStringFromSelector(#selector(getter:oxxo)): "oxxo",
-            NSStringFromSelector(#selector(getter:sofort)): "sofort",
-            NSStringFromSelector(#selector(getter:upi)): "upi",
-            NSStringFromSelector(#selector(getter:afterpayClearpay)): "afterpayClearpay",
-            NSStringFromSelector(#selector(getter:weChatPay)): "wechat_pay",
-            NSStringFromSelector(#selector(getter:boleto)): "boleto",
-            NSStringFromSelector(#selector(getter:klarna)): "klarna",
-            NSStringFromSelector(#selector(getter:affirm)): "affirm",
-            NSStringFromSelector(#selector(getter:usBankAccount)): "us_bank_account",
-            NSStringFromSelector(#selector(getter:link)): "link",
-            NSStringFromSelector(#selector(getter:metadata)): "metadata",
+            NSStringFromSelector(#selector(getter: rawTypeString)): "type",
+            NSStringFromSelector(#selector(getter: billingDetails)): "billing_details",
+            NSStringFromSelector(#selector(getter: card)): "card",
+            NSStringFromSelector(#selector(getter: iDEAL)): "ideal",
+            NSStringFromSelector(#selector(getter: eps)): "eps",
+            NSStringFromSelector(#selector(getter: fpx)): "fpx",
+            NSStringFromSelector(#selector(getter: sepaDebit)): "sepa_debit",
+            NSStringFromSelector(#selector(getter: bacsDebit)): "bacs_debit",
+            NSStringFromSelector(#selector(getter: auBECSDebit)): "au_becs_debit",
+            NSStringFromSelector(#selector(getter: giropay)): "giropay",
+            NSStringFromSelector(#selector(getter: grabPay)): "grabpay",
+            NSStringFromSelector(#selector(getter: przelewy24)): "p24",
+            NSStringFromSelector(#selector(getter: bancontact)): "bancontact",
+            NSStringFromSelector(#selector(getter: netBanking)): "netbanking",
+            NSStringFromSelector(#selector(getter: oxxo)): "oxxo",
+            NSStringFromSelector(#selector(getter: sofort)): "sofort",
+            NSStringFromSelector(#selector(getter: upi)): "upi",
+            NSStringFromSelector(#selector(getter: afterpayClearpay)): "afterpayClearpay",
+            NSStringFromSelector(#selector(getter: weChatPay)): "wechat_pay",
+            NSStringFromSelector(#selector(getter: boleto)): "boleto",
+            NSStringFromSelector(#selector(getter: klarna)): "klarna",
+            NSStringFromSelector(#selector(getter: affirm)): "affirm",
+            NSStringFromSelector(#selector(getter: usBankAccount)): "us_bank_account",
+            NSStringFromSelector(#selector(getter: link)): "link",
+            NSStringFromSelector(#selector(getter: metadata)): "metadata",
         ]
     }
 }
@@ -1116,7 +1116,7 @@ extension STPPaymentMethodParams {
     @objc public var label: String {
         switch type {
         case .alipay:
-            return "Alipay"  //? Why aren't these localized?
+            return "Alipay"  // ? Why aren't these localized?
         case .card:
             if let card = card {
                 let brand = STPCardValidator.brand(forNumber: card.number ?? "")

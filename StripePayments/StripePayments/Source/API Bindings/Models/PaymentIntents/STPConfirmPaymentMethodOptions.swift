@@ -51,11 +51,11 @@ extension STPConfirmPaymentMethodOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:alipayOptions)): "alipay",
-            NSStringFromSelector(#selector(getter:cardOptions)): "card",
-            NSStringFromSelector(#selector(getter:blikOptions)): "blik",
-            NSStringFromSelector(#selector(getter:weChatPayOptions)): "wechat_pay",
-            NSStringFromSelector(#selector(getter:usBankAccountOptions)): "us_bank_account",
+            NSStringFromSelector(#selector(getter: alipayOptions)): "alipay",
+            NSStringFromSelector(#selector(getter: cardOptions)): "card",
+            NSStringFromSelector(#selector(getter: blikOptions)): "blik",
+            NSStringFromSelector(#selector(getter: weChatPayOptions)): "wechat_pay",
+            NSStringFromSelector(#selector(getter: usBankAccountOptions)): "us_bank_account",
         ]
     }
 

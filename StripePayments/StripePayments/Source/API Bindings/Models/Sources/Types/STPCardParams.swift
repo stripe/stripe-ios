@@ -65,7 +65,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     /// The cardholder's address.
     /// @note Setting `address` to a new value will also change the `name` property to
     /// be the value of `address.name`. However, changing `address.name` directly will
-    ///not* change `name`.
+    /// not* change `name`.
     @objc public var address: STPAddress {
         didSet {
             name = address.name
@@ -174,18 +174,18 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
 
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:number)): "number",
-            NSStringFromSelector(#selector(getter:cvc)): "cvc",
-            NSStringFromSelector(#selector(getter:name)): "name",
-            NSStringFromSelector(#selector(getter:addressLine1)): "address_line1",
-            NSStringFromSelector(#selector(getter:addressLine2)): "address_line2",
-            NSStringFromSelector(#selector(getter:addressCity)): "address_city",
-            NSStringFromSelector(#selector(getter:addressState)): "address_state",
-            NSStringFromSelector(#selector(getter:addressZip)): "address_zip",
-            NSStringFromSelector(#selector(getter:addressCountry)): "address_country",
-            NSStringFromSelector(#selector(getter:expMonth)): "exp_month",
-            NSStringFromSelector(#selector(getter:expYear)): "exp_year",
-            NSStringFromSelector(#selector(getter:currency)): "currency",
+            NSStringFromSelector(#selector(getter: number)): "number",
+            NSStringFromSelector(#selector(getter: cvc)): "cvc",
+            NSStringFromSelector(#selector(getter: name)): "name",
+            NSStringFromSelector(#selector(getter: addressLine1)): "address_line1",
+            NSStringFromSelector(#selector(getter: addressLine2)): "address_line2",
+            NSStringFromSelector(#selector(getter: addressCity)): "address_city",
+            NSStringFromSelector(#selector(getter: addressState)): "address_state",
+            NSStringFromSelector(#selector(getter: addressZip)): "address_zip",
+            NSStringFromSelector(#selector(getter: addressCountry)): "address_country",
+            NSStringFromSelector(#selector(getter: expMonth)): "exp_month",
+            NSStringFromSelector(#selector(getter: expYear)): "exp_year",
+            NSStringFromSelector(#selector(getter: currency)): "currency",
         ]
     }
 

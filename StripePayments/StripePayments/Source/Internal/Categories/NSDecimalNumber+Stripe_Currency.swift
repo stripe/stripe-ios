@@ -9,7 +9,7 @@
 import Foundation
 
 extension NSDecimalNumber {
-    
+
     @objc @_spi(STP) public class func stp_decimalNumber(
         withAmount amount: Int,
         currency: String?
@@ -25,17 +25,17 @@ extension NSDecimalNumber {
         ourNumber = multiplying(byPowerOf10: Int16(decimalCount))
         return Int(ourNumber.doubleValue)
     }
-    
+
     private class func decimalCount(for currency: String?) -> Int {
         let currencyLocaleIdentifier = Locale.availableIdentifiers.first(where: {
             let locale = Locale(identifier: $0)
             return locale.currencyCode?.lowercased() == currency?.lowercased()
         })
-        
+
         let currencyFormatter = NumberFormatter()
         currencyFormatter.numberStyle = .currency
         currencyFormatter.locale = Locale(identifier: currencyLocaleIdentifier ?? "")
-        
+
         return currencyFormatter.maximumFractionDigits
     }
 }

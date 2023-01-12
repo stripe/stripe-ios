@@ -74,7 +74,7 @@ extension STPAPIClient {
         var params: [String: Any] = [
             "pii": [
                 "personal_id_number": pii
-            ]
+            ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         if let completion = completion {
@@ -95,7 +95,7 @@ extension STPAPIClient {
         var params: [String: Any] = [
             "pii": [
                 "ssn_last_4": ssnLast4
-            ]
+            ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         createToken(withParameters: params, completion: completion)
@@ -197,7 +197,7 @@ extension StripeFile {
             fileId: id,
             created: created,
             purpose: purpose.toSTPFilePurpose,
-            size: NSNumber(integerLiteral: size),
+            size: NSNumber(value: size),
             type: type
         )
     }
@@ -231,7 +231,7 @@ extension STPAPIClient {
         var params: [String: Any] = [
             "cvc_update": [
                 "cvc": cvc
-            ]
+            ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         if let completion = completion {
