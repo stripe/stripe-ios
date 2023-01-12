@@ -5,8 +5,8 @@
 //  Created by David Estes on 2/8/21.
 //
 
-import SwiftUI
 import Stripe
+import SwiftUI
 
 struct AUBECSDebitView: View {
   @StateObject var model = MyPIModel()
@@ -38,12 +38,11 @@ struct AUBECSDebitView: View {
     }
 }
 
-struct AUBECSDebitView_Preview : PreviewProvider {
+struct AUBECSDebitView_Preview: PreviewProvider {
   static var previews: some View {
     AUBECSDebitView()
   }
 }
-
 
 extension STPAUBECSDebitFormView {
   public struct Representable: UIViewRepresentable {
@@ -52,7 +51,7 @@ extension STPAUBECSDebitFormView {
     public init(paymentMethodParams: Binding<STPPaymentMethodParams?>) {
       _paymentMethodParams = paymentMethodParams
     }
-    
+
     public func makeCoordinator() -> Coordinator {
       return Coordinator(parent: self)
     }
@@ -61,7 +60,7 @@ extension STPAUBECSDebitFormView {
       let formView = STPAUBECSDebitFormView(companyName: "Test")
       formView.becsDebitFormDelegate = context.coordinator
       formView.setContentHuggingPriority(.required, for: .vertical)
-      
+
       return formView
     }
 
@@ -80,4 +79,3 @@ extension STPAUBECSDebitFormView {
     }
   }
 }
-

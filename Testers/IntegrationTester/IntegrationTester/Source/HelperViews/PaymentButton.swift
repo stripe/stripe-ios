@@ -11,12 +11,12 @@ Abstract:
 A button that hosts PKPaymentButton from Apple's Fruta example app.
 */
 
-import SwiftUI
 import PassKit
+import SwiftUI
 
 struct PaymentButton: View {
     var action: () -> Void
-    
+
     var height: CGFloat {
         #if os(macOS)
         return 30
@@ -24,7 +24,7 @@ struct PaymentButton: View {
         return 45
         #endif
     }
-    
+
     var body: some View {
         Representable(action: action)
             .frame(minWidth: 100, maxWidth: 400)
@@ -40,23 +40,23 @@ extension PaymentButton {
     #else
     typealias ViewRepresentable = NSViewRepresentable
     #endif
-    
+
     struct Representable: ViewRepresentable {
         var action: () -> Void
-        
+
         init(action: @escaping () -> Void) {
             self.action = action
         }
-        
+
         func makeCoordinator() -> Coordinator {
             Coordinator(action: action)
         }
-        
+
         #if os(iOS)
         func makeUIView(context: Context) -> UIView {
             context.coordinator.button
         }
-        
+
         func updateUIView(_ rootView: UIView, context: Context) {
             context.coordinator.action = action
         }
@@ -64,17 +64,17 @@ extension PaymentButton {
         func makeNSView(context: Context) -> NSView {
             context.coordinator.button
         }
-        
+
         func updateNSView(_ rootView: NSView, context: Context) {
             context.coordinator.action = action
         }
         #endif
     }
-    
+
     class Coordinator: NSObject {
         var action: () -> Void
         var button = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .automatic)
-        
+
         init(action: @escaping () -> Void) {
             self.action = action
             super.init()
@@ -85,7 +85,7 @@ extension PaymentButton {
             button.target = self
             #endif
         }
-        
+
         @objc
         func callback(_ sender: Any) {
             action()

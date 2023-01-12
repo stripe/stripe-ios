@@ -22,6 +22,7 @@ lint_dirs=(
 	"StripePaymentsUI"
 	"StripePaymentSheet"
 	"StripeIdentity"
+	"Testers"
 )
 
 exit_code=0

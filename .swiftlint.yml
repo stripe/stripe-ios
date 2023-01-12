@@ -66,11 +66,16 @@ opt_in_rules:
   # - weak_delegate
   # - discouraged_object_literal
   # - unowned_variable_capture
+  # - indentation_width
 
 excluded:
+  - Package.swift
   - Pods
   - Carthage
   - Tests/installation_tests
+  - vendor
+  - build*
+  - .build
 
 identifier_name:
   allowed_symbols: _

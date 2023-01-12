@@ -5,13 +5,13 @@
 //  Created by David Estes on 2/8/21.
 //
 
-import SwiftUI
 import Stripe
+import SwiftUI
 
 struct FPXView: View {
   @StateObject var model = MyPIModel()
   @State var isConfirmingPayment = false
-  
+
   var body: some View {
       VStack {
         if let paymentStatus = model.paymentStatus {
@@ -36,7 +36,7 @@ struct FPXView: View {
     }
 }
 
-struct FPXView_Preview : PreviewProvider {
+struct FPXView_Preview: PreviewProvider {
   static var previews: some View {
     FPXView()
   }
@@ -45,11 +45,11 @@ struct FPXView_Preview : PreviewProvider {
 extension STPBankSelectionViewController {
   struct Representable: UIViewControllerRepresentable {
     let onCompletion: (STPPaymentMethodParams?) -> Void
-    
+
     public init(onCompletion: @escaping (STPPaymentMethodParams?) -> Void) {
       self.onCompletion = onCompletion
     }
-    
+
     func makeCoordinator() -> Coordinator {
       return Coordinator(parent: self)
     }
@@ -66,7 +66,7 @@ extension STPBankSelectionViewController {
       func bankSelectionViewController(_ bankViewController: STPBankSelectionViewController, didCreatePaymentMethodParams paymentMethodParams: STPPaymentMethodParams) {
         self.parent.onCompletion(paymentMethodParams)
       }
-      
+
       var parent: Representable
       init(parent: Representable) {
         self.parent = parent
@@ -75,7 +75,7 @@ extension STPBankSelectionViewController {
         vc.delegate = self
       }
 
-      let vc : STPBankSelectionViewController
+      let vc: STPBankSelectionViewController
     }
   }
 }
