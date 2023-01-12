@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 import iOSSnapshotTestCase
+@_spi(STP) import StripeUICore
 
 @testable import StripeIdentity
 

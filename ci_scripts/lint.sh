@@ -19,6 +19,7 @@ lint_dirs=(
 	"StripeCardScan"
 	"StripePayments"
 	"StripePaymentSheet"
+	"StripeIdentity"
 )
 
 exit_code=0

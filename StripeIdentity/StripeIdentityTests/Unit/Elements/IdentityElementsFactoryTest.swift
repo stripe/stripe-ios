@@ -26,7 +26,7 @@ final class IdentityElementsFactoryTest: XCTestCase {
                 stateNameType: .state,
                 zip: "",
                 zipNameType: .pin
-            )
+            ),
         ]
         return specProvider
     }()

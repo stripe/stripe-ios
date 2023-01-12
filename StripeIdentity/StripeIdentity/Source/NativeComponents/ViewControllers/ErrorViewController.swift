@@ -69,7 +69,7 @@ final class ErrorViewController: IdentityFlowViewController {
                         didTap: { [weak self] in
                             self?.didTapButton()
                         }
-                    )
+                    ),
                 ]
             )
         )

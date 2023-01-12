@@ -78,7 +78,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             return [
                 .continueButton { [weak self] in
                     self?.saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
-                }
+                },
             ]
 
         case .noCameraAccess:
@@ -88,7 +88,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     didTap: { [weak self] in
                         self?.imageScanningSession.appSettingsHelper.openAppSettings()
                     }
-                )
+                ),
             ]
         case .cameraError:
             return [
@@ -97,7 +97,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     didTap: { [weak self] in
                         self?.dismiss(animated: true)
                     }
-                )
+                ),
             ]
         case .timeout:
             return [
@@ -106,7 +106,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     didTap: { [weak self] in
                         self?.imageScanningSession.startScanning()
                     }
-                )
+                ),
             ]
         }
     }

@@ -263,7 +263,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     staticContent: staticContent
                 )
             )
-        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
+        } else if !missingRequirements.isDisjoint(with: [.idDocumentFront, .idDocumentBack]) {
             return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {
                 [weak self] result in
                 guard let self = self else { return }

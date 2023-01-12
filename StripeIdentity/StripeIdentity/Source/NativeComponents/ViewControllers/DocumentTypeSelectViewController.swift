@@ -74,7 +74,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
             }
 
             // Display loading indicator if we're currently saving
-            var accessoryViewModel: ListItemView.ViewModel.Accessory? = nil
+            var accessoryViewModel: ListItemView.ViewModel.Accessory?
             if currentlySavingSelectedDocument == documentTypeAndLabel.documentType {
                 accessoryViewModel = .activityIndicator
             }
@@ -106,7 +106,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
     // Gets set to user-selected document type.
     // After selection is saved, is reset to nil.
-    private(set) var currentlySavingSelectedDocument: DocumentType? = nil {
+    private(set) var currentlySavingSelectedDocument: DocumentType? {
         didSet {
             guard oldValue != currentlySavingSelectedDocument else {
                 return
