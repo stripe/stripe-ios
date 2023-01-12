@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
@@ -653,7 +653,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             fields: [
                 .country(
                     .init(apiPath: ["v1": "sofort[country]"], allowedCountryCodes: ["AT", "BE"])
-                )
+                ),
             ],
             selectorIcon: nil,
             nextActionSpec: nil
@@ -862,7 +862,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 stateNameType: .state,
                 zip: "\\d{5}",
                 zipNameType: .zip
-            )
+            ),
         ]
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
@@ -974,7 +974,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 stateNameType: .state,
                 zip: "",
                 zipNameType: .pin
-            )
+            ),
         ]
         let loadFormSpecs = expectation(description: "Load form specs")
         FormSpecProvider.shared.load { _ in
@@ -1052,7 +1052,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 stateNameType: .state,
                 zip: "",
                 zipNameType: .zip
-            )
+            ),
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
@@ -1098,7 +1098,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 stateNameType: .state,
                 zip: "",
                 zipNameType: .zip
-            )
+            ),
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),

@@ -135,7 +135,7 @@ class STPApplePayContextTest: XCTestCase {
         address.isoCountryCode = "US"
         address.postalCode = "94105"
         shipping.postalAddress = address
-        payment.perform(#selector(setter:PKPaymentRequest.shippingContact), with: shipping)
+        payment.perform(#selector(setter: PKPaymentRequest.shippingContact), with: shipping)
 
         let shippingParams = context!._shippingDetails(from: payment)
         XCTAssertNotNil(shippingParams)

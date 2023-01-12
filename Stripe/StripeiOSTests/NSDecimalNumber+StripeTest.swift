@@ -6,12 +6,12 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import XCTest
 
 class NSDecimalNumberStripeTest: XCTestCase {
     // an incomplete list of 2 decimal point currencies
@@ -21,9 +21,9 @@ class NSDecimalNumberStripeTest: XCTestCase {
         "eur",
         "aud",
         "sek",
-        "sgd"
+        "sgd",
     ]
-    
+
     private let noDecimalPointCurrencies = [
         "bif",
         "clp",
@@ -39,18 +39,17 @@ class NSDecimalNumberStripeTest: XCTestCase {
         "vuv",
         "xaf",
         "xof",
-        "xpf"
+        "xpf",
     ]
-    
+
     private let threeDecimalCurrencies = [
         "bhd",
         "jod",
         "kwd",
         "omr",
-        "tnd"
+        "tnd",
     ]
-    
-    
+
     func testDecimalAmount_twoDecimal() {
         for twoDecimalPointCurrency in twoDecimalPointCurrencies {
             let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92123, currency: twoDecimalPointCurrency)
@@ -64,14 +63,14 @@ class NSDecimalNumberStripeTest: XCTestCase {
             XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92123"))
         }
     }
-    
+
     func testDecimalAmount_threeDecimal() {
         for currency in threeDecimalCurrencies {
             let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92123, currency: currency)
             XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92.123"))
         }
     }
-    
+
     func testAmount_twoDecimal() {
         for twoDecimalPointCurrency in twoDecimalPointCurrencies {
             let amount = NSDecimalNumber(value: 1000.12)
@@ -79,7 +78,7 @@ class NSDecimalNumberStripeTest: XCTestCase {
             XCTAssertEqual(decimalNumber, 100012)
         }
     }
-    
+
     func testAmount_noDecimal() {
         for noDecimalPointCurrency in noDecimalPointCurrencies {
             let amount = NSDecimalNumber(value: 1000.12)
@@ -87,7 +86,7 @@ class NSDecimalNumberStripeTest: XCTestCase {
             XCTAssertEqual(decimalNumber, 1000)
         }
     }
-    
+
     func testAmount_threeDecimal() {
         for threeDecimalPointCurrency in threeDecimalCurrencies {
             let amount = NSDecimalNumber(value: 1000.12)

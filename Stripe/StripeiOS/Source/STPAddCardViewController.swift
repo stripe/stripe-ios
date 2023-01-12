@@ -143,7 +143,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
 
     /// Storage for `cardScanner`.
-    private var _cardScanner: NSObject? = nil
+    private var _cardScanner: NSObject?
 
     @available(macCatalyst 14, *)
     private var scannerCell: STPCardScannerTableViewCell? {
@@ -156,7 +156,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
 
     /// Storage for `scannerCell`.
-    private var _scannerCell: NSObject? = nil
+    private var _scannerCell: NSObject?
 
     private var _isScanning = false
     private var isScanning: Bool {

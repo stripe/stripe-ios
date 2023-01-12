@@ -13,8 +13,8 @@ import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class MockEphemeralKeyManager: STPEphemeralKeyManagerProtocol {
@@ -47,7 +47,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/customers") ?? false
                 && urlRequest.httpMethod == "GET"
-        } response: { urlRequest in
+        } response: { _ in
             DispatchQueue.main.async {
                 // Fulfill after response is sent
                 exp.fulfill()
@@ -79,7 +79,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
                 return true
             }
             return false
-        } response: { urlRequest in
+        } response: { _ in
             let paymentMethodsJSON = """
                 {
                   "object": "list",
@@ -109,7 +109,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/customers") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             XCTFail("Retrieve customer should not be called")
             return HTTPStubsResponse(error: NSError(domain: "test", code: 100, userInfo: nil))
         }
@@ -172,7 +172,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         waitForExpectations(timeout: 2, handler: nil)
         let exp2 = expectation(description: "retrieveCustomer again")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
-            sut.retrieveCustomer { customer, error in
+            sut.retrieveCustomer { customer, _ in
                 XCTAssertEqual(customer!.stripeID, expectedCustomer.stripeID)
                 exp2.fulfill()
             }
@@ -208,7 +208,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let exp2 = expectation(description: "retrieveCustomer again")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
             sut.customerRetrievedDate = Date(timeIntervalSinceNow: -70)
-            sut.retrieveCustomer { customer, error in
+            sut.retrieveCustomer { customer, _ in
                 XCTAssertEqual(customer!.stripeID, expectedCustomer.stripeID)
                 exp2.fulfill()
             }
@@ -244,7 +244,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let exp2 = expectation(description: "retrieveCustomer again")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
             sut.clearCache()
-            sut.retrieveCustomer { customer, error in
+            sut.retrieveCustomer { customer, _ in
                 XCTAssertEqual(customer!.stripeID, expectedCustomer.stripeID)
                 exp2.fulfill()
             }
@@ -279,7 +279,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // Give the mocked API request a little time to complete and cache the customer, then check cache
         let exp2 = expectation(description: "listPaymentMethods")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
-            sut.listPaymentMethodsForCustomer { paymentMethods, error in
+            sut.listPaymentMethodsForCustomer { paymentMethods, _ in
                 XCTAssertEqual(paymentMethods!.count, expectedPaymentMethods.count)
                 exp2.fulfill()
             }
@@ -316,7 +316,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let exp2 = expectation(description: "listPaymentMethods")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
             sut.paymentMethodsRetrievedDate = Date(timeIntervalSinceNow: -70)
-            sut.listPaymentMethodsForCustomer { paymentMethods, error in
+            sut.listPaymentMethodsForCustomer { paymentMethods, _ in
                 XCTAssertEqual(paymentMethods!.count, expectedPaymentMethods.count)
                 exp2.fulfill()
             }
@@ -353,7 +353,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let exp2 = expectation(description: "listPaymentMethods")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
             sut.clearCache()
-            sut.listPaymentMethodsForCustomer { paymentMethods, error in
+            sut.listPaymentMethodsForCustomer { paymentMethods, _ in
                 XCTAssertEqual(paymentMethods!.count, expectedPaymentMethods.count)
                 exp2.fulfill()
             }
@@ -392,7 +392,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
                 return true
             }
             return false
-        } response: { urlRequest in
+        } response: { _ in
             exp.fulfill()
             return HTTPStubsResponse(
                 jsonObject: expectedCustomerJSON,
@@ -442,7 +442,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
                 return true
             }
             return false
-        } response: { urlRequest in
+        } response: { _ in
             exp.fulfill()
             return HTTPStubsResponse(
                 jsonObject: expectedPaymentMethodJSON,
@@ -500,7 +500,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
                 return true
             }
             return false
-        } response: { urlRequest in
+        } response: { _ in
             exp.fulfill()
             return HTTPStubsResponse(
                 jsonObject: expectedPaymentMethodJSON,
@@ -553,7 +553,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // Give the mocked API request a little time to complete and cache the customer, then check cache
         let exp2 = expectation(description: "listPaymentMethods")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
-            sut.listPaymentMethodsForCustomer { paymentMethods, error in
+            sut.listPaymentMethodsForCustomer { paymentMethods, _ in
                 // Apple Pay should be filtered out
                 XCTAssertEqual(paymentMethods!.count, 1)
                 exp2.fulfill()
@@ -589,7 +589,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // Give the mocked API request a little time to complete and cache the customer, then check cache
         let exp2 = expectation(description: "listPaymentMethods")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
-            sut.listPaymentMethodsForCustomer { paymentMethods, error in
+            sut.listPaymentMethodsForCustomer { paymentMethods, _ in
                 // Apple Pay should be included
                 XCTAssertEqual(paymentMethods!.count, 2)
                 exp2.fulfill()
@@ -627,7 +627,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // Give the mocked API request a little time to complete and cache the customer, then check cache
         let exp = expectation(description: "retrieveCustomer")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
-            sut.retrieveCustomer { customer, error in
+            sut.retrieveCustomer { customer, _ in
                 // Apple Pay should be filtered out
                 XCTAssertEqual(customer!.sources.count, 1)
                 exp.fulfill()
@@ -663,7 +663,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // Give the mocked API request a little time to complete and cache the customer, then check cache
         let exp = expectation(description: "retrieveCustomer")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ohhttpDelay) {
-            sut.retrieveCustomer { customer, error in
+            sut.retrieveCustomer { customer, _ in
                 // Apple Pay should be filtered out
                 XCTAssertEqual(customer!.sources.count, 2)
                 exp.fulfill()

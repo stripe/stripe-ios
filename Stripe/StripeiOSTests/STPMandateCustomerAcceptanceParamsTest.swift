@@ -7,8 +7,8 @@
 //
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPMandateCustomerAcceptanceParamsTest: XCTestCase {
@@ -28,7 +28,7 @@ class STPMandateCustomerAcceptanceParamsTest: XCTestCase {
                 "online": [
                     "infer_from_client": NSNumber(value: true)
                 ],
-            ]
+            ],
         ]
         XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
 
@@ -37,7 +37,7 @@ class STPMandateCustomerAcceptanceParamsTest: XCTestCase {
         expected = [
             "customer_acceptance": [
                 "type": "offline"
-            ]
+            ],
         ]
         XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
     }

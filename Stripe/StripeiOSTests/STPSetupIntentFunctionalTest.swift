@@ -12,8 +12,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPSetupIntentFunctionalTestSwift: XCTestCase {
@@ -22,7 +22,7 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
     func createAndConfirmSetupIntentWithUSBankAccount(completion: @escaping (String?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-        var clientSecret: String? = nil
+        var clientSecret: String?
         let createSIExpectation = expectation(description: "Create SetupIntent")
         STPTestingAPIClient.shared().createSetupIntent(
             withParams: ["payment_method_types": ["us_bank_account"]],

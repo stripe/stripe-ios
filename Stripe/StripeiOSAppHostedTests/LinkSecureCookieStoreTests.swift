@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable import Stripe
 @testable import StripePaymentSheet
+import XCTest
 
 class LinkSecureCookieStoreTests: XCTestCase {
 
@@ -21,7 +21,7 @@ class LinkSecureCookieStoreTests: XCTestCase {
 
         XCTAssertEqual(cookieStore.read(key: Self.testKey), "cookie_value")
     }
-    
+
     func testWrite_allowSyncTrue() {
         cookieStore.write(key: Self.testKey, value: "cookie_value", allowSync: true)
 
@@ -42,7 +42,6 @@ class LinkSecureCookieStoreTests: XCTestCase {
         XCTAssertNil(cookieStore.read(key: Self.testKey))
     }
 
-    
     func testDelete_allowSyncTrue() {
         cookieStore.write(key: Self.testKey, value: "cookie_value", allowSync: true)
         cookieStore.delete(key: Self.testKey)
