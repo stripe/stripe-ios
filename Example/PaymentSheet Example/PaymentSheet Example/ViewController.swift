@@ -23,8 +23,4 @@ class ViewController: UIViewController {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomPaymentFlow())
     }
 
-    @IBSegueAction func showSwiftUILinkOnlyExample(_ coder: NSCoder) -> UIViewController? {
-        return UIHostingController(coder: coder, rootView: ExampleSwiftUILinkOnlyFlow())
-    }
-
 }

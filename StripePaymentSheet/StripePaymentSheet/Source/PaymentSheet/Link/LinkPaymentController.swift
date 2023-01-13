@@ -6,11 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
-
+@_spi(STP) import StripeUICore
+import UIKit
 
 /// `LinkPaymentController` encapsulates the Link payment flow, allowing you to let your customers pay with their Link account.
 /// You probably want to [use the Mobile Payment Element instead](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet), which supports Link alongside credit cards, bank transfers, and many other payment methods to offer your customers more choice and convenience in how they pay.
