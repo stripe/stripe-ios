@@ -38,12 +38,8 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private var callToAction: ConfirmButton.CallToActionType {
-            context.shouldPayInFlow ? context.intent.callToAction : .customWithLock(title: String.Localized.continue)
-        }
-
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
-            callToAction: callToAction,
+            callToAction: context.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
             compact: shouldShowApplePayButton
         ) { [weak self] in
@@ -300,7 +296,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         } else {
             confirmButton.update(
                 state: viewController.paymentOption != nil ? .enabled : .disabled,
-                callToAction: callToAction
+                callToAction: context.callToAction
             )
         }
         updateErrorLabel(for: nil)

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 
 
@@ -16,8 +18,8 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 @_spi(LinkOnly) public class LinkPaymentController {
 
-    private var intentSecret: IntentClientSecret
-    private var configuration: PaymentSheet.Configuration
+    private let intentSecret: IntentClientSecret
+    private let configuration: PaymentSheet.Configuration
 
     private var intent: Intent?
     private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
@@ -42,20 +44,21 @@ import UIKit
 
     private init(intentSecret: IntentClientSecret, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
         self.intentSecret = intentSecret
-        configuration = PaymentSheet.Configuration()
+        var configuration = PaymentSheet.Configuration()
         configuration.linkPaymentMethodsOnly = true
         configuration.returnURL = returnURL
         if let billingDetails = billingDetails {
             configuration.defaultBillingDetails = billingDetails
         }
+        self.configuration = configuration
     }
 
     /// Presents the Link payment flow, allowing your customer to pay with Link.
     /// The flow lets your customer log into or create a Link account, select a valid source of funds, and approve the usage of those funds to complete the purchase. The actual purchase will not occur until you call `confirm(from:completion:)`.
-    /// - Parameter presentingViewController: The view controller to present the payment flow from
+    /// - Note: Once `confirm(from:completion:)` completes successfully (i.e. when `result` is `.success`), calling this method is an error, as payment/setup intents should not be reused. Until then, you may call this method as many times as is necessary.
+    /// - Parameter presentingViewController: The view controller to present the payment flow from.
     /// - Parameter completion: Called when the payment flow is dismissed. If the flow was completed successfully, the result will be `.success`, and you can call `confirm(from:completion:)` when you're ready to complete the payment. If it was not, the result will be `.failure` with an `Error` describing what happened; this will be `LinkPaymentController.Error.canceled` if the customer canceled the flow.
-    /// - Note: This method is safe to call multiple times until you get a `.success` result from `confirm(from:completion:)`. Once `confirm(from:completion:)` completes successfully, calling this method is an error, as payment/setup intents should not be reused.
-    @_spi(LinkOnly) public func present(from presentingViewController: UIViewController, completion: @escaping (Result<Void, Swift.Error>) -> Void) -> Void {
+    @_spi(LinkOnly) public func present(from presentingViewController: UIViewController, completion: @escaping (Result<Void, Swift.Error>) -> Void) {
         Task {
             do {
                 try await present(from: presentingViewController)
@@ -70,10 +73,10 @@ import UIKit
     /// The flow lets your customer log into or create a Link account, select a valid source of funds, and approve the usage of those funds to complete the purchase. The actual purchase will not occur until you call `confirm(from:)`.
     /// If this method returns successfully, you can call `confirm(from:)` when you're ready to complete the payment.
     /// - Note: Once `confirm(from:)` returns successfully, calling this method is an error, as payment/setup intents should not be reused. Until then, you may call this method as many times as is necessary.
-    /// - Parameter presentingViewController: The view controller to present the payment flow from
+    /// - Parameter presentingViewController: The view controller to present the payment flow from.
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
-    @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws -> Void {
+    @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
         let linkController: PayWithLinkViewController = try await withCheckedThrowingContinuation { [self] continuation in
             PaymentSheet.load(clientSecret: intentSecret, configuration: configuration) { result in
                 switch result {
@@ -88,7 +91,7 @@ import UIKit
                         configuration: self.configuration,
                         shouldOfferApplePay: false,
                         shouldFinishOnClose: true,
-                        shouldPayInFlow: false
+                        callToAction: .customWithLock(title: String.Localized.continue)
                     )
                     continuation.resume(returning: linkController)
                 case .failure(let error):
@@ -113,7 +116,7 @@ import UIKit
     /// - Note: Once `completion` is called with a `.completed` result, this `LinkPaymentController` instance should no longer be used, as payment/setup intents should not be reused. Other results indicate cancellation or failure, and do not invalidate the instance.
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
     /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
-    @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController, completion: @escaping (PaymentSheetResult) -> Void) -> Void {
+    @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController, completion: @escaping (PaymentSheetResult) -> Void) {
         Task {
             do {
                 try await confirm(from: presentingViewController)
@@ -131,7 +134,7 @@ import UIKit
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
-    @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController) async throws -> Void {
+    @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController) async throws {
         if (intent == nil || paymentOption == nil) && LinkAccountService().hasSessionCookie {
             // If the customer has a Link cookie, `present` may not need to have been called - try to load here
             paymentOption = try await withCheckedThrowingContinuation { [self] continuation in
@@ -161,18 +164,17 @@ import UIKit
                 authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default),
                 intent: intent,
                 paymentOption: paymentOption,
-                paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-                completion: { result in
-                    switch result {
-                    case .completed:
-                        continuation.resume()
-                    case .canceled:
-                        continuation.resume(throwing: Error.canceled)
-                    case .failed(let error):
-                        continuation.resume(throwing: error)
-                    }
+                paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
+            ) { result in
+                switch result {
+                case .completed:
+                    continuation.resume()
+                case .canceled:
+                    continuation.resume(throwing: Error.canceled)
+                case .failed(let error):
+                    continuation.resume(throwing: error)
                 }
-            )
+            }
         }
     }
 
@@ -180,7 +182,7 @@ import UIKit
     ///
     /// You must call this method when the user logs out from your app.
     /// This will ensure that any persisted authentication state, such as authentication cookies, is also cleared during logout.
-    @_spi(LinkOnly) public static func resetCustomer() -> Void {
+    @_spi(LinkOnly) public static func resetCustomer() {
         PaymentSheet.resetCustomer()
     }
 
