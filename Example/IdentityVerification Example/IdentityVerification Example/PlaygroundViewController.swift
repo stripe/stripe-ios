@@ -108,8 +108,8 @@ class PlaygroundViewController: UIViewController {
                     "allowed_types": documentAllowedTypes.map { $0.rawValue },
                     "require_id_number": requireIDNumberSwitch.isOn,
                     "require_live_capture": requireLiveCaptureSwitch.isOn,
-                    "require_matching_selfie": requireSelfieSwitch.isOn
-                ]
+                    "require_matching_selfie": requireSelfieSwitch.isOn,
+                ],
             ]
             requestDict["options"] = options
         }
@@ -120,7 +120,7 @@ class PlaygroundViewController: UIViewController {
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
         urlRequest.httpBody = requestJson
 
-        let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
+        let task = session.dataTask(with: urlRequest) { [weak self] data, _, error in
             DispatchQueue.main.async { [weak self] in
                 // Re-enable button
                 self?.updateButtonState(isLoading: false)
@@ -217,7 +217,7 @@ class PlaygroundViewController: UIViewController {
                 textField.inputView = UIView()
             }
         }
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
             alertController.dismiss(animated: true) {
                 self.dismiss(animated: true, completion: nil)
             }
@@ -237,7 +237,6 @@ class PlaygroundViewController: UIViewController {
         }
         #endif
     }
-
 
     @IBAction func didChangeVerificationType(_ sender: Any) {
         switch verificationType {

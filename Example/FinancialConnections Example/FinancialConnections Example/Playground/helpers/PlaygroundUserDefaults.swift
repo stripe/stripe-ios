@@ -9,13 +9,13 @@
 import Foundation
 
 final class PlaygroundUserDefaults {
-    
+
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_FLOW",
         defaultValue: PlaygroundMainViewModel.Flow.data.rawValue
     )
     static var flow: String
-    
+
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE",
         defaultValue: nil
@@ -58,7 +58,7 @@ struct UserDefault<Value> {
     }
 }
 
-fileprivate protocol OptionalValue {
+private protocol OptionalValue {
     var isNil: Bool { get }
 }
 

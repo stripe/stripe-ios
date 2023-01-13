@@ -56,14 +56,14 @@ let project = Project(
             additionalFiles: [
                 "Non-Card Payment Examples/*.h",
             ]
-        )
+        ),
     ],
     schemes: [
         Scheme(
             name: "Non-Card Payment Examples",
             buildAction: .buildAction(targets: ["Non-Card Payment Examples"]),
             runAction: .runAction(executable: "Non-Card Payment Examples")
-        )
+        ),
     ],
     additionalFiles: "README.md"
 )

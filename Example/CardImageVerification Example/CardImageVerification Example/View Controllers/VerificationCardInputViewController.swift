@@ -13,7 +13,7 @@ class VerificationCardInputViewController: UIViewController {
     @IBOutlet weak var verifyResultLabel: UILabel!
     @IBOutlet weak var iinTextField: UITextField!
     @IBOutlet weak var lastFourTextField: UITextField!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
@@ -80,4 +80,3 @@ extension VerificationCardInputViewController: UITextFieldDelegate {
         return shouldNotResign
     }
 }
-

@@ -22,7 +22,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
         buyButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         buyButton.isEnabled = false
-        
+
         paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
 
@@ -31,7 +31,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
         request.httpMethod = "POST"
         let task = URLSession.shared.dataTask(
             with: request,
-            completionHandler: { [weak self] (data, response, error) in
+            completionHandler: { [weak self] (data, _, error) in
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],
@@ -120,7 +120,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
     func displayAlert(_ message: String) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
             alertController.dismiss(animated: true) {
                 self.navigationController?.popViewController(animated: true)
             }

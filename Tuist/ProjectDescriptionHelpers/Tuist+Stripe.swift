@@ -4,7 +4,7 @@ import ProjectDescription
 extension Project {
     /// Options for test targets inside Stripe frameworks.
     public struct TestOptions {
-        public var resources: ResourceFileElements? = nil
+        public var resources: ResourceFileElements?
         public var dependencies: [TargetDependency] = []
         public var settings: Settings = .stripeTargetSettings(
             baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
@@ -326,7 +326,7 @@ extension Project {
                         ? Arguments(
                             environment: [
                                 "FB_REFERENCE_IMAGE_DIR":
-                                    "$(SRCROOT)/../Tests/ReferenceImages"
+                                    "$(SRCROOT)/../Tests/ReferenceImages",
                             ]
                         ) : nil,
                     expandVariableFromTarget: "\(name)"
@@ -440,4 +440,3 @@ extension String {
         )
     }
 }
-

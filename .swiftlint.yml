@@ -37,6 +37,7 @@ disabled_rules:
   - reduce_boolean
   - unused_setter_value
   - notification_center_detachment
+  - private_outlet
 
 opt_in_rules:
   - colon
@@ -54,7 +55,6 @@ opt_in_rules:
   - prohibited_super_call
   - redundant_nil_coalescing
   - return_arrow_whitespace
-  - single_test_class
   - sorted_imports
   - statement_position
   - trailing_newline
@@ -65,11 +65,17 @@ opt_in_rules:
   # - weak_delegate
   # - discouraged_object_literal
   # - unowned_variable_capture
+  # - indentation_width
+  # - single_test_class
 
 excluded:
+  - Package.swift
   - Pods
   - Carthage
   - Tests/installation_tests
+  - vendor
+  - build*
+  - .build
 
 identifier_name:
   allowed_symbols: _

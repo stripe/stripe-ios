@@ -329,7 +329,7 @@ import UIKit
                 input: "\u{08}",
                 modifierFlags: .command,
                 action: #selector(commandDeleteBackwards)
-            )
+            ),
         ]
     }
 

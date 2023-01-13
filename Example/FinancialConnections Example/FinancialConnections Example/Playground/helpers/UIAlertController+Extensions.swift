@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UIAlertController {
-    
+
     static func showAlert(
         title: String? = nil,
         message: String? = nil

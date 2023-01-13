@@ -59,7 +59,7 @@ let project = Project(
                         "//StripeCardScan/StripeCardScanTests/Resources/synthetic_test_image.jpg",
                     ],
                     basedOnDependencyAnalysis: false
-                )
+                ),
             ],
             dependencies: [
                 .target(name: "CardImageVerification Example"),
@@ -78,6 +78,6 @@ let project = Project(
             ]),
             testAction: .targets(["CardImageVerification ExampleUITests"]),
             runAction: .runAction(executable: "CardImageVerification Example")
-        )
+        ),
     ]
 )

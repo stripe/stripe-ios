@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-///TODO(jaimepark): Make CTAButton with activity indicator an encapsulated object instead of extending uibutton.
+/// TODO(jaimepark): Make CTAButton with activity indicator an encapsulated object instead of extending uibutton.
 extension UIButton {
     func updateButtonState(isLoading: Bool) {
         self.isEnabled = !isLoading

@@ -6,15 +6,15 @@
 //  Copyright © 2021 Stripe. All rights reserved.
 //
 
-import SwiftUI
 import Stripe
+import SwiftUI
 
 @available(iOS 13.0.0, *)
 struct SwiftUICardFormView: View {
-    
+
     @State private var paymentMethodParams: STPPaymentMethodParams = STPPaymentMethodParams()
     @State private var cardFormIsComplete: Bool = false
-    
+
     var body: some View {
         VStack {
             STPCardFormView.Representable(paymentMethodParams: $paymentMethodParams,

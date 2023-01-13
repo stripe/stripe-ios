@@ -9,10 +9,9 @@
 import Foundation
 
 @_spi(STP) public class STPStringUtils: NSObject {
+    // This code was adapted from Stripe.js
     /// Reformats an expiration date with a four-digit year to one with a two digit year.
     /// Ex: `01/2021` to `01/21`.
-    // This code was adapted from Stripe.js
-
     static let expirationDateStringRegex: NSRegularExpression = {
         return try! NSRegularExpression(
             pattern: "^(\\d{2}\\D{1,3})(\\d{1,4})?",

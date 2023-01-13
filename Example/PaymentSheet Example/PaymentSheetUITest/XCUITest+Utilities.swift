@@ -30,7 +30,7 @@ extension XCUIElement {
         testCase.waitForExpectations(timeout: 15.0, handler: nil)
         self.forceTapElement()
     }
-    
+
     @discardableResult
     func waitForExistenceAndTap() -> Bool {
         guard waitForExistence(timeout: 4) else {
@@ -57,37 +57,36 @@ extension XCUIApplication {
 }
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
-func scroll(collectionView: XCUIElement, toFindCellWithId identifier:String) -> XCUIElement? {
+func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) -> XCUIElement? {
     guard collectionView.elementType == .collectionView else {
         fatalError("XCUIElement is not a collectionView.")
     }
 
     var reachedTheEnd = false
     var allVisibleElements = [String]()
-    
+
     while !reachedTheEnd {
         let cell = collectionView.cells[identifier]
-        
+
         // Did we find our cell ?
         if cell.exists {
             return cell
         }
 
         // If not: we store the list of all the elements we've got in the CollectionView
-        let allElements = collectionView.cells.allElementsBoundByIndex.map({$0.identifier})
-        
+        let allElements = collectionView.cells.allElementsBoundByIndex.map({ $0.identifier })
+
         // Did we read then end of the CollectionView ?
         // i.e: do we have the same elements visible than before scrolling ?
         reachedTheEnd = (allElements == allVisibleElements)
         allVisibleElements = allElements
-        
+
         // Then, we do a scroll right on the scrollview
         let startCoordinate = collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
-        startCoordinate.press(forDuration: 0.01, thenDragTo: collectionView.coordinate(withNormalizedOffset:CGVector(dx: 0.1, dy: 0.99)))
+        startCoordinate.press(forDuration: 0.01, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
     }
     return nil
 }
-
 
 extension XCTestCase {
     func fillCardData(_ app: XCUIApplication, container: XCUIElement? = nil) throws {
@@ -107,7 +106,7 @@ extension XCTestCase {
         expectation(for: exists, evaluatedWith: target, handler: nil)
         waitForExpectations(timeout: 60.0, handler: nil)
     }
-    
+
     func reload(_ app: XCUIApplication) {
         app.buttons["Reload PaymentSheet"].tap()
 

@@ -65,7 +65,7 @@ extension KlarnaExampleViewController {
     @objc func pay() {
         // 1. Create an Klarna PaymentIntent
         MyAPIClient.shared().createPaymentIntent(
-            completion: { (result, clientSecret, error) in
+            completion: { (_, clientSecret, error) in
                 guard let clientSecret = clientSecret else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
@@ -89,7 +89,7 @@ extension KlarnaExampleViewController {
 
                 STPPaymentHandler.shared().confirmPayment(
                     paymentIntentParams, with: self
-                ) { (status, intent, error) in
+                ) { (status, _, error) in
                     switch status {
                     case .canceled:
                         self.delegate?.exampleViewController(
