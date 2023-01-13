@@ -5,8 +5,8 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import UIKit
 import StripeIdentity
+import UIKit
 
 @available(iOS 14.3, *)
 class ExampleVerificationViewController: UIViewController {
@@ -45,7 +45,7 @@ class ExampleVerificationViewController: UIViewController {
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
 
-        let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
+        let task = session.dataTask(with: urlRequest) { [weak self] data, _, error in
             DispatchQueue.main.async { [weak self] in
                 // Re-enable button
                 self?.updateButtonState(isLoading: false)
@@ -98,7 +98,7 @@ class ExampleVerificationViewController: UIViewController {
 
     func displayAlert(_ message: String) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
             alertController.dismiss(animated: true) {
                 self.dismiss(animated: true, completion: nil)
             }
@@ -106,7 +106,6 @@ class ExampleVerificationViewController: UIViewController {
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
     }
-
 
     // MARK: - Customize navigation bar
 

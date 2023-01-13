@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct PlaygroundMainView: View {
-    
+
     @StateObject var viewModel = PlaygroundMainViewModel()
-    
+
     var body: some View {
         ZStack {
             VStack {
@@ -30,7 +30,7 @@ struct PlaygroundMainView: View {
                             .font(.caption)
                             .italic()
                     }
-                    
+
                     VStack(alignment: .leading, spacing: 4) {
                         Text("How do you want it to look like?")
                             .font(.headline)
@@ -55,7 +55,7 @@ struct PlaygroundMainView: View {
                     } else {
                         Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
                     }
-                    
+
                     Button(action: viewModel.didSelectClearCaches) {
                         Text("Clear Caches")
                     }
@@ -73,7 +73,7 @@ struct PlaygroundMainView: View {
                     .buttonStyle(.plain)
                 }.padding()
             }
-            
+
             if viewModel.isLoading {
                 ZStack {
                     Color(UIColor.systemGray)
@@ -95,5 +95,3 @@ struct PlaygroundMainView_Previews: PreviewProvider {
         PlaygroundMainView()
     }
 }
-
-

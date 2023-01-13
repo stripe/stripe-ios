@@ -695,8 +695,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         STPPaymentCardTextFieldViewModel()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
-    @objc internal var internalBillingDetails: STPPaymentMethodBillingDetails? = nil
-    @objc internal var internalMetadata: [String: String]? = nil
+    @objc internal var internalBillingDetails: STPPaymentMethodBillingDetails?
+    @objc internal var internalMetadata: [String: String]?
 
     @objc @_spi(STP) public var allFields: [STPFormTextField] = []
     private lazy var sizingField: STPFormTextField = {
@@ -1063,7 +1063,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         let sortedCardNumberFormat =
             (STPCardValidator.cardNumberFormat(forCardNumber: cardNumber ?? "") as NSArray)
             .sortedArray(
-                using: #selector(getter:NSNumber.uintValue)
+                using: #selector(getter: NSNumber.uintValue)
             ) as! [NSNumber]
         let fragmentLength = STPCardValidator.fragmentLength(for: currentBrand)
         let maxLength: Int = max(Int(fragmentLength), sortedCardNumberFormat.last!.intValue)

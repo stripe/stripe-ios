@@ -43,14 +43,14 @@ let project = Project(
             settings: .stripeTargetSettings(
                 baseXcconfigFilePath: "BuildConfigurations/UI-Examples"
             )
-        )
+        ),
     ],
     schemes: [
         Scheme(
             name: "UI Examples",
             buildAction: .buildAction(targets: ["UI Examples"]),
             runAction: .runAction(executable: "UI Examples")
-        )
+        ),
     ],
     additionalFiles: "README.md"
 )

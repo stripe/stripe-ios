@@ -19,7 +19,7 @@ struct APIClient {
         urlRequest.httpMethod = httpMethod
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
 
-        URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+        URLSession.shared.dataTask(with: urlRequest) { data, _, error in
             DispatchQueue.main.async {
                 guard
                     error == nil,

@@ -69,6 +69,6 @@ let project = Project(
             ]),
             testAction: .targets(["BasicIntegrationUITests"]),
             runAction: .runAction(executable: "Basic Integration")
-        )
+        ),
     ]
 )

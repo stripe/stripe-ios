@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # To set as a local pre-push hook:
-#         ln -s "$(pwd)/ci_scripts/lint_before_push.sh" .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+#         ln -s "$(pwd)/ci_scripts/lint_modified_files.sh" .git/hooks/pre-push && chmod +x .git/hooks/pre-push
 
 function suggest_no_verify() {
   sleep 0.01 # wait for git to print its error
@@ -14,13 +14,19 @@ function suggest_no_verify() {
 }
 
 if which swiftlint >/dev/null; then
+  IS_HOOK=false
+  if [ $(dirname $0) == ".git/hooks" ]; then
+    IS_HOOK=true
+  fi
 
   START=`date +%s`
 
   z40=0000000000000000000000000000000000000000
 
-  echo "Linting before pushing (use $(tput setaf 7)git push --no-verify$(tput sgr0) to skip)."
-  echo ""
+  if [ "$IS_HOOK" = true ]; then
+    echo "Linting before pushing (use $(tput setaf 7)git push --no-verify$(tput sgr0) to skip)."
+    echo ""
+  fi
 
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
   count=0
@@ -45,10 +51,10 @@ if which swiftlint >/dev/null; then
   END=`date +%s`
   echo ""
   echo "Linted in $(($END - $START))s."
-  if [ "$EXIT_CODE" != '0' ]; then
-    suggest_no_verify &
-  else
+  if [ "$EXIT_CODE" == '0' ]; then
     echo 'All lints passed.'
+  elif [ "$IS_HOOK" = true ]; then
+    suggest_no_verify &
   fi
   exit $EXIT_CODE
 else

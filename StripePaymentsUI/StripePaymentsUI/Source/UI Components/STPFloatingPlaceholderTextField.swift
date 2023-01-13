@@ -290,6 +290,9 @@ extension STPFloatingPlaceholderTextField {
 
     /// :nodoc:
     @objc public override var leftViewMode: UITextField.ViewMode {
+        get {
+            return super.leftViewMode
+        }
         set {
             if newValue != .always && newValue != .never {
                 assert(false, "Only .always or .never are supported")
@@ -298,13 +301,13 @@ extension STPFloatingPlaceholderTextField {
                 super.leftViewMode = newValue
             }
         }
-        get {
-            return super.leftViewMode
-        }
     }
 
     /// :nodoc:
     @objc public override var rightViewMode: UITextField.ViewMode {
+        get {
+            return super.rightViewMode
+        }
         set {
             if newValue != .always && newValue != .never {
                 assert(false, "Only .always or .never are supported")
@@ -312,9 +315,6 @@ extension STPFloatingPlaceholderTextField {
             } else {
                 super.rightViewMode = newValue
             }
-        }
-        get {
-            return super.rightViewMode
         }
     }
 

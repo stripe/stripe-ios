@@ -5,33 +5,33 @@
 //  Created by Vardges Avetisyan on 11/12/21.
 //
 
-import UIKit
 import StripeFinancialConnections
+import UIKit
 
 class ConnectAccountViewController: UIViewController {
 
     // MARK: - Constants
-    
+
     let baseURL = "https://stripe-mobile-connections-example.glitch.me"
     let financialConnectionsEndpoint = "/create_session"
 
     // MARK: - IBOutlets
-    
+
     @IBOutlet weak var connectAccountButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Properties
-    
+
     private var financialConnectionsSheet: FinancialConnectionsSheet?
-    
+
     // MARK: - IBActions
-    
+
     @IBAction func didTapConnectAccount(_ sender: Any) {
         requestFinancialConnectionsSession()
     }
 
     // MARK: - Helpers
-    
+
     private func requestFinancialConnectionsSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
@@ -43,7 +43,7 @@ class ConnectAccountViewController: UIViewController {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
 
-        let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
+        let task = session.dataTask(with: urlRequest) { [weak self] data, _, error in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
 
@@ -63,7 +63,7 @@ class ConnectAccountViewController: UIViewController {
         }
         task.resume()
     }
- 
+
     private func startFinancialConnections(responseJson: [String: String]) {
         guard let clientSecret = responseJson["client_secret"] else {
             assertionFailure("Did not receive a valid client secret.")
@@ -97,7 +97,7 @@ class ConnectAccountViewController: UIViewController {
         // Re-enable button
         updateButtonState(isLoading: false)
     }
-    
+
     private func updateButtonState(isLoading: Bool) {
         // Re-enable button
         connectAccountButton.isEnabled = !isLoading
@@ -107,10 +107,10 @@ class ConnectAccountViewController: UIViewController {
             activityIndicator.stopAnimating()
         }
     }
-    
+
     private func displayAlert(_ message: String) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
             alertController.dismiss(animated: true) {
                 self.dismiss(animated: true, completion: nil)
             }

@@ -19,28 +19,27 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
 
-        
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
         app.launch()
     }
-    
+
     func waitToAppear(_ target: XCUIElement?) {
         _ = target?.waitForExistence(timeout: 60)
     }
-    
+
     func saveScreenshot(_ name: String) {
         let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
         attachment.lifetime = .keepAlways
         attachment.name = name
         add(attachment)
     }
-    
+
     func scrollToPaymentMethodCell(_ cell: String) {
         let paymentMethodTypeCollectionView = app.collectionViews["PaymentMethodTypeCollectionView"]
         waitToAppear(paymentMethodTypeCollectionView)
         let targetCell = paymentMethodTypeCollectionView.cells[cell]
-        
+
         // This is not particularly efficient or robust but it's working
         // Unfortunately UICollectionViews are setup for KVO so we can't query
         // contentOffset or contentSize here
@@ -69,7 +68,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         app.segmentedControls["mode_selector"].buttons["Pay"].tap() // PaymentIntent
         app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable automatic payment methods
         app.buttons["Reload PaymentSheet"].tap()
-        
+
         let checkout = app.buttons["Checkout (Complete)"]
         expectation(
             for: NSPredicate(format: "enabled == true"),
@@ -151,7 +150,6 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             cvcField.tap()
             saveScreenshot("card_incomplete_exp_date")
 
-
             numberField.clearText()
             expField.clearText()
             cvcField.tap()
@@ -172,11 +170,11 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             idealCell.tap() // hacky to double tap but fixes transition if software keyboard is enabled
             saveScreenshot("ideal_entry")
         }
-        
+
         do {
             let bancontactCell = app.cells["bancontact"]
             scrollToPaymentMethodCell("bancontact")
-            
+
             bancontactCell.tap()
             bancontactCell.tap() // hacky to double tap but fixes transition if software keyboard is enabled
             saveScreenshot("bancontact_entry")
@@ -228,8 +226,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
 //            app.cells.containing(.button, identifier: "Remove").firstMatch.buttons["Remove"].tap()
 //            saveScreenshot("removing_payment_method_confirmation")
 //        }
-        
-        
+
     }
 }
 
@@ -238,7 +235,7 @@ extension XCUIElement {
         guard let stringValue = value as? String, !stringValue.isEmpty else {
             return
         }
-        
+
         // offset tap location a bit so cursor is at end of string
         let offsetTapLocation = coordinate(withNormalizedOffset: CGVector(dx: 0.6, dy: 0.6))
         offsetTapLocation.tap()

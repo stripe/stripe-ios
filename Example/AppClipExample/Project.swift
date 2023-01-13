@@ -126,7 +126,6 @@ let project = Project(
                 "AppClipExampleClipUITests",
             ]),
             runAction: .runAction(executable: "AppClipExampleClip")
-        )
+        ),
     ]
 )
-

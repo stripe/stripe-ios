@@ -8,9 +8,9 @@
 
 import UIKit
 
+import StripeApplePay
 import StripeFinancialConnections
 import StripePayments
-import StripeApplePay
 
 class USBankAccountFinancialConnectionsExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
@@ -26,7 +26,7 @@ class USBankAccountFinancialConnectionsExampleViewController: UIViewController {
     }
 
     let bankAccountCollector = STPBankAccountCollector()
-    var clientSecret: String? = nil
+    var clientSecret: String?
 
     // UI
     lazy var nameField: UITextField = {
@@ -117,7 +117,6 @@ class USBankAccountFinancialConnectionsExampleViewController: UIViewController {
             mandateLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 1),
             view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: mandateLabel.trailingAnchor, multiplier: 1),
 
-
             payButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             payButton.topAnchor.constraint(equalToSystemSpacingBelow: mandateLabel.bottomAnchor, multiplier: 1),
 
@@ -146,7 +145,7 @@ class USBankAccountFinancialConnectionsExampleViewController: UIViewController {
         inProgress = true
         // 1. Create a US Bank Account PaymentIntent
         MyAPIClient.shared().createPaymentIntent(
-            completion: { [self] (result, clientSecret, error) in
+            completion: { [self] (_, clientSecret, error) in
                 guard let clientSecret = clientSecret else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
@@ -196,7 +195,7 @@ extension USBankAccountFinancialConnectionsExampleViewController {
         paymentIntentParams.returnURL = "payments-example://stripe/"
         STPPaymentHandler.shared().confirmPayment(
             paymentIntentParams, with: self
-        ) { (status, intent, error) in
+        ) { (status, _, error) in
             switch status {
             case .canceled:
                 self.delegate?.exampleViewController(

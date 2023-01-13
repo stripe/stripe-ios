@@ -172,7 +172,7 @@ import WebKit
 extension PaymentMethodMessagingView {
     /// A regex that matches <img> tags and captures its url
     static let imgTagRegex = try! NSRegularExpression(pattern: "<img src=\"(.*?)\">")
-    
+
     /// - Returns: The given `html` string with <img> tags replaced with <a href> tags, and a list of the URLs contained in the replaced tags
     static func htmlReplacingImageTags(html: String) -> (String, [URL]) {
         var html = html
@@ -192,7 +192,7 @@ extension PaymentMethodMessagingView {
         }
         return (html, images)
     }
-    
+
     static func makeCSS(for font: UIFont) -> String {
         // To set the font, we prepend CSS to the given `html` before converting it to an NSAttributedString
         let isSystemFont = font.familyName == UIFont.systemFont(ofSize: font.pointSize).familyName
@@ -206,7 +206,7 @@ extension PaymentMethodMessagingView {
                 </style>
             """
     }
-    
+
     static func makeAttributedString(
         from html: String,
         configuration: Configuration
@@ -224,7 +224,7 @@ extension PaymentMethodMessagingView {
         }
         // 4. Replace the links in the attributed string with image attachments
         let mAttributedString = NSMutableAttributedString(attributedString: attributedString)
-        mAttributedString.enumerateAttribute(.link, in: NSRange(0..<mAttributedString.length)) { value, range, stop in
+        mAttributedString.enumerateAttribute(.link, in: NSRange(0..<mAttributedString.length)) { value, range, _ in
             guard
                 let url = value as? URL,
                 let image = images[url]
@@ -291,7 +291,7 @@ extension PaymentMethodMessagingView {
             "locale": Locale.canonicalLanguageIdentifier(from: configuration.locale.identifier),
         ]
     }
-    
+
     static func loadImage(url: URL, apiClient: STPAPIClient) async throws -> UIImage? {
         let request = apiClient.configuredRequest(for: url)
         let data: Data
@@ -301,7 +301,7 @@ extension PaymentMethodMessagingView {
         } else {
             /// Adapted from https://www.swiftbysundell.com/articles/making-async-system-apis-backward-compatible/
             data = try await withCheckedThrowingContinuation { continuation in
-                let task = apiClient.urlSession.dataTask(with: request) { data, response, error in
+                let task = apiClient.urlSession.dataTask(with: request) { data, _, error in
                     guard let data = data else {
                         let error = error ?? URLError(.badServerResponse)
                         return continuation.resume(throwing: error)
@@ -353,7 +353,7 @@ extension PaymentMethodMessagingView {
 extension NSAttributedString {
     func withFontSize(_ size: CGFloat) -> NSAttributedString {
         let mutable = NSMutableAttributedString(attributedString: self)
-        mutable.enumerateAttributes(in: NSRange(0..<mutable.length)) { attributes, range, stop in
+        mutable.enumerateAttributes(in: NSRange(0..<mutable.length)) { attributes, range, _ in
             // Ignore text attachments (images) - setting the font size on these causes the image to disappear
             guard attributes[NSAttributedString.Key.attachment] == nil else {
                 return

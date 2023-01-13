@@ -65,7 +65,7 @@ extension AffirmExampleViewController {
     @objc func pay() {
         // 1. Create an Affirm PaymentIntent
         MyAPIClient.shared().createPaymentIntent(
-            completion: { (result, clientSecret, error) in
+            completion: { (_, clientSecret, error) in
                 guard let clientSecret = clientSecret else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
@@ -86,11 +86,11 @@ extension AffirmExampleViewController {
                     metadata: [:])
                 paymentIntentParams.returnURL = "payments-example://safepay/"
                 paymentIntentParams.shipping = shippingDetailsParam
-                
+
                 // 3. Confirm payment
                 STPPaymentHandler.shared().confirmPayment(
                     paymentIntentParams, with: self
-                ) { (status, intent, error) in
+                ) { (status, _, error) in
                     switch status {
                     case .canceled:
                         self.delegate?.exampleViewController(

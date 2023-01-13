@@ -5,8 +5,8 @@
 //  Created by David Estes on 2/8/21.
 //
 
-import SwiftUI
 import Stripe
+import SwiftUI
 
 struct CardView: View {
   @StateObject var model = MyPIModel()
@@ -35,7 +35,7 @@ struct CardView: View {
     }
 }
 
-struct CardView_Preview : PreviewProvider {
+struct CardView_Preview: PreviewProvider {
   static var previews: some View {
     CardView()
   }

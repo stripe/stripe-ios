@@ -142,7 +142,7 @@ extension KlarnaSourcesExampleViewController {
         // Klarna will request additional information from the customer during checkout.
         let items = [
             STPKlarnaLineItem(
-                itemType: .SKU, itemDescription: "Mysterious Item", quantity: 1, totalAmount: 10000)
+                itemType: .SKU, itemDescription: "Mysterious Item", quantity: 1, totalAmount: 10000),
         ]
 
         let sourceParams = STPSourceParams.klarnaParams(

@@ -5,8 +5,8 @@
 //  Created by David Estes on 2/8/21.
 //
 
-import SwiftUI
 import Stripe
+import SwiftUI
 
 struct CardSetupIntentsView: View {
     @StateObject var model = MySIModel()
@@ -35,7 +35,7 @@ struct CardSetupIntentsView: View {
     }
 }
 
-struct CardSetupIntentsView_Preview : PreviewProvider {
+struct CardSetupIntentsView_Preview: PreviewProvider {
   static var previews: some View {
     CardSetupIntentsView()
   }
