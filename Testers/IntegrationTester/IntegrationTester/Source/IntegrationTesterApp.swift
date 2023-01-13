@@ -5,8 +5,8 @@
 //  Created by David Estes on 2/8/21.
 //
 
-import SwiftUI
 import Stripe
+import SwiftUI
 
 @main
 struct IntegrationTesterApp: App {
@@ -18,13 +18,13 @@ struct IntegrationTesterApp: App {
               }
               .onAppear {
                 // As early as possible, configure STPAPIClient with your publishable key.
-                BackendModel.shared.loadPublishableKey() { publishableKey in
+                BackendModel.shared.loadPublishableKey { publishableKey in
                   STPAPIClient.shared.publishableKey = publishableKey
                 }
-                
+
                 // Disable hardware keyboards in CI:
                 #if targetEnvironment(simulator)
-                if (ProcessInfo.processInfo.environment["UITesting"] != nil) {
+                if ProcessInfo.processInfo.environment["UITesting"] != nil {
                     let setHardwareLayout = NSSelectorFromString("setHardwareLayout:")
                     UITextInputMode.activeInputModes
                         .filter({ $0.responds(to: setHardwareLayout) })

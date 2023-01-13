@@ -13,8 +13,8 @@ import OHHTTPStubsSwift
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 @available(iOS 13.0, *)
@@ -37,7 +37,7 @@ class STPApplePayContextFunctionalTestAPIClient: STPAPIClient {
             }
             // Let everything pass through to the underlying API
             return false
-        } response: { urlRequest in
+        } response: { _ in
             // This doesn't matter, we're not sending responses for anything.
             return HTTPStubsResponse()
         }

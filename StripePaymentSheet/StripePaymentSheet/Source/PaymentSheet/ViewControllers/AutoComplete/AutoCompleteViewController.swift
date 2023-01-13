@@ -7,13 +7,13 @@
 //
 
 import Foundation
-import UIKit
 import MapKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol AutoCompleteViewControllerDelegate: AnyObject {
-    
+
     /// Called when the user has selected an address from the auto complete suggestions
     /// - Parameter address: The address selected from the search results
     func didSelectAddress(_ address: PaymentSheet.Address?)
@@ -33,9 +33,9 @@ class AutoCompleteViewController: UIViewController {
         }
         return searchCompleter
     }()
-    
+
     weak var delegate: AutoCompleteViewControllerDelegate?
-    
+
     private let cellReuseIdentifier = "autoCompleteCell"
     var results: [AddressSearchResult] = [] {
         didSet {
@@ -53,7 +53,7 @@ class AutoCompleteViewController: UIViewController {
     private var theme: ElementsUITheme {
         return configuration.appearance.asElementsTheme
     }
-    
+
     // MARK: - Views
     lazy var formView: UIView = {
         return formElement.view
@@ -63,7 +63,7 @@ class AutoCompleteViewController: UIViewController {
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        
+
         return stackView
     }()
     lazy var tableView: UITableView = {
@@ -92,7 +92,7 @@ class AutoCompleteViewController: UIViewController {
         label.isHidden = true
         return label
     }()
-    
+
     // MARK: - Elements
     lazy var autoCompleteLine: TextFieldElement = {
         let autoCompleteLine = TextFieldElement.Address.makeAutoCompleteLine(defaultValue: initialLine1Text, theme: theme)
@@ -107,7 +107,7 @@ class AutoCompleteViewController: UIViewController {
         form.delegate = self
         return form
     }()
-    
+
     // MARK: - Initializers
     required init(
         configuration: AddressViewController.Configuration,
@@ -122,17 +122,17 @@ class AutoCompleteViewController: UIViewController {
             self.addressSearchCompleter.queryFragment = initialLine1Text
         }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Overrides
     var stackViewBottomConstraint: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
-        
+
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButton])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
@@ -150,17 +150,17 @@ class AutoCompleteViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
-            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height)
+            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
         ])
-        
+
     }
-    
+
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.removeObserver(self)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
-    
+
     @objc private func adjustForKeyboard(notification: Notification) {
         guard
             let keyboardScreenEndFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
@@ -183,18 +183,18 @@ class AutoCompleteViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-     
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
         autoCompleteLine.beginEditing()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     // MARK: Private functions
     @objc private func manualEntryButtonTapped() {
         // Populate address with partial for line 1
@@ -207,7 +207,7 @@ extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         addressSearchCompleter.queryFragment = autoCompleteLine.text
     }
-    
+
     func continueToNextField(element: Element) {
         // no-op
     }
@@ -218,16 +218,16 @@ extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         self.results = completer.results
     }
-    
+
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         let nsError = error as NSError
-        
+
         // Making a query with an empty string causes a server error and doesn't update search results
         if completer.queryFragment.isEmpty && nsError.code == MKError.serverFailure.rawValue {
             results.removeAll()
             return
         }
-        
+
         self.latestError = error
     }
 }
@@ -237,11 +237,11 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return results.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) ??
              UITableViewCell(style: .subtitle, reuseIdentifier: cellReuseIdentifier)
@@ -261,15 +261,15 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
 
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
     }
-    
+
     func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
         return 1
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         results[indexPath.row].asAddress { [weak self] address in
             DispatchQueue.main.async {
@@ -277,5 +277,5 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
             }
         }
     }
-    
+
 }

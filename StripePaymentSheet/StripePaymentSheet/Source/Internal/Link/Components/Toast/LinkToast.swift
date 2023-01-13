@@ -79,7 +79,7 @@ final class LinkToast: UIView {
             stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
     }
 
@@ -111,7 +111,7 @@ extension LinkToast {
             // Pin edges
             topAnchor.constraint(equalTo: presentingView.safeAreaLayoutGuide.topAnchor),
             leadingAnchor.constraint(greaterThanOrEqualTo: presentingView.layoutMarginsGuide.leadingAnchor),
-            trailingAnchor.constraint(lessThanOrEqualTo: presentingView.layoutMarginsGuide.trailingAnchor)
+            trailingAnchor.constraint(lessThanOrEqualTo: presentingView.layoutMarginsGuide.trailingAnchor),
         ])
 
         alpha = 0

@@ -32,7 +32,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         }
     }
 
-    private var scrolledToBottomYOffset: CGFloat? = nil
+    private var scrolledToBottomYOffset: CGFloat?
 
     var flowViewModel: IdentityFlowView.ViewModel {
 
@@ -122,13 +122,13 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                         image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
                         text: consentContent.timeEstimate,
                         isTextHTML: false
-                    )
+                    ),
                 ],
                 nonIconText: [
                     .init(
                         text: consentContent.privacyPolicy,
                         isTextHTML: true
-                    )
+                    ),
                 ],
                 bodyHtmlString: consentContent.body,
                 didOpenURL: { [weak self] url in

@@ -8,9 +8,9 @@
 
 import Foundation
 import PassKit
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
@@ -69,7 +69,7 @@ extension UIViewController {
             // Remove the child view controller, but don't remove its view yet - keep it on screen so we can fade it out
             fromVC.willMove(toParent: nil)
             fromVC.removeFromParent()
-            
+
             animateHeightChange(
                 {
                     containerView.updateHeight()

@@ -11,8 +11,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
@@ -110,11 +110,15 @@ extension PayWithLinkViewController_WalletViewModelTests {
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
         let paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
         let orderedPaymentJson = ["card", "link"]
-        let paymentIntentResponse = ["payment_intent": paymentIntentJson,
-                                     "ordered_payment_method_types": orderedPaymentJson] as [String : Any]
+        let paymentIntentResponse = [
+            "payment_intent": paymentIntentJson,
+            "ordered_payment_method_types": orderedPaymentJson,
+        ] as [String: Any]
         let linkSettingsJson = ["link_funding_sources": ["CARD"]]
-        let response = ["payment_method_preference": paymentIntentResponse,
-                        "link_settings": linkSettingsJson]
+        let response = [
+            "payment_method_preference": paymentIntentResponse,
+            "link_settings": linkSettingsJson,
+        ]
         let paymentIntent = try XCTUnwrap(
             STPPaymentIntent.decodedObject(fromAPIResponse: response)
         )

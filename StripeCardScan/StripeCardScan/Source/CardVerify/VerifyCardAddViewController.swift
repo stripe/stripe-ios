@@ -18,7 +18,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
 
     static var manualCardEntryText = String.Localized.enter_card_details_manually
 
-    //TODO(jaimepark): Remove on consolidation
+    // TODO(jaimepark): Remove on consolidation
     weak var verifyDelegate: VerifyViewControllerDelegate?
 
     private let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
@@ -69,7 +69,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
 
         return uxAndOcrMainLoop
     }
-    // MARK: -Set Up Manual Card Entry Button
+    // MARK: - Set Up Manual Card Entry Button
     override func setupUiComponents() {
         if let closeButton = VerifyCardAddViewController.closeButton {
             self.closeButton = closeButton
@@ -141,7 +141,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
         ).isActive = true
     }
 
-    // MARK: -Override some ScanBase functions
+    // MARK: - Override some ScanBase functions
     override func onScannedCard(
         number: String,
         expiryYear: String?,
@@ -183,7 +183,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
         }
     }
 
-    // MARK: -UI event handlers and other navigation functions
+    // MARK: - UI event handlers and other navigation functions
     override func cancelButtonPress() {
         /// User canceled the scan before the main loop completed, log with a failure
         mainLoopDurationTask.trackResult(.failure)

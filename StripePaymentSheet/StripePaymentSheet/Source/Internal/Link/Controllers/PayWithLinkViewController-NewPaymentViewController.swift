@@ -6,11 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import PassKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension PayWithLinkViewController {
 
@@ -92,7 +92,7 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
-            
+
             return AddPaymentMethodViewController(
                 intent: context.intent,
                 configuration: configuration,
@@ -137,7 +137,7 @@ extension PayWithLinkViewController {
                 titleLabel,
                 addPaymentMethodVC.view,
                 errorLabel,
-                buttonContainer
+                buttonContainer,
             ])
 
             stackView.axis = .vertical
@@ -175,7 +175,7 @@ extension PayWithLinkViewController {
                     constant: LinkUI.contentMargins.leading),
                 buttonContainer.trailingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
-                    constant: -LinkUI.contentMargins.trailing)
+                    constant: -LinkUI.contentMargins.trailing),
             ])
 
             didUpdate(addPaymentMethodVC)
@@ -191,7 +191,7 @@ extension PayWithLinkViewController {
                 didSelectAddBankAccount()
                 return
             }
-            
+
             guard let newPaymentOption = addPaymentMethodVC.paymentOption,
                   case .new(let confirmParams) = newPaymentOption else {
                 assertionFailure()
@@ -211,12 +211,12 @@ extension PayWithLinkViewController {
                     if case .card(let card) = paymentDetails.details {
                         card.cvc = confirmParams.paymentMethodParams.card?.cvc
                     }
-                    
+
                     self.coordinator?.confirm(with: self.linkAccount,
                                               paymentDetails: paymentDetails,
                                               completion: { [weak self] result in
                         let state: ConfirmButton.Status
-                        
+
                         switch result {
                         case .completed:
                             state = .succeeded
@@ -245,7 +245,7 @@ extension PayWithLinkViewController {
         func didSelectAddBankAccount() {
             confirmButton.update(state: .processing)
 
-            coordinator?.startInstantDebits() { [weak self] result in
+            coordinator?.startInstantDebits { [weak self] result in
                 guard let self = self else { return }
 
                 switch result {
@@ -262,7 +262,7 @@ extension PayWithLinkViewController {
                 }
             }
         }
-        
+
         func updateErrorLabel(for error: Error?) {
             errorLabel.text = error?.nonGenericDescription
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {

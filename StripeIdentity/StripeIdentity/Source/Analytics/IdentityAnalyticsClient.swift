@@ -476,7 +476,7 @@ final class IdentityAnalyticsClient {
                     error: error,
                     filePath: filePath,
                     line: line
-                )
+                ),
             ]
         )
     }

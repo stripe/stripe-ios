@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPCardFormViewTests: XCTestCase {
@@ -154,9 +154,9 @@ class STPCardFormViewTests: XCTestCase {
         let createPaymentIntentExpectation = self.expectation(
             description: "createPaymentIntentExpectation"
         )
-        var retrievedClientSecret: String? = nil
+        var retrievedClientSecret: String?
         STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) {
-            (createdPIClientSecret, error) in
+            (createdPIClientSecret, _) in
             if let createdPIClientSecret = createdPIClientSecret {
                 retrievedClientSecret = createdPIClientSecret
                 createPaymentIntentExpectation.fulfill()
@@ -199,7 +199,7 @@ class STPCardFormViewTests: XCTestCase {
         paymentIntentParams.paymentMethodParams = paymentMethodParams
 
         let confirmExpectation = expectation(description: "confirmExpectation")
-        client.confirmPaymentIntent(with: paymentIntentParams) { (paymentIntent, error) in
+        client.confirmPaymentIntent(with: paymentIntentParams) { (_, error) in
             if let error = error {
                 let cardForm = STPCardFormView()
                 if shouldHandle {

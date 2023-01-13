@@ -9,17 +9,17 @@
 //  an example of what you should do in a real app!
 //  Note: Do not import Stripe using `@_spi(STP)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
-import StripePaymentSheet
 import Contacts
-import UIKit
-import SwiftUI
 import PassKit
+import StripePaymentSheet
+import SwiftUI
+import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
     static let endpointSelectorEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/endpoints"
     static let defaultCheckoutEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
 
-    static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
+    static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings?
 
     // Configuration
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
@@ -72,7 +72,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case paymentWithSetup = "payment_with_setup"
         case setup
     }
-    
+
     enum ShippingMode {
         case on
         case onWithDefaults
@@ -89,7 +89,7 @@ class PaymentSheetTestPlayground: UIViewController {
             return .returning
         }
     }
-    
+
     var shouldSetDefaultBillingAddress: Bool {
         return defaultBillingAddressSelector.selectedSegmentIndex == 0
     }
@@ -112,7 +112,7 @@ class PaymentSheetTestPlayground: UIViewController {
                     billing.startDate = Date()
                     billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
                     billing.intervalUnit = .month
-                    
+
                     request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
                                                                                 regularBilling: billing,
                                                                                 managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
@@ -185,7 +185,7 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
-    
+
     var shippingMode: ShippingMode {
         switch shippingInfoSelector.selectedSegmentIndex {
         case 0: return .on
@@ -248,7 +248,7 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var addressDetails: AddressViewController.AddressDetails?
-    
+
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
@@ -256,11 +256,11 @@ class PaymentSheetTestPlayground: UIViewController {
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
-    
+
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
             title: "Complete", message: "Completed", preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
             alertController.dismiss(animated: true, completion: nil)
         }
         alertController.addAction(OKAction)
@@ -272,10 +272,10 @@ class PaymentSheetTestPlayground: UIViewController {
 
         // Enable experimental payment methods.
 //        PaymentSheet.supportedPaymentMethods += [.link]
-        
+
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
-        
+
         shippingAddressButton.addTarget(self, action: #selector(didTapShippingAddressButton), for: .touchUpInside)
         shippingAddressButton.titleLabel?.adjustsFontSizeToFitWidth = true
         shippingAddressButton.titleLabel?.textAlignment = .right
@@ -350,7 +350,7 @@ class PaymentSheetTestPlayground: UIViewController {
             self.updateButtons()
         }
     }
-    
+
     @objc
     func didTapShippingAddressButton() {
         present(UINavigationController(rootViewController: addressViewController!), animated: true)
@@ -436,14 +436,14 @@ extension PaymentSheetTestPlayground {
                 return "returning"
             }
         }()
-        
+
         let body = [
             "customer": customer,
             "currency": currency.rawValue,
             "merchant_country_code": merchantCountryCode.rawValue,
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
-            "use_link": linkSelector.selectedSegmentIndex == 0
+            "use_link": linkSelector.selectedSegmentIndex == 0,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
@@ -451,7 +451,7 @@ extension PaymentSheetTestPlayground {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, response, error in
+        let task = session.dataTask(with: urlRequest) { data, _, error in
             guard
                 error == nil,
                 let data = data,
@@ -552,14 +552,14 @@ extension PaymentSheetTestPlayground: AddressViewControllerDelegate {
 
 // MARK: - EndpointSelectorViewControllerDelegate
 extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
-    func selected(endpoint: String) -> Void {
+    func selected(endpoint: String) {
         checkoutEndpoint = endpoint
         serializeSettingsToNSUserDefaults()
         loadBackend()
         self.navigationController?.dismiss(animated: true)
 
     }
-    func cancelTapped() -> Void {
+    func cancelTapped() {
         self.navigationController?.dismiss(animated: true)
     }
 }
@@ -567,7 +567,7 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
 // MARK: - Helpers
 
 extension PaymentSheetTestPlayground {
-    func serializeSettingsToNSUserDefaults() -> Void {
+    func serializeSettingsToNSUserDefaults() {
         let settings = PaymentSheetPlaygroundSettings(
             modeSelectorValue: modeSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,

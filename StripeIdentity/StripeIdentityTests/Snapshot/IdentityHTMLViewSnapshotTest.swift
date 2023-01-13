@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 import iOSSnapshotTestCase
+@_spi(STP) import StripeUICore
 
 @testable import StripeIdentity
 
@@ -29,7 +29,7 @@ final class IdentityHTMLViewSnapshotTest: FBSnapshotTestCase {
                         image: StripeIdentity.Image.iconCheckmark.makeImage(),
                         text: "One line of text",
                         isTextHTML: false
-                    )
+                    ),
                 ],
                 bodyHtmlString: NSAttributedString_HTMLSnapshotTest.htmlText,
                 didOpenURL: { _ in }
@@ -45,7 +45,7 @@ final class IdentityHTMLViewSnapshotTest: FBSnapshotTestCase {
                         image: StripeIdentity.Image.iconClock.makeImage(),
                         text: "Some text that is really long and wraps to multiple lines",
                         isTextHTML: false
-                    )
+                    ),
                 ],
                 bodyHtmlString: NSAttributedString_HTMLSnapshotTest.htmlText,
                 didOpenURL: { _ in }

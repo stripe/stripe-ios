@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdateSelection(
@@ -26,10 +26,10 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
 @objc(STP_Internal_SavedPaymentOptionsViewController)
 class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - Types
+    // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
     /**
      Represents the payment method the user has selected
      */
-    // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
     enum Selection {
         case applePay
         case link
@@ -54,7 +54,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
-        
+
         enum AutoSelectDefaultBehavior {
             /// will only autoselect default has been stored locally
             case onlyIfMatched
@@ -63,7 +63,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             /// No auto selection
             case none
         }
-        
+
         let autoSelectDefaultBehavior: AutoSelectDefaultBehavior
     }
 
@@ -93,7 +93,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
     var bottomNoticeAttributedString: NSAttributedString? {
         if case .saved(let paymentMethod) = selectedPaymentOption {
-            if let _ = paymentMethod.usBankAccount {
+            if paymentMethod.usBankAccount != nil {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(theme: appearance.asElementsTheme)
             }
         }
@@ -241,7 +241,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         // For some reason, the selected cell loses its selected appearance
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
-    
+
     func unselectPaymentMethod() {
         guard let selectedIndexPath = selectedIndexPath else {
             return
@@ -290,7 +290,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
-        
+
         return cell
     }
 
@@ -316,7 +316,6 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         case .add:
             // Should have been handled in shouldSelectItemAt: before we got here!
             assertionFailure()
-            break
         case .applePay:
             DefaultPaymentMethodStore.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
@@ -377,13 +376,13 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             title: String.Localized.cancel,
             style: .cancel, handler: nil
         )
-        
+
         let alertController = UIAlertController(
             title: paymentMethod.removalMessage.title,
             message: paymentMethod.removalMessage.message,
             preferredStyle: .alert
         )
-        
+
         alertController.addAction(cancel)
         alertController.addAction(alert)
         present(alertController, animated: true, completion: nil)

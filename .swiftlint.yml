@@ -22,6 +22,7 @@ disabled_rules:
   - closing_brace
   - function_parameter_count
   - multiple_closures_with_trailing_closure
+  - inclusive_language
   # Rules to enable after initial cleanup.
   - line_length
   - shorthand_operator
@@ -31,12 +32,17 @@ disabled_rules:
   - overridden_super_call
   - redundant_string_enum_value
   - no_fallthrough_only
+  - class_delegate_protocol
+  - closure_parameter_position
+  - reduce_boolean
+  - unused_setter_value
+  - notification_center_detachment
+  - private_outlet
 
 opt_in_rules:
   - colon
   - comma
   - control_statement
-  - discouraged_object_literal
   - empty_count
   # - force_unwrapping  # Enable one day...
   - joined_default_parameter
@@ -49,21 +55,27 @@ opt_in_rules:
   - prohibited_super_call
   - redundant_nil_coalescing
   - return_arrow_whitespace
-  - single_test_class
   - sorted_imports
   - statement_position
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace
-  - unowned_variable_capture
   - closure_spacing
   # Rules to enable after initial cleanup.
   # - weak_delegate
+  # - discouraged_object_literal
+  # - unowned_variable_capture
+  # - indentation_width
+  # - single_test_class
 
 excluded:
+  - Package.swift
   - Pods
   - Carthage
   - Tests/installation_tests
+  - vendor
+  - build*
+  - .build
 
 identifier_name:
   allowed_symbols: _
@@ -91,3 +103,6 @@ vertical_whitespace:
 
 trailing_comma:
   mandatory_comma: true
+
+generic_type_name:
+  max_length: 30          # Maybe remove after initial cleanup.

@@ -9,8 +9,8 @@
 import UIKit
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 protocol PayWithLinkViewControllerDelegate: AnyObject {
 
@@ -163,7 +163,7 @@ final class PayWithLinkViewController: UINavigationController {
         // to restore the functionality.
         interactivePopGestureRecognizer?.delegate = self
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
@@ -326,7 +326,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
 
         let linkAccountSession = try await withCheckedThrowingContinuation { continuation in
-            linkAccount.createLinkAccountSession() { result in
+            linkAccount.createLinkAccountSession { result in
                 continuation.resume(with: result)
             }
         }

@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
 import iOSSnapshotTestCase
+@_spi(STP) import StripeUICore
 
 @testable import StripeIdentity
 
@@ -25,7 +25,7 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
             accessibilityLabel: nil,
             accessory: .activityIndicator,
             onTap: nil
-        )
+        ),
     ])
 
     static let manyItemViewModel = ListView.ViewModel(items: [

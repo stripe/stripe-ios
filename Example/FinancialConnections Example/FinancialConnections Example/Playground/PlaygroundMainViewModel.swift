@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import UIKit
 import StripeFinancialConnections
+import UIKit
 
 final class PlaygroundMainViewModel: ObservableObject {
-    
+
     enum Flow: String, CaseIterable, Identifiable {
         case data
         case payments
-        
+
         var id: String {
             return rawValue
         }
@@ -25,12 +25,12 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.flow = flow.rawValue
         }
     }
-    
+
     enum NativeSelection: String, CaseIterable, Identifiable {
         case automatic
         case web
         case native
-        
+
         var id: String {
             return rawValue
         }
@@ -58,15 +58,15 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.enableAppToApp = enableAppToApp
         }
     }
-    
+
     @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
         didSet {
             PlaygroundUserDefaults.enableTestMode = enableTestMode
         }
     }
-    
+
     @Published var isLoading: Bool = false
-    
+
     init() {
         self.nativeSelection = {
             if let enableNative = PlaygroundUserDefaults.enableNative {
@@ -76,11 +76,11 @@ final class PlaygroundMainViewModel: ObservableObject {
             }
         }()
     }
-    
+
     func didSelectShow() {
         setup()
     }
-    
+
     private func setup() {
         isLoading = true
         SetupPlayground(
@@ -115,7 +115,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             self?.isLoading = false
         }
     }
-    
+
     func didSelectClearCaches() {
         URLSession.shared.reset(completionHandler: {})
     }
@@ -125,16 +125,16 @@ private func SetupPlayground(
     enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
-    completionHandler: @escaping ([String:String]?) -> Void
+    completionHandler: @escaping ([String: String]?) -> Void
 ) {
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
     let endpoint = "/setup_playground"
     let url = URL(string: baseURL + endpoint)!
-    
+
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = "POST"
     urlRequest.httpBody = {
-        var requestBody: [String:Any] = [:]
+        var requestBody: [String: Any] = [:]
         requestBody["enable_test_mode"] = enableTestMode
         requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
@@ -145,7 +145,7 @@ private func SetupPlayground(
     }()
     urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
     urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    
+
     URLSession.shared
         .dataTask(
             with: urlRequest
@@ -170,7 +170,7 @@ private func SetupPlayground(
 }
 
 private func PresentFinancialConnectionsSheet(
-    setupPlaygroundResponseJSON: [String:String],
+    setupPlaygroundResponseJSON: [String: String],
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
@@ -179,7 +179,7 @@ private func PresentFinancialConnectionsSheet(
     guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"]  else {
         fatalError("Did not receive a valid publishable key.")
     }
-    
+
     STPAPIClient.shared.publishableKey = publishableKey
 
     let financialConnectionsSheet = FinancialConnectionsSheet(

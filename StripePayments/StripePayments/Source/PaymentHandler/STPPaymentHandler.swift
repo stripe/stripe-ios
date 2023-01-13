@@ -151,7 +151,7 @@ public class STPPaymentHandler: NSObject {
 
     private var formSpecPaymentHandler: FormSpecPaymentHandler?
 
-    internal var _redirectShim: ((URL, URL?, Bool) -> Void)? = nil
+    internal var _redirectShim: ((URL, URL?, Bool) -> Void)?
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
@@ -350,7 +350,7 @@ public class STPPaymentHandler: NSObject {
                             for: .intentStatusErrorCode,
                             userInfo: [
                                 STPError.errorMessageKey:
-                                    "Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion."
+                                    "Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion.",
                             ]
                         )
                     )
@@ -551,7 +551,7 @@ public class STPPaymentHandler: NSObject {
                             for: .intentStatusErrorCode,
                             userInfo: [
                                 STPError.errorMessageKey:
-                                    "Confirm the SetupIntent on the backend before calling handleNextActionForSetupIntent:withAuthenticationContext:completion."
+                                    "Confirm the SetupIntent on the backend before calling handleNextActionForSetupIntent:withAuthenticationContext:completion.",
                             ]
                         )
                     )
@@ -1274,7 +1274,6 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             presentingVC.presentPollingVCForAction(currentAction)
-            break
         @unknown default:
             fatalError()
         }
@@ -2010,7 +2009,7 @@ extension STPPaymentHandler {
             uiType: transaction.presentedChallengeUIType
         )
         if transactionStatus == "Y" {
-            _markChallengeCompleted(withCompletion: { markedCompleted, error in
+            _markChallengeCompleted(withCompletion: { _, _ in
                 if let currentAction = self.currentAction
                     as? STPPaymentHandlerPaymentIntentActionParams
                 {
@@ -2043,7 +2042,7 @@ extension STPPaymentHandler {
             })
         } else {
             // going to ignore the rest of the status types because they provide more detail than we require
-            _markChallengeCompleted(withCompletion: { _, error in
+            _markChallengeCompleted(withCompletion: { _, _ in
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
                     error: self._error(
@@ -2070,7 +2069,7 @@ extension STPPaymentHandler {
             intentID: currentAction.intentStripeID ?? "",
             uiType: transaction.presentedChallengeUIType
         )
-        _markChallengeCompleted(withCompletion: { _, error in
+        _markChallengeCompleted(withCompletion: { _, _ in
             // we don't forward cancelation errors
             currentAction.complete(with: STPPaymentHandlerActionStatus.canceled, error: nil)
         })
@@ -2089,7 +2088,7 @@ extension STPPaymentHandler {
             intentID: currentAction.intentStripeID ?? "",
             uiType: transaction.presentedChallengeUIType
         )
-        _markChallengeCompleted(withCompletion: { _, error in
+        _markChallengeCompleted(withCompletion: { _, _ in
             currentAction.complete(
                 with: STPPaymentHandlerActionStatus.failed,
                 error: self._error(for: .timedOutErrorCode)
@@ -2110,7 +2109,7 @@ extension STPPaymentHandler {
             return
         }
 
-        _markChallengeCompleted(withCompletion: { _, error in
+        _markChallengeCompleted(withCompletion: { _, _ in
             // Add localizedError to the 3DS2 SDK error
             let threeDSError = protocolErrorEvent.errorMessage.nsErrorValue() as NSError
             var userInfo = threeDSError.userInfo
@@ -2145,7 +2144,7 @@ extension STPPaymentHandler {
             return
         }
 
-        _markChallengeCompleted(withCompletion: { _, error in
+        _markChallengeCompleted(withCompletion: { _, _ in
             // Add localizedError to the 3DS2 SDK error
             let threeDSError = runtimeErrorEvent.nsErrorValue() as NSError
             var userInfo = threeDSError.userInfo

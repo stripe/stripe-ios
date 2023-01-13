@@ -12,8 +12,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentIntentFunctionalTestSwift: XCTestCase {
@@ -25,7 +25,7 @@ class STPPaymentIntentFunctionalTestSwift: XCTestCase {
     ) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-        var clientSecret: String? = nil
+        var clientSecret: String?
         let createPIExpectation = expectation(description: "Create PaymentIntent")
         STPTestingAPIClient.shared().createPaymentIntent(
             withParams: [

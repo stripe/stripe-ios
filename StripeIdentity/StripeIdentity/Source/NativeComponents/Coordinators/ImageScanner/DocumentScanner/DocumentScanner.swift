@@ -90,7 +90,7 @@ extension DocumentScanner: ImageScanner {
 
         // If there's motion blur, reset the timer on the barcode detector.
         // Otherwise, scan for a barcode if this is the back of an ID.
-        var barcodeOutput: BarcodeDetectorOutput? = nil
+        var barcodeOutput: BarcodeDetectorOutput?
         if let barcodeDetector = self.barcodeDetector,
             idDetectorOutput.classification == .idCardBack
         {

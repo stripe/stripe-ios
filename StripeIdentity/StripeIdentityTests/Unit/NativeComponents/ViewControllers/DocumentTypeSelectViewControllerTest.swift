@@ -38,7 +38,7 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
 
     func testOnlyInvalidDocumentTypes() throws {
         do {
-            let _ = try makeViewController(withDocTypes: [
+            _ = try makeViewController(withDocTypes: [
                 "invalid_document_type": "foo"
             ])
             XCTFail("Expected `DocumentTypeSelectViewControllerError`")
@@ -53,7 +53,7 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
 
     func testEmptyDocumentTypes() throws {
         do {
-            let _ = try makeViewController(withDocTypes: [:])
+            _ = try makeViewController(withDocTypes: [:])
             XCTFail("Expected `DocumentTypeSelectViewControllerError`")
         } catch DocumentTypeSelectViewControllerError.noValidDocumentTypes(
             let providedDocumentTypes

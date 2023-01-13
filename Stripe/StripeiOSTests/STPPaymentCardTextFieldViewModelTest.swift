@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentCardTextFieldViewModelTest: XCTestCase {
@@ -38,6 +38,7 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
     }
 
     func testRawExpiration() {
+        // swiftlint:disable:next large_tuple
         let tests: [(String, String, String, String, STPCardValidationState)] = [
             ("", "", "", "", .incomplete),
             ("12/23", "12/23", "12", "23", .valid),

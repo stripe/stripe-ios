@@ -58,7 +58,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             verifyHeaders(urlRequest: urlRequest)
 
             return true
-        } response: { urlRequest in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
@@ -102,7 +102,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             }
             XCTAssertEqual(String(data: httpBody, encoding: .utf8), encodedMockVerificationData)
             return true
-        } response: { urlRequest in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
@@ -139,7 +139,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
 
             XCTAssertEqual(urlRequest.ohhttpStubs_httpBody?.isEmpty, true)
             return true
-        } response: { urlRequest in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
@@ -179,7 +179,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             )
 
             return true
-        } response: { urlRequest in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 

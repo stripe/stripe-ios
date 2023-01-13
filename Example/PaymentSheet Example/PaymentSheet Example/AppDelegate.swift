@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         // Override point for customization after application launch.
         #if targetEnvironment(simulator)
-        if (ProcessInfo.processInfo.environment["UITesting"] != nil) {
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
             // Disable hardware keyboards in CI:
             let setHardwareLayout = NSSelectorFromString("setHardwareLayout:")
             UITextInputMode.activeInputModes
@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             PaymentSheetTestPlayground.paymentSheetPlaygroundSettings = PaymentSheetPlaygroundSettings.defaultValues()
         }
         #endif
-        
+
         return true
     }
 

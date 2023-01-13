@@ -38,7 +38,7 @@ struct SoftNMS {
                 break
             }
 
-            //Take the last box and replace the max box with the last box
+            // Take the last box and replace the max box with the last box
             subsetBoxes.remove(at: maxIdx)
             probs.remove(at: maxIdx)
 

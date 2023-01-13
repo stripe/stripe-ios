@@ -278,7 +278,7 @@ final class ImageScanningSession<
                     outputSettings: [
                         (kCVPixelBufferPixelFormatTypeKey as String): Int(
                             IDDetectorConstants.requiredPixelFormat
-                        )
+                        ),
                     ]
                 ),
                 delegate: self,

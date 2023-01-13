@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPInputTextFieldFormatterTests: XCTestCase {
@@ -22,7 +22,7 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(
             formatter.textField(
                 textField,
-                shouldChangeCharactersIn: NSMakeRange(0, 2),
+                shouldChangeCharactersIn: NSRange(location: 0, length: 2),
                 replacementString: ""
             ),
             "Should allow deletion on empty"
@@ -31,7 +31,7 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(
             formatter.textField(
                 textField,
-                shouldChangeCharactersIn: NSMakeRange(0, 2),
+                shouldChangeCharactersIn: NSRange(location: 0, length: 2),
                 replacementString: ""
             ),
             "Should allow full deletion"
@@ -40,7 +40,7 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(
             formatter.textField(
                 textField,
-                shouldChangeCharactersIn: NSMakeRange(4, 1),
+                shouldChangeCharactersIn: NSRange(location: 4, length: 1),
                 replacementString: ""
             ),
             "Should allow partial deletion at end"
@@ -49,7 +49,7 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(
             formatter.textField(
                 textField,
-                shouldChangeCharactersIn: NSMakeRange(3, 1),
+                shouldChangeCharactersIn: NSRange(location: 3, length: 1),
                 replacementString: ""
             ),
             "Should allow partial deletion in middle"
@@ -58,7 +58,7 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(
             formatter.textField(
                 textField,
-                shouldChangeCharactersIn: NSMakeRange(0, 1),
+                shouldChangeCharactersIn: NSRange(location: 0, length: 1),
                 replacementString: ""
             ),
             "Should allow partial deletion at beginning"
@@ -72,7 +72,7 @@ class STPInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(
             formatter.textField(
                 textField,
-                shouldChangeCharactersIn: NSMakeRange(0, 0),
+                shouldChangeCharactersIn: NSRange(location: 0, length: 0),
                 replacementString: " "
             )
         )

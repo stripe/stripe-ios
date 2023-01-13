@@ -65,12 +65,12 @@ public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
         let dict = dict.stp_dictionaryByRemovingNulls()
         last4 = dict.stp_string(forKey: "last4")
         brand = STPCard.brand(from: dict.stp_string(forKey: "brand") ?? "")
-        //#pragma clang diagnostic push
-        //#pragma clang diagnostic ignored "-Wdeprecated"
+        // #pragma clang diagnostic push
+        // #pragma clang diagnostic ignored "-Wdeprecated"
         // This is only intended to be deprecated publicly.
         // When removed from public header, can remove these pragmas
         funding = STPCard.funding(from: dict.stp_string(forKey: "funding") ?? "")
-        //#pragma clang diagnostic pop
+        // #pragma clang diagnostic pop
         country = dict.stp_string(forKey: "country")
         expMonth = UInt(dict.stp_int(forKey: "exp_month", or: 0))
         expYear = UInt(dict.stp_int(forKey: "exp_year", or: 0))

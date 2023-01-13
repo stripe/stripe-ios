@@ -6,10 +6,10 @@ import UIKit
 
 @_spi(STP) public class UxAnalyzer: CreditCardOcrImplementation {
     @AtomicProperty var uxModel: UxModel?
-    
+
     static let uxResource = "UxModel"
     static let uxExtension = "mlmodelc"
-    
+
     let ocr: CreditCardOcrImplementation
 
     init(
@@ -72,7 +72,7 @@ import UIKit
         else {
             return
         }
-        
+
         UxModel.asyncLoad(contentsOf: uxModelUrl) { [weak self] result in
             switch result {
             case .success(let model):

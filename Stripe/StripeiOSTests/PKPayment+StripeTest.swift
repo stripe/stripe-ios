@@ -11,8 +11,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class PKPayment_StripeTest: XCTestCase {
@@ -20,11 +20,11 @@ class PKPayment_StripeTest: XCTestCase {
         let payment = PKPayment()
         let paymentToken = PKPaymentToken()
 
-        //#pragma clang diagnostic push
-        //#pragma clang diagnostic ignored "-Wundeclared-selector"
+        // #pragma clang diagnostic push
+        // #pragma clang diagnostic ignored "-Wundeclared-selector"
         paymentToken.perform(Selector(("setTransactionIdentifier:")), with: "Simulated Identifier")
-        payment.perform(#selector(setter:STPPaymentMethodCardParams.token), with: paymentToken)
-        //#pragma clang diagnostic pop
+        payment.perform(#selector(setter: STPPaymentMethodCardParams.token), with: paymentToken)
+        // #pragma clang diagnostic pop
 
         XCTAssertTrue(payment.stp_isSimulated())
     }

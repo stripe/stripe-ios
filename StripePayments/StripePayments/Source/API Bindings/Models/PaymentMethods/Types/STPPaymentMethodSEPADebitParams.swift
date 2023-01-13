@@ -24,7 +24,7 @@ public class STPPaymentMethodSEPADebitParams: NSObject, STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:iban)): "iban"
+            NSStringFromSelector(#selector(getter: iban)): "iban"
         ]
     }
 }

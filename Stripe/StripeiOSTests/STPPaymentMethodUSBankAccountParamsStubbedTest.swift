@@ -21,7 +21,7 @@ class STPPaymentMethodUSBankAccountParamsStubbedTest: APIStubbedTestCase {
         let stubbedApiClient = stubbedAPIClient()
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/payment_methods") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let jsonText = """
                 {
                   "id": "pm_1KgvOfFY0qyl6XeW7RfvDvxE",
@@ -109,7 +109,7 @@ class STPPaymentMethodUSBankAccountParamsStubbedTest: APIStubbedTestCase {
         let stubbedApiClient = stubbedAPIClient()
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/payment_methods") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let jsonText = """
                 {
                   "id": "pm_1KgvOfFY0qyl6XeW7RfvDvxE",
@@ -207,7 +207,7 @@ class STPPaymentMethodUSBankAccountParamsStubbedTest: APIStubbedTestCase {
         let stubbedApiClient = stubbedAPIClient()
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/payment_methods") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let jsonText = """
                 {
                   "id": "pm_1KgvOfFY0qyl6XeW7RfvDvxE",

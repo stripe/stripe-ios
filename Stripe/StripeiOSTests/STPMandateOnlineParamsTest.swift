@@ -7,8 +7,8 @@
 //
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPMandateOnlineParamsTest: XCTestCase {
@@ -23,7 +23,7 @@ class STPMandateOnlineParamsTest: XCTestCase {
             "online": [
                 "ip_address": "test_ip_address",
                 "user_agent": "a_user_agent",
-            ]
+            ],
         ]
         XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
 
@@ -33,7 +33,7 @@ class STPMandateOnlineParamsTest: XCTestCase {
         expected = [
             "online": [
                 "infer_from_client": NSNumber(value: true)
-            ]
+            ],
         ]
         XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
     }

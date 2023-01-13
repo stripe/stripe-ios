@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripePayments
+import UIKit
 
 extension ConsumerSession {
     struct Preferences {
@@ -16,32 +16,32 @@ extension ConsumerSession {
 
     class LookupResponse: NSObject, STPAPIResponseDecodable {
         let allResponseFields: [AnyHashable: Any]
-        
+
         enum ResponseType {
             case found(
                 consumerSession: ConsumerSession,
                 preferences: ConsumerSession.Preferences
             )
-            
+
             // errorMessage can be used internally to differentiate between
             // a not found because of an unrecognized email or a not found
             // due to an invalid cookie
             case notFound(errorMessage: String)
-            
+
             /// Lookup call was not provided an email and no cookies stored
             case noAvailableLookupParams
         }
-        
+
         let responseType: ResponseType
-        
+
         init(_ responseType: ResponseType,
              allResponseFields: [AnyHashable: Any]) {
             self.responseType = responseType
             self.allResponseFields = allResponseFields
             super.init()
         }
-        
-        static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+
+        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
             guard let response = response,
                   let exists = response["exists"] as? Bool else {
                 return nil

@@ -12,8 +12,8 @@ import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
@@ -122,8 +122,8 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         }
     }
 
-    //#pragma clang diagnostic push
-    //#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    // #pragma clang diagnostic push
+    // #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     func testNextWithCreatePaymentMethodError() {
         let sut = buildAddCardViewController()!
         let expectedCardParams = STPFixtures.paymentMethodCardParams()
@@ -135,7 +135,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
                 expectedCardParams: expectedCardParams,
                 urlRequest: urlRequest
             )
-        } response: { urlRequest in
+        } response: { _ in
             XCTAssertTrue(sut.loading)
             let paymentMethod = ["error": "intentionally_invalid"]
             defer {
@@ -173,7 +173,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
                 expectedCardParams: expectedCardParams,
                 urlRequest: urlRequest
             )
-        } response: { urlRequest in
+        } response: { _ in
             XCTAssertTrue(sut.loading)
             defer {
                 createPaymentMethodExp.fulfill()
@@ -193,7 +193,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
 
         mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {
-            (addCardViewController, paymentMethod, completion) in
+            (_, paymentMethod, completion) in
             XCTAssertTrue(sut.loading)
             let error = NSError.stp_genericFailedToParseResponseError()
             XCTAssertEqual(paymentMethod.stripeId, expectedPaymentMethod.stripeId)
@@ -223,7 +223,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
                 expectedCardParams: expectedCardParams,
                 urlRequest: urlRequest
             )
-        } response: { urlRequest in
+        } response: { _ in
             XCTAssertTrue(sut.loading)
             defer {
                 createPaymentMethodExp.fulfill()
@@ -242,7 +242,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
 
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
         mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {
-            (addCardViewController, paymentMethod, completion) in
+            (_, paymentMethod, completion) in
             XCTAssertTrue(sut.loading)
             XCTAssertEqual(paymentMethod.stripeId, expectedPaymentMethod.stripeId)
             completion(nil)

@@ -7,8 +7,8 @@ import Foundation
 import UIKit
 
 protocol EndpointSelectorViewControllerDelegate: AnyObject {
-    func selected(endpoint: String) -> Void
-    func cancelTapped() -> Void
+    func selected(endpoint: String)
+    func cancelTapped()
 }
 
 class EndpointSelectorViewController: UITableViewController {
@@ -124,7 +124,7 @@ extension EndpointSelectorViewController {
 extension EndpointSelectorViewController {
     func loadEndpointSelector(endpoint: String) {
         let request = URLRequest(url: URL(string: endpoint)!)
-        let session = URLSession.shared.dataTask(with: request) { data, response, error in
+        let session = URLSession.shared.dataTask(with: request) { data, _, error in
             guard error == nil,
                   let data = data,
                   let specs = self.deserializeResponse(data: data) else {

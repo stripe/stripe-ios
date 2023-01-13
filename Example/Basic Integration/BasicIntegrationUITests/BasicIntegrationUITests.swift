@@ -19,7 +19,7 @@ extension XCUIElement {
 
 class BasicIntegrationUITests: XCTestCase {
     var app: XCUIApplication!
-    
+
     override func setUp() {
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
@@ -244,7 +244,7 @@ class BasicIntegrationUITests: XCTestCase {
 
 class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
     var app: XCUIApplication!
-    
+
     override func setUp() {
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false

@@ -66,7 +66,7 @@ extension AfterpayClearpayExampleViewController {
     @objc func pay() {
         // 1. Create an Afterpay Clearpay PaymentIntent
         MyAPIClient.shared().createPaymentIntent(
-            completion: { (result, clientSecret, error) in
+            completion: { (_, clientSecret, error) in
                 guard let clientSecret = clientSecret else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
@@ -100,7 +100,7 @@ extension AfterpayClearpayExampleViewController {
 
                 STPPaymentHandler.shared().confirmPayment(
                     withParams: paymentIntentParams, authenticationContext: self
-                ) { (status, intent, error) in
+                ) { (status, _, error) in
                     switch status {
                     case .canceled:
                         self.delegate?.exampleViewController(

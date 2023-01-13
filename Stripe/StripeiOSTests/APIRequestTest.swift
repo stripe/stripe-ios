@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class AnyAPIResponse: NSObject, STPAPIResponseDecodable {
@@ -161,7 +161,7 @@ class APIRequestTest: XCTestCase {
                 "type": "invalid_request_error",
                 "message": "Your card number is incorrect.",
                 "code": "incorrect_number",
-            ]
+            ],
         ]
         let body = try? JSONSerialization.data(withJSONObject: json, options: [])
         let errorParameter: NSError? = nil
@@ -248,7 +248,7 @@ class APIRequestTest: XCTestCase {
         let e = expectation(description: "Request completed")
         // We expect this request to retry a few times with exponential backoff before calling the completion handler.
         APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:]) {
-            (obj, response, error) in
+            (_, response, _) in
             XCTAssertEqual(response?.statusCode, 429)
             inProgress = false
             e.fulfill()
@@ -274,7 +274,7 @@ class APIRequestTest: XCTestCase {
 
         let e = expectation(description: "Request completed")
         APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:]) {
-            (obj, response, error) in
+            (_, response, _) in
             XCTAssertEqual(response?.statusCode, 429)
             e.fulfill()
         }

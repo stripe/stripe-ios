@@ -11,8 +11,8 @@ import OHHTTPStubs
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
@@ -58,7 +58,7 @@ class STPNetworkStubbingTestCase: XCTestCase {
 
             // Creates filenames like `post_v1_tokens_0.tail`.
             var count = 0
-            recorder?.fileNamingBlock = { request, response, defaultName in
+            recorder?.fileNamingBlock = { request, _, _ in
                 let method = request!.httpMethod?.lowercased()
                 let urlPath = request!.url?.path.replacingOccurrences(of: "/", with: "_")
                 var fileName = "\(method ?? "")\(urlPath ?? "")_\(count)"
@@ -90,10 +90,10 @@ class STPNetworkStubbingTestCase: XCTestCase {
             } catch {
             }
             guard
-                let _ = try? SWHttpTrafficRecorder.shared().startRecording(
+                (try? SWHttpTrafficRecorder.shared().startRecording(
                     atPath: recordingPath,
                     for: config
-                )
+                )) != nil
             else {
                 assert(false, "Error recording requests")
                 return
@@ -108,7 +108,7 @@ class STPNetworkStubbingTestCase: XCTestCase {
         } else {
             // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
             HTTPStubs.stubRequests(
-                passingTest: { request in
+                passingTest: { _ in
                     return true
                 },
                 withStubResponse: { request in

@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A UIScrollView subclass that actively prevents its content from being covered by the software keyboard.
 /// For internal SDK use only
@@ -39,7 +39,7 @@ final class LinkKeyboardAvoidingScrollView: UIScrollView {
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentView.widthAnchor.constraint(equalTo: widthAnchor)
+            contentView.widthAnchor.constraint(equalTo: widthAnchor),
         ])
     }
 

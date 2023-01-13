@@ -49,7 +49,7 @@ final class LinkBadgeView: UIView {
 
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
-            imageView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height)
+            imageView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
         ])
 
         return imageView

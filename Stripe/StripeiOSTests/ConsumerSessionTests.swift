@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class ConsumerSessionTests: XCTestCase {
@@ -31,7 +31,7 @@ class ConsumerSessionTests: XCTestCase {
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
-                case .found(_, _):
+                case .found:
                     XCTFail("Got a response without any params")
 
                 case .notFound(let errorMessage):
@@ -59,11 +59,11 @@ class ConsumerSessionTests: XCTestCase {
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
-                case .notFound(_):
+                case .notFound:
                     // Expected response type.
                     break
 
-                case .noAvailableLookupParams, .found(_, _):
+                case .noAvailableLookupParams, .found:
                     XCTFail("Unexpected response type: \(lookupResponse.responseType)")
                 }
             case .failure(let error):
@@ -85,7 +85,7 @@ class ConsumerSessionTests: XCTestCase {
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
-                case .found(_, _):
+                case .found:
                     break  // Pass
 
                 case .notFound(let errorMessage):
@@ -114,7 +114,7 @@ class ConsumerSessionTests: XCTestCase {
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
-                case .found(_, _):
+                case .found:
                     break  // Pass
 
                 case .notFound(let errorMessage):
@@ -146,7 +146,7 @@ class ConsumerSessionTests: XCTestCase {
                 case .found(let consumerSession, _):
                     XCTFail("Got unexpected found response with \(consumerSession)")
 
-                case .notFound(_):
+                case .notFound:
                     break  // Pass
 
                 case .noAvailableLookupParams:
@@ -280,7 +280,7 @@ class ConsumerSessionTests: XCTestCase {
             consumerAccountPublishableKey: preferences.publishableKey
         ) { result in
             switch result {
-            case .success(_):
+            case .success:
                 // Pass
                 break
             case .failure(let error):
@@ -385,7 +385,7 @@ class ConsumerSessionTests: XCTestCase {
             consumerAccountPublishableKey: preferences.publishableKey
         ) { result in
             switch result {
-            case .success(_):
+            case .success:
                 XCTAssertNil(self.cookieStore.formattedSessionCookies())
             case .failure(let error):
                 XCTFail("Received error: \(error.nonGenericDescription)")
@@ -452,7 +452,7 @@ extension ConsumerSessionTests {
             consumerAccountPublishableKey: preferences.publishableKey
         ) { result in
             switch result {
-            case .success(_):
+            case .success:
                 // Pass
                 break
             case .failure(let error):

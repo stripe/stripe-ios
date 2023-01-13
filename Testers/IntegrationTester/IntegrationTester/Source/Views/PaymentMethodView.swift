@@ -6,14 +6,13 @@
 //
 
 import IntegrationTesterCommon
-import SwiftUI
 import Stripe
+import SwiftUI
 
 struct PaymentMethodView: View {
   let integrationMethod: IntegrationMethod
   @StateObject var model = MyPIModel()
   @State var isConfirmingPayment = false
-    
 
   var body: some View {
       VStack {
@@ -37,7 +36,7 @@ struct PaymentMethodView: View {
     }
 }
 
-struct PaymentMethodView_Preview : PreviewProvider {
+struct PaymentMethodView_Preview: PreviewProvider {
   static var previews: some View {
     PaymentMethodView(integrationMethod: .iDEAL)
   }

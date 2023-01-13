@@ -113,9 +113,6 @@ final public class STPTheme: NSObject {
 
     /// The font to be used for all views using this theme. Make sure to select an appropriate size.
     @objc public var font: UIFont {
-        set {
-            _font = newValue
-        }
         get {
             if let _font = _font {
                 return _font
@@ -124,14 +121,14 @@ final public class STPTheme: NSObject {
                 return fontMetrics.scaledFont(for: STPThemeDefaultFont)
             }
         }
+        set {
+            _font = newValue
+        }
     }
     private var _font: UIFont?
 
     /// The medium-weight font to be used for all bold text in views using this theme. Make sure to select an appropriate size.
     @objc public var emphasisFont: UIFont {
-        set {
-            _emphasisFont = newValue
-        }
         get {
             if let _emphasisFont = _emphasisFont {
                 return _emphasisFont
@@ -140,6 +137,9 @@ final public class STPTheme: NSObject {
                 return fontMetrics.scaledFont(for: STPThemeDefaultMediumFont)
             }
         }
+        set {
+            _emphasisFont = newValue
+        }
     }
     private var _emphasisFont: UIFont?
 
@@ -147,15 +147,15 @@ final public class STPTheme: NSObject {
     /// by the SDK. The default value will be determined based on the brightness
     /// of the theme's `secondaryBackgroundColor`.
     @objc public var barStyle: UIBarStyle {
-        set {
-            _barStyle = newValue
-        }
         get {
             if let _barStyle = _barStyle {
                 return _barStyle
             } else {
                 return barStyle(for: secondaryBackgroundColor)
             }
+        }
+        set {
+            _barStyle = newValue
         }
     }
     private var _barStyle: UIBarStyle?

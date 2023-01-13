@@ -9,8 +9,8 @@
 import UIKit
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 protocol UpdatePaymentViewControllerDelegate: AnyObject {
     func didUpdate(paymentMethod: ConsumerPaymentDetails)
@@ -57,14 +57,14 @@ extension PayWithLinkViewController {
         ) { [weak self] in
             self?.updateCard()
         }
-        
+
         private lazy var cancelButton: Button = {
             let button = Button(configuration: .linkSecondary(), title: String.Localized.cancel)
             button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
             button.adjustsFontForContentSizeCategory = true
             return button
         }()
-        
+
         private lazy var errorLabel: UILabel = {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
@@ -90,14 +90,14 @@ extension PayWithLinkViewController {
             view.backgroundColor = .linkBackground
             view.directionalLayoutMargins = LinkUI.contentMargins
             errorLabel.isHidden = true
-            
+
             let stackView = UIStackView(arrangedSubviews: [
                 titleLabel,
                 cardEditElement.view,
                 errorLabel,
                 thisIsYourDefaultLabel,
                 updateButton,
-                cancelButton
+                cancelButton,
             ])
 
             stackView.axis = .vertical
@@ -148,7 +148,7 @@ extension PayWithLinkViewController {
                     if case .card(let card) = updatedPaymentDetails.details {
                         card.cvc = params.cvc
                     }
-                    
+
                     self?.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
                         self?.delegate?.didUpdate(paymentMethod: updatedPaymentDetails)
                         self?.navigationController?.popViewController(animated: true)
@@ -161,11 +161,11 @@ extension PayWithLinkViewController {
                 }
             }
         }
-        
+
         @objc func didSelectCancel() {
             self.navigationController?.popViewController(animated: true)
         }
-        
+
         func updateErrorLabel(for error: Error?) {
             errorLabel.text = error?.nonGenericDescription
             errorLabel.setHiddenIfNecessary(error == nil)
@@ -176,16 +176,16 @@ extension PayWithLinkViewController {
 }
 
 extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate {
-    
+
     func didUpdate(element: Element) {
         updateErrorLabel(for: nil)
         updateButton.update(state: cardEditElement.validationState.isValid ? .enabled : .disabled)
     }
-    
+
     func continueToNextField(element: Element) {
         updateButton.update(state: cardEditElement.validationState.isValid ? .enabled : .disabled)
     }
-    
+
 }
 
 // MARK: UpdatePaymentDetailsParams
@@ -204,4 +204,3 @@ struct UpdatePaymentDetailsParams {
         self.details = details
     }
 }
-

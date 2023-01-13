@@ -9,8 +9,8 @@
 import Foundation
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 protocol PayWithLinkSignUpViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.SignUpViewModel)
@@ -168,7 +168,7 @@ extension PayWithLinkViewController {
                 consentAction: .button
             ) { [weak self] result in
                 switch result {
-                case .success():
+                case .success:
                     completion(.success(linkAccount))
                 case .failure(let error):
                     self?.errorMessage = error.nonGenericDescription

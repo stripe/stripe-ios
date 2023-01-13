@@ -5,16 +5,16 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
-final class USBankAccountPaymentMethodElement : Element {
-    var presentingViewControllerDelegate: PresentingViewControllerDelegate? = nil
+final class USBankAccountPaymentMethodElement: Element {
+    var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
-    var delegate: ElementDelegate? = nil
+    var delegate: ElementDelegate?
 
     var view: UIView {
         return formElement.view
@@ -50,7 +50,6 @@ final class USBankAccountPaymentMethodElement : Element {
     static let SaveAccountMandateText: String = STPLocalizedString("By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@).")
     static let MicrodepositCopy: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
 
-
     var canLinkAccount: Bool {
         return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount)) != nil
     }
@@ -62,7 +61,7 @@ final class USBankAccountPaymentMethodElement : Element {
     var email: String? {
         return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.email
     }
-    
+
     init(titleElement: StaticElement,
          nameElement: PaymentMethodElement,
          emailElement: PaymentMethodElement,
@@ -84,7 +83,7 @@ final class USBankAccountPaymentMethodElement : Element {
         var autoSectioningElements: [Element] = [titleElement,
                                                  nameElement,
                                                  emailElement,
-                                                 bankInfoSectionElement]
+                                                 bankInfoSectionElement, ]
         if let checkboxElement = checkboxElement {
             checkboxElement.view.isHidden = true
             autoSectioningElements.append(checkboxElement)
@@ -93,14 +92,12 @@ final class USBankAccountPaymentMethodElement : Element {
         self.formElement.delegate = self
         self.bankInfoView.delegate = self
 
-        defer {
-            savingAccount.didUpdate = { [weak self] value in
-                guard let self = self else {
-                    return
-                }
-                self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value, theme: theme)
-                self.delegate?.didUpdate(element: self)
+        savingAccount.didUpdate = { [weak self] value in
+            guard let self = self else {
+                return
             }
+            self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value, theme: theme)
+            self.delegate?.didUpdate(element: self)
         }
     }
 
@@ -140,7 +137,7 @@ final class USBankAccountPaymentMethodElement : Element {
     }
 
     // TODO(wooj): Refactor this code to be common across multiple classes
-    private class func applyLinksToString(template: String, links:[String: URL]) -> NSMutableAttributedString {
+    private class func applyLinksToString(template: String, links: [String: URL]) -> NSMutableAttributedString {
         let formattedString = NSMutableAttributedString()
         STPStringUtils.parseRanges(from: template, withTags: Set<String>(links.keys)) { string, matches in
             formattedString.append(NSAttributedString(string: string))
@@ -163,7 +160,7 @@ final class USBankAccountPaymentMethodElement : Element {
         style.alignment = .center
         formattedString.addAttributes([.paragraphStyle: style,
                                        .font: UIFont.preferredFont(forTextStyle: .footnote),
-                                       .foregroundColor: theme.colors.secondaryText
+                                       .foregroundColor: theme.colors.secondaryText,
                                       ],
                                       range: NSRange(location: 0, length: formattedString.length))
     }

@@ -7,9 +7,9 @@
 //
 
 import Foundation
+import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import UIKit
-import iOSSnapshotTestCase
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore

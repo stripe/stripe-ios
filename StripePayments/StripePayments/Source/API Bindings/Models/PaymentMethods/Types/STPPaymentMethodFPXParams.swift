@@ -41,7 +41,7 @@ public class STPPaymentMethodFPXParams: NSObject, STPFormEncodable {
 
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:rawBankString)): "bank"
+            NSStringFromSelector(#selector(getter: rawBankString)): "bank"
         ]
     }
 }

@@ -18,18 +18,18 @@ protocol AddressSearchResult {
     var subtitle: String { get }
 
     var subtitleHighlightRanges: [NSValue] { get } // NSValue-wrapped NSRanges
-    
+
     /// Converts this search result to a `PaymentSheet.Address?`
     /// - Parameter completion: Invoked with a `PaymentSheet.Address?` representation of this address search result
-    func asAddress(completion: @escaping (PaymentSheet.Address?) -> ())
+    func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void)
 }
 
 extension MKLocalSearchCompletion: AddressSearchResult {
-    func asAddress(completion: @escaping (PaymentSheet.Address?) -> ()) {
+    func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void) {
         let searchRequest = MKLocalSearch.Request(completion: self)
         let search = MKLocalSearch(request: searchRequest)
 
-        search.start { (response, error) in
+        search.start { (response, _) in
             let placemark = response?.mapItems.first?.placemark
             completion(placemark?.asAddress)
         }

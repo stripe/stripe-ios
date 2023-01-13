@@ -89,7 +89,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                     uploadStatus: documentUploader.frontUploadStatus
                 ),
                 onTap: nil
-            )
+            ),
         ]
 
         if documentType.hasBack && sheetController?.collectedData.idDocumentFront != nil {
@@ -181,7 +181,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                         didTap: { [weak self] in
                             self?.didTapContinueButton()
                         }
-                    )
+                    ),
                 ]
             )
         )
@@ -451,9 +451,9 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     #if DEBUG
 
-        //ce `presentedViewController` isn't updated within the test target,
-        //re book keeping it here for the purpose of testing the presented view
-        //troller is what we expect.
+        // ce `presentedViewController` isn't updated within the test target,
+        // re book keeping it here for the purpose of testing the presented view
+        // troller is what we expect.
 
         private(set) var test_presentedViewController: UIViewController?
 

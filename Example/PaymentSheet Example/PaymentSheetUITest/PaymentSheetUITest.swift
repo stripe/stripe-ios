@@ -10,7 +10,7 @@ import XCTest
 
 class PaymentSheetUITest: XCTestCase {
     var app: XCUIApplication!
-    
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
@@ -46,12 +46,12 @@ class PaymentSheetUITest: XCTestCase {
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
-        
+
         let numberField = app.textFields["Card number"]
         XCTAssertTrue(numberField.waitForExistence(timeout: 60.0))
         numberField.tap()
         numberField.typeText("378282246310005")
-        
+
         // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
         let cvvField = app.textFields["CVV"]
         XCTAssertTrue(cvvField.waitForExistence(timeout: 10.0))
@@ -59,12 +59,12 @@ class PaymentSheetUITest: XCTestCase {
         let expField = app.textFields["expiration date"]
         XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(expField.typeText("1228"))
-        
+
         XCTAssertTrue((cvvField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(cvvField.typeText("1234"))
-        
+
         app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
-        
+
         let postalField = app.textFields["ZIP"]
         XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(postalField.typeText("12345"))
@@ -105,7 +105,7 @@ class PaymentSheetUITest: XCTestCase {
             // This test case is testing a feature not available when Link is on,
             // so we must manually turn off Link.
             "automatic_payment_methods": "off",
-            "link": "off"
+            "link": "off",
         ])
 
         var paymentMethodButton = app.buttons["Select Payment Method"]
@@ -149,7 +149,7 @@ class PaymentSheetUITest: XCTestCase {
             saveThisCardToggle.tap()
         }
         XCTAssertTrue(saveThisCardToggle.isSelected)
-        
+
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
@@ -216,17 +216,17 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
     }
-    
+
     func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "apple_pay": "off",
-            "currency": "EUR"
+            "currency": "EUR",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay €50.99"]
-        
+
         guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
             XCTFail()
             return
@@ -238,14 +238,14 @@ class PaymentSheetUITest: XCTestCase {
         name.tap()
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
-        
+
         let bank = app.textFields["iDEAL Bank"]
         bank.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")
         app.toolbars.buttons["Done"].tap()
 
         payButton.tap()
-        
+
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
@@ -255,7 +255,7 @@ class PaymentSheetUITest: XCTestCase {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "apple_pay": "off",
-            "currency": "EUR"
+            "currency": "EUR",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -289,7 +289,7 @@ class PaymentSheetUITest: XCTestCase {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "apple_pay": "off",
-            "currency": "EUR"
+            "currency": "EUR",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -318,7 +318,7 @@ class PaymentSheetUITest: XCTestCase {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "apple_pay": "off",
-            "currency": "EUR"
+            "currency": "EUR",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -358,12 +358,12 @@ class PaymentSheetUITest: XCTestCase {
     func testKlarnaPaymentMethod() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new", // new customer
-            "automatic_payment_methods": "off"
+            "automatic_payment_methods": "off",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $50.99"]
-        
+
         // Select Klarna
         guard let klarna = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Klarna") else {
             XCTFail()
@@ -376,12 +376,12 @@ class PaymentSheetUITest: XCTestCase {
         name.tap()
         name.typeText("foo@bar.com")
         name.typeText(XCUIKeyboardKey.return.rawValue)
-        
+
         // Country should be pre-filled
-        
+
         // Attempt payment
         payButton.tap()
-        
+
         // Close the webview, no need to see the successful pay
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
@@ -392,13 +392,12 @@ class PaymentSheetUITest: XCTestCase {
         loadPlayground(app, settings: [
             "customer_mode": "new", // new customer
             "automatic_payment_methods": "off",
-            "shipping": "on w/ defaults" // collect shipping
+            "shipping": "on w/ defaults", // collect shipping
         ])
 
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $50.99"]
 
-        
         // Select affirm
         guard let affirm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Affirm") else {
             XCTFail()
@@ -407,17 +406,17 @@ class PaymentSheetUITest: XCTestCase {
         affirm.tap()
 
         XCTAssertTrue(payButton.isEnabled)
- 
+
         // Attempt payment, should fail
         payButton.tap()
-            
+
     }
 
     func testUSBankAccountPaymentMethod() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "automatic_payment_methods": "off",
-            "allows_delayed_pms": "true"
+            "allows_delayed_pms": "true",
         ])
         app.buttons["Checkout (Complete)"].tap()
 
@@ -452,20 +451,18 @@ class PaymentSheetUITest: XCTestCase {
         let unselectedMandate = "By continuing, you agree to authorize payments pursuant to these terms."
         XCTAssertTrue(app.textViews[expectDefaultSelectionOn ? selectedMandate : unselectedMandate].waitForExistence(timeout: 5))
 
-
-
         let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
         saveThisAccountToggle.tap()
         XCTAssertTrue(app.textViews[expectDefaultSelectionOn ? unselectedMandate : selectedMandate].waitForExistence(timeout: 5))
 
         // no pay button tap because linked account is stubbed/fake in UI test
     }
-    
+
     func testUPIPaymentMethod() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "merchant_country_code": "IN",
-            "currency": "INR"
+            "currency": "INR",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -485,12 +482,12 @@ class PaymentSheetUITest: XCTestCase {
 
         payButton.tap()
     }
-    
+
     func testUPIPaymentMethod_invalidVPA() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "merchant_country_code": "IN",
-            "currency": "INR"
+            "currency": "INR",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -523,7 +520,7 @@ extension PaymentSheetUITest {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "automatic_payment_methods": "off",
-            "link": "on"
+            "link": "on",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -535,7 +532,7 @@ extension PaymentSheetUITest {
         let emailField = app.textFields["Email"]
         emailField.tap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-        
+
         let phoneField = app.textFields["Phone"]
         // Phone field appears after the network call finishes. We want to wait for it to appear.
         XCTAssert(phoneField.waitForExistence(timeout: 10))
@@ -563,7 +560,7 @@ extension PaymentSheetUITest {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "automatic_payment_methods": "off",
-            "link": "on"
+            "link": "on",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -601,7 +598,7 @@ extension PaymentSheetUITest {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "automatic_payment_methods": "off",
-            "link": "on"
+            "link": "on",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -676,7 +673,7 @@ extension PaymentSheetUITest {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "automatic_payment_methods": "off",
-            "link": "on"
+            "link": "on",
         ])
 
         app.buttons["Checkout (Complete)"].tap()
@@ -694,7 +691,7 @@ extension PaymentSheetUITest {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "automatic_payment_methods": "off",
-            "link": "on"
+            "link": "on",
         ])
 
         let paymentMethodButton = app.buttons["Select Payment Method"]

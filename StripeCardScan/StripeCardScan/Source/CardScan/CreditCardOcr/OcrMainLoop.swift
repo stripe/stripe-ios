@@ -161,7 +161,7 @@ class OcrMainLoop: MachineLearningLoop {
             // only keep the latest images
             imageQueue.insert(imageData, at: 0)
             while imageQueue.count > imageQueueSize {
-                let _ = imageQueue.popLast()
+                _ = imageQueue.popLast()
             }
 
             // if we have any analyzers waiting, fire them off now
@@ -277,7 +277,7 @@ class OcrMainLoop: MachineLearningLoop {
         return result
     }
 
-    // MARK: -backrounding logic
+    // MARK: - backrounding logic
     @objc func willResignActive() {
         // make sure that no new images get pushed to our image buffer
         // and we clear out the image buffer

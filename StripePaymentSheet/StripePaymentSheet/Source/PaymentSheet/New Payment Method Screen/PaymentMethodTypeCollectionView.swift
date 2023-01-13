@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
@@ -23,7 +23,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
     internal static let cellHeight: CGFloat = 52
     internal static let minInteritemSpacing: CGFloat = 12
-    
+
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
     private(set) var selected: PaymentSheet.PaymentMethodType {
         didSet(old) {
@@ -42,7 +42,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
-        
+
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
         self.selected = paymentMethodTypes[0]
@@ -107,7 +107,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         selected = paymentMethodTypes[indexPath.item]
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var useFixedSizeCells: Bool {
             // Prefer fixed size cells for iPads and Mac.
@@ -141,7 +141,7 @@ extension PaymentMethodTypeCollectionView {
                 update()
             }
         }
-        
+
         var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default {
             didSet {
                 update()
@@ -204,7 +204,7 @@ extension PaymentMethodTypeCollectionView {
             isAccessibilityElement = true
             contentView.addAndPinSubview(shadowRoundedRectangle)
             shadowRoundedRectangle.frame = bounds
-            
+
             NSLayoutConstraint.activate([
                 paymentMethodLogo.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
@@ -220,7 +220,7 @@ extension PaymentMethodTypeCollectionView {
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
             ])
-            
+
             contentView.layer.cornerRadius = appearance.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
@@ -292,7 +292,7 @@ extension PaymentMethodTypeCollectionView {
             } else {
                 // Set text color
                 label.textColor = appearance.colors.componentText
-                
+
                 // Set border
                 shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
                 shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor

@@ -111,6 +111,6 @@ let project = Project(
                 expandVariableFromTarget: "PaymentSheet Example"
             ),
             runAction: .runAction(executable: "PaymentSheet Example")
-        )
+        ),
     ]
 )
