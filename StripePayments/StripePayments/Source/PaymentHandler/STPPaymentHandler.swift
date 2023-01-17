@@ -1275,7 +1275,6 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             presentingVC.presentPollingVCForAction(currentAction)
-            break
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
