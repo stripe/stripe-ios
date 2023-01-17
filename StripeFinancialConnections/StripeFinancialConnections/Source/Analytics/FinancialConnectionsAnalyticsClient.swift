@@ -168,6 +168,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .resetFlow
         case is TerminalErrorViewController:
             return .terminalError
+        case is NetworkingLinkSignupViewController:
+            return .networkingLinkSignupPane
         default:
             return .unparsable
         }

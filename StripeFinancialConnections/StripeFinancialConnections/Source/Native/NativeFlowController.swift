@@ -539,6 +539,23 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
     }
 }
 
+// MARK: - NetworkingLinkSignupViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
+
+    func networkingLinkSignupViewControllerDidSelectNotNow(
+        _ viewController: NetworkingLinkSignupViewController
+    ) {
+        let successViewController = CreatePaneViewController(
+            pane: .success,
+            nativeFlowController: self,
+            dataManager: dataManager
+        )
+        pushViewController(successViewController, animated: true)
+    }
+}
+
 // MARK: - TerminalErrorViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
@@ -690,8 +707,17 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkSignupPane:
-        assertionFailure("Not supported")
-        viewController = nil
+        let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
+            manifest: dataManager.manifest,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
+        )
+        let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
+            dataSource: networkingLinkSignupDataSource
+        )
+        networkingLinkSignupViewController.delegate = nativeFlowController
+        viewController = networkingLinkSignupViewController
     case .networkingLinkVerification:
         assertionFailure("Not supported")
         viewController = nil
