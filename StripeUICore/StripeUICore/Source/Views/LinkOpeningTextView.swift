@@ -24,12 +24,12 @@ class LinkOpeningTextView: UITextView {
      the view using `isTextSelectable`.
      */
     override var isSelectable: Bool {
+        get {
+            return isTextSelectable
+        }
         set {
             super.isSelectable = true
             isTextSelectable = newValue
-        }
-        get {
-            return isTextSelectable
         }
     }
 

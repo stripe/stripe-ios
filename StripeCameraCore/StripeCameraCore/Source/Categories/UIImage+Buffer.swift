@@ -28,8 +28,8 @@
 
 #if targetEnvironment(simulator)
 
-import UIKit
 import CoreMedia
+import UIKit
 
 extension UIImage {
     @_spi(STP) public func convertToPixelBuffer() -> CVPixelBuffer? {

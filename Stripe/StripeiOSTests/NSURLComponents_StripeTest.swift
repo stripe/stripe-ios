@@ -6,12 +6,12 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import XCTest
 
 class NSURLComponents_StripeTest: XCTestCase {
     func testCaseInsensitiveSchemeComparison() {

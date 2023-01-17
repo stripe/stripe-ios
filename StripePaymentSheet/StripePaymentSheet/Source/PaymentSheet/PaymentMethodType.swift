@@ -6,17 +6,17 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension PaymentSheet {
     public enum PaymentMethodType: Equatable, Hashable {
 
         func supportsAddingRequirements() -> [PaymentMethodTypeRequirement] {
-            switch(self) {
+            switch self {
             case .dynamic("revolut_pay"):
                 return [.returnURL]
             case .dynamic("mobilepay"):
@@ -27,7 +27,7 @@ extension PaymentSheet {
         }
 
         func supportsSaveAndReuseRequirements() -> [PaymentMethodTypeRequirement] {
-            switch(self) {
+            switch self {
             default:
                 return [.unavailable]
             }
@@ -44,7 +44,7 @@ extension PaymentSheet {
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
         public init(from str: String) {
-            switch(str) {
+            switch str {
             case STPPaymentMethod.string(from: .card):
                 self = .card
             case STPPaymentMethod.string(from: .USBankAccount):
@@ -61,7 +61,7 @@ extension PaymentSheet {
         }
 
         static func string(from type: PaymentMethodType) -> String? {
-            switch(type) {
+            switch type {
             case .card:
                 return STPPaymentMethod.string(from: .card)
             case .USBankAccount:
@@ -86,7 +86,7 @@ extension PaymentSheet {
             } else if case .dynamic("mobilepay") = self {
                 return "MobilePay"
             } else if case .dynamic(let name) = self {
-                //TODO: We should introduce a display name in our model rather than presenting the payment method type
+                // TODO: We should introduce a display name in our model rather than presenting the payment method type
                 return name
             }
             assertionFailure()
@@ -157,27 +157,27 @@ extension PaymentSheet {
             }
             return paymentMethodType
         }
-        
+
         /// Extracts all the recommended `PaymentMethodType`s from the given `intent`.
         /// - Parameter intent: The `intent` to extract `PaymentMethodType`s from.
         /// - Returns: An ordered list of all the `PaymentMethodType`s for this `intent`.
         static func recommendedPaymentMethodTypes(from intent: Intent) -> [PaymentMethodType] {
-            switch(intent) {
+            switch intent {
             case .paymentIntent(let paymentIntent):
                 guard let paymentMethodTypeStrings = paymentIntent.allResponseFields["payment_method_types"] as? [String] else {
                     return []
                 }
                 let paymentTypesString = paymentIntent.allResponseFields["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
-                return paymentTypesString.map{ PaymentMethodType(from: $0) }
+                return paymentTypesString.map { PaymentMethodType(from: $0) }
             case .setupIntent(let setupIntent):
                 guard let paymentMethodTypeStrings = setupIntent.allResponseFields["payment_method_types"] as? [String] else {
                     return []
                 }
                 let paymentTypesString = setupIntent.allResponseFields["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
-                return paymentTypesString.map{ PaymentMethodType(from: $0) }
+                return paymentTypesString.map { PaymentMethodType(from: $0) }
             }
         }
-        
+
         /// Extracts the recommended `PaymentMethodType`s from the given `intent` and filters out the ones that aren't supported by the given `configuration`.
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
@@ -206,8 +206,8 @@ extension PaymentSheet {
 
             let serverFilteredPaymentMethods = Self.recommendedPaymentMethodTypes(
                 from: intent
-            ).filter({$0 != .USBankAccount && $0 != .link})
-            let paymentTypesFiltered = paymentTypes.filter({$0 != .USBankAccount && $0 != .link})
+            ).filter({ $0 != .USBankAccount && $0 != .link })
+            let paymentTypesFiltered = paymentTypes.filter({ $0 != .USBankAccount && $0 != .link })
             if serverFilteredPaymentMethods != paymentTypesFiltered {
                 let result = serverFilteredPaymentMethods.symmetricDifference(paymentTypes)
                 STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethods(clientFilteredPaymentMethods: result.stringList())
@@ -271,7 +271,7 @@ extension PaymentSheet {
 }
 extension STPPaymentMethod {
     func paymentSheetPaymentMethodType() -> PaymentSheet.PaymentMethodType {
-        switch(self.type) {
+        switch self.type {
         case .card:
             return .card
         case .USBankAccount:
@@ -293,7 +293,7 @@ extension STPPaymentMethod {
 }
 extension STPPaymentMethodParams {
     func paymentSheetPaymentMethodType() -> PaymentSheet.PaymentMethodType {
-        switch(self.type) {
+        switch self.type {
         case .card:
             return .card
         case .USBankAccount:

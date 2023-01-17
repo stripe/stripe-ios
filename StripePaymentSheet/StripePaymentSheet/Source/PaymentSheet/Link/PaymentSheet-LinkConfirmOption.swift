@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 extension PaymentSheet {
 

@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class LinkingAccountsLoadingView: UIView {
-    
+
     init(
         numberOfSelectedAccounts: Int,
         businessName: String?
@@ -43,7 +43,7 @@ final class LinkingAccountsLoadingView: UIView {
         )
         addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

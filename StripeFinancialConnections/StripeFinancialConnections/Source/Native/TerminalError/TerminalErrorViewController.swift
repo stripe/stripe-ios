@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol TerminalErrorViewControllerDelegate: AnyObject {
     func terminalErrorViewController(_ viewController: TerminalErrorViewController, didCloseWithError error: Error)
@@ -16,11 +16,11 @@ protocol TerminalErrorViewControllerDelegate: AnyObject {
 }
 
 final class TerminalErrorViewController: UIViewController {
-    
+
     private let error: Error
     private let allowManualEntry: Bool
     weak var delegate: TerminalErrorViewControllerDelegate?
-    
+
     init(error: Error, allowManualEntry: Bool) {
         self.error = error
         self.allowManualEntry = allowManualEntry
@@ -30,12 +30,12 @@ final class TerminalErrorViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
-        
+
         let errorView = ReusableInformationView(
             iconType: .view(CreateGenericErrorIconView()),
             title: STPLocalizedString("Something went wrong", "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),

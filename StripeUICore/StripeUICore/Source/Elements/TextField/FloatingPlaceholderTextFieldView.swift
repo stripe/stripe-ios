@@ -15,9 +15,9 @@ import UIKit
  */
 @objc(STP_Internal_FloatingPlaceholderTextFieldView)
 class FloatingPlaceholderTextFieldView: UIView {
-    
+
     // MARK: - Views
-    
+
     private let textField: UITextField
     private let theme: ElementsUITheme
     private lazy var placeholderLabel: UILabel = {
@@ -26,7 +26,7 @@ class FloatingPlaceholderTextFieldView: UIView {
         label.font = theme.fonts.subheadline
         return label
     }()
-    
+
     public var placeholder: String {
         get {
             return placeholderLabel.text ?? ""
@@ -35,9 +35,9 @@ class FloatingPlaceholderTextFieldView: UIView {
             placeholderLabel.text = newValue
         }
     }
-    
+
     // MARK: - Initializers
-    
+
     public init(textField: UITextField, theme: ElementsUITheme = .default) {
         self.textField = textField
         self.theme = theme
@@ -45,32 +45,32 @@ class FloatingPlaceholderTextFieldView: UIView {
         isAccessibilityElement = true
         installConstraints()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Overrides
-    
+
     override var isUserInteractionEnabled: Bool {
         didSet {
             textField.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
-    
+
     override var accessibilityValue: String? {
-        set { assertionFailure() }
         get { return textField.accessibilityValue }
+        set { assertionFailure() } // swiftlint:disable:this unused_setter_value
     }
-    
+
     override var accessibilityLabel: String? {
-        set { assertionFailure() }
         get { return textField.accessibilityLabel ?? placeholderLabel.text }
+        set { assertionFailure() } // swiftlint:disable:this unused_setter_value
     }
-    
+
     override var accessibilityTraits: UIAccessibilityTraits {
-        set { assertionFailure() }
         get { return textField.accessibilityTraits }
+        set { assertionFailure() } // swiftlint:disable:this unused_setter_value
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -80,20 +80,20 @@ class FloatingPlaceholderTextFieldView: UIView {
         // Forward all events within our bounds to the textfield
         return textField
     }
-    
+
     override func becomeFirstResponder() -> Bool {
         guard !isHidden else {
             return false
         }
         return textField.becomeFirstResponder()
     }
-    
+
     // MARK: - Private methods
-    
+
     fileprivate func installConstraints() {
         textField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textField)
-        
+
         // Allow space for the minimized placeholder to sit above the textfield
         let minimizedPlaceholderHeight = placeholderLabel.font.lineHeight * Constants.Placeholder.scale
         NSLayoutConstraint.activate([
@@ -118,7 +118,7 @@ class FloatingPlaceholderTextFieldView: UIView {
     }
 
     // MARK: - Animate placeholder
-    
+
     fileprivate lazy var animator: UIViewPropertyAnimator = {
         let params = UISpringTimingParameters(
             mass: 1.0,
@@ -129,15 +129,15 @@ class FloatingPlaceholderTextFieldView: UIView {
         animator.isInterruptible = true
         return animator
     }()
-    
+
     fileprivate lazy var placeholderCenterYConstraint: NSLayoutConstraint = {
         placeholderLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
     }()
-    
+
     fileprivate lazy var placeholderTopYConstraint: NSLayoutConstraint = {
         placeholderLabel.topAnchor.constraint(equalTo: topAnchor)
     }()
-    
+
     public func updatePlaceholder(animated: Bool = true) {
         enum Position { case up, down }
         let isEmpty = textField.text?.isEmpty ?? true
@@ -149,7 +149,7 @@ class FloatingPlaceholderTextFieldView: UIView {
             self.placeholderCenterYConstraint.isActive = position != .up
             self.placeholderTopYConstraint.isActive = position == .up
         }
-        
+
         // Don't update redundantly; this can cause animation issues
         guard transform != self.placeholderLabel.transform else {
             return
@@ -162,7 +162,7 @@ class FloatingPlaceholderTextFieldView: UIView {
             updatePlaceholderLocation()
             return
         }
-        
+
         animator.stopAnimation(true)
         animator.addAnimations {
             updatePlaceholderLocation()
@@ -172,7 +172,6 @@ class FloatingPlaceholderTextFieldView: UIView {
     }
 
 }
-
 
 // MARK: - EventHandler
 
@@ -189,7 +188,7 @@ extension FloatingPlaceholderTextFieldView: EventHandler {
 
 // MARK: - Constants
 
-fileprivate enum Constants {
+private enum Constants {
     enum Placeholder {
         static let scale: CGFloat = 0.75
         /// The distance between the floating placeholder label and the textfield below it.

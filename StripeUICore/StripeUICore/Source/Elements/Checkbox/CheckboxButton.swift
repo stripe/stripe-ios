@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public protocol CheckboxButtonDelegate: AnyObject {
     /// Return `true` to open the URL in the device's default browser.
@@ -94,7 +94,7 @@ import UIKit
             textView.isUserInteractionEnabled = isEnabled
         }
     }
-    
+
     public private(set) var hasReceivedTap: Bool = false
 
     public override var isHidden: Bool {
@@ -187,7 +187,7 @@ import UIKit
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: checkbox.trailingAnchor, constant: 6),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            minimizeHeight
+            minimizeHeight,
         ])
     }
 
@@ -254,12 +254,12 @@ class CheckBox: UIView {
             setNeedsDisplay()
         }
     }
-    
+
     private var fillColor: UIColor {
         if isSelected {
             return theme.colors.primary
         }
-        
+
         return theme.colors.background
     }
 
@@ -286,11 +286,11 @@ class CheckBox: UIView {
         setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func draw(_ rect: CGRect) {
         let rect = rect.inset(by: superview!.alignmentRectInsets)
         let borderRectWidth = min(16, rect.width - 2)

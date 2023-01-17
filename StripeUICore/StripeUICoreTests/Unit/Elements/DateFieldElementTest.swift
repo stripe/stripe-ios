@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) @testable import StripeUICore
+import XCTest
 
 final class DateFieldElementTest: XCTestCase {
     // Mock dates

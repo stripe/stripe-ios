@@ -16,7 +16,7 @@ class NSMutableURLRequest_StripeTest: XCTestCase {
             request = URLRequest(url: url)
         }
         request?.stp_addParameters(toURL: [
-            "foo": "bar"
+            "foo": "bar",
         ])
 
         XCTAssertEqual(request?.url?.absoluteString, "https://example.com?foo=bar")
@@ -28,7 +28,7 @@ class NSMutableURLRequest_StripeTest: XCTestCase {
             request = URLRequest(url: url)
         }
         request?.stp_addParameters(toURL: [
-            "foo": "bar"
+            "foo": "bar",
         ])
 
         XCTAssertEqual(request?.url?.absoluteString, "https://example.com?a=b&foo=bar")

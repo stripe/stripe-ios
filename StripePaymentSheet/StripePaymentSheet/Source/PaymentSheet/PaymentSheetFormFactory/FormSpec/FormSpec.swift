@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 /// A decodable representation that can used to construct a `FormElement`
 struct FormSpec: Decodable {
@@ -48,7 +48,7 @@ struct FormSpec: Decodable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let field_type = try container.decode(String.self, forKey: .type)
 
-            switch(field_type) {
+            switch field_type {
             case "name":
                 self = .name(try NameFieldSpec(from: decoder))
             case "email":
@@ -108,7 +108,7 @@ struct FormSpec: Decodable {
                     self.urlPath = try container.decodeIfPresent(String.self, forKey: .urlPath) ?? "next_action[redirect_to_url][url]"
                     self.returnUrlPath = try container.decodeIfPresent(String.self, forKey: .returnUrlPath) ?? "next_action[redirect_to_url][return_url]"
                     let redirectStrategy = try container.decodeIfPresent(String.self, forKey: .nativeMobileRedirectStrategy) ?? "none"
-                    switch(redirectStrategy) {
+                    switch redirectStrategy {
                     case "external_browser":
                         self.redirectStrategy = .external_browser
                     case "follow_redirects":
@@ -139,7 +139,7 @@ struct FormSpec: Decodable {
 
                 let nextActionType = try container.decode(String.self, forKey: .type)
 
-                switch(nextActionType){
+                switch nextActionType {
                 case "redirect_to_url":
                     self.type = .redirect_to_url(try RedirectToURL(from: decoder))
                 case "finished":
@@ -167,7 +167,7 @@ struct FormSpec: Decodable {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
 
                 let nextActionType = try container.decode(String.self, forKey: .type)
-                switch(nextActionType) {
+                switch nextActionType {
                 case "finished":
                     self.type = .finished
                 case "canceled":
@@ -181,7 +181,7 @@ struct FormSpec: Decodable {
 }
 extension FormSpec {
     static func nextActionSpec(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec? {
-        var nextActionSpec: FormSpec.NextActionSpec? = nil
+        var nextActionSpec: FormSpec.NextActionSpec?
         if let paymentMethod = paymentIntent.paymentMethod?.paymentSheetPaymentMethodType(),
            let paymentMethodString = PaymentSheet.PaymentMethodType.string(from: paymentMethod) {
             nextActionSpec = formSpecProvider.nextActionSpec(for: paymentMethodString)
@@ -193,11 +193,11 @@ extension FormSpec {
 extension FormSpec {
     struct BaseFieldSpec: Decodable, Equatable {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
-        let apiPath: [String:String]?
+        let apiPath: [String: String]?
     }
     struct NameFieldSpec: Decodable, Equatable {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
-        let apiPath: [String:String]?
+        let apiPath: [String: String]?
         /// An optional localizedId to control the label
         let translationId: LocalizedString?
     }
@@ -213,7 +213,7 @@ extension FormSpec {
         /// The list of items to display in the dropdown
         let items: [PropertyItemSpec]
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
-        let apiPath: [String:String]?
+        let apiPath: [String: String]?
 
     }
 

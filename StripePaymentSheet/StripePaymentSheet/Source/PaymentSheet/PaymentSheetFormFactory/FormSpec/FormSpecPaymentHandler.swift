@@ -20,7 +20,7 @@ class PaymentSheetFormSpecPaymentHandler {
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension PaymentSheetFormSpecPaymentHandler : FormSpecPaymentHandler {
+extension PaymentSheetFormSpecPaymentHandler: FormSpecPaymentHandler {
     func handlePostConfirmPIStatusSpec(for paymentIntent: StripePayments.STPPaymentIntent?, action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, paymentHandler: StripePayments.STPPaymentHandler) -> Bool {
         if let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) {
             paymentHandler._handlePostConfirmPIStatusSpec(forAction: action, paymentIntentStatusSpec: spec)
@@ -28,14 +28,14 @@ extension PaymentSheetFormSpecPaymentHandler : FormSpecPaymentHandler {
         }
         return false
     }
-    
+
     func isPIStatusSpecFinishedForPostConfirmPIStatus(paymentIntent: StripePayments.STPPaymentIntent?, paymentHandler: STPPaymentHandler) -> Bool {
         guard let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) else {
             return false
         }
         return paymentHandler._isPIStatusSpecFinished(paymentIntentStatusSpec: spec)
     }
-    
+
     func handleNextActionSpec(for paymentIntent: STPPaymentIntent, action: STPPaymentHandlerPaymentIntentActionParams, paymentHandler: STPPaymentHandler) -> Bool {
         if let paymentIntentStatusSpec = paymentHandler._specForConfirmResponse(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) {
             paymentHandler._handleNextActionSpec(forAction: action, paymentIntentStatusSpec: paymentIntentStatusSpec, urlSession: self.urlSession)
@@ -43,7 +43,7 @@ extension PaymentSheetFormSpecPaymentHandler : FormSpecPaymentHandler {
         }
         return false
     }
-    
+
 }
 
 extension STPPaymentHandler {
@@ -68,16 +68,16 @@ extension STPPaymentHandler {
             return
         }
 
-        switch(paymentIntentStatusSpec.type) {
+        switch paymentIntentStatusSpec.type {
         case .redirect_to_url(let redirectToUrl):
             if let urlString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.urlPath) as? String,
                let url = URL(string: urlString) {
 
-                var returnUrl: URL? = nil
+                var returnUrl: URL?
                 if let returnString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath) as? String {
                     returnUrl = URL(string: returnString)
                 }
-                switch(redirectToUrl.redirectStrategy) {
+                switch redirectToUrl.redirectStrategy {
                 case .external_browser:
                     self._handleRedirectToExternalBrowser(to: url, withReturn: returnUrl)
                 case .follow_redirects:
@@ -119,7 +119,7 @@ extension STPPaymentHandler {
         return nil
     }
     func _handlePostConfirmPIStatusSpec(forAction action: STPPaymentHandlerPaymentIntentActionParams, paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs) {
-        switch(paymentIntentStatusSpec.type) {
+        switch paymentIntentStatusSpec.type {
         case .finished:
             action.complete(with: .succeeded, error: nil)
         case .canceled:

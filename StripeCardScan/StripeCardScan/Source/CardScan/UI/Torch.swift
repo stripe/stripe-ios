@@ -25,7 +25,7 @@ struct Torch {
         self.level = 1.0
     }
 
-    ///TODO(jaimepark): Refactor
+    /// TODO(jaimepark): Refactor
     mutating func toggle() {
         self.state = self.state == .on ? .off : .on
         do {

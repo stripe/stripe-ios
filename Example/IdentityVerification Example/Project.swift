@@ -47,6 +47,6 @@ let project = Project(
             name: "IdentityVerification Example",
             buildAction: .buildAction(targets: ["IdentityVerification Example"]),
             runAction: .runAction(executable: "IdentityVerification Example")
-        )
+        ),
     ]
 )

@@ -7,6 +7,10 @@ app:
   - FASTLANE_XCODE_LIST_TIMEOUT: '120'
   - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
+  - GIT_AUTHOR_NAME: Bitrise CI
+  - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
+  - GIT_COMMITTER_NAME: Bitrise CI
+  - GIT_COMMITTER_EMAIL: mobile-sdk-team@stripe.com
   - opts:
       is_expand: false
     FASTLANE_WORK_DIR: "."
@@ -16,12 +20,17 @@ app:
 trigger_map:
 - push_branch: master
   pipeline: main-trigger-pipeline
+- pull_request_source_branch: 'releases/*'
+  pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
     stages:
     - stage-trigger-run-all: {}
+  releases-trigger-pipeline:
+    stages:
+    - stage-releases-run-all: {}
   nightly-pipeline:
     stages:
     - stage-nightly-all: {}
@@ -29,19 +38,35 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
-    - check-docs: {}
+    - framework-tests-xcode-13: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
-  stage-nightly-all:
+  stage-releases-run-all:
     workflows:
+    - framework-tests: {}
+    - deploy-docs: {}
+    - install-tests-non-carthage: {}
+    - lint-tests: {}
+    - size-report: {}
     - basic-integration-tests: {}
     - ui-tests: {}
     - legacy-tests-13: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
+    - pod-lint-tests: {}
+    - integration-all: {}
+  stage-nightly-all:
+    workflows:
+    - basic-integration-tests: {}
+    - ui-tests: {}
+    - check-docs: {}
+    - legacy-tests-13: {}
+    - legacy-tests-14: {}
+    - carthage-install-test: {}
     - data-theorem-sast: {}
     - deploy-dry-run: {}
+    - pod-lint-tests: {}
     - integration-all: {}
 workflows:
   basic-integration-tests:
@@ -71,15 +96,40 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: brew install sourcekitten
-        is_always_run: true
-        title: Install sourcekitten
-    - fastlane@3:
-        inputs:
-        - lane: check_docs
-        title: fastlane check_docs
+        - content: bundle exec ./ci_scripts/build_documentation.rb
+        title: Build documentation
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
+  deploy-docs:
+    steps:
+    - activate-ssh-key@4: {}
+    - script@1:
+        inputs:
+        - content: bundle config set path 'vendor/bundle'
+        is_always_run: true
+        title: Set Bundler to use local vendor directory
+    - git-clone@6:
+        inputs:
+        - merge_pr: 'no'
+        - fetch_tags: 'yes'
+    - cache-pull@2: {}
+    - bundler@0: {}
+    - cache-push@2:
+        inputs:
+        - compress_archive: 'true'
+        - cache_paths: |
+            vendor
+            SourcePackages
+    - script@1:
+        inputs:
+        - content: git fetch origin
+        title: Fetch full branch history
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/build_documentation.rb --publish
+        title: Build documentation
   data-theorem-sast:
     steps:
     - script@1:
@@ -218,6 +268,22 @@ workflows:
     before_run:
     - prep_all
     after_run: []
+  framework-tests-xcode-13:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: legacy_tests_14
+        title: fastlane legacy_tests_14
+    envs:
+    - DEFAULT_TEST_DEVICE: "platform=iOS Simulator,name=iPhone 8,OS=14.5"
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
+    meta:
+      bitrise.io:
+        stack: osx-xcode-13.2.x
+        machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
     - fastlane@3:
@@ -287,6 +353,10 @@ workflows:
     - notify_ci
   lint-tests:
     steps:
+    - script@1:
+        inputs:
+        - content: "./ci_scripts/lint_modified_files.sh"
+        title: Run swiftlint
     - fastlane@3:
         inputs:
         - lane: build_extras
@@ -295,10 +365,14 @@ workflows:
         inputs:
         - lane: analyze
         title: fastlane analyze
-    - fastlane@3:
+    before_run:
+    - prep_all
+  pod-lint-tests:
+    steps:
+    - script@1:
         inputs:
-        - lane: objc_symbol_check
-        title: fastlane objc_symbol_check
+        - content: "pod lib lint --include-podspecs='*.podspec'"
+        title: pod lib lint
     before_run:
     - prep_all
   notify_ci:
@@ -386,12 +460,6 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
-    - xcode-test@4:
-        inputs:
-        - destination: "$DEFAULT_TEST_DEVICE"
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "5"
-        - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all

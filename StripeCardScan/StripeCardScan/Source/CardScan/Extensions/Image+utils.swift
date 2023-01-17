@@ -192,7 +192,7 @@ extension CGImage {
         // Get ratio to convert points to pixels
         let fullScreenImage: CGImage? = {
             // if image is already 16:9, no need to crop to match crop ratio
-            ///TODO(jaimepark): make sure this works
+            /// TODO(jaimepark): make sure this works
             if abs(cropRatio - imageAspectRatio) < 0.0001 {
                 return self
             }

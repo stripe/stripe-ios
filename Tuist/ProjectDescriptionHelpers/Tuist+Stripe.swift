@@ -4,7 +4,7 @@ import ProjectDescription
 extension Project {
     /// Options for test targets inside Stripe frameworks.
     public struct TestOptions {
-        public var resources: ResourceFileElements? = nil
+        public var resources: ResourceFileElements?
         public var dependencies: [TargetDependency] = []
         public var settings: Settings = .stripeTargetSettings(
             baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
@@ -199,7 +199,10 @@ extension Project {
                 product: .framework,
                 bundleId: "com.stripe.\(name.casedToDashed)",
                 infoPlist: "\(name)/Info.plist",
-                sources: "\(name)/Source/**/*.swift",
+                sources: [
+                    "\(name)/Source/**/*.swift",
+                    "\(name)/*.docc",
+                ],
                 resources: resources,
                 headers: .headers(
                     public: "\(name)/\(name).h"
@@ -323,7 +326,7 @@ extension Project {
                         ? Arguments(
                             environment: [
                                 "FB_REFERENCE_IMAGE_DIR":
-                                    "$(SRCROOT)/../Tests/ReferenceImages"
+                                    "$(SRCROOT)/../Tests/ReferenceImages",
                             ]
                         ) : nil,
                     expandVariableFromTarget: "\(name)"
@@ -437,4 +440,3 @@ extension String {
         )
     }
 }
-

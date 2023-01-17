@@ -8,10 +8,10 @@
 import Foundation
 
 final class ManualEntryValidator {
-    
+
     static let routingNumberLength = 9
     static let accountNumberMaxLength = 17
-    
+
     static func validateRoutingNumber(_ routingNumber: String) -> String? {
         if routingNumber.isEmpty {
             return STPLocalizedString("Routing number is required.", "An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank.")
@@ -23,7 +23,7 @@ final class ManualEntryValidator {
             return nil
         }
     }
-    
+
     static func validateAccountNumber(_ accountNumber: String) -> String? {
         if accountNumber.isEmpty {
             return STPLocalizedString("Account number is required.", "An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Account number' field blank.")
@@ -33,7 +33,7 @@ final class ManualEntryValidator {
             return nil
         }
     }
-    
+
     static func validateAccountNumberConfirmation(
         _ accountNumberConfirmation: String,
         accountNumber: String
@@ -46,7 +46,7 @@ final class ManualEntryValidator {
             return nil
         }
     }
-    
+
     private static func isStringDigits(
         _ string: String,
         withMaxLength maxLength: Int
@@ -54,7 +54,7 @@ final class ManualEntryValidator {
         let regex = "^\\d{1,\(maxLength)}$"
         return string.range(of: regex, options: [.regularExpression]) != nil
     }
-    
+
     private static func isStringDigits(
         _ string: String,
         withExactLength exactLength: Int
@@ -62,7 +62,7 @@ final class ManualEntryValidator {
         let regex = "^\\d{\(exactLength)}$"
         return string.range(of: regex, options: [.regularExpression]) != nil
     }
-    
+
     private static func isUSRoutingNumber(_ routingNumber: String) -> Bool {
         func usRoutingFactor(_ index: Int) -> Int {
             let mod3 = index % 3
@@ -74,16 +74,16 @@ final class ManualEntryValidator {
                 return 1
             }
         }
-        
+
         if routingNumber.range(of: #"^\d{9}$"#, options: [.regularExpression]) != nil {
             let total = routingNumber.enumerated().reduce(0) { partialResult, indexAndCharacter in
                 let index = indexAndCharacter.offset
                 let character = String(indexAndCharacter.element)
-                
+
                 // the character cast can't fail because we ensure that
                 // all characters are digits with the regex
                 assert(Int(character) != nil)
-                
+
                 return partialResult + (Int(character) ?? 1) * usRoutingFactor(index)
             }
             return total % 10 == 0

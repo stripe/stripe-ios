@@ -56,7 +56,7 @@ extension TruncatedDecimalTest {
         guard let jsonDataToDecode = "{\"number\":\(string)}".data(using: .utf8) else {
             return XCTFail("Could not encode string to json", file: file, line: line)
         }
-        let _ = try jsonDecoder.decode(Container<T>.self, from: jsonDataToDecode)
+        _ = try jsonDecoder.decode(Container<T>.self, from: jsonDataToDecode)
     }
 }
 

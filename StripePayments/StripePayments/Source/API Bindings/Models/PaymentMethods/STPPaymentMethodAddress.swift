@@ -70,12 +70,12 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:line1)): "line1",
-            NSStringFromSelector(#selector(getter:line2)): "line2",
-            NSStringFromSelector(#selector(getter:city)): "city",
-            NSStringFromSelector(#selector(getter:country)): "country",
-            NSStringFromSelector(#selector(getter:state)): "state",
-            NSStringFromSelector(#selector(getter:CNMutablePostalAddress.postalCode)):
+            NSStringFromSelector(#selector(getter: line1)): "line1",
+            NSStringFromSelector(#selector(getter: line2)): "line2",
+            NSStringFromSelector(#selector(getter: city)): "city",
+            NSStringFromSelector(#selector(getter: country)): "country",
+            NSStringFromSelector(#selector(getter: state)): "state",
+            NSStringFromSelector(#selector(getter: CNMutablePostalAddress.postalCode)):
                 "postal_code",
         ]
     }

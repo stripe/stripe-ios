@@ -12,7 +12,7 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 
 extension PaymentSheet {
-    
+
     /// An unordered list of paymentMethod types that can be used with PaymentSheet
     /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.
     /// Modifying this property in a production app can lead to unexpected behavior.
@@ -27,7 +27,7 @@ extension PaymentSheet {
         .UPI,
         .cashApp
     ]
-    
+
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
     /// - Note: This is a var because it depends on the authenticated Link user
     ///
@@ -75,7 +75,7 @@ extension PaymentSheet {
                 return [.unavailable]
             }
         }()
-        
+
         return supports(
             paymentMethod: paymentMethod,
             requirements: requirements,
@@ -84,7 +84,7 @@ extension PaymentSheet {
             supportedPaymentMethods: supportedPaymentMethods
         )
     }
-    
+
     /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use, set up, and reuse
     /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent or saved payment method
     /// - Parameters:
@@ -122,7 +122,7 @@ extension PaymentSheet {
                 return [.unavailable]
             }
         }()
-        
+
         return supports(
             paymentMethod: paymentMethod,
             requirements: requirements,
@@ -131,7 +131,7 @@ extension PaymentSheet {
             supportedPaymentMethods: supportedPaymentMethods
         )
     }
-    
+
     /// DRY helper method
     static func supports(
         paymentMethod: STPPaymentMethodType,
@@ -143,17 +143,17 @@ extension PaymentSheet {
         guard supportedPaymentMethods.contains(paymentMethod) else {
             return false
         }
-        
+
         // Hide a payment method type if we are in live mode and it is unactivated
         if !configuration.apiClient.isTestmode && intent.unactivatedPaymentMethodTypes.contains(paymentMethod) {
             return false
         }
-        
+
         let fulfilledRequirements = [configuration, intent].reduce([]) {
             (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
             return accumulator + element.fulfilledRequirements
         }
-        
+
         let supports = Set(requirements).isSubset(of: fulfilledRequirements)
         if paymentMethod == .USBankAccount {
             if !fulfilledRequirements.contains(.financialConnectionsSDK) {
@@ -169,11 +169,10 @@ extension PaymentSheet {
 
 /// Defines an instance type who provides a set of `PaymentMethodTypeRequirement` it satisfies
 protocol PaymentMethodRequirementProvider {
-    
+
     /// The set of payment requirements provided by this instance
     var fulfilledRequirements: [PaymentMethodTypeRequirement] { get }
 }
-
 
 extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
@@ -202,7 +201,7 @@ extension Intent: PaymentMethodRequirementProvider {
                     reqs.append(.shippingAddress)
                 }
             }
-            
+
             // Not setting up
             if paymentIntent.setupFutureUsage == .none {
                 reqs.append(.notSettingUp)
@@ -243,19 +242,19 @@ typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequireme
 
 extension PaymentSheet {
     enum PaymentMethodTypeRequirement {
-        
+
         /// A special case that indicates the payment method is unavailable
         case unavailable
-        
+
         /// Indicates that a payment method requires a return URL
         case returnURL
-        
+
         /// Indicates that a payment method requires shipping information
         case shippingAddress
-        
+
         /// Requires that we are not using a PaymentIntent+setupFutureUsage or SetupIntent with this PaymentMethod
         case notSettingUp
-        
+
         /// Requires that the user declare support for asynchronous payment methods
         case userSupportsDelayedPaymentMethods
 

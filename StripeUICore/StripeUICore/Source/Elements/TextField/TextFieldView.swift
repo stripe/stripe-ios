@@ -36,11 +36,11 @@ class TextFieldView: UIView {
             updateUI(with: viewModel)
         }
     }
-    
+
     var didReceiveAutofill = false
 
     // MARK: - Views
-    
+
     private(set) lazy var textField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
@@ -92,9 +92,9 @@ class TextFieldView: UIView {
     }()
     private var viewModel: TextFieldElement.ViewModel
     private var hStack = UIStackView()
-    
+
     // MARK: - Initializers
-    
+
     init(viewModel: TextFieldElement.ViewModel, delegate: TextFieldViewDelegate) {
         self.viewModel = viewModel
         self.delegate = delegate
@@ -104,13 +104,13 @@ class TextFieldView: UIView {
         installConstraints()
         updateUI(with: viewModel)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Overrides
-    
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
@@ -125,9 +125,9 @@ class TextFieldView: UIView {
         }
         return textField
     }
-    
+
     // MARK: - Private methods
-    
+
     fileprivate func installConstraints() {
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
@@ -143,12 +143,12 @@ class TextFieldView: UIView {
         hStack.spacing = 6
         addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
     }
-    
+
     @objc private func clearText() {
         textField.text = nil
         textField.sendActions(for: .editingChanged)
     }
-    
+
     private func setClearButton(hidden: Bool) {
         UIView.performWithoutAnimation {
             clearButton.isHidden = hidden
@@ -157,13 +157,13 @@ class TextFieldView: UIView {
     }
 
     // MARK: - Internal methods
-    
+
     func updateUI(with viewModel: TextFieldElement.ViewModel) {
         self.viewModel = viewModel
-        
+
         // Update accessibility
         textField.accessibilityLabel = viewModel.accessibilityLabel
-        
+
         // Update placeholder, text
         textFieldView.placeholder = viewModel.placeholder
 
@@ -188,7 +188,7 @@ class TextFieldView: UIView {
             textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
             textField.reloadInputViews()
         }
-        
+
         // Update text and border color
         if case .invalid(let error) = viewModel.validationState,
            error.shouldDisplay(isUserEditing: textField.isEditing) {
@@ -208,13 +208,13 @@ class TextFieldView: UIView {
 
         // Update accessory view
         accessoryView = viewModel.accessoryView
-        
+
         accessibilityElements = [textFieldView, accessoryView].compactMap { $0 }
         // Manually call layoutIfNeeded to avoid unintentional animations
         // in next layout pass
         layoutIfNeeded()
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
@@ -235,7 +235,7 @@ extension TextFieldView: UITextFieldDelegate {
 
         delegate?.textFieldViewDidUpdate(view: self)
     }
-    
+
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // If text is already present in the text field we should show the clear button
         if let text = textField.text, !text.isEmpty, viewModel.shouldShowClearButton {
@@ -244,14 +244,14 @@ extension TextFieldView: UITextFieldDelegate {
         textFieldView.updatePlaceholder()
         delegate?.textFieldViewDidUpdate(view: self)
     }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField) {
         setClearButton(hidden: true) // Hide clear button when not editing
         textFieldView.updatePlaceholder()
         textField.layoutIfNeeded() // Without this, the text jumps for some reason
         delegate?.textFieldViewDidUpdate(view: self)
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         delegate?.textFieldViewContinueToNextField(view: self)
         textField.resignFirstResponder()

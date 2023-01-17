@@ -141,7 +141,7 @@ extension CardImageVerificationControllerTests {
 
             self?.verifyFramesRequestExp.fulfill()
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
         }
     }
@@ -163,7 +163,7 @@ extension CardImageVerificationControllerTests {
 
             self?.scanStatsRequestExp.fulfill()
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
         }
     }

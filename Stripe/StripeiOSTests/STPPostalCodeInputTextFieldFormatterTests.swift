@@ -10,8 +10,8 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPostalCodeInputTextFieldFormatterTests: XCTestCase {
@@ -19,20 +19,20 @@ class STPPostalCodeInputTextFieldFormatterTests: XCTestCase {
     func testIsAllowedInput() {
         let formatter = STPPostalCodeInputTextFieldFormatter()
         formatter.countryCode = "US"
-        XCTAssertTrue(formatter.isAllowedInput("10002", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertTrue(formatter.isAllowedInput("21218", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertFalse(formatter.isAllowedInput("10002-1234", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertFalse(formatter.isAllowedInput("100021234", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertFalse(formatter.isAllowedInput("ABC10002", to: "", at: NSMakeRange(0, 0)))
+        XCTAssertTrue(formatter.isAllowedInput("10002", to: "", at: NSRange(location: 0, length: 0)))
+        XCTAssertTrue(formatter.isAllowedInput("21218", to: "", at: NSRange(location: 0, length: 0)))
+        XCTAssertFalse(formatter.isAllowedInput("10002-1234", to: "", at: NSRange(location: 0, length: 0)))
+        XCTAssertFalse(formatter.isAllowedInput("100021234", to: "", at: NSRange(location: 0, length: 0)))
+        XCTAssertFalse(formatter.isAllowedInput("ABC10002", to: "", at: NSRange(location: 0, length: 0)))
 
-        XCTAssertFalse(formatter.isAllowedInput("1", to: "100021234", at: NSMakeRange(10, 0)))
-        XCTAssertFalse(formatter.isAllowedInput("1", to: "10002", at: NSMakeRange(4, 0)))
-        XCTAssertTrue(formatter.isAllowedInput("1", to: "1000", at: NSMakeRange(4, 0)))
+        XCTAssertFalse(formatter.isAllowedInput("1", to: "100021234", at: NSRange(location: 10, length: 0)))
+        XCTAssertFalse(formatter.isAllowedInput("1", to: "10002", at: NSRange(location: 4, length: 0)))
+        XCTAssertTrue(formatter.isAllowedInput("1", to: "1000", at: NSRange(location: 4, length: 0)))
 
         formatter.countryCode = "UK"
-        XCTAssertTrue(formatter.isAllowedInput("10002-1234", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertTrue(formatter.isAllowedInput("100021234", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertTrue(formatter.isAllowedInput("ABC10002", to: "", at: NSMakeRange(0, 0)))
+        XCTAssertTrue(formatter.isAllowedInput("10002-1234", to: "", at: NSRange(location: 0, length: 0)))
+        XCTAssertTrue(formatter.isAllowedInput("100021234", to: "", at: NSRange(location: 0, length: 0)))
+        XCTAssertTrue(formatter.isAllowedInput("ABC10002", to: "", at: NSRange(location: 0, length: 0)))
     }
 
     func testFormattedString() {

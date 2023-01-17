@@ -44,7 +44,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
             XCTAssertEqual(request.httpMethod, "POST")
 
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
         }
 
@@ -129,7 +129,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
             }
 
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
         }
 
@@ -190,7 +190,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
             XCTAssertEqual(request.httpMethod, "POST")
 
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
         }
 
@@ -206,7 +206,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         promise.observe { result in
             switch result {
             /// The successful response is an empty struct
-            case .success(_):
+            case .success:
                 XCTAssert(true, "A response has been returned")
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
@@ -262,7 +262,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
             XCTAssertEqual(request.httpMethod, "POST")
 
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
         }
 
@@ -279,7 +279,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         promise.observe { result in
             switch result {
             /// The successful response is an empty struct
-            case .success(_):
+            case .success:
                 XCTAssert(true, "A response has been returned")
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
@@ -353,7 +353,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
             XCTAssertEqual(request.httpMethod, "POST")
 
             return true
-        } response: { request in
+        } response: { _ in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
         }
 
@@ -370,7 +370,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         promise.observe { result in
             switch result {
             /// The successful response is an empty struct
-            case .success(_):
+            case .success:
                 XCTAssert(true, "A response has been returned")
             case .failure(let error):
                 XCTFail("Request returned error \(error)")

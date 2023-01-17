@@ -1140,7 +1140,7 @@ extension STPPaymentMethodParams {
     @objc public var label: String {
         switch type {
         case .alipay:
-            return "Alipay"  //? Why aren't these localized?
+            return "Alipay"  // ? Why aren't these localized?
         case .card:
             if let card = card {
                 let brand = STPCardValidator.brand(forNumber: card.number ?? "")

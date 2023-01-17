@@ -7,18 +7,18 @@
 
 import Foundation
 import SafariServices
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class ClickableLabel: HitTestView {
-    
+
     struct Link {
         let range: NSRange
         let urlString: String
         let action: (URL) -> Void
     }
-    
+
     private let font: UIFont
     private let boldFont: UIFont
     private let linkFont: UIFont
@@ -26,7 +26,7 @@ final class ClickableLabel: HitTestView {
     private let alignCenter: Bool
     private let textView = IncreasedHitTestTextView()
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
-    
+
     init(
         font: UIFont,
         boldFont: UIFont,
@@ -56,7 +56,7 @@ final class ClickableLabel: HitTestView {
         // link, the selection area does not get clipped
         textView.clipsToBounds = false
         addAndPinSubview(textView)
-        
+
         // enable faster tap recognizing
         if let gestureRecognizers = textView.gestureRecognizers {
             for gestureRecognizer in gestureRecognizers {
@@ -72,11 +72,11 @@ final class ClickableLabel: HitTestView {
             }
         }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     /// Helper that automatically handles extracting links and, optionally, opening it via `SFSafariViewController`
     @available(iOSApplicationExtension, unavailable)
     func setText(
@@ -97,7 +97,7 @@ final class ClickableLabel: HitTestView {
             }
         )
     }
-    
+
     private func setText(
         _ text: String,
         links: [Link]
@@ -114,20 +114,20 @@ final class ClickableLabel: HitTestView {
                 .foregroundColor: textColor,
             ]
         )
-        
+
         // apply link attributes
         for link in links {
             string.addAttribute(.link, value: link.urlString, range: link.range)
-            
+
             // setting font in `linkTextAttributes` does not work
             string.addAttribute(.font, value: linkFont, range: link.range)
-                        
+
             linkURLStringToAction[link.urlString] = link.action
         }
-        
+
         // apply bold attributes
         string.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
-        
+
         textView.attributedText = string
     }
 }
@@ -135,7 +135,7 @@ final class ClickableLabel: HitTestView {
 // MARK: <UITextViewDelegate>
 
 extension ClickableLabel: UITextViewDelegate {
-    
+
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         if let linkAction = linkURLStringToAction[URL.absoluteString] {
             linkAction(URL)
@@ -145,7 +145,7 @@ extension ClickableLabel: UITextViewDelegate {
         }
         return true
     }
-    
+
     func textViewDidChangeSelection(_ textView: UITextView) {
         // disable the ability to select/copy the text as a way to improve UX
         textView.selectedTextRange = nil
@@ -153,7 +153,7 @@ extension ClickableLabel: UITextViewDelegate {
 }
 
 private class IncreasedHitTestTextView: UITextView {
-    
+
     // increase the area of NSAttributedString taps
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         // Note that increasing size here does NOT help to

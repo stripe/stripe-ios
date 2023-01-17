@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class SuccessAccountListView: UIView {
-    
+
     private let maxNumberOfAccountsListedBeforeShowingOnlyAccountCount = 4
-    
+
     init(institution: FinancialConnectionsInstitution, linkedAccounts: [FinancialConnectionsPartnerAccount]) {
         super.init(frame: .zero)
         let accountListView: UIView
@@ -24,7 +24,7 @@ final class SuccessAccountListView: UIView {
         }
         addAndPinSubview(accountListView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -36,7 +36,7 @@ private func CreateAccountCountView(institution: FinancialConnectionsInstitution
     numberOfAccountsLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
     numberOfAccountsLabel.textColor = .textSecondary
     numberOfAccountsLabel.text = String(format: STPLocalizedString("%d accounts", "An textual description of how many bank accounts user has successfully connected (or linked). Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %d will be replaced by the number of accounts connected (or linked)."), numberOfAccounts)
-    
+
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
             CreateIconWithLabelView(instituion: institution, text: institution.name),
@@ -71,7 +71,7 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
             text: account.name
         )
     )
-    
+
     if let displayableAccountNumbers = account.displayableAccountNumbers {
         let displayableAccountNumberLabel = UILabel()
         displayableAccountNumberLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
@@ -81,14 +81,14 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
         displayableAccountNumberLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         horizontalStackView.addArrangedSubview(displayableAccountNumberLabel)
     }
-    
+
     return horizontalStackView
 }
 
 private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
     let institutionIconView = InstitutionIconView(size: .small)
     institutionIconView.setImageUrl(instituion.icon?.default)
-    
+
     let label = UILabel()
     label.font = .stripeFont(forTextStyle: .captionEmphasized)
     label.textColor = .textPrimary
@@ -97,7 +97,7 @@ private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution
     label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     // compress `account.name` instead of account number if text is long
     label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-    
+
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
             institutionIconView,

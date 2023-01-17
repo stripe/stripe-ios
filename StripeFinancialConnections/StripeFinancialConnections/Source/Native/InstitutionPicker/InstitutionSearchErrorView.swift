@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchErrorView: UIView {
-    
+
     init(didSelectEnterYourBankDetailsManually: (() -> Void)?) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
@@ -27,7 +27,7 @@ final class InstitutionSearchErrorView: UIView {
         verticalStackView.alignment = .center
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -110,15 +110,15 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct InstitutionSearchErrorViewUIViewRepresentable: UIViewRepresentable {
-    
+
     let didSelectEnterYourBankDetailsManually: (() -> Void)?
-    
+
     func makeUIView(context: Context) -> InstitutionSearchErrorView {
         InstitutionSearchErrorView(
             didSelectEnterYourBankDetailsManually: didSelectEnterYourBankDetailsManually
         )
     }
-    
+
     func updateUIView(_ uiView: InstitutionSearchErrorView, context: Context) {
         uiView.sizeToFit()
     }

@@ -23,7 +23,7 @@ import UIKit
     public let elements: [Element]
     public let style: Style
     public let theme: ElementsUITheme
-    
+
     // MARK: - Style
     public enum Style {
         /// Default element styling in stack view
@@ -47,9 +47,9 @@ import UIKit
     var viewModel: ViewModel {
         return ViewModel(elements: elements.map({ $0.view }), bordered: style == .bordered, theme: theme)
     }
-    
+
     // MARK: - Initializer
-  
+
     public convenience init(elements: [Element?], theme: ElementsUITheme = .default) {
         self.init(elements: elements, style: .plain, theme: theme)
     }
@@ -58,9 +58,7 @@ import UIKit
         self.elements = elements.compactMap { $0 }
         self.style = style
         self.theme = theme
-        defer {
-            self.elements.forEach { $0.delegate = self }
-        }
+        self.elements.forEach { $0.delegate = self }
     }
 
     public func setElements(_ elements: [Element], hidden: Bool, animated: Bool) {

@@ -43,7 +43,7 @@ class MyBackendModel: ObservableObject {
         request.httpMethod = "POST"
         let task = URLSession.shared.dataTask(
             with: request,
-            completionHandler: { (data, response, error) in
+            completionHandler: { (data, _, _) in
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],

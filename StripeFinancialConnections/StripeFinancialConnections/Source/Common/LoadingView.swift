@@ -5,14 +5,14 @@
 //  Created by Vardges Avetisyan on 6/3/22.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 class LoadingView: UIView {
 
     // MARK: - Subview Properties
-    
+
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
         label.text = STPLocalizedString("Failed to connect", "Error message that displays when we're unable to connect to the server.")
@@ -45,7 +45,7 @@ class LoadingView: UIView {
     }()
 
     // MARK: - Init
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 

@@ -12,8 +12,8 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthenticationContext {
@@ -88,8 +88,8 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         let expectConfirmWasCanceled = expectation(description: "didCancel")
         paymentHandler.confirmPayment(paymentIntentParams, with: self) {
             status,
-            paymentIntent,
-            error in
+            _,
+            _ in
             if case .canceled = status {
                 expectConfirmWasCanceled.fulfill()
             }
@@ -99,7 +99,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             return
         }
 
-        //Test the cancel case
+        // Test the cancel case
         stubRetrievePaymentIntent(
             fileMock: .paymentIntentResponse,
             responseCallback: { data in
@@ -251,7 +251,6 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                                   paymentIntentParams: paymentIntentParams)
     }
 
-
     func testRedirectStrategy_follow_redirects() {
         let nextActionData = """
               {
@@ -290,13 +289,13 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         )
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/affirm/acct_123") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let data = "<>".data(using: .utf8)!
             return HTTPStubsResponse(data: data, statusCode: 302, headers: ["Location": "https://www.financial-partner.com/"])
         }
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("financial-partner.com") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let data = "".data(using: .utf8)!
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
@@ -432,16 +431,18 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                                   paymentHandler: paymentHandler,
                                   paymentIntentParams: paymentIntentParams)
     }
-    private func confirmPaymentWithSucceed(nextActionData: String,
-                                   paymentMethodData: String,
-                                   didRedirect: XCTestExpectation,
-                                   paymentHandler: STPPaymentHandler,
-                                   paymentIntentParams: STPPaymentIntentParams) {
+    private func confirmPaymentWithSucceed(
+        nextActionData: String,
+        paymentMethodData: String,
+        didRedirect: XCTestExpectation,
+        paymentHandler: STPPaymentHandler,
+        paymentIntentParams: STPPaymentIntentParams
+    ) {
         let expectConfirmSucceeded = expectation(description: "didSucceed")
         paymentHandler.confirmPayment(paymentIntentParams, with: self) {
             status,
-            paymentIntent,
-            error in
+            _,
+            _ in
             if case .succeeded = status {
                 expectConfirmSucceeded.fulfill()
             }
@@ -472,7 +473,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
     private func formSpecProvider() -> FormSpecProvider {
         let expectation = expectation(description: "Load Specs")
         let formSpecProvider = FormSpecProvider()
-        formSpecProvider.load { success in
+        formSpecProvider.load { _ in
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
@@ -499,7 +500,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
     private func stubConfirm(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/confirm") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let mockResponseData = try! fileMock.data()
             let data = responseCallback?(mockResponseData) ?? mockResponseData
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
@@ -511,7 +512,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
     ) {
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/payment_intents") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let mockResponseData = try! fileMock.data()
             let data = responseCallback?(mockResponseData) ?? mockResponseData
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)

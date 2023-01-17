@@ -34,7 +34,7 @@ final class SeparatorLabel: UIView {
             label.font = newValue
         }
     }
-    
+
     var textColor: UIColor {
         get {
             return label.textColor
@@ -52,7 +52,7 @@ final class SeparatorLabel: UIView {
             label.adjustsFontForContentSizeCategory = newValue
         }
     }
-    
+
     var separatorColor: UIColor? {
         get {
             return leftLineView.backgroundColor

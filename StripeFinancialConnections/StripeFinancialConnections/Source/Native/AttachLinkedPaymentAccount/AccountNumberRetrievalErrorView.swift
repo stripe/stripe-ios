@@ -7,13 +7,12 @@
 
 import Foundation
 
-import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class AccountNumberRetrievalErrorView: UIView {
-    
+
     init(
         institution: FinancialConnectionsInstitution,
         didSelectAnotherBank: @escaping () -> Void,
@@ -55,7 +54,7 @@ final class AccountNumberRetrievalErrorView: UIView {
         )
         addAndPinSubview(reusableInformationView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -67,10 +66,10 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewRepresentable {
-    
+
     let institutionName: String
     let didSelectEnterBankDetailsManually: (() -> Void)?
-    
+
     func makeUIView(context: Context) -> AccountNumberRetrievalErrorView {
         AccountNumberRetrievalErrorView(
             institution: FinancialConnectionsInstitution(
@@ -82,7 +81,7 @@ private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewReprese
             didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
         )
     }
-    
+
     func updateUIView(_ uiView: AccountNumberRetrievalErrorView, context: Context) {}
 }
 
@@ -93,7 +92,7 @@ struct AccountNumberRetrievalErrorView_Previews: PreviewProvider {
             institutionName: "Chase",
             didSelectEnterBankDetailsManually: {}
         )
-        
+
         AccountNumberRetrievalErrorViewUIViewRepresentable(
             institutionName: "Bank of America",
             didSelectEnterBankDetailsManually: nil
@@ -102,4 +101,3 @@ struct AccountNumberRetrievalErrorView_Previews: PreviewProvider {
 }
 
 #endif
-

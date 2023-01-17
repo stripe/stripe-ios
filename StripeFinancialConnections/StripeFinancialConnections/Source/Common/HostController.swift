@@ -5,8 +5,8 @@
 //  Created by Vardges Avetisyan on 6/3/22.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol HostControllerDelegate: AnyObject {
@@ -20,9 +20,9 @@ protocol HostControllerDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 class HostController {
-    
+
     // MARK: - Properties
-    
+
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let returnURL: String?
@@ -33,9 +33,9 @@ class HostController {
     lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
 
     weak var delegate: HostControllerDelegate?
-        
+
     // MARK: - Init
-    
+
     init(api: FinancialConnectionsAPIClient,
          clientSecret: String,
          returnURL: String?,
@@ -70,11 +70,14 @@ extension HostController: HostViewControllerDelegate {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
-        guard let consentPaneModel = synchronizePayload.text?.consentPane else {
+        guard
+            let consentPaneModel = synchronizePayload.text?.consentPane,
+            let visualUpdate = synchronizePayload.visual
+        else {
             continueWithWebFlow(synchronizePayload.manifest)
             return
         }
-        
+
         let flowRouter = FlowRouter(synchronizePayload: synchronizePayload,
                                     analyticsClient: analyticsClient)
         defer {
@@ -87,12 +90,12 @@ extension HostController: HostViewControllerDelegate {
             continueWithWebFlow(synchronizePayload.manifest)
             return
         }
-        
+
         navigationController.configureAppearanceForNative()
 
         let dataManager = NativeFlowAPIDataManager(
             manifest: synchronizePayload.manifest,
-            visualUpdate: synchronizePayload.visual,
+            visualUpdate: visualUpdate,
             returnURL: returnURL,
             consentPaneModel: consentPaneModel,
             apiClient: api,
@@ -112,7 +115,7 @@ extension HostController: HostViewControllerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 private extension HostController {
-    
+
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
@@ -145,4 +148,3 @@ extension HostController: NativeFlowControllerDelegate {
         delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
 }
-

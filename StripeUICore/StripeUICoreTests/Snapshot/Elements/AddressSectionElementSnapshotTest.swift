@@ -18,7 +18,7 @@ class AddressSectionElementSnapshotTest: FBSnapshotTestCase {
         ]
         return specProvider
     }()
-    
+
     override func setUp() {
         super.setUp()
 //        recordMode = true

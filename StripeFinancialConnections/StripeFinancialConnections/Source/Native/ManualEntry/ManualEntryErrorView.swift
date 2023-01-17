@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class ManualEntryErrorView: UIView {
-    
+
     init(text: String) {
         super.init(frame: .zero)
         let errorLabelFont = UIFont.stripeFont(forTextStyle: .body)
@@ -29,14 +29,14 @@ final class ManualEntryErrorView: UIView {
             warningIconImageView.widthAnchor.constraint(equalToConstant: warningIconWidthAndHeight),
             warningIconImageView.heightAnchor.constraint(equalToConstant: warningIconWidthAndHeight),
         ])
-        
+
         let errorLabel = UILabel()
         errorLabel.font = errorLabelFont
         errorLabel.textColor = .textCritical
         errorLabel.numberOfLines = 0
         errorLabel.text = text
         errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        
+
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
                 warningIconImageView,
@@ -49,7 +49,7 @@ final class ManualEntryErrorView: UIView {
         horizontalStackView.alignment = .top
         addAndPinSubview(horizontalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

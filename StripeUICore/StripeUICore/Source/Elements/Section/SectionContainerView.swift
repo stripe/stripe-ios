@@ -21,7 +21,7 @@ import UIKit
 class SectionContainerView: UIView {
 
     // MARK: - Views
-    
+
     lazy var bottomPinningContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
         view.directionalLayoutMargins = .zero
@@ -34,7 +34,7 @@ class SectionContainerView: UIView {
         let view = buildStackView(views: views, theme: theme)
         return view
     }()
-    
+
     private(set) var views: [UIView]
     private let theme: ElementsUITheme
 
@@ -43,7 +43,7 @@ class SectionContainerView: UIView {
     convenience init(view: UIView, theme: ElementsUITheme = .default) {
         self.init(views: [view], theme: theme)
     }
-    
+
     /**
      - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
      */
@@ -58,15 +58,15 @@ class SectionContainerView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Overrides
-    
+
     override var isUserInteractionEnabled: Bool {
         didSet {
             updateUI()
         }
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         // Set up each subviews border corners
@@ -115,13 +115,13 @@ class SectionContainerView: UIView {
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
         layer.cornerRadius = theme.cornerRadius
-        
+
         if isUserInteractionEnabled || isDarkMode() {
             backgroundColor = theme.colors.background
         } else {
             backgroundColor = .tertiarySystemGroupedBackground
         }
-        
+
         guard let newViews = newViews, views != newViews else {
             return
         }
@@ -138,7 +138,7 @@ class SectionContainerView: UIView {
             dummyFirstView = nil
             newStackViews = newViews
         }
-        
+
         let oldStackHeight = self.stackView.frame.size.height
         let newStack = buildStackView(views: newStackViews, theme: theme)
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
@@ -152,7 +152,7 @@ class SectionContainerView: UIView {
                 self.stackView.insertArrangedSubview(dummyFirstView, at: 0)
                 newStack.insertArrangedSubview(firstView, at: 0)
             }
-            
+
             // Fade old out
             self.stackView.arrangedSubviews.forEach { $0.alpha = 0 }
             self.stackView.alpha = 0.0
@@ -194,7 +194,7 @@ extension SectionContainerView: EventHandler {
 extension SectionContainerView {
     class MultiElementRowView: UIView {
         let views: [UIView]
-        
+
         init(views: [UIView], theme: ElementsUITheme = .default) {
             self.views = views
             super.init(frame: .zero)

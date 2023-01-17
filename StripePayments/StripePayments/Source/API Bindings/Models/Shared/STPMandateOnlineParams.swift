@@ -55,9 +55,9 @@ extension STPMandateOnlineParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:ipAddressField)): "ip_address",
-            NSStringFromSelector(#selector(getter:userAgentField)): "user_agent",
-            NSStringFromSelector(#selector(getter:inferFromClient)): "infer_from_client",
+            NSStringFromSelector(#selector(getter: ipAddressField)): "ip_address",
+            NSStringFromSelector(#selector(getter: userAgentField)): "user_agent",
+            NSStringFromSelector(#selector(getter: inferFromClient)): "infer_from_client",
         ]
     }
 

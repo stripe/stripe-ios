@@ -6,11 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
@@ -22,7 +22,7 @@ extension PaymentOption {
             return paymentMethod.makeIcon()
         case .new(let confirmParams):
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
-        case .link(_):
+        case .link:
             return Image.pm_type_link.makeImage()
         }
     }
@@ -71,8 +71,6 @@ extension STPPaymentMethod {
     }
 }
 
-
-
 extension STPPaymentMethodParams {
     func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
@@ -101,7 +99,7 @@ extension STPPaymentMethodParams {
 extension ConsumerPaymentDetails {
     func makeIcon() -> UIImage {
         switch details {
-            
+
         case .card(let card):
             return STPImageLibrary.cardBrandImage(for: card.brand)
         case .bankAccount(let bankAccount):
@@ -111,13 +109,13 @@ extension ConsumerPaymentDetails {
 }
 
 extension STPPaymentMethodType {
-    
+
     /// A few payment method type icons need to be tinted white or black as they do not have
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         return self == .card || self == .AUBECSDebit || self == .USBankAccount || self == .linkInstantDebit
     }
-    
+
     func makeImage(forDarkBackground: Bool = false) -> UIImage {
         guard let image: Image = {
             switch self {
@@ -158,9 +156,8 @@ extension STPPaymentMethodType {
             assertionFailure()
             return UIImage()
         }
-        
+
         // payment method type icons are light/dark agnostic except PayPal
         return image.makeImage(darkMode: self == .payPal ? forDarkBackground : false)
     }
 }
-

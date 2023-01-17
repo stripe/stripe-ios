@@ -6,13 +6,13 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import iOSSnapshotTestCase
+import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPFormViewSnapshotTests: FBSnapshotTestCase {

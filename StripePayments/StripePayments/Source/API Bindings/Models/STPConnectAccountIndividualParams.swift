@@ -124,24 +124,24 @@ extension STPConnectAccountIndividualParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:address)): "address",
-            NSStringFromSelector(#selector(getter:kanaAddress)): "address_kana",
-            NSStringFromSelector(#selector(getter:kanjiAddress)): "address_kanji",
-            NSStringFromSelector(#selector(getter:_dateOfBirth)): "dob",
-            NSStringFromSelector(#selector(getter:email)): "email",
-            NSStringFromSelector(#selector(getter:firstName)): "first_name",
-            NSStringFromSelector(#selector(getter:kanaFirstName)): "first_name_kana",
-            NSStringFromSelector(#selector(getter:kanjiFirstName)): "first_name_kanji",
-            NSStringFromSelector(#selector(getter:gender)): "gender",
-            NSStringFromSelector(#selector(getter:idNumber)): "id_number",
-            NSStringFromSelector(#selector(getter:lastName)): "last_name",
-            NSStringFromSelector(#selector(getter:kanaLastName)): "last_name_kana",
-            NSStringFromSelector(#selector(getter:kanjiLastName)): "last_name_kanji",
-            NSStringFromSelector(#selector(getter:maidenName)): "maiden_name",
-            NSStringFromSelector(#selector(getter:metadata)): "metadata",
-            NSStringFromSelector(#selector(getter:phone)): "phone",
-            NSStringFromSelector(#selector(getter:ssnLast4)): "ssn_last_4",
-            NSStringFromSelector(#selector(getter:verification)): "verification",
+            NSStringFromSelector(#selector(getter: address)): "address",
+            NSStringFromSelector(#selector(getter: kanaAddress)): "address_kana",
+            NSStringFromSelector(#selector(getter: kanjiAddress)): "address_kanji",
+            NSStringFromSelector(#selector(getter: _dateOfBirth)): "dob",
+            NSStringFromSelector(#selector(getter: email)): "email",
+            NSStringFromSelector(#selector(getter: firstName)): "first_name",
+            NSStringFromSelector(#selector(getter: kanaFirstName)): "first_name_kana",
+            NSStringFromSelector(#selector(getter: kanjiFirstName)): "first_name_kanji",
+            NSStringFromSelector(#selector(getter: gender)): "gender",
+            NSStringFromSelector(#selector(getter: idNumber)): "id_number",
+            NSStringFromSelector(#selector(getter: lastName)): "last_name",
+            NSStringFromSelector(#selector(getter: kanaLastName)): "last_name_kana",
+            NSStringFromSelector(#selector(getter: kanjiLastName)): "last_name_kanji",
+            NSStringFromSelector(#selector(getter: maidenName)): "maiden_name",
+            NSStringFromSelector(#selector(getter: metadata)): "metadata",
+            NSStringFromSelector(#selector(getter: phone)): "phone",
+            NSStringFromSelector(#selector(getter: ssnLast4)): "ssn_last_4",
+            NSStringFromSelector(#selector(getter: verification)): "verification",
         ]
     }
 
@@ -169,8 +169,8 @@ extension STPConnectAccountIndividualVerification: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:document)): "document",
-            NSStringFromSelector(#selector(getter:additionalDocument)): "additional_document",
+            NSStringFromSelector(#selector(getter: document)): "document",
+            NSStringFromSelector(#selector(getter: additionalDocument)): "additional_document",
         ]
     }
 
@@ -200,8 +200,8 @@ extension STPConnectAccountVerificationDocument: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:back)): "back",
-            NSStringFromSelector(#selector(getter:front)): "front",
+            NSStringFromSelector(#selector(getter: back)): "back",
+            NSStringFromSelector(#selector(getter: front)): "front",
         ]
     }
 
@@ -233,9 +233,9 @@ extension STPDateOfBirth: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:day)): "day",
-            NSStringFromSelector(#selector(getter:month)): "month",
-            NSStringFromSelector(#selector(getter:year)): "year",
+            NSStringFromSelector(#selector(getter: day)): "day",
+            NSStringFromSelector(#selector(getter: month)): "month",
+            NSStringFromSelector(#selector(getter: year)): "year",
         ]
     }
 

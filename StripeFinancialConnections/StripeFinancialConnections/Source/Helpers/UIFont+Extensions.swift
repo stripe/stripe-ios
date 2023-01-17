@@ -28,7 +28,7 @@ extension UIFont {
         case captionTightEmphasized
         case monospaced
     }
-    
+
     static func stripeFont(forTextStyle stripeTextStyle: StripeTextStyle) -> UIFont {
         let font: UIFont
         // Mapped from:
@@ -92,4 +92,3 @@ extension UIFont {
         return scaledFont
     }
 }
-            

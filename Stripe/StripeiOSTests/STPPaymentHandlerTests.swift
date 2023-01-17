@@ -15,8 +15,8 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import Stripe3DS2
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
@@ -29,9 +29,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let createPaymentIntentExpectation = expectation(
             description: "createPaymentIntentExpectation"
         )
-        var retrievedClientSecret: String? = nil
+        var retrievedClientSecret: String?
         STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) {
-            (createdPIClientSecret, error) in
+            (createdPIClientSecret, _) in
             if let createdPIClientSecret = createdPIClientSecret {
                 retrievedClientSecret = createdPIClientSecret
                 createPaymentIntentExpectation.fulfill()
@@ -99,7 +99,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
 
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("3ds2/authenticate") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let jsonText = """
                         {
                             "state": "challenge_required",
@@ -131,13 +131,13 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
 
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("3ds2/challenge_complete") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let errorResponse = [
                 "error":
                     [
                         "message": "This is intentionally failing for this test.",
                         "type": "invalid_request_error",
-                    ]
+                    ],
             ]
             return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 400, headers: nil)
         }
@@ -224,7 +224,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             for: setupIntent,
             with: self,
             returnURL: nil
-        ) { (status, si, error) in
+        ) { (status, _, _) in
             XCTAssertEqual(status, .failed)
             inProgress = false
             paymentHandlerExpectation.fulfill()

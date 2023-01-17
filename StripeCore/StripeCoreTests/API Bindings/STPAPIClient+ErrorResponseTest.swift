@@ -17,7 +17,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
             "error": [
                 "type": "card_error",
                 "code": "incorrect_number",
-            ]
+            ],
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
@@ -46,7 +46,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
                 "type": "card_error",
                 "message": "some message",
                 "code": "incorrect_number",
-            ]
+            ],
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
@@ -73,7 +73,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
             "error": [
                 "type": "card_error",
                 "message": "some message",
-            ]
+            ],
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
@@ -98,7 +98,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
                 "type": "card_error",
                 "message": "some message",
                 "code": "",
-            ]
+            ],
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
@@ -123,7 +123,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
                 "type": "card_error",
                 "message": "some message",
                 "code": "garbage",
-            ]
+            ],
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])

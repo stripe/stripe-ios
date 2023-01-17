@@ -100,8 +100,11 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         var systemInfo = utsname()
         uname(&systemInfo)
         let model = withUnsafePointer(to: &systemInfo.machine) {
-            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
-                ptr in String.init(validatingUTF8: ptr)
+            $0.withMemoryRebound(
+                to: CChar.self,
+                capacity: 1
+            ) { ptr in
+                String.init(validatingUTF8: ptr)
             }
         }
         return model ?? "Unknown"
@@ -127,7 +130,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private func encodeValue(_ value: String?) -> [AnyHashable: Any]? {
         if let value = value {
             return [
-                "v": value
+                "v": value,
             ]
         }
         return nil

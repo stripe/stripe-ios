@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import SafariServices
+import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -105,7 +105,7 @@ extension PayWithLinkViewController {
                 nameSection.view,
                 legalTermsView,
                 errorLabel,
-                signUpButton
+                signUpButton,
             ])
 
             stackView.axis = .vertical
@@ -220,7 +220,7 @@ extension PayWithLinkViewController {
                 case .success(let account):
                     self?.coordinator?.accountUpdated(account)
                     STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-                case .failure(_):
+                case .failure:
                     STPAnalyticsClient.sharedClient.logLinkSignupFailure()
                 }
 

@@ -48,7 +48,7 @@ let addressDataFilename = "localized_address_data"
         }
         return promise
     }
-    
+
     func addressSpec(for country: String) -> AddressSpec {
         guard let spec = addressSpecs[country] else {
             return AddressSpec.default

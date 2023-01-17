@@ -7,8 +7,8 @@
 //
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPMandateDataParamsTest: XCTestCase {
@@ -34,8 +34,8 @@ class STPMandateDataParamsTest: XCTestCase {
                     "online": [
                         "infer_from_client": true
                     ],
-                ]
-            ]
+                ],
+            ],
         ]
         XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
     }

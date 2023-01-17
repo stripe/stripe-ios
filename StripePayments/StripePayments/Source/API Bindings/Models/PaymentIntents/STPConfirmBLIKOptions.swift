@@ -43,7 +43,7 @@ extension STPConfirmBLIKOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:code)): "code"
+            NSStringFromSelector(#selector(getter: code)): "code"
         ]
     }
 

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol FeaturedInstitutionGridViewDelegate: AnyObject {
@@ -26,11 +26,11 @@ class FeaturedInstitutionGridView: UIView {
     // necessary to retain a reference to `dataSource`
     private let dataSource: UICollectionViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: FeaturedInstitutionGridViewDelegate?
-    
+
     init() {
         let flowLayout = UICollectionViewFlowLayout()
         self.flowLayout = flowLayout
-        
+
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.backgroundColor = .clear
         collectionView.contentInset = UIEdgeInsets(
@@ -42,35 +42,36 @@ class FeaturedInstitutionGridView: UIView {
         collectionView.keyboardDismissMode = .onDrag
         let cellIdentifier = "\(FeaturedInstitutionGridCell.self)"
         collectionView.register(FeaturedInstitutionGridCell.self, forCellWithReuseIdentifier: cellIdentifier)
-        
+
         let dataSource = UICollectionViewDiffableDataSource<Section, FinancialConnectionsInstitution>(collectionView: collectionView) { collectionView, indexPath, institution in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? FeaturedInstitutionGridCell else {
                 fatalError("Couldn't find cell with reuseIdentifier \(cellIdentifier)")
             }
             cell.customize(with: institution)
+            cell.accessibilityLabel = institution.name // used for UI tests
             return cell
         }
         self.dataSource = dataSource
-        
+
         super.init(frame: .zero)
-        
+
         collectionView.delegate = self
         addAndPinSubview(collectionView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func loadInstitutions(_ institutions: [FinancialConnectionsInstitution]) {
         assertMainQueue()
-        
+
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([.main])
         snapshot.appendItems(institutions, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         let itemSpacing: CGFloat = 8
@@ -87,7 +88,7 @@ class FeaturedInstitutionGridView: UIView {
 
 @available(iOSApplicationExtension, unavailable)
 extension FeaturedInstitutionGridView: UICollectionViewDelegate {
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
@@ -104,11 +105,11 @@ import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
 private struct FeaturedInstitutionGridViewUIViewRepresentable: UIViewRepresentable {
-    
+
     func makeUIView(context: Context) -> FeaturedInstitutionGridView {
         FeaturedInstitutionGridView()
     }
-    
+
     func updateUIView(_ uiView: FeaturedInstitutionGridView, context: Context) {
         let institutions = (1...10).map { i in
             FinancialConnectionsInstitution(id: "\(i)", name: "\(i)", url: nil)
@@ -119,7 +120,7 @@ private struct FeaturedInstitutionGridViewUIViewRepresentable: UIViewRepresentab
 
 @available(iOSApplicationExtension, unavailable)
 struct FeaturedInstitutionGridView_Previews: PreviewProvider {
-    
+
     static var previews: some View {
         VStack {
             FeaturedInstitutionGridViewUIViewRepresentable()

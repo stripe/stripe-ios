@@ -7,8 +7,8 @@
 
 import XCTest
 
-@testable import StripeFinancialConnections
 @_spi(STP) import StripeCore
+@testable import StripeFinancialConnections
 
 final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
 

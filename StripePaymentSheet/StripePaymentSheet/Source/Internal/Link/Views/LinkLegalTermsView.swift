@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkLegalTermsViewDelegate: AnyObject {
     /// Called when the user taps on a legal link.
@@ -32,7 +32,7 @@ final class LinkLegalTermsView: UIView {
 
     private let links: [String: URL] = [
         "terms": URL(string: "https://link.co/terms")!,
-        "privacy": URL(string: "https://link.co/privacy")!
+        "privacy": URL(string: "https://link.co/privacy")!,
     ]
 
     weak var delegate: LinkLegalTermsViewDelegate?
@@ -45,7 +45,7 @@ final class LinkLegalTermsView: UIView {
             textView.textColor = newValue
         }
     }
-    
+
     var font: UIFont? {
         get {
             return textView.font

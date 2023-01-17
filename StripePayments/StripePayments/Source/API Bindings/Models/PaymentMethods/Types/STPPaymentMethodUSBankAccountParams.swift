@@ -70,11 +70,11 @@ extension STPPaymentMethodUSBankAccountParams: STPFormEncodable {
 
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter:accountHolderTypeString)): "account_holder_type",
-            NSStringFromSelector(#selector(getter:accountNumber)): "account_number",
-            NSStringFromSelector(#selector(getter:accountTypeString)): "account_type",
-            NSStringFromSelector(#selector(getter:routingNumber)): "routing_number",
-            NSStringFromSelector(#selector(getter:linkAccountSessionID)): "link_account_session",
+            NSStringFromSelector(#selector(getter: accountHolderTypeString)): "account_holder_type",
+            NSStringFromSelector(#selector(getter: accountNumber)): "account_number",
+            NSStringFromSelector(#selector(getter: accountTypeString)): "account_type",
+            NSStringFromSelector(#selector(getter: routingNumber)): "routing_number",
+            NSStringFromSelector(#selector(getter: linkAccountSessionID)): "link_account_session",
         ]
     }
 }

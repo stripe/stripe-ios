@@ -6,28 +6,28 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-import UIKit
 import iOSSnapshotTestCase
-import StripeCoreTestUtils
 import OHHTTPStubs
 import OHHTTPStubsSwift
+import StripeCoreTestUtils
+import UIKit
 
-@_spi(STP) @testable import StripeUICore
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripeUICore
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
-    
+
     private var paymentSheet: PaymentSheet!
-    
+
     private var window: UIWindow {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
         window.isHidden = false
         return window
     }
-    
+
     private var configuration = PaymentSheet.Configuration()
 
     // Change this to true to hit the real glitch backend. This may be required
@@ -35,7 +35,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     var runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
-        
+
         configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = .init(
@@ -111,7 +111,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetShadow() {
         stubNewCustomerResponse()
 
@@ -121,7 +121,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetShadowRoundsCorners() {
         stubNewCustomerResponse()
 
@@ -131,19 +131,19 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetFont() {
         stubNewCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
         appearance.font.sizeScaleFactor = 1.15
         appearance.font.base = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
-        
+
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetColors() {
         stubNewCustomerResponse()
 
@@ -159,12 +159,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.colors.componentPlaceholderText = .white
         appearance.colors.icon = .orange
         appearance.colors.danger = .cyan
-        
+
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetPrimaryButton() {
         stubNewCustomerResponse()
 
@@ -176,34 +176,33 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.primaryButton.borderWidth = 2.0
         appearance.primaryButton.font = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
         appearance.primaryButton.shadow = PaymentSheet.Appearance.Shadow(color: .yellow, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 6)
-        
+
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCornerRadius() {
         stubNewCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
         appearance.cornerRadius = 0.0
-        
+
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetBorderWidth() {
         stubNewCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
         appearance.borderWidth = 2.0
-        
+
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-
 
     func testPaymentSheetCustom() {
         stubReturningCustomerResponse()
@@ -260,21 +259,21 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomFont() {
         stubReturningCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
         appearance.font.sizeScaleFactor = 1.15
         appearance.font.base = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
-        
+
         preparePaymentSheet(customer: "snapshot",
                             appearance: appearance,
                             applePayEnabled: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomColors() {
         stubReturningCustomerResponse()
 
@@ -290,13 +289,13 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.colors.componentPlaceholderText = .white
         appearance.colors.icon = .orange
         appearance.colors.danger = .cyan
-        
+
         preparePaymentSheet(customer: "snapshot",
                             appearance: appearance, applePayEnabled: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomPrimaryButton() {
         stubReturningCustomerResponse()
 
@@ -308,24 +307,24 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.primaryButton.borderWidth = 2.0
         appearance.primaryButton.font = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
         appearance.primaryButton.shadow = PaymentSheet.Appearance.Shadow(color: .yellow, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 6)
-        
+
         preparePaymentSheet(customer: "snapshot",
                             appearance: appearance,
                             applePayEnabled: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomPrimaryButtonLabel() {
         stubNewCustomerResponse()
 
         configuration.primaryButtonLabel = "Donate"
-        
+
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomApplePayCta() {
         stubNewCustomerResponse()
 
@@ -333,7 +332,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             merchantId: "com.foo.example",
             merchantCountryCode: "US",
             buttonType: .donate)
-        
+
         preparePaymentSheet(applePayEnabled: true)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -347,7 +346,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             merchantId: "com.foo.example",
             merchantCountryCode: "US",
             buttonType: .donate)
-        
+
         preparePaymentSheet(applePayEnabled: true)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -358,20 +357,20 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
         var appearance = PaymentSheet.Appearance()
         appearance.cornerRadius = 0.0
-        
+
         preparePaymentSheet(customer: "snapshot",
                             appearance: appearance,
                             applePayEnabled: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomBorderWidth() {
         stubReturningCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
         appearance.borderWidth = 2.0
-        
+
         preparePaymentSheet(customer: "snapshot",
                             appearance: appearance,
                             applePayEnabled: false)
@@ -433,8 +432,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_Affirm_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"affirm\"",
-                                                                          "<currency>": "\"usd\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"affirm\"",
+                    "<currency>": "\"usd\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -449,8 +452,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_AfterpayClearpay_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"afterpay_clearpay\"",
-                                                                          "<currency>": "\"usd\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"afterpay_clearpay\"",
+                    "<currency>": "\"usd\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -465,8 +472,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_klarna_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"klarna\"",
-                                                                          "<currency>": "\"usd\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"klarna\"",
+                    "<currency>": "\"usd\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -497,8 +508,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_iDeal_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"ideal\"",
-                                                                          "<currency>": "\"eur\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"ideal\"",
+                    "<currency>": "\"eur\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -514,8 +529,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_bancontact_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"bancontact\"",
-                                                                          "<currency>": "\"eur\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"bancontact\"",
+                    "<currency>": "\"eur\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -531,8 +550,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_sofort_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"sofort\"",
-                                                                          "<currency>": "\"eur\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"sofort\"",
+                    "<currency>": "\"eur\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -548,8 +571,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_sepaDebit_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"sepa_debit\"",
-                                                                          "<currency>": "\"eur\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"sepa_debit\"",
+                    "<currency>": "\"eur\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -562,12 +589,15 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-
     func testPaymentSheet_LPM_eps_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"eps\"",
-                                                                          "<currency>": "\"eur\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"eps\"",
+                    "<currency>": "\"eur\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -583,8 +613,11 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_giropay_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"giropay\"",
-                                                                          "<currency>": "\"eur\""])
+            return self.updatePaymentMethodDetail(
+                data: data, variables: [
+                    "<paymentMethods>": "\"giropay\"",
+                    "<currency>": "\"eur\"",
+                ])
         })
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -600,8 +633,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_p24_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"p24\"",
-                                                                          "<currency>": "\"eur\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"p24\"",
+                    "<currency>": "\"eur\"",
+                ])
         })
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -617,8 +654,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_aubecs_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"au_becs_debit\"",
-                                                                          "<currency>": "\"aud\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"au_becs_debit\"",
+                    "<currency>": "\"aud\"",
+                ])
         })
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -634,8 +675,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheet_LPM_paypal_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"paypal\"",
-                                                                          "<currency>": "\"GBP\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"paypal\"",
+                    "<currency>": "\"GBP\"",
+                ])
         })
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -647,12 +692,16 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
-    func testPaymentSheet_LPM_upi_only() {        
+
+    func testPaymentSheet_LPM_upi_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
-            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"upi\"",
-                                                                          "<currency>": "\"inr\""])
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": "\"upi\"",
+                    "<currency>": "\"inr\"",
+                ])
         })
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
@@ -665,7 +714,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
 
     }
-    private func updatePaymentMethodDetail(data: Data, variables: [String:String]) -> Data {
+    private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
         var template = String(data: data, encoding: .utf8)!
         for (templateKey, templateValue) in variables {
             let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
@@ -674,8 +723,10 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         return template.data(using: .utf8)!
     }
 
-    private func stubPaymentMethods(stubRequestCallback: ((URLRequest) -> Bool?)? = nil,
-                            fileMock: FileMock) {
+    private func stubPaymentMethods(
+        stubRequestCallback: ((URLRequest) -> Bool?)? = nil,
+        fileMock: FileMock
+    ) {
         guard !runAgainstLiveService else {
             return
         }
@@ -684,7 +735,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                 return shouldStub
             }
             return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let mockResponseData = try! fileMock.data()
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
@@ -696,7 +747,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         }
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/customers") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let mockResponseData = try! FileMock.customers_200.data()
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
@@ -708,7 +759,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         }
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
-        } response: { urlRequest in
+        } response: { _ in
             let mockResponseData = try! fileMock.data()
             let data = responseCallback?(mockResponseData) ?? mockResponseData
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
@@ -752,7 +803,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             "mode": "payment",
             "set_shipping_address": "false",
             "automatic_payment_methods": automaticPaymentMethods,
-            "use_link": useLink
+            "use_link": useLink,
         ] as [String: Any]
 
         if let override_payment_methods_types = override_payment_methods_types {
@@ -764,7 +815,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, response, error in
+        let task = session.dataTask(with: urlRequest) { data, _, error in
             guard
                 error == nil,
                 let data = data,
@@ -838,14 +889,14 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             while isLoading && count < 10 {
                 count += 1
                 DispatchQueue.main.sync {
-                    guard let _ = self.paymentSheet.bottomSheetViewController.contentStack.first as? LoadingViewController else {
+                    guard (self.paymentSheet.bottomSheetViewController.contentStack.first as? LoadingViewController) != nil else {
                         isLoading = false
                         presentingExpectation.fulfill()
                         return
                     }
                 }
                 if isLoading {
-                    usleep(50000) //50ms
+                    usleep(50000) // 50ms
                 }
             }
         }
@@ -853,7 +904,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
         paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(preferredContentSizeCategory: preferredContentSizeCategory)
     }
-    
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -866,13 +917,13 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                              file: file,
                              line: line)
     }
-    
+
     private func stubNewCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
     }
-    
+
     private func stubReturningCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
         stubPaymentMethods(stubRequestCallback: { urlRequest in
@@ -885,7 +936,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         }, fileMock: .saved_payment_methods_200)
         stubCustomers()
     }
-    
+
 }
 
 private extension PaymentSheet.Appearance {
@@ -896,7 +947,6 @@ private extension PaymentSheet.Appearance {
         var font = PaymentSheet.Appearance.Font()
         font.sizeScaleFactor = 0.85
         font.base = UIFont(name: "AvenirNext-Regular", size: 12)!
-        
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
@@ -921,13 +971,13 @@ private extension PaymentSheet.Appearance {
 
         appearance.font = font
         appearance.colors = colors
-        
+
         return appearance
     }
-    
+
     static var snapshotPrimaryButtonTestTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance.snapshotTestTheme
-        
+
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.backgroundColor = .purple
         button.textColor = .red
@@ -942,11 +992,9 @@ private extension PaymentSheet.Appearance {
 
         appearance.primaryButton = button
 
-        
         return appearance
     }
 }
-
 
 public class ClassForBundle { }
 @_spi(STP) public enum FileMock: String, MockData {

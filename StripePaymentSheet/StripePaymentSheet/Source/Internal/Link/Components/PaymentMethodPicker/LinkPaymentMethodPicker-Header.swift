@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkPaymentMethodPicker {
 
@@ -81,7 +81,7 @@ extension LinkPaymentMethodPicker {
 
             NSLayoutConstraint.activate([
                 chevron.widthAnchor.constraint(equalToConstant: Constants.chevronSize.width),
-                chevron.heightAnchor.constraint(equalToConstant: Constants.chevronSize.height)
+                chevron.heightAnchor.constraint(equalToConstant: Constants.chevronSize.height),
             ])
 
             return chevron
@@ -90,7 +90,7 @@ extension LinkPaymentMethodPicker {
         private lazy var paymentInfoStackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 payWithLabel,
-                contentView
+                contentView,
             ])
 
             stackView.alignment = .center
@@ -104,7 +104,7 @@ extension LinkPaymentMethodPicker {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentInfoStackView,
                 headingLabel,
-                chevron
+                chevron,
             ])
 
             stackView.axis = .horizontal

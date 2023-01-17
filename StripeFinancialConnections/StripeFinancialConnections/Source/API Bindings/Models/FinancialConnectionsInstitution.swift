@@ -9,13 +9,13 @@ import Foundation
 @_spi(STP) import StripeCore
 
 struct FinancialConnectionsInstitution: Decodable, Hashable, Equatable {
-    
+
     let id: String
     let name: String
     let url: String?
     let icon: FinancialConnectionsImage?
     let logo: FinancialConnectionsImage?
-    
+
     init(id: String, name: String, url: String?, smallImageUrl: String? = nil) {
         self.id = id
         self.name = name

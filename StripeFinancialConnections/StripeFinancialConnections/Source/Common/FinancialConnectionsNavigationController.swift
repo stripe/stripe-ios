@@ -5,9 +5,9 @@
 //  Created by Vardges Avetisyan on 6/6/22.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 class FinancialConnectionsNavigationController: UINavigationController {
@@ -18,7 +18,7 @@ class FinancialConnectionsNavigationController: UINavigationController {
     private weak var lastShownViewController: UIViewController?
 
     // MARK: - UIViewController
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // disable the ability for a user to swipe down to dismiss
@@ -27,7 +27,7 @@ class FinancialConnectionsNavigationController: UINavigationController {
         isModalInPresentation = true
         listenToInteractivePopGestureRecognizer()
     }
-    
+
     private func logNavigationBackEvent(fromViewController: UIViewController, source: String) {
         guard let analyticsClient = analyticsClient else {
             assertionFailure("Expected `analyticsClient` (\(FinancialConnectionsAnalyticsClient.self)) to be set.")
@@ -50,13 +50,13 @@ class FinancialConnectionsNavigationController: UINavigationController {
 
 @available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationControllerDelegate {
-        
+
     private func listenToInteractivePopGestureRecognizer() {
         delegate = self
         assert(interactivePopGestureRecognizer != nil)
         interactivePopGestureRecognizer?.addTarget(self, action: #selector(interactivePopGestureRecognizerDidChange))
     }
-    
+
     @objc private func interactivePopGestureRecognizerDidChange() {
         if interactivePopGestureRecognizer?.state == .ended {
             // As soon as user releases the "interactive pop" the gesture will
@@ -66,7 +66,7 @@ extension FinancialConnectionsNavigationController: UINavigationControllerDelega
             lastInteractivePopGestureRecognizerEndedDate = Date()
         }
     }
-    
+
     func navigationController(
         _ navigationController: UINavigationController,
         didShow viewController: UIViewController,
@@ -92,7 +92,7 @@ extension FinancialConnectionsNavigationController: UINavigationControllerDelega
 
 @available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
-    
+
     // `UINavigationBarDelegate` methods "just work" on `UINavigationController`
     // without having to set any delegates
     func navigationBar(
@@ -114,7 +114,7 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 // all the common changes to `UINavigationController`
 @available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController {
-    
+
     func configureAppearanceForNative() {
         let backButtonImage = Image
             .back_arrow
@@ -127,12 +127,12 @@ extension FinancialConnectionsNavigationController {
         navigationBar.standardAppearance = appearance
         navigationBar.scrollEdgeAppearance = appearance
         navigationBar.compactAppearance = appearance
-        
+
         // change the back button color
         navigationBar.tintColor = UIColor.textDisabled
         navigationBar.isTranslucent = false
     }
-    
+
     static func configureNavigationItemForNative(
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
@@ -170,11 +170,11 @@ extension FinancialConnectionsNavigationController {
                 let containerView = UIView()
                 containerView.frame = stripeLogoImageView.bounds
                 containerView.addSubview(stripeLogoImageView)
-                
+
                 stripeLogoImageView.center = containerView.center
                 return containerView
             }()
-            
+
             if shouldLeftAlignStripeLogo {
                 navigationItem?.leftBarButtonItem = UIBarButtonItem(customView: stripeLogoView)
             } else {

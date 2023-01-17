@@ -13,7 +13,7 @@ import Foundation
         case valid
         case invalid(_ error: TextFieldValidationError)
     }
-    
+
     /// A general-purpose TextFieldValidationError.
     /// If it doesn't suit your text field's needs, create a new enum instead of modifying this one!
     @frozen enum Error: TextFieldValidationError, Equatable {
@@ -21,7 +21,7 @@ import Foundation
         case empty
         case incomplete(localizedDescription: String)
         case invalid(localizedDescription: String)
-        
+
         public func shouldDisplay(isUserEditing: Bool) -> Bool {
             switch self {
             case .empty:
@@ -32,7 +32,7 @@ import Foundation
                 return !isUserEditing
             }
         }
-        
+
         public var localizedDescription: String {
             switch self {
             case .incomplete(let localizedDescription):
@@ -62,7 +62,7 @@ import Foundation
      - Note: The default implementation always returns `true`
      */
     func shouldDisplay(isUserEditing: Bool) -> Bool
-    
+
     var localizedDescription: String { get }
 }
 

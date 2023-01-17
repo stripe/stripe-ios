@@ -10,7 +10,7 @@ import UIKit
 
 typealias STPKeyboardFrameBlock = (CGRect, UIView?) -> Void
 extension UIViewController {
-    
+
     func stp_beginObservingKeyboardAndInsettingScrollView(
         _ scrollView: UIScrollView?,
         onChange block: STPKeyboardFrameBlock?

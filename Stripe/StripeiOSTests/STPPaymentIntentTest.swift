@@ -8,8 +8,8 @@
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentIntentTest: XCTestCase {
@@ -94,8 +94,8 @@ class STPPaymentIntentTest: XCTestCase {
         XCTAssertEqual(paymentIntent.receiptEmail, "danj@example.com")
 
         // Deprecated: `nextSourceAction` & `authorizeWithURL` should just be aliases for `nextAction` & `redirectToURL`
-        //#pragma clang diagnostic push
-        //#pragma clang diagnostic ignored "-Wdeprecated"
+        // #pragma clang diagnostic push
+        // #pragma clang diagnostic ignored "-Wdeprecated"
         XCTAssertEqual(
             paymentIntent.nextAction,
             paymentIntent.nextAction,
@@ -106,7 +106,7 @@ class STPPaymentIntentTest: XCTestCase {
             paymentIntent.nextAction!.redirectToURL,
             "Should be the same object."
         )
-        //#pragma clang diagnostic pop
+        // #pragma clang diagnostic pop
 
         // nextAction
         XCTAssertNotNil(paymentIntent.nextAction)

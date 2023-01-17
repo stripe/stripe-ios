@@ -61,7 +61,7 @@ let project = Project(
             settings: .stripeTargetSettings(
                 baseXcconfigFilePath: "BuildConfigurations/FinancialConnectionsUITests"
             )
-        )
+        ),
     ],
     schemes: [
         Scheme(
@@ -79,6 +79,6 @@ let project = Project(
                 expandVariableFromTarget: "FinancialConnections Example"
             ),
             runAction: .runAction(executable: "FinancialConnections Example")
-        )
+        ),
     ]
 )

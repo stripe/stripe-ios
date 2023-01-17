@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripeCore
+import UIKit
 
 private class CardScanningEasilyTappableButton: UIButton {
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -50,7 +50,8 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     }
 
     func cardScanner(
-        _ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?,
+        _ scanner: STPCardScanner,
+        didFinishWith cardParams: STPPaymentMethodCardParams?,
         error: Error?
     ) {
         if error != nil {

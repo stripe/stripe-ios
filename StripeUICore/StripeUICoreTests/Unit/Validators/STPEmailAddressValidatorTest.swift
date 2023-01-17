@@ -6,8 +6,8 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @_spi(STP) import StripeUICore
+import XCTest
 
 class STPEmailAddressValidatorTest: XCTestCase {
     func testValidEmails() {

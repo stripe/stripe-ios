@@ -5,8 +5,8 @@
 //  Created by Vardges Avetisyan on 11/12/21.
 //
 
-import UIKit
 import StripeFinancialConnections
+import UIKit
 
 class CollectBankAccountTokenViewController: UIViewController {
 
@@ -42,7 +42,7 @@ class CollectBankAccountTokenViewController: UIViewController {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
 
-        let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
+        let task = session.dataTask(with: urlRequest) { [weak self] data, _, error in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
 
@@ -115,7 +115,7 @@ class CollectBankAccountTokenViewController: UIViewController {
 
     private func displayAlert(_ message: String) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
             alertController.dismiss(animated: true) {
                 self.dismiss(animated: true, completion: nil)
             }

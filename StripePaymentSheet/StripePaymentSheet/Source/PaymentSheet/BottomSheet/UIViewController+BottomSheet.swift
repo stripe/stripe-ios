@@ -14,7 +14,7 @@ extension UIViewController {
     func presentAsBottomSheet(
         _ viewControllerToPresent: BottomSheetPresentable,
         appearance: PaymentSheet.Appearance,
-        completion: (() -> ())? = nil
+        completion: (() -> Void)? = nil
     ) {
         var presentAsFormSheet: Bool {
             // Present as form sheet in larger devices (iPad/Mac).
@@ -36,7 +36,7 @@ extension UIViewController {
             BottomSheetTransitioningDelegate.appearance = appearance
             viewControllerToPresent.transitioningDelegate = BottomSheetTransitioningDelegate.default
         }
-        
+
         present(viewControllerToPresent, animated: true, completion: completion)
     }
 }

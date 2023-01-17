@@ -37,7 +37,7 @@ final class URLEncoderTest: XCTestCase {
             [
                 "foo": "bar",
                 "baz": [
-                    "qux": NSNumber(value: 1)
+                    "qux": NSNumber(value: 1),
                 ],
             ] as [String: AnyHashable]
         let result = URLEncoder.queryString(from: params)
@@ -50,7 +50,7 @@ final class URLEncoderTest: XCTestCase {
                 "certificates": ["cert1", "cert2"],
                 "nonce": "123mynonce",
                 "nonce_signature": "sig",
-            ]
+            ],
         ]
         let result = URLEncoder.queryString(from: params)
         XCTAssertEqual(

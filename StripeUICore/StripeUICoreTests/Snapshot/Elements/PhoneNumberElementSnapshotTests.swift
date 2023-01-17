@@ -16,7 +16,7 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
         super.setUp()
 //        recordMode = true
     }
-    
+
     func testEmptyUS() {
         let sut = PhoneNumberElement(
             allowedCountryCodes: ["US"],

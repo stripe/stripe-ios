@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
+import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
@@ -38,11 +38,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
-    
+
     var redactedPhoneNumber: String? {
         return currentSession?.redactedPhoneNumber
     }
-    
+
     var isRegistered: Bool {
         return currentSession != nil
     }
@@ -64,7 +64,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         return currentSession?.hasStartedSMSVerification ?? false
     }
 
-    private var currentSession: ConsumerSession? = nil
+    private var currentSession: ConsumerSession?
 
     init(
         email: String,
@@ -94,7 +94,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             completion: completion
         )
     }
-    
+
     func signUp(
         with phoneNumber: String,
         legalName: String?,
@@ -132,7 +132,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
         }
     }
-    
+
     func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
         guard case .requiresVerification = sessionState else {
             DispatchQueue.main.async {
@@ -165,7 +165,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
         }
     }
-    
+
     func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard case .requiresVerification = sessionState,
               hasStartedSMSVerification,
@@ -194,7 +194,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
         }
     }
-    
+
     func createLinkAccountSession(
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
@@ -235,7 +235,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
-    
+
     func createPaymentDetails(
         linkedAccountId: String,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
@@ -253,7 +253,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
-    
+
     func listPaymentDetails(
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
@@ -330,9 +330,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
         // Delete cookie.
         cookieStore.delete(key: .session)
-        
+
         markEmailAsLoggedOut()
-        
+
         // Forget current session.
         self.currentSession = nil
     }
@@ -371,9 +371,9 @@ private extension PaymentSheetLinkAccount {
         completion: @escaping CompletionBlock<T>,
         apiCall: @escaping (@escaping CompletionBlock<T>) -> Void
     ) {
-        apiCall() { [weak self] result in
+        apiCall { [weak self] result in
             switch result {
-            case .success(_):
+            case .success:
                 completion(result)
             case .failure(let error as NSError):
                 let isAuthError = (
@@ -384,9 +384,9 @@ private extension PaymentSheetLinkAccount {
                 if isAuthError {
                     self?.refreshSession { refreshSessionResult in
                         switch refreshSessionResult {
-                        case .success():
+                        case .success:
                             apiCall(completion)
-                        case .failure(_):
+                        case .failure:
                             completion(result)
                         }
                     }

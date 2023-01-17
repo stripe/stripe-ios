@@ -42,6 +42,6 @@ extension STPConfirmUSBankAccountOptions: STPFormEncodable {
     }
 
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        [NSStringFromSelector(#selector(getter:setupFutureUsageRawString)): "setup_future_usage"]
+        [NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage"]
     }
 }

@@ -12,11 +12,11 @@ class BackendModel {
     // You can replace this with your own backend URL.
     // Visit https://glitch.com/edit/#!/stripe-integration-tester and click "remix".
     static let backendAPIURL = URL(string: "https://stripe-integration-tester.glitch.me")!
-  
+
     static let returnURL = "stp-integration-tester://stripe-redirect"
-  
+
     public static let shared = BackendModel()
-    
+
     func fetchPaymentIntent(completion: @escaping (String?) -> Void) {
         let params = ["integration_method": "Apple Pay"]
         getAPI(method: "create_pi", params: params) { (json) in
@@ -27,7 +27,7 @@ class BackendModel {
             completion(paymentIntentClientSecret)
         }
     }
-    
+
     func loadPublishableKey(completion: @escaping (String) -> Void) {
         let params = ["integration_method": "Apple Pay"]
         getAPI(method: "get_pub_key", params: params) { (json) in
@@ -38,22 +38,22 @@ class BackendModel {
           }
         }
     }
-    
-    private func getAPI(method: String, params: [String : Any] = [:], completion: @escaping ([String : Any]) -> Void) {
+
+    private func getAPI(method: String, params: [String: Any] = [:], completion: @escaping ([String: Any]) -> Void) {
         var request = URLRequest(url: Self.backendAPIURL.appendingPathComponent(method))
         request.httpMethod = "POST"
-        
+
         request.httpBody = try! JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, _, error) in
           guard let unwrappedData = data,
-                let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String : Any] else {
+                let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any] else {
             if let data = data {
                 print("\(String(decoding: data, as: UTF8.self))")
             } else {
-                print("\(error ?? NSError())")
+                print("\(error ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
             }
             return
           }

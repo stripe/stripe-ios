@@ -47,7 +47,7 @@ class FlowRouter {
         ) as? Bool {
             return isNativeEnabled
         }
-        
+
         // if this version is killswitched by server, fallback to webview.
         if killswitchActive { return false }
 
@@ -73,7 +73,7 @@ class FlowRouter {
 
         analyticsClient.logExposure(experimentName: Constants.nativeExperiment,
                                     assignmentEventId: assignmentEventId,
-                                    parameters: ["account_holder_id": accountHolder])
+                                    accountholderToken: accountHolder)
 
     }
 }

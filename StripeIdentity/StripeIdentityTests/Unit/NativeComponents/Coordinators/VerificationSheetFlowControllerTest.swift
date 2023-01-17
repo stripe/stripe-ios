@@ -275,7 +275,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     // TODO(IDPROD-2745): Re-enable when `IndividualViewController` is supported
-    //func testNextViewControllerIndividualFields() {
+    // func testNextViewControllerIndividualFields() {
     //    XCTAssertIs(nextViewController(
     //        missingRequirements: [.address]
     //    ), IndividualViewController.self)
@@ -294,7 +294,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     //    XCTAssertIs(nextViewController(
     //        missingRequirements: [.phoneNumber]
     //    ), IndividualViewController.self)
-    //}
+    // }
 
     func testNextViewControllerDocumentCapture() throws {
         // Mock that user has selected document type

@@ -28,7 +28,7 @@ import Foundation
                 return
             }
             #if DEBUG
-            var accumulator: [String:String] = ["00": "Stripe Test Bank"]
+            var accumulator: [String: String] = ["00": "Stripe Test Bank"]
             decodedBSBs.forEach { (key, value) in
                 accumulator[key] = value
             }
@@ -40,7 +40,7 @@ import Foundation
             return
         }
     }
-    
+
     func bsbName(for bsbNumber: String) -> String {
         for i in (2...3).reversed() {
             let bsbPrefix = String(bsbNumber.prefix(i))

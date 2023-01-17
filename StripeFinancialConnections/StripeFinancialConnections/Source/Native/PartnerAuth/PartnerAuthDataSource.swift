@@ -22,21 +22,21 @@ protocol PartnerAuthDataSource: AnyObject {
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
-    
+
     let institution: FinancialConnectionsInstitution
     let manifest: FinancialConnectionsSessionManifest
     let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    
+
     // a "pending" auth session is a session which has started
     // BUT the session is still yet-to-be authorized
     //
     // in other words, a `pendingAuthSession` is up for being
     // cancelled unless the user successfully authorizes
     private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
-    
+
     init(
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
@@ -52,7 +52,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
-    
+
     func createAuthSession() -> Future<FinancialConnectionsAuthSession> {
         return apiClient.createAuthSession(
             clientSecret: clientSecret,
@@ -62,25 +62,25 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             return Promise(value: authSession)
         }
     }
-    
+
     func cancelPendingAuthSessionIfNeeded() {
         guard let pendingAuthSession = pendingAuthSession else {
             return
         }
         self.pendingAuthSession = nil
         cancelAuthSession(pendingAuthSession)
-            .observe { result in
+            .observe { _ in
                 // we ignore the result because its not important
             }
     }
-    
+
     private func cancelAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
         return apiClient.cancelAuthSession(
             clientSecret: clientSecret,
             authSessionId: authSession.id
         )
     }
-    
+
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
         return apiClient.fetchAuthSessionOAuthResults(
             clientSecret: clientSecret,
@@ -97,7 +97,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             )
         })
     }
-    
+
     func recordAuthSessionEvent(
         eventName: String,
         authSessionId: String
@@ -107,7 +107,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             // for simulator or tests, so don't send these either...
             return
         }
-        
+
         apiClient.recordAuthSessionEvent(
             clientSecret: clientSecret,
             authSessionId: authSessionId,

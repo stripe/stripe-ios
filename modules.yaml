@@ -92,7 +92,7 @@ modules:
   supports_catalyst: true
   custom_string_convertible_dir: StripePayments/StripePayments/Categories
   docs:
-    output: docs/stripe-payments
+    output: docs/stripepayments
     readme: StripePayments/README.md
     include:
       - StripeCore
@@ -105,7 +105,7 @@ modules:
   localization_dir: StripePaymentsUI/StripePaymentsUI
   custom_string_convertible_dir: StripePaymentsUI/StripePaymentsUI/Categories
   docs:
-    output: docs/stripe-payments-ui
+    output: docs/stripepaymentsui
     readme: StripePaymentsUI/README.md
     include:
       - StripeCore
@@ -119,7 +119,7 @@ modules:
   localization_dir: StripePaymentSheet/StripePaymentSheet
   supports_catalyst: true
   docs:
-    output: docs/stripe-paymentsheet
+    output: docs/stripepaymentsheet
     readme: StripePaymentSheet/README.md
     include:
       - StripeCore
@@ -149,7 +149,7 @@ modules:
     max_uncompressed_size: 3000
     max_incremental_uncompressed_size: 100
   docs:
-    output: docs/stripe-identity
+    output: docs/stripeidentity
     readme: StripeIdentity/README.md
 
 - podspec: StripeApplePay.podspec
@@ -157,7 +157,7 @@ modules:
   framework_name: StripeApplePay
   supports_catalyst: true
   docs:
-    output: docs/stripe-applepay
+    output: docs/stripeapplepay
     readme: StripeApplePay/README.md
   size_report:
     max_compressed_size: 500
@@ -169,7 +169,7 @@ modules:
   framework_name: StripeCardScan
   supports_catalyst: false
   docs:
-    output: docs/stripe-cardscan
+    output: docs/stripecardscan
     readme: StripeCardScan/README.md
   localization_dir: StripeCardScan/StripeCardScan
 
@@ -177,7 +177,7 @@ modules:
   scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
   docs:
-    output: docs/stripe-financialconnections
+    output: docs/stripefinancialconnections
     readme: StripeFinancialConnections/README.md
     include:
       - StripeCore

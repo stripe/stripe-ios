@@ -13,8 +13,8 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 
 class STPAPIClientStubbedTest: APIStubbedTestCase {
 
@@ -74,7 +74,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             paymentMethodType: .USBankAccount,
             customerName: "Test Tester",
             customerEmailAddress: "test@example.com"
-        ) { intent, error in
+        ) { intent, _ in
             guard let intent = intent else {
                 XCTFail("Intent was null")
                 return
@@ -144,7 +144,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             paymentMethodType: .USBankAccount,
             customerName: "Test Tester",
             customerEmailAddress: "test@example.com"
-        ) { intent, error in
+        ) { intent, _ in
             guard let intent = intent else {
                 XCTFail("Intent was null")
                 return
@@ -210,7 +210,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             setupIntentID: "seti_12345",
             linkAccountSessionID: "las_123456",
             clientSecret: "si_client_secret_123"
-        ) { intent, error in
+        ) { intent, _ in
             guard let intent = intent else {
                 XCTFail("Intent was null")
                 return
@@ -277,7 +277,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             paymentIntentID: "pi_12345",
             linkAccountSessionID: "las_123456",
             clientSecret: "pi_client_secret_123"
-        ) { intent, error in
+        ) { intent, _ in
             guard let intent = intent else {
                 XCTFail("Intent was null")
                 return

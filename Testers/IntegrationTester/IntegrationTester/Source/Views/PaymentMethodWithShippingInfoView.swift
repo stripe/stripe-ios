@@ -6,8 +6,8 @@
 //
 
 import IntegrationTesterCommon
-import SwiftUI
 import Stripe
+import SwiftUI
 
 struct PaymentMethodWithShippingInfoView: View {
   let integrationMethod: IntegrationMethod
@@ -76,7 +76,7 @@ struct PaymentMethodWithShippingInfoView: View {
     }
 }
 
-struct PaymentMethodWithShippingInfoView_Preview : PreviewProvider {
+struct PaymentMethodWithShippingInfoView_Preview: PreviewProvider {
   static var previews: some View {
     PaymentMethodWithShippingInfoView(integrationMethod: .oxxo)
   }

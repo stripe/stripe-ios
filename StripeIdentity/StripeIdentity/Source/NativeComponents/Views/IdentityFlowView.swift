@@ -87,8 +87,8 @@ class IdentityFlowView: UIView {
         let headerViewModel: HeaderView.ViewModel?
         let contentViewModel: Content
         let buttons: [Button]
-        var scrollViewDelegate: UIScrollViewDelegate? = nil
-        var flowViewDelegate: IdentityFlowViewDelegate? = nil
+        var scrollViewDelegate: UIScrollViewDelegate?
+        var flowViewDelegate: IdentityFlowViewDelegate?
     }
 
     private let headerView = HeaderView()
@@ -119,7 +119,7 @@ class IdentityFlowView: UIView {
         )
     )
 
-    private var flowViewDelegate: IdentityFlowViewDelegate? = nil
+    private var flowViewDelegate: IdentityFlowViewDelegate?
 
     // MARK: Configured properties
     private var contentViewModel: ContentViewModel?
@@ -310,7 +310,7 @@ extension IdentityFlowView.ViewModel {
                     state: state,
                     isPrimary: true,
                     didTap: didTapButton
-                )
+                ),
             ]
         )
     }

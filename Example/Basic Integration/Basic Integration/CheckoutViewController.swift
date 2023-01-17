@@ -20,7 +20,7 @@ class CheckoutViewController: UIViewController {
     // https://github.com/stripe/example-mobile-backend/tree/v18.1.0, click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-    var backendBaseURL: String? = nil
+    var backendBaseURL: String?
 
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
@@ -280,7 +280,8 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         }
     }
     func paymentContext(
-        _ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult,
+        _ paymentContext: STPPaymentContext,
+        didCreatePaymentResult paymentResult: STPPaymentResult,
         completion: @escaping STPPaymentStatusBlock
     ) {
         // Create the PaymentIntent on the backend
@@ -314,7 +315,6 @@ extension CheckoutViewController: STPPaymentContextDelegate {
                 // A real app should retry this request if it was a network error.
                 print("Failed to create a Payment Intent: \(error)")
                 completion(.error, error)
-                break
             }
         }
     }
@@ -393,7 +393,8 @@ extension CheckoutViewController: STPPaymentContextDelegate {
     // Note: this delegate method is optional. If you do not need to collect a
     // shipping method from your user, you should not implement this method.
     func paymentContext(
-        _ paymentContext: STPPaymentContext, didUpdateShippingAddress address: STPAddress,
+        _ paymentContext: STPPaymentContext,
+        didUpdateShippingAddress address: STPAddress,
         completion: @escaping STPShippingMethodsCompletionBlock
     ) {
         let upsGround = PKShippingMethod()

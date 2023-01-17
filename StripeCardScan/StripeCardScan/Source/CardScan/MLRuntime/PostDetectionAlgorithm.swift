@@ -7,7 +7,6 @@ import Foundation
 /// that it uses are non-maximum suppression and depth first search on box
 /// sequences to find likely numbers. There are also a number of heuristics
 /// for filtering out unlikely sequences.
-
 struct PostDetectionAlgorithm {
     let kNumberWordCount = 4
     let kAmexWordCount = 5

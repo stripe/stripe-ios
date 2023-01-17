@@ -68,7 +68,7 @@ public class STPIntentActionVerifyWithMicrodeposits: NSObject {
 // MARK: - STPAPIResponseDecodable
 /// :nodoc:
 extension STPIntentActionVerifyWithMicrodeposits: STPAPIResponseDecodable {
-    public static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+    public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response,
             let arrivalDate = response.stp_date(forKey: "arrival_date"),
             let hostedVerificationURL = response.stp_url(forKey: "hosted_verification_url"),

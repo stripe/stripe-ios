@@ -19,14 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         // Disable hardware keyboards in CI:
         #if targetEnvironment(simulator)
-        if (ProcessInfo.processInfo.environment["UITesting"] != nil) {
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
             let setHardwareLayout = NSSelectorFromString("setHardwareLayout:")
             UITextInputMode.activeInputModes
                 .filter({ $0.responds(to: setHardwareLayout) })
                 .forEach { $0.perform(setHardwareLayout, with: nil) }
         }
         #endif
-        
+
         let rootVC = BrowseProductsViewController()
         let navigationController = UINavigationController(rootViewController: rootVC)
         let window = UIWindow(frame: UIScreen.main.bounds)
@@ -54,7 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // This method is where you handle URL opens if you are using univeral link URLs (eg "https://example.com/stripe_ios_callback")
     func application(
-        _ application: UIApplication, continue userActivity: NSUserActivity,
+        _ application: UIApplication,
+        continue userActivity: NSUserActivity,
         restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
     ) -> Bool {
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {

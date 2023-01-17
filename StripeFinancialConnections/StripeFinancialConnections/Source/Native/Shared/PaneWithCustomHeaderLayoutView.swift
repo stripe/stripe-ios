@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// Reusable view that separates panes into three parts:
 /// 1. A header that is part of a "content scroll view."
@@ -17,16 +17,17 @@ import UIKit
 /// Purposefully NOT a `UIView` subclass because it should only be used via
 /// `addToView` helper function.
 final class PaneWithCustomHeaderLayoutView {
-    
+
     private let paneLayoutView: PaneLayoutView
     var scrollView: UIScrollView {
         return paneLayoutView.scrollView
     }
-    
+
     init(
         headerView: UIView,
         headerTopMargin: CGFloat = 16,
         contentView: UIView,
+        headerAndContentSpacing: CGFloat = 24.0,
         footerView: UIView?
     ) {
         self.paneLayoutView = PaneLayoutView(
@@ -38,7 +39,7 @@ final class PaneWithCustomHeaderLayoutView {
                     ]
                 )
                 verticalStackView.axis = .vertical
-                verticalStackView.spacing = 24
+                verticalStackView.spacing = headerAndContentSpacing
                 verticalStackView.isLayoutMarginsRelativeArrangement = true
                 verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
                     top: headerTopMargin,
@@ -72,7 +73,7 @@ final class PaneWithCustomHeaderLayoutView {
             }()
         )
     }
-    
+
     func addTo(view: UIView) {
         paneLayoutView.addTo(view: view)
     }

@@ -322,7 +322,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.saveDocumentFrontAndDecideBack(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader,
-            onCompletion: { isBackRequired in }
+            onCompletion: { _ in }
         )
         // Mock that document upload failed
         mockDocumentUploader.frontUploadPromise.reject(with: mockError)

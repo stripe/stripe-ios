@@ -5,8 +5,8 @@
 //  Created by David Estes on 2/10/21.
 //
 
-import SwiftUI
 import Stripe
+import SwiftUI
 
 struct PaymentHandlerStatusView: View {
   let actionStatus: STPPaymentHandlerActionStatus
@@ -20,7 +20,7 @@ struct PaymentHandlerStatusView: View {
         Text("Payment complete!")
       case .failed:
         Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
-        Text("Payment failed! \(lastPaymentError ?? NSError())")
+        Text("Payment failed! \(lastPaymentError ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
       case .canceled:
         Image(systemName: "xmark.octagon.fill").foregroundColor(.orange)
         Text("Payment canceled.")
@@ -55,4 +55,3 @@ struct PaymentStatusView: View {
     .accessibility(identifier: "Payment status view")
   }
 }
-

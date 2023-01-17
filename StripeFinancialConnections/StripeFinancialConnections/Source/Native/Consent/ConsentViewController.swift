@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import UIKit
 import SafariServices
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol ConsentViewControllerDelegate: AnyObject {
@@ -19,16 +19,17 @@ protocol ConsentViewControllerDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 class ConsentViewController: UIViewController {
-    
+
     private let dataSource: ConsentDataSource
     weak var delegate: ConsentViewControllerDelegate?
-    
+
     private lazy var titleLabel: ClickableLabel = {
         let titleLabel = ClickableLabel(
             font: .stripeFont(forTextStyle: .subtitle),
             boldFont: .stripeFont(forTextStyle: .subtitle),
             linkFont: .stripeFont(forTextStyle: .subtitle),
-            textColor: .textPrimary
+            textColor: .textPrimary,
+            alignCenter: dataSource.merchantLogo != nil
         )
         titleLabel.setText(
             dataSource.consent.title,
@@ -54,41 +55,58 @@ class ConsentViewController: UIViewController {
             }
         )
     }()
-    
+
     init(dataSource: ConsentDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+
         let paneLayoutView = PaneWithCustomHeaderLayoutView(
-            headerView: titleLabel,
+            headerView: {
+                if let merchantLogo = dataSource.merchantLogo {
+                    let stackView = UIStackView(
+                        arrangedSubviews: [
+                            ConsentLogoView(merchantLogo: merchantLogo),
+                            titleLabel,
+                        ]
+                    )
+                    stackView.axis = .vertical
+                    stackView.spacing = 20
+                    stackView.alignment = .center
+                    return stackView
+                } else {
+                    return titleLabel
+                }
+            }(),
+            headerTopMargin: (dataSource.merchantLogo == nil) ? 16 : 4,
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consent.body.bullets,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURL(url)
                 }
             ),
+            headerAndContentSpacing: 28.0,
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
-        
+
         dataSource.analyticsClient.logPaneLoaded(pane: .consent)
     }
-    
+
     private func didSelectAgree() {
         dataSource.analyticsClient.log(
             eventName: "click.agree",
             parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
         )
-        
+
         footerView.setIsLoading(true)
         dataSource.markConsentAcquired()
             .observe(on: .main) { [weak self] result in
@@ -109,7 +127,7 @@ class ConsentViewController: UIViewController {
                 self.footerView.setIsLoading(false)
             }
     }
-    
+
     // this function will get called when user taps
     // on ANY link returned from backend
     private func didSelectURL(_ url: URL) {
@@ -124,7 +142,7 @@ class ConsentViewController: UIViewController {
                     parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
                 )
         }
-        
+
         if url.scheme == "stripe" {
             if url.host == "manual-entry" {
                 delegate?.consentViewControllerDidSelectManuallyVerify(self)

@@ -23,7 +23,7 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
                 stateNameType: .state,
                 zip: "",
                 zipNameType: .zip
-            )
+            ),
         ]
         return specProvider
     }()

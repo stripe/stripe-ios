@@ -5,8 +5,8 @@
 //  Created by Vardges Avetisyan on 11/10/21.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /**
  A drop-in class that presents a sheet for a user to connect their financial accounts.
@@ -44,7 +44,7 @@ final public class FinancialConnectionsSheet {
      See https://stripe.com/docs/api/financial_connections/sessions/object#financial_connections_session_object-client_secret
      */
     public let financialConnectionsSessionClientSecret: String
-    
+
     /// A URL that redirects back to your app that FinancialConnectionsSheet can use
     /// get back to your app after completing authentication in another app (such as bank app or Safari).
     public let returnURL: String?
@@ -58,7 +58,7 @@ final public class FinancialConnectionsSheet {
 
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((Result) -> Void)?
-    
+
     @available(iOSApplicationExtension, unavailable)
     private var hostController: HostController?
 
@@ -95,9 +95,9 @@ final public class FinancialConnectionsSheet {
 
     @available(iOSApplicationExtension, unavailable)
     public func presentForToken(from presentingViewController: UIViewController,
-                                completion: @escaping (TokenResult) -> ()) {
+                                completion: @escaping (TokenResult) -> Void) {
         present(from: presentingViewController) { result in
-            switch (result) {
+            switch result {
             case .completed(session: let session):
                 completion(.completed(result: (session: session, token: session.bankAccountToken)))
             case .failed(error: let error):
@@ -116,7 +116,7 @@ final public class FinancialConnectionsSheet {
      */
     @available(iOSApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController,
-                        completion: @escaping (Result) -> ()) {
+                        completion: @escaping (Result) -> Void) {
         // Overwrite completion closure to retain self until called
         let completion: (Result) -> Void = { result in
             self.analyticsClient.log(analytic: FinancialConnectionsSheetCompletionAnalytic.make(
@@ -137,9 +137,9 @@ final public class FinancialConnectionsSheet {
             completion(.failed(error: error))
             return
         }
-        
+
         if let urlString = returnURL {
-            guard (URL(string: urlString) != nil) else {
+            guard URL(string: urlString) != nil else {
                 assertionFailure("invalid returnURL: \(urlString) parameter passed in when creating FinancialConnectionsSheet")
                 let error = FinancialConnectionsSheetError.unknown(
                     debugDescription: "invalid returnURL: \(urlString) parameter passed in when creating FinancialConnectionsSheet"

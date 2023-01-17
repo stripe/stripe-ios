@@ -83,6 +83,6 @@ let project = Project(
             name: "IntegrationTester",
             buildAction: .buildAction(targets: ["IntegrationTester"]),
             testAction: .targets(["IntegrationTesterUITests"])
-        )
+        ),
     ]
 )

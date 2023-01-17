@@ -348,7 +348,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
                 code: STPErrorCode.cancellationError.rawValue,
                 userInfo: [
                     STPError.errorMessageKey:
-                        "User manually closed SFSafariViewController before redirect was completed."
+                        "User manually closed SFSafariViewController before redirect was completed.",
                 ]
             )
         }

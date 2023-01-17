@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import XCTest
 @_spi(STP) import StripeUICore
+import XCTest
 
 class STPVPANumberValidatorTest: XCTestCase {
     func testValidVPAs() {
