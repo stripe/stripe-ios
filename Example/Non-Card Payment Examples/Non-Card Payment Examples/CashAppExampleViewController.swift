@@ -54,7 +54,9 @@ class CashAppExampleViewController: UIViewController {
     @objc func didTapPayButton() {
         guard STPAPIClient.shared.publishableKey != nil else {
             delegate?.exampleViewController(
-                self, didFinishWithMessage: "Please set a Stripe Publishable Key in Constants.m")
+                self,
+                didFinishWithMessage: "Please set a Stripe Publishable Key in Constants.m"
+            )
             return
         }
         inProgress = true
@@ -67,7 +69,7 @@ extension CashAppExampleViewController {
     @objc func pay() {
         // 1. Create an CashApp PaymentIntent
         MyAPIClient.shared().createPaymentIntent(
-            completion: { (result, clientSecret, error) in
+            completion: { (_, clientSecret, error) in
                 guard let clientSecret = clientSecret else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
@@ -78,26 +80,34 @@ extension CashAppExampleViewController {
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     cashApp: STPPaymentMethodCashAppParams(),
                     billingDetails: nil,
-                    metadata: nil)
+                    metadata: nil
+                )
                 paymentIntentParams.returnURL = "payments-example://safepay/"
 
                 STPPaymentHandler.shared().confirmPayment(
-                    paymentIntentParams, with: self
-                ) { (status, intent, error) in
+                    paymentIntentParams,
+                    with: self
+                ) { (status, _, error) in
                     switch status {
                     case .canceled:
                         self.delegate?.exampleViewController(
-                            self, didFinishWithMessage: "Cancelled")
+                            self,
+                            didFinishWithMessage: "Cancelled"
+                        )
                     case .failed:
                         self.delegate?.exampleViewController(self, didFinishWithError: error)
                     case .succeeded:
                         self.delegate?.exampleViewController(
-                            self, didFinishWithMessage: "Payment successfully created.")
+                            self,
+                            didFinishWithMessage: "Payment successfully created."
+                        )
                     @unknown default:
                         fatalError()
                     }
                 }
-            }, additionalParameters: "supported_payment_methods=cashapp")
+            },
+            additionalParameters: "supported_payment_methods=cashapp"
+        )
     }
 }
 

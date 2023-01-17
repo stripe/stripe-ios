@@ -18,14 +18,14 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [
+    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [
         .card, .payPal,
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
         .AUBECSDebit,
         .UPI,
-        .cashApp
+        .cashApp,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
@@ -51,7 +51,8 @@ extension PaymentSheet {
             switch paymentMethod {
             case .blik, .card, .cardPresent, .UPI, .weChatPay:
                 return []
-            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit, .cashApp:
+            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit,
+                .cashApp:
                 return [.returnURL]
             case .USBankAccount:
                 return [.userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod]
@@ -116,7 +117,8 @@ extension PaymentSheet {
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .unknown:
+                .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
+                .affirm, .unknown:
                 return [.unavailable]
             @unknown default:
                 return [.unavailable]
@@ -157,7 +159,9 @@ extension PaymentSheet {
         let supports = Set(requirements).isSubset(of: fulfilledRequirements)
         if paymentMethod == .USBankAccount {
             if !fulfilledRequirements.contains(.financialConnectionsSDK) {
-                print("[Stripe SDK] Warning: us_bank_account requires the StripeConnections SDK. See https://stripe.com/docs/payments/ach-debit/accept-a-payment?platform=ios")
+                print(
+                    "[Stripe SDK] Warning: us_bank_account requires the StripeConnections SDK. See https://stripe.com/docs/payments/ach-debit/accept-a-payment?platform=ios"
+                )
             }
         }
 
@@ -195,9 +199,10 @@ extension Intent: PaymentMethodRequirementProvider {
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {
                 if shippingInfo.name != nil,
-                   shippingInfo.address?.line1 != nil,
-                   shippingInfo.address?.country != nil,
-                   shippingInfo.address?.postalCode != nil {
+                    shippingInfo.address?.line1 != nil,
+                    shippingInfo.address?.country != nil,
+                    shippingInfo.address?.postalCode != nil
+                {
                     reqs.append(.shippingAddress)
                 }
             }
@@ -209,7 +214,8 @@ extension Intent: PaymentMethodRequirementProvider {
 
             // valid us bank verification method
             if let usBankOptions = paymentIntent.paymentMethodOptions?.usBankAccount,
-               usBankOptions.verificationMethod.isValidForPaymentSheet {
+                usBankOptions.verificationMethod.isValidForPaymentSheet
+            {
                 reqs.append(.validUSBankVerificationMethod)
             }
 
@@ -219,7 +225,8 @@ extension Intent: PaymentMethodRequirementProvider {
 
             // valid us bank verification method
             if let usBankOptions = setupIntent.paymentMethodOptions?.usBankAccount,
-               usBankOptions.verificationMethod.isValidForPaymentSheet {
+                usBankOptions.verificationMethod.isValidForPaymentSheet
+            {
                 reqs.append(.validUSBankVerificationMethod)
             }
             return reqs

@@ -12,7 +12,7 @@ import SafariServices
 @_spi(STP) import StripeCore
 
 #if canImport(Stripe3DS2)
-    import Stripe3DS2
+import Stripe3DS2
 #endif
 
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
@@ -1282,11 +1282,11 @@ public class STPPaymentHandler: NSObject {
             else {
                 fatalError()
             }
-            
+
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
                 let resultingRedirectURL = self.followRedirects(to: mobileAuthURL, urlSession: URLSession.shared)
                 _handleRedirect(to: resultingRedirectURL, withReturn: returnURL)
-                
+
             } else {
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
@@ -1302,20 +1302,21 @@ public class STPPaymentHandler: NSObject {
             fatalError()
         }
     }
-    
+
     public func followRedirects(to url: URL, urlSession: URLSession) -> URL {
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
 
         var resultingUrl = url
-        let task = urlSession.dataTask(with: urlRequest) { data, response, error in
+        let task = urlSession.dataTask(with: urlRequest) { _, response, error in
             defer {
                 blockingDataTaskSemaphore.signal()
             }
             guard error == nil,
-                  let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode),
-                    let responseURL = response?.url else {
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode),
+                let responseURL = response?.url
+            else {
                 return
             }
             resultingUrl = responseURL
@@ -1338,29 +1339,28 @@ public class STPPaymentHandler: NSObject {
 
     func _retrieveAndCheckIntentForCurrentAction(retryCount: Int = maxChallengeRetries) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
-        let pingMarlinIfNecessary:
-            ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
-                currentAction,
-                completionBlock in
-                if let paymentMethod = currentAction.paymentIntent?.paymentMethod,
-                    paymentMethod.type == .alipay,
-                    let alipayHandleRedirect = currentAction.nextAction()?.alipayHandleRedirect,
-                    let alipayReturnURL = alipayHandleRedirect.marlinReturnURL
-                {
+        let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
+            currentAction,
+            completionBlock in
+            if let paymentMethod = currentAction.paymentIntent?.paymentMethod,
+                paymentMethod.type == .alipay,
+                let alipayHandleRedirect = currentAction.nextAction()?.alipayHandleRedirect,
+                let alipayReturnURL = alipayHandleRedirect.marlinReturnURL
+            {
 
-                    // Make a request to the return URL
-                    let request: URLRequest = URLRequest(url: alipayReturnURL)
-                    let task: URLSessionDataTask = URLSession.shared.dataTask(
-                        with: request,
-                        completionHandler: { _, _, _ in
-                            completionBlock()
-                        }
-                    )
-                    task.resume()
-                } else {
-                    completionBlock()
-                }
+                // Make a request to the return URL
+                let request: URLRequest = URLRequest(url: alipayReturnURL)
+                let task: URLSessionDataTask = URLSession.shared.dataTask(
+                    with: request,
+                    completionHandler: { _, _, _ in
+                        completionBlock()
+                    }
+                )
+                task.resume()
+            } else {
+                completionBlock()
             }
+        }
 
         if let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams,
             let paymentIntent = currentAction.paymentIntent
@@ -1415,8 +1415,7 @@ public class STPPaymentHandler: NSObject {
                                             && retrievedPaymentIntent?.nextAction?.type
                                                 == .useStripeSDK
                                         {
-                                            self._retryWithExponentialDelay(retryCount: retryCount)
-                                            {
+                                            self._retryWithExponentialDelay(retryCount: retryCount) {
                                                 self._retrieveAndCheckIntentForCurrentAction(
                                                     retryCount: retryCount - 1
                                                 )
@@ -1549,7 +1548,9 @@ public class STPPaymentHandler: NSObject {
         // In the case that it is a stripe owned URL, the URL is expected to redirect our financial partners, at which point Safari can
         // redirect to a native app if the app has been installed.  If Safari is not the default browser, then users not be
         // automatically navigated to the native app.
-        let options: [UIApplication.OpenExternalURLOptionsKey: Any] = [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false]
+        let options: [UIApplication.OpenExternalURLOptionsKey: Any] = [
+            UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false
+        ]
         UIApplication.shared.open(
             url,
             options: options,
@@ -1637,9 +1638,9 @@ public class STPPaymentHandler: NSObject {
         // We don't want universal links to open up Safari, but we do want to allow custom URL schemes
         var options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:]
         #if !targetEnvironment(macCatalyst)
-            if let scheme = url?.scheme, scheme == "http" || scheme == "https" {
-                options[UIApplication.OpenExternalURLOptionsKey.universalLinksOnly] = true
-            }
+        if let scheme = url?.scheme, scheme == "http" || scheme == "https" {
+            options[UIApplication.OpenExternalURLOptionsKey.universalLinksOnly] = true
+        }
         #endif
 
         // If we're simulating app-to-app redirects, we always want to open the URL in Safari instead of an in-app web view.

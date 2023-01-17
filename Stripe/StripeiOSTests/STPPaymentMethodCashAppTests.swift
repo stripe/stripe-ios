@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 1/4/23.
 //
 
-import XCTest
-import StripeCoreTestUtils
 @testable import Stripe
+import StripeCoreTestUtils
+import XCTest
 
 class STPPaymentMethodCashAppTests: XCTestCase {
 

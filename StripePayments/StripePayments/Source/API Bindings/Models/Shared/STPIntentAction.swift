@@ -54,7 +54,7 @@ import Foundation
 
     /// The action type for UPI payment methods. The customer must complete the transaction in their banking app within 5 minutes.
     case upiAwaitNotification
-    
+
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     case cashAppRedirectToApp
 
@@ -152,7 +152,7 @@ public class STPIntentAction: NSObject {
 
     /// Contains details describing microdeposits verification flow for US bank accounts
     @objc public let verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
-    
+
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     @objc public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
 

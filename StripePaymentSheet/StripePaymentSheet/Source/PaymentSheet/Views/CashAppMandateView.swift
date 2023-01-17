@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_CashAppMandateView)
@@ -20,7 +20,7 @@ class CashAppMandateView: UIView {
         label.numberOfLines = 0
         return label
     }()
-    
+
     init(merchantDisplayName: String, theme: ElementsUITheme = .default) {
         self.theme = theme
         super.init(frame: .zero)
@@ -31,11 +31,11 @@ class CashAppMandateView: UIView {
         label.text = String(format: localized, merchantDisplayName, merchantDisplayName)
         installConstraints()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     fileprivate func installConstraints() {
         addAndPinSubview(label)
     }
