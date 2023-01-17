@@ -26,6 +26,9 @@
 "Card" = "Card";
 
 /* Payment Method type brand name */
+"Cash App Pay" = "Cash App Pay";
+
+/* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
 /* Payment Method type brand name. */

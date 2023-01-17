@@ -186,6 +186,8 @@ extension STPIntentActionType: CustomStringConvertible {
             return "verifyWithMicrodeposits"
         case .weChatPayRedirectToApp:
             return "weChatPayRedirectToApp"
+        case .cashAppRedirectToApp:
+            return "cashAppRedirectToApp"
         }
     }
 }
@@ -530,6 +532,8 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "unknown"
         case .weChatPay:
             return "weChatPay"
+        case .cashApp:
+            return "cashApp"
         }
     }
 }

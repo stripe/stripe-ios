@@ -39,6 +39,7 @@ extension PaymentSheet {
         case link
         case dynamic(String)
         case UPI
+        case cashApp
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
@@ -51,7 +52,9 @@ extension PaymentSheet {
             case STPPaymentMethod.string(from: .link):
                 self = .link
             case STPPaymentMethod.string(from: .UPI):
-                self  = .UPI
+                self = .UPI
+            case STPPaymentMethod.string(from: .cashApp):
+                self = .cashApp
             default:
                 self = .dynamic(str)
             }
@@ -69,6 +72,8 @@ extension PaymentSheet {
                 return nil
             case .UPI:
                 return STPPaymentMethod.string(from: .UPI)
+            case .cashApp:
+                return STPPaymentMethod.string(from: .cashApp)
             case .dynamic(let str):
                 return str
             }
@@ -107,12 +112,14 @@ extension PaymentSheet {
         /// to download the image.
         func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             if case .dynamic(let name) = self,
-               let spec = FormSpecProvider.shared.formSpec(for: name),
-               let selectorIcon = spec.selectorIcon,
-               var imageUrl = URL(string: selectorIcon.lightThemePng) {
+                let spec = FormSpecProvider.shared.formSpec(for: name),
+                let selectorIcon = spec.selectorIcon,
+                var imageUrl = URL(string: selectorIcon.lightThemePng)
+            {
                 if forDarkBackground,
-                   let darkImageString = selectorIcon.darkThemePng,
-                   let darkImageUrl = URL(string: darkImageString) {
+                    let darkImageString = selectorIcon.darkThemePng,
+                    let darkImageUrl = URL(string: darkImageString)
+                {
                     imageUrl = darkImageUrl
                 }
                 if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
@@ -159,16 +166,23 @@ extension PaymentSheet {
         static func recommendedPaymentMethodTypes(from intent: Intent) -> [PaymentMethodType] {
             switch intent {
             case .paymentIntent(let paymentIntent):
-                guard let paymentMethodTypeStrings = paymentIntent.allResponseFields["payment_method_types"] as? [String] else {
+                guard
+                    let paymentMethodTypeStrings = paymentIntent.allResponseFields["payment_method_types"] as? [String]
+                else {
                     return []
                 }
-                let paymentTypesString = paymentIntent.allResponseFields["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
+                let paymentTypesString =
+                    paymentIntent.allResponseFields["ordered_payment_method_types"] as? [String]
+                    ?? paymentMethodTypeStrings
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
             case .setupIntent(let setupIntent):
-                guard let paymentMethodTypeStrings = setupIntent.allResponseFields["payment_method_types"] as? [String] else {
+                guard let paymentMethodTypeStrings = setupIntent.allResponseFields["payment_method_types"] as? [String]
+                else {
                     return []
                 }
-                let paymentTypesString = setupIntent.allResponseFields["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
+                let paymentTypesString =
+                    setupIntent.allResponseFields["ordered_payment_method_types"] as? [String]
+                    ?? paymentMethodTypeStrings
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
             }
         }
@@ -178,7 +192,8 @@ extension PaymentSheet {
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
         /// - Returns: An ordered list of `PaymentMethodType`s, including only the ones supported by this configuration.
-        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration) -> [PaymentMethodType] {
+        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration) -> [PaymentMethodType]
+        {
             var recommendedPaymentMethodTypes = Self.recommendedPaymentMethodTypes(from: intent)
             if configuration.linkPaymentMethodsOnly {
                 // If we're in the Link modal, manually add Link payment methods
@@ -194,8 +209,8 @@ extension PaymentSheet {
                     paymentMethod: $0,
                     configuration: configuration,
                     intent: intent,
-                    supportedPaymentMethods: configuration.linkPaymentMethodsOnly ?
-                        PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
+                    supportedPaymentMethods: configuration.linkPaymentMethodsOnly
+                        ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
             }
 
@@ -205,7 +220,9 @@ extension PaymentSheet {
             let paymentTypesFiltered = paymentTypes.filter({ $0 != .USBankAccount && $0 != .link })
             if serverFilteredPaymentMethods != paymentTypesFiltered {
                 let result = serverFilteredPaymentMethods.symmetricDifference(paymentTypes)
-                STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethods(clientFilteredPaymentMethods: result.stringList())
+                STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethods(
+                    clientFilteredPaymentMethods: result.stringList()
+                )
             } else {
                 STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethodsNone()
             }
@@ -219,14 +236,18 @@ extension PaymentSheet {
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> Bool {
             if let stpPaymentMethodType = paymentMethod.stpPaymentMethodType {
-                return PaymentSheet.supportsAdding(paymentMethod: stpPaymentMethodType,
-                                                   configuration: configuration,
-                                                   intent: intent,
-                                                   supportedPaymentMethods: supportedPaymentMethods)
+                return PaymentSheet.supportsAdding(
+                    paymentMethod: stpPaymentMethodType,
+                    configuration: configuration,
+                    intent: intent,
+                    supportedPaymentMethods: supportedPaymentMethods
+                )
             } else if case .dynamic = paymentMethod {
-                return supports(requirements: paymentMethod.supportsAddingRequirements(),
-                                configuration: configuration,
-                                intent: intent)
+                return supports(
+                    requirements: paymentMethod.supportsAddingRequirements(),
+                    configuration: configuration,
+                    intent: intent
+                )
             }
             // TODO: We need a way to model this information in our common model
             return false
@@ -239,22 +260,28 @@ extension PaymentSheet {
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> Bool {
             if let stpPaymentMethodType = paymentMethod.stpPaymentMethodType {
-                return PaymentSheet.supportsSaveAndReuse(paymentMethod: stpPaymentMethodType,
-                                                         configuration: configuration,
-                                                         intent: intent,
-                                                         supportedPaymentMethods: supportedPaymentMethods)
+                return PaymentSheet.supportsSaveAndReuse(
+                    paymentMethod: stpPaymentMethodType,
+                    configuration: configuration,
+                    intent: intent,
+                    supportedPaymentMethods: supportedPaymentMethods
+                )
             } else if case .dynamic = paymentMethod {
-                return supports(requirements: paymentMethod.supportsSaveAndReuseRequirements(),
-                                configuration: configuration,
-                                intent: intent)
+                return supports(
+                    requirements: paymentMethod.supportsSaveAndReuseRequirements(),
+                    configuration: configuration,
+                    intent: intent
+                )
             }
             // TODO: We need a way to model this information in our common model
             return false
         }
 
-        static func supports(requirements: [PaymentMethodTypeRequirement],
-                             configuration: PaymentSheet.Configuration,
-                             intent: Intent) -> Bool {
+        static func supports(
+            requirements: [PaymentMethodTypeRequirement],
+            configuration: PaymentSheet.Configuration,
+            intent: Intent
+        ) -> Bool {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
                 (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
                 return accumulator + element.fulfilledRequirements

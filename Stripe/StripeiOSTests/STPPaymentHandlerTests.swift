@@ -194,6 +194,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             weChatPayRedirectToApp: nil,
             boletoDisplayDetails: nil,
             verifyWithMicrodeposits: nil,
+            cashAppRedirectToApp: nil,
             allResponseFields: [:]
         )
         let setupIntent = STPSetupIntent(

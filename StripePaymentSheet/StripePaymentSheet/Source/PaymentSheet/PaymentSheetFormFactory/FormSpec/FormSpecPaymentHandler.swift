@@ -13,7 +13,9 @@ class PaymentSheetFormSpecPaymentHandler {
     let urlSession: URLSession
     let formSpecProvider: FormSpecProvider
     init(urlSession: URLSession? = nil, formSpecProvider: FormSpecProvider? = nil) {
-        self.urlSession = urlSession ?? URLSession(configuration: .default, delegate: STPPaymentHandlerURLSessionDelegate(), delegateQueue: nil)
+        self.urlSession =
+            urlSession
+            ?? URLSession(configuration: .default, delegate: STPPaymentHandlerURLSessionDelegate(), delegateQueue: nil)
         self.formSpecProvider = formSpecProvider ?? FormSpecProvider.shared
     }
 }
@@ -21,24 +23,50 @@ class PaymentSheetFormSpecPaymentHandler {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheetFormSpecPaymentHandler: FormSpecPaymentHandler {
-    func handlePostConfirmPIStatusSpec(for paymentIntent: StripePayments.STPPaymentIntent?, action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, paymentHandler: StripePayments.STPPaymentHandler) -> Bool {
-        if let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) {
+    func handlePostConfirmPIStatusSpec(
+        for paymentIntent: StripePayments.STPPaymentIntent?,
+        action: StripePayments.STPPaymentHandlerPaymentIntentActionParams,
+        paymentHandler: StripePayments.STPPaymentHandler
+    ) -> Bool {
+        if let spec = paymentHandler._specForPostConfirmPIStatus(
+            paymentIntent: paymentIntent,
+            formSpecProvider: formSpecProvider
+        ) {
             paymentHandler._handlePostConfirmPIStatusSpec(forAction: action, paymentIntentStatusSpec: spec)
             return true
         }
         return false
     }
 
-    func isPIStatusSpecFinishedForPostConfirmPIStatus(paymentIntent: StripePayments.STPPaymentIntent?, paymentHandler: STPPaymentHandler) -> Bool {
-        guard let spec = paymentHandler._specForPostConfirmPIStatus(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) else {
+    func isPIStatusSpecFinishedForPostConfirmPIStatus(
+        paymentIntent: StripePayments.STPPaymentIntent?,
+        paymentHandler: STPPaymentHandler
+    ) -> Bool {
+        guard
+            let spec = paymentHandler._specForPostConfirmPIStatus(
+                paymentIntent: paymentIntent,
+                formSpecProvider: formSpecProvider
+            )
+        else {
             return false
         }
         return paymentHandler._isPIStatusSpecFinished(paymentIntentStatusSpec: spec)
     }
 
-    func handleNextActionSpec(for paymentIntent: STPPaymentIntent, action: STPPaymentHandlerPaymentIntentActionParams, paymentHandler: STPPaymentHandler) -> Bool {
-        if let paymentIntentStatusSpec = paymentHandler._specForConfirmResponse(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) {
-            paymentHandler._handleNextActionSpec(forAction: action, paymentIntentStatusSpec: paymentIntentStatusSpec, urlSession: self.urlSession)
+    func handleNextActionSpec(
+        for paymentIntent: STPPaymentIntent,
+        action: STPPaymentHandlerPaymentIntentActionParams,
+        paymentHandler: STPPaymentHandler
+    ) -> Bool {
+        if let paymentIntentStatusSpec = paymentHandler._specForConfirmResponse(
+            paymentIntent: paymentIntent,
+            formSpecProvider: formSpecProvider
+        ) {
+            paymentHandler._handleNextActionSpec(
+                forAction: action,
+                paymentIntentStatusSpec: paymentIntentStatusSpec,
+                urlSession: self.urlSession
+            )
             return true
         }
         return false
@@ -47,13 +75,21 @@ extension PaymentSheetFormSpecPaymentHandler: FormSpecPaymentHandler {
 }
 
 extension STPPaymentHandler {
-    func _specForConfirmResponse(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec.ConfirmResponseStatusSpecs? {
-        guard let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider) else {
+    func _specForConfirmResponse(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec
+        .NextActionSpec.ConfirmResponseStatusSpecs?
+    {
+        guard
+            let nextActionSpec = FormSpec.nextActionSpec(
+                paymentIntent: paymentIntent,
+                formSpecProvider: formSpecProvider
+            )
+        else {
             return nil
         }
 
         if let status = paymentIntent.allResponseFields["status"] as? String,
-           let spec = nextActionSpec.confirmResponseStatusSpecs[status] {
+            let spec = nextActionSpec.confirmResponseStatusSpecs[status]
+        {
             return spec
         }
         return nil
@@ -61,7 +97,11 @@ extension STPPaymentHandler {
 
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    func _handleNextActionSpec(forAction action: STPPaymentHandlerPaymentIntentActionParams, paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs, urlSession: URLSession) {
+    func _handleNextActionSpec(
+        forAction action: STPPaymentHandlerPaymentIntentActionParams,
+        paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs,
+        urlSession: URLSession
+    ) {
 
         guard let paymentIntent = action.paymentIntent else {
             assert(false, "Calling _handleNextActionStateSpec without a paymentIntent")
@@ -71,10 +111,13 @@ extension STPPaymentHandler {
         switch paymentIntentStatusSpec.type {
         case .redirect_to_url(let redirectToUrl):
             if let urlString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.urlPath) as? String,
-               let url = URL(string: urlString) {
+                let url = URL(string: urlString)
+            {
 
                 var returnUrl: URL?
-                if let returnString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath) as? String {
+                if let returnString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath)
+                    as? String
+                {
                     returnUrl = URL(string: returnString)
                 }
                 switch redirectToUrl.redirectStrategy {
@@ -93,32 +136,49 @@ extension STPPaymentHandler {
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
                             "STPIntentAction": action.nextAction()?.description ?? ""
-                        ]))
+                        ]
+                    )
+                )
             }
         case .finished:
             action.complete(with: .succeeded, error: nil)
         case .unknown:
-            action.complete(with: .failed, error: _error(for: .intentStatusErrorCode,
-                                                         userInfo: [
-                                                            "STPIntentAction": action.nextAction()?.description ?? ""
-                                                         ]))
+            action.complete(
+                with: .failed,
+                error: _error(
+                    for: .intentStatusErrorCode,
+                    userInfo: [
+                        "STPIntentAction": action.nextAction()?.description ?? ""
+                    ]
+                )
+            )
         }
     }
 
-    func _specForPostConfirmPIStatus(paymentIntent: STPPaymentIntent?, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs? {
+    func _specForPostConfirmPIStatus(paymentIntent: STPPaymentIntent?, formSpecProvider: FormSpecProvider) -> FormSpec
+        .NextActionSpec.PostConfirmHandlingPiStatusSpecs?
+    {
         guard let paymentIntent = paymentIntent,
-              let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent, formSpecProvider: formSpecProvider),
-              let responseSpec = nextActionSpec.postConfirmHandlingPiStatusSpecs,
-              !responseSpec.isEmpty else {
+            let nextActionSpec = FormSpec.nextActionSpec(
+                paymentIntent: paymentIntent,
+                formSpecProvider: formSpecProvider
+            ),
+            let responseSpec = nextActionSpec.postConfirmHandlingPiStatusSpecs,
+            !responseSpec.isEmpty
+        else {
             return nil
         }
         if let status = paymentIntent.allResponseFields["status"] as? String,
-           let spec = responseSpec[status] {
+            let spec = responseSpec[status]
+        {
             return spec
         }
         return nil
     }
-    func _handlePostConfirmPIStatusSpec(forAction action: STPPaymentHandlerPaymentIntentActionParams, paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs) {
+    func _handlePostConfirmPIStatusSpec(
+        forAction action: STPPaymentHandlerPaymentIntentActionParams,
+        paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs
+    ) {
         switch paymentIntentStatusSpec.type {
         case .finished:
             action.complete(with: .succeeded, error: nil)
@@ -128,35 +188,21 @@ extension STPPaymentHandler {
             assert(false, "programming error")
         }
     }
-    func _isPIStatusSpecFinished(paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs) -> Bool {
+    func _isPIStatusSpecFinished(paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs)
+        -> Bool
+    {
         return paymentIntentStatusSpec.type == .finished
-    }
-
-    func followRedirects(to url: URL, urlSession: URLSession) -> URL {
-        let urlRequest = URLRequest(url: url)
-        let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
-
-        var resultingUrl = url
-        let task = urlSession.dataTask(with: urlRequest) { _, response, error in
-            defer {
-                blockingDataTaskSemaphore.signal()
-            }
-            guard error == nil,
-                  let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode),
-                    let responseURL = response?.url else {
-                return
-            }
-            resultingUrl = responseURL
-        }
-        task.resume()
-        blockingDataTaskSemaphore.wait()
-        return resultingUrl
     }
 }
 
 class STPPaymentHandlerURLSessionDelegate: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
-    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+    func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        willPerformHTTPRedirection response: HTTPURLResponse,
+        newRequest request: URLRequest,
+        completionHandler: @escaping (URLRequest?) -> Void
+    ) {
         completionHandler(request)
     }
 }

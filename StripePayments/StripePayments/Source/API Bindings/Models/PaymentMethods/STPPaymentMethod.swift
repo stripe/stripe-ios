@@ -77,6 +77,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// If this is a US Bank Account PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUSBankAccount`), this contains additional details.
     @objc private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
+    /// If this is an Cash App PaymentMethod (i.e. `self.type == STPPaymentMethodTypeCashApp`), this contains additional details.
+    @objc private(set) public var cashApp: STPPaymentMethodCashApp?
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
 
@@ -131,6 +133,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "klarna = \(String(describing: klarna))",
             "affirm = \(String(describing: affirm))",
             "usBankAccount = \(String(describing: usBankAccount))",
+            "cashapp = \(String(describing: cashApp))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -166,6 +169,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "klarna": NSNumber(value: STPPaymentMethodType.klarna.rawValue),
             "affirm": NSNumber(value: STPPaymentMethodType.affirm.rawValue),
             "us_bank_account": NSNumber(value: STPPaymentMethodType.USBankAccount.rawValue),
+            "cashapp": NSNumber(value: STPPaymentMethodType.cashApp.rawValue),
         ]
     }
 
@@ -314,6 +318,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.usBankAccount = STPPaymentMethodUSBankAccount.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "us_bank_account")
+        )
+        paymentMethod.cashApp = STPPaymentMethodCashApp.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "cashapp")
         )
 
         return paymentMethod
