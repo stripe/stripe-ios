@@ -15,6 +15,7 @@ final class PlaygroundMainViewModel: ObservableObject {
     enum Flow: String, CaseIterable, Identifiable {
         case data
         case payments
+        case networking
 
         var id: String {
             return rawValue
