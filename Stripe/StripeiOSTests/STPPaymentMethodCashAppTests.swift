@@ -19,8 +19,9 @@ class STPPaymentMethodCashAppTests: XCTestCase {
             withClientSecret: Self.cashAppPaymentIntentClientSecret,
             expand: ["payment_method"]
         ) { paymentIntent, _ in
-            let cashAppJson = paymentIntent?.paymentMethod?.cashApp?.allResponseFields
-            completion(cashAppJson ?? [:])
+            XCTAssertNotNil(paymentIntent?.paymentMethod?.allResponseFields["cashapp"])
+            let cashAppJson = try? XCTUnwrap(paymentIntent?.paymentMethod?.cashApp?.allResponseFields)
+            completion(cashAppJson)
         }
     }
 

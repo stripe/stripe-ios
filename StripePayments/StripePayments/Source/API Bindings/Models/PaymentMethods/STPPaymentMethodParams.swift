@@ -516,7 +516,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
-    /// Creates params for an Cash App PaymentMethod. :nodoc:
+    /// Creates params for an Cash App PaymentMethod.
     /// - Parameters:
     ///   - cashApp:   An object containing additional Cash App details.
     ///   - billingDetails:      An object containing the user's billing details.

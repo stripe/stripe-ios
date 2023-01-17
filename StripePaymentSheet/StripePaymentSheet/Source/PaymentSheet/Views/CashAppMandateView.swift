@@ -5,7 +5,6 @@
 //  Created by Nick Porter on 1/10/23.
 //
 
-import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
