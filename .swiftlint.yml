@@ -23,21 +23,22 @@ disabled_rules:
   - function_parameter_count
   - multiple_closures_with_trailing_closure
   - inclusive_language
-  # Rules to enable after initial cleanup.
-  - line_length
-  - shorthand_operator
-  - for_where  
-  - xctfail_message
-  - empty_count
-  - overridden_super_call
-  - redundant_string_enum_value
-  - no_fallthrough_only
-  - class_delegate_protocol
-  - closure_parameter_position
-  - reduce_boolean
-  - unused_setter_value
-  - notification_center_detachment
-  - private_outlet
+  # The following rules were disabled during the initial cleanup, if it causes too much trouble to fix
+  # violations in future changes they can be disabled on a case by case basis.
+  # - line_length
+  # - shorthand_operator
+  # - for_where  
+  # - xctfail_message
+  # - empty_count
+  # - overridden_super_call
+  # - redundant_string_enum_value
+  # - no_fallthrough_only
+  # - class_delegate_protocol
+  # - closure_parameter_position
+  # - reduce_boolean
+  # - unused_setter_value
+  # - notification_center_detachment
+  # - private_outlet
 
 opt_in_rules:
   - colon
@@ -61,7 +62,13 @@ opt_in_rules:
   - trailing_semicolon
   - trailing_whitespace
   - closure_spacing
-  # Rules to enable after initial cleanup.
+  - weak_delegate
+  - discouraged_object_literal
+  - unowned_variable_capture
+  - indentation_width
+  - single_test_class
+  # The following rules were disabled during the initial cleanup, if it causes too much trouble to fix
+  # violations in future changes they can be disabled on a case by case basis.
   # - weak_delegate
   # - discouraged_object_literal
   # - unowned_variable_capture
@@ -76,6 +83,11 @@ excluded:
   - vendor
   - build*
   - .build
+
+line_length:
+  ignores_comments: true
+  ignores_urls: true
+  ignores_interpolated_strings: true
 
 identifier_name:
   allowed_symbols: _
