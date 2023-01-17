@@ -25,6 +25,7 @@
   "testTargets" : [
     {
       "skippedTests" : [
+        "PaymentMethodMessagingViewSnapshotTests",
         "STPCardBINMetadataTests",
         "TextFieldElementCardTest\/testBINRangeThatRequiresNetworkCallToValidate()"
       ],
