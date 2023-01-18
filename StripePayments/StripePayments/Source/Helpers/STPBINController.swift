@@ -188,7 +188,7 @@ extension STPBINRange {
     /// Returns the shortest possible card number length for the brand
     @_spi(STP) public func minCardNumberLength(for brand: STPCardBrand) -> Int {
         switch brand {
-        case .visa, .amex, .mastercard, .discover, .JCB, .dinersClub:
+        case .visa, .amex, .mastercard, .discover, .JCB, .dinersClub, .cartesBancaires:
             return allRanges().reduce(Int.max) { currentMinimum, range in
                 if range.brand == brand {
                     return min(currentMinimum, Int(range.panLength))
@@ -303,7 +303,75 @@ extension STPBINRange {
                 )
             }
         })
+    }
 
+
+    @_spi(STP) public func retrieveBINRangesForCBC(
+        forPrefix binPrefix: String,
+        recordErrorsAsSuccess: Bool = true,
+        completion: @escaping STPRetrieveBINRangesCompletionBlock
+    ) {
+        self._retrievalQueue.async(execute: {
+            let binPrefixKey = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest)
+            if self.sRetrievedRanges[binPrefixKey] != nil
+                || (binPrefixKey.count) < kPrefixLengthForMetadataRequest
+                || self.isInvalidBINPrefix(binPrefixKey)
+//                || !self.isVariableLengthBINPrefix(binPrefix)
+            {
+                // if we already have a metadata response or the binPrefix isn't long enough to make a request,
+                // or we know that this is not a valid BIN prefix
+                // or we know this isn't a BIN prefix that could contain variable length BINs
+                // return the bin ranges we already have on device
+                DispatchQueue.main.async(execute: {
+                    completion(.success(self.binRanges(forNumber: binPrefix)))
+                })
+            } else if self.sPendingRequests[binPrefixKey] != nil {
+                // A request for this prefix is already in flight, add the completion block to sPendingRequests
+                if let sPendingRequest = self.sPendingRequests[binPrefixKey] {
+                    self.sPendingRequests[binPrefixKey] = sPendingRequest + [completion]
+                }
+            } else {
+
+                self.sPendingRequests[binPrefixKey] = [completion]
+
+                STPBINRange.retrieve(
+                    forPrefix: binPrefixKey,
+                    completion: { result in
+                        self._retrievalQueue.async(execute: {
+                            let ranges = result.map { $0.data }
+                            let completionBlocks = self.sPendingRequests[binPrefixKey]
+
+                            self.sPendingRequests.removeValue(forKey: binPrefixKey)
+
+                            if recordErrorsAsSuccess {
+                                // The following is a comment for STPCardFormView/STPPaymentCardTextField:
+                                // we'll record this response even if there was an error
+                                // this will prevent our validation from getting stuck thinking we don't
+                                // have enough info if the metadata service is down or unreachable
+                                // Could improve this in the future with "smart" retries
+                                self.sRetrievedRanges[binPrefixKey] = (try? ranges.get()) ?? []
+                            } else if let ranges = try? ranges.get(), !ranges.isEmpty {
+                                self.sRetrievedRanges[binPrefixKey] = ranges
+                            }
+                            self._performSync(withAllRangesLock: {
+                                self.sAllRanges =
+                                    self.sAllRanges + ((try? ranges.get()) ?? [])
+                            })
+
+                            if case .failure = ranges {
+                                STPAnalyticsClient.sharedClient.logCardMetadataResponseFailure()
+                            }
+
+                            DispatchQueue.main.async(execute: {
+                                for block in completionBlocks ?? [] {
+                                    block(ranges)
+                                }
+                            })
+                        })
+                    }
+                )
+            }
+        })
     }
 
     // MARK: - Class Utilities

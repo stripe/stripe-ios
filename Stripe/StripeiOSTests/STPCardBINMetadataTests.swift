@@ -22,7 +22,7 @@ class STPCardBINMetadataTests: XCTestCase {
 
         // 625035 is a randomly selected UnionPay BIN
         STPBINRange.retrieve(
-            forPrefix: "625035",
+            forPrefix: "513017",
             completion: { result in
                 let cardMetadata = try! result.get()
                 XCTAssertTrue(cardMetadata.data.count > 0)

@@ -121,7 +121,7 @@ public class STPImageLibrary: NSObject {
             imageName = shouldUseTemplate ? "stp_card_mastercard_template" : "stp_card_mastercard"
         case .unionPay:
             imageName = shouldUseTemplate ? "stp_card_unionpay_template" : "stp_card_unionpay"
-        case .unknown:
+        case .cartesBancaires, .unknown:
             shouldUseTemplate = true
             imageName = "stp_card_unknown"
         case .visa:

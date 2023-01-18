@@ -110,7 +110,7 @@ class STPImageLibraryTestSwift: XCTestCase {
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unionpay", templateIfAvailable: false)
                 )
-            case .unknown:
+            case .unknown, .cartesBancaires:
                 STPAssertEqualImages(
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: false)
@@ -180,7 +180,7 @@ class STPImageLibraryTestSwift: XCTestCase {
                         templateIfAvailable: true
                     )
                 )
-            case .unknown:
+            case .unknown, .cartesBancaires:
                 STPAssertEqualImages(
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unknown", templateIfAvailable: true)

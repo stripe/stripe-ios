@@ -97,7 +97,7 @@ extension STPCardBrand {
             imageName = "card_diners"
         case .unionPay:
             imageName = "card_unionpay"
-        case .unknown:
+        case .cartesBancaires, .unknown:
             imageName = "card_unknown"
         @unknown default:
             imageName = "card_unknown"

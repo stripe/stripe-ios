@@ -145,6 +145,12 @@ public class STPCardValidator: NSObject {
         return .unknown
     }
 
+//    @objc(brandsForBIN:)
+//    public class func brands(forBin binNumber: String) -> [STPCardBrand] {
+//        let sanitizedNumber = self.sanitizedNumericString(for: binNumber)
+//
+//    }
+
     /// The possible number lengths for cards associated with a card brand. For
     /// example, Discover card numbers contain 16 characters, while American Express
     /// cards contain 15 characters.
@@ -412,6 +418,17 @@ public class STPCardValidator: NSObject {
         var brands = binRanges.map { $0.brand }
         brands.removeAll { $0 == .unknown }
         return Set(brands)
+    }
+
+    class func possibleBrands(forNumber cardNumber: String,
+                              completion: @escaping (Set<STPCardBrand>) -> Void) {
+        let binController = STPBINController()
+        binController.retrieveBINRangesForCBC(forPrefix: cardNumber) { result in
+            let binRanges = binController.binRanges(forNumber: cardNumber)
+            var brands = binRanges.map { $0.brand }
+            brands.removeAll { $0 == .unknown }
+            completion(Set(brands))
+        }
     }
 
     class func currentYear() -> Int {
