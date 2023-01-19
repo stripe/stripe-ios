@@ -150,6 +150,7 @@ class ConsentViewController: UIViewController {
                 let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
                 let consentBottomSheetModel = ConsentBottomSheetModel(
                     title: dataAccessNoticeModel.title,
+                    subtitle: dataAccessNoticeModel.subtitle,
                     body: ConsentBottomSheetModel.Body(
                         bullets: dataAccessNoticeModel.body.bullets
                     ),
@@ -167,6 +168,7 @@ class ConsentViewController: UIViewController {
                 let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                 let consentBottomSheetModel = ConsentBottomSheetModel(
                     title: legalDetailsNoticeModel.title,
+                    subtitle: nil,
                     body: ConsentBottomSheetModel.Body(
                         bullets: legalDetailsNoticeModel.body.bullets
                     ),
