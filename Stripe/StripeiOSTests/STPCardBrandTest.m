@@ -25,6 +25,7 @@
                                     @(STPCardBrandMastercard),
                                     @(STPCardBrandUnionPay),
                                     @(STPCardBrandVisa),
+                                    @(STPCardBrandCartesBancaires),
                                     @(STPCardBrandUnknown),
                                     ];
 

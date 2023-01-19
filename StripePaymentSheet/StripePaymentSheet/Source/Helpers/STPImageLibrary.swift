@@ -97,6 +97,7 @@ extension STPCardBrand {
             imageName = "card_diners"
         case .unionPay:
             imageName = "card_unionpay"
+        // TODO: Fix CartesBancaires - This was added for RUN_MOBILESDK-1927
         case .cartesBancaires, .unknown:
             imageName = "card_unknown"
         @unknown default:

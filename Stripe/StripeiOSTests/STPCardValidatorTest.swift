@@ -118,17 +118,6 @@ class STPCardValidatorTest: XCTestCase {
             XCTAssertEqual(STPCardValidator.sanitizedNumericString(for: test[0]), test[1])
         }
     }
-    func testPossibleBrands() {
-        let expectation1 = expectation(description: "retreiveBinRanges")
-
-        StripeAPI.defaultPublishableKey = STPTestingDefaultPublishableKey
-
-        STPCardValidator.possibleBrands(forNumber: "497982", completion: { brands in
-            print("brands:\(brands)")
-            expectation1.fulfill()
-        })
-        wait(for: [expectation1], timeout: 100)
-    }
 
     func testNumberValidation() {
         var tests: [(STPCardValidationState, String)] = []

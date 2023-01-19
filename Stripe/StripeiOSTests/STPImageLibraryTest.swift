@@ -110,6 +110,7 @@ class STPImageLibraryTestSwift: XCTestCase {
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unionpay", templateIfAvailable: false)
                 )
+            // TODO: Fix CartesBancaires - This was added for RUN_MOBILESDK-1927
             case .unknown, .cartesBancaires:
                 STPAssertEqualImages(
                     image,
@@ -180,6 +181,7 @@ class STPImageLibraryTestSwift: XCTestCase {
                         templateIfAvailable: true
                     )
                 )
+            // TODO: Fix CartesBancaires - This was added for RUN_MOBILESDK-1927
             case .unknown, .cartesBancaires:
                 STPAssertEqualImages(
                     image,

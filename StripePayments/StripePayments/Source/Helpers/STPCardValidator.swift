@@ -145,12 +145,6 @@ public class STPCardValidator: NSObject {
         return .unknown
     }
 
-//    @objc(brandsForBIN:)
-//    public class func brands(forBin binNumber: String) -> [STPCardBrand] {
-//        let sanitizedNumber = self.sanitizedNumericString(for: binNumber)
-//
-//    }
-
     /// The possible number lengths for cards associated with a card brand. For
     /// example, Discover card numbers contain 16 characters, while American Express
     /// cards contain 15 characters.
