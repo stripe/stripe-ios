@@ -102,6 +102,7 @@ extension PaymentSheet {
     /// - Parameter content: The content of the view.
     public struct PaymentButton<Content: View>: View {
         private let paymentSheet: PaymentSheet
+        private let contentTapped: () -> Void
         private let onCompletion: (PaymentSheetResult) -> Void
         private let content: Content
 
@@ -110,10 +111,12 @@ extension PaymentSheet {
         /// Initialize a `PaymentButton` with required parameters.
         public init(
             paymentSheet: PaymentSheet,
+            contentTapped: @escaping () -> Void,
             onCompletion: @escaping (PaymentSheetResult) -> Void,
             @ViewBuilder content: () -> Content
         ) {
             self.paymentSheet = paymentSheet
+            self.contentTapped = contentTapped
             self.onCompletion = onCompletion
             self.content = content()
         }
@@ -121,6 +124,7 @@ extension PaymentSheet {
         public var body: some View {
             Button(action: {
                 showingPaymentSheet = true
+                contentTapped()
             }) {
                 content
             }.paymentSheet(
