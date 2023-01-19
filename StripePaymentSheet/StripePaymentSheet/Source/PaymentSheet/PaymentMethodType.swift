@@ -205,13 +205,29 @@ extension PaymentSheet {
             }
 
             let paymentTypes = recommendedPaymentMethodTypes.filter {
-                PaymentSheet.PaymentMethodType.supportsAdding(
-                    paymentMethod: $0,
-                    configuration: configuration,
-                    intent: intent,
-                    supportedPaymentMethods: configuration.linkPaymentMethodsOnly
-                        ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
-                )
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    // if using SFU on the PI fallthrough to the setup case
+                    if paymentIntent.setupFutureUsage == .offSession || paymentIntent.setupFutureUsage == .onSession {
+                        fallthrough
+                    }
+
+                    return PaymentSheet.PaymentMethodType.supportsAdding(
+                        paymentMethod: $0,
+                        configuration: configuration,
+                        intent: intent,
+                        supportedPaymentMethods: configuration.linkPaymentMethodsOnly
+                            ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
+                    )
+                case .setupIntent:
+                    return PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
+                        paymentMethod: $0,
+                        configuration: configuration,
+                        intent: intent,
+                        supportedPaymentMethods: configuration.linkPaymentMethodsOnly
+                            ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
+                    )
+                }
             }
 
             let serverFilteredPaymentMethods = Self.recommendedPaymentMethodTypes(

@@ -298,6 +298,26 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types[0], .card)
     }
 
+    func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
+        let paymentIntent = constructPI(
+            paymentMethodTypes: ["card", "klarna", "p24"],
+            orderedPaymentMethodTypes: ["card", "klarna", "p24"],
+            setupFutureUsage: .onSession
+        )!
+        let intent = Intent.paymentIntent(paymentIntent)
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        configuration.allowsDelayedPaymentMethods = true
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            configuration: configuration
+        )
+
+        XCTAssertEqual(types.count, 1)
+        XCTAssertEqual(types[0], .card)
+        // Klarna and P24 do not support save and reuse so they should be filtered out
+    }
+
     func testSetupIntentFilteredPaymentMethodTypes() {
         let setupIntent = constructSI(paymentMethodTypes: ["card", "klarna", "p24"])!
         let intent = Intent.setupIntent(setupIntent)
@@ -308,10 +328,9 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 3)
+        XCTAssertEqual(types.count, 1)
         XCTAssertEqual(types[0], .card)
-        XCTAssertEqual(types[1], .dynamic("klarna"))
-        XCTAssertEqual(types[2], .dynamic("p24"))
+        // Klarna and P24 do not support save and reuse so they should be filtered out
     }
 
     func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
@@ -430,9 +449,10 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     private func constructPI(
         paymentMethodTypes: [String],
-        orderedPaymentMethodTypes: [String]? = nil
+        orderedPaymentMethodTypes: [String]? = nil,
+        setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
     ) -> STPPaymentIntent? {
-        var apiResponse: [AnyHashable: Any] = [
+        var apiResponse: [AnyHashable: Any?] = [
             "id": "123",
             "client_secret": "sec",
             "amount": 10,
@@ -441,13 +461,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             "livemode": false,
             "created": 1652736692.0,
             "payment_method_types": paymentMethodTypes,
+            "setup_future_usage": setupFutureUsage.stringValue,
         ]
         if let orderedPaymentMethodTypes = orderedPaymentMethodTypes {
             apiResponse["ordered_payment_method_types"] = orderedPaymentMethodTypes
         }
         guard
             let stpPaymentIntent = STPPaymentIntent.decodeSTPPaymentIntentObject(
-                fromAPIResponse: apiResponse
+                fromAPIResponse: apiResponse as [AnyHashable: Any]
             )
         else {
             XCTFail("Failed to decode")
