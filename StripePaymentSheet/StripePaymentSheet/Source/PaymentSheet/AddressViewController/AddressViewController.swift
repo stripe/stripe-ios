@@ -20,6 +20,7 @@ public protocol AddressViewControllerDelegate: AnyObject {
 
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
+/// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
 @objc(STPAddressViewController)
 public class AddressViewController: UIViewController {
     // MARK: - Public properties
