@@ -438,4 +438,28 @@ class STPCardValidatorTest: XCTestCase {
             }
         }
     }
+    
+    func testCBCFetch() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let mcExp = expectation(description: "Mastercard")
+        let visaExp = expectation(description: "Visa/CBC")
+        let justVisaExp = expectation(description: "Visa Only")
+        STPCardValidator.possibleBrands(forNumber: "513130") { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, [.cartesBancaires, .mastercard])
+            mcExp.fulfill()
+        }
+        STPCardValidator.possibleBrands(forNumber: "455673") { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, [.cartesBancaires, .visa])
+            visaExp.fulfill()
+        }
+        STPCardValidator.possibleBrands(forNumber: "424242") { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, [.visa])
+            justVisaExp.fulfill()
+        }
+
+        wait(for: [mcExp, visaExp, justVisaExp], timeout: STPTestingNetworkRequestTimeout)
+    }
 }
