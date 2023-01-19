@@ -133,7 +133,7 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accountsPayload):
                     let accounts = accountsPayload.data
-
+                    let shouldSkipAccountSelection = accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false
                     if !accounts.isEmpty {
                         self.dataSource
                             .analyticsClient
@@ -157,7 +157,7 @@ final class AccountPickerViewController: UIViewController {
                                 debugDescription: "API returned an empty list of accounts"
                             )
                         )
-                    } else if self.dataSource.authSession.skipAccountSelection ?? false {
+                    } else if shouldSkipAccountSelection {
                         self.delegate?.accountPickerViewController(
                             self,
                             didSelectAccounts: accounts
