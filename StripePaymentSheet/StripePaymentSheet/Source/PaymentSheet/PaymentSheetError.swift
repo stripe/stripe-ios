@@ -35,7 +35,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
     }
 
     public var debugDescription: String {
-        return "An error ocurred in PaymentSheet. " + {
+        return "An error occured in PaymentSheet. " + {
             switch self {
             case .noPaymentMethodTypesAvailable(let intentPaymentMethods):
                 return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` in your PaymentSheet.Configuration object."
