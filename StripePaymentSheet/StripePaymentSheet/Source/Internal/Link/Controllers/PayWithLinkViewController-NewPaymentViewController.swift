@@ -17,7 +17,7 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_NewPaymentViewController)
     final class NewPaymentViewController: BaseViewController {
-        struct  Constants {
+        struct Constants {
             static let applePayButtonHeight: CGFloat = 48
         }
 
@@ -39,7 +39,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
-            callToAction: context.intent.callToAction,
+            callToAction: context.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
             compact: shouldShowApplePayButton
         ) { [weak self] in
@@ -296,7 +296,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         } else {
             confirmButton.update(
                 state: viewController.paymentOption != nil ? .enabled : .disabled,
-                callToAction: context.intent.callToAction
+                callToAction: context.callToAction
             )
         }
         updateErrorLabel(for: nil)
