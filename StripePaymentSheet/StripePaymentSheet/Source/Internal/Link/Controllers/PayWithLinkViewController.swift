@@ -172,7 +172,7 @@ final class PayWithLinkViewController: UINavigationController {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
             viewController.customNavigationBar.linkAccount = linkAccount
-            viewController.customNavigationBar.showBackButton = viewControllers.count > 0
+            viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
         }
 
         super.pushViewController(viewController, animated: animated)
