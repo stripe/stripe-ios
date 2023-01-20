@@ -1,18 +1,17 @@
 //
-//  ConsentBottomSheetModel.swift
+//  FinancialConnectionsDataAccessNotice.swift
 //  StripeFinancialConnections
 //
-//  Created by Krisjanis Gaidis on 11/17/22.
-//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//  Created by Krisjanis Gaidis on 1/19/23.
 //
 
 import Foundation
 
-struct ConsentBottomSheetModel {
+struct FinancialConnectionsDataAccessNotice: Decodable {
     let title: String
     let subtitle: String?
     let body: Body
-    let extraNotice: String?
+    let connectedAccountNotice: String?
     let learnMore: String
     let cta: String
 

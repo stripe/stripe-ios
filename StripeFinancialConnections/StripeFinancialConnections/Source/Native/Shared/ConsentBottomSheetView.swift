@@ -29,6 +29,7 @@ final class ConsentBottomSheetView: UIView {
             arrangedSubviews: [
                 CreateContentView(
                     headerTitle: model.title,
+                    headerSubtitle: model.subtitle,
                     bulletItems: model.body.bullets,
                     extraNotice: model.extraNotice,
                     learnMoreText: model.learnMore,
@@ -81,6 +82,7 @@ final class ConsentBottomSheetView: UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateContentView(
     headerTitle: String,
+    headerSubtitle: String?,
     bulletItems: [FinancialConnectionsBulletPoint],
     extraNotice: String?,
     learnMoreText: String,
@@ -91,7 +93,8 @@ private func CreateContentView(
             var subviews: [UIView] = []
             subviews.append(
                 CreateHeaderView(
-                    text: headerTitle,
+                    title: headerTitle,
+                    subtitle: headerSubtitle,
                     didSelectURL: didSelectURL
                 )
             )
@@ -131,17 +134,34 @@ private func CreateContentView(
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateHeaderView(
-    text: String,
+    title: String,
+    subtitle: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
+    let verticalStack = UIStackView()
+    verticalStack.axis = .vertical
+    verticalStack.spacing = 4
+
     let headerLabel = ClickableLabel(
         font: .stripeFont(forTextStyle: .heading),
         boldFont: .stripeFont(forTextStyle: .heading),
         linkFont: .stripeFont(forTextStyle: .heading),
         textColor: .textPrimary
     )
-    headerLabel.setText(text, action: didSelectURL)
-    return headerLabel
+    headerLabel.setText(title, action: didSelectURL)
+    verticalStack.addArrangedSubview(headerLabel)
+
+    if let subtitle = subtitle {
+        let subtitleLabel = ClickableLabel(
+            font: .stripeFont(forTextStyle: .body),
+            boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            textColor: .textPrimary
+        )
+        subtitleLabel.setText(subtitle, action: didSelectURL)
+        verticalStack.addArrangedSubview(subtitleLabel)
+    }
+    return verticalStack
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -221,19 +241,20 @@ private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentBottomSheetView {
         ConsentBottomSheetView(
             model: ConsentBottomSheetModel(
-                title: "",
+                title: "When will [Merchant] use your data?",
+                subtitle: "[Merchant] will use your account and routing number, balances and transactions when:",
                 body: ConsentBottomSheetModel.Body(
                     bullets: [
                         FinancialConnectionsBulletPoint(
                             icon: FinancialConnectionsImage(default: nil),
-                            title: "...",
-                            content: "..."
+                            title: nil,
+                            content: "Transferring money between your bank account and Merchant"
                         ),
                     ]
                 ),
                 extraNotice: nil,
-                learnMore: "...",
-                cta: "..."
+                learnMore: "[Learn more](https://www.stripe.com)",
+                cta: "Got it"
             ),
             didSelectOK: {},
             didSelectURL: { _ in }
