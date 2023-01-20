@@ -23,7 +23,7 @@ class PaginatedAPIClient: EmptyFinancialConnectionsAPIClient {
 
     private let count: Int
     private let limit: Int
-    private lazy var accounts: [StripeAPI.FinancialConnectionsAccount] = (0...count-1).map {
+    private lazy var accounts: [StripeAPI.FinancialConnectionsAccount] = (0...count - 1).map {
         StripeAPI.FinancialConnectionsAccount(
             balance: nil,
             balanceRefresh: nil,
@@ -50,15 +50,19 @@ class PaginatedAPIClient: EmptyFinancialConnectionsAPIClient {
         startingAfterAccountId: String?
     ) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
         guard let startingAfterAccountId = startingAfterAccountId, let index = Int(startingAfterAccountId) else {
-            let list = StripeAPI.FinancialConnectionsSession.AccountList(data: subarray(start: 0),
-                                                   hasMore: true)
+            let list = StripeAPI.FinancialConnectionsSession.AccountList(
+                data: subarray(start: 0),
+                hasMore: true
+            )
             return Promise<StripeAPI.FinancialConnectionsSession.AccountList>(value: list)
 
         }
         let subArray = subarray(start: index + 1)
         let hasMore = index + limit < accounts.count - 1
-        let list = StripeAPI.FinancialConnectionsSession.AccountList(data: subArray,
-                                               hasMore: hasMore)
+        let list = StripeAPI.FinancialConnectionsSession.AccountList(
+            data: subArray,
+            hasMore: hasMore
+        )
         return Promise<StripeAPI.FinancialConnectionsSession.AccountList>(value: list)
     }
 
@@ -75,7 +79,10 @@ class PaginatedAPIClient: EmptyFinancialConnectionsAPIClient {
 class AccountFetcherTests: XCTestCase {
 
     func testPaginationMax100() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 120, limit: 1), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 120, limit: 1),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -87,7 +94,10 @@ class AccountFetcherTests: XCTestCase {
     }
 
     func testPaginationUnderLimit() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 3, limit: 1), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 3, limit: 1),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -99,7 +109,10 @@ class AccountFetcherTests: XCTestCase {
     }
 
     func testPaginationUnderLimitLargePageSize() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 3, limit: 10), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 3, limit: 10),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -113,7 +126,10 @@ class AccountFetcherTests: XCTestCase {
     }
 
     func testPaginationUnderLimitSmallPageSize() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 80, limit: 10), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 80, limit: 10),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):

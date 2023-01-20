@@ -11,7 +11,9 @@ import Foundation
 @testable import StripeFinancialConnections
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
-    func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
+    func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
+        StripeAPI.FinancialConnectionsSession.AccountList
+    > {
         return Promise<StripeAPI.FinancialConnectionsSession.AccountList>()
     }
 
@@ -43,11 +45,15 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthSession>()
     }
 
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
+        FinancialConnectionsMixedOAuthParams
+    > {
         return Promise<FinancialConnectionsMixedOAuthParams>()
     }
 
-    func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthSession> {
+    func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<
+        FinancialConnectionsAuthSession
+    > {
         return Promise<FinancialConnectionsAuthSession>()
     }
 
@@ -59,7 +65,9 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
 
-    func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
+    func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String])
+        -> Promise<FinancialConnectionsAuthSessionAccounts>
+    {
         return Promise<FinancialConnectionsAuthSessionAccounts>()
     }
 
