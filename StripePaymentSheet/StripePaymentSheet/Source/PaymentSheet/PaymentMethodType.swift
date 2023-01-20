@@ -205,29 +205,13 @@ extension PaymentSheet {
             }
 
             let paymentTypes = recommendedPaymentMethodTypes.filter {
-                switch intent {
-                case .paymentIntent(let paymentIntent):
-                    // if using SFU on the PI fallthrough to the setup case
-                    if paymentIntent.setupFutureUsage == .offSession || paymentIntent.setupFutureUsage == .onSession {
-                        fallthrough
-                    }
-
-                    return PaymentSheet.PaymentMethodType.supportsAdding(
-                        paymentMethod: $0,
-                        configuration: configuration,
-                        intent: intent,
-                        supportedPaymentMethods: configuration.linkPaymentMethodsOnly
-                            ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
-                    )
-                case .setupIntent:
-                    return PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
-                        paymentMethod: $0,
-                        configuration: configuration,
-                        intent: intent,
-                        supportedPaymentMethods: configuration.linkPaymentMethodsOnly
-                            ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
-                    )
-                }
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: $0,
+                    configuration: configuration,
+                    intent: intent,
+                    supportedPaymentMethods: configuration.linkPaymentMethodsOnly
+                        ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
+                )
             }
 
             let serverFilteredPaymentMethods = Self.recommendedPaymentMethodTypes(
@@ -251,18 +235,35 @@ extension PaymentSheet {
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> Bool {
-            if let stpPaymentMethodType = paymentMethod.stpPaymentMethodType {
-                return PaymentSheet.supportsAdding(
-                    paymentMethod: stpPaymentMethodType,
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                // if using SFU on the PI fallthrough to the setup case
+                if paymentIntent.setupFutureUsage == .offSession || paymentIntent.setupFutureUsage == .onSession {
+                    fallthrough
+                }
+
+                if let stpPaymentMethodType = paymentMethod.stpPaymentMethodType {
+                    return PaymentSheet.supportsAdding(
+                        paymentMethod: stpPaymentMethodType,
+                        configuration: configuration,
+                        intent: intent,
+                        supportedPaymentMethods: supportedPaymentMethods
+                    )
+                } else if case .dynamic = paymentMethod {
+                    return supports(
+                        requirements: paymentMethod.supportsAddingRequirements(),
+                        configuration: configuration,
+                        intent: intent
+                    )
+                }
+
+            case .setupIntent:
+                return PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
+                    paymentMethod: paymentMethod,
                     configuration: configuration,
                     intent: intent,
-                    supportedPaymentMethods: supportedPaymentMethods
-                )
-            } else if case .dynamic = paymentMethod {
-                return supports(
-                    requirements: paymentMethod.supportsAddingRequirements(),
-                    configuration: configuration,
-                    intent: intent
+                    supportedPaymentMethods: configuration.linkPaymentMethodsOnly
+                        ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
             }
             // TODO: We need a way to model this information in our common model
