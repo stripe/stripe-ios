@@ -121,8 +121,9 @@ public class STPImageLibrary: NSObject {
             imageName = shouldUseTemplate ? "stp_card_mastercard_template" : "stp_card_mastercard"
         case .unionPay:
             imageName = shouldUseTemplate ? "stp_card_unionpay_template" : "stp_card_unionpay"
-        // TODO: Fix CartesBancaires - This was added for RUN_MOBILESDK-1927
-        case .cartesBancaires, .unknown:
+        case .cartesBancaires:
+            imageName = shouldUseTemplate ? "stp_card_cartes_bancaires_template" : "stp_card_cartes_bancaires"
+        case .unknown:
             shouldUseTemplate = true
             imageName = "stp_card_unknown"
         case .visa:
