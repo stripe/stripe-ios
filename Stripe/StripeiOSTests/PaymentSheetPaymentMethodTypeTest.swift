@@ -300,8 +300,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
         let paymentIntent = constructPI(
-            paymentMethodTypes: ["card", "klarna", "p24"],
-            orderedPaymentMethodTypes: ["card", "klarna", "p24"],
+            paymentMethodTypes: ["card", "cashapp"],
+            orderedPaymentMethodTypes: ["card", "cashapp"],
             setupFutureUsage: .onSession
         )!
         let intent = Intent.paymentIntent(paymentIntent)
@@ -315,11 +315,11 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         XCTAssertEqual(types.count, 1)
         XCTAssertEqual(types[0], .card)
-        // Klarna and P24 do not support save and reuse so they should be filtered out
+        // Cash App is not enabled for saving or reuse so it should be filtered out
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {
-        let setupIntent = constructSI(paymentMethodTypes: ["card", "klarna", "p24"])!
+        let setupIntent = constructSI(paymentMethodTypes: ["card", "cashapp"])!
         let intent = Intent.setupIntent(setupIntent)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
@@ -330,7 +330,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         XCTAssertEqual(types.count, 1)
         XCTAssertEqual(types[0], .card)
-        // Klarna and P24 do not support save and reuse so they should be filtered out
+        // Cash App is not enabled for saving or reuse so it should be filtered out
     }
 
     func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
