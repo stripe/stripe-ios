@@ -15,11 +15,11 @@ final class ManualEntryFooterView: UIView {
 
     private(set) lazy var continueButton: Button = {
         let continueButton = Button(configuration: .financialConnectionsPrimary)
-        continueButton.title = "Continue" // TODO: replace with String.Localized.continue when we localize
+        continueButton.title = "Continue"  // TODO: replace with String.Localized.continue when we localize
         continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            continueButton.heightAnchor.constraint(equalToConstant: 56),
+            continueButton.heightAnchor.constraint(equalToConstant: 56)
         ])
         return continueButton
     }()
@@ -30,7 +30,7 @@ final class ManualEntryFooterView: UIView {
 
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                continueButton,
+                continueButton
             ]
         )
         verticalStackView.axis = .vertical

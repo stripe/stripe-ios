@@ -41,7 +41,10 @@ final class InstitutionSearchBar: UIView {
         textField.borderStyle = .none
         // use `NSAttributedString` to be able to change the placeholder color
         textField.attributedPlaceholder = NSAttributedString(
-            string: STPLocalizedString("Search", "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."),
+            string: STPLocalizedString(
+                "Search",
+                "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."
+            ),
             attributes: [
                 .foregroundColor: UIColor.textSecondary,
                 .font: UIFont.stripeFont(forTextStyle: .body),
@@ -160,7 +163,7 @@ extension InstitutionSearchBar: UITextFieldDelegate {
 private func CreateSearchIconView() -> UIView {
     let searchIconImageView = UIImageView()
     searchIconImageView.image = Image.search.makeImage()
-            .withTintColor(.textPrimary)
+        .withTintColor(.textPrimary)
     searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         searchIconImageView.widthAnchor.constraint(equalToConstant: 16),

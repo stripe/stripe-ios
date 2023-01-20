@@ -50,7 +50,7 @@ final class AccountPickerSelectionRowView: UIView {
     }()
 
     private lazy var labelRowView: AccountPickerLabelRowView = {
-       return AccountPickerLabelRowView()
+        return AccountPickerLabelRowView()
     }()
 
     init(
@@ -76,7 +76,7 @@ final class AccountPickerSelectionRowView: UIView {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGestureRecognizer)
 
-        isSelected = false // activate the setter to draw border
+        isSelected = false  // activate the setter to draw border
     }
 
     required init?(coder: NSCoder) {
@@ -124,8 +124,8 @@ private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackVie
 private protocol SelectionView: UIView {
     var isSelected: Bool { get set }
 }
-extension CheckboxView: SelectionView { }
-extension RadioButtonView: SelectionView { }
+extension CheckboxView: SelectionView {}
+extension RadioButtonView: SelectionView {}
 
 #if DEBUG
 

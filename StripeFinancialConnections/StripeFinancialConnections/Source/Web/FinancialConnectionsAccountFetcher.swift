@@ -30,7 +30,9 @@ class FinancialConnectionsAccountAPIFetcher: FinancialConnectionsAccountFetcher 
 
     // MARK: - FinancialConnectionsAccountFetcher
 
-    func fetchAccounts(initial: [StripeAPI.FinancialConnectionsAccount]) -> Future<[StripeAPI.FinancialConnectionsAccount]> {
+    func fetchAccounts(initial: [StripeAPI.FinancialConnectionsAccount]) -> Future<
+        [StripeAPI.FinancialConnectionsAccount]
+    > {
         return fetchAccounts(resultsSoFar: initial)
     }
 }
@@ -43,8 +45,10 @@ extension FinancialConnectionsAccountAPIFetcher {
         resultsSoFar: [StripeAPI.FinancialConnectionsAccount]
     ) -> Future<[StripeAPI.FinancialConnectionsAccount]> {
         let lastId = resultsSoFar.last?.id
-        let promise = api.fetchFinancialConnectionsAccounts(clientSecret: clientSecret,
-                                              startingAfterAccountId: lastId)
+        let promise = api.fetchFinancialConnectionsAccounts(
+            clientSecret: clientSecret,
+            startingAfterAccountId: lastId
+        )
         return promise.chained { list in
             let combinedResults = resultsSoFar + list.data
             guard list.hasMore, combinedResults.count < Constants.maxAccountLimit else {

@@ -23,7 +23,9 @@ final class ManualEntryErrorView: UIView {
             //
             // UIStackView does not do a great job of doing this
             // automatically.
-            .withAlignmentRectInsets(UIEdgeInsets(top: -warningIconInsets, left: 0, bottom: warningIconInsets, right: 0))
+            .withAlignmentRectInsets(
+                UIEdgeInsets(top: -warningIconInsets, left: 0, bottom: warningIconInsets, right: 0)
+            )
         warningIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             warningIconImageView.widthAnchor.constraint(equalToConstant: warningIconWidthAndHeight),

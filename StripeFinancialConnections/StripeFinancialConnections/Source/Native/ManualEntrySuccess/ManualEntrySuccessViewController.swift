@@ -43,13 +43,28 @@ final class ManualEntrySuccessViewController: UIViewController {
 
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
             icon: .view(SuccessIconView()),
-            title: STPLocalizedString("Micro-deposits initiated", "The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account."),
+            title: STPLocalizedString(
+                "Micro-deposits initiated",
+                "The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account."
+            ),
             subtitle: {
                 let subtitle: String
                 if microdepositVerificationMethod == .descriptorCode {
-                    subtitle = String(format: STPLocalizedString("Expect a $0.01 deposit to the account ending in ****%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
+                    subtitle = String(
+                        format: STPLocalizedString(
+                            "Expect a $0.01 deposit to the account ending in ****%@ in 1-2 business days and an email with additional instructions to verify your bank account.",
+                            "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."
+                        ),
+                        accountNumberLast4
+                    )
                 } else {
-                    subtitle = String(format: STPLocalizedString("Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
+                    subtitle = String(
+                        format: STPLocalizedString(
+                            "Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account.",
+                            "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."
+                        ),
+                        accountNumberLast4
+                    )
                 }
                 return subtitle
             }(),
@@ -73,7 +88,7 @@ final class ManualEntrySuccessViewController: UIViewController {
 
 private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) -> UIView {
     let doneButton = Button(configuration: .financialConnectionsPrimary)
-    doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
+    doneButton.title = "Done"  // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
     doneButton.addTarget(
         buttonTarget,
         action: #selector(ManualEntrySuccessViewController.didSelectDone),
@@ -81,11 +96,11 @@ private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) 
     )
     doneButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        doneButton.heightAnchor.constraint(equalToConstant: 56),
+        doneButton.heightAnchor.constraint(equalToConstant: 56)
     ])
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            doneButton,
+            doneButton
         ]
     )
     verticalStackView.axis = .vertical

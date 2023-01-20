@@ -73,9 +73,18 @@ fileprivate extension PlaceholderViewController {
             label.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 
             // Pin button to the bottom of safe area
-            actionButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: Styling.actionButtonSpacing),
-            actionButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -Styling.actionButtonSpacing),
-            actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Styling.actionButtonSpacing),
+            actionButton.leftAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leftAnchor,
+                constant: Styling.actionButtonSpacing
+            ),
+            actionButton.rightAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.rightAnchor,
+                constant: -Styling.actionButtonSpacing
+            ),
+            actionButton.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                constant: -Styling.actionButtonSpacing
+            ),
         ])
     }
 

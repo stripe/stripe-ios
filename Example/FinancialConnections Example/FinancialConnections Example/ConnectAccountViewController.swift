@@ -59,7 +59,7 @@ class ConnectAccountViewController: UIViewController {
                 }
 
                 self.startFinancialConnections(responseJson: responseJson)
-             }
+            }
         }
         task.resume()
     }
@@ -69,7 +69,7 @@ class ConnectAccountViewController: UIViewController {
             assertionFailure("Did not receive a valid client secret.")
             return
         }
-        guard let publishableKey = responseJson["publishable_key"]  else {
+        guard let publishableKey = responseJson["publishable_key"] else {
             assertionFailure("Did not receive a valid publishable key.")
             return
         }
@@ -77,12 +77,15 @@ class ConnectAccountViewController: UIViewController {
         // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
         STPAPIClient.shared.publishableKey = publishableKey
 
-        financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret, returnURL: "financial-connections-example://redirect")
+        financialConnectionsSheet = FinancialConnectionsSheet(
+            financialConnectionsSessionClientSecret: clientSecret,
+            returnURL: "financial-connections-example://redirect"
+        )
         financialConnectionsSheet?.present(
             from: self,
             completion: { [weak self] result in
                 switch result {
-                case .completed(session: let session):
+                case .completed(let session):
                     let accounts = session.accounts.data.filter { $0.last4 != nil }
                     let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
                     self?.displayAlert("Completed with \(accountInfos.joined(separator: "\n")) accounts")
@@ -92,8 +95,9 @@ class ConnectAccountViewController: UIViewController {
                     self?.displayAlert("Failed!")
                     print(error)
                 }
-                self?.financialConnectionsSheet = nil // clear out strong reference
-            })
+                self?.financialConnectionsSheet = nil  // clear out strong reference
+            }
+        )
         // Re-enable button
         updateButtonState(isLoading: false)
     }

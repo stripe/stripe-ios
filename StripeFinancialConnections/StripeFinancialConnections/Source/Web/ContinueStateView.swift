@@ -27,13 +27,21 @@ class ContinueStateView: UIView {
         backgroundColor = .customBackgroundColor
 
         let paneLayoutView = PaneWithHeaderLayoutView(
-            icon: .view({
-                let institutionIconView = InstitutionIconView(size: .large)
-                institutionIconView.setImageUrl(institutionImageUrl)
-                return institutionIconView
-            }()),
-            title: STPLocalizedString("Continue linking your account", "Title for a label of a screen telling users to tap below to continue linking process."),
-            subtitle: STPLocalizedString("You haven't finished linking your account. Press continue to finish the process.", "Title for a label explaining that the linking process hasn't finished yet."),
+            icon: .view(
+                {
+                    let institutionIconView = InstitutionIconView(size: .large)
+                    institutionIconView.setImageUrl(institutionImageUrl)
+                    return institutionIconView
+                }()
+            ),
+            title: STPLocalizedString(
+                "Continue linking your account",
+                "Title for a label of a screen telling users to tap below to continue linking process."
+            ),
+            subtitle: STPLocalizedString(
+                "You haven't finished linking your account. Press continue to finish the process.",
+                "Title for a label explaining that the linking process hasn't finished yet."
+            ),
             contentView: {
                 let clearView = UIView()
                 clearView.backgroundColor = .clear
@@ -60,11 +68,11 @@ private func CreateFooterView(
     view: ContinueStateView
 ) -> UIView {
     let continueButton = Button(configuration: .financialConnectionsPrimary)
-    continueButton.title = "Continue" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
+    continueButton.title = "Continue"  // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
     continueButton.addTarget(view, action: #selector(ContinueStateView.didSelectContinueButton), for: .touchUpInside)
     continueButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        continueButton.heightAnchor.constraint(equalToConstant: 56),
+        continueButton.heightAnchor.constraint(equalToConstant: 56)
     ])
 
     let footerStackView = UIStackView()

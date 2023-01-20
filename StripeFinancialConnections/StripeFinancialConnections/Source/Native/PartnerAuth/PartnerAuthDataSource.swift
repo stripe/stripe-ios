@@ -74,28 +74,38 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             }
     }
 
-    private func cancelAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
+    private func cancelAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<
+        FinancialConnectionsAuthSession
+    > {
         return apiClient.cancelAuthSession(
             clientSecret: clientSecret,
             authSessionId: authSession.id
         )
     }
 
-    func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
+    func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
+    {
         return apiClient.fetchAuthSessionOAuthResults(
             clientSecret: clientSecret,
             authSessionId: authSession.id
         )
-        .chained(on: DispatchQueue.main, using: { [weak self] mixedOAuthParameters in
-            guard let self = self else {
-                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "\(PartnerAuthDataSourceImplementation.self) deallocated."))
+        .chained(
+            on: DispatchQueue.main,
+            using: { [weak self] mixedOAuthParameters in
+                guard let self = self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(
+                            debugDescription: "\(PartnerAuthDataSourceImplementation.self) deallocated."
+                        )
+                    )
+                }
+                return self.apiClient.authorizeAuthSession(
+                    clientSecret: self.clientSecret,
+                    authSessionId: authSession.id,
+                    publicToken: mixedOAuthParameters.publicToken
+                )
             }
-            return self.apiClient.authorizeAuthSession(
-                clientSecret: self.clientSecret,
-                authSessionId: authSession.id,
-                publicToken: mixedOAuthParameters.publicToken
-            )
-        })
+        )
     }
 
     func recordAuthSessionEvent(
@@ -121,9 +131,9 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
 }
 
 private func ShouldRecordAuthSessionEvent() -> Bool {
-#if targetEnvironment(simulator)
-return false
-#else
-return NSClassFromString("XCTest") == nil
-#endif
+    #if targetEnvironment(simulator)
+    return false
+    #else
+    return NSClassFromString("XCTest") == nil
+    #endif
 }

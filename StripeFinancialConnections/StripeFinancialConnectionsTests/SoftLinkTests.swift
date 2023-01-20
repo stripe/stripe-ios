@@ -11,7 +11,9 @@ import XCTest
 
 class SoftLinkTest: XCTestCase {
     func testLoadingImplementationClass() {
-        let klass = NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation") as? FinancialConnectionsSDKInterface.Type
+        let klass =
+            NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
+            as? FinancialConnectionsSDKInterface.Type
         XCTAssertNotNil(klass)
     }
 }

@@ -86,8 +86,7 @@ final class APIPollingHelper<Value> {
                 case .success:
                     self.originalPromise.fullfill(with: result)
                 case .failure(let error):
-                    if
-                        self.numberOfRetriesLeft > 0,
+                    if self.numberOfRetriesLeft > 0,
                         let error = error as? StripeError,
                         case .apiError(let apiError) = error,
                         // we want to retry in the case of a 202

@@ -14,7 +14,10 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 protocol ConsentViewControllerDelegate: AnyObject {
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController)
-    func consentViewController(_ viewController: ConsentViewController, didConsentWithManifest manifest: FinancialConnectionsSessionManifest)
+    func consentViewController(
+        _ viewController: ConsentViewController,
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -131,8 +134,7 @@ class ConsentViewController: UIViewController {
     // this function will get called when user taps
     // on ANY link returned from backend
     private func didSelectURL(_ url: URL) {
-        if
-            let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
+        if let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let eventName = urlParameters.queryItems?.first(where: { $0.name == "eventName" })?.value
         {
             dataSource

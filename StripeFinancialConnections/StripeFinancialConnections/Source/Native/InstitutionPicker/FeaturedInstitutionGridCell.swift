@@ -39,7 +39,7 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
             } else {
                 contentView.layer.borderColor = UIColor.borderNeutral.cgColor
 
-                contentView.layer.shadowOpacity = 0 // hide shadow
+                contentView.layer.shadowOpacity = 0  // hide shadow
             }
         }
     }

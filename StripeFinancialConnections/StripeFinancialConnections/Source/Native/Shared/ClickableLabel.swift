@@ -49,7 +49,7 @@ final class ClickableLabel: HitTestView {
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0.0
         textView.linkTextAttributes = [
-            .foregroundColor: UIColor.textBrand,
+            .foregroundColor: UIColor.textBrand
         ]
         textView.delegate = self
         // remove clipping so when user selects an attributed
@@ -60,8 +60,7 @@ final class ClickableLabel: HitTestView {
         // enable faster tap recognizing
         if let gestureRecognizers = textView.gestureRecognizers {
             for gestureRecognizer in gestureRecognizers {
-                if
-                    let tapGestureRecognizer = gestureRecognizer as? UITapGestureRecognizer,
+                if let tapGestureRecognizer = gestureRecognizer as? UITapGestureRecognizer,
                     tapGestureRecognizer.numberOfTapsRequired == 2
                 {
                     // double-tap gesture recognizer causes a delay
@@ -136,7 +135,12 @@ final class ClickableLabel: HitTestView {
 
 extension ClickableLabel: UITextViewDelegate {
 
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
         if let linkAction = linkURLStringToAction[URL.absoluteString] {
             linkAction(URL)
             return false

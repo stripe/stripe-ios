@@ -5,7 +5,7 @@
 //  Created by Krisjanis Gaidis on 10/2/22.
 //
 
-@testable @_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeCore
 @testable import StripeFinancialConnections
 import XCTest
 
@@ -28,7 +28,7 @@ final class APIPollingHelperTests: XCTestCase {
 
         switch result {
         case .success:
-            break // we expect success
+            break  // we expect success
         case .failure:
             XCTFail()
         case .none:
@@ -53,7 +53,7 @@ final class APIPollingHelperTests: XCTestCase {
 
         switch result {
         case .success:
-            break // we expect success
+            break  // we expect success
         case .failure:
             XCTFail()
         case .none:
@@ -79,7 +79,7 @@ final class APIPollingHelperTests: XCTestCase {
 
         switch result {
         case .success:
-            break // we expect success
+            break  // we expect success
         case .failure:
             XCTFail()
         case .none:
@@ -106,7 +106,7 @@ final class APIPollingHelperTests: XCTestCase {
         case .success:
             XCTFail()
         case .failure:
-            break // we expect failure
+            break  // we expect failure
         case .none:
             XCTFail()
         }
@@ -115,7 +115,7 @@ final class APIPollingHelperTests: XCTestCase {
     func testPollingDefaults() throws {
         let dataSource = DataSource(
             numberOfRetriesUntilServerReturnsSuccess: 2,
-            maxNumberOfRetriesClientWillTry: nil // use default polling
+            maxNumberOfRetriesClientWillTry: nil  // use default polling
         )
 
         let expectation = expectation(description: "expect that DataSource 'server' returns a value")
@@ -125,11 +125,11 @@ final class APIPollingHelperTests: XCTestCase {
                 result = apiCallResult
                 expectation.fulfill()
             }
-        wait(for: [expectation], timeout: 10) // add extra time-out to make up for defaults
+        wait(for: [expectation], timeout: 10)  // add extra time-out to make up for defaults
 
         switch result {
         case .success:
-            break // we expect success
+            break  // we expect success
         case .failure:
             XCTFail()
         case .none:
@@ -156,7 +156,7 @@ final class APIPollingHelperTests: XCTestCase {
         case .success:
             XCTFail()
         case .failure:
-            break // we expect failure
+            break  // we expect failure
         case .none:
             XCTFail()
         }
@@ -174,7 +174,7 @@ final class APIPollingHelperTests: XCTestCase {
         wait(for: [secondPollingExpectation], timeout: 5)
         switch secondPollResult {
         case .success:
-            break // we expect to succeed the second time
+            break  // we expect to succeed the second time
         case .failure:
             XCTFail()
         case .none:
@@ -194,7 +194,7 @@ final class APIPollingHelperTests: XCTestCase {
         var apiPollingHelper: APIPollingHelper<TestModel>? = APIPollingHelper(
             apiCall: apiCall,
             pollTimingOptions: APIPollingHelper<TestModel>.PollTimingOptions(
-                initialPollDelay: 0.3 // delay to prevent api from calling immediately
+                initialPollDelay: 0.3  // delay to prevent api from calling immediately
             )
         )
         // after this point `apiPollingHelper` should have a strong reference to itself
@@ -228,7 +228,7 @@ final class APIPollingHelperTests: XCTestCase {
         let apiPollingHelper = APIPollingHelper(
             apiCall: apiCall,
             pollTimingOptions: APIPollingHelper<TestModel>.PollTimingOptions(
-                initialPollDelay: 0.5 // delay to prevent api from calling immediately
+                initialPollDelay: 0.5  // delay to prevent api from calling immediately
             )
         )
         apiPollingHelper.startPollingApiCall()
@@ -268,7 +268,7 @@ private final class DataSource {
 
     init(
         numberOfRetriesUntilServerReturnsSuccess: Int,
-        maxNumberOfRetriesClientWillTry: Int? // null means to use default values
+        maxNumberOfRetriesClientWillTry: Int?  // null means to use default values
     ) {
         self.numberOfRetriesUntilServerReturnsSuccess = numberOfRetriesUntilServerReturnsSuccess
         self.maxNumberOfRetriesClientWillTry = maxNumberOfRetriesClientWillTry
@@ -278,7 +278,8 @@ private final class DataSource {
         let apiCall: () -> Future<TestModel> = { [weak self] in
             guard let self = self else {
                 return Promise(
-                    error: FinancialConnectionsSheetError
+                    error:
+                        FinancialConnectionsSheetError
                         .unknown(
                             debugDescription: "DataSource deallocated."
                         )
@@ -325,7 +326,7 @@ private struct TestModel: Codable {}
 private func Create202Error() -> StripeError {
     let errorJson: [String: Any] = [
         "error": [
-            "type": "api_error",
+            "type": "api_error"
         ],
     ]
     let errorJsonData = try! JSONSerialization.data(

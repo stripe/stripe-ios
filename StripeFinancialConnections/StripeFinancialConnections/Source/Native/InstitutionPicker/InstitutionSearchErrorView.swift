@@ -39,7 +39,7 @@ final class InstitutionSearchErrorView: UIView {
 private func CreateIconView() -> UIView {
     let iconImageView = UIImageView()
     iconImageView.image = Image.warning_triangle.makeImage()
-            .withTintColor(.textSecondary)
+        .withTintColor(.textSecondary)
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         iconImageView.widthAnchor.constraint(equalToConstant: 24),
@@ -72,7 +72,10 @@ private func CreateTitleLabel() -> UIView {
     titleLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
     titleLabel.textColor = .textSecondary
     titleLabel.textAlignment = .center
-    titleLabel.text = STPLocalizedString("Search is currently unavailable", "The title of an error message that appears when a user searches for a bank, but there's an issue, or error.")
+    titleLabel.text = STPLocalizedString(
+        "Search is currently unavailable",
+        "The title of an error message that appears when a user searches for a bank, but there's an issue, or error."
+    )
     return titleLabel
 }
 
@@ -88,17 +91,29 @@ private func CreateSubtitleLabel(
         alignCenter: true
     )
     if let didSelectEnterYourBankDetailsManually = didSelectEnterYourBankDetailsManually {
-        let pleaseTryAgainLaterString = STPLocalizedString("Please try again later or %@.", "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later. '%@' will be replaced by 'enter your bank details manually' to form 'Please try again later or enter your bank details manually.'.")
-        let enterYourBankDetailsManuallyString = STPLocalizedString("enter your bank details manually", "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. This 'part' will be placed into a full string that says 'Please try again later or enter your bank details manually.'")
+        let pleaseTryAgainLaterString = STPLocalizedString(
+            "Please try again later or %@.",
+            "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later. '%@' will be replaced by 'enter your bank details manually' to form 'Please try again later or enter your bank details manually.'."
+        )
+        let enterYourBankDetailsManuallyString = STPLocalizedString(
+            "enter your bank details manually",
+            "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. This 'part' will be placed into a full string that says 'Please try again later or enter your bank details manually.'"
+        )
         subtitleLabel.setText(
-            String(format: pleaseTryAgainLaterString, "[\(enterYourBankDetailsManuallyString)](https://www.use-action-instead.com)"),
+            String(
+                format: pleaseTryAgainLaterString,
+                "[\(enterYourBankDetailsManuallyString)](https://www.use-action-instead.com)"
+            ),
             action: { _ in
                 didSelectEnterYourBankDetailsManually()
             }
         )
     } else {
         subtitleLabel.setText(
-            STPLocalizedString("Please try again later.", "The subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later.")
+            STPLocalizedString(
+                "Please try again later.",
+                "The subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later."
+            )
         )
     }
     return subtitleLabel
