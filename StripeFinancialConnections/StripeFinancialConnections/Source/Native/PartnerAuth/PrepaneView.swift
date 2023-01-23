@@ -28,13 +28,27 @@ final class PrepaneView: UIView {
         backgroundColor = .customBackgroundColor
 
         let paneLayoutView = PaneWithHeaderLayoutView(
-            icon: .view({
-                let institutionIconView = InstitutionIconView(size: .large)
-                institutionIconView.setImageUrl(institutionImageUrl)
-                return institutionIconView
-            }()),
-            title: String(format: STPLocalizedString("Log in to %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
-            subtitle: String(format: STPLocalizedString("Next, you’ll be prompted to log in and select a %@ bank account to link via Stripe.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName),
+            icon: .view(
+                {
+                    let institutionIconView = InstitutionIconView(size: .large)
+                    institutionIconView.setImageUrl(institutionImageUrl)
+                    return institutionIconView
+                }()
+            ),
+            title: String(
+                format: STPLocalizedString(
+                    "Log in to %@",
+                    "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."
+                ),
+                institutionName
+            ),
+            subtitle: String(
+                format: STPLocalizedString(
+                    "Next, you’ll be prompted to log in and select a %@ bank account to link via Stripe.",
+                    "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "
+                ),
+                institutionName
+            ),
             contentView: {
                 let clearView = UIView()
                 clearView.backgroundColor = .clear
@@ -65,11 +79,11 @@ private func CreateFooterView(
     view: PrepaneView
 ) -> UIView {
     let continueButton = Button(configuration: .financialConnectionsPrimary)
-    continueButton.title = "Continue" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
+    continueButton.title = "Continue"  // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
     continueButton.addTarget(view, action: #selector(PrepaneView.didSelectContinueButton), for: .touchUpInside)
     continueButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        continueButton.heightAnchor.constraint(equalToConstant: 56),
+        continueButton.heightAnchor.constraint(equalToConstant: 56)
     ])
 
     let footerStackView = UIStackView()
@@ -107,34 +121,38 @@ private func CreatePartnerDisclosureView(
     horizontalStackView.layer.cornerRadius = 8
 
     if let partnerIcon = partner.icon {
-        horizontalStackView.addArrangedSubview({
-            let partnerIconImageView = UIImageView()
-            partnerIconImageView.image = partnerIcon
-            partnerIconImageView.layer.cornerRadius = 4
-            partnerIconImageView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                partnerIconImageView.widthAnchor.constraint(equalToConstant: 24),
-                partnerIconImageView.heightAnchor.constraint(equalToConstant: 24),
-            ])
-            return partnerIconImageView
-        }())
+        horizontalStackView.addArrangedSubview(
+            {
+                let partnerIconImageView = UIImageView()
+                partnerIconImageView.image = partnerIcon
+                partnerIconImageView.layer.cornerRadius = 4
+                partnerIconImageView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    partnerIconImageView.widthAnchor.constraint(equalToConstant: 24),
+                    partnerIconImageView.heightAnchor.constraint(equalToConstant: 24),
+                ])
+                return partnerIconImageView
+            }()
+        )
     }
 
-    horizontalStackView.addArrangedSubview({
-        let partnerDisclosureLabel = ClickableLabel(
-            font: .stripeFont(forTextStyle: .captionTight),
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-            textColor: .textSecondary
-        )
-        partnerDisclosureLabel.setText(
-            CreatePartnerDisclosureText(
-                partnerName: partner.name,
-                isStripeDirect: isStripeDirect
+    horizontalStackView.addArrangedSubview(
+        {
+            let partnerDisclosureLabel = ClickableLabel(
+                font: .stripeFont(forTextStyle: .captionTight),
+                boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+                linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+                textColor: .textSecondary
             )
-        )
-        return partnerDisclosureLabel
-    }())
+            partnerDisclosureLabel.setText(
+                CreatePartnerDisclosureText(
+                    partnerName: partner.name,
+                    isStripeDirect: isStripeDirect
+                )
+            )
+            return partnerDisclosureLabel
+        }()
+    )
 
     return horizontalStackView
 }
@@ -143,13 +161,20 @@ private func CreatePartnerDisclosureText(
     partnerName: String,
     isStripeDirect: Bool
 ) -> String {
-    let partnersString = String(format: STPLocalizedString("Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.", "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"), partnerName)
+    let partnersString = String(
+        format: STPLocalizedString(
+            "Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.",
+            "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"
+        ),
+        partnerName
+    )
     let learnMoreString = String.Localized.learn_more
     let learnMoreUrlString: String = {
         if isStripeDirect {
             return "https://stripe.com/docs/linked-accounts/faqs"
         } else {
-            return "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
+            return
+                "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
         }
     }()
     return partnersString + " [\(learnMoreString)](\(learnMoreUrlString))"

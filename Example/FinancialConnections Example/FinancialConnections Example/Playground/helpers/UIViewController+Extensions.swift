@@ -28,7 +28,8 @@ extension UIApplication {
 
     @available(iOSApplicationExtension, unavailable)
     fileprivate var customKeyWindow: UIWindow? {
-        let foregroundActiveWindow = connectedScenes
+        let foregroundActiveWindow =
+            connectedScenes
             .filter { $0.activationState == .foregroundActive }
             .first(where: { $0 is UIWindowScene })
             .flatMap({ ($0 as? UIWindowScene) })?.windows
@@ -40,7 +41,8 @@ extension UIApplication {
 
         // There are scenarios (ex. presenting from a notification) when
         // no scenes are `foregroundActive` so here we ignore the parameter
-        return connectedScenes
+        return
+            connectedScenes
             .first(where: { $0 is UIWindowScene })
             .flatMap({ ($0 as? UIWindowScene) })?.windows
             .first(where: \.isKeyWindow)

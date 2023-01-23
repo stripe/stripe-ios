@@ -41,7 +41,7 @@ struct FinancialConnectionsSheetClosedAnalytic: FinancialConnectionsSheetAnalyti
 
     var additionalParams: [String: Any] {
         return [
-            "session_result": result,
+            "session_result": result
         ]
     }
 }

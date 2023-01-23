@@ -29,8 +29,12 @@ final public class FinancialConnectionsSheet {
 
     @frozen public enum TokenResult {
         // User completed the financialConnections session
-        case completed(result: (session: StripeAPI.FinancialConnectionsSession,
-                                token: StripeAPI.BankAccountToken?))
+        case completed(
+            result: (
+                session: StripeAPI.FinancialConnectionsSession,
+                token: StripeAPI.BankAccountToken?
+            )
+        )
         // Failed with error
         case failed(error: Error)
         // User canceled out of the financialConnections session
@@ -77,12 +81,18 @@ final public class FinancialConnectionsSheet {
        - returnURL: A URL that redirects back to your application. FinancialConnectionsSheet uses it after completing authentication in another application (such as a bank application or Safari).
      */
     public convenience init(financialConnectionsSessionClientSecret: String, returnURL: String? = nil) {
-        self.init(financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret, returnURL: returnURL, analyticsClient: STPAnalyticsClient.sharedClient)
+        self.init(
+            financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret,
+            returnURL: returnURL,
+            analyticsClient: STPAnalyticsClient.sharedClient
+        )
     }
 
-    init(financialConnectionsSessionClientSecret: String,
-         returnURL: String?,
-         analyticsClient: STPAnalyticsClientProtocol) {
+    init(
+        financialConnectionsSessionClientSecret: String,
+        returnURL: String?,
+        analyticsClient: STPAnalyticsClientProtocol
+    ) {
         self.financialConnectionsSessionClientSecret = financialConnectionsSessionClientSecret
         self.returnURL = returnURL
         self.analyticsClient = analyticsClient
@@ -94,13 +104,15 @@ final public class FinancialConnectionsSheet {
     // MARK: - Public
 
     @available(iOSApplicationExtension, unavailable)
-    public func presentForToken(from presentingViewController: UIViewController,
-                                completion: @escaping (TokenResult) -> Void) {
+    public func presentForToken(
+        from presentingViewController: UIViewController,
+        completion: @escaping (TokenResult) -> Void
+    ) {
         present(from: presentingViewController) { result in
             switch result {
-            case .completed(session: let session):
+            case .completed(let session):
                 completion(.completed(result: (session: session, token: session.bankAccountToken)))
-            case .failed(error: let error):
+            case .failed(let error):
                 completion(.failed(error: error))
             case .canceled:
                 completion(.canceled)
@@ -115,14 +127,19 @@ final public class FinancialConnectionsSheet {
        - completion: Called with the result of the financial connections session after the financial connections  sheet is dismissed.
      */
     @available(iOSApplicationExtension, unavailable)
-    public func present(from presentingViewController: UIViewController,
-                        completion: @escaping (Result) -> Void) {
+    public func present(
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result) -> Void
+    ) {
         // Overwrite completion closure to retain self until called
         let completion: (Result) -> Void = { result in
-            self.analyticsClient.log(analytic: FinancialConnectionsSheetCompletionAnalytic.make(
-                clientSecret: self.financialConnectionsSessionClientSecret,
-                result: result
-            ), apiClient: self.apiClient)
+            self.analyticsClient.log(
+                analytic: FinancialConnectionsSheetCompletionAnalytic.make(
+                    clientSecret: self.financialConnectionsSessionClientSecret,
+                    result: result
+                ),
+                apiClient: self.apiClient
+            )
             completion(result)
             self.completion = nil
         }
@@ -140,9 +157,12 @@ final public class FinancialConnectionsSheet {
 
         if let urlString = returnURL {
             guard URL(string: urlString) != nil else {
-                assertionFailure("invalid returnURL: \(urlString) parameter passed in when creating FinancialConnectionsSheet")
+                assertionFailure(
+                    "invalid returnURL: \(urlString) parameter passed in when creating FinancialConnectionsSheet"
+                )
                 let error = FinancialConnectionsSheetError.unknown(
-                    debugDescription: "invalid returnURL: \(urlString) parameter passed in when creating FinancialConnectionsSheet"
+                    debugDescription:
+                        "invalid returnURL: \(urlString) parameter passed in when creating FinancialConnectionsSheet"
                 )
                 completion(.failed(error: error))
                 return
@@ -158,12 +178,20 @@ final public class FinancialConnectionsSheet {
         )
         hostController?.delegate = self
 
-        analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret), apiClient: apiClient)
+        analyticsClient.log(
+            analytic: FinancialConnectionsSheetPresentedAnalytic(
+                clientSecret: self.financialConnectionsSessionClientSecret
+            ),
+            apiClient: apiClient
+        )
         let navigationController = hostController!.navigationController
         present(navigationController, presentingViewController)
     }
 
-    private func present(_ navigationController: FinancialConnectionsNavigationController, _ presentingViewController: UIViewController) {
+    private func present(
+        _ navigationController: FinancialConnectionsNavigationController,
+        _ presentingViewController: UIViewController
+    ) {
         let toPresent: UIViewController
         let animated: Bool
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -185,16 +213,22 @@ final public class FinancialConnectionsSheet {
 @available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsSheet: HostControllerDelegate {
     func hostController(_ hostController: HostController, viewController: UIViewController, didFinish result: Result) {
-        viewController.dismiss(animated: true, completion: {
-            if let wrapperViewController = self.wrapperViewController {
-                wrapperViewController.dismiss(animated: false, completion: {
+        viewController.dismiss(
+            animated: true,
+            completion: {
+                if let wrapperViewController = self.wrapperViewController {
+                    wrapperViewController.dismiss(
+                        animated: false,
+                        completion: {
+                            self.completion?(result)
+                        }
+                    )
+                    self.wrapperViewController = nil
+                } else {
                     self.completion?(result)
-                })
-                self.wrapperViewController = nil
-            } else {
-                self.completion?(result)
+                }
             }
-        })
+        )
     }
 }
 

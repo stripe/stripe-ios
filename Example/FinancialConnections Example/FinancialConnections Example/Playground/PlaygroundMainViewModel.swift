@@ -93,7 +93,7 @@ final class PlaygroundMainViewModel: ObservableObject {
                     setupPlaygroundResponseJSON: setupPlaygroundResponse
                 ) { result in
                     switch result {
-                    case .completed(session: let session):
+                    case .completed(let session):
                         let accounts = session.accounts.data.filter { $0.last4 != nil }
                         let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
                         UIAlertController.showAlert(
@@ -150,8 +150,7 @@ private func SetupPlayground(
         .dataTask(
             with: urlRequest
         ) { data, response, error in
-            if
-                error == nil,
+            if error == nil,
                 let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
@@ -176,7 +175,7 @@ private func PresentFinancialConnectionsSheet(
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
         fatalError("Did not receive a valid client secret.")
     }
-    guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"]  else {
+    guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"] else {
         fatalError("Did not receive a valid publishable key.")
     }
 
@@ -190,6 +189,7 @@ private func PresentFinancialConnectionsSheet(
         from: UIViewController.topMostViewController()!,
         completion: { result in
             completionHandler(result)
-            _ = financialConnectionsSheet // retain the sheet
-        })
+            _ = financialConnectionsSheet  // retain the sheet
+        }
+    )
 }

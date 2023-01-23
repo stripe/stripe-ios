@@ -12,8 +12,10 @@ protocol FinancialConnectionsAPIClient {
 
     func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize>
 
-    func fetchFinancialConnectionsAccounts(clientSecret: String,
-                                           startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList>
+    func fetchFinancialConnectionsAccounts(
+        clientSecret: String,
+        startingAfterAccountId: String?
+    ) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList>
 
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
 
@@ -27,11 +29,15 @@ protocol FinancialConnectionsAPIClient {
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
 
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams>
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
+        FinancialConnectionsMixedOAuthParams
+    >
 
-    func authorizeAuthSession(clientSecret: String,
-                              authSessionId: String,
-                              publicToken: String?) -> Promise<FinancialConnectionsAuthSession>
+    func authorizeAuthSession(
+        clientSecret: String,
+        authSessionId: String,
+        publicToken: String?
+    ) -> Promise<FinancialConnectionsAuthSession>
 
     func fetchAuthSessionAccounts(
         clientSecret: String,
@@ -39,9 +45,11 @@ protocol FinancialConnectionsAPIClient {
         initialPollDelay: TimeInterval
     ) -> Future<FinancialConnectionsAuthSessionAccounts>
 
-    func selectAuthSessionAccounts(clientSecret: String,
-                                   authSessionId: String,
-                                   selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts>
+    func selectAuthSessionAccounts(
+        clientSecret: String,
+        authSessionId: String,
+        selectedAccountIds: [String]
+    ) -> Promise<FinancialConnectionsAuthSessionAccounts>
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
 
@@ -69,19 +77,25 @@ protocol FinancialConnectionsAPIClient {
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
 
-    func fetchFinancialConnectionsAccounts(clientSecret: String,
-                                           startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
+    func fetchFinancialConnectionsAccounts(
+        clientSecret: String,
+        startingAfterAccountId: String?
+    ) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
         var parameters = ["client_secret": clientSecret]
         if let startingAfterAccountId = startingAfterAccountId {
             parameters["starting_after"] = startingAfterAccountId
         }
-        return self.get(resource: APIEndpointListAccounts,
-                        parameters: parameters)
+        return self.get(
+            resource: APIEndpointListAccounts,
+            parameters: parameters
+        )
     }
 
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
-        return self.get(resource: APIEndpointSessionReceipt,
-                        parameters: ["client_secret": clientSecret])
+        return self.get(
+            resource: APIEndpointSessionReceipt,
+            parameters: ["client_secret": clientSecret]
+        )
     }
 
     func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
@@ -105,7 +119,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let parameters = [
-            "client_secret": clientSecret,
+            "client_secret": clientSecret
         ]
         return self.post(
             resource: APIEndpointConsentAcquired,
@@ -118,8 +132,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "limit": "10",
         ]
-        return self.get(resource: APIEndpointFeaturedInstitutions,
-                        parameters: parameters)
+        return self.get(
+            resource: APIEndpointFeaturedInstitutions,
+            parameters: parameters
+        )
     }
 
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
@@ -128,8 +144,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "query": query,
             "limit": "20",
         ]
-        return self.get(resource: APIEndpointSearchInstitutions,
-                        parameters: parameters)
+        return self.get(
+            resource: APIEndpointSearchInstitutions,
+            parameters: parameters
+        )
     }
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
@@ -151,7 +169,9 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointAuthSessionsCancel, object: body)
     }
 
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
+        FinancialConnectionsMixedOAuthParams
+    > {
         let body = [
             "client_secret": clientSecret,
             "id": authSessionId,
@@ -159,27 +179,31 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         let pollingHelper = APIPollingHelper(
             apiCall: { [weak self] in
                 guard let self = self else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
+                    )
                 }
                 return self.post(resource: APIEndpointAuthSessionsOAuthResults, object: body)
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsMixedOAuthParams>.PollTimingOptions(
                 initialPollDelay: 0,
-                maxNumberOfRetries: 300, // Stripe.js has 600 second timeout, 600 / 2 = 300 retries
+                maxNumberOfRetries: 300,  // Stripe.js has 600 second timeout, 600 / 2 = 300 retries
                 retryInterval: 2.0
             )
         )
         return pollingHelper.startPollingApiCall()
     }
 
-    func authorizeAuthSession(clientSecret: String,
-                              authSessionId: String,
-                              publicToken: String? = nil) -> Promise<FinancialConnectionsAuthSession> {
+    func authorizeAuthSession(
+        clientSecret: String,
+        authSessionId: String,
+        publicToken: String? = nil
+    ) -> Promise<FinancialConnectionsAuthSession> {
         var body = [
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        body["public_token"] = publicToken // not all integrations require public_token
+        body["public_token"] = publicToken  // not all integrations require public_token
         return self.post(resource: APIEndpointAuthSessionsAuthorized, object: body)
     }
 
@@ -195,7 +219,9 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         let pollingHelper = APIPollingHelper(
             apiCall: { [weak self] in
                 guard let self = self else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
+                    )
                 }
                 return self.post(resource: APIEndpointAuthSessionsAccounts, object: body)
             },
@@ -206,9 +232,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return pollingHelper.startPollingApiCall()
     }
 
-    func selectAuthSessionAccounts(clientSecret: String,
-                                   authSessionId: String,
-                                   selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
+    func selectAuthSessionAccounts(
+        clientSecret: String,
+        authSessionId: String,
+        selectedAccountIds: [String]
+    ) -> Promise<FinancialConnectionsAuthSessionAccounts> {
         let body: [String: Any] = [
             "client_secret": clientSecret,
             "id": authSessionId,
@@ -219,14 +247,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let body = [
-            "client_secret": clientSecret,
+            "client_secret": clientSecret
         ]
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
 
     func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
         let body = [
-            "client_secret": clientSecret,
+            "client_secret": clientSecret
         ]
         return self.post(resource: APIEndpointComplete, object: body)
             .chained { (session: StripeAPI.FinancialConnectionsSession) in
@@ -238,10 +266,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         api: self,
                         clientSecret: clientSecret
                     )
-                    return accountAPIFetcher
+                    return
+                        accountAPIFetcher
                         .fetchAccounts(initial: session.accounts.data)
                         .chained { [accountAPIFetcher] accounts in
-                            _ = accountAPIFetcher // retain `accountAPIFetcher` for the duration of the network call
+                            _ = accountAPIFetcher  // retain `accountAPIFetcher` for the duration of the network call
                             return Promise(
                                 value: StripeAPI.FinancialConnectionsSession(
                                     clientSecret: session.clientSecret,
@@ -294,7 +323,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         consumerSessionClientSecret: String? = nil
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         var body: [String: Any] = [
-            "client_secret": clientSecret,
+            "client_secret": clientSecret
         ]
         if let accountNumber = accountNumber, let routingNumber = routingNumber {
             body["type"] = "bank_account"
@@ -305,13 +334,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         } else if let linkedAccountId = linkedAccountId {
             body["type"] = "linked_account"
             body["linked_account"] = [
-                "id": linkedAccountId,
+                "id": linkedAccountId
             ]
-            body["consumer_session_client_secret"] = consumerSessionClientSecret // optional for Link
+            body["consumer_session_client_secret"] = consumerSessionClientSecret  // optional for Link
         } else {
             assertionFailure()
             return Promise(
-                error: FinancialConnectionsSheetError
+                error:
+                    FinancialConnectionsSheetError
                     .unknown(debugDescription: "Invalid usage of \(#function).")
             )
         }
@@ -319,7 +349,9 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         let pollingHelper = APIPollingHelper(
             apiCall: { [weak self] in
                 guard let self = self else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
+                    )
                 }
                 return self.post(resource: APIEndpointAttachPaymentAccount, parameters: body)
             },

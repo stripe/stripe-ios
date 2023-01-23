@@ -72,8 +72,7 @@ extension FinancialConnectionsNavigationController: UINavigationControllerDelega
         didShow viewController: UIViewController,
         animated: Bool
     ) {
-        if
-            let lastInteractivePopGestureRecognizerEndedDate = lastInteractivePopGestureRecognizerEndedDate,
+        if let lastInteractivePopGestureRecognizerEndedDate = lastInteractivePopGestureRecognizerEndedDate,
             Date().timeIntervalSince(lastInteractivePopGestureRecognizerEndedDate) < 0.7,
             let lastShownViewController = lastShownViewController
         {
@@ -102,7 +101,9 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
         if let topViewController = topViewController {
             logNavigationBackEvent(fromViewController: topViewController, source: "navigation_bar_button")
         } else {
-            assertionFailure("Expected a `topViewConroller` to exist for \(FinancialConnectionsNavigationController.self)")
+            assertionFailure(
+                "Expected a `topViewConroller` to exist for \(FinancialConnectionsNavigationController.self)"
+            )
         }
         return true
     }
@@ -123,7 +124,7 @@ extension FinancialConnectionsNavigationController {
         let appearance = UINavigationBarAppearance()
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
         appearance.backgroundColor = .customBackgroundColor
-        appearance.shadowColor = .clear // remove border
+        appearance.shadowColor = .clear  // remove border
         navigationBar.standardAppearance = appearance
         navigationBar.scrollEdgeAppearance = appearance
         navigationBar.compactAppearance = appearance

@@ -29,7 +29,13 @@ final class ManualEntrySuccessTransactionTableView: UIView {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 CreateTableTitleView(
-                    title: String(format: STPLocalizedString("••••%@ BANK STATEMENT", "The title of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The '%@' is replaced by the last 4 digits of a bank account number. For example, it could form '••••6489 BANK STATEMENT'."), accountNumberLast4)
+                    title: String(
+                        format: STPLocalizedString(
+                            "••••%@ BANK STATEMENT",
+                            "The title of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The '%@' is replaced by the last 4 digits of a bank account number. For example, it could form '••••6489 BANK STATEMENT'."
+                        ),
+                        accountNumberLast4
+                    )
                 ),
                 CreateTableView(
                     rows: CreateRows(
@@ -92,7 +98,7 @@ private func CreateRows(
 private func CreateTableTitleView(title: String) -> UIView {
     let iconImageView = UIImageView()
     iconImageView.image = Image.bank.makeImage()
-            .withTintColor(.textSecondary)
+        .withTintColor(.textSecondary)
     NSLayoutConstraint.activate([
         iconImageView.widthAnchor.constraint(equalToConstant: 16),
         iconImageView.heightAnchor.constraint(equalToConstant: 16),
@@ -117,16 +123,25 @@ private func CreateTableTitleView(title: String) -> UIView {
 
 private func CreateTableView(rows: [[Label]]) -> UIView {
     let transactionColumnTuple = CreateColumnView(
-        title: STPLocalizedString("Transaction", "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Transaction' column displays the title of the transaction, for example, 'Groceries.'"),
+        title: STPLocalizedString(
+            "Transaction",
+            "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Transaction' column displays the title of the transaction, for example, 'Groceries.'"
+        ),
         rowLabels: rows.compactMap { $0[0] }
     )
     let amountColumnTuple = CreateColumnView(
-        title: STPLocalizedString("Amount", "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Amount' column displays the currency value for a transaction, for example, '$56.12.'"),
+        title: STPLocalizedString(
+            "Amount",
+            "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Amount' column displays the currency value for a transaction, for example, '$56.12.'"
+        ),
         alignment: .trailing,
         rowLabels: rows.compactMap { $0[1] }
     )
     let typeColumnTuple = CreateColumnView(
-        title: STPLocalizedString("Type", "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Type' column displays the type of transaction, for example, 'VISA' or 'ACH CREDIT'"),
+        title: STPLocalizedString(
+            "Type",
+            "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Type' column displays the type of transaction, for example, 'VISA' or 'ACH CREDIT'"
+        ),
         rowLabels: rows.compactMap { $0[2] }
     )
 
@@ -146,7 +161,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
     // it needs extra spacing to avoid interferring
     // with "Type" column.
     columnHorizontalStackView.setCustomSpacing(10, after: amountColumnTuple.stackView)
-    columnHorizontalStackView.spacing = 1 // otherwise..have "1" spacing
+    columnHorizontalStackView.spacing = 1  // otherwise..have "1" spacing
 
     // Add separator to each column.
     //
@@ -199,7 +214,7 @@ private func CreateColumnView(
 ) -> (stackView: UIStackView, rowViews: [UIView]) {
     let verticalStackView = UIStackView()
     verticalStackView.axis = .vertical
-    verticalStackView.spacing = 4 // spacing for rows
+    verticalStackView.spacing = 4  // spacing for rows
     verticalStackView.alignment = alignment
 
     // Title

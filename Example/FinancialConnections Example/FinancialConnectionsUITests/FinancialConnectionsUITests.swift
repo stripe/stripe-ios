@@ -11,6 +11,7 @@ import XCTest
 final class FinancialConnectionsUITests: XCTestCase {
 
     override func setUpWithError() throws {
+        try super.setUpWithError()
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
         // In UI tests it is usually best to stop immediately when a failure occurs.
@@ -20,6 +21,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        try super.tearDownWithError()
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
@@ -50,7 +52,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         showAuthFlowButton.tap()
 
         let consentAgreeButton = app.buttons["Agree"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0)) // glitch app can take time to lload
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         consentAgreeButton.tap()
 
         let featuredLegacyTestInstitution = app.collectionViews.staticTexts["Test OAuth Institution"]
@@ -62,18 +64,21 @@ final class FinancialConnectionsUITests: XCTestCase {
         prepaneContinueButton.tap()
 
         let accountPickerLinkAccountsButton = app.buttons["Link accounts"]
-        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0)) // wait for accounts to fetch
+        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0))  // wait for accounts to fetch
         accountPickerLinkAccountsButton.tap()
 
         let successPaneDoneButton = app.buttons["Done"]
-        XCTAssertTrue(successPaneDoneButton.waitForExistence(timeout: 120.0)) // wait for accounts to link
+        XCTAssertTrue(successPaneDoneButton.waitForExistence(timeout: 120.0))  // wait for accounts to link
         successPaneDoneButton.tap()
 
         let playgroundSuccessAlert = app.alerts["Success"]
         XCTAssertTrue(playgroundSuccessAlert.waitForExistence(timeout: 60.0))
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
-        XCTAssert(playgroundSuccessAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch.exists)
+        XCTAssert(
+            playgroundSuccessAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
     }
 
     func testPaymentTestModeLegacyNativeAuthFlow() throws {
@@ -103,7 +108,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         showAuthFlowButton.tap()
 
         let consentAgreeButton = app.buttons["Agree"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0)) // glitch app can take time to lload
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         consentAgreeButton.tap()
 
         let featuredLegacyTestInstitution = app.collectionViews.staticTexts["Test Institution"]
@@ -115,18 +120,21 @@ final class FinancialConnectionsUITests: XCTestCase {
         successAccountRow.tap()
 
         let accountPickerLinkAccountButton = app.buttons["Link account"]
-        XCTAssertTrue(accountPickerLinkAccountButton.waitForExistence(timeout: 120.0)) // wait for accounts to fetch
+        XCTAssertTrue(accountPickerLinkAccountButton.waitForExistence(timeout: 120.0))  // wait for accounts to fetch
         accountPickerLinkAccountButton.tap()
 
         let successPaneDoneButton = app.buttons["Done"]
-        XCTAssertTrue(successPaneDoneButton.waitForExistence(timeout: 120.0)) // wait for accounts to link
+        XCTAssertTrue(successPaneDoneButton.waitForExistence(timeout: 120.0))  // wait for accounts to link
         successPaneDoneButton.tap()
 
         let playgroundSuccessAlert = app.alerts["Success"]
         XCTAssertTrue(playgroundSuccessAlert.waitForExistence(timeout: 60.0))
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
-        XCTAssert(playgroundSuccessAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch.exists)
+        XCTAssert(
+            playgroundSuccessAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
     }
 
     // note that this does NOT complete the Auth Flow, but its a decent check on
@@ -158,7 +166,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         showAuthFlowButton.tap()
 
         let consentAgreeButton = app.buttons["Agree"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0)) // glitch app can take time to lload
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         consentAgreeButton.tap()
 
         // find + tap an institution; we add extra institutions in case
@@ -213,7 +221,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         let cancelAlert = app.alerts["Are you sure you want to cancel?"]
         XCTAssertTrue(cancelAlert.waitForExistence(timeout: 60.0))
 
-        let cancelAlertButon =  app.alerts.buttons["Yes, cancel"]
+        let cancelAlertButon = app.alerts.buttons["Yes, cancel"]
         XCTAssertTrue(cancelAlertButon.waitForExistence(timeout: 60.0))
         cancelAlertButon.tap()
 
@@ -250,7 +258,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         showAuthFlowButton.tap()
 
         let consentAgreeButton = app.webViews.buttons["Agree"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0)) // glitch app can take time to load
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to load
         consentAgreeButton.tap()
 
         // find + tap an institution; we add extra institutions in case
@@ -305,8 +313,8 @@ final class FinancialConnectionsUITests: XCTestCase {
 
 extension XCTestCase {
     fileprivate func wait(timeout: TimeInterval) {
-       _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
-   }
+        _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
+    }
 }
 
 extension XCUIElement {

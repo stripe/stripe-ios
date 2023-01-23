@@ -34,7 +34,7 @@ final class ManualEntryCheckView: UIView {
     init() {
         super.init(frame: .zero)
         addSubview(imageView)
-        clipsToBounds = true // we shift `imageView` in the `bounds` of this view, so clip it to bounds
+        clipsToBounds = true  // we shift `imageView` in the `bounds` of this view, so clip it to bounds
     }
 
     required init?(coder: NSCoder) {

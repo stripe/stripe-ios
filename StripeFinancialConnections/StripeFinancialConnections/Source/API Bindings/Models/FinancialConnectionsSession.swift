@@ -26,8 +26,10 @@ public extension StripeAPI {
 
             // MARK: - Internal Init
 
-            internal init(data: [StripeAPI.FinancialConnectionsAccount],
-                          hasMore: Bool) {
+            internal init(
+                data: [StripeAPI.FinancialConnectionsAccount],
+                hasMore: Bool
+            ) {
                 self.data = data
                 self.hasMore = hasMore
             }
@@ -58,7 +60,8 @@ public extension StripeAPI {
                 let container = try decoder.singleValueContainer()
                 if let value = try? container.decode(FinancialConnectionsAccount.self) {
                     self = .linkedAccount(value)
-                } else if let value = try? container.decode(FinancialConnectionsSession.PaymentAccount.BankAccount.self) {
+                } else if let value = try? container.decode(FinancialConnectionsSession.PaymentAccount.BankAccount.self)
+                {
                     self = .bankAccount(value)
                 } else {
                     self = .unparsable
@@ -77,12 +80,14 @@ public extension StripeAPI {
 
         // MARK: - Internal Init
 
-        internal init(clientSecret: String,
-                      id: String,
-                      accounts: FinancialConnectionsSession.AccountList,
-                      livemode: Bool,
-                      paymentAccount: PaymentAccount?,
-                      bankAccountToken: BankAccountToken?) {
+        internal init(
+            clientSecret: String,
+            id: String,
+            accounts: FinancialConnectionsSession.AccountList,
+            livemode: Bool,
+            paymentAccount: PaymentAccount?,
+            bankAccountToken: BankAccountToken?
+        ) {
             self.clientSecret = clientSecret
             self.id = id
             self.accounts = accounts
@@ -111,12 +116,14 @@ public extension StripeAPI {
             } catch {
                 accounts = try container.decode(FinancialConnectionsSession.AccountList.self, forKey: .linkedAccounts)
             }
-            self.init(clientSecret: try container.decode(String.self, forKey: .clientSecret),
-                      id: try container.decode(String.self, forKey: .id),
-                      accounts: accounts,
-                      livemode: try container.decode(Bool.self, forKey: .livemode),
-                      paymentAccount: try? container.decode(PaymentAccount.self, forKey: .paymentAccount),
-                      bankAccountToken: try? container.decode(BankAccountToken.self, forKey: .bankAccountToken))
+            self.init(
+                clientSecret: try container.decode(String.self, forKey: .clientSecret),
+                id: try container.decode(String.self, forKey: .id),
+                accounts: accounts,
+                livemode: try container.decode(Bool.self, forKey: .livemode),
+                paymentAccount: try? container.decode(PaymentAccount.self, forKey: .paymentAccount),
+                bankAccountToken: try? container.decode(BankAccountToken.self, forKey: .bankAccountToken)
+            )
         }
     }
 }

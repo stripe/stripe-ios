@@ -46,8 +46,7 @@ struct UserDefault<Value> {
             return userDefaults.object(forKey: key) as? Value ?? defaultValue
         }
         set {
-            if
-                let optionalWrappedValue = newValue as? OptionalValue,
+            if let optionalWrappedValue = newValue as? OptionalValue,
                 optionalWrappedValue.isNil
             {
                 userDefaults.removeObject(forKey: key)
