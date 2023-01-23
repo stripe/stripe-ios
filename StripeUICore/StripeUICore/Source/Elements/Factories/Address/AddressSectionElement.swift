@@ -321,7 +321,7 @@ import UIKit
         spec.makePostalElement(countryCode: countryCode, defaultValue: address.postalCode, theme: theme) : nil
 
         // Order the address fields according to `fieldOrdering`
-        let addressFields: [TextOrDropdownElement?] = fieldOrdering.reduce([]) { partialResult, fieldType in
+        let addressFields: [Element?] = fieldOrdering.reduce([]) { partialResult, fieldType in
             // This should be a flatMap but I'm having trouble satisfying the compiler
             switch fieldType {
             case .line:
@@ -334,8 +334,10 @@ import UIKit
                 return partialResult + [postalCode]
             }
         }
-        // Set the new address fields, including any additional fields
-        addressSection.elements = ([name] + [country] + [autoCompleteLine] + addressFields + [phone]).compactMap { $0 }
+
+        let initialElements: [Element?] = [name, country, autoCompleteLine]
+        let phoneElement: [Element?] = [phone]
+        addressSection.elements = (initialElements + addressFields + phoneElement).compactMap { $0 }
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.
