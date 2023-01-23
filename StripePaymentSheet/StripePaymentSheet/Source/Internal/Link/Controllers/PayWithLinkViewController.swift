@@ -64,6 +64,7 @@ final class PayWithLinkViewController: UINavigationController {
         let configuration: PaymentSheet.Configuration
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
+        let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
 
         /// Creates a new Context object.
@@ -72,16 +73,19 @@ final class PayWithLinkViewController: UINavigationController {
         ///   - configuration: PaymentSheet configuration.
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
+        ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         init(
             intent: Intent,
             configuration: PaymentSheet.Configuration,
             shouldOfferApplePay: Bool,
-            shouldFinishOnClose: Bool
+            shouldFinishOnClose: Bool,
+            callToAction: ConfirmButton.CallToActionType?
         ) {
             self.intent = intent
             self.configuration = configuration
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
+            self.callToAction = callToAction ?? intent.callToAction
         }
     }
 
@@ -114,14 +118,16 @@ final class PayWithLinkViewController: UINavigationController {
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         shouldOfferApplePay: Bool = false,
-        shouldFinishOnClose: Bool = false
+        shouldFinishOnClose: Bool = false,
+        callToAction: ConfirmButton.CallToActionType? = nil
     ) {
         self.init(
             context: Context(
                 intent: intent,
                 configuration: configuration,
                 shouldOfferApplePay: shouldOfferApplePay,
-                shouldFinishOnClose: shouldFinishOnClose
+                shouldFinishOnClose: shouldFinishOnClose,
+                callToAction: callToAction
             )
         )
     }
@@ -166,7 +172,7 @@ final class PayWithLinkViewController: UINavigationController {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
             viewController.customNavigationBar.linkAccount = linkAccount
-            viewController.customNavigationBar.showBackButton = viewControllers.count > 0
+            viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
         }
 
         super.pushViewController(viewController, animated: animated)

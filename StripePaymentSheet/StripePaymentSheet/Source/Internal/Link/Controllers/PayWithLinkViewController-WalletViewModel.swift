@@ -143,7 +143,7 @@ extension PayWithLinkViewController {
 
         /// CTA
         var confirmButtonCallToAction: ConfirmButton.CallToActionType {
-            return context.intent.callToAction
+            context.callToAction
         }
 
         var confirmButtonStatus: ConfirmButton.Status {
