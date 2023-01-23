@@ -97,6 +97,10 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        // Use server provided active AuthSession.
+        self.authSession = manifest.activeAuthSession
+        // If the server returns active institution use that, otherwise resort to initial institution.
+        self.institution = manifest.activeInstitution ?? manifest.initialInstitution
         didUpdateManifest()
     }
 

@@ -57,6 +57,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let hostedAuthUrl: String?
     let successUrl: String?
     let cancelUrl: String?
+    let activeAuthSession: FinancialConnectionsAuthSession?
     let initialInstitution: FinancialConnectionsInstitution?
     let instantVerificationDisabled: Bool
     let institutionSearchDisabled: Bool
