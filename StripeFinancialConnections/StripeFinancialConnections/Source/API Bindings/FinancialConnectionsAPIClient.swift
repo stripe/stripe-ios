@@ -100,6 +100,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
         let parameters: [String: Any] = [
+            "expand" : ["manifest.active_auth_session"],
             "client_secret": clientSecret,
             "mobile": {
                 var mobileParameters: [String: Any] = [
