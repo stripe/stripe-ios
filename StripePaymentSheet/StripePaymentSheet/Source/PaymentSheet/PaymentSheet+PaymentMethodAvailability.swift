@@ -51,8 +51,7 @@ extension PaymentSheet {
             switch paymentMethod {
             case .blik, .card, .cardPresent, .UPI, .weChatPay:
                 return []
-            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit,
-                .cashApp:
+            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit:
                 return [.returnURL]
             case .USBankAccount:
                 return [.userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod]
@@ -60,7 +59,7 @@ extension PaymentSheet {
                 return [.userSupportsDelayedPaymentMethods]
             case .AUBECSDebit:
                 return [.notSettingUp, .userSupportsDelayedPaymentMethods]
-            case .bancontact, .iDEAL:
+            case .bancontact, .iDEAL, .cashApp:
                 return [.returnURL, .notSettingUp]
             case .SEPADebit:
                 return [.notSettingUp, .userSupportsDelayedPaymentMethods]
