@@ -30,7 +30,7 @@ final class SuccessBodyView: HitTestView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 12
 
-        if linkedAccounts.count > 0 {
+        if !linkedAccounts.isEmpty {
             verticalStackView.addArrangedSubview(
                 CreateInformationBoxView(
                     accountsListView: SuccessAccountListView(

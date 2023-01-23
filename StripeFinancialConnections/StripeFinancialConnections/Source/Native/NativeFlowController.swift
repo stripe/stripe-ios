@@ -224,7 +224,7 @@ extension NativeFlowController {
                     switch result {
                     case .success(let session):
                         let eventType = "object"
-                        if session.accounts.data.count > 0 || session.paymentAccount != nil
+                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
                             self.logCompleteEvent(

@@ -17,8 +17,8 @@ class ConnectAccountViewController: UIViewController {
 
     // MARK: - IBOutlets
 
-    @IBOutlet weak var connectAccountButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var connectAccountButton: UIButton!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Properties
 

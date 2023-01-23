@@ -17,8 +17,8 @@ class CollectBankAccountTokenViewController: UIViewController {
 
     // MARK: - IBOutlets
 
-    @IBOutlet weak var collectBankAccountTokenButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var collectBankAccountTokenButton: UIButton!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Properties
 
