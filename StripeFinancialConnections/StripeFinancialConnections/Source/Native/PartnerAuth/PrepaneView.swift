@@ -107,7 +107,7 @@ private func CreateFooterView(
     prepaneCtaModel: FinancialConnectionsOAuthPrepane.OauthPrepaneCTA,
     view: PrepaneView
 ) -> UIView {
-    let continueButton = Button(configuration: .primary())  // Button(configuration: .financialConnectionsPrimary)
+    let continueButton = Button(configuration: .financialConnectionsPrimary)
     continueButton.title = prepaneCtaModel.text
     continueButton.addTarget(view, action: #selector(PrepaneView.didSelectContinueButton), for: .touchUpInside)
     continueButton.translatesAutoresizingMaskIntoConstraints = false
@@ -140,6 +140,7 @@ private func CreatePartnerDisclosureView(
             {
                 let partnerIconImageView = UIImageView()
                 partnerIconImageView.setImage(with: partnerIconUrlString)
+                partnerIconImageView.clipsToBounds = true
                 partnerIconImageView.layer.cornerRadius = 4
                 partnerIconImageView.translatesAutoresizingMaskIntoConstraints = false
                 NSLayoutConstraint.activate([

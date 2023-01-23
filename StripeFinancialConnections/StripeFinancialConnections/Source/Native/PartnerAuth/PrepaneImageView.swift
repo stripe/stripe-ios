@@ -15,6 +15,8 @@ final class PrepaneImageView: UIView {
     init(imageURLString: String) {
         super.init(frame: .zero)
         backgroundColor = .backgroundContainer
+        clipsToBounds = true
+        layer.cornerRadius = 8.0
 
         // first we load an image (or GIF) into a WebView
         let imageView = GIFImageView(gifUrlString: imageURLString)
@@ -67,7 +69,6 @@ private func CreateCenteringView(centeredView: UIView) -> UIView {
 private final class GIFImageView: UIView, WKNavigationDelegate {
 
     private let webView = WKWebView()
-    private var width: CGFloat = 256
 
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 256, height: 264)
@@ -88,7 +89,6 @@ private final class GIFImageView: UIView, WKNavigationDelegate {
             + "<img src=\"" + gifUrlString + "\" align=\"middle\" style=\"width:100%;height:100%;\">"
             + "</body>"
             + "</html>"
-        webView.navigationDelegate = self
         webView.scrollView.isScrollEnabled = false
         webView.isUserInteractionEnabled = false
         webView.loadHTMLString(htmlString, baseURL: nil)
@@ -98,18 +98,4 @@ private final class GIFImageView: UIView, WKNavigationDelegate {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    //    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-    //        webView.evaluateJavaScript("document.readyState") { [weak webView] complete, error in
-    //            if complete != nil {
-    //                webView?.evaluateJavaScript("document.body.scrollWidth") { [weak self] width, error in
-    //                    guard let width = width as? CGFloat, let self = self else {
-    //                        return
-    //                    }
-    //                    self.width = width
-    //                    self.invalidateIntrinsicContentSize()
-    //                }
-    //            }
-    //        }
-    //    }
 }

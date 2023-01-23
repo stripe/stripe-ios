@@ -23,8 +23,8 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
         struct OauthPrepaneBodyEntry: Decodable {
 
             enum EntryType: String, SafeEnumCodable, Equatable {
-                case text = "text"
-                case image = "image"
+                case text
+                case image
                 case unparsable
             }
 
@@ -38,8 +38,8 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
             }
 
             enum CodingKeys: String, CodingKey {
-                case type = "type"
-                case content = "content"
+                case type
+                case content
             }
 
             init(type: EntryType, content: Any?) {
