@@ -21,6 +21,26 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private let dataSoure: NetworkingLinkSignupDataSource
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
+    private lazy var formView: NetworkingLinkSignupBodyFormView = {
+        return NetworkingLinkSignupBodyFormView()
+    }()
+    private lazy var footerView: NetworkingLinkSignupFooterView = {
+        return NetworkingLinkSignupFooterView(
+            didSelectSaveToLink: {
+
+            },
+            didSelectNotNow: { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.delegate?.networkingLinkSignupViewControllerDidSelectNotNow(self)
+            },
+            didSelectURL: { [weak self] url in
+                self?.didSelectURLInTextFromBackend(url)
+            }
+        )
+    }()
+
     init(dataSource: NetworkingLinkSignupDataSource) {
         self.dataSoure = dataSource
         super.init(nibName: nil, bundle: nil)
@@ -36,22 +56,35 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
         let pane = PaneWithHeaderLayoutView(
             title: "Save your account to Link",
-            contentView: UIView(),
-            footerView: NetworkingLinkSignupFooterView(
-                aboveCtaText: "",
-                ctaText: "Not Now",
-                belowCtaText: nil,
-                didSelectAgree: { [weak self] in
-                    guard let self = self else {
-                        return
-                    }
-                    self.delegate?.networkingLinkSignupViewControllerDidSelectNotNow(self)
-                },
-                didSelectURL: { _ in
-
+            contentView: NetworkingLinkSignupBodyView(
+                bulletPoints: [
+                    FinancialConnectionsBulletPoint(
+                        icon: FinancialConnectionsImage(
+                            default:
+                                "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
+                        ),
+                        content:
+                            "Connect your account faster on [Merchant] and thousands of sites."
+                    ),
+                    FinancialConnectionsBulletPoint(
+                        icon: FinancialConnectionsImage(
+                            default:
+                                "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
+                        ),
+                        content: "Link with Stripe encrypts your data and never shares your login details."
+                    ),
+                ],
+                formView: formView,
+                didSelectURL: { [weak self] url in
+                    self?.didSelectURLInTextFromBackend(url)
                 }
-            )
+            ),
+            footerView: footerView
         )
         pane.addTo(view: view)
+    }
+
+    private func didSelectURLInTextFromBackend(_ url: URL) {
+
     }
 }

@@ -13,32 +13,23 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class NetworkingLinkSignupFooterView: HitTestView {
 
-    private let agreeButtonText: String
-    private let didSelectAgree: () -> Void
+    private let aboveCtaText: String
+    private let saveToLinkButtonText: String
+    private let notNowButtonText: String
+    private let didSelectSaveToLink: () -> Void
+    private let didSelectNotNow: () -> Void
+    private let didSelectURL: (URL) -> Void
 
-    private lazy var agreeButton: StripeUICore.Button = {
-        let agreeButton = Button(configuration: .financialConnectionsPrimary)
-        agreeButton.title = agreeButtonText
-        agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
-        agreeButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            agreeButton.heightAnchor.constraint(equalToConstant: 56)
-        ])
-        return agreeButton
+    private lazy var footerVerticalStackView: UIStackView = {
+        let verticalStackView = UIStackView()
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 16
+        verticalStackView.addArrangedSubview(aboveCtaLabel)
+        verticalStackView.addArrangedSubview(buttonVerticalStack)
+        return verticalStackView
     }()
 
-    init(
-        aboveCtaText: String,
-        ctaText: String,
-        belowCtaText: String?,
-        didSelectAgree: @escaping () -> Void,
-        didSelectURL: @escaping (URL) -> Void
-    ) {
-        self.agreeButtonText = ctaText
-        self.didSelectAgree = didSelectAgree
-        super.init(frame: .zero)
-        backgroundColor = .customBackgroundColor
-
+    private lazy var aboveCtaLabel: ClickableLabel = {
         let termsAndPrivacyPolicyLabel = ClickableLabel(
             font: UIFont.stripeFont(forTextStyle: .detail),
             boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
@@ -50,45 +41,73 @@ class NetworkingLinkSignupFooterView: HitTestView {
             aboveCtaText,
             action: didSelectURL
         )
+        return termsAndPrivacyPolicyLabel
+    }()
 
-        let verticalStackView = HitTestStackView(
-            arrangedSubviews: [
-                termsAndPrivacyPolicyLabel,
-                agreeButton,
-            ]
-        )
+    private lazy var buttonVerticalStack: UIStackView = {
+        let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 20
+        verticalStackView.spacing = 12
+        verticalStackView.addArrangedSubview(saveToLinkButton)
+        verticalStackView.addArrangedSubview(notNowButton)
+        return verticalStackView
+    }()
 
-        if let belowCtaText = belowCtaText {
-            let manuallyVerifyLabel = ClickableLabel(
-                font: UIFont.stripeFont(forTextStyle: .detail),
-                boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-                linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-                textColor: .textSecondary,
-                alignCenter: true
-            )
-            manuallyVerifyLabel.setText(
-                belowCtaText,
-                action: didSelectURL
-            )
-            verticalStackView.addArrangedSubview(manuallyVerifyLabel)
-            verticalStackView.setCustomSpacing(24, after: agreeButton)
-        }
+    private lazy var saveToLinkButton: StripeUICore.Button = {
+        let saveToLinkButton = Button(configuration: .primary())  // Button(configuration: .financialConnectionsPrimary)
+        saveToLinkButton.title = saveToLinkButtonText
+        saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
+        saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
+        ])
+        return saveToLinkButton
+    }()
 
-        addAndPinSubview(verticalStackView)
+    private lazy var notNowButton: StripeUICore.Button = {
+        let saveToLinkButton = Button(configuration: .secondary())  // Button(configuration: .financialConnectionsSecondary)
+        saveToLinkButton.title = notNowButtonText
+        saveToLinkButton.addTarget(self, action: #selector(didSelectNotNowButton), for: .touchUpInside)
+        saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
+        ])
+        return saveToLinkButton
+    }()
+
+    init(
+        aboveCtaText: String = "Stripe's [Terms](www.stripe.com) and [Privacy Policy](www.stripe.com)",
+        saveToLinkButtonText: String = "Save to Link",
+        notNowButtonText: String = "Not now",
+        didSelectSaveToLink: @escaping () -> Void,
+        didSelectNotNow: @escaping () -> Void,
+        didSelectURL: @escaping (URL) -> Void
+    ) {
+        self.aboveCtaText = aboveCtaText
+        self.saveToLinkButtonText = saveToLinkButtonText
+        self.notNowButtonText = notNowButtonText
+        self.didSelectSaveToLink = didSelectNotNow
+        self.didSelectNotNow = didSelectNotNow
+        self.didSelectURL = didSelectURL
+        super.init(frame: .zero)
+        backgroundColor = .customBackgroundColor
+        addAndPinSubview(footerVerticalStackView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func didSelectAgreeButton() {
-        didSelectAgree()
+    @objc private func didSelectSaveToLinkButton() {
+        didSelectSaveToLink()
+    }
+
+    @objc private func didSelectNotNowButton() {
+        didSelectNotNow()
     }
 
     func setIsLoading(_ isLoading: Bool) {
-        agreeButton.isLoading = isLoading
+        saveToLinkButton.isLoading = isLoading
     }
 }
 
@@ -101,11 +120,8 @@ private struct NetworkingLinkSignupFooterViewUIViewRepresentable: UIViewRepresen
 
     func makeUIView(context: Context) -> NetworkingLinkSignupFooterView {
         NetworkingLinkSignupFooterView(
-            aboveCtaText:
-                "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
-            ctaText: "Agree",
-            belowCtaText: "[Manually verify instead](https://www.stripe.com) (takes 1-2 business days)",
-            didSelectAgree: {},
+            didSelectSaveToLink: {},
+            didSelectNotNow: {},
             didSelectURL: { _ in }
         )
     }
@@ -115,17 +131,17 @@ private struct NetworkingLinkSignupFooterViewUIViewRepresentable: UIViewRepresen
     }
 }
 
+@available(iOS 14.0, *)
 @available(iOSApplicationExtension, unavailable)
 struct NetworkingLinkSignupFooterView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack {
-                NetworkingLinkSignupFooterViewUIViewRepresentable()
-                    .frame(maxHeight: 200)
-                Spacer()
-            }
-            .padding()
+        VStack {
+            NetworkingLinkSignupFooterViewUIViewRepresentable()
+                .frame(maxHeight: 200)
+            Spacer()
         }
+        .padding()
+        .frame(maxWidth: .infinity)
     }
 }
 
