@@ -12,7 +12,7 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkSignupBodyView: UIView {
-    
+
     init(
         bulletPoints: [FinancialConnectionsBulletPoint],
         formView: UIView,
@@ -25,14 +25,14 @@ final class NetworkingLinkSignupBodyView: UIView {
                     bulletPoints: bulletPoints,
                     didSelectURL: didSelectURL
                 ),
-                formView
+                formView,
             ]
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 24
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -111,7 +111,10 @@ private struct NetworkingLinkSignupBodyViewUIViewRepresentable: UIViewRepresenta
                         "Connect your account faster on [Merchant] and thousands of sites."
                 ),
                 FinancialConnectionsBulletPoint(
-                    icon: FinancialConnectionsImage(default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"),
+                    icon: FinancialConnectionsImage(
+                        default:
+                            "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
+                    ),
                     content: "Link with Stripe encrypts your data and never shares your login details."
                 ),
             ],

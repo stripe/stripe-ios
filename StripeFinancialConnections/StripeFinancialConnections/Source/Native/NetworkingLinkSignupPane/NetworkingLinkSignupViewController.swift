@@ -22,7 +22,9 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
-        return NetworkingLinkSignupBodyFormView()
+        let formView = NetworkingLinkSignupBodyFormView()
+        formView.delegate = self
+        return formView
     }()
     private lazy var footerView: NetworkingLinkSignupFooterView = {
         return NetworkingLinkSignupFooterView(
@@ -33,6 +35,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 guard let self = self else {
                     return
                 }
+                // TODO(kgaidis): log `click.not_now`
+                // TODO(kgaidis): go to success pane
                 self.delegate?.networkingLinkSignupViewControllerDidSelectNotNow(self)
             },
             didSelectURL: { [weak self] url in
@@ -86,5 +90,29 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
     private func didSelectURLInTextFromBackend(_ url: URL) {
 
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDelegate {
+
+    func networkingLinkSignupBodyFormViewDidEnterValidEmail(_ view: NetworkingLinkSignupBodyFormView) {
+        guard let emailAddress = view.emailAddressTextField.text else {
+            return
+        }
+        print(emailAddress)
+
+        // TODO(kgaidis): first check whether a user with this `emailAddress` already exists...
+        //                this is done via `startVerificationSession` call
+        //                if it exists, we will log `networking.returning_consumer`
+        //                and also go to `networking_save_to_link_verification`
+        //                ...we also need to handle errors
+
+        // if this user with `emailAddress` does NOT exist, we:
+        // - TODO(kgaidis): show the Save to Link button
+
+        dataSoure.analyticsClient.log(eventName: "networking.new_consumer", pane: .networkingLinkSignupPane)
+        formView.showPhoneNumberTextFieldIfNeeded()
+        footerView.showSaveToLinkButtonIfNeeded()
     }
 }

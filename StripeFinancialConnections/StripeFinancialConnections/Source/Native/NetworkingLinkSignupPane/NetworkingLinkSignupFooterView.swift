@@ -48,7 +48,6 @@ class NetworkingLinkSignupFooterView: HitTestView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 12
-        verticalStackView.addArrangedSubview(saveToLinkButton)
         verticalStackView.addArrangedSubview(notNowButton)
         return verticalStackView
     }()
@@ -98,6 +97,15 @@ class NetworkingLinkSignupFooterView: HitTestView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func showSaveToLinkButtonIfNeeded() {
+        guard saveToLinkButton.superview == nil else {
+            return  // already added
+        }
+        notNowButton.removeFromSuperview()
+        buttonVerticalStack.addArrangedSubview(saveToLinkButton)
+        buttonVerticalStack.addArrangedSubview(notNowButton)
+    }
+
     @objc private func didSelectSaveToLinkButton() {
         didSelectSaveToLink()
     }
@@ -107,6 +115,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }
 
     func setIsLoading(_ isLoading: Bool) {
+        // TODO(kgaidis): remove if not necessary
         saveToLinkButton.isLoading = isLoading
     }
 }

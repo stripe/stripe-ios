@@ -31,4 +31,5 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
+
 }
