@@ -6,23 +6,22 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
 import UIKit
 
 /// A field for collecting one-time codes (OTCs).
 /// For internal SDK use only
 @objc(STP_Internal_OneTimeCodeTextField)
-final class OneTimeCodeTextField: UIControl {
-    struct Constants {
+@_spi(STP) public final class OneTimeCodeTextField: UIControl {
+    private struct Constants {
         static let itemSpacing: CGFloat = 6
         static let groupSpacing: CGFloat = 20
     }
 
     /// Total number of digits of the one-time code.
-    let numberOfDigits: Int
+    public let numberOfDigits: Int
 
     /// The one-time code value without formatting.
-    var value: String {
+    public var value: String {
         get {
             return textStorage.value
         }
@@ -32,7 +31,40 @@ final class OneTimeCodeTextField: UIControl {
         }
     }
 
-    var selectedTextRange: UITextRange? {
+    /// A Boolean value indicating whether the user has entered all the digits of the one-time code.
+    public var isComplete: Bool {
+        return textStorage.isFull
+    }
+
+    public override var canBecomeFirstResponder: Bool {
+        return true
+    }
+
+    // MARK: - Private properties
+
+    private let theme: ElementsUITheme
+
+    private let textStorage: TextStorage
+
+    private var shouldGroupDigits: Bool {
+        return numberOfDigits > 4 && numberOfDigits.isMultiple(of: 2)
+    }
+
+    private lazy var digitViews: [DigitView] = (0..<numberOfDigits).map { _ in
+        return DigitView(theme: theme)
+    }
+
+    private let feedbackGenerator = UINotificationFeedbackGenerator()
+
+    // MARK: - UIKeyInput properties
+
+    public var keyboardType: UIKeyboardType = .asciiCapableNumberPad
+
+    public var textContentType: UITextContentType? = .oneTimeCode
+
+    // MARK: - UITextInput properties
+
+    public var selectedTextRange: UITextRange? {
         willSet {
             inputDelegate?.selectionWillChange(self)
         }
@@ -42,38 +74,15 @@ final class OneTimeCodeTextField: UIControl {
         }
     }
 
-    /// A Boolean value indicating whether the user has entered all the digits of the one-time code.
-    var isComplete: Bool {
-        return textStorage.isFull
-    }
+    public var inputDelegate: UITextInputDelegate?
 
-    var keyboardType: UIKeyboardType = .asciiCapableNumberPad
+    public lazy var tokenizer: UITextInputTokenizer = UITextInputStringTokenizer(textInput: self)
 
-    var textContentType: UITextContentType? = .oneTimeCode
-
-    var inputDelegate: UITextInputDelegate?
-
-    lazy var tokenizer: UITextInputTokenizer = UITextInputStringTokenizer(textInput: self)
-
-    private let textStorage: TextStorage
-
-    private var shouldGroupDigits: Bool {
-        return numberOfDigits > 4 && numberOfDigits.isMultiple(of: 2)
-    }
-
-    private lazy var digitViews: [DigitView] = (0..<numberOfDigits).map { _ in
-        return DigitView()
-    }
-
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
-
-    private let feedbackGenerator = UINotificationFeedbackGenerator()
-
-    init(numberOfDigits: Int = 6) {
+    // MARK: -
+    public init(numberOfDigits: Int = 6, theme: ElementsUITheme = .default) {
         self.numberOfDigits = numberOfDigits
         self.textStorage = TextStorage(capacity: numberOfDigits)
+        self.theme = theme
         super.init(frame: .zero)
 
         selectedTextRange = textStorage.endCaretRange
@@ -106,7 +115,7 @@ final class OneTimeCodeTextField: UIControl {
     }
 
     @discardableResult
-    override func becomeFirstResponder() -> Bool {
+    public override func becomeFirstResponder() -> Bool {
         let result = super.becomeFirstResponder()
 
         if result {
@@ -117,7 +126,7 @@ final class OneTimeCodeTextField: UIControl {
     }
 
     @discardableResult
-    override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
         let result = super.resignFirstResponder()
 
         if result {
@@ -128,7 +137,7 @@ final class OneTimeCodeTextField: UIControl {
         return result
     }
 
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
 
         guard let point = touches.first?.location(in: self),
@@ -239,7 +248,7 @@ private extension OneTimeCodeTextField {
 
 // MARK: - UIResponder
 
-extension OneTimeCodeTextField {
+public extension OneTimeCodeTextField {
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return action == #selector(paste(_:)) && UIPasteboard.general.hasStrings
@@ -256,7 +265,7 @@ extension OneTimeCodeTextField {
 
 // MARK: - Animation
 
-extension OneTimeCodeTextField {
+public extension OneTimeCodeTextField {
 
     /// Performs a shake animation, useful for indicating a bad code.
     /// - Parameter shouldClearValue: Whether or not the field's value should be cleared at the end of the animation.
@@ -281,8 +290,8 @@ extension OneTimeCodeTextField {
             let borderColorAnimation = CABasicAnimation(keyPath: "borderColor")
             borderColorAnimation.beginTime = beginTime + (CFTimeInterval(index) * staggerDelay)
             borderColorAnimation.duration = duration / 3
-            borderColorAnimation.fromValue = UIColor.linkSeparator.cgColor
-            borderColorAnimation.toValue = UIColor.systemRed.cgColor
+            borderColorAnimation.fromValue = theme.colors.border.cgColor
+            borderColorAnimation.toValue = theme.colors.danger.cgColor
             borderColorAnimation.fillMode = .forwards
             borderColorAnimation.isRemovedOnCompletion = false
 
@@ -313,11 +322,11 @@ extension OneTimeCodeTextField {
 
 extension OneTimeCodeTextField: UIKeyInput {
 
-    var hasText: Bool {
+    public var hasText: Bool {
         return value.count > 0
     }
 
-    func insertText(_ text: String) {
+    public func insertText(_ text: String) {
         guard let range = selectedTextRange as? TextRange else {
             return
         }
@@ -331,7 +340,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         update()
     }
 
-    func deleteBackward() {
+    public func deleteBackward() {
         guard let range = selectedTextRange as? TextRange else {
             return
         }
@@ -361,12 +370,12 @@ extension OneTimeCodeTextField {
 
 extension OneTimeCodeTextField: UITextInput {
 
-    var markedTextRange: UITextRange? {
+    public var markedTextRange: UITextRange? {
         // We don't support marked text
         return nil
     }
 
-    var markedTextStyle: [NSAttributedString.Key: Any]? {
+    public var markedTextStyle: [NSAttributedString.Key: Any]? {
         get {
             return nil
         }
@@ -375,15 +384,15 @@ extension OneTimeCodeTextField: UITextInput {
         }
     }
 
-    var beginningOfDocument: UITextPosition {
+    public var beginningOfDocument: UITextPosition {
         return textStorage.start
     }
 
-    var endOfDocument: UITextPosition {
+    public var endOfDocument: UITextPosition {
         return textStorage.end
     }
 
-    func text(in range: UITextRange) -> String? {
+    public func text(in range: UITextRange) -> String? {
         guard let range = range as? TextRange else {
             return nil
         }
@@ -391,19 +400,19 @@ extension OneTimeCodeTextField: UITextInput {
         return textStorage.text(in: range)
     }
 
-    func replace(_ range: UITextRange, withText text: String) {
+    public func replace(_ range: UITextRange, withText text: String) {
         // No-op
     }
 
-    func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+    public func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
         // We don't support marked text
     }
 
-    func unmarkText() {
+    public func unmarkText() {
         // We don't support marked text
     }
 
-    func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
+    public func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
         guard
             let fromPosition = fromPosition as? TextPosition,
             let toPosition = toPosition as? TextPosition
@@ -414,7 +423,7 @@ extension OneTimeCodeTextField: UITextInput {
         return textStorage.makeRange(from: fromPosition, to: toPosition)
     }
 
-    func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
+    public func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
         guard let position = position as? TextPosition else {
             return nil
         }
@@ -429,7 +438,7 @@ extension OneTimeCodeTextField: UITextInput {
         return TextPosition(newIndex)
     }
 
-    func position(
+    public func position(
         from position: UITextPosition,
         in direction: UITextLayoutDirection,
         offset: Int
@@ -448,7 +457,7 @@ extension OneTimeCodeTextField: UITextInput {
         }
     }
 
-    func compare(_ position: UITextPosition, to other: UITextPosition) -> ComparisonResult {
+    public func compare(_ position: UITextPosition, to other: UITextPosition) -> ComparisonResult {
         guard
             let position = position as? TextPosition,
             let other = other as? TextPosition
@@ -459,7 +468,7 @@ extension OneTimeCodeTextField: UITextInput {
         return position.compare(other)
     }
 
-    func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int {
+    public func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int {
         guard
             let from = from as? TextPosition,
             let toPosition = toPosition as? TextPosition
@@ -470,7 +479,7 @@ extension OneTimeCodeTextField: UITextInput {
         return toPosition.index - from.index
     }
 
-    func position(within range: UITextRange, farthestIn direction: UITextLayoutDirection) -> UITextPosition? {
+    public func position(within range: UITextRange, farthestIn direction: UITextLayoutDirection) -> UITextPosition? {
         guard let range = range as? TextRange else {
             return nil
         }
@@ -485,7 +494,7 @@ extension OneTimeCodeTextField: UITextInput {
         }
     }
 
-    func characterRange(
+    public func characterRange(
         byExtending position: UITextPosition,
         in direction: UITextLayoutDirection
     ) -> UITextRange? {
@@ -501,7 +510,7 @@ extension OneTimeCodeTextField: UITextInput {
         }
     }
 
-    func baseWritingDirection(
+    public func baseWritingDirection(
         for position: UITextPosition,
         in direction: UITextStorageDirection
     ) -> NSWritingDirection {
@@ -509,11 +518,11 @@ extension OneTimeCodeTextField: UITextInput {
         return .leftToRight
     }
 
-    func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {
+    public func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {
         // No-op
     }
 
-    func firstRect(for range: UITextRange) -> CGRect {
+    public func firstRect(for range: UITextRange) -> CGRect {
         guard let range = range as? TextRange, !range.isEmpty else {
             return .zero
         }
@@ -537,7 +546,7 @@ extension OneTimeCodeTextField: UITextInput {
         return firstRect.union(secondRect)
     }
 
-    func caretRect(for position: UITextPosition) -> CGRect {
+    public func caretRect(for position: UITextPosition) -> CGRect {
         guard let position = position as? TextPosition else {
             return .zero
         }
@@ -546,16 +555,16 @@ extension OneTimeCodeTextField: UITextInput {
         return digitView.convert(digitView.caretRect, to: self)
     }
 
-    func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
+    public func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
         // No text-selection
         return []
     }
 
-    func closestPosition(to point: CGPoint) -> UITextPosition? {
+    public func closestPosition(to point: CGPoint) -> UITextPosition? {
         return closestPosition(to: point, within: textStorage.extent)
     }
 
-    func closestPosition(to point: CGPoint, within range: UITextRange) -> UITextPosition? {
+    public func closestPosition(to point: CGPoint, within range: UITextRange) -> UITextPosition? {
         guard
             let range = range as? TextRange,
             let digitView = hitTest(point, with: nil) as? DigitView,
@@ -567,7 +576,7 @@ extension OneTimeCodeTextField: UITextInput {
         return range.contains(index) ? TextPosition(index) : nil
     }
 
-    func characterRange(at point: CGPoint) -> UITextRange? {
+    public func characterRange(at point: CGPoint) -> UITextRange? {
         guard
             let startPosition = closestPosition(to: point) as? TextPosition,
             let endPosition = position(from: startPosition, offset: 1)
@@ -590,6 +599,12 @@ private extension OneTimeCodeTextField {
             static let borderWidth: CGFloat = 1
             static let cornerRadius: CGFloat = 8
             static let focusRingThickness: CGFloat = 2
+            // Color is hardcoded for now, as it's not semantically supported by ElementsUI
+            // TODO(bmelts): Should this be a theme color with a low alpha component?
+            static let dotColor: UIColor = .dynamic(
+                light: UIColor(red: 0.922, green: 0.933, blue: 0.945, alpha: 1.0),
+                dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
+            )
         }
 
         var isActive: Bool = false {
@@ -606,6 +621,8 @@ private extension OneTimeCodeTextField {
         }
 
         private let font: UIFont = .systemFont(ofSize: 20)
+
+        private let theme: ElementsUITheme
 
         private(set) lazy var borderLayer: CALayer = {
             let borderLayer = CALayer()
@@ -635,7 +652,7 @@ private extension OneTimeCodeTextField {
             let label = UILabel()
             label.textAlignment = .center
             label.isAccessibilityElement = false
-            label.textColor = .label
+            label.textColor = theme.colors.textFieldText
             label.font = font
             return label
         }()
@@ -655,7 +672,8 @@ private extension OneTimeCodeTextField {
             return CGSize(width: UIView.noIntrinsicMetric, height: 60)
         }
 
-        init() {
+        init(theme: ElementsUITheme) {
+            self.theme = theme
             super.init(frame: .zero)
 
             layer.addSublayer(borderLayer)
@@ -713,9 +731,9 @@ private extension OneTimeCodeTextField {
         }
 
         private func updateColors() {
-            borderLayer.backgroundColor = UIColor.linkControlBackground.cgColor
-            borderLayer.borderColor = UIColor.linkControlBorder.cgColor
-            dot.backgroundColor = UIColor.linkControlLightPlaceholder.cgColor
+            borderLayer.backgroundColor = theme.colors.background.cgColor
+            borderLayer.borderColor = theme.colors.border.cgColor
+            dot.backgroundColor = Constants.dotColor.cgColor
             caret.backgroundColor = tintColor.cgColor
             focusRing.borderColor = tintColor.cgColor
         }

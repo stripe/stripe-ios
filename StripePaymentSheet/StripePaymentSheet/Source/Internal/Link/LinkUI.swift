@@ -163,6 +163,8 @@ extension LinkUI {
         appearance.colors.componentText = .linkPrimaryText
         appearance.colors.componentPlaceholderText = .linkSecondaryText
         appearance.colors.componentBackground = .linkControlBackground
+        appearance.colors.componentBorder = .linkControlBorder
+        appearance.colors.componentDivider = .linkSeparator
 
         // Primary button
         appearance.primaryButton.textColor = .linkPrimaryButtonForeground
