@@ -271,7 +271,7 @@ extension PaymentSheet {
                         // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                         let savedPaymentMethods = paymentMethods
                             .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
-                            .filter { PaymentSheet.supportsSaveAndReuse(paymentMethod: $0.paymentSheetPaymentMethodType(),
+                            .filter { PaymentMethodType.supportsSaveAndReuse(paymentMethod: $0.paymentSheetPaymentMethodType(),
                                                                         configuration: configuration, intent: intent) }
                         warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: intent.unactivatedPaymentMethodTypes)
 
