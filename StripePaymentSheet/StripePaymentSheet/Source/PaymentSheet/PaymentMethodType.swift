@@ -243,7 +243,10 @@ extension PaymentSheet {
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> Bool {
+            
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
+                // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
+                // as a dynamic payment method
                 if case .dynamic = paymentMethod {
                     return configurationSatisfiesRequirements(
                         requirements: paymentMethod.supportsAddingRequirements(),
@@ -251,17 +254,12 @@ extension PaymentSheet {
                         intent: intent
                     )
                 }
-
+                
                 return false
             }
-
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                // if setting up, fall through to the setup case
-                if paymentIntent.setupFutureUsage != .none {
-                    fallthrough
-                }
-            case .setupIntent:
+            
+            // if the intent is a SI or PI+sfu, then use the save and reuse requirements
+            if intent.isSettingUp {
                 return supportsSaveAndReuse(
                     paymentMethod: paymentMethod,
                     configuration: configuration,
@@ -269,6 +267,7 @@ extension PaymentSheet {
                 )
             }
 
+            // if this is a PI with a `STPPaymentMethodType` use the following requirements
             let requirements: [PaymentMethodTypeRequirement] = {
                 switch stpPaymentMethodType {
                 case .blik, .card, .cardPresent, .UPI, .weChatPay:
