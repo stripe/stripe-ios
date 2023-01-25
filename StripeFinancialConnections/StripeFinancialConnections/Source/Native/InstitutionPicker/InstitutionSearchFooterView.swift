@@ -16,7 +16,7 @@ final class InstitutionSearchFooterView: UIView {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                CreateTitleLabel(),
+                CreateTitleLabel()
                 // ...more views are added later...
             ]
         )
@@ -33,14 +33,18 @@ final class InstitutionSearchFooterView: UIView {
         verticalStackView.addArrangedSubview(
             CreateRowView(
                 image: .check,
-                title: STPLocalizedString("Double check your spelling and search terms", "A message that appears at the bottom of search results. It tells users to check what they typed to find their bank is correct.")
+                title: STPLocalizedString(
+                    "Double check your spelling and search terms",
+                    "A message that appears at the bottom of search results. It tells users to check what they typed to find their bank is correct."
+                )
             )
         )
         if let didSelectManuallyAddYourAccount = didSelectManuallyAddYourAccount {
             verticalStackView.addArrangedSubview(
                 CreateRowView(
                     image: .edit,
-                    title: "[\(STPLocalizedString("Manually add your account", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be able to manually enter their bank account details (a routing number and an account number)."))](https://www.use-custom-action-instead.com)",
+                    title:
+                        "[\(STPLocalizedString("Manually add your account", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be able to manually enter their bank account details (a routing number and an account number)."))](https://www.use-custom-action-instead.com)",
                     customAction: didSelectManuallyAddYourAccount
                 )
             )
@@ -48,7 +52,8 @@ final class InstitutionSearchFooterView: UIView {
         verticalStackView.addArrangedSubview(
             CreateRowView(
                 image: .email,
-                title: "[\(STPLocalizedString("Questions? Contact support", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be  directed to a support website where users can contact support."))](https://support.stripe.com/contact)"
+                title:
+                    "[\(STPLocalizedString("Questions? Contact support", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be  directed to a support website where users can contact support."))](https://support.stripe.com/contact)"
             )
         )
         addAndPinSubview(verticalStackView)
@@ -85,7 +90,10 @@ final class InstitutionSearchFooterView: UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateTitleLabel() -> UIView {
     let titleLabel = UILabel()
-    titleLabel.text = STPLocalizedString("CAN'T FIND YOUR BANK?", "The title of a section that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the section is to give users other options in case they can't find their bank.")
+    titleLabel.text = STPLocalizedString(
+        "CAN'T FIND YOUR BANK?",
+        "The title of a section that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the section is to give users other options in case they can't find their bank."
+    )
     titleLabel.font = .stripeFont(forTextStyle: .kicker)
     titleLabel.textColor = .textSecondary
     return titleLabel

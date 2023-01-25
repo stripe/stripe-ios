@@ -30,7 +30,7 @@ final class PaneLayoutView {
 
         let verticalStackView = HitTestStackView(
             arrangedSubviews: [
-                scrollView,
+                scrollView
             ]
         )
         if let footerView = footerView {

@@ -12,9 +12,9 @@ import UIKit
 final class InstitutionIconView: UIView {
 
     enum Size {
-        case small // 24x24
-        case medium // 32x32
-        case large // 40x40
+        case small  // 24x24
+        case medium  // 32x32
+        case large  // 40x40
     }
 
     private lazy var institutionImageView: UIImageView = {

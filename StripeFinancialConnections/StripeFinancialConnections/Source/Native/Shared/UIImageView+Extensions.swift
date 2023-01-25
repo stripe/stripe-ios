@@ -10,7 +10,11 @@ import UIKit
 
 extension UIImageView {
 
-    func setImage(with urlString: String?, placeholder: UIImage? = nil, completionHandler: ((_ didDownloadImage: Bool) -> Void)? = nil) {
+    func setImage(
+        with urlString: String?,
+        placeholder: UIImage? = nil,
+        completionHandler: ((_ didDownloadImage: Bool) -> Void)? = nil
+    ) {
         if let placeholder = placeholder {
             image = placeholder
         }

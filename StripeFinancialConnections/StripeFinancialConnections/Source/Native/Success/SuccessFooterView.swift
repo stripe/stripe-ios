@@ -17,11 +17,11 @@ final class SuccessFooterView: UIView {
 
     private lazy var doneButton: Button = {
         let doneButton = Button(configuration: .financialConnectionsPrimary)
-        doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
+        doneButton.title = "Done"  // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
         doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            doneButton.heightAnchor.constraint(equalToConstant: 56),
+            doneButton.heightAnchor.constraint(equalToConstant: 56)
         ])
         return doneButton
     }()
@@ -41,10 +41,14 @@ final class SuccessFooterView: UIView {
         if didSelectLinkAnotherAccount != nil {
             let linkAnotherAccount = Button(configuration: .financialConnectionsSecondary)
             linkAnotherAccount.title = String.Localized.link_another_account
-            linkAnotherAccount.addTarget(self, action: #selector(didSelectLinkAnotherAccountButton), for: .touchUpInside)
+            linkAnotherAccount.addTarget(
+                self,
+                action: #selector(didSelectLinkAnotherAccountButton),
+                for: .touchUpInside
+            )
             linkAnotherAccount.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                linkAnotherAccount.heightAnchor.constraint(equalToConstant: 56),
+                linkAnotherAccount.heightAnchor.constraint(equalToConstant: 56)
             ])
             footerStackView.addArrangedSubview(linkAnotherAccount)
         }

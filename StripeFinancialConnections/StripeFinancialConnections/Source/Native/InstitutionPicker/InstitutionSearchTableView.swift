@@ -16,7 +16,10 @@ private enum Section {
 
 @available(iOSApplicationExtension, unavailable)
 protocol InstitutionSearchTableViewDelegate: AnyObject {
-    func institutionSearchTableView(_ tableView: InstitutionSearchTableView, didSelectInstitution institution: FinancialConnectionsInstitution)
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didSelectInstitution institution: FinancialConnectionsInstitution
+    )
     func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView)
 }
 
@@ -27,22 +30,23 @@ final class InstitutionSearchTableView: UIView {
     private let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     private lazy var didSelectManualEntry: (() -> Void)? = {
-        return allowManualEntry ? { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
-        } : nil
+        return allowManualEntry
+            ? { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
+            } : nil
     }()
     weak var delegate: InstitutionSearchTableViewDelegate?
 
     private lazy var tableFooterView: UIView = {
-        let footerView =  InstitutionSearchFooterView(didSelectManuallyAddYourAccount: didSelectManualEntry)
+        let footerView = InstitutionSearchFooterView(didSelectManuallyAddYourAccount: didSelectManualEntry)
         let footerContainerView = UIView()
         footerContainerView.backgroundColor = .clear
         footerContainerView.addAndPinSubview(
             // we wrap `footerView` in a container to add extra padding
             footerView,
             insets: NSDirectionalEdgeInsets(
-                top: 10, // extra padding between table and footer
+                top: 10,  // extra padding between table and footer
                 leading: 0,
                 bottom: 0,
                 trailing: 0
@@ -68,8 +72,13 @@ final class InstitutionSearchTableView: UIView {
         let cellIdentifier = "\(InstitutionSearchTableViewCell.self)"
         tableView = UITableView(frame: frame)
         self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? InstitutionSearchTableViewCell else {
-                fatalError("Unable to dequeue cell \(InstitutionSearchTableViewCell.self) with cell identifier \(cellIdentifier)")
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
+                    as? InstitutionSearchTableViewCell
+            else {
+                fatalError(
+                    "Unable to dequeue cell \(InstitutionSearchTableViewCell.self) with cell identifier \(cellIdentifier)"
+                )
             }
             cell.customize(with: institution)
             return cell
@@ -165,13 +174,19 @@ final class InstitutionSearchTableView: UIView {
         } else {
             loadingView.stopAnimating()
         }
-        bringSubviewToFront(loadingContainerView) // defensive programming to avoid loadingView being hiddden
+        bringSubviewToFront(loadingContainerView)  // defensive programming to avoid loadingView being hiddden
     }
 
     func showNoResultsNotice(query: String?) {
         if let query = query {
             let noResultsLabel = UILabel()
-            noResultsLabel.text = String(format: STPLocalizedString("No results for \"%@\".", "A message that tells the user that we found no search results for the bank name they typed. '%@' will be replaced by the text they typed - for example, 'Bank of America'."), query)
+            noResultsLabel.text = String(
+                format: STPLocalizedString(
+                    "No results for \"%@\".",
+                    "A message that tells the user that we found no search results for the bank name they typed. '%@' will be replaced by the text they typed - for example, 'Bank of America'."
+                ),
+                query
+            )
             noResultsLabel.font = .stripeFont(forTextStyle: .caption)
             noResultsLabel.textColor = .textSecondary
             noResultsLabel.textAlignment = .center
@@ -193,9 +208,11 @@ final class InstitutionSearchTableView: UIView {
 
     func showError(_ show: Bool) {
         if show {
-            tableView.setTableHeaderViewWithCompressedFrameSize(InstitutionSearchErrorView(
-                didSelectEnterYourBankDetailsManually: didSelectManualEntry
-            ))
+            tableView.setTableHeaderViewWithCompressedFrameSize(
+                InstitutionSearchErrorView(
+                    didSelectEnterYourBankDetailsManually: didSelectManualEntry
+                )
+            )
         } else {
             tableView.tableHeaderView = nil
         }

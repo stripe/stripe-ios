@@ -35,7 +35,13 @@ private func CreateAccountCountView(institution: FinancialConnectionsInstitution
     numberOfAccountsLabel.textAlignment = .right
     numberOfAccountsLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
     numberOfAccountsLabel.textColor = .textSecondary
-    numberOfAccountsLabel.text = String(format: STPLocalizedString("%d accounts", "An textual description of how many bank accounts user has successfully connected (or linked). Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %d will be replaced by the number of accounts connected (or linked)."), numberOfAccounts)
+    numberOfAccountsLabel.text = String(
+        format: STPLocalizedString(
+            "%d accounts",
+            "An textual description of how many bank accounts user has successfully connected (or linked). Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %d will be replaced by the number of accounts connected (or linked)."
+        ),
+        numberOfAccounts
+    )
 
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
@@ -49,7 +55,10 @@ private func CreateAccountCountView(institution: FinancialConnectionsInstitution
     return horizontalStackView
 }
 
-private func CreateAccountListView(institution: FinancialConnectionsInstitution, accounts: [FinancialConnectionsPartnerAccount]) -> UIView {
+private func CreateAccountListView(
+    institution: FinancialConnectionsInstitution,
+    accounts: [FinancialConnectionsPartnerAccount]
+) -> UIView {
     let accountRowVerticalStackView = UIStackView(
         arrangedSubviews: accounts.map { account in
             CreateAccountRowView(institution: institution, account: account)
@@ -60,7 +69,10 @@ private func CreateAccountListView(institution: FinancialConnectionsInstitution,
     return accountRowVerticalStackView
 }
 
-private func CreateAccountRowView(institution: FinancialConnectionsInstitution, account: FinancialConnectionsPartnerAccount) -> UIView {
+private func CreateAccountRowView(
+    institution: FinancialConnectionsInstitution,
+    account: FinancialConnectionsPartnerAccount
+) -> UIView {
     let horizontalStackView = UIStackView()
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 8

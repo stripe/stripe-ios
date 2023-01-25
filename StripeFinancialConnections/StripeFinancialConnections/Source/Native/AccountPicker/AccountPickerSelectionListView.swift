@@ -70,7 +70,10 @@ final class AccountPickerSelectionListView: UIView {
                 }
             )
             allAccountsCellView.setLeadingTitle(
-                STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
+                STPLocalizedString(
+                    "All accounts",
+                    "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+                ),
                 trailingTitle: nil,
                 subtitle: nil,
                 isSelected: (enabledAccounts.count == selectedAccounts.count),
@@ -92,8 +95,8 @@ final class AccountPickerSelectionListView: UIView {
                     } else {
                         if self.selectionType == .checkbox {
                             selectedAccounts.append(account)
-                        } else { // radiobutton
-                            selectedAccounts = [account] // select only one account
+                        } else {  // radiobutton
+                            selectedAccounts = [account]  // select only one account
                         }
                     }
                     self.delegate?.accountPickerSelectionListView(self, didSelectAccounts: selectedAccounts)

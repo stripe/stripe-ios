@@ -54,7 +54,7 @@ final class PaneWithCustomHeaderLayoutView {
                     // This is only a `HitTestStackView` to add margins
                     let verticalStackView = HitTestStackView(
                         arrangedSubviews: [
-                            footerView,
+                            footerView
                         ]
                     )
                     verticalStackView.axis = .vertical

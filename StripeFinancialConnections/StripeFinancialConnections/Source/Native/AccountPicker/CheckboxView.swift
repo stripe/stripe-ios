@@ -37,7 +37,7 @@ final class CheckboxView: UIView {
 
     init() {
         super.init(frame: .zero)
-        isSelected = false // fire off setter to draw
+        isSelected = false  // fire off setter to draw
         addSubview(checkboxImageView)
     }
 

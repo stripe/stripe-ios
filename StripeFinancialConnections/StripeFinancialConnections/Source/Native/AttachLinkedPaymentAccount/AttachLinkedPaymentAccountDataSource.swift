@@ -50,7 +50,7 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
         return apiClient.attachLinkedAccountIdToLinkAccountSession(
             clientSecret: clientSecret,
             linkedAccountId: linkedAccountId,
-            consumerSessionClientSecret: nil // used for Link
+            consumerSessionClientSecret: nil  // used for Link
         )
     }
 }

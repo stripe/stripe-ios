@@ -25,14 +25,23 @@ final class MerchantDataAccessView: HitTestView {
         // the asterisks are to bold the text via "markdown"
         let leadingString: String
         if isStripeDirect {
-            let localizedLeadingString = STPLocalizedString("Data accessible to Stripe:", "This text is a lead-up to a disclosure that lists all of the bank data that Stripe will have access to. For example, the full text may read 'Data accessible to Stripe: Account details, transactions.'")
+            let localizedLeadingString = STPLocalizedString(
+                "Data accessible to Stripe:",
+                "This text is a lead-up to a disclosure that lists all of the bank data that Stripe will have access to. For example, the full text may read 'Data accessible to Stripe: Account details, transactions.'"
+            )
             leadingString = "**\(localizedLeadingString)**"
         } else {
             if let businessName = businessName {
-                let localizedLeadingString = STPLocalizedString("Data accessible to %@:", "This text is a lead-up to a disclosure that lists all of the bank data that a merchant (ex. Coca-Cola) will have access to. For example, the full text may read 'Data accessible to Coca-Cola: Account details, transactions.'")
+                let localizedLeadingString = STPLocalizedString(
+                    "Data accessible to %@:",
+                    "This text is a lead-up to a disclosure that lists all of the bank data that a merchant (ex. Coca-Cola) will have access to. For example, the full text may read 'Data accessible to Coca-Cola: Account details, transactions.'"
+                )
                 leadingString = "**\(String(format: localizedLeadingString, businessName))**"
             } else {
-                let localizedLeadingString = STPLocalizedString("Data accessible to this business:", "This text is a lead-up to a disclosure that lists all of the bank data that a business will have access to. For example, the full text may read 'Data accessible to this business: Account details, transactions.'")
+                let localizedLeadingString = STPLocalizedString(
+                    "Data accessible to this business:",
+                    "This text is a lead-up to a disclosure that lists all of the bank data that a business will have access to. For example, the full text may read 'Data accessible to this business: Account details, transactions.'"
+                )
                 leadingString = "**\(localizedLeadingString)**"
             }
         }
@@ -41,14 +50,16 @@ final class MerchantDataAccessView: HitTestView {
         //
         // BOTH (payment_method and account_numbers are valid permissions),
         // but we want to "combine" them for better UX
-        let permissions = permissions.contains(.accountNumbers) ? permissions.filter({ $0 != .paymentMethod }) : permissions
+        let permissions =
+            permissions.contains(.accountNumbers) ? permissions.filter({ $0 != .paymentMethod }) : permissions
         let permissionString = FormPermissionListString(permissions)
 
         let learnMoreUrlString: String
         if isStripeDirect {
             learnMoreUrlString = "https://stripe.com/docs/linked-accounts/faqs"
         } else {
-            learnMoreUrlString = "https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account"
+            learnMoreUrlString =
+                "https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account"
         }
         let learnMoreString = "[\(String.Localized.learn_more)](\(learnMoreUrlString))"
 
@@ -56,7 +67,13 @@ final class MerchantDataAccessView: HitTestView {
         if isStripeDirect {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         } else {
-            let localizedPermissionFullString = String(format: STPLocalizedString("%@ through Stripe.", "A sentence that describes what users banking data is accessible to Stripe. For example, the full sentence may say 'Account details, transactions, balances through Stripe.'"), permissionString)
+            let localizedPermissionFullString = String(
+                format: STPLocalizedString(
+                    "%@ through Stripe.",
+                    "A sentence that describes what users banking data is accessible to Stripe. For example, the full sentence may say 'Account details, transactions, balances through Stripe.'"
+                ),
+                permissionString
+            )
             finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
         }
 
@@ -86,7 +103,8 @@ final class MerchantDataAccessView: HitTestView {
 private func FormPermissionListString(
     _ permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
 ) -> String {
-    let permissionListString = permissions
+    let permissionListString =
+        permissions
         .map { LocalizedStringFromPermission($0) }
         .joined(separator: ", ")
 
@@ -106,15 +124,30 @@ private func LocalizedStringFromPermission(
         // but we want to "combine" them for better UX
         fallthrough
     case .accountNumbers:
-        return STPLocalizedString("account details", "A type of user banking data that Stripe can have access to. In this case, account details involve things like being able to access a banks account and routing number.")
+        return STPLocalizedString(
+            "account details",
+            "A type of user banking data that Stripe can have access to. In this case, account details involve things like being able to access a banks account and routing number."
+        )
     case .balances:
-        return STPLocalizedString("balances", "A type of user banking data that Stripe can have access to. In this case, balances means account balance in a bank like $1,000.")
+        return STPLocalizedString(
+            "balances",
+            "A type of user banking data that Stripe can have access to. In this case, balances means account balance in a bank like $1,000."
+        )
     case .ownership:
-        return STPLocalizedString("account ownership details", "A type of user banking data that Stripe can have access to. In this case, account ownership details entail things like users full name or address.")
+        return STPLocalizedString(
+            "account ownership details",
+            "A type of user banking data that Stripe can have access to. In this case, account ownership details entail things like users full name or address."
+        )
     case .transactions:
-        return STPLocalizedString("transactions", "A type of user banking data that Stripe can have access to. In this case, transactions entails a list of transactions user has made on their debit card. For example, 'bought $5.00 coffee at 12:00 PM'")
+        return STPLocalizedString(
+            "transactions",
+            "A type of user banking data that Stripe can have access to. In this case, transactions entails a list of transactions user has made on their debit card. For example, 'bought $5.00 coffee at 12:00 PM'"
+        )
     case .unparsable:
-        return STPLocalizedString("others", "A type of user banking data that Stripe can have access to. In this case, 'others' mean an unknown, or generic type of user data. Maybe it's the users full name, maybe its the balance of the bank account (ex. $1,000).")
+        return STPLocalizedString(
+            "others",
+            "A type of user banking data that Stripe can have access to. In this case, 'others' mean an unknown, or generic type of user data. Maybe it's the users full name, maybe its the balance of the bank account (ex. $1,000)."
+        )
     }
 }
 
@@ -150,56 +183,56 @@ struct MerchantDataAccessView_Previews: PreviewProvider {
                 businessName: nil,
                 permissions: [.accountNumbers]
             )
-                .frame(height: 30)
+            .frame(height: 30)
 
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.accountNumbers]
             )
-                .frame(height: 30)
+            .frame(height: 30)
 
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: nil,
                 permissions: [.accountNumbers]
             )
-                .frame(height: 30)
+            .frame(height: 30)
 
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.accountNumbers]
             )
-                .frame(height: 30)
+            .frame(height: 30)
 
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.accountNumbers, .paymentMethod]
             )
-                .frame(height: 30)
+            .frame(height: 30)
 
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.accountNumbers, .paymentMethod, .transactions, .ownership, .balances]
             )
-                .frame(height: 50)
+            .frame(height: 50)
 
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.unparsable]
             )
-                .frame(height: 30)
+            .frame(height: 30)
 
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: true,
                 businessName: nil,
                 permissions: []
             )
-                .frame(height: 30)
+            .frame(height: 30)
 
             Spacer()
         }

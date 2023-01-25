@@ -21,7 +21,7 @@ enum FinancialConnectionsSessionMock: String, MockData {
 }
 
 // Dummy class to determine this bundle
-private class ClassForBundle { }
+private class ClassForBundle {}
 
 final class FinancialConnectionsSessionTests: XCTestCase {
 

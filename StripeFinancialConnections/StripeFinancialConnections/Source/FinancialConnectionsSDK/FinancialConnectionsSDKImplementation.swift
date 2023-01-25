@@ -23,29 +23,45 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
-        let financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret, returnURL: returnURL)
+        let financialConnectionsSheet = FinancialConnectionsSheet(
+            financialConnectionsSessionClientSecret: clientSecret,
+            returnURL: returnURL
+        )
         financialConnectionsSheet.apiClient = apiClient
         // Captures self explicitly until the callback is invoked
         financialConnectionsSheet.present(
             from: presentingViewController,
             completion: { result in
                 switch result {
-                case .completed(session: let session):
+                case .completed(let session):
                     guard let paymentAccount = session.paymentAccount else {
-                        completion(.failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on FinancialConnectionsSession")))
+                        completion(
+                            .failed(
+                                error: FinancialConnectionsSheetError.unknown(
+                                    debugDescription: "PaymentAccount is not set on FinancialConnectionsSession"
+                                )
+                            )
+                        )
                         return
                     }
                     if let linkedBank = self.linkedBankFor(paymentAccount: paymentAccount, session: session) {
                         completion(.completed(linkedBank: linkedBank))
                     } else {
-                        completion(.failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "Unknown PaymentAccount is set on FinancialConnectionsSession")))
+                        completion(
+                            .failed(
+                                error: FinancialConnectionsSheetError.unknown(
+                                    debugDescription: "Unknown PaymentAccount is set on FinancialConnectionsSession"
+                                )
+                            )
+                        )
                     }
                 case .canceled:
                     completion(.cancelled)
                 case .failed(let error):
                     completion(.failed(error: error))
                 }
-            })
+            }
+        )
     }
 
     // MARK: - Helpers
@@ -56,19 +72,23 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
     ) -> LinkedBank? {
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):
-            return LinkedBankImplementation(with: session.id,
-                                            accountId: linkedAccount.id,
-                                            displayName: linkedAccount.displayName,
-                                            bankName: linkedAccount.institutionName,
-                                            last4: linkedAccount.last4,
-                                            instantlyVerified: true)
+            return LinkedBankImplementation(
+                with: session.id,
+                accountId: linkedAccount.id,
+                displayName: linkedAccount.displayName,
+                bankName: linkedAccount.institutionName,
+                last4: linkedAccount.last4,
+                instantlyVerified: true
+            )
         case .bankAccount(let bankAccount):
-            return LinkedBankImplementation(with: session.id,
-                                            accountId: bankAccount.id,
-                                            displayName: bankAccount.bankName,
-                                            bankName: bankAccount.bankName,
-                                            last4: bankAccount.last4,
-                                            instantlyVerified: false)
+            return LinkedBankImplementation(
+                with: session.id,
+                accountId: bankAccount.id,
+                displayName: bankAccount.bankName,
+                bankName: bankAccount.bankName,
+                last4: bankAccount.last4,
+                instantlyVerified: false
+            )
         case .unparsable:
             return nil
         }
@@ -85,12 +105,14 @@ struct LinkedBankImplementation: LinkedBank {
     public let last4: String?
     public let instantlyVerified: Bool
 
-    public init(with sessionId: String,
-                accountId: String,
-                displayName: String?,
-                bankName: String?,
-                last4: String?,
-                instantlyVerified: Bool) {
+    public init(
+        with sessionId: String,
+        accountId: String,
+        displayName: String?,
+        bankName: String?,
+        last4: String?,
+        instantlyVerified: Bool
+    ) {
         self.sessionId = sessionId
         self.accountId = accountId
         self.displayName = displayName

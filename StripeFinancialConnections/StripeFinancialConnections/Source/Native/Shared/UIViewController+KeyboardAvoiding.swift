@@ -22,7 +22,8 @@ extension UIViewController {
         }
         let keyboardAvoiding = STPKeyboardDetectingViewController(
             keyboardFrameBlock: block,
-            scrollView: scrollView)
+            scrollView: scrollView
+        )
         addChild(keyboardAvoiding)
         view.addSubview(keyboardAvoiding.view)
         keyboardAvoiding.didMove(toParent: self)
@@ -54,11 +55,17 @@ class STPKeyboardDetectingViewController: UIViewController {
         keyboardFrameBlock = block
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardWillChangeFrame(_:)),
-            name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+            self,
+            selector: #selector(keyboardWillChangeFrame(_:)),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
         NotificationCenter.default.addObserver(
-            self, selector: #selector(textFieldWillBeginEditing(_:)),
-            name: UITextField.textDidBeginEditingNotification, object: nil)
+            self,
+            selector: #selector(textFieldWillBeginEditing(_:)),
+            name: UITextField.textDidBeginEditingNotification,
+            object: nil
+        )
         managedScrollView = scrollView
         currentBottomInsetChange = 0
     }
@@ -84,10 +91,13 @@ class STPKeyboardDetectingViewController: UIViewController {
             textField != lastResponder && !lastKeyboardFrame.isEmpty
         {
             UIView.animate(
-                withDuration: 0.3, delay: 0, options: .curveEaseOut,
+                withDuration: 0.3,
+                delay: 0,
+                options: .curveEaseOut,
                 animations: {
                     keyboardFrameBlock(self.lastKeyboardFrame, textField)
-                })
+                }
+            )
         }
     }
 
@@ -123,14 +133,15 @@ class STPKeyboardDetectingViewController: UIViewController {
             var contentInsets = scrollView.contentInset
             var scrollIndicatorInsets: UIEdgeInsets = .zero
             #if !TARGET_OS_MACCATALYST
-                scrollIndicatorInsets = scrollView.verticalScrollIndicatorInsets
+            scrollIndicatorInsets = scrollView.verticalScrollIndicatorInsets
             #else
-                scrollIndicatorInsets = scrollView.scrollIndicatorInsets
+            scrollIndicatorInsets = scrollView.scrollIndicatorInsets
             #endif
 
             let windowFrame = scrollViewSuperView?.convert(
                 scrollViewSuperView?.frame ?? CGRect.zero,
-                to: nil)
+                to: nil
+            )
 
             let bottomIntersection = windowFrame?.intersection(keyboardFrame)
             let bottomInsetDelta =

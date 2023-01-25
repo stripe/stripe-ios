@@ -38,7 +38,10 @@ final class SuccessViewController: UIViewController {
 
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
             icon: .view(SuccessIconView()),
-            title: STPLocalizedString("Success!", "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."),
+            title: STPLocalizedString(
+                "Success!",
+                "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
+            ),
             subtitle: CreateSubtitleText(
                 businessName: dataSource.manifest.businessName,
                 isLinkingOneAccount: (dataSource.linkedAccounts.count == 1)
@@ -82,16 +85,17 @@ final class SuccessViewController: UIViewController {
                         )
                     self.delegate?.successViewControllerDidSelectDone(self)
                 },
-                didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton ? { [weak self] in
-                    guard let self = self else { return }
-                    self.dataSource
-                        .analyticsClient
-                        .log(
-                            eventName: "click.link_another_account",
-                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
-                        )
-                    self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
-                } : nil
+                didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton
+                    ? { [weak self] in
+                        guard let self = self else { return }
+                        self.dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "click.link_another_account",
+                                parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                            )
+                        self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
+                    } : nil
             )
         )
         paneWithHeaderLayoutView.addTo(view: view)
@@ -105,15 +109,33 @@ final class SuccessViewController: UIViewController {
 private func CreateSubtitleText(businessName: String?, isLinkingOneAccount: Bool) -> String {
     if isLinkingOneAccount {
         if let businessName = businessName {
-            return String(format: STPLocalizedString("Your account was successfully linked to %@ through Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+            return String(
+                format: STPLocalizedString(
+                    "Your account was successfully linked to %@ through Stripe.",
+                    "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."
+                ),
+                businessName
+            )
         } else {
-            return STPLocalizedString("Your account was successfully linked to Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments.")
+            return STPLocalizedString(
+                "Your account was successfully linked to Stripe.",
+                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
+            )
         }
-    } else { // multiple bank accounts
+    } else {  // multiple bank accounts
         if let businessName = businessName {
-            return String(format: STPLocalizedString("Your accounts were successfully linked to %@ through Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+            return String(
+                format: STPLocalizedString(
+                    "Your accounts were successfully linked to %@ through Stripe.",
+                    "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."
+                ),
+                businessName
+            )
         } else {
-            return STPLocalizedString("Your accounts were successfully linked to Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
+            return STPLocalizedString(
+                "Your accounts were successfully linked to Stripe.",
+                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments."
+            )
         }
     }
 }

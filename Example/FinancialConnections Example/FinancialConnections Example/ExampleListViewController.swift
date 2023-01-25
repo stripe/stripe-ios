@@ -20,7 +20,10 @@ class ExampleListViewController: UITableViewController {
     private let examples: [Example] = {
         var examples = [
             Example(title: "Connect Account", viewControllerIdentifier: "ConnectAccountViewController"),
-            Example(title: "Collect Bank Account Token", viewControllerIdentifier: "CollectBankAccountTokenViewController"),
+            Example(
+                title: "Collect Bank Account Token",
+                viewControllerIdentifier: "CollectBankAccountTokenViewController"
+            ),
         ]
         if #available(iOS 14.0, *) {
             // iOS 13 example/playground crashes due to SwiftUI
@@ -84,8 +87,9 @@ extension ExampleListViewController {
 extension ExampleListViewController {
     private func getBuildInfo() -> String {
         guard let infoDictionary = Bundle.main.infoDictionary,
-              let version = infoDictionary["CFBundleShortVersionString"] as? String,
-              let build = infoDictionary["CFBundleVersion"] as? String else {
+            let version = infoDictionary["CFBundleShortVersionString"] as? String,
+            let build = infoDictionary["CFBundleVersion"] as? String
+        else {
             return ""
         }
         return "v\(version) build \(build)"
