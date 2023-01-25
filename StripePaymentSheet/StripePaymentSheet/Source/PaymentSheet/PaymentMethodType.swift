@@ -234,7 +234,7 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - paymentMethod: the `STPPaymentMethodType` in question
         ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
-        ///   - intent: a payment or setup intent
+        ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
         /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
         static func supportsAdding(
@@ -307,6 +307,7 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - paymentMethod: the `STPPaymentMethodType` in question
         ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
+        ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
         /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
         static func supportsSaveAndReuse(
