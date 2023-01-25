@@ -75,7 +75,8 @@ private func CreateContentView(
     verticalStackView.axis = .vertical
 
     prepaneBodyModel.entries?.forEach { entry in
-        if let text = entry.text {
+        switch entry.content {
+        case .text(let text):
             let label = ClickableLabel(
                 font: .stripeFont(forTextStyle: .body),
                 boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
@@ -84,9 +85,13 @@ private func CreateContentView(
             )
             label.setText(text, action: didSelectURL)
             verticalStackView.addArrangedSubview(label)
-        } else if let imageUrl = entry.image?.default {
-            let prepaneImageView = PrepaneImageView(imageURLString: imageUrl)
-            verticalStackView.addArrangedSubview(prepaneImageView)
+        case .image(let image):
+            if let imageUrl = image.default {
+                let prepaneImageView = PrepaneImageView(imageURLString: imageUrl)
+                verticalStackView.addArrangedSubview(prepaneImageView)
+            }
+        case .unparsable:
+            break  // we encountered an unknown type, so just skip
         }
     }
 
@@ -186,19 +191,19 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
                 body: FinancialConnectionsOAuthPrepane.OauthPrepaneBody(
                     entries: [
                         .init(
-                            type: .text,
-                            content: "Be sure to select **Account Number & Routing Number**."
+                            content: .text("Be sure to select **Account Number & Routing Number**.")
                         ),
                         .init(
-                            type: .image,
-                            content: FinancialConnectionsImage(
-                                default: "https://js.stripe.com/v3/f0620405e3235ff4736f6876f4d3d045.gif"
+                            content: .image(
+                                FinancialConnectionsImage(
+                                    default: "https://js.stripe.com/v3/f0620405e3235ff4736f6876f4d3d045.gif"
+                                )
                             )
                         ),
                         .init(
-                            type: .text,
-                            content:
+                            content: .text(
                                 "We will only share the [requested data](https://www.stripe.com) with [Merchant] even if your bank grants Stripe access to more."
+                            )
                         ),
                     ]
                 ),

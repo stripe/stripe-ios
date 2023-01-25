@@ -22,19 +22,16 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
 
         struct OauthPrepaneBodyEntry: Decodable {
 
-            enum EntryType: String, SafeEnumCodable, Equatable {
-                case text
-                case image
+            enum Content {
+                case text(String)
+                case image(FinancialConnectionsImage)
                 case unparsable
             }
 
-            let type: EntryType
-            private let content: Any?
-            var text: String? {
-                return content as? String
-            }
-            var image: FinancialConnectionsImage? {
-                return content as? FinancialConnectionsImage
+            let content: Content
+
+            init(content: Content) {
+                self.content = content
             }
 
             enum CodingKeys: String, CodingKey {
@@ -42,20 +39,25 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
                 case content
             }
 
-            init(type: EntryType, content: Any?) {
-                self.type = type
-                self.content = content
-            }
-
             init(from decoder: Decoder) throws {
                 let values = try decoder.container(keyedBy: CodingKeys.self)
-                self.type = try values.decode(EntryType.self, forKey: .type)
-                if let text = try? values.decode(String.self, forKey: .content) {
-                    self.content = text
-                } else if let image = try? values.decode(FinancialConnectionsImage.self, forKey: .content) {
-                    self.content = image
+
+                // check the `type` before we unwrap `content` because we
+                // want to avoid cases where an unknown/new `type` has
+                // the same underlying data-type (ex. String) as a known `type`
+                guard let type = try? values.decode(String.self, forKey: .type) else {
+                    self.content = .unparsable
+                    return
+                }
+
+                if type == "text", let text = try? values.decode(String.self, forKey: .content) {
+                    self.content = .text(text)
+                } else if type == "image",
+                    let image = try? values.decode(FinancialConnectionsImage.self, forKey: .content)
+                {
+                    self.content = .image(image)
                 } else {
-                    self.content = nil
+                    self.content = .unparsable
                 }
             }
         }

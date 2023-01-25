@@ -77,18 +77,21 @@ private final class GIFImageView: UIView, WKNavigationDelegate {
     init(gifUrlString: String) {
         super.init(frame: .zero)
         let htmlString =
-            "<!DOCTYPE html>"
-            + "<html>"
-            + "<head>"
-            + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
-            + "<style>"
-            + "* { margin: 0; padding: 0 }"
-            + "</style>"
-            + "</head>"
-            + "<body style=\"background-color: transparent;\">"
-            + "<img src=\"" + gifUrlString + "\" align=\"middle\" style=\"width:100%;height:100%;\">"
-            + "</body>"
-            + "</html>"
+            """
+            <!DOCTYPE html>
+            <html>
+            <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>
+            * { margin: 0; padding: 0 }
+            </style>
+            </head>
+            <body style="background-color: transparent;">
+            <img src="\(gifUrlString)" align="middle" style="width:100%;height:100%;">
+            </body>
+            </html>
+            """
+
         webView.scrollView.isScrollEnabled = false
         webView.isUserInteractionEnabled = false
         webView.loadHTMLString(htmlString, baseURL: nil)
