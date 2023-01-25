@@ -73,6 +73,23 @@ protocol FinancialConnectionsAPIClient {
         eventNamespace: String,
         eventName: String
     ) -> Future<EmptyResponse>
+
+    // MARK: - Networking
+
+    func saveAccountsToLink(
+        emailAddress: String,
+        phoneNumber: String,
+        country: String,
+        selectedAccountIds: [String],
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
+
+    // MARK: - Link API's
+
+    func consumerSessionLookup(
+        emailAddress: String
+    ) -> Future<LookupConsumerSessionResponse>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -388,6 +405,46 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             parameters: body
         )
     }
+
+    // MARK: - Networking
+
+    func saveAccountsToLink(
+        emailAddress: String,
+        phoneNumber: String,
+        country: String,
+        selectedAccountIds: [String],
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        var body: [String: Any] = [
+            "client_secret": clientSecret,
+            "email_address":
+                emailAddress
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased(),
+            "phone_number": phoneNumber,
+            "country": country,
+            "locale": Locale.current.identifier,
+            "selected_accounts": selectedAccountIds,
+        ]
+        body["consumer_session_client_secret"] = consumerSessionClientSecret
+        return post(resource: APIEndpointSaveAccountsToLink, parameters: body)
+    }
+
+    // MARK: - Link API's [TODO(kgaidis): delete these later]
+
+    func consumerSessionLookup(
+        emailAddress: String
+    ) -> Future<LookupConsumerSessionResponse> {
+        let parameters: [String: Any] = [
+            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+            "email_address":
+                emailAddress
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased(),
+        ]
+        return post(resource: "consumers/sessions/lookup", parameters: parameters)
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -406,3 +463,5 @@ private let APIEndpointAuthSessionsAuthorized = "connections/auth_sessions/autho
 private let APIEndpointAuthSessionsAccounts = "connections/auth_sessions/accounts"
 private let APIEndpointAuthSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
 private let APIEndpointAuthSessionsEvents = "connections/auth_sessions/events"
+// Networking
+private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"

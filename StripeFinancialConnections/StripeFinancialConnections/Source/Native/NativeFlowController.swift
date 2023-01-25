@@ -544,7 +544,7 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
 
-    func networkingLinkSignupViewControllerDidSelectNotNow(
+    func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController
     ) {
         let successViewController = CreatePaneViewController(
@@ -707,17 +707,23 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkSignupPane:
-        let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
-            manifest: dataManager.manifest,
-            apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret,
-            analyticsClient: dataManager.analyticsClient
-        )
-        let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
-            dataSource: networkingLinkSignupDataSource
-        )
-        networkingLinkSignupViewController.delegate = nativeFlowController
-        viewController = networkingLinkSignupViewController
+        if let linkedAccountIds = dataManager.linkedAccounts?.map({ $0.id }) {
+            let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
+                manifest: dataManager.manifest,
+                selectedAccountIds: linkedAccountIds,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
+                dataSource: networkingLinkSignupDataSource
+            )
+            networkingLinkSignupViewController.delegate = nativeFlowController
+            viewController = networkingLinkSignupViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .networkingLinkVerification:
         assertionFailure("Not supported")
         viewController = nil

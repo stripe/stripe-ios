@@ -85,7 +85,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         self.aboveCtaText = aboveCtaText
         self.saveToLinkButtonText = saveToLinkButtonText
         self.notNowButtonText = notNowButtonText
-        self.didSelectSaveToLink = didSelectNotNow
+        self.didSelectSaveToLink = didSelectSaveToLink
         self.didSelectNotNow = didSelectNotNow
         self.didSelectURL = didSelectURL
         super.init(frame: .zero)

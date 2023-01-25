@@ -11,6 +11,7 @@ import Foundation
 @testable import StripeFinancialConnections
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
+
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList
     > {
@@ -102,5 +103,22 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         eventName: String
     ) -> Future<EmptyResponse> {
         return Promise<EmptyResponse>()
+    }
+
+    func saveAccountsToLink(
+        emailAddress: String,
+        phoneNumber: String,
+        country: String,
+        selectedAccountIds: [String],
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<StripeFinancialConnections.FinancialConnectionsSessionManifest> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
+
+    func consumerSessionLookup(
+        emailAddress: String
+    ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {
+        return Promise<StripeFinancialConnections.LookupConsumerSessionResponse>()
     }
 }

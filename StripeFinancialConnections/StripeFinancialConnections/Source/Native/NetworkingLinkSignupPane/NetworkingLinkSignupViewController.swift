@@ -6,11 +6,12 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
-    func networkingLinkSignupViewControllerDidSelectNotNow(
+    func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController
     )
 }
@@ -18,7 +19,7 @@ protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
 @available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkSignupViewController: UIViewController {
 
-    private let dataSoure: NetworkingLinkSignupDataSource
+    private let dataSource: NetworkingLinkSignupDataSource
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
@@ -28,8 +29,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }()
     private lazy var footerView: NetworkingLinkSignupFooterView = {
         return NetworkingLinkSignupFooterView(
-            didSelectSaveToLink: {
-
+            didSelectSaveToLink: { [weak self] in
+                self?.didSelectSaveToLink()
             },
             didSelectNotNow: { [weak self] in
                 guard let self = self else {
@@ -37,7 +38,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 }
                 // TODO(kgaidis): log `click.not_now`
                 // TODO(kgaidis): go to success pane
-                self.delegate?.networkingLinkSignupViewControllerDidSelectNotNow(self)
+                self.delegate?.networkingLinkSignupViewControllerDidFinish(self)
             },
             didSelectURL: { [weak self] url in
                 self?.didSelectURLInTextFromBackend(url)
@@ -46,7 +47,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }()
 
     init(dataSource: NetworkingLinkSignupDataSource) {
-        self.dataSoure = dataSource
+        self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -86,6 +87,36 @@ final class NetworkingLinkSignupViewController: UIViewController {
             footerView: footerView
         )
         pane.addTo(view: view)
+
+        // TODO(kgaidis): pre-fill email
+        // TODO(kgaidis): pre-fill phone number
+    }
+
+    private func didSelectSaveToLink() {
+        // TODO(kgaidis): on save to link, make a network call to saveToLinkNetwork...whether SUCCESS or FAILURE...we push to success pane...
+        dataSource.saveToLink(
+            emailAddress: formView.emailAddressTextField.text ?? "",
+            phoneNumber: formView.phoneNumberTextField.text ?? "",
+            countryCode: "US"  // TODO(kgaidis): fix the country code
+        )
+        .observe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success:
+                self.delegate?.networkingLinkSignupViewControllerDidFinish(self)
+            case .failure(let error):
+                // on error, we still go to success pane, but show a
+                // small error notice above the done button
+                self.delegate?.networkingLinkSignupViewControllerDidFinish(self)
+                self.dataSource.analyticsClient.logUnexpectedError(
+                    error,
+                    errorName: "SaveToLinkError",
+                    pane: .networkingLinkSignupPane
+                )
+                // TODO(kgaidis): ensure we show a small error notice after saveToLink fails
+                assertionFailure("got error: \(error)")  // TODO(kgaidis): temporary to catch this
+            }
+        }
     }
 
     private func didSelectURLInTextFromBackend(_ url: URL) {
@@ -100,19 +131,34 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
         guard let emailAddress = view.emailAddressTextField.text else {
             return
         }
-        print(emailAddress)
-
-        // TODO(kgaidis): first check whether a user with this `emailAddress` already exists...
-        //                this is done via `startVerificationSession` call
-        //                if it exists, we will log `networking.returning_consumer`
-        //                and also go to `networking_save_to_link_verification`
-        //                ...we also need to handle errors
-
-        // if this user with `emailAddress` does NOT exist, we:
-        // - TODO(kgaidis): show the Save to Link button
-
-        dataSoure.analyticsClient.log(eventName: "networking.new_consumer", pane: .networkingLinkSignupPane)
-        formView.showPhoneNumberTextFieldIfNeeded()
-        footerView.showSaveToLinkButtonIfNeeded()
+        dataSource
+            .lookup(emailAddress: emailAddress)
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let response):
+                    if response.exists {
+                        self.dataSource.analyticsClient.log(
+                            eventName: "networking.returning_consumer",
+                            pane: .networkingLinkSignupPane
+                        )
+                        // TODO(kgaidis): push pane manually to `networking_save_to_link_verification`
+                    } else {
+                        self.dataSource.analyticsClient.log(
+                            eventName: "networking.new_consumer",
+                            pane: .networkingLinkSignupPane
+                        )
+                        self.formView.showPhoneNumberTextFieldIfNeeded()
+                        self.footerView.showSaveToLinkButtonIfNeeded()
+                    }
+                case .failure(let error):
+                    // TODO(kgaidis): handle errors
+                    self.dataSource.analyticsClient.logUnexpectedError(
+                        error,
+                        errorName: "LookupConsumerSessionError",
+                        pane: .networkingLinkSignupPane
+                    )
+                }
+            }
     }
 }
