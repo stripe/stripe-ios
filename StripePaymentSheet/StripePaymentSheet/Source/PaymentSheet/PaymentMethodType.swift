@@ -257,6 +257,7 @@ extension PaymentSheet {
 
             switch intent {
             case .paymentIntent(let paymentIntent):
+                // if setting up, fall through to the setup case
                 if paymentIntent.setupFutureUsage != .none {
                     fallthrough
                 }
