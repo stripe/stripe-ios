@@ -15,6 +15,254 @@ import XCTest
 
 class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
+    func makeConfiguration(
+        hasReturnURL: Bool = false
+    ) -> PaymentSheet.Configuration {
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = hasReturnURL ? "foo://bar" : nil
+        return configuration
+    }
+
+    // MARK: - Cards
+
+    /// Returns false, card not in `supportedPaymentMethods`
+    func testSupportsAdding_notInSupportedList_noRequirementsNeeded() {
+        XCTAssertFalse(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .card,
+                configuration: PaymentSheet.Configuration(),
+                intent: .paymentIntent(STPFixtures.paymentIntent()),
+                supportedPaymentMethods: []
+            )
+        )
+    }
+
+    /// Returns true, card in `supportedPaymentMethods` and has no additional requirements
+    func testSupportsAdding_inSupportedList_noRequirementsNeeded() {
+        XCTAssertTrue(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .card,
+                configuration: PaymentSheet.Configuration(),
+                intent: .paymentIntent(
+                    STPFixtures.makePaymentIntent(setupFutureUsage: .offSession)
+                ),
+                supportedPaymentMethods: [.card]
+            )
+        )
+    }
+
+    /// Returns true, card in `supportedPaymentMethods` and has no additional requirements
+    func testSupportsAdding_inSupportedList_noRequirementsNeededButProvided() {
+        XCTAssertTrue(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .card,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                supportedPaymentMethods: [.card]
+            )
+        )
+    }
+
+    // MARK: - iDEAL
+
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequired() {
+        XCTAssertTrue(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("ideal"),
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                supportedPaymentMethods: [.iDEAL]
+            )
+        )
+    }
+
+    /// Returns true, iDEAL in `supportedPaymentMethods` but URL requirement not is met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequiredButNotProvided() {
+        XCTAssertFalse(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("ideal"),
+                configuration: makeConfiguration(),
+                intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                supportedPaymentMethods: [.iDEAL]
+            )
+        )
+    }
+
+    // MARK: - Afterpay
+
+    /// Returns false, Afterpay in `supportedPaymentMethods` but shipping requirement not is met
+    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingShipping() {
+        XCTAssertFalse(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
+                supportedPaymentMethods: [.afterpayClearpay]
+            )
+        )
+    }
+
+    /// Returns false, Afterpay in `supportedPaymentMethods` but URL requirement not is met
+    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingURL() {
+        XCTAssertFalse(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                configuration: makeConfiguration(hasReturnURL: false),
+                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
+                supportedPaymentMethods: [.afterpayClearpay]
+            )
+        )
+    }
+
+    /// Returns true, Afterpay in `supportedPaymentMethods` and both URL and shipping requirements are met
+    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_bothMet() {
+        // Afterpay should be supported if PI has shipping...
+        XCTAssertTrue(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: true)),
+                supportedPaymentMethods: [.afterpayClearpay]
+            )
+        )
+        // ...and also if configuration.allowsPaymentMethodsThatRequireShipping is true
+        var config = makeConfiguration(hasReturnURL: true)
+        config.allowsPaymentMethodsRequiringShippingAddress = true
+        XCTAssertTrue(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                configuration: config,
+                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
+                supportedPaymentMethods: [.afterpayClearpay]
+            )
+        )
+    }
+
+    // MARK: - SEPA family
+
+    let sepaFamily = [
+        PaymentSheet.PaymentMethodType.dynamic("ideal"),
+        PaymentSheet.PaymentMethodType.dynamic("bancontact"),
+        PaymentSheet.PaymentMethodType.dynamic("sofort"),
+        PaymentSheet.PaymentMethodType.dynamic("sepa_debit"),
+    ]
+    func testCantSetupSEPAFamily() {
+        // All SEPA family pms...
+        for pm in sepaFamily {
+            // ...can't be added...
+            XCTAssertFalse(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: pm,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    // ...if setup future usage is provided.
+                    intent: .paymentIntent(
+                        STPFixtures.makePaymentIntent(setupFutureUsage: .offSession)
+                    ),
+                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                )
+            )
+
+            // ...and can't be set up
+            XCTAssertFalse(
+                PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
+                    paymentMethod: pm,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: .setupIntent(STPFixtures.setupIntent()),
+                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                )
+            )
+        }
+    }
+
+    func testCanAddSEPAFamily() {
+        // iDEAL and bancontact can be added if returnURL provided
+        let sepaFamilySynchronous = [
+            PaymentSheet.PaymentMethodType.dynamic("ideal"),
+            PaymentSheet.PaymentMethodType.dynamic("bancontact"),
+        ]
+        for pm in sepaFamilySynchronous {
+            XCTAssertTrue(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: pm,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                )
+            )
+        }
+
+        let sepaFamilyAsynchronous = [
+            PaymentSheet.PaymentMethodType.dynamic("sofort"),
+            PaymentSheet.PaymentMethodType.dynamic("sepa_debit"),
+        ]
+        // ...SEPA and sofort also need allowsDelayedPaymentMethod:
+        for pm in sepaFamilyAsynchronous {
+            var config = makeConfiguration(hasReturnURL: true)
+            XCTAssertFalse(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: pm,
+                    configuration: config,
+                    intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                )
+            )
+            config.allowsDelayedPaymentMethods = true
+            XCTAssertTrue(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: pm,
+                    configuration: config,
+                    intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                )
+            )
+        }
+    }
+
+    // US Bank Account
+    func testCanAddUSBankAccountBasedOnVerificationMethod() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.allowsDelayedPaymentMethods = true
+        for verificationMethod in STPPaymentMethodOptions.USBankAccount.VerificationMethod.allCases {
+            let usBankOptions = STPPaymentMethodOptions.USBankAccount(
+                setupFutureUsage: nil,
+                verificationMethod: verificationMethod,
+                allResponseFields: [:]
+            )
+            let paymentMethodOptions = STPPaymentMethodOptions(
+                usBankAccount: usBankOptions,
+                allResponseFields: [:]
+            )
+            let pi = STPFixtures.makePaymentIntent(
+                paymentMethodTypes: [.USBankAccount],
+                setupFutureUsage: nil,
+                paymentMethodOptions: paymentMethodOptions,
+                shippingProvided: false
+            )
+            switch verificationMethod {
+            case .automatic, .instantOrSkip, .instant:
+                XCTAssertTrue(
+                    PaymentSheet.PaymentMethodType.supportsAdding(
+                        paymentMethod: .USBankAccount,
+                        configuration: configuration,
+                        intent: .paymentIntent(pi),
+                        supportedPaymentMethods: [.USBankAccount]
+                    )
+                )
+
+            case .skip, .microdeposits, .unknown:
+                XCTAssertFalse(
+                    PaymentSheet.PaymentMethodType.supportsAdding(
+                        paymentMethod: .USBankAccount,
+                        configuration: configuration,
+                        intent: .paymentIntent(pi),
+                        supportedPaymentMethods: [.USBankAccount]
+                    )
+                )
+            }
+        }
+    }
+
     func testInit() {
         XCTAssertEqual(PaymentSheet.PaymentMethodType(from: "card"), .card)
         XCTAssertEqual(PaymentSheet.PaymentMethodType(from: "us_bank_account"), .USBankAccount)
@@ -383,7 +631,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         XCTAssertTrue(
             PaymentSheet.PaymentMethodType.supports(
-                requirements: [.returnURL, .notSettingUp],
+                requirements: [.returnURL],
                 configuration: configuration,
                 intent: intent
             )
@@ -502,4 +750,32 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         return stpSetupIntent
     }
 
+}
+
+extension STPFixtures {
+    static func makePaymentIntent(
+        paymentMethodTypes: [STPPaymentMethodType]? = nil,
+        setupFutureUsage: STPPaymentIntentSetupFutureUsage? = nil,
+        paymentMethodOptions: STPPaymentMethodOptions? = nil,
+        shippingProvided: Bool = false
+    ) -> STPPaymentIntent {
+        var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)!
+        if let setupFutureUsage = setupFutureUsage {
+            json["setup_future_usage"] = setupFutureUsage.stringValue
+        }
+        if let paymentMethodTypes = paymentMethodTypes {
+            json["payment_method_types"] = paymentMethodTypes.map {
+                STPPaymentMethod.string(from: $0)
+            }
+        }
+        if !shippingProvided {
+            // The payment intent json already has shipping on it, so just remove it if needed
+            json["shipping"] = nil
+        }
+        if let paymentMethodOptions = paymentMethodOptions {
+            json["payment_method_options"] = paymentMethodOptions.dictionaryValue
+        }
+        let pi = STPPaymentIntent.decodedObject(fromAPIResponse: json)
+        return pi!
+    }
 }
