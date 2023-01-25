@@ -630,7 +630,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         configuration.returnURL = "http://return-to-url"
 
         XCTAssertTrue(
-            PaymentSheet.PaymentMethodType.supports(
+            PaymentSheet.PaymentMethodType.configurationSatisfiesRequirements(
                 requirements: [.returnURL],
                 configuration: configuration,
                 intent: intent

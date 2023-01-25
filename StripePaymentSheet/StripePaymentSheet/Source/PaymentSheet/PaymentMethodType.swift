@@ -245,7 +245,7 @@ extension PaymentSheet {
         ) -> Bool {
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 if case .dynamic = paymentMethod {
-                    return supports(
+                    return configurationSatisfiesRequirements(
                         requirements: paymentMethod.supportsAddingRequirements(),
                         configuration: configuration,
                         intent: intent
@@ -293,7 +293,7 @@ extension PaymentSheet {
                 }
             }()
 
-            return supports(
+            return configurationSupports(
                 paymentMethod: stpPaymentMethodType,
                 requirements: requirements,
                 configuration: configuration,
@@ -319,7 +319,7 @@ extension PaymentSheet {
         ) -> Bool {
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 if case .dynamic = paymentMethod {
-                    return supports(
+                    return configurationSatisfiesRequirements(
                         requirements: paymentMethod.supportsSaveAndReuseRequirements(),
                         configuration: configuration,
                         intent: intent
@@ -355,7 +355,7 @@ extension PaymentSheet {
                 }
             }()
 
-            return supports(
+            return configurationSupports(
                 paymentMethod: stpPaymentMethodType,
                 requirements: requirements,
                 configuration: configuration,
@@ -365,8 +365,15 @@ extension PaymentSheet {
 
             // TODO: We need a way to model this information in our common model
         }
-
-        static func supports(
+        
+        /// Returns true if the passed configuration satsifies the passed in `requirements`
+        /// Use this function over `configurationSupports` when the payment method cannot be expressed as a `STPPaymentMethodType`
+        /// - Parameters:
+        ///   - requirements: a list of requirements to be satisfied
+        ///   - configuration: a configuration to satisfy requirements
+        ///   - intent: an intent object
+        /// - Returns: true if the configuration satisfies the requirements
+        static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
             intent: Intent
@@ -379,8 +386,17 @@ extension PaymentSheet {
             return supports
         }
 
-        /// DRY helper method
-        static func supports(
+        
+        /// Returns true if the passed configuration satsifies the passed in `requirements` and this payment method is in the list of supported payment methods
+        /// Use this function over `configurationSatisfiesRequirements` when the payment method in quesiton can be represented as a `STPPaymentMethodType`
+        /// - Parameters:
+        ///   - paymentMethod: the payment method type in question
+        ///   - requirements: a list of requirements to be satisfied
+        ///   - configuration: a configuration to satisfy requirements
+        ///   - intent: an intent object
+        ///   - supportedPaymentMethods: a list of supported payment method types
+        /// - Returns: true if the configuration satisfies the requirements and if `paymentMethod` is contained in `supportedPaymentMethods`
+        static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
