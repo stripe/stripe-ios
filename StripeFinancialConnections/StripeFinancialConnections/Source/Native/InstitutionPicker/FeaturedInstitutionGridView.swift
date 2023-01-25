@@ -11,7 +11,10 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol FeaturedInstitutionGridViewDelegate: AnyObject {
-    func featuredInstitutionGridView(_ view: FeaturedInstitutionGridView, didSelectInstitution institution: FinancialConnectionsInstitution)
+    func featuredInstitutionGridView(
+        _ view: FeaturedInstitutionGridView,
+        didSelectInstitution institution: FinancialConnectionsInstitution
+    )
 }
 
 private enum Section {
@@ -43,12 +46,17 @@ class FeaturedInstitutionGridView: UIView {
         let cellIdentifier = "\(FeaturedInstitutionGridCell.self)"
         collectionView.register(FeaturedInstitutionGridCell.self, forCellWithReuseIdentifier: cellIdentifier)
 
-        let dataSource = UICollectionViewDiffableDataSource<Section, FinancialConnectionsInstitution>(collectionView: collectionView) { collectionView, indexPath, institution in
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? FeaturedInstitutionGridCell else {
+        let dataSource = UICollectionViewDiffableDataSource<Section, FinancialConnectionsInstitution>(
+            collectionView: collectionView
+        ) { collectionView, indexPath, institution in
+            guard
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
+                    as? FeaturedInstitutionGridCell
+            else {
                 fatalError("Couldn't find cell with reuseIdentifier \(cellIdentifier)")
             }
             cell.customize(with: institution)
-            cell.accessibilityLabel = institution.name // used for UI tests
+            cell.accessibilityLabel = institution.name  // used for UI tests
             return cell
         }
         self.dataSource = dataSource

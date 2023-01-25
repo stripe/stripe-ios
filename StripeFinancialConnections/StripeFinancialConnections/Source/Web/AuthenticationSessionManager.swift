@@ -77,25 +77,30 @@ final class AuthenticationSessionManager: NSObject {
                 guard let returnUrlString = returnUrl?.absoluteString else {
                     promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Missing return URL"))
                     return
-                 }
+                }
 
                 if returnUrlString == self.manifest.successUrl {
                     promise.resolve(with: .success)
                 } else if returnUrlString == self.manifest.cancelUrl {
                     promise.resolve(with: .webCancelled)
-                } else if returnUrlString.hasNativeRedirectPrefix, let targetURL = URL(string: returnUrlString.droppingNativeRedirectPrefix()) {
+                } else if returnUrlString.hasNativeRedirectPrefix,
+                    let targetURL = URL(string: returnUrlString.droppingNativeRedirectPrefix())
+                {
                     promise.resolve(with: .redirect(url: targetURL))
                 } else {
                     promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Nil return URL"))
                 }
-        })
+            }
+        )
         authSession.presentationContextProvider = self
         authSession.prefersEphemeralWebBrowserSession = true
 
         self.authSession = authSession
         if #available(iOS 13.4, *) {
             if !authSession.canStart {
-                promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Failed to start session"))
+                promise.reject(
+                    with: FinancialConnectionsSheetError.unknown(debugDescription: "Failed to start session")
+                )
                 return promise
             }
         }

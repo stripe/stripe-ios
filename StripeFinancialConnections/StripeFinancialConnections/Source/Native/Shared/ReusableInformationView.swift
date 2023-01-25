@@ -84,7 +84,7 @@ private func CreateFooterView(
     guard
         primaryButtonConfiguration != nil || secondaryButtonConfiguration != nil
     else {
-        return nil // display no footer
+        return nil  // display no footer
     }
     let footerStackView = UIStackView()
     footerStackView.axis = .vertical
@@ -92,20 +92,28 @@ private func CreateFooterView(
     if let secondaryButtonConfiguration = secondaryButtonConfiguration {
         let secondaryButton = Button(configuration: .financialConnectionsSecondary)
         secondaryButton.title = secondaryButtonConfiguration.title
-        secondaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectSecondaryButton), for: .touchUpInside)
+        secondaryButton.addTarget(
+            view,
+            action: #selector(ReusableInformationView.didSelectSecondaryButton),
+            for: .touchUpInside
+        )
         secondaryButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            secondaryButton.heightAnchor.constraint(equalToConstant: 56),
+            secondaryButton.heightAnchor.constraint(equalToConstant: 56)
         ])
         footerStackView.addArrangedSubview(secondaryButton)
     }
     if let primaryButtonConfiguration = primaryButtonConfiguration {
         let primaryButton = Button(configuration: .financialConnectionsPrimary)
         primaryButton.title = primaryButtonConfiguration.title
-        primaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectPrimaryButton), for: .touchUpInside)
+        primaryButton.addTarget(
+            view,
+            action: #selector(ReusableInformationView.didSelectPrimaryButton),
+            for: .touchUpInside
+        )
         primaryButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            primaryButton.heightAnchor.constraint(equalToConstant: 56),
+            primaryButton.heightAnchor.constraint(equalToConstant: 56)
         ])
         footerStackView.addArrangedSubview(primaryButton)
     }
@@ -157,7 +165,7 @@ struct ReusableInformationView_Previews: PreviewProvider {
                 primaryButtonConfiguration: nil,
                 secondaryButtonConfiguration: nil
             )
-                .frame(width: 320)
+            .frame(width: 320)
         }
         .frame(maxWidth: .infinity)
         .background(Color.gray.opacity(0.1))

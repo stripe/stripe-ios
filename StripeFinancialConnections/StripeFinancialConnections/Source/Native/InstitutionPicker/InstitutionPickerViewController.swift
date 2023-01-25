@@ -12,8 +12,13 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerViewControllerDelegate: AnyObject {
-    func institutionPickerViewController(_ viewController: InstitutionPickerViewController, didSelect institution: FinancialConnectionsInstitution)
-    func institutionPickerViewControllerDidSelectManuallyAddYourAccount(_ viewController: InstitutionPickerViewController)
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didSelect institution: FinancialConnectionsInstitution
+    )
+    func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
+        _ viewController: InstitutionPickerViewController
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -46,7 +51,10 @@ class InstitutionPickerViewController: UIViewController {
         return featuredInstitutionGridView
     }()
     private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView(frame: view.bounds, allowManualEntry: dataSource.manifest.allowManualEntry)
+        let institutionSearchTableView = InstitutionSearchTableView(
+            frame: view.bounds,
+            allowManualEntry: dataSource.manifest.allowManualEntry
+        )
         institutionSearchTableView.delegate = self
         return institutionSearchTableView
     }()
@@ -94,7 +102,10 @@ class InstitutionPickerViewController: UIViewController {
 
         toggleContentContainerViewVisbility()
 
-        let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
+        let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(didTapOutsideOfSearchBar)
+        )
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
     }
@@ -125,7 +136,7 @@ class InstitutionPickerViewController: UIViewController {
         } else {
             loadingView.stopAnimating()
         }
-        view.bringSubviewToFront(loadingView) // defensive programming to avoid loadingView being hiddden
+        view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 }
 
@@ -216,7 +227,10 @@ extension InstitutionPickerViewController {
                 }
         })
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newFetchInstitutionsDispatchWorkItem)
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + Constants.queryDelay,
+            execute: newFetchInstitutionsDispatchWorkItem
+        )
     }
 }
 
@@ -319,7 +333,7 @@ private func CreateHeaderView(
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            CreateHeaderTitleLabel(),
+            CreateHeaderTitleLabel()
         ]
     )
     if let searchBar = searchBar {
@@ -341,6 +355,9 @@ private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = UILabel()
     headerTitleLabel.textColor = .textPrimary
     headerTitleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    headerTitleLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
+    headerTitleLabel.text = STPLocalizedString(
+        "Select your bank",
+        "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
+    )
     return headerTitleLabel
 }

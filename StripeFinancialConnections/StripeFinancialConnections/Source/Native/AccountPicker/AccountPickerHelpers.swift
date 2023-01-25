@@ -8,7 +8,9 @@
 import Foundation
 
 final class AccountPickerHelpers {
-    static func rowTitles(forAccount account: FinancialConnectionsPartnerAccount) -> (leadingTitle: String, trailingTitle: String?) {
+    static func rowTitles(forAccount account: FinancialConnectionsPartnerAccount) -> (
+        leadingTitle: String, trailingTitle: String?
+    ) {
         let willDisplayBalanceInfoInSubtitle = account.balanceInfo != nil
         if willDisplayBalanceInfoInSubtitle {
             return (account.name, "••••\(account.displayableAccountNumbers ?? "")")
@@ -33,7 +35,9 @@ final class AccountPickerHelpers {
         let numberFormatter = NumberFormatter()
         numberFormatter.currencyCode = currency
         numberFormatter.numberStyle = .currency
-        return numberFormatter.string(for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: balanceAmount, currency: currency))
+        return numberFormatter.string(
+            for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: balanceAmount, currency: currency)
+        )
     }
 }
 

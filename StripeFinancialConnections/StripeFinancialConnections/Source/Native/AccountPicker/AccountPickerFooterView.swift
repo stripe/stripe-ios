@@ -21,7 +21,7 @@ final class AccountPickerFooterView: UIView {
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            linkAccountsButton.heightAnchor.constraint(equalToConstant: 56),
+            linkAccountsButton.heightAnchor.constraint(equalToConstant: 56)
         ])
         return linkAccountsButton
     }()
@@ -56,7 +56,7 @@ final class AccountPickerFooterView: UIView {
         addSubview(verticalStackView)
         addAndPinSubviewToSafeArea(verticalStackView)
 
-        didSelectAccounts(count: 0) // set the button title
+        didSelectAccounts(count: 0)  // set the button title
     }
 
     required init?(coder: NSCoder) {
@@ -71,10 +71,19 @@ final class AccountPickerFooterView: UIView {
         linkAccountsButton.isEnabled = (numberOfAccountsSelected > 0)
 
         if institutionHasAccountPicker {
-            linkAccountsButton.title = STPLocalizedString("Confirm", "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
+            linkAccountsButton.title = STPLocalizedString(
+                "Confirm",
+                "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+            )
         } else {
-            let singleAccountButtonTitle = STPLocalizedString("Link account", "A button that allows users to confirm the process of saving their bank account for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
-            let multipleAccountButtonTitle = STPLocalizedString("Link accounts", "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
+            let singleAccountButtonTitle = STPLocalizedString(
+                "Link account",
+                "A button that allows users to confirm the process of saving their bank account for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+            )
+            let multipleAccountButtonTitle = STPLocalizedString(
+                "Link accounts",
+                "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+            )
 
             if numberOfAccountsSelected == 0 {
                 if singleAccount {
@@ -84,7 +93,7 @@ final class AccountPickerFooterView: UIView {
                 }
             } else if numberOfAccountsSelected == 1 {
                 linkAccountsButton.title = singleAccountButtonTitle
-            } else { // numberOfAccountsSelected > 1
+            } else {  // numberOfAccountsSelected > 1
                 linkAccountsButton.title = multipleAccountButtonTitle
             }
         }

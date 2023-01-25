@@ -27,10 +27,12 @@ final class HostViewController: UIViewController {
     // MARK: - UI
 
     private lazy var closeItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: Image.close.makeImage(template: false),
-                                   style: .plain,
-                                   target: self,
-                                   action: #selector(didTapClose))
+        let item = UIBarButtonItem(
+            image: Image.close.makeImage(template: false),
+            style: .plain,
+            target: self,
+            action: #selector(didTapClose)
+        )
 
         item.tintColor = UIColor.dynamic(light: .systemGray2, dark: .white)
         return item
@@ -50,10 +52,11 @@ final class HostViewController: UIViewController {
 
     // MARK: - Init
 
-    init(clientSecret: String,
-         returnURL: String?,
-         apiClient: FinancialConnectionsAPIClient,
-         delegate: HostViewControllerDelegate?
+    init(
+        clientSecret: String,
+        returnURL: String?,
+        apiClient: FinancialConnectionsAPIClient,
+        delegate: HostViewControllerDelegate?
     ) {
         self.clientSecret = clientSecret
         self.returnURL = returnURL
@@ -104,7 +107,7 @@ extension HostViewController {
                     self.loadingView.errorView.isHidden = false
                     self.lastError = error
                 }
-        }
+            }
     }
 }
 

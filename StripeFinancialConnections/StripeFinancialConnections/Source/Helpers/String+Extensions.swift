@@ -46,32 +46,38 @@ extension String {
         guard
             // Matches markdown links. For example, the regex will find all
             // occurrances of tokens like: `[Stripe Link Here](https://stripe.com/)`
-            let regularExpression = try? NSRegularExpression(pattern: #"\[[^\[]*]*\]\([^\)]*\)"#, options: NSRegularExpression.Options(rawValue: 0))
+            let regularExpression = try? NSRegularExpression(
+                pattern: #"\[[^\[]*]*\]\([^\)]*\)"#,
+                options: NSRegularExpression.Options(rawValue: 0)
+            )
         else {
             return (originalString, [])
         }
 
         var modifiedString = originalString
         var links: [Link] = []
-        while
-            let textCheckingResult = regularExpression.firstMatch(
-                in: modifiedString,
-                range: NSRange(location: 0, length: modifiedString.count)
-            )
-        {
+        while let textCheckingResult = regularExpression.firstMatch(
+            in: modifiedString,
+            range: NSRange(location: 0, length: modifiedString.count)
+        ) {
             let markdownLinkRange = textCheckingResult.range
             // Ex. [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms)
             let markdownLinkString = (modifiedString as NSString).substring(with: markdownLinkRange)
 
             var replacementString = ""
-            if let substring = markdownLinkString.extractStringInBrackets(), let urlString = markdownLinkString.extractStringInParentheses() {
+            if let substring = markdownLinkString.extractStringInBrackets(),
+                let urlString = markdownLinkString.extractStringInParentheses()
+            {
                 replacementString = substring
                 let linkRange = NSRange(location: markdownLinkRange.location, length: substring.count)
                 let link = Link(range: linkRange, urlString: urlString)
                 links.append(link)
             }
 
-            modifiedString = (modifiedString as NSString).replacingCharacters(in: markdownLinkRange, with: replacementString)
+            modifiedString = (modifiedString as NSString).replacingCharacters(
+                in: markdownLinkRange,
+                with: replacementString
+            )
         }
 
         return (modifiedString, links)
@@ -82,11 +88,15 @@ extension String {
     /// For example,  `Terms` out of `[Terms]`.
     private func extractStringInBrackets() -> String? {
         guard
-            let regularExpression = try? NSRegularExpression(pattern: #"(?<=\[)[^\[\n]*(?=\])"#, options: NSRegularExpression.Options(rawValue: 0))
+            let regularExpression = try? NSRegularExpression(
+                pattern: #"(?<=\[)[^\[\n]*(?=\])"#,
+                options: NSRegularExpression.Options(rawValue: 0)
+            )
         else {
             return nil
         }
-        guard let range = regularExpression.firstMatch(in: self, range: NSRange(location: 0, length: count))?.range else {
+        guard let range = regularExpression.firstMatch(in: self, range: NSRange(location: 0, length: count))?.range
+        else {
             return nil
         }
         return (self as NSString).substring(with: range)
@@ -97,11 +107,15 @@ extension String {
     /// For example, `https://stripe.com/` out of `(https://stripe.com/)`.
     private func extractStringInParentheses() -> String? {
         guard
-            let regularExpression = try? NSRegularExpression(pattern: #"(?<=\()[^\)\(\n]*(?=\))"#, options: NSRegularExpression.Options(rawValue: 0))
+            let regularExpression = try? NSRegularExpression(
+                pattern: #"(?<=\()[^\)\(\n]*(?=\))"#,
+                options: NSRegularExpression.Options(rawValue: 0)
+            )
         else {
             return nil
         }
-        guard let range = regularExpression.firstMatch(in: self, range: NSRange(location: 0, length: count))?.range else {
+        guard let range = regularExpression.firstMatch(in: self, range: NSRange(location: 0, length: count))?.range
+        else {
             return nil
         }
         return (self as NSString).substring(with: range)

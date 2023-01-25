@@ -58,21 +58,23 @@ final class AccountPickerLabelRowView: UIView {
 
     init() {
         super.init(frame: .zero)
-        labelStackView.addArrangedSubview({
-            let horizontalStackView = UIStackView(
-                arrangedSubviews: [
-                    // we need a leading and a trailing
-                    // title label because we want to
-                    // prioritize the `trailingTitleLabel`
-                    // when there's a need for truncation
-                    leadingTitleLabel,
-                    trailingTitleLabel,
-                ]
-            )
-            horizontalStackView.axis = .horizontal
-            horizontalStackView.spacing = 4
-            return horizontalStackView
-        }())
+        labelStackView.addArrangedSubview(
+            {
+                let horizontalStackView = UIStackView(
+                    arrangedSubviews: [
+                        // we need a leading and a trailing
+                        // title label because we want to
+                        // prioritize the `trailingTitleLabel`
+                        // when there's a need for truncation
+                        leadingTitleLabel,
+                        trailingTitleLabel,
+                    ]
+                )
+                horizontalStackView.axis = .horizontal
+                horizontalStackView.spacing = 4
+                return horizontalStackView
+            }()
+        )
 
         topLevelHorizontalStackView.addArrangedSubview(labelStackView)
         addAndPinSubview(topLevelHorizontalStackView)
@@ -101,7 +103,10 @@ final class AccountPickerLabelRowView: UIView {
         linkedView = nil
         if isLinked {
             let linkedLabel = UILabel()
-            linkedLabel.text = STPLocalizedString("Linked", "An indicator next to a bank account that educates the user that this bank account is already connected (or linked). This indicator appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
+            linkedLabel.text = STPLocalizedString(
+                "Linked",
+                "An indicator next to a bank account that educates the user that this bank account is already connected (or linked). This indicator appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+            )
             linkedLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
             linkedLabel.textColor = .textSuccess
             linkedLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)

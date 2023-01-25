@@ -59,7 +59,7 @@ final class ConsentBottomSheetView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners() // needs to be in `layoutSubviews` to get the correct size for the mask
+        roundCorners()  // needs to be in `layoutSubviews` to get the correct size for the mask
     }
 
     private func roundCorners() {
@@ -226,7 +226,7 @@ private func CreateFooterView(
     okButton.addTarget(actionTarget, action: #selector(ConsentBottomSheetView.didSelectOK), for: .touchUpInside)
     okButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        okButton.heightAnchor.constraint(equalToConstant: 56),
+        okButton.heightAnchor.constraint(equalToConstant: 56)
     ])
     return okButton
 }
@@ -271,9 +271,9 @@ struct ConsentBottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack {
-                    ConsentBottomSheetViewUIViewRepresentable()
-                        .frame(width: 320)
-                        .frame(height: 350)
+                ConsentBottomSheetViewUIViewRepresentable()
+                    .frame(width: 320)
+                    .frame(height: 350)
 
             }
             .frame(maxWidth: .infinity)

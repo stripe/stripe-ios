@@ -22,7 +22,7 @@ class ConsentFooterView: HitTestView {
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            agreeButton.heightAnchor.constraint(equalToConstant: 56),
+            agreeButton.heightAnchor.constraint(equalToConstant: 56)
         ])
         return agreeButton
     }()
@@ -101,7 +101,8 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentFooterView {
         ConsentFooterView(
-            aboveCtaText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
+            aboveCtaText:
+                "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
             ctaText: "Agree",
             belowCtaText: "[Manually verify instead](https://www.stripe.com) (takes 1-2 business days)",
             didSelectAgree: {},

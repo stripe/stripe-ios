@@ -13,7 +13,9 @@ protocol ManualEntryDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
-    func attachBankAccountToLinkAccountSession(routingNumber: String, accountNumber: String) -> Future<FinancialConnectionsPaymentAccountResource>
+    func attachBankAccountToLinkAccountSession(routingNumber: String, accountNumber: String) -> Future<
+        FinancialConnectionsPaymentAccountResource
+    >
 }
 
 final class ManualEntryDataSourceImplementation: ManualEntryDataSource {

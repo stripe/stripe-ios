@@ -13,7 +13,10 @@ import XCTest
 final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
 
     func testFinancialConnectionsSheetFailedAnalyticEncoding() {
-        let analytic = FinancialConnectionsSheetFailedAnalytic(clientSecret: "test", error: FinancialConnectionsSheetError.unknown(debugDescription: "some description"))
+        let analytic = FinancialConnectionsSheetFailedAnalytic(
+            clientSecret: "test",
+            error: FinancialConnectionsSheetError.unknown(debugDescription: "some description")
+        )
         XCTAssertNotNil(analytic.error)
 
         let errorDict = analytic.error.serializeForLogging()
@@ -24,8 +27,18 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
 
     func testFinancialConnectionsSheetCompletionAnalyticCompleted() {
         let accountList = StripeAPI.FinancialConnectionsSession.AccountList(data: [], hasMore: false)
-        let session = StripeAPI.FinancialConnectionsSession(clientSecret: "", id: "", accounts: accountList, livemode: false, paymentAccount: nil, bankAccountToken: nil)
-        let analytic = FinancialConnectionsSheetCompletionAnalytic.make(clientSecret: "secret", result: .completed(session: session))
+        let session = StripeAPI.FinancialConnectionsSession(
+            clientSecret: "",
+            id: "",
+            accounts: accountList,
+            livemode: false,
+            paymentAccount: nil,
+            bankAccountToken: nil
+        )
+        let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
+            clientSecret: "secret",
+            result: .completed(session: session)
+        )
         guard let closedAnalytic = analytic as? FinancialConnectionsSheetClosedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")
         }
@@ -45,7 +58,10 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
     }
 
     func testFinancialConnectionsSheetCompletionAnalyticFailed() {
-        let analytic = FinancialConnectionsSheetCompletionAnalytic.make(clientSecret: "secret", result: .failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "some description")))
+        let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
+            clientSecret: "secret",
+            result: .failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "some description"))
+        )
         guard let failedAnalytic = analytic as? FinancialConnectionsSheetFailedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetFailedAnalytic`")
         }

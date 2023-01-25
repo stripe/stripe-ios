@@ -19,7 +19,7 @@ extension Button.Configuration {
         primaryButtonConfiguration.disabledBackgroundColor = .textBrand
         primaryButtonConfiguration.disabledForegroundColor = .white.withAlphaComponent(0.3)
         // pressed
-        primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23) // this tries to simulate `brand600`
+        primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23)  // this tries to simulate `brand600`
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return primaryButtonConfiguration
     }
@@ -34,7 +34,7 @@ extension Button.Configuration {
         secondaryButtonConfiguration.disabledForegroundColor = .textPrimary.withAlphaComponent(0.3)
         secondaryButtonConfiguration.disabledBackgroundColor = .backgroundContainer
         // pressed
-        secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04) // this tries to simulate `neutral100`
+        secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return secondaryButtonConfiguration
     }

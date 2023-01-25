@@ -64,7 +64,12 @@ class ManualEntryValidatorTests: XCTestCase {
     func testValidateAccountNumberConfirmation() throws {
         XCTAssert(ManualEntryValidator.validateAccountNumberConfirmation("", accountNumber: "") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumberConfirmation("1", accountNumber: "1") == nil)
-        XCTAssert(ManualEntryValidator.validateAccountNumberConfirmation("00000000123456789", accountNumber: "00000000123456789") == nil)
+        XCTAssert(
+            ManualEntryValidator.validateAccountNumberConfirmation(
+                "00000000123456789",
+                accountNumber: "00000000123456789"
+            ) == nil
+        )
         XCTAssert(ManualEntryValidator.validateAccountNumberConfirmation("1", accountNumber: "2") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumberConfirmation("2", accountNumber: "1") != nil)
     }

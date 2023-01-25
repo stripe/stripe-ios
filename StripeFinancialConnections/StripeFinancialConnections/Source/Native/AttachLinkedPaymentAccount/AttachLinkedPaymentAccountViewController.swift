@@ -16,8 +16,12 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
         _ viewController: AttachLinkedPaymentAccountViewController,
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
     )
-    func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(_ viewController: AttachLinkedPaymentAccountViewController)
-    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(_ viewController: AttachLinkedPaymentAccountViewController)
+    func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(
+        _ viewController: AttachLinkedPaymentAccountViewController
+    )
+    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
+        _ viewController: AttachLinkedPaymentAccountViewController
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -35,18 +39,20 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
     // we only allow to retry once
     private var allowRetry = true
     private var didSelectTryAgain: (() -> Void)? {
-        return allowRetry ? { [weak self] in
-            guard let self = self else { return }
-            self.allowRetry = false
-            self.showErrorView(nil)
-            self.attachLinkedAccountIdToLinkAccountSession()
-        } : nil
+        return allowRetry
+            ? { [weak self] in
+                guard let self = self else { return }
+                self.allowRetry = false
+                self.showErrorView(nil)
+                self.attachLinkedAccountIdToLinkAccountSession()
+            } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry ? { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.attachLinkedPaymentAccountViewControllerDidSelectManualEntry(self)
-        } : nil
+        return dataSource.manifest.allowManualEntry
+            ? { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.attachLinkedPaymentAccountViewControllerDidSelectManualEntry(self)
+            } : nil
     }
     private var errorView: UIView?
 
@@ -100,14 +106,13 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         self,
                         didFinishWithPaymentAccountResource: paymentAccountResource
                     )
-                    // we don't remove `linkingAccountsLoadingView` on success
-                    // because this is the last time the user will see this
-                    // screen, and we don't want to show a blank background
-                    // while we transition to the next pane
+                // we don't remove `linkingAccountsLoadingView` on success
+                // because this is the last time the user will see this
+                // screen, and we don't want to show a blank background
+                // while we transition to the next pane
                 case .failure(let error):
                     linkingAccountsLoadingView.removeFromSuperview()
-                    if
-                        let error = error as? StripeError,
+                    if let error = error as? StripeError,
                         case .apiError(let apiError) = error,
                         let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
                         let reason = extraFields["reason"] as? String,
