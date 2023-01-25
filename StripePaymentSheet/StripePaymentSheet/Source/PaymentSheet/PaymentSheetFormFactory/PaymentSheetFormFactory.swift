@@ -217,8 +217,7 @@ extension PaymentSheetFormFactory {
             defaults: defaultAddress,
             collectionMode: collectionMode,
             additionalFields: .init(
-                billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox
-                    ? .enabled(isOptional: false) : .disabled
+                billingSameAsShippingCheckbox: .enabled(isOptional: false)
             ),
             theme: theme
         )
@@ -271,6 +270,7 @@ extension PaymentSheetFormFactory {
             nameElement: makeName(),
             emailElement: makeEmail(),
             checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            addressElement: makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil),
             savingAccount: isSaving,
             merchantName: merchantName,
             theme: theme

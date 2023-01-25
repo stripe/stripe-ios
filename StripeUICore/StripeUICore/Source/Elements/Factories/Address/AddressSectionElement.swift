@@ -50,7 +50,14 @@ import UIKit
             var state: String?
 
             /// Initializes an Address
-            public init(city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+            public init(
+                city: String? = nil,
+                country: String? = nil,
+                line1: String? = nil,
+                line2: String? = nil,
+                postalCode: String? = nil,
+                state: String? = nil
+            ) {
                 self.city = city
                 self.country = country
                 self.line1 = line1
@@ -71,6 +78,7 @@ import UIKit
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
         /// Replaces the address line 1 field with `self.autoCompleteLine`
         case autoCompletable
+        case none
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -129,14 +137,21 @@ import UIKit
         return countryCodes[country.selectedIndex]
     }
     var addressDetails: AddressDetails {
-        let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
+        let address = AddressDetails.Address(
+            city: city?.text ?? defaults.address.city,
+            country: selectedCountryCode,
+            line1: line1?.text ?? defaults.address.line1,
+            line2: line2?.text ?? defaults.address.line2,
+            postalCode: postalCode?.text ?? defaults.address.postalCode,
+            state: state?.rawData ?? defaults.address.state
+        )
         return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
     }
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsUITheme
     private(set) var defaults: AddressDetails
-    public var didTapAutocompleteButton: () -> Void = { }
+    public var didTapAutocompleteButton: () -> Void = {}
 
     // MARK: - Implementation
     /**
@@ -159,8 +174,17 @@ import UIKit
         additionalFields: AdditionalFields = .init(),
         theme: ElementsUITheme = .default
     ) {
+        assert(
+            collectionMode != .none || defaults.address.country != nil,
+            "When billing address collection is off you must include a country in the default billing address."
+        )
+
+        let defaultCountry = defaults.address.country ?? "US"
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
-        let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
+        let countryCodes =
+            collectionMode != .none
+            ? locale.sortedByTheirLocalizedNames(dropdownCountries)
+            : [defaultCountry]
         self.collectionMode = collectionMode
         self.countryCodes = countryCodes
         self.country = DropdownFieldElement.Address.makeCountry(
@@ -178,8 +202,10 @@ import UIKit
         // Initialize additional fields
         self.name = {
             if case .enabled(let isOptional) = additionalFields.name {
-                return TextFieldElement.NameConfiguration(defaultValue: defaults.name,
-                                                          isOptional: isOptional).makeElement(theme: theme)
+                return TextFieldElement.NameConfiguration(
+                    defaultValue: defaults.name,
+                    isOptional: isOptional
+                ).makeElement(theme: theme)
             } else {
                 return nil
             }
@@ -198,8 +224,14 @@ import UIKit
                 return nil
             }
         }()
-        self.sameAsCheckbox = CheckboxElement(theme: theme, label: String.Localized.billing_same_as_shipping, isSelectedByDefault: true)
-        if case .enabled = additionalFields.billingSameAsShippingCheckbox, let defaultCountry = defaults.address.country, countryCodes.contains(defaultCountry) {
+        self.sameAsCheckbox = CheckboxElement(
+            theme: theme,
+            label: String.Localized.billing_same_as_shipping,
+            isSelectedByDefault: true
+        )
+        if case .enabled = additionalFields.billingSameAsShippingCheckbox,
+            let defaultCountry = defaults.address.country, countryCodes.contains(defaultCountry)
+        {
             // Country must exist in the dropdown, otherwise this address can't be same as shipping
             sameAsCheckbox.view.isHidden = false
         } else {
@@ -223,11 +255,15 @@ import UIKit
             guard let self = self else { return }
             if isToggled {
                 // Set the country to the default country
-                self.country.selectedIndex = self.country.items.firstIndex {
-                    $0.rawData == self.defaults.address.country ?? ""
-                } ?? self.country.selectedIndex
+                self.country.selectedIndex =
+                    self.country.items.firstIndex {
+                        $0.rawData == self.defaults.address.country ?? ""
+                    } ?? self.country.selectedIndex
                 // Populate our fields with the provided defaults
-                self.updateAddressFields(for: self.defaults.address.country ?? self.country.selectedItem.rawData, address: self.defaults.address)
+                self.updateAddressFields(
+                    for: self.defaults.address.country ?? self.country.selectedItem.rawData,
+                    address: self.defaults.address
+                )
             } else {
                 // Clear the fields
                 self.updateAddressFields(for: self.country.selectedItem.rawData, address: .init())
@@ -242,7 +278,8 @@ import UIKit
         self.defaults.address = defaultAddress
 
         // Next, show/hide the checkbox if address is valid/invalid
-        sameAsCheckbox.view.isHidden = defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesnt exist")
+        sameAsCheckbox.view.isHidden =
+            defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesnt exist")
         guard !sameAsCheckbox.view.isHidden else {
             // We're done if the checkbox is hidden
             return
@@ -251,10 +288,14 @@ import UIKit
         // Finally...
         if sameAsCheckbox.isSelected {
             // ...update the fields with the default values if billing checkbox is shown and checked
-            self.country.selectedIndex = self.country.items.firstIndex {
-                $0.rawData == defaults.address.country ?? ""
-            } ?? self.country.selectedIndex
-            updateAddressFields(for: defaults.address.country ?? self.country.selectedItem.rawData, address: defaults.address)
+            self.country.selectedIndex =
+                self.country.items.firstIndex {
+                    $0.rawData == defaults.address.country ?? ""
+                } ?? self.country.selectedIndex
+            updateAddressFields(
+                for: defaults.address.country ?? self.country.selectedItem.rawData,
+                address: defaults.address
+            )
         } else {
             // ...or select the checkbox if the address matches
             sameAsCheckbox.isSelected = displayedAddressEqualTo(address: defaultAddress)
@@ -263,18 +304,30 @@ import UIKit
 
     /// - Parameter address: Populates the new fields with the provided defaults, or the current fields' text if `nil`.
     private func updateAddressFields(
-        for countryCode: String,
+        for countryCode: String?,
         address: AddressDetails.Address? = nil
     ) {
+        guard collectionMode != .none else {
+            addressSection.elements = []
+            return
+        }
+
+        assert(countryCode != nil)
+        guard let countryCode = countryCode else {
+            return
+        }
+
         // Create the new address fields' default text
-        let address = address ?? AddressDetails.Address(
-            city: city?.text,
-            country: nil,
-            line1: line1?.text,
-            line2: line2?.text,
-            postalCode: postalCode?.text,
-            state: state?.rawData
-        )
+        let address =
+            address
+            ?? AddressDetails.Address(
+                city: city?.text,
+                country: nil,
+                line1: line1?.text,
+                line2: line2?.text,
+                postalCode: postalCode?.text,
+                state: state?.rawData
+            )
 
         // Get the address spec for the country and filter out unused fields
         let spec = addressSpecProvider.addressSpec(for: countryCode)
@@ -286,9 +339,11 @@ import UIKit
                 if case .postal = $0 {
                     return countriesRequiringPostalCollection.contains(countryCode)
                 } else {
-                   return false
+                    return false
                 }
             case .autoCompletable:
+                return false
+            case .none:
                 return false
             }
         }
@@ -298,9 +353,12 @@ import UIKit
         } else {
             autoCompleteLine = nil
         }
+
         // Re-create the address fields
         if fieldOrdering.contains(.line) {
-            if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
+            if case .all(let autocompletableCountries) = collectionMode,
+                autocompletableCountries.caseInsensitiveContains(countryCode)
+            {
                 line1 = TextFieldElement.Address.LineConfiguration(
                     lineType: .line1Autocompletable(didTapAutocomplete: didTapAutocompleteButton),
                     defaultValue: address.line1
@@ -309,16 +367,20 @@ import UIKit
                 line1 = TextFieldElement.Address.makeLine1(defaultValue: address.line1, theme: theme)
             }
         }
-        line2 = fieldOrdering.contains(.line) ?
-            TextFieldElement.Address.makeLine2(defaultValue: address.line2, theme: theme) : nil
-        city = fieldOrdering.contains(.city) ?
-        spec.makeCityElement(defaultValue: address.city, theme: theme) : nil
-        state = fieldOrdering.contains(.state) ?
-        spec.makeStateElement(defaultValue: address.state,
-                              stateDict: Dictionary(uniqueKeysWithValues: zip(spec.subKeys ?? [], spec.subLabels ?? [])),
-                              theme: theme) : nil
-        postalCode = fieldOrdering.contains(.postal) ?
-        spec.makePostalElement(countryCode: countryCode, defaultValue: address.postalCode, theme: theme) : nil
+        line2 =
+            fieldOrdering.contains(.line)
+            ? TextFieldElement.Address.makeLine2(defaultValue: address.line2, theme: theme) : nil
+        city = fieldOrdering.contains(.city) ? spec.makeCityElement(defaultValue: address.city, theme: theme) : nil
+        state =
+            fieldOrdering.contains(.state)
+            ? spec.makeStateElement(
+                defaultValue: address.state,
+                stateDict: Dictionary(uniqueKeysWithValues: zip(spec.subKeys ?? [], spec.subLabels ?? [])),
+                theme: theme
+            ) : nil
+        postalCode =
+            fieldOrdering.contains(.postal)
+            ? spec.makePostalElement(countryCode: countryCode, defaultValue: address.postalCode, theme: theme) : nil
 
         // Order the address fields according to `fieldOrdering`
         let addressFields: [Element?] = fieldOrdering.reduce([]) { partialResult, fieldType in
@@ -335,7 +397,9 @@ import UIKit
             }
         }
 
-        let initialElements: [Element?] = [name, country, autoCompleteLine]
+        // Explicitly
+        let countryElement = collectionMode != .none ? country : nil
+        let initialElements: [Element?] = [name, countryElement, autoCompleteLine]
         let phoneElement: [Element?] = [phone]
         addressSection.elements = (initialElements + addressFields + phoneElement).compactMap { $0 }
     }
@@ -344,22 +408,22 @@ import UIKit
     func displayedAddressEqualTo(address: AddressDetails.Address) -> Bool {
         var allDisplayedFieldsEqual = true
         if let city = city, city.text.nonEmpty != address.city?.nonEmpty {
-           allDisplayedFieldsEqual = false
+            allDisplayedFieldsEqual = false
         }
         if country.selectedItem.rawData != address.country?.nonEmpty {
-           allDisplayedFieldsEqual = false
+            allDisplayedFieldsEqual = false
         }
         if let line1 = line1, line1.text.nonEmpty != address.line1?.nonEmpty {
-           allDisplayedFieldsEqual = false
+            allDisplayedFieldsEqual = false
         }
         if let line2 = line2, line2.text.nonEmpty != address.line2?.nonEmpty {
-           allDisplayedFieldsEqual = false
+            allDisplayedFieldsEqual = false
         }
         if let postalCode = postalCode, postalCode.text.nonEmpty != address.postalCode?.nonEmpty {
-           allDisplayedFieldsEqual = false
+            allDisplayedFieldsEqual = false
         }
         if let state = state, state.rawData.nonEmpty != address.state?.nonEmpty {
-           allDisplayedFieldsEqual = false
+            allDisplayedFieldsEqual = false
         }
         return allDisplayedFieldsEqual
     }
@@ -390,7 +454,8 @@ extension AddressSectionElement: Element {
 // MARK: - ElementDelegate
 extension AddressSectionElement: ElementDelegate {
     public func didUpdate(element: Element) {
-        if !sameAsCheckbox.view.isHidden, sameAsCheckbox.isSelected, !displayedAddressEqualTo(address: defaults.address) {
+        if !sameAsCheckbox.view.isHidden, sameAsCheckbox.isSelected, !displayedAddressEqualTo(address: defaults.address)
+        {
             // Deselect checkbox if the address != the shipping address (our `defaults`)
             sameAsCheckbox.isSelected = false
         }
@@ -402,7 +467,8 @@ extension AddressSectionElement: ElementDelegate {
         if let phone = phone,
             defaults.phone == nil,
             !phone.hasBeenModified
-            && phone.countryDropdownElement.selectedIndex != country.selectedIndex {
+                && phone.countryDropdownElement.selectedIndex != country.selectedIndex
+        {
             phone.selectCountry(index: country.selectedIndex, shouldUpdateDefaultNumber: true)
         }
     }

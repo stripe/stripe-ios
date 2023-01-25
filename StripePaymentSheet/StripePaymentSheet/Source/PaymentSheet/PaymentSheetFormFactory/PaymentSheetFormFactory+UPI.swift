@@ -15,12 +15,23 @@ import UIKit
 extension PaymentSheetFormFactory {
 
     func makeUPI() -> FormElement {
-        return FormElement(autoSectioningElements: [makeUPIHeader(), makeVPAField()], theme: theme)
+        return FormElement(
+            autoSectioningElements: [
+                makeUPIHeader(),
+                makeVPAField(),
+                makeBillingAddressSection(collectionMode: .all(), countries: nil),
+            ],
+            theme: theme
+        )
     }
 
     private func makeUPIHeader() -> StaticElement {
-        return makeSectionTitleLabelWith(text: STPLocalizedString("Buy using a UPI ID",
-                                                                  "Header text shown above a UPI ID text field"))
+        return makeSectionTitleLabelWith(
+            text: STPLocalizedString(
+                "Buy using a UPI ID",
+                "Header text shown above a UPI ID text field"
+            )
+        )
     }
 
     private func makeVPAField() -> PaymentMethodElementWrapper<TextFieldElement> {

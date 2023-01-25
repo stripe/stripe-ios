@@ -30,6 +30,14 @@ extension PaymentSheetFormFactory {
                 elements.append(element)
             }
         }
+        if !spec.fields.contains(where: { spec in
+            guard case FormSpec.FieldSpec.billing_address = spec else { return false }
+            return true
+        }) {
+            if let element = fieldSpecToElement(fieldSpec: .billing_address(.init(allowedCountryCodes: nil))) {
+                elements.append(element)
+            }
+        }
         return elements
     }
 
@@ -41,7 +49,12 @@ extension PaymentSheetFormFactory {
             return makeEmail(apiPath: spec.apiPath?["v1"])
         case .selector(let selectorSpec):
             let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {
-                .init(pickerDisplayName: $0.displayText, labelDisplayName: $0.displayText, accessibilityValue: $0.displayText, rawData: $0.apiValue ?? $0.displayText)
+                .init(
+                    pickerDisplayName: $0.displayText,
+                    labelDisplayName: $0.displayText,
+                    accessibilityValue: $0.displayText,
+                    rawData: $0.apiValue ?? $0.displayText
+                )
             }
             let dropdownField = DropdownFieldElement(
                 items: dropdownItems,
@@ -57,7 +70,7 @@ extension PaymentSheetFormFactory {
                 return params
             }
         case .billing_address(let countrySpec):
-            return makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
+            return makeBillingAddressSection(collectionMode: .all(), countries: countrySpec.allowedCountryCodes)
         case .country(let spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
