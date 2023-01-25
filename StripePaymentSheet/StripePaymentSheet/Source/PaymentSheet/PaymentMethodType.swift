@@ -248,8 +248,9 @@ extension PaymentSheet {
                 // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
                 // as a dynamic payment method
                 if case .dynamic = paymentMethod {
+                    let requirements = intent.isSettingUp ? paymentMethod.supportsSaveAndReuseRequirements() : paymentMethod.supportsAddingRequirements()
                     return configurationSatisfiesRequirements(
-                        requirements: paymentMethod.supportsAddingRequirements(),
+                        requirements: requirements,
                         configuration: configuration,
                         intent: intent
                     )

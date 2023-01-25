@@ -549,7 +549,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
         let paymentIntent = constructPI(
             paymentMethodTypes: ["card", "cashapp"],
-            orderedPaymentMethodTypes: ["card", "cashapp"],
+            orderedPaymentMethodTypes: ["card", "cashapp", "mobilepay"],
             setupFutureUsage: .onSession
         )!
         let intent = Intent.paymentIntent(paymentIntent)
