@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "%1$@ račun koji završava s %2$@";
+
 "%1$@ ending in %2$@" = "%1$@ završava na %2$@";
 
 "Address line 2 (optional)" = "Ulica i kućni broj 2 (neobavezno)";

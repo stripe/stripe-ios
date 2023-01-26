@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Fizetési adatok megadása";
 
+"Approve payment" = "Fizetés jóváhagyása";
+
 "Are you sure you want to remove this card?" = "Biztosan törli ezt a kártyát?";
 
 "Are you sure you want to remove this linked account?" = "Biztosan törli ezt a kapcsolt számlát?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Megvásárlás most, vagy fizetés később Klarnával.";
 
+"Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Fizetési adatainak megadásával és a fizetés megerősítésével Ön felhatalmazza (A) a(z) %@ céget és a Stripe-ot, fizetési szolgáltatónkat, hogy utasításokat küldjön a bankjának, hogy megterhelje a számláját, és (B) bankját, hogy az utasításoknak megfelelően megterhelje a számláját. A jogai részeként Ön jogosult a bankjától a velük kötött megállapodás feltételei szerinti visszatérítésre. A visszatérítést a számla megterhelésének napjától számított 8 héten belül kell igényelni. Jogait egy, a bankjától beszerezhető nyilatkozat tartalmazza. Beleegyezik abba, hogy a jövőbeni terhelésekről értesítést kap, legfeljebb 2 nappal azok bekövetkezése előtt.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
+
+"Cancel and pay another way" = "Szakítsa meg, és fizessen más módon";
 
 "Change email" = "E-mail-cím módosítása";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "Nem a(z) %@?";
 
+"Open your UPI app to approve your payment within %@" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
+
 "Or" = "vagy";
 
 "Or pay using" = "Vagy fizetés a következővel:";
@@ -88,7 +96,11 @@
 
 "Payment" = "Fizetés";
 
+"Payment failed" = "A fizetés nem sikerült";
+
 "Payment methods" = "Fizetési módok";
+
+"Please go back and select another payment method" = "Lépjen vissza, és válasszon másik fizetési módot";
 
 "Point the camera at your card." = "Tegye a kártyát a kamera elé.";
 

@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Añadir información de pago";
 
+"Approve payment" = "Aprueba el pago";
+
 "Are you sure you want to remove this card?" = "¿Seguro que quieres eliminar esta tarjeta?";
 
 "Are you sure you want to remove this linked account?" = "¿Seguro que quieres eliminar esta cuenta vinculada?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Compra ahora y paga después con Klarna.";
 
+"Buy using a UPI ID" = "Comprar usando una ID de UPI";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al continuar, aceptas autorizar pagos de conformidad con <terms>estas condiciones</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Al continuar, aceptas autorizar pagos de conformidad con estas <terms>condiciones</terms>.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Al facilitarnos la información del pago y al confirmar este pago, autorizas a (A) %@ y a Stripe, nuestro proveedor de servicios de pago, a enviar instrucciones a tu banco para adeudar tu cuenta y (B) a tu banco para efectuar los adeudos en tu cuenta siguiendo dichas instrucciones. Como parte de tus derechos, estás legitimado al rembolso por parte de tu banco en los términos y condiciones del contrato suscrito con este. La solicitud del reembolso deberá efectuarse dentro de las ocho semanas posteriores a la fecha de adeudo en cuenta. Tus derechos se explican en una declaración que puedes obtener en tu banco. Aceptas recibir notificaciones sobre próximos adeudos con hasta dos días de antelación a que estos ocurran.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos con arreglo a <terms> estas condiciones</terms>.";
+
+"Cancel and pay another way" = "Cancelar o usar otro método de pago";
 
 "Change email" = "Cambiar correo electrónico";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "¿No eres %@?";
 
+"Open your UPI app to approve your payment within %@" = "Abre la aplicación UPI para aprobar el pago en %@";
+
 "Or" = "O";
 
 "Or pay using" = "O paga con";
@@ -88,7 +96,11 @@
 
 "Payment" = "Pago";
 
+"Payment failed" = "Error en el pago";
+
 "Payment methods" = "Métodos de pago";
+
+"Please go back and select another payment method" = "Vuelve al paso anterior y selecciona otro método de pago.";
 
 "Point the camera at your card." = "Enfoca con la cámara a la tarjeta.";
 

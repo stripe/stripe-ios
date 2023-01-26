@@ -10,6 +10,8 @@
 
 "Add your payment information" = "결제 정보를 추가하세요.";
 
+"Approve payment" = "결제 승인";
+
 "Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
 
 "Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
 
+"Buy using a UPI ID" = "UPI ID를 사용하여 구매";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "계속하면 해당 <terms>약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
+
+"Cancel and pay another way" = "취소 및 다른 방법으로 결제";
 
 "Change email" = "이메일 변경";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "%@ 님이 아니십니까?";
 
+"Open your UPI app to approve your payment within %@" = "결제를 승인하려면 %@ 안에 UPI 앱을 여십시오.";
+
 "Or" = "또는";
 
 "Or pay using" = "또는 다음 결제 방식 사용";
@@ -88,7 +96,11 @@
 
 "Payment" = "결제";
 
+"Payment failed" = "결제 실패";
+
 "Payment methods" = "결제 방식";
+
+"Please go back and select another payment method" = "뒤로 돌아가서 다른 결제 방식을 선택해 주십시오.";
 
 "Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";
 

@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Προσθέστε τα στοιχεία πληρωμής σας";
 
+"Approve payment" = "Έγκριση πληρωμής";
+
 "Are you sure you want to remove this card?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτήν την κάρτα;";
 
 "Are you sure you want to remove this linked account?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτόν τον συνδεδεμένο λογαριασμό;";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Αγορά τώρα ή πληρωμή αργότερα με Klarna.";
 
+"Buy using a UPI ID" = "Αγορά με χρήση αναγνωριστικού UPI";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση αυτούς τους <terms>όρους</terms>.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Με την παροχή των στοιχείων πληρωμής σας και επιβεβαιώνοντας αυτήν την πληρωμή, εξουσιοδοτείτε (A) την %@ και την Stripe, τον πάροχο υπηρεσιών πληρωμών μας, να στείλουν οδηγίες στην τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας και (B) την τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας, σύμφωνα με τις οδηγίες αυτές. Στο πλαίσιο των δικαιωμάτων σας, δικαιούστε επιστροφή από την τράπεζά σας με βάση τους όρους και τις προϋποθέσεις που διατυπώνονται στη σύμβαση με την τράπεζά σας. Η αξίωση για επιστροφή πρέπει να υποβληθεί εντός 8 εβδομάδων από την ημερομηνία χρέωσης του λογαριασμού σας. Τα δικαιώματά σας επεξηγούνται σε αναλυτική κατάσταση, την οποία μπορείτε να εξασφαλίσετε από την τράπεζά σας. Συμφωνείτε να λαμβάνετε ειδοποιήσεις για μελλοντικές χρεώσεις έως και 2 ημέρες προτού προκύψουν.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
+
+"Cancel and pay another way" = "Ακύρωση και πληρωμή με άλλον τρόπο";
 
 "Change email" = "Αλλαγή email";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "Δεν είναι το %@;";
 
+"Open your UPI app to approve your payment within %@" = "Ανοίξτε την εφαρμογή UPI για να εγκρίνετε την πληρωμή σας σε %@";
+
 "Or" = "Ή";
 
 "Or pay using" = "Ή πληρωμή χρησιμοποιώντας";
@@ -88,7 +96,11 @@
 
 "Payment" = "Πληρωμή";
 
+"Payment failed" = "Η πληρωμή απέτυχε";
+
 "Payment methods" = "Μέθοδοι πληρωμής";
+
+"Please go back and select another payment method" = "Πηγαίνετε πίσω και επιλέξτε μια άλλη μέθοδο πληρωμής";
 
 "Point the camera at your card." = "Στρέψτε την κάμερα στην κάρτα σας.";
 

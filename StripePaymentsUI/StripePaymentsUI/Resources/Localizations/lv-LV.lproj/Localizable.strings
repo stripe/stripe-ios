@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "%1$@konts, kas beidzas ar%2$@";
+
 "%1$@ ending in %2$@" = "%1$@, kuras numura pēdējie cipari ir %2$@";
 
 "Address line 2 (optional)" = "2. adreses rindiņa (nav obligāti)";

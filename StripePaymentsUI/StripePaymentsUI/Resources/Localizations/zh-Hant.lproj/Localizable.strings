@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "尾號為 %2$@ 的 %1$@ 賬戶";
+
 "%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
 
 "Address line 2 (optional)" = "地址第 2 行（可選）";
