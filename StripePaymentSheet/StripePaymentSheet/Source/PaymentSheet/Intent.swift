@@ -75,7 +75,7 @@ enum Intent {
             return nil
         }
     }
-    
+
     /// True if this ia PaymentIntent with sfu not equal to none or a SetupIntent
     var isSettingUp: Bool {
         switch self {

@@ -243,22 +243,24 @@ extension PaymentSheet {
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> Bool {
-            
+
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
                 // as a dynamic payment method
                 if case .dynamic = paymentMethod {
-                    let requirements = intent.isSettingUp ? paymentMethod.supportsSaveAndReuseRequirements() : paymentMethod.supportsAddingRequirements()
+                    let requirements =
+                        intent.isSettingUp
+                        ? paymentMethod.supportsSaveAndReuseRequirements() : paymentMethod.supportsAddingRequirements()
                     return configurationSatisfiesRequirements(
                         requirements: requirements,
                         configuration: configuration,
                         intent: intent
                     )
                 }
-                
+
                 return false
             }
-            
+
             // if the intent is a SI or PI+sfu, then use the save and reuse requirements
             if intent.isSettingUp {
                 return supportsSaveAndReuse(
@@ -365,7 +367,7 @@ extension PaymentSheet {
 
             // TODO: We need a way to model this information in our common model
         }
-        
+
         /// Returns true if the passed configuration satsifies the passed in `requirements`
         /// Use this function over `configurationSupports` when the payment method cannot be expressed as a `STPPaymentMethodType`
         /// - Parameters:
@@ -386,7 +388,6 @@ extension PaymentSheet {
             return supports
         }
 
-        
         /// Returns true if the passed configuration satsifies the passed in `requirements` and this payment method is in the list of supported payment methods
         /// Use this function over `configurationSatisfiesRequirements` when the payment method in quesiton can be represented as a `STPPaymentMethodType`
         /// - Parameters:
