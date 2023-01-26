@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Telefoninumber puudulik";
 
+"Invalid UPI ID" = "Kehtetu UPI ID";
+
 "Island" = "Saar";
 
 "Last" = "Viimane";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Eemaldage pangakonto lõpuga %@";
 
+"Search" = "Otsi";
+
 "State" = "Osariik";
 
 "Suburb" = "Eeslinn";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "Sisestatud kontonumber on puudulik.";
 
 "Town or city" = "Linn";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Telefoninumbri parsimine ebaõnnestus";
 

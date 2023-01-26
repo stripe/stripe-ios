@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Ufuldstændigt telefonnummer";
 
+"Invalid UPI ID" = "Ugyldigt UPI ID";
+
 "Island" = "Ø";
 
 "Last" = "Sidste";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Fjern bankkonto, der ender på %@";
 
+"Search" = "Søg";
+
 "State" = "Stat";
 
 "Suburb" = "Forstad";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "Det indtastede kontonummer er ikke komplet.";
 
 "Town or city" = "Landsby eller by";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Kunne ikke analysere telefonnummer";
 

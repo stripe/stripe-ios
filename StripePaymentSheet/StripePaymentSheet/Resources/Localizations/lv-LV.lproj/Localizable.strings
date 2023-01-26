@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Pievienot maksājuma informāciju";
 
+"Approve payment" = "Apstiprināt maksājumu";
+
 "Are you sure you want to remove this card?" = "Vai tiešām vēlaties noņemt šo karti?";
 
 "Are you sure you want to remove this linked account?" = "Vai tiešām vēlaties noņemt šo saistīto kontu?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Pērciet tagad vai maksājiet vēlāk ar Klarna.";
 
+"Buy using a UPI ID" = "Pirkt, izmantojot UPI ID";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar šiem<terms>noteikumiem</terms>.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Norādot savu maksājuma informāciju un apstiprinot šo maksājumu, jūs pilnvarojat A) %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma noteikumiem un nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa astoņu nedēļu laikā, sākot no jūsu konta debetēšanas datuma. Jūsu tiesības ir paskaidrotas paziņojumā, kuru varat saņemt savā bankā. Jūs piekrītat saņemt paziņojumus par turpmākajiem debeta darījumiem vismaz divas dienas pirms to veikšanas.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
+
+"Cancel and pay another way" = "Atcelt vai maksāt citā veidā";
 
 "Change email" = "Mainīt e-pastu";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "Ne %@?";
 
+"Open your UPI app to approve your payment within %@" = "Atveriet UPI lietotni, lai apstiprinātu savu maksājumu %@";
+
 "Or" = "Vai";
 
 "Or pay using" = "Vai maksāt, izmantojot";
@@ -88,7 +96,11 @@
 
 "Payment" = "Maksājums";
 
+"Payment failed" = "Maksājums neizdevās";
+
 "Payment methods" = "Maksājuma veidi";
+
+"Please go back and select another payment method" = "Lūdzu, atgriezieties un atlasiet citu maksājuma veidu.";
 
 "Point the camera at your card." = "Vērsiet kameru uz karti.";
 

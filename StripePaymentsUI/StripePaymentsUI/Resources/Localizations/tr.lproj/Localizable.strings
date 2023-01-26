@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "%2$@ ile biten %1$@ hesabınız";
+
 "%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
 
 "Address line 2 (optional)" = "Adres satırı 2 (isteğe bağlı)";

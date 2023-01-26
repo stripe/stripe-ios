@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Dodavanje informacija o plaćanju";
 
+"Approve payment" = "Odobri plaćanje";
+
 "Are you sure you want to remove this card?" = "Jeste li sigurni da želite ukloniti ovu karticu?";
 
 "Are you sure you want to remove this linked account?" = "Jeste li sigurni da želite ukloniti ovaj povezani račun?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Kupite sada ili platite kasnije pomoću Klarne";
 
+"Buy using a UPI ID" = "Kupi koristeći UPI ID";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s ovim <terms>uvjetima</terms>.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Unošenjem vaših podataka o plaćanju, ovlašćujete (A) %@ i Stripe, našeg davatelja usluga platnog prometa, da vašoj banci pošalje upute za terećenje vašeg računa, i (B) vašu banku za terećenje vašeg računa u skladu s tim uputama. U sklopu vaših prava, imate pravo na povrat novca od svoje banke prema uvjetima i odredbama ugovora s bankom. Povrat novca mora se zatražiti u roku od 8 tjedana počevši od datuma terećenja vašeg računa. Vaša prava objašnjena su u izjavi koju možete dobiti od svoje banke. Slažete se s primanjem obavijesti o budućim terećenjima do 2 dana prije njihova izvršenja.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Spremanjem bankovnog računa za %@ pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
+
+"Cancel and pay another way" = "Otkaži i plati na drugi način";
 
 "Change email" = "Izmijeni e-poštu";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "Niste %@?";
 
+"Open your UPI app to approve your payment within %@" = "Otvorite svoju aplikaciju UPI da biste odobrili svoje plaćanje unutar %@";
+
 "Or" = "Ili";
 
 "Or pay using" = "Ili platite koristeći";
@@ -88,7 +96,11 @@
 
 "Payment" = "Plaćanje";
 
+"Payment failed" = "Plaćanje nije uspjelo";
+
 "Payment methods" = "Načini plaćanja";
+
+"Please go back and select another payment method" = "Molimo vratite se i odaberite drugi način plaćanja";
 
 "Point the camera at your card." = "Usmjerite kameru na svoju karticu.";
 

@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "끝자리가 %2$@인 %1$@ 계좌 삭제";
+
 "%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
 
 "Address line 2 (optional)" = "주소란 2(선택 사항)";

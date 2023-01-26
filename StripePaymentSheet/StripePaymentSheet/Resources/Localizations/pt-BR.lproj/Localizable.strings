@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Adicione seus dados de pagamento";
 
+"Approve payment" = "Aprovar pagamento";
+
 "Are you sure you want to remove this card?" = "Tem certeza de que deseja remover este cartão?";
 
 "Are you sure you want to remove this linked account?" = "Tem certeza de que deseja remover esta conta vinculada?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Compre agora ou pague depois com Klarna.";
 
+"Buy using a UPI ID" = "Comprar usando um ID UPI";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, você aceita autorizar pagamentos de acordo com <terms>estes termos</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ao continuar, você concorda em autorizar pagamentos conforme estes <terms>termos</terms>.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ao fornecer seus dados de pagamento e confirmar este pagamento, você autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamento, a enviar instruções ao seu banco para debitar sua conta e (B) seu banco a debitar sua conta, de acordo com as referidas instruções. Os seus direitos incluem a possibilidade de exigir do banco o reembolso do valor debitado, nos termos e condições acordados com a instituição. O reembolso deve ser solicitado dentro de um prazo de 8 semanas a partir da data do débito na conta. Você concorda em receber notificações de débitos futuros em até 2 dias antes do débito.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao salvar sua conta bancária para %@, você autoriza pagamentos de acordo com <terms>estes termos</terms>.";
+
+"Cancel and pay another way" = "Cancele e pague de outra forma";
 
 "Change email" = "Alterar e-mail";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "Não é %@?";
 
+"Open your UPI app to approve your payment within %@" = "Abra o aplicativo UPI para aprovar o pagamento em até %@";
+
 "Or" = "Ou";
 
 "Or pay using" = "Ou pague com";
@@ -88,7 +96,11 @@
 
 "Payment" = "Pagamento";
 
+"Payment failed" = "Falha no pagamento";
+
 "Payment methods" = "Formas de pagamento";
+
+"Please go back and select another payment method" = "Volte e selecione outra forma de pagamento";
 
 "Point the camera at your card." = "Aponte a câmera para o cartão.";
 

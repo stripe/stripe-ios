@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Número de teléfono incompleto";
 
+"Invalid UPI ID" = "ID de UPI no válida";
+
 "Island" = "Isla";
 
 "Last" = "Apellido";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Eliminar la cuenta bancaria que termina en %@";
 
+"Search" = "Buscar";
+
 "State" = "Estado";
 
 "Suburb" = "Suburbio";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "El número de cuenta que ingresaste está incompleto.";
 
 "Town or city" = "Pueblo o ciudad";
+
+"UPI ID" = "ID de UPI";
 
 "Unable to parse phone number" = "No se pudo analizar el número de teléfono.";
 

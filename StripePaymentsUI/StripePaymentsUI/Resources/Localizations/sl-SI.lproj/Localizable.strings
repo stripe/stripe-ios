@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
+
 "%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
 
 "Address line 2 (optional)" = "Naslov 2 (izbirno)";

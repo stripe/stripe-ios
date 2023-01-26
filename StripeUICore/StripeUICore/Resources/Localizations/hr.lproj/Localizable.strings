@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Nepotpuni telefonski broj";
 
+"Invalid UPI ID" = "Nevažeći UPI ID";
+
 "Island" = "Otok";
 
 "Last" = "Prezime";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Ukloni bankovni račun koji završava na %@";
 
+"Search" = "Pretraži";
+
 "State" = "Država";
 
 "Suburb" = "Predgrađe";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "Uneseni broj računa je nepotpun.";
 
 "Town or city" = "Gradić ili grad";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Broj telefona nije moguće pročitati";
 
