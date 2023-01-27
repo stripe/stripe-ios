@@ -18,6 +18,8 @@
 
 "City" = "Paikkakunta";
 
+"Code field" = "Koodikenttä";
+
 "Company" = "Yritys";
 
 "Continue" = "Jatka";
@@ -35,6 +37,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Valmis";
+
+"Double tap to edit" = "Napauta kahdesti ja muokkaa";
 
 "Edit" = "Muokkaa";
 

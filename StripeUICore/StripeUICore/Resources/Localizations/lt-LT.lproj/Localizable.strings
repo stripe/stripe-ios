@@ -18,6 +18,8 @@
 
 "City" = "Miestas";
 
+"Code field" = "Kodo laukas";
+
 "Company" = "Bendrovė";
 
 "Continue" = "Tęsti";
@@ -35,6 +37,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Atlikta";
+
+"Double tap to edit" = "Norėdami redaguoti, dukart bakstelėkite";
 
 "Edit" = "Redaguoti";
 
