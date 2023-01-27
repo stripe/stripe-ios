@@ -369,7 +369,10 @@ extension PaymentSheet {
         }
 
         /// Returns true if the passed configuration satsifies the passed in `requirements`
-        /// Use this function over `configurationSupports` when the payment method cannot be expressed as a `STPPaymentMethodType`
+        /// This function is to be used with dynamic payment method types that do not have bindings support and cannot be represented as a `STPPaymentMethodType`.
+        /// It's required for the client to specfiy dynamic payment method type requirements (rather than being server driven) because dynamically delivering new LPMS to clients that don't know about them is no longer/currently a priority.
+        /// - Note: Use this function over `configurationSupports` when the payment method does not have bindings support e.g. cannot be represented as
+        /// a `STPPaymentMethodType`.
         /// - Parameters:
         ///   - requirements: a list of requirements to be satisfied
         ///   - configuration: a configuration to satisfy requirements
@@ -389,6 +392,7 @@ extension PaymentSheet {
         }
 
         /// Returns true if the passed configuration satisfies the passed in `requirements` and this payment method is in the list of supported payment methods
+        /// This function is to be used with payment method types thar have bindings support and can be represented as a `STPPaymentMethodType`
         /// Use this function over `configurationSatisfiesRequirements` when the payment method in quesiton can be represented as a `STPPaymentMethodType`
         /// - Parameters:
         ///   - paymentMethod: the payment method type in question
