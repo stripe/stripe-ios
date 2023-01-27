@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Eksik telefon numarası";
 
+"Invalid UPI ID" = "Geçersiz UPI Numarası";
+
 "Island" = "Ada";
 
 "Last" = "Soyadı";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "%@ ile biten banka hesabını kaldır";
 
+"Search" = "Ara";
+
 "State" = "Eyalet";
 
 "Suburb" = "Banliyö";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "Girdiğiniz hesap numarası eksik.";
 
 "Town or city" = "Kasaba veya şehir";
+
+"UPI ID" = "UPI Numarası";
 
 "Unable to parse phone number" = "Telefon numaranızı ayrıştırılamadı";
 

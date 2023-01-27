@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Incomplete phone number";
 
+"Invalid UPI ID" = "Invalid UPI ID";
+
 "Island" = "Island";
 
 "Last" = "Last";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Remove bank account ending in %@";
 
+"Search" = "Search";
+
 "State" = "State";
 
 "Suburb" = "Suburb";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "The account number you entered is incomplete.";
 
 "Town or city" = "Town or city";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Unable to parse phone number";
 

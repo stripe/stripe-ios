@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Dodaj informacje o płatności";
 
+"Approve payment" = "Zatwierdź płatność";
+
 "Are you sure you want to remove this card?" = "Czy na pewno chcesz usunąć tę kartę?";
 
 "Are you sure you want to remove this linked account?" = "Czy na pewno chcesz usunąć to połączone konto?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Kup teraz lub zapłać za pomocą Klarna później.";
 
+"Buy using a UPI ID" = "Kup za pomocą UPI ID";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z tymi <terms>warunkami</terms>.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Podając dane płatności i potwierdzając tę płatność, upoważniasz (A) %@ i Stripe, naszego dostawcę usług płatności, do wysłania instrukcji do Twojego banku w celu obciążenia Twojego konta oraz (B) Twój bank do obciążenia Twojego konta zgodnie z tymi instrukcjami. W ramach swoich praw jesteś uprawniony(-a) do otrzymania zwrotu od Twojego banku zgodnie z zasadami i warunkami umowy z bankiem. Zwrot należy odebrać w ciągu 8 tygodni, licząc od daty obciążenia konta. Twoje prawa są wyjaśnione w oświadczeniu, które możesz otrzymać z banku. Wyrażasz zgodę na otrzymywanie powiadomień w przypadku przyszłych obciążeń do 2 dni przed ich wystąpieniem.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Zapisując swoje konto bankowe dla %@, zgadzasz się na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
+
+"Cancel and pay another way" = "Anuluj i skorzystaj z innej metody zapłaty";
 
 "Change email" = "Zmień e-mail";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "Nie jesteś %@?";
 
+"Open your UPI app to approve your payment within %@" = "Otwórz aplikację UPI, aby zatwierdzić płatność w %@";
+
 "Or" = "Lub";
 
 "Or pay using" = "Lub zapłać, korzystając z";
@@ -88,7 +96,11 @@
 
 "Payment" = "Płatność";
 
+"Payment failed" = "Płatność się nie powiodła";
+
 "Payment methods" = "Metody płatności";
+
+"Please go back and select another payment method" = "Wróć i wybierz inną metodę płatności";
 
 "Point the camera at your card." = "Skieruj aparat na kartę.";
 

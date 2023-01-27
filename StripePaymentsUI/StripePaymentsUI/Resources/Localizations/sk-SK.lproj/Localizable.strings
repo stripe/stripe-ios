@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "%1$@ účet končiaci na %2$@";
+
 "%1$@ ending in %2$@" = "Karta %1$@ s poslednými štyrmi číslami %2$@";
 
 "Address line 2 (optional)" = "Riadok adresy 2 (voliteľne)";

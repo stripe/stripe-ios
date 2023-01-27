@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Puutteellinen puhelinnumero";
 
+"Invalid UPI ID" = "Virheellinen UPI-tunnus";
+
 "Island" = "Saari";
 
 "Last" = "Sukunimi";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Poista pankkitili, joka päättyy numeroihin %@";
 
+"Search" = "Etsi";
+
 "State" = "Osavaltio";
 
 "Suburb" = "Esikaupunki";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "Antamasi tilinumero on puutteellinen.";
 
 "Town or city" = "Kaupunki tai kunta";
+
+"UPI ID" = "UPI-tunnus";
 
 "Unable to parse phone number" = "Puhelinnumeron jäsennys epäonnistui";
 

@@ -10,6 +10,8 @@
 
 "Add your payment information" = "支払い情報を追加";
 
+"Approve payment" = "支払いを承認する";
+
 "Are you sure you want to remove this card?" = "このカードを削除しますか？";
 
 "Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Klarna で後払いします。";
 
+"Buy using a UPI ID" = "UPI ID を使って購入";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "続行すると、これらの<terms>規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
+
+"Cancel and pay another way" = "キャンセルして別の方法で支払う";
 
 "Change email" = "メールアドレスを変更";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "%@ ではありませんか？";
 
+"Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
+
 "Or" = "または";
 
 "Or pay using" = "または別の方法で支払う";
@@ -88,7 +96,11 @@
 
 "Payment" = "決済";
 
+"Payment failed" = "支払いに失敗しました";
+
 "Payment methods" = "決済手段";
+
+"Please go back and select another payment method" = "前に戻って別の決済手段を選択してください";
 
 "Point the camera at your card." = "カメラをカードに向けてください。";
 

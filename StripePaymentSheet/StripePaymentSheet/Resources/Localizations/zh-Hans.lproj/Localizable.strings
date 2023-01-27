@@ -10,6 +10,8 @@
 
 "Add your payment information" = "添加您的支付信息";
 
+"Approve payment" = "批准付款";
+
 "Are you sure you want to remove this card?" = "您确定要移除此卡吗？";
 
 "Are you sure you want to remove this linked account?" = "您确定要移除这个关联的账户吗？";
@@ -20,15 +22,19 @@
 
 "Buy now or pay later with Klarna." = "用 Klarna 先买后付。";
 
+"Buy using a UPI ID" = "用 UPI ID 购买";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "继续操作即表示您同意按照<terms>这些条款</terms>授权付款。";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "点击“继续”，即表示您同意按照这些<terms>条款</terms>授权付款。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行借记的指令以及 (B) 您的银行按照这些指令对您的账户进行借记。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内申请，从您的帐户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续借记的通知。";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行扣款的指令以及 (B) 您的银行按照这些指令对您的账户进行扣款。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内申请，从您的账户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续扣款的通知。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
+
+"Cancel and pay another way" = "取消并用另一方式支付";
 
 "Change email" = "更改邮件地址";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "不是 %@？";
 
+"Open your UPI app to approve your payment within %@" = "请在 %@ 内打开您的 UPI 应用来批准付款";
+
 "Or" = "或";
 
 "Or pay using" = "或用以下方式支付";
@@ -88,7 +96,11 @@
 
 "Payment" = "支付方式";
 
+"Payment failed" = "付款失败";
+
 "Payment methods" = "支付方式";
+
+"Please go back and select another payment method" = "请返回并选择另一个支付方式。";
 
 "Point the camera at your card." = "将摄像头正对银行卡。";
 

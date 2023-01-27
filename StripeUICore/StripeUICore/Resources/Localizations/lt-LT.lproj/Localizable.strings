@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Ne visas telefono numeris";
 
+"Invalid UPI ID" = "Netinkamas UPI ID";
+
 "Island" = "Sala";
 
 "Last" = "Pavardė";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Pašalinti banko sąskaitą, kurios paskutiniai skaičiai %@";
 
+"Search" = "Paieška";
+
 "State" = "Valstija";
 
 "Suburb" = "Priemiestis";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "Įvedėte ne visą sąskaitos numerį.";
 
 "Town or city" = "Miestelis arba miestas";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Nepavyko išanalizuoti telefono numerio";
 

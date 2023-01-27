@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "Nepilnīgs tālruņa numurs";
 
+"Invalid UPI ID" = "Nederīgs UPI ID";
+
 "Island" = "Sala";
 
 "Last" = "Uzvārds";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "Noņemt bankas kontu, kas beidzas ar %@";
 
+"Search" = "Meklēšana";
+
 "State" = "Novads/štats";
 
 "Suburb" = "Priekšpilsēta";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "Jūsu ievadītais konta numurs nav pilnīgs.";
 
 "Town or city" = "Ciems vai pilsēta";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Neizdevās parsēt tālruņa numuru";
 
