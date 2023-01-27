@@ -388,7 +388,7 @@ extension PaymentSheet {
             return supports
         }
 
-        /// Returns true if the passed configuration satsifies the passed in `requirements` and this payment method is in the list of supported payment methods
+        /// Returns true if the passed configuration satisfies the passed in `requirements` and this payment method is in the list of supported payment methods
         /// Use this function over `configurationSatisfiesRequirements` when the payment method in quesiton can be represented as a `STPPaymentMethodType`
         /// - Parameters:
         ///   - paymentMethod: the payment method type in question
