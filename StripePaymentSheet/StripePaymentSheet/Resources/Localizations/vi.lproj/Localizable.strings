@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Thêm thông tin thanh toán của bạn";
 
+"Approve payment" = "Chấp nhận thanh toán";
+
 "Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
 
 "Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
 
+"Buy using a UPI ID" = "Mua bằng cách sử dụng ID UPI";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Bằng việc tiếp tục, quý vị đồng ý xác thực thanh toán tuân theo các <terms>điều khoản</terms> sau.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
+
+"Cancel and pay another way" = "Hủy và thanh toán theo cách khác";
 
 "Change email" = "Đổi email";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "Không phải %@?";
 
+"Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
+
 "Or" = "Hoặc";
 
 "Or pay using" = "Hoặc thanh toán bằng";
@@ -88,7 +96,11 @@
 
 "Payment" = "Thanh toán";
 
+"Payment failed" = "Thanh toán không thành công";
+
 "Payment methods" = "Phương thức thanh toán";
+
+"Please go back and select another payment method" = "Vui lòng quay lại và chọn phương thức thanh toán khác";
 
 "Point the camera at your card." = "Hướng camera vào thẻ.";
 

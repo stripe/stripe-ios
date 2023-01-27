@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "电话号码不完整";
 
+"Invalid UPI ID" = "UPI ID 无效";
+
 "Island" = "岛";
 
 "Last" = "姓氏";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "移除尾号为 %@ 的银行账户";
 
+"Search" = "搜索";
+
 "State" = "州";
 
 "Suburb" = "市郊";
@@ -90,11 +94,13 @@
 
 "The BSB you entered is incomplete." = "您输入的 BSB 不完整。";
 
-"The ID number you entered is incomplete." = "您输入的身份证号不完整。";
+"The ID number you entered is incomplete." = "您输入的证件号码不完整。";
 
 "The account number you entered is incomplete." = "您输入的账号不完整。";
 
 "Town or city" = "城镇或城市";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "无法粘贴手机号码";
 

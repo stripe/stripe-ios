@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "%1$@-konto som slutar på %2$@";
+
 "%1$@ ending in %2$@" = "%1$@ med slutsiffrorna %2$@";
 
 "Address line 2 (optional)" = "Adressrad 2 (valfritt)";

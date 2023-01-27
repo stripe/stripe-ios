@@ -52,6 +52,8 @@
 
 "Incomplete phone number" = "電話號碼不完整";
 
+"Invalid UPI ID" = "UPI ID 無效";
+
 "Island" = "島";
 
 "Last" = "姓氏";
@@ -82,6 +84,8 @@
 
 "Remove bank account ending in %@" = "移除尾號為%@ 的銀行帳戶";
 
+"Search" = "搜尋";
+
 "State" = "州";
 
 "Suburb" = "郊區";
@@ -95,6 +99,8 @@
 "The account number you entered is incomplete." = "您輸入的帳號不完整。";
 
 "Town or city" = "城鎮或城市";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "無法粘貼手機號碼";
 

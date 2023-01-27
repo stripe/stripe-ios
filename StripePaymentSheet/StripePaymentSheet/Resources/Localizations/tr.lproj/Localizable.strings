@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Ödeme bilgilerinizi ekleyin";
 
+"Approve payment" = "Ödemeyi onaylayın";
+
 "Are you sure you want to remove this card?" = "Bu kartı kaldırmak istediğinizden emin misiniz?";
 
 "Are you sure you want to remove this linked account?" = "Bu bağlı hesabı kaldırmak istediğinizden emin misiniz?";
@@ -20,6 +22,8 @@
 
 "Buy now or pay later with Klarna." = "Şimdi satın alın veya daha sonra Klarna ile ödeyin.";
 
+"Buy using a UPI ID" = "UPI Numarası kullanarak satın alın";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Devam ettiğinizde, bu <terms>koşullar</terms>a uygun olarak ödemelere izin vermeyi kabul etmiş olursunuz.";
@@ -29,6 +33,8 @@
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ödeme bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, (A) %@ ve ödeme hizmeti sağlayıcımız Stripe'a hesabınızdan ödeme tahsilatı yapması için bankanıza talimatlar göndermesi ve (B) bankanıza bu talimatlara uygun olarak hesabınızdan ödeme tahsilatı yapması için yetki verirsiniz. Haklarınızın bir parçası olarak, bankanızla yaptığınız sözleşmenin hüküm ve koşulları uyarınca bankanızdan geri ödeme alma hakkına sahipsiniz. Geri ödeme, hesabınızdan ödeme tahsilatı yapıldığı tarihten itibaren 8 hafta içinde talep edilmelidir. Haklarınız, bankanızdan alabileceğiniz bir hesap özetinde açıklanmaktadır. Tahakkuk etmeden 2 gün öncesine kadar gelecekteki ödeme tahsilatları için bildirim almayı da kabul edersiniz.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
+
+"Cancel and pay another way" = "İptal edip başka bir yöntemle ödeyin";
 
 "Change email" = "E-posta adresini değiştir";
 
@@ -62,6 +68,8 @@
 
 "Not %@?" = "%@ doğru değil mi?";
 
+"Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
+
 "Or" = "Veya";
 
 "Or pay using" = "Veya şununla ödeyin:";
@@ -88,7 +96,11 @@
 
 "Payment" = "Ödeme";
 
+"Payment failed" = "Ödeme başarısız oldu";
+
 "Payment methods" = "Ödeme yöntemleri";
+
+"Please go back and select another payment method" = "Lütfen geri gidip başka bir ödeme yöntemi seçin";
 
 "Point the camera at your card." = "Kamerayı kartınıza doğrultun.";
 
