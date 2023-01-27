@@ -376,12 +376,9 @@ extension STPAPIClient {
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         var request = configuredRequest(for: url)
-        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         switch method {
         case .get:
-            let query = URLEncoder.queryString(from: parameters)
-            urlComponents.query = query
-            request.url = urlComponents.url!
+            request.stp_addParameters(toURL: parameters)
         case .post:
             let formData = URLEncoder.queryString(from: parameters).data(using: .utf8)
             request.httpBody = formData
