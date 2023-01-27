@@ -376,10 +376,11 @@ extension STPAPIClient {
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         var request = configuredRequest(for: url)
-        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         switch method {
         case .get:
-            let query = URLEncoder.queryString(from: parameters)
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)!
+            // URLComponents expects the query set on it to not be url escaped
+            let query = URLEncoder.nonEscapedQueryString(from: parameters)
             urlComponents.query = query
             request.url = urlComponents.url!
         case .post:

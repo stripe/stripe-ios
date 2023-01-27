@@ -39,6 +39,10 @@ import Foundation
     public class func queryString(from parameters: [String: Any]) -> String {
         return query(parameters)
     }
+
+    public class func nonEscapedQueryString(from parameters: [String: Any]) -> String {
+        return query(parameters, shouldEscape: false)
+    }
 }
 
 // MARK: -
@@ -58,7 +62,7 @@ struct Key {
 ///   - value: Value of the query component.
 ///
 /// - Returns: The percent-escaped, URL encoded query string components.
-private func queryComponents(fromKey key: String, value: Any) -> [(String, String)] {
+private func queryComponents(fromKey key: String, value: Any, shouldEscape: Bool = true) -> [(String, String)] {
     func unwrap<T>(_ any: T) -> Any {
         let mirror = Mirror(reflecting: any)
         guard mirror.displayStyle == .optional, let first = mirror.children.first else {
@@ -67,12 +71,17 @@ private func queryComponents(fromKey key: String, value: Any) -> [(String, Strin
         return first.value
     }
 
+    func escapeIfNeeded(_ string: String) -> String {
+        guard shouldEscape else { return string }
+        return escape(string)
+    }
+
     var components: [(String, String)] = []
     switch value {
     case let dictionary as [String: Any]:
         for nestedKey in dictionary.keys.sorted() {
             let value = dictionary[nestedKey]!
-            let escapedNestedKey = escape(nestedKey)
+            let escapedNestedKey = escapeIfNeeded(nestedKey)
             components += queryComponents(fromKey: "\(key)[\(escapedNestedKey)]", value: value)
         }
     case let array as [Any]:
@@ -81,19 +90,19 @@ private func queryComponents(fromKey key: String, value: Any) -> [(String, Strin
         }
     case let number as NSNumber:
         if number.isBool {
-            components.append((key, escape(number.boolValue ? "true" : "false")))
+            components.append((key, escapeIfNeeded(number.boolValue ? "true" : "false")))
         } else {
-            components.append((key, escape("\(number)")))
+            components.append((key, escapeIfNeeded("\(number)")))
         }
     case let bool as Bool:
-        components.append((key, escape(bool ? "true" : "false")))
+        components.append((key, escapeIfNeeded(bool ? "true" : "false")))
     case let set as Set<AnyHashable>:
         for value in Array(set) {
             components += queryComponents(fromKey: "\(key)", value: value)
         }
     default:
         let unwrappedValue = unwrap(value)
-        components.append((key, escape("\(unwrappedValue)")))
+        components.append((key, escapeIfNeeded("\(unwrappedValue)")))
     }
     return components
 }
@@ -107,12 +116,12 @@ private func escape(_ string: String) -> String {
     string.addingPercentEncoding(withAllowedCharacters: URLQueryAllowed) ?? string
 }
 
-private func query(_ parameters: [String: Any]) -> String {
+private func query(_ parameters: [String: Any], shouldEscape: Bool = true) -> String {
     var components: [(String, String)] = []
 
     for key in parameters.keys.sorted(by: <) {
         let value = parameters[key]!
-        components += queryComponents(fromKey: escape(key), value: value)
+        components += queryComponents(fromKey: escape(key), value: value, shouldEscape: shouldEscape)
     }
     return components.map { "\($0)=\($1)" }.joined(separator: "&")
 }
