@@ -105,6 +105,19 @@ extension NativeFlowController {
         navigationController.setViewControllers(viewControllers, animated: animated)
     }
 
+    private func pushPane(_ pane: FinancialConnectionsSessionManifest.NextPane, animated: Bool) {
+        if pane == .success && dataManager.manifest.skipSuccessPane == true {
+            closeAuthFlow(showConfirmationAlert: false, error: nil)
+        } else {
+            let manualEntryViewController = CreatePaneViewController(
+                pane: pane,
+                nativeFlowController: self,
+                dataManager: dataManager
+            )
+            pushViewController(manualEntryViewController, animated: animated)
+        }
+    }
+
     private func pushViewController(_ viewController: UIViewController?, animated: Bool) {
         if let viewController = viewController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
@@ -132,12 +145,7 @@ extension NativeFlowController {
 extension NativeFlowController {
 
     private func pushManualEntry() {
-        let manualEntryViewController = CreatePaneViewController(
-            pane: .manualEntry,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(manualEntryViewController, animated: true)
+        pushPane(.manualEntry, animated: true)
     }
 
     private func didSelectAnotherBank() {
@@ -325,12 +333,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
     ) {
         dataManager.manifest = manifest
 
-        let viewController = CreatePaneViewController(
-            pane: manifest.nextPane,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(viewController, animated: true)
+        pushPane(manifest.nextPane, animated: true)
     }
 
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
@@ -349,12 +352,7 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
     ) {
         dataManager.institution = institution
 
-        let partnerAuthViewController = CreatePaneViewController(
-            pane: .partnerAuth,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(partnerAuthViewController, animated: true)
+        pushPane(.partnerAuth, animated: true)
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
@@ -387,16 +385,11 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
     ) {
         dataManager.authSession = authSession
 
-        let accountPickerViewController = CreatePaneViewController(
-            pane: .accountPicker,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
         // This is a weird thing to do, but effectively we don't want to
         // animate for OAuth since we make the authorize call in that case
         // and already have the same loading screen.
         let shouldAnimate = !authSession.isOauthNonOptional
-        pushViewController(accountPickerViewController, animated: shouldAnimate)
+        pushPane(.accountPicker, animated: shouldAnimate)
     }
 
     func partnerAuthViewController(
@@ -420,23 +413,13 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 
         let shouldAttachLinkedPaymentAccount = (dataManager.manifest.paymentMethodType != nil)
         if shouldAttachLinkedPaymentAccount {
-            let attachLinkedPaymentMethodViewController = CreatePaneViewController(
-                pane: .attachLinkedPaymentAccount,
-                nativeFlowController: self,
-                dataManager: dataManager
-            )
             // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
             //
             // `attachLinkedPaymentAccount` looks the same as the last step of `accountPicker`
             // so navigating to a "Linking account" loading screen can look buggy to the user
-            pushViewController(attachLinkedPaymentMethodViewController, animated: false)
+            pushPane(.attachLinkedPaymentAccount, animated: false)
         } else {
-            let successViewController = CreatePaneViewController(
-                pane: .success,
-                nativeFlowController: self,
-                dataManager: dataManager
-            )
-            pushViewController(successViewController, animated: true)
+            pushPane(.success, animated: true)
         }
     }
 
@@ -485,12 +468,7 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         dataManager.accountNumberLast4 = accountNumberLast4
 
         if dataManager.manifest.manualEntryUsesMicrodeposits {
-            let manualEntrySuccessViewController = CreatePaneViewController(
-                pane: .manualEntrySuccess,
-                nativeFlowController: self,
-                dataManager: dataManager
-            )
-            pushViewController(manualEntrySuccessViewController, animated: true)
+            pushPane(.manualEntrySuccess, animated: true)
         } else {
             closeAuthFlow(showConfirmationAlert: false, error: nil)
         }
@@ -527,12 +505,7 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
         dataManager.resetState(withNewManifest: manifest)
 
         // go to the next pane (likely `institutionPicker`)
-        let nextViewController = CreatePaneViewController(
-            pane: manifest.nextPane,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(nextViewController, animated: false)
+        pushPane(manifest.nextPane, animated: false)
     }
 
     func resetFlowViewController(
@@ -569,13 +542,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
         _ viewController: AttachLinkedPaymentAccountViewController,
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
     ) {
-        let viewController = CreatePaneViewController(
-            pane: paymentAccountResource.nextPane ?? .success,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        // the next pane is likely `success`
-        pushViewController(viewController, animated: true)
+        pushPane(paymentAccountResource.nextPane ?? .success, animated: true)
     }
 
     func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(
