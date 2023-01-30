@@ -77,4 +77,5 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let features: [String: Bool]?
     let experimentAssignments: [String: String]?
     let assignmentEventId: String?
+    let skipSuccessPane: Bool?
 }
