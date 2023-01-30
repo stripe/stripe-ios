@@ -1,6 +1,11 @@
 ## x.x.x yyyy-mm-dd
-* [Changed] Image asset for AFFIN bank
 
+## 23.3.3 2023-01-30
+### Payments
+* [Changed] Updated image asset for AFFIN bank.
+
+### Financial Connections
+* [Fixed] Double encoding of GET parameters.
 
 ## 23.3.2 2023-01-09
 * [Changed] Using [Tuist](https://tuist.io) to generate Xcode projects. From now on, only release versions of the SDK will include Xcode project files, in case you want to build a non release revision from source, you can follow [these instructions](https://docs.tuist.io/tutorial/get-started) to generate the project files. For Carthage users, this also means that you will only be able to depend on release versions.
