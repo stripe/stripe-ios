@@ -132,7 +132,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .completed,
             linkEnabled: false,
             activeLinkSession: false,
-            paymentOption: .applePay,
             currency: "USD"
         )
 
@@ -144,7 +143,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .failed(error: PaymentSheetError.unknown(debugDescription: "Error")),
             linkEnabled: false,
             activeLinkSession: false,
-            paymentOption: .applePay,
             currency: "USD"
         )
 
@@ -225,7 +223,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .completed,
             linkEnabled: false,
             activeLinkSession: false,
-            paymentOption: .applePay,
             currency: "USD"
         )
 
