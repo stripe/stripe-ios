@@ -6,7 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
 import UIKit
 
 extension OneTimeCodeTextField {
@@ -43,7 +42,8 @@ extension OneTimeCodeTextField {
         private let allowedCharacters: CharacterSet = .init(charactersIn: "0123456789")
 
         init(capacity: Int) {
-            self.capacity = capacity
+            assert(capacity >= 0, "Cannot have a negative capacity")
+            self.capacity = max(capacity, 0)
         }
 
         func insert(_ text: String, at range: TextRange) -> TextRange {
@@ -55,7 +55,7 @@ extension OneTimeCodeTextField {
 
             if value.count > capacity {
                 // Truncate to capacity
-                value = value.stp_safeSubstring(to: capacity)
+                value = String(value.prefix(capacity))
             }
 
             let newInsertionPoint = TextPosition(range._start.index + sanitizedText.count)

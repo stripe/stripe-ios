@@ -18,6 +18,8 @@
 
 "City" = "Grad";
 
+"Code field" = "Polje za kod";
+
 "Company" = "Poduzeće";
 
 "Continue" = "Nastavi";
@@ -35,6 +37,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Gotovo";
+
+"Double tap to edit" = "Dodirnite dva puta za uređivanje";
 
 "Edit" = "Uredi";
 

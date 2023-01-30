@@ -13,6 +13,7 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class OneTimeCodeTextFieldTests: XCTestCase {
 
@@ -306,7 +307,7 @@ class OneTimeCodeTextFieldTests: XCTestCase {
 extension OneTimeCodeTextFieldTests {
 
     fileprivate func makeSUT(numberOfDigits: Int = 6) -> OneTimeCodeTextField {
-        let sut = OneTimeCodeTextField(numberOfDigits: numberOfDigits)
+        let sut = OneTimeCodeTextField(numberOfDigits: numberOfDigits, theme: LinkUI.appearance.asElementsTheme)
         sut.frame = CGRect(x: 0, y: 0, width: 320, height: 60)
         sut.layoutIfNeeded()
         return sut

@@ -18,6 +18,8 @@
 
 "City" = "Ort";
 
+"Code field" = "Fält för kod";
+
 "Company" = "Företag";
 
 "Continue" = "Fortsätt";
@@ -35,6 +37,8 @@
 "Do Si" = "Provins och stad";
 
 "Done" = "Klar";
+
+"Double tap to edit" = "Dubbelklicka för att redigera";
 
 "Edit" = "Redigera";
 
