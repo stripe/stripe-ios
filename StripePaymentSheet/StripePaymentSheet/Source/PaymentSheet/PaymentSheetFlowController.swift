@@ -22,20 +22,6 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
-
-        var name: String {
-            switch self {
-
-            case .applePay:
-                return "applepay"
-            case .saved(paymentMethod: let paymentMethod):
-                return paymentMethod.type.displayName.lowercased()
-            case .new(confirmParams: let confirmParams):
-                return confirmParams.paymentMethodType.displayName.lowercased()
-            case .link:
-                return "link"
-            }
-        }
     }
 
     /// A class that presents the individual steps of a payment flow
@@ -286,7 +272,6 @@ extension PaymentSheet {
                     result: result,
                     linkEnabled: intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    paymentOption: paymentOption,
                     currency: intent.currency
                 )
 
