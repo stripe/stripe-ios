@@ -18,6 +18,8 @@
 
 "City" = "Ort";
 
+"Code field" = "Code-Feld";
+
 "Company" = "Unternehmen";
 
 "Continue" = "Weiter";
@@ -35,6 +37,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Fertig";
+
+"Double tap to edit" = "Doppelklick zum Bearbeiten";
 
 "Edit" = "Bearbeiten";
 

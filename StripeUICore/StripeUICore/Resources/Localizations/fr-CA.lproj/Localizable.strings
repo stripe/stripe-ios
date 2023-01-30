@@ -18,6 +18,8 @@
 
 "City" = "Ville";
 
+"Code field" = "Champ de code";
+
 "Company" = "Entreprise";
 
 "Continue" = "Continuer";
@@ -35,6 +37,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Terminé";
+
+"Double tap to edit" = "Touchez deux fois pour saisir votre texte";
 
 "Edit" = "Modifier";
 

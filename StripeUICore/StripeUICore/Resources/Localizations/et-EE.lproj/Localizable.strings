@@ -18,6 +18,8 @@
 
 "City" = "Linn";
 
+"Code field" = "Koodi väli";
+
 "Company" = "Ettevõte";
 
 "Continue" = "Jätka";
@@ -35,6 +37,8 @@
 "Do Si" = "Do Si";
 
 "Done" = "Valmis";
+
+"Double tap to edit" = "Redigeerimiseks topeltklõpsake";
 
 "Edit" = "Muutmine";
 
