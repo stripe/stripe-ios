@@ -29,7 +29,7 @@ final class CloseConfirmationAlertHandler {
                 if let businessName = businessName {
                     return String(
                         format: STPLocalizedString(
-                            "You haven’t finished linking your bank account.",
+                            "You haven’t finished linking your bank account to %@.",
                             "The subtitle/description of a pop-up that appears when the user attempts to exit the bank linking screen."
                         ),
                         businessName
