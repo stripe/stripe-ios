@@ -392,7 +392,7 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
             nativeFlowController: self,
             dataManager: dataManager
         )
-        pushViewController(accountPickerViewController, animated: true)
+        pushViewController(accountPickerViewController, animated: false)
     }
 
     func partnerAuthViewController(

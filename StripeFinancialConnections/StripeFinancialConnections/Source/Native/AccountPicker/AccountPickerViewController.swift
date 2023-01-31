@@ -122,17 +122,7 @@ final class AccountPickerViewController: UIViewController {
 
     private func pollAuthSessionAccounts() {
         // Load accounts
-        let retreivingAccountsLoadingView = ReusableInformationView(
-            iconType: .loading,
-            title: STPLocalizedString(
-                "Retrieving accounts",
-                "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."
-            ),
-            subtitle: STPLocalizedString(
-                "Please wait while Stripe loads your accounts.",
-                "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."
-            )
-        )
+        let retreivingAccountsLoadingView = buildRetrievingAccountsView()
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
 
         let pollingStartDate = Date()
