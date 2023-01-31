@@ -149,9 +149,9 @@ import UIKit
                             return
                         }
                         // TODO(porter) Revisit Link for deferred workflow
-                                            guard let intent = intent as? Intent else {
-                                                fatalError("Link not currently supported in deferred workflow")
-                                            }
+                        guard let intent = intent as? Intent else {
+                            fatalError("Link not currently supported in deferred workflow")
+                        }
                         self.intent = intent
                         // TODO(bmelts): can we reliably determine the customer's previously used funding source (if any)?
                         continuation.resume(returning: .link(option: .wallet))
