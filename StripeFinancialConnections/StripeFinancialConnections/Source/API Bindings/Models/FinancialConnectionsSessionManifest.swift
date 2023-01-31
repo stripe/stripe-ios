@@ -38,10 +38,10 @@ struct FinancialConnectionsSessionManifest: Decodable {
     }
 
     enum AccountDisconnectionMethod: String, SafeEnumCodable, Equatable {
-        case dashboard = "dashboard"
-        case support = "support"
-        case email = "email"
-        case link = "link"
+        case dashboard
+        case support
+        case email
+        case link
         case unparsable
     }
 
