@@ -52,7 +52,7 @@ class PaymentSheetViewController: UIViewController {
 
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
-    private(set) var intent: Intent
+    private(set) var intent: IntentAbstraction
     enum Mode {
         case selectingSaved
         case addingNew
@@ -66,10 +66,9 @@ class PaymentSheetViewController: UIViewController {
 
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
         let shouldDisplaySavePaymentMethodCheckbox: Bool = {
-            switch intent {
-            case .paymentIntent:
+            if intent.isPaymentIntent {
                 return configuration.customer != nil
-            case .setupIntent:
+            } else {
                 return false
             }
         }()
@@ -139,11 +138,10 @@ class PaymentSheetViewController: UIViewController {
             if let customCtaLabel = configuration.primaryButtonLabel {
                 return .customWithLock(title: customCtaLabel)
             }
-
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
-            case .setupIntent:
+            
+            if let amount = intent.amount, let currency = intent.currency {
+                return .pay(amount: amount, currency: currency)
+            } else {
                 return .setup
             }
         }()
@@ -166,7 +164,7 @@ class PaymentSheetViewController: UIViewController {
     }
 
     required init(
-        intent: Intent,
+        intent: IntentAbstraction,
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,

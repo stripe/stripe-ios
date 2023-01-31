@@ -28,13 +28,17 @@ class PaymentSheetFormFactory {
     }
     let saveMode: SaveMode
     let paymentMethod: PaymentSheet.PaymentMethodType
-    let intent: Intent
+    let intent: IntentAbstraction
     let configuration: PaymentSheet.Configuration
     let addressSpecProvider: AddressSpecProvider
     let offerSaveToLinkWhenSupported: Bool
     let linkAccount: PaymentSheetLinkAccount?
 
     var canSaveToLink: Bool {
+        // TODO(porter) Revisit Link for deferred workflow
+        guard let intent = intent as? Intent else {
+            return false
+        }
         return (intent.supportsLinkCard && paymentMethod == .card && saveMode != .merchantRequired)
     }
 
@@ -43,16 +47,15 @@ class PaymentSheetFormFactory {
     }
 
     init(
-        intent: Intent,
+        intent: IntentAbstraction,
         configuration: PaymentSheet.Configuration,
         paymentMethod: PaymentSheet.PaymentMethodType,
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
     ) {
-        switch intent {
-        case let .paymentIntent(paymentIntent):
-            let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
+        if intent.isPaymentIntent {
+            let merchantRequiresSave = (intent.setupFutureUsage ?? .unknown) != .none
             let hasCustomer = configuration.customer != nil
             let isPaymentMethodSaveable = PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
                 paymentMethod: paymentMethod,
@@ -69,9 +72,10 @@ class PaymentSheetFormFactory {
             case (false, false, _):
                 saveMode = .none
             }
-        case .setupIntent:
+        } else {
             saveMode = .merchantRequired
         }
+
         self.intent = intent
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -315,27 +319,27 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        guard case let .paymentIntent(paymentIntent) = intent else {
+        guard let currency = intent.currency, let amount = intent.amount else {
             assertionFailure()
             return nil
         }
         return StaticElement(
             view: AfterpayPriceBreakdownView(
-                amount: paymentIntent.amount,
-                currency: paymentIntent.currency,
+                amount: amount,
+                currency: currency,
                 theme: theme
             )
         )
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        guard case let .paymentIntent(paymentIntent) = intent else {
+        guard let currency = intent.currency else {
             assertionFailure("Klarna only be used with a PaymentIntent")
             return nil
         }
 
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(
-            KlarnaHelper.availableCountries(currency: paymentIntent.currency)
+            KlarnaHelper.availableCountries(currency: currency)
         )
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(

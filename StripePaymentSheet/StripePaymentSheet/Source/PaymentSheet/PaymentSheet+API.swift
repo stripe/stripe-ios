@@ -19,7 +19,7 @@ extension PaymentSheet {
     /// `PaymentSheet.load()` result.
     enum LoadingResult {
         case success(
-            intent: Intent,
+            intent: IntentAbstraction,
             savedPaymentMethods: [STPPaymentMethod],
             isLinkEnabled: Bool
         )

@@ -27,6 +27,10 @@ extension PaymentSheetFormFactory {
             shouldDisplaySaveCheckbox ? saveCheckbox : nil,
         ], theme: theme)
         if isLinkEnabled {
+            // TODO(porter) Revisit Link for deferred workflow
+            guard let intent = intent as? Intent else {
+                fatalError("Link not currently supported in deferred workflow")
+            }
             return LinkEnabledPaymentMethodElement(
                 type: .card,
                 paymentMethodElement: cardFormElement,

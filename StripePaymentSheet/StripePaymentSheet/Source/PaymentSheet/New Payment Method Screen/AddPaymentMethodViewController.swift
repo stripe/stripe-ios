@@ -95,7 +95,7 @@ class AddPaymentMethodViewController: UIViewController {
         return nil
     }
 
-    private let intent: Intent
+    private let intent: IntentAbstraction
     private let configuration: PaymentSheet.Configuration
 
     private lazy var usBankAccountFormElement: USBankAccountPaymentMethodElement? = {
@@ -141,7 +141,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     required init(
-        intent: Intent,
+        intent: IntentAbstraction,
         configuration: PaymentSheet.Configuration,
         delegate: AddPaymentMethodViewControllerDelegate
     ) {
@@ -314,6 +314,11 @@ class AddPaymentMethodViewController: UIViewController {
             case .failed:
                 self.delegate?.updateErrorLabel(for: genericError)
             }
+        }
+        
+        // TODO(porter) Revisit when there is a solution to ACHv2 in deferred mode
+        guard let intent = intent as? Intent else {
+            fatalError("ACH not supported in deferred workflow currently")
         }
         switch intent {
         case .paymentIntent:

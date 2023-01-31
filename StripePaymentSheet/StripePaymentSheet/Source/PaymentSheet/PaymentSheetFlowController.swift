@@ -65,7 +65,7 @@ extension PaymentSheet {
 
         // MARK: - Private properties
 
-        private var intent: Intent
+        private var intent: IntentAbstraction
         private let savedPaymentMethods: [STPPaymentMethod]
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
 
@@ -105,7 +105,7 @@ extension PaymentSheet {
         // MARK: - Initializer (Internal)
 
         required init(
-            intent: Intent,
+            intent: IntentAbstraction,
             savedPaymentMethods: [STPPaymentMethod],
             isLinkEnabled: Bool,
             configuration: Configuration
@@ -258,7 +258,11 @@ extension PaymentSheet {
             }
 
             let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: configuration.appearance)
-
+            
+            // TODO(porter) Revisit deferred confirm flow
+            guard let intent = intent as? Intent else {
+                fatalError("Can't currently support confirming deferred intents")
+            }
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: authenticationContext,
