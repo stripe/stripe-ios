@@ -81,7 +81,7 @@ private func CreateContentView(
                 font: .stripeFont(forTextStyle: .body),
                 boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
                 linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
-                textColor: .textSecondary
+                textColor: .textPrimary
             )
             label.setText(text, action: didSelectURL)
             verticalStackView.addArrangedSubview(label)
