@@ -392,7 +392,11 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
             nativeFlowController: self,
             dataManager: dataManager
         )
-        pushViewController(accountPickerViewController, animated: true)
+        // This is a weird thing to do, but effectively we don't want to
+        // animate for OAuth since we make the authorize call in that case
+        // and already have the same loading screen.
+        let shouldAnimate = !authSession.isOauthNonOptional
+        pushViewController(accountPickerViewController, animated: shouldAnimate)
     }
 
     func partnerAuthViewController(
