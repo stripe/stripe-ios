@@ -423,7 +423,20 @@ public class STPCardValidator: NSObject {
     // `retrieveBinRanges()`, but we'll bypass that check when using the CBC BIN controller.
     static let cbcBinController = STPBINController()
 
-    public class func possibleBrands(forNumber cardNumber: String,
+    /// Returns available brands for the provided card details.
+    /// - Parameter card: The card details to validate.
+    /// - Parameter completion: Will be called with the set of available STPCardBrands or an error.
+    /// - seealso: https://stripe.com/docs/card-brand-choice
+    public class func possibleBrands(forCard cardParams: STPPaymentMethodCardParams,
+                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+        guard let cardNumber = cardParams.number else {
+            completion(.success([]))
+            return
+        }
+        possibleBrands(forNumber: cardNumber, completion: completion)
+    }
+    
+    class func possibleBrands(forNumber cardNumber: String,
                                      completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
         cbcBinController.retrieveBINRanges(forPrefix: cardNumber, recordErrorsAsSuccess: false, onlyFetchForVariableLengthBINs: false) { result in
             switch result {
