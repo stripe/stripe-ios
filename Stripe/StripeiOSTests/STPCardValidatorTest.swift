@@ -453,7 +453,7 @@ class STPCardValidatorTest: XCTestCase {
         let params = STPPaymentMethodCardParams()
         params.number = "5131301234"
         STPCardValidator.possibleBrands(forCard: params) { result in
-            guard let brands = try! result.get()
+            let brands = try! result.get()
             XCTAssertEqual(brands, [.cartesBancaires, .mastercard])
             paramsExp.fulfill()
         }
