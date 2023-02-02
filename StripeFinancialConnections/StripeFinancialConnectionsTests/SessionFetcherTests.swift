@@ -58,7 +58,9 @@ class NoMoreAccountSessionAPIClient: EmptyFinancialConnectionsAPIClient {
             accounts: fullList,
             livemode: false,
             paymentAccount: nil,
-            bankAccountToken: nil
+            bankAccountToken: nil,
+            status: nil,
+            statusDetails: nil
         )
         return Promise(value: sessionWithFullAccountList)
     }
