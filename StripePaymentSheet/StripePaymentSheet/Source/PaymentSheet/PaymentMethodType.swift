@@ -306,12 +306,40 @@ extension PaymentSheet {
                 return false
             }
         }
+        
+        /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
+        /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
+        /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
+        func supportsSavedPaymentMethod(configuration: Configuration, intent: Intent) -> Bool {
+            guard let stpPaymentMethodType = stpPaymentMethodType else {
+                // At the time of writing, we only support cards and us bank accounts.
+                // These should both have an `stpPaymentMethodType`, so I'm avoiding handling this guard condition
+                return false
+            }
+            let requirements: [PaymentMethodTypeRequirement] = {
+                switch stpPaymentMethodType {
+                case .card:
+                    return []
+                case .USBankAccount:
+                    return [.userSupportsDelayedPaymentMethods]
+                default:
+                    return [.unavailable]
+                }
+            }()
+            return Self.configurationSupports(
+                paymentMethod: stpPaymentMethodType,
+                requirements: requirements,
+                configuration: configuration,
+                intent: intent,
+                supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
+            )
+        }
 
-        /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use, set up, and reuse
-        /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent or saved payment method
+        /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use or set up
+        /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent
         /// - Parameters:
         ///   - paymentMethod: the `STPPaymentMethodType` in question
-        ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
+        ///   - configuration: the user's configuration object
         ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
         /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
