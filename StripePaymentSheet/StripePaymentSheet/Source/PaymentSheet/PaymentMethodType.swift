@@ -255,7 +255,7 @@ extension PaymentSheet {
                     switch stpPaymentMethodType {
                     case .card:
                         return []
-                    case .alipay:
+                    case .alipay, .payPal:
                         return [.returnURL]
                     case .USBankAccount:
                         return [.userSupportsDelayedPaymentMethods]
@@ -269,7 +269,7 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
                         .affirm, .cashApp, .unknown:
                         return [.unavailable]
                     @unknown default:
