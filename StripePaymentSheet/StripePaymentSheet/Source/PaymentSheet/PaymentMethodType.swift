@@ -290,6 +290,22 @@ extension PaymentSheet {
             )
             // TODO: We need a way to model this information in our common model
         }
+        
+        /// Returns whether or not we can show a "☑️ Save for future use" checkbox to the customer
+        func supportsSaveForFutureUseCheckbox() -> Bool {
+            guard let stpPaymentMethodType = stpPaymentMethodType else {
+                // At the time of writing, we only support cards and us bank accounts.
+                // These should both have an `stpPaymentMethodType`, so I'm avoiding handling this guard condition
+                return false
+            }
+            // This payment method and its requirements are hardcoded on the client
+            switch stpPaymentMethodType {
+            case .card, .USBankAccount:
+                return true
+            default:
+                return false
+            }
+        }
 
         /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use, set up, and reuse
         /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent or saved payment method
