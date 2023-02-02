@@ -33,7 +33,9 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
             accounts: accountList,
             livemode: false,
             paymentAccount: nil,
-            bankAccountToken: nil
+            bankAccountToken: nil,
+            status: nil,
+            statusDetails: nil
         )
         let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
             clientSecret: "secret",
