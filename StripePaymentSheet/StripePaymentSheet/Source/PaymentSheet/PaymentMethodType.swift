@@ -215,7 +215,7 @@ extension PaymentSheet {
             }
         }
 
-        /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
+        /// Returns whether or not PaymentSheet should display the given `paymentMethod` as an option to the customer.
         /// Note: This doesn't affect the availability of saved PMs.
         /// - Parameters:
         ///   - paymentMethod: the `STPPaymentMethodType` in question
@@ -247,39 +247,60 @@ extension PaymentSheet {
                 return false
             }
 
-            // if the intent is a SI or PI+sfu, then use the save and reuse requirements
+            let requirements: [PaymentMethodTypeRequirement]
+            
+            // We have different requirements depending on whether or not the intent is setting up the payment method for future use
             if intent.isSettingUp {
-                return supportsSaveAndReuse(
-                    paymentMethod: paymentMethod,
-                    configuration: configuration,
-                    intent: intent
-                )
+                requirements = {
+                    switch stpPaymentMethodType {
+                    case .card:
+                        return []
+                    case .alipay:
+                        return [.returnURL]
+                    case .USBankAccount:
+                        return [.userSupportsDelayedPaymentMethods]
+                    case .iDEAL, .bancontact, .sofort:
+                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                        // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unavailable]
+                    case .SEPADebit:
+                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                        return [.userSupportsDelayedPaymentMethods, .unavailable]
+                    case .bacsDebit:
+                        return [.returnURL, .userSupportsDelayedPaymentMethods]
+                    case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                        .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
+                        .affirm, .cashApp, .unknown:
+                        return [.unavailable]
+                    @unknown default:
+                        return [.unavailable]
+                    }
+                }()
+            } else {
+                requirements = {
+                    switch stpPaymentMethodType {
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay:
+                        return []
+                    case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
+                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
+                        return [.returnURL]
+                    case .USBankAccount:
+                        return [
+                            .userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod,
+                        ]
+                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit:
+                        return [.userSupportsDelayedPaymentMethods]
+                    case .bacsDebit, .sofort:
+                        return [.returnURL, .userSupportsDelayedPaymentMethods]
+                    case .afterpayClearpay, .affirm:
+                        return [.returnURL, .shippingAddress]
+                    case .link, .unknown:
+                        return [.unavailable]
+                    @unknown default:
+                        return [.unavailable]
+                    }
+                }()
             }
-
-            // if this is a PI with a `STPPaymentMethodType` use the following requirements
-            let requirements: [PaymentMethodTypeRequirement] = {
-                switch stpPaymentMethodType {
-                case .blik, .card, .cardPresent, .UPI, .weChatPay:
-                    return []
-                case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                    .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
-                    return [.returnURL]
-                case .USBankAccount:
-                    return [
-                        .userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod,
-                    ]
-                case .OXXO, .boleto, .AUBECSDebit, .SEPADebit:
-                    return [.userSupportsDelayedPaymentMethods]
-                case .bacsDebit, .sofort:
-                    return [.returnURL, .userSupportsDelayedPaymentMethods]
-                case .afterpayClearpay, .affirm:
-                    return [.returnURL, .shippingAddress]
-                case .link, .unknown:
-                    return [.unavailable]
-                @unknown default:
-                    return [.unavailable]
-                }
-            }()
 
             return configurationSupports(
                 paymentMethod: stpPaymentMethodType,
@@ -333,69 +354,6 @@ extension PaymentSheet {
                 intent: intent,
                 supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
             )
-        }
-
-        /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use or set up
-        /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent
-        /// - Parameters:
-        ///   - paymentMethod: the `STPPaymentMethodType` in question
-        ///   - configuration: the user's configuration object
-        ///   - intent: a intent object
-        ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
-        /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
-        static func supportsSaveAndReuse(
-            paymentMethod: PaymentMethodType,
-            configuration: PaymentSheet.Configuration,
-            intent: Intent,
-            supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
-        ) -> Bool {
-            guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
-                if case .dynamic = paymentMethod {
-                    return configurationSatisfiesRequirements(
-                        requirements: paymentMethod.supportsSaveAndReuseRequirements(),
-                        configuration: configuration,
-                        intent: intent
-                    )
-                }
-
-                return false
-            }
-
-            let requirements: [PaymentMethodTypeRequirement] = {
-                switch stpPaymentMethodType {
-                case .card:
-                    return []
-                case .alipay:
-                    return [.returnURL]
-                case .USBankAccount:
-                    return [.userSupportsDelayedPaymentMethods]
-                case .iDEAL, .bancontact, .sofort:
-                    // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                    // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
-                    return [.returnURL, .userSupportsDelayedPaymentMethods, .unavailable]
-                case .SEPADebit:
-                    // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                    return [.userSupportsDelayedPaymentMethods, .unavailable]
-                case .bacsDebit:
-                    return [.returnURL, .userSupportsDelayedPaymentMethods]
-                case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
-                    .affirm, .cashApp, .unknown:
-                    return [.unavailable]
-                @unknown default:
-                    return [.unavailable]
-                }
-            }()
-
-            return configurationSupports(
-                paymentMethod: stpPaymentMethodType,
-                requirements: requirements,
-                configuration: configuration,
-                intent: intent,
-                supportedPaymentMethods: supportedPaymentMethods
-            )
-
-            // TODO: We need a way to model this information in our common model
         }
 
         /// Returns true if the passed configuration satsifies the passed in `requirements`
