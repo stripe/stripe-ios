@@ -23,6 +23,18 @@ public class STPMandateDataParams: NSObject {
         self.customerAcceptance = customerAcceptance
         super.init()
     }
+    
+    /// Create mandate data by inferring its values from the client
+    @_spi(STP) public static func makeWithInferredValues() -> STPMandateDataParams {
+        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
+        onlineParams.inferFromClient = NSNumber(value: true)
+        
+        let customerAcceptanceParams = STPMandateCustomerAcceptanceParams()
+        customerAcceptanceParams.type = .online
+        customerAcceptanceParams.onlineParams = onlineParams
+        
+        return STPMandateDataParams(customerAcceptance: customerAcceptanceParams)
+    }
 }
 
 extension STPMandateDataParams: STPFormEncodable {

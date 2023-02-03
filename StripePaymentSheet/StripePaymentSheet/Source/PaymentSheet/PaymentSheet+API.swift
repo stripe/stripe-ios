@@ -101,6 +101,10 @@ extension PaymentSheet {
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                    // Paypal requires mandate_data if setting up
+                    if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal && paymentIntent.setupFutureUsage == .offSession {
+                        paymentIntentParams.mandateData = .makeWithInferredValues()
+                    }
                     paymentHandler.confirmPayment(paymentIntentParams,
                                                   with: authenticationContext,
                                                   completion: paymentHandlerCompletion)
@@ -109,6 +113,10 @@ extension PaymentSheet {
             case .setupIntent(let setupIntent):
                 let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
                 setupIntentParams.returnURL = configuration.returnURL
+                // Paypal requires mandate_data if setting up
+                if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal {
+                    setupIntentParams.mandateData = .makeWithInferredValues()
+                }
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,

@@ -125,25 +125,15 @@ public class STPPaymentIntentParams: NSObject {
 
     internal var _mandateData: STPMandateDataParams?
     /// Details about the Mandate to create.
-    /// @note If this value is null and the (self.paymentMethod.type == STPPaymentMethodTypeSEPADebit | | self.paymentMethodParams.type == STPPaymentMethodTypeAUBECSDebit || self.paymentMethodParams.type == STPPaymentMethodTypeBacsDebit) && self.mandate == nil`, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context.
+    /// @note If this value is null, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context if it's required for `self.paymentMethodType`
     @objc public var mandateData: STPMandateDataParams? {
         get {
             if let _mandateData = _mandateData {
                 return _mandateData
             }
             switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link,
-                .USBankAccount:
-                // Create default infer from client mandate_data
-                let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
-                onlineParams.inferFromClient = NSNumber(value: true)
-
-                if let customerAcceptance = STPMandateCustomerAcceptanceParams(
-                    type: .online,
-                    onlineParams: onlineParams
-                ) {
-                    return STPMandateDataParams(customerAcceptance: customerAcceptance)
-                }
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
+                return .makeWithInferredValues()
             default: break
             }
             return nil
