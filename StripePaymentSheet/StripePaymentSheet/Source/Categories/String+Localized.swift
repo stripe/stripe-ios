@@ -155,4 +155,32 @@ extension String.Localized {
             "Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method"
         )
     }
+    
+    static var sepa_mandate_text: String {
+        STPLocalizedString(
+            "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.",
+            "SEPA mandate text"
+        )
+    }
+    
+    static var cash_app_mandate_text: String {
+        STPLocalizedString(
+            "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.",
+            "Cash App mandate text"
+        )
+    }
+    
+    static var paypal_mandate_text_payment: String {
+        STPLocalizedString(
+            "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
+            "Paypal mandate text"
+        )
+    }
+    
+    static var paypal_mandate_text_setup: String {
+        STPLocalizedString(
+            "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
+            "Paypal mandate text"
+        )
+    }
 }
