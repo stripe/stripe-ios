@@ -71,7 +71,7 @@ final class InstitutionSearchTableView: UIView {
         self.allowManualEntry = allowManualEntry
         let cellIdentifier = "\(InstitutionSearchTableViewCell.self)"
         tableView = UITableView(frame: frame)
-        self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
+        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
                     as? InstitutionSearchTableViewCell
@@ -82,7 +82,9 @@ final class InstitutionSearchTableView: UIView {
             }
             cell.customize(with: institution)
             return cell
-        }
+        }        
+        dataSource.defaultRowAnimation = .fade
+
         super.init(frame: frame)
         tableView.backgroundColor = .customBackgroundColor
         tableView.separatorInset = .zero

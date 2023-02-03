@@ -77,6 +77,17 @@ final class InstitutionSearchBar: UIView {
         ])
         return textFieldClearButton
     }()
+    private lazy var searchIconView: UIView = {
+        let searchIconImageView = UIImageView()
+        searchIconImageView.image = Image.search.makeImage()
+            .withTintColor(.textPrimary)
+        searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchIconImageView.widthAnchor.constraint(equalToConstant: 16),
+            searchIconImageView.heightAnchor.constraint(equalToConstant: 16),
+        ])
+        return searchIconImageView
+    }()
 
     init() {
         super.init(frame: .zero)
@@ -84,7 +95,7 @@ final class InstitutionSearchBar: UIView {
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
-                CreateSearchIconView(),
+                searchIconView,
                 textField,
                 textFieldClearButton,
             ]
@@ -139,6 +150,26 @@ final class InstitutionSearchBar: UIView {
         layer.borderColor = searchBarBorderColor.cgColor
         layer.borderWidth = searchBarBorderWidth
     }
+
+    private var searchIndicatorActive: Bool = false
+
+    func updateSearchingIndicator(_ isSearching: Bool) {
+        guard isSearching != self.searchIndicatorActive else { return }
+        self.searchIndicatorActive = isSearching
+
+        if isSearching {
+            let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+            opacityAnimation.fromValue = 0.6
+            opacityAnimation.toValue = 0.3
+            opacityAnimation.repeatCount = 10000
+            opacityAnimation.duration = 0.3
+            opacityAnimation.autoreverses = true
+
+            searchIconView.layer.add(opacityAnimation, forKey: "pulseAnimation")
+        } else {
+            searchIconView.layer.removeAnimation(forKey: "pulseAnimation")
+        }
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -158,18 +189,6 @@ extension InstitutionSearchBar: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-}
-
-private func CreateSearchIconView() -> UIView {
-    let searchIconImageView = UIImageView()
-    searchIconImageView.image = Image.search.makeImage()
-        .withTintColor(.textPrimary)
-    searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        searchIconImageView.widthAnchor.constraint(equalToConstant: 16),
-        searchIconImageView.heightAnchor.constraint(equalToConstant: 16),
-    ])
-    return searchIconImageView
 }
 
 private class IncreasedHitTestTextField: UITextField {
