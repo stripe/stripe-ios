@@ -204,7 +204,7 @@ extension PaymentSheet {
                 }
             }
 
-            let paymentTypes = recommendedPaymentMethodTypes.filter {
+            return recommendedPaymentMethodTypes.filter {
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: $0,
                     configuration: configuration,
@@ -213,20 +213,6 @@ extension PaymentSheet {
                         ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
             }
-
-            let serverFilteredPaymentMethods = Self.recommendedPaymentMethodTypes(
-                from: intent
-            ).filter({ $0 != .USBankAccount && $0 != .link })
-            let paymentTypesFiltered = paymentTypes.filter({ $0 != .USBankAccount && $0 != .link })
-            if serverFilteredPaymentMethods != paymentTypesFiltered {
-                let result = serverFilteredPaymentMethods.symmetricDifference(paymentTypes)
-                STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethods(
-                    clientFilteredPaymentMethods: result.stringList()
-                )
-            } else {
-                STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethodsNone()
-            }
-            return paymentTypes
         }
 
         /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
@@ -491,24 +477,5 @@ extension STPPaymentMethodParams {
                 return label
             }
         }
-    }
-}
-
-extension Array where Element == PaymentSheet.PaymentMethodType {
-    func stringList() -> String {
-        var stringList: [String] = []
-        for paymentType in self {
-            let type = PaymentSheet.PaymentMethodType.string(from: paymentType) ?? "unknown"
-            stringList.append(type)
-        }
-        guard let data = try? JSONSerialization.data(withJSONObject: stringList, options: []) else {
-            return "[]"
-        }
-        return String(data: data, encoding: .utf8) ?? "[]"
-    }
-    func symmetricDifference(_ other: Array) -> Array where Element == PaymentSheet.PaymentMethodType {
-        let set1 = Set(self)
-        let set2 = Set(other)
-        return Array(set1.symmetricDifference(set2))
     }
 }
