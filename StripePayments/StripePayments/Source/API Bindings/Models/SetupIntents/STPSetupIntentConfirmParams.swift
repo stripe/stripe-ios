@@ -68,7 +68,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
                 return _mandateData
             }
             switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount, .cashApp:
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount,
+                .cashApp:
                 return .makeWithInferredValues()
             default: break
             }

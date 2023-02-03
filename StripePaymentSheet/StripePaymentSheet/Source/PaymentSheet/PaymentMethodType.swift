@@ -282,11 +282,12 @@ extension PaymentSheet {
                     case .blik, .card, .cardPresent, .UPI, .weChatPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
+                        .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
-                            .userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod,
+                            .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
+                            .validUSBankVerificationMethod,
                         ]
                     case .OXXO, .boleto, .AUBECSDebit, .SEPADebit:
                         return [.userSupportsDelayedPaymentMethods]
