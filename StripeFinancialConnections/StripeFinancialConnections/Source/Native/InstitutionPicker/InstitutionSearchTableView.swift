@@ -82,7 +82,7 @@ final class InstitutionSearchTableView: UIView {
             }
             cell.customize(with: institution)
             return cell
-        }        
+        }
         dataSource.defaultRowAnimation = .fade
 
         super.init(frame: frame)
