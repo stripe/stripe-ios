@@ -527,6 +527,23 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
     }
 }
 
+// MARK: - NetworkingLinkSignupViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
+
+    func networkingLinkSignupViewControllerDidFinish(
+        _ viewController: NetworkingLinkSignupViewController
+    ) {
+        let successViewController = CreatePaneViewController(
+            pane: .success,
+            nativeFlowController: self,
+            dataManager: dataManager
+        )
+        pushViewController(successViewController, animated: true)
+    }
+}
+
 // MARK: - TerminalErrorViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
@@ -672,8 +689,23 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkSignupPane:
-        assertionFailure("Not supported")
-        viewController = nil
+        if let linkedAccountIds = dataManager.linkedAccounts?.map({ $0.id }) {
+            let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
+                manifest: dataManager.manifest,
+                selectedAccountIds: linkedAccountIds,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
+                dataSource: networkingLinkSignupDataSource
+            )
+            networkingLinkSignupViewController.delegate = nativeFlowController
+            viewController = networkingLinkSignupViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .networkingLinkVerification:
         assertionFailure("Not supported")
         viewController = nil

@@ -25,9 +25,16 @@ final class FinancialConnectionsAnalyticsClient {
         additionalParameters["navigator_language"] = Locale.current.identifier
     }
 
-    public func log(eventName: String, parameters: [String: Any] = [:]) {
+    public func log(
+        eventName: String,
+        parameters: [String: Any] = [:],
+        pane: FinancialConnectionsSessionManifest.NextPane? = nil
+    ) {
         let eventName = "linked_accounts.\(eventName)"
-        let parameters = parameters.merging(
+
+        var parameters = parameters
+        parameters["pane"] = pane?.rawValue
+        parameters = parameters.merging(
             additionalParameters,
             uniquingKeysWith: { eventParameter, _ in
                 // prioritize event `parameters` over `additionalParameters`
@@ -168,6 +175,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .resetFlow
         case is TerminalErrorViewController:
             return .terminalError
+        case is NetworkingLinkSignupViewController:
+            return .networkingLinkSignupPane
         default:
             return .unparsable
         }
