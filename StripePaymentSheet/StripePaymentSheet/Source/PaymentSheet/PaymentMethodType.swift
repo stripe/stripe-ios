@@ -248,7 +248,7 @@ extension PaymentSheet {
             }
 
             let requirements: [PaymentMethodTypeRequirement]
-            
+
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
             if intent.isSettingUp {
                 requirements = {
@@ -311,7 +311,7 @@ extension PaymentSheet {
             )
             // TODO: We need a way to model this information in our common model
         }
-        
+
         /// Returns whether or not we can show a "☑️ Save for future use" checkbox to the customer
         func supportsSaveForFutureUseCheckbox() -> Bool {
             guard let stpPaymentMethodType = stpPaymentMethodType else {
@@ -327,7 +327,7 @@ extension PaymentSheet {
                 return false
             }
         }
-        
+
         /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
         /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
         /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.

@@ -176,7 +176,7 @@ extension PaymentSheetFormFactory {
             view: SimpleMandateTextView(mandateText: mandateText, theme: theme)
         )
     }
-    
+
     func makePaypalMandate(intent: Intent) -> StaticElement {
         let mandateText: String = {
             switch intent {
