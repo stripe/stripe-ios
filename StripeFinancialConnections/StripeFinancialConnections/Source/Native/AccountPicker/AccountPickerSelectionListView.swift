@@ -76,8 +76,7 @@ final class AccountPickerSelectionListView: UIView {
                 ),
                 trailingTitle: nil,
                 subtitle: nil,
-                isSelected: (enabledAccounts.count == selectedAccounts.count),
-                isLinked: false
+                isSelected: (enabledAccounts.count == selectedAccounts.count)
             )
             verticalStackView.addArrangedSubview(allAccountsCellView)
         }
@@ -107,8 +106,7 @@ final class AccountPickerSelectionListView: UIView {
                 rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
                 subtitle: AccountPickerHelpers.rowSubtitle(forAccount: account),
-                isSelected: selectedAccounts.contains(where: { $0.id == account.id }),
-                isLinked: account.linkedAccountId != nil
+                isSelected: selectedAccounts.contains(where: { $0.id == account.id })
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }
@@ -126,8 +124,7 @@ final class AccountPickerSelectionListView: UIView {
                 AccountPickerHelpers.rowTitles(forAccount: disabledAccount).leadingTitle,
                 trailingTitle: "••••\(disabledAccount.displayableAccountNumbers ?? "")",
                 subtitle: disabledAccount.allowSelectionMessage,
-                isSelected: false,
-                isLinked: false
+                isSelected: false
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }

@@ -87,14 +87,12 @@ final class AccountPickerSelectionRowView: UIView {
         _ leadingTitle: String,
         trailingTitle: String?,
         subtitle: String?,
-        isSelected: Bool,
-        isLinked: Bool
+        isSelected: Bool
     ) {
         labelRowView.setLeadingTitle(
             leadingTitle,
             trailingTitle: trailingTitle,
-            subtitle: subtitle,
-            isLinked: isLinked
+            subtitle: subtitle
         )
         self.isSelected = isSelected
     }
@@ -152,8 +150,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
             leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
-            isSelected: isSelected,
-            isLinked: isLinked
+            isSelected: isSelected
         )
         return view
     }
@@ -163,8 +160,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
             leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
-            isSelected: isSelected,
-            isLinked: isLinked
+            isSelected: isSelected
         )
     }
 }
