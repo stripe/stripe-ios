@@ -170,7 +170,7 @@ extension PayWithLinkViewController {
         var cardBrand: STPCardBrand? {
             switch selectedPaymentMethod?.details {
             case .card(let card):
-                return card.brand
+                return card.stpBrand
             default:
                 return nil
             }

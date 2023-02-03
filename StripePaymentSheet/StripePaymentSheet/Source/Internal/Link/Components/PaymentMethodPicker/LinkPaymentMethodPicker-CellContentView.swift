@@ -23,7 +23,7 @@ extension LinkPaymentMethodPicker {
             didSet {
                 switch paymentMethod?.details {
                 case .card(let card):
-                    cardBrandView.cardBrand = card.brand
+                    cardBrandView.cardBrand = card.stpBrand
                     bankIconView.isHidden = true
                     cardBrandView.isHidden = false
                     primaryLabel.text = paymentMethod?.paymentSheetLabel

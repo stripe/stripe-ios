@@ -68,7 +68,7 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
         let supportedPaymentDetailsTypeStrings = dict["support_payment_details_types"] as? [String]
 
         let supportedPaymentDetailsTypes = supportedPaymentDetailsTypeStrings?.compactMap {
-            ConsumerPaymentDetails.DetailsType(rawValue: $0.lowercased())
+            ConsumerPaymentDetails.DetailsType(rawValue: $0)
         }
 
         return ConsumerSession(clientSecret: clientSecret,

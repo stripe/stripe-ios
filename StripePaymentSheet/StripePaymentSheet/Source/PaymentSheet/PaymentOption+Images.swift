@@ -108,7 +108,7 @@ extension ConsumerPaymentDetails {
         switch details {
 
         case .card(let card):
-            return STPImageLibrary.cardBrandImage(for: card.brand)
+            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
         case .bankAccount(let bankAccount):
             return PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode)
         }

@@ -63,12 +63,10 @@ extension LinkCardEditElementSnapshotTests {
                     expiryMonth: 1,
                     brand: "visa",
                     last4: "4242",
-                    checks: nil,
-                    allResponseFields: [:]
+                    checks: nil
                 )
             ),
-            isDefault: isDefault,
-            allResponseFields: [:]
+            isDefault: isDefault
         )
 
         return LinkCardEditElement(paymentMethod: paymentMethod)
