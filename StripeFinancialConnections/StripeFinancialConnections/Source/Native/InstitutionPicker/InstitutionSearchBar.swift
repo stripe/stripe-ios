@@ -160,7 +160,7 @@ final class InstitutionSearchBar: UIView {
         if isSearching {
             let opacityAnimation = CABasicAnimation(keyPath: "opacity")
             opacityAnimation.fromValue = 0.6
-            opacityAnimation.toValue = 0.3
+            opacityAnimation.toValue = 0.25
             opacityAnimation.repeatCount = 10000
             opacityAnimation.duration = 0.3
             opacityAnimation.autoreverses = true
