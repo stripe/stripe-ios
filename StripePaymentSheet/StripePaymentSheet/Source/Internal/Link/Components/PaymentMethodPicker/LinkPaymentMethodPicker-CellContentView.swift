@@ -36,7 +36,7 @@ extension LinkPaymentMethodPicker {
                     primaryLabel.text = bankAccount.name
                     secondaryLabel.text = paymentMethod?.paymentSheetLabel
                     secondaryLabel.isHidden = false
-                case .none:
+                case .none, .unparsable:
                     cardBrandView.isHidden = true
                     bankIconView.isHidden = true
                     primaryLabel.text = nil

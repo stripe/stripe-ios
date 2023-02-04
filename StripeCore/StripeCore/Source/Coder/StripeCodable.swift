@@ -32,10 +32,10 @@ public protocol UnknownFieldsEncodable: Encodable {
     var _additionalParametersStorage: NonEncodableParameters? { get set }
 }
 
-/// A Codable enum that sets an "unparsable" case
+/// A Decodable enum that sets an "unparsable" case
 /// instead of failing on values that are unknown to the SDK.
 /// :nodoc:
-public protocol SafeEnumCodable: Codable {
+public protocol SafeEnumDecodable: Decodable {
     /// If the value is unparsable, the result will be available in
     /// the `allResponseFields` of the parent object.
     static var unparsable: Self { get }
@@ -44,6 +44,11 @@ public protocol SafeEnumCodable: Codable {
     // as an associated value, but Swift can't auto-generate the Codable
     // keys if we do that.
 }
+
+/// A Codable enum that sets an "unparsable" case
+/// instead of failing on values that are unknown to the SDK.
+/// :nodoc:
+public protocol SafeEnumCodable: Codable, SafeEnumDecodable {}
 
 extension UnknownFieldsDecodable {
     /// A dictionary containing all response fields from the original JSON,

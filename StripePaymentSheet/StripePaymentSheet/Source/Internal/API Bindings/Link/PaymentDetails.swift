@@ -50,14 +50,16 @@ final class ConsumerPaymentDetails: Decodable {
 // MARK: - Details
 /// :nodoc:
 extension ConsumerPaymentDetails {
-    enum DetailsType: String, CaseIterable, Codable {
+    enum DetailsType: String, CaseIterable, SafeEnumCodable {
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
+        case unparsable = ""
     }
 
-    enum Details: Decodable {
+    enum Details: SafeEnumDecodable {
         case card(card: Card)
         case bankAccount(bankAccount: BankAccount)
+        case unparsable
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -74,6 +76,8 @@ extension ConsumerPaymentDetails {
                 self = .card(card: try container.decode(Card.self, forKey: CodingKeys.card))
             case .bankAccount:
                 self = .bankAccount(bankAccount: try container.decode(BankAccount.self, forKey: CodingKeys.bankAccount))
+            case .unparsable:
+                self = .unparsable
             }
         }
     }
@@ -84,6 +88,8 @@ extension ConsumerPaymentDetails {
             return .card
         case .bankAccount:
             return .bankAccount
+        case .unparsable:
+            return .unparsable
         }
     }
 }
@@ -93,14 +99,14 @@ extension ConsumerPaymentDetails {
 extension ConsumerPaymentDetails.Details {
     /// For internal SDK use only
     final class CardChecks: Codable {
-        enum CVCCheck: String, Codable {
+        enum CVCCheck: String, SafeEnumCodable {
             case pass = "PASS"
             case fail = "FAIL"
             case unchecked = "UNCHECKED"
             case unavailable = "UNAVAILABLE"
             case stateInvalid = "STATE_INVALID"
             // Catch all
-            case unknown = "UNKNOWN"
+            case unparsable = ""
         }
 
         let cvcCheck: CVCCheck
@@ -202,6 +208,8 @@ extension ConsumerPaymentDetails {
             return "••••\(card.last4)"
         case .bankAccount(let bank):
             return "••••\(bank.last4)"
+        case .unparsable:
+            return ""
         }
     }
 
@@ -210,6 +218,8 @@ extension ConsumerPaymentDetails {
         case .card(let card):
             return card.cvc
         case .bankAccount:
+            return nil
+        case .unparsable:
             return nil
         }
     }
@@ -232,6 +242,8 @@ extension ConsumerPaymentDetails {
                 bank.name,
                 digits
             )
+        case .unparsable:
+            return ""
         }
     }
 

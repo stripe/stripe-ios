@@ -202,6 +202,8 @@ extension LinkPaymentMethodPicker {
                     return card.hasExpired
                 case .bankAccount:
                     return false
+                case .unparsable:
+                    return false
                 }
             }
 
