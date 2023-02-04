@@ -48,7 +48,7 @@ public protocol SafeEnumDecodable: Decodable {
 /// A Codable enum that sets an "unparsable" case
 /// instead of failing on values that are unknown to the SDK.
 /// :nodoc:
-public protocol SafeEnumCodable: Codable, SafeEnumDecodable {}
+public protocol SafeEnumCodable: Encodable, SafeEnumDecodable {}
 
 extension UnknownFieldsDecodable {
     /// A dictionary containing all response fields from the original JSON,
