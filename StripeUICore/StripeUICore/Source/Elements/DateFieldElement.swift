@@ -15,6 +15,12 @@ import UIKit
  */
 @_spi(STP) public class DateFieldElement {
     public typealias DidUpdateSelectedDate = (Date) -> Void
+    struct DateEmptyError: ElementValidationError {
+        var localizedDescription: String = STPLocalizedString(
+            "Date is empty.",
+            "Error message for empty date."
+        )
+    }
 
     weak public var delegate: ElementDelegate?
     private(set) lazy var datePickerView: UIDatePicker = {
@@ -49,6 +55,13 @@ import UIKit
         }
     }
     private var previouslySelectedDate: Date?
+    public var validationState: ElementValidationState {
+        if selectedDate != nil {
+            return .valid
+        } else {
+            return .invalid(error: DateEmptyError(), shouldDisplay: false)
+        }
+    }
     public var didUpdate: DidUpdateSelectedDate?
 
     private let label: String
@@ -130,9 +143,11 @@ extension DateFieldElement: PickerFieldViewDelegate {
 
     func didFinish(_ pickerFieldView: PickerFieldView) {
         if previouslySelectedDate != selectedDate,
-           let selectedDate = selectedDate {
+            let selectedDate = selectedDate
+        {
             didUpdate?(selectedDate)
             previouslySelectedDate = selectedDate
+            delegate?.didUpdate(element: self)
         }
         delegate?.continueToNextField(element: self)
     }
@@ -152,12 +167,14 @@ private extension DateFieldElement {
         }
 
         if let min = min,
-           date < min {
+            date < min
+        {
             return nil
         }
 
         if let max = max,
-           date > max {
+            date > max
+        {
             return nil
         }
 

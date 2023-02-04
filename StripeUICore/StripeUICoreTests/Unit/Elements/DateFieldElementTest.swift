@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) @testable import StripeUICore
+@_spi(STP)@testable import StripeUICore
 import XCTest
 
 final class DateFieldElementTest: XCTestCase {
@@ -17,11 +17,13 @@ final class DateFieldElementTest: XCTestCase {
     func testNoDefault() {
         let element = DateFieldElement(label: "")
         XCTAssertNil(element.selectedDate)
+        XCTAssertFalse(element.validationState.isValid)
     }
 
     func testWithDefault() {
         let element = DateFieldElement(label: "", defaultDate: oct1_2021)
         XCTAssertEqual(element.selectedDate, oct1_2021)
+        XCTAssertTrue(element.validationState.isValid)
     }
 
     func testDefaultExceedsMax() {
