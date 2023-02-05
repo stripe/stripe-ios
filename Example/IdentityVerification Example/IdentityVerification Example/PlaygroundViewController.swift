@@ -15,23 +15,30 @@ class PlaygroundViewController: UIViewController {
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets
+    @IBOutlet weak var nativeOrWebSelector: UISegmentedControl!
     @IBOutlet weak var verificationTypeSelector: UISegmentedControl!
     @IBOutlet weak var drivingLicenseSwitch: UISwitch!
     @IBOutlet weak var passportSwitch: UISwitch!
     @IBOutlet weak var idCardSwitch: UISwitch!
     @IBOutlet weak var requireIDNumberSwitch: UISwitch!
+    @IBOutlet weak var requireAddressSwitch: UISwitch!
     @IBOutlet weak var requireLiveCaptureSwitch: UISwitch!
     @IBOutlet weak var requireSelfieSwitch: UISwitch!
-    @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
     @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
+    enum InvocationType: CaseIterable {
+        case native
+        case web
+        case link
+    }
     enum VerificationType: String, CaseIterable {
-        case document
+        case document = "document"
         case idNumber = "id_number"
+        case address = "address"
     }
 
     enum DocumentAllowedType: String {
@@ -40,13 +47,14 @@ class PlaygroundViewController: UIViewController {
         case idCard = "id_card"
     }
 
+    /// Use native SDK or web redirect
+    var invocationType: InvocationType {
+        return InvocationType.allCases[nativeOrWebSelector.selectedSegmentIndex]
+    }
+
     /// VerificationType specified in the UI toggle
     var verificationType: VerificationType {
-        let index = verificationTypeSelector.selectedSegmentIndex
-        guard index >= 0 && index < VerificationType.allCases.count else {
-            return .document
-        }
-        return VerificationType.allCases[index]
+        return VerificationType.allCases[verificationTypeSelector.selectedSegmentIndex]
     }
 
     /// List of allowed document types based on UI toggles
@@ -70,10 +78,9 @@ class PlaygroundViewController: UIViewController {
         super.viewDidLoad()
 
         if #available(iOS 14.3, *) {
-            useNativeComponentsSwitch.isEnabled = true
+            nativeOrWebSelector.isEnabled = true
         } else {
-            useNativeComponentsSwitch.isEnabled = false
-            useNativeComponentsSwitch.isOn = true
+            nativeOrWebSelector.isEnabled = false
             nativeComponentsOptionsContainerView.isHidden = false
         }
 
@@ -109,6 +116,7 @@ class PlaygroundViewController: UIViewController {
                     "require_id_number": requireIDNumberSwitch.isOn,
                     "require_live_capture": requireLiveCaptureSwitch.isOn,
                     "require_matching_selfie": requireSelfieSwitch.isOn,
+                    "require_address": requireAddressSwitch.isOn,
                 ],
             ]
             requestDict["options"] = options
@@ -135,36 +143,42 @@ class PlaygroundViewController: UIViewController {
                 }
 
                 self?.startVerificationFlow(responseJson: responseJson)
-             }
+            }
         }
         task.resume()
     }
 
     func startVerificationFlow(responseJson: [String: String]) {
-        let shouldUseNativeComponents = useNativeComponentsSwitch.isOn
-
-        if !shouldUseNativeComponents,
-           #available(iOS 14.3, *) {
-            setupVerificationSheetWebUI(responseJson: responseJson)
+        if invocationType == .link {
+            displayAlert("Verification Link", responseJson["url"]!)
         } else {
-            setupVerificationSheetNativeUI(responseJson: responseJson)
-        }
+            let shouldUseNativeComponents = invocationType == .native
 
-        let verificationSessionId = responseJson["id"]
+            if !shouldUseNativeComponents,
+                #available(iOS 14.3, *)
+            {
+                setupVerificationSheetWebUI(responseJson: responseJson)
+            } else {
+                setupVerificationSheetNativeUI(responseJson: responseJson)
+            }
 
-        self.verificationSheet?.present(
-            from: self,
-            completion: { [weak self] result in
-                switch result {
-                case .flowCompleted:
-                    self?.displayAlert("Completed!", verificationSessionId)
-                case .flowCanceled:
-                    self?.displayAlert("Canceled!", verificationSessionId)
-                case .flowFailed(let error):
-                    self?.displayAlert("Failed!", verificationSessionId)
-                    print(error)
+            let verificationSessionId = responseJson["id"]
+
+            self.verificationSheet?.present(
+                from: self,
+                completion: { [weak self] result in
+                    switch result {
+                    case .flowCompleted:
+                        self?.displayAlert("Completed!", verificationSessionId)
+                    case .flowCanceled:
+                        self?.displayAlert("Canceled!", verificationSessionId)
+                    case .flowFailed(let error):
+                        self?.displayAlert("Failed!", verificationSessionId)
+                        print(error)
+                    }
                 }
-            })
+            )
+        }
     }
 
     func setupVerificationSheetNativeUI(responseJson: [String: String]) {
@@ -229,7 +243,8 @@ class PlaygroundViewController: UIViewController {
     func mockDocumentCameraForSimulator() {
         #if targetEnvironment(simulator)
         if let frontImage = UIImage(named: "front_drivers_license.jpg"),
-           let backImage = UIImage(named: "back_drivers_license.jpg") {
+            let backImage = UIImage(named: "back_drivers_license.jpg")
+        {
             IdentityVerificationSheet.simulatorDocumentCameraImages = [frontImage, backImage]
         }
         if let selfieImage = UIImage(named: "selfie.jpg") {
@@ -244,11 +259,20 @@ class PlaygroundViewController: UIViewController {
             documentOptionsContainerView.isHidden = false
         case .idNumber:
             documentOptionsContainerView.isHidden = true
+        case .address:
+            documentOptionsContainerView.isHidden = true
         }
     }
 
-    @IBAction func didChangeUseNativeComponentsToggle(_ sender: Any) {
-        nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
+    @IBAction func didChangeNativeOrWeb(_ sender: Any) {
+        switch invocationType {
+        case .native:
+            nativeComponentsOptionsContainerView.isHidden = false
+        case .web:
+            nativeComponentsOptionsContainerView.isHidden = true
+        case .link:
+            nativeComponentsOptionsContainerView.isHidden = true
+        }
     }
 
     // MARK: – Customize Branding
@@ -301,7 +325,10 @@ class PlaygroundViewController: UIViewController {
         }
 
         // Customize back button arrow
-        standardNavBarAppearance.setBackIndicatorImage(UIImage(named: "BackArrow"), transitionMaskImage: UIImage(named: "BackArrow"))
+        standardNavBarAppearance.setBackIndicatorImage(
+            UIImage(named: "BackArrow"),
+            transitionMaskImage: UIImage(named: "BackArrow")
+        )
     }
 
     func disableCustomColorsFonts() {
@@ -334,7 +361,9 @@ class PlaygroundViewController: UIViewController {
 // MARK: - Alert TextField Delegate
 
 extension PlaygroundViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String)
+        -> Bool
+    {
         return false
     }
 
