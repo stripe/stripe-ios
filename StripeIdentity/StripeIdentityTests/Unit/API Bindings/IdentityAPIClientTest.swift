@@ -42,37 +42,36 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         apiClient.apiClient.urlSession = URLSession(configuration: urlSessionConfig)
     }
 
-    func testCreateVerificationPage() throws {
-        let mockVerificationPage = VerificationPageMock.response200
-        let mockResponseData = try mockVerificationPage.data()
-        let mockResponse = try mockVerificationPage.make()
+    func testCreateVerificationPageWithTypeDoc() throws {
+        try testVerificationPage(with: VerificationPageMock.response200)
+    }
 
-        stub { urlRequest in
-            XCTAssertEqual(
-                urlRequest.url?.absoluteString.hasSuffix(
-                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?"
-                ),
-                true
-            )
-            XCTAssertEqual(urlRequest.httpMethod, "GET")
-            verifyHeaders(urlRequest: urlRequest)
+    func testCreateVerificationPageWithTypeDocRequireLifeCapture() throws {
+        try testVerificationPage(with: VerificationPageMock.requireLiveCapture)
+    }
 
-            return true
-        } response: { _ in
-            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
-        }
+    func testCreateVerificationPageWithTypeDocNoSelfie() throws {
+        try testVerificationPage(with: VerificationPageMock.noSelfie)
+    }
 
-        apiClient.getIdentityVerificationPage().observe { result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            self.exp.fulfill()
-        }
+    func testCreateVerificationPageWithTypeDocRequireIdNumber() throws {
+        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumber)
+    }
 
-        wait(for: [exp], timeout: 1)
+    func testCreateVerificationPageWithTypeDocRequireAddress() throws {
+        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireAddress)
+    }
+
+    func testCreateVerificationPageWithTypeDocRequireIdNumberAndAddress() throws {
+        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumberAndAddress)
+    }
+
+    func testCreateVerificationPageWithTypeIdNumber() throws {
+        try testVerificationPage(with: VerificationPageMock.typeIdNumber)
+    }
+
+    func testCreateVerificationPageWithTypeAddress() throws {
+        try testVerificationPage(with: VerificationPageMock.typeAddress)
     }
 
     func testUpdateVerificationPageData() throws {
@@ -200,6 +199,39 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
 
         wait(for: [exp], timeout: 1)
     }
+
+    private func testVerificationPage(with responseMock: VerificationPageMock) throws {
+        let mockVerificationPage = responseMock
+        let mockResponseData = try mockVerificationPage.data()
+        let mockResponse = try mockVerificationPage.make()
+
+        stub { urlRequest in
+            XCTAssertEqual(
+                urlRequest.url?.absoluteString.hasSuffix(
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?"
+                ),
+                true
+            )
+            XCTAssertEqual(urlRequest.httpMethod, "GET")
+            verifyHeaders(urlRequest: urlRequest)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        apiClient.getIdentityVerificationPage().observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, mockResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            self.exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
 }
 
 private func verifyHeaders(
@@ -215,7 +247,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v2",
+        "2020-08-27; identity_client_api=v3",
         file: file,
         line: line
     )
