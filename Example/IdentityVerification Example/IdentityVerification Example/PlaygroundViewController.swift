@@ -15,20 +15,20 @@ class PlaygroundViewController: UIViewController {
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets
-    @IBOutlet weak var nativeOrWebSelector: UISegmentedControl!
-    @IBOutlet weak var verificationTypeSelector: UISegmentedControl!
-    @IBOutlet weak var drivingLicenseSwitch: UISwitch!
-    @IBOutlet weak var passportSwitch: UISwitch!
-    @IBOutlet weak var idCardSwitch: UISwitch!
-    @IBOutlet weak var requireIDNumberSwitch: UISwitch!
-    @IBOutlet weak var requireAddressSwitch: UISwitch!
-    @IBOutlet weak var requireLiveCaptureSwitch: UISwitch!
-    @IBOutlet weak var requireSelfieSwitch: UISwitch!
-    @IBOutlet weak var documentOptionsContainerView: UIStackView!
-    @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
+    @IBOutlet private weak var nativeOrWebSelector: UISegmentedControl!
+    @IBOutlet private weak var verificationTypeSelector: UISegmentedControl!
+    @IBOutlet private weak var drivingLicenseSwitch: UISwitch!
+    @IBOutlet private weak var passportSwitch: UISwitch!
+    @IBOutlet private weak var idCardSwitch: UISwitch!
+    @IBOutlet private weak var requireIDNumberSwitch: UISwitch!
+    @IBOutlet private weak var requireAddressSwitch: UISwitch!
+    @IBOutlet private weak var requireLiveCaptureSwitch: UISwitch!
+    @IBOutlet private weak var requireSelfieSwitch: UISwitch!
+    @IBOutlet private weak var documentOptionsContainerView: UIStackView!
+    @IBOutlet private weak var nativeComponentsOptionsContainerView: UIStackView!
 
-    @IBOutlet weak var verifyButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var verifyButton: UIButton!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     enum InvocationType: CaseIterable {
         case native
@@ -350,6 +350,7 @@ class PlaygroundViewController: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         // Reset custom colors if the view gets popped
         guard presentedViewController == nil else {
             return
