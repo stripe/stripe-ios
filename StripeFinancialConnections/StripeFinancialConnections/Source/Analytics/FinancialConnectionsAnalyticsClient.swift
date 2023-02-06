@@ -177,6 +177,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .terminalError
         case is NetworkingLinkSignupViewController:
             return .networkingLinkSignupPane
+        case is NetworkingLinkLoginWarmupViewController:
+            return .networkingLinkLoginWarmup
         default:
             return .unparsable
         }
