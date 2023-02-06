@@ -64,7 +64,7 @@ import UIKit
     }
     public var didUpdate: DidUpdateSelectedDate?
 
-    private let label: String
+    private let label: String?
     private let theme: ElementsUITheme
 
     /**
@@ -83,7 +83,7 @@ import UIKit
        - `didUpdate` is not called if the user does not change their input before hitting "Done"
      */
     public init(
-        label: String,
+        label: String? = nil,
         defaultDate: Date? = nil,
         minimumDate: Date? = nil,
         maximumDate: Date? = nil,
