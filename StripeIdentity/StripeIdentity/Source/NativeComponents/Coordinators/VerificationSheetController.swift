@@ -140,6 +140,17 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             self?.verificationPageResponse = result
             if case .success(let verificationPage) = result {
                 self?.startLoadingMLModels(from: verificationPage)
+                // if result success and requires address, load address spec before continue
+                if (verificationPage.requirements.missing.contains(.address)) {
+                    AddressSpecProvider.shared.loadAddressSpecs() {
+                        returnedPromise.fullfill(with: result)
+                    }
+                } else {
+                    returnedPromise.fullfill(with: result)
+                }
+            } else {
+                // result not success
+                returnedPromise.fullfill(with: result)
             }
             returnedPromise.fullfill(with: result)
         }
