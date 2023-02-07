@@ -5,13 +5,14 @@
 //  Created by Krisjanis Gaidis on 2/6/23.
 //
 
-
 import Foundation
 @_spi(STP) import StripeCore
 
 protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+
+    func disableNetworking() -> Future<Void>
 }
 
 final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLoginWarmupDataSource {
@@ -31,5 +32,15 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+    }
+
+    func disableNetworking() -> Future<Void> {
+        return apiClient.disableNetworking(
+            disabledReason: nil,
+            clientSecret: clientSecret
+        )
+        .chained { _ in
+            return Promise(value: ())
+        }
     }
 }

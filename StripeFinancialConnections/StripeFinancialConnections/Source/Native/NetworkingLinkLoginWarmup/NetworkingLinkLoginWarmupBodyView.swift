@@ -12,7 +12,7 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkLoginWarmupBodyView: UIView {
-    
+
     private let didSelectContinue: () -> Void
 
     init(
@@ -40,7 +40,7 @@ final class NetworkingLinkLoginWarmupBodyView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc fileprivate func didSelectContinueButton() {
         didSelectContinue()
     }
@@ -71,13 +71,13 @@ private func CreateContinueButton(
     horizontalStack.layer.borderColor = UIColor.borderNeutral.cgColor
     horizontalStack.layer.borderWidth = 1
     horizontalStack.layer.cornerRadius = 8
-    
+
     let tapGestureRecognizer = UITapGestureRecognizer(
         target: target,
         action: #selector(NetworkingLinkLoginWarmupBodyView.didSelectContinueButton)
     )
     horizontalStack.addGestureRecognizer(tapGestureRecognizer)
-    
+
     return horizontalStack
 }
 
@@ -86,12 +86,12 @@ private func CreateContinueButtonLabelView(email: String) -> UIView {
     continueLabel.text = "Continue as"
     continueLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
     continueLabel.textColor = .textSecondary
-    
+
     let emailLabel = UILabel()
     emailLabel.text = email
     emailLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
     emailLabel.textColor = .textPrimary
-    
+
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             continueLabel,

@@ -68,7 +68,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.enableTestMode = enableTestMode
         }
     }
-    
+
     @Published var email: String = PlaygroundUserDefaults.email {
         didSet {
             PlaygroundUserDefaults.email = email

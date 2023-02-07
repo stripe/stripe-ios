@@ -38,7 +38,7 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+
         let pane = PaneWithHeaderLayoutView(
             title: STPLocalizedString(
                 "Sign in to Link",
@@ -49,7 +49,10 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
                 "The subtitle/description of a screen where users are informed that they can sign-in-to Link."
             ),
             contentView: NetworkingLinkLoginWarmupBodyView(
-                email: "kgaidis@stripe.com", // TODO(kgaidis): get email getAccountholderCustomerEmailAddress
+                // `accountholderCustomerEmailAddress` should always be non-null, and
+                // since the email is only used as a visual, it's not worth to throw an error
+                // if it is null
+                email: dataSource.manifest.accountholderCustomerEmailAddress ?? "you",
                 didSelectContinue: { [weak self] in
                     self?.didSelectContinue()
                 },
@@ -61,7 +64,7 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
         )
         pane.addTo(view: view)
     }
-    
+
     private func didSelectContinue() {
         dataSource.analyticsClient.log(
             eventName: "click.continue",
@@ -69,13 +72,21 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
         )
         delegate?.networkingLinkLoginWarmupViewControllerDidSelectContinue(self)
     }
-    
+
     private func didSelectSkip() {
         dataSource.analyticsClient.log(
             eventName: "click.skip_sign_in",
             pane: .networkingLinkLoginWarmup
         )
-        // TODO(kgaidis): disableNetworkingInSession(); disableNetworking( ... on error...do generic error (?); on success, push to 'institution_picker'
-        delegate?.networkingLinkLoginWarmupViewControllerDidSelectSkip(self)
+        dataSource.disableNetworking()
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success:
+                    self.delegate?.networkingLinkLoginWarmupViewControllerDidSelectSkip(self)
+                case .failure(let error):
+                    self.delegate?.networkingLinkLoginWarmupViewController(self, didReceiveTerminalError: error)
+                }
+            }
     }
 }

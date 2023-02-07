@@ -71,7 +71,7 @@ struct PlaygroundMainView: View {
                             Text("Clear Caches")
                         }
                     }
-                    
+
                     if viewModel.flow == .networking {
                         Section(header: Text("NETWORKING")) {
                             TextField("Email (existing Link consumer)", text: $viewModel.email)

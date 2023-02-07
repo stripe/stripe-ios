@@ -549,13 +549,13 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
     ) {
         pushPane(.networkingLinkVerification, animated: true)
     }
-    
+
     func networkingLinkLoginWarmupViewControllerDidSelectSkip(
         _ viewController: NetworkingLinkLoginWarmupViewController
     ) {
         pushPane(.institutionPicker, animated: true)
     }
-    
+
     func networkingLinkLoginWarmupViewController(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         didReceiveTerminalError error: Error

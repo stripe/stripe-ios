@@ -33,7 +33,7 @@ final class PlaygroundUserDefaults {
         defaultValue: false
     )
     static var enableTestMode: Bool
-    
+
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_EMAIL",
         defaultValue: ""
