@@ -15,7 +15,7 @@ protocol PickerFieldViewDelegate: AnyObject {
 
 /**
  An input field that looks like TextFieldView but whose input is another view.
- 
+
  - Note: This view has padding according to `directionalLayoutMargins`.
  For internal SDK use only
  */
@@ -133,7 +133,7 @@ final class PickerFieldView: UIView {
                 textField.textColor = .tertiaryLabel
             }
             if frame.size != .zero {
-                textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
+                textField.layoutIfNeeded()  // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
             }
         }
     }
@@ -186,6 +186,7 @@ extension PickerFieldView: EventHandler {
 extension PickerFieldView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         UIAccessibility.post(notification: .layoutChanged, argument: pickerView)
+        floatingPlaceholderTextFieldView?.updatePlaceholder()
         delegate?.didBeginEditing(self)
     }
 
@@ -198,6 +199,7 @@ extension PickerFieldView: UITextFieldDelegate {
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
+        floatingPlaceholderTextFieldView?.updatePlaceholder()
         delegate?.didFinish(self)
     }
 }
