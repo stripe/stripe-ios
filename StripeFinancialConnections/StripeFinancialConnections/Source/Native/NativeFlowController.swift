@@ -606,6 +606,13 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
     }
 }
 
+// MARK: - NetworkingLinkVerificationViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate {
+    
+}
+
 // MARK: - Static Helpers
 
 @available(iOSApplicationExtension, unavailable)
@@ -727,8 +734,15 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkVerification:
-        assertionFailure("Not supported")
-        viewController = nil
+        let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
+            manifest: dataManager.manifest,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
+        )
+        let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
+        networkingLinkVerificationViewController.delegate = nativeFlowController
+        viewController = networkingLinkVerificationViewController
     case .partnerAuth:
         if let institution = dataManager.institution {
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
