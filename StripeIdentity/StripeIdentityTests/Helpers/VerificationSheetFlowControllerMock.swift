@@ -26,8 +26,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         description: "transitionToNextScreen"
     )
     private(set) var transitionedWithStaticContentResult: Result<StripeAPI.VerificationPage, Error>?
-    private(set) var transitionedWithUpdateDataResult:
-        Result<StripeAPI.VerificationPageData, Error>?
+    private(set) var transitionedWithUpdateDataResult: Result<StripeAPI.VerificationPageData, Error>?
 
     private(set) var replacedWithViewController: UIViewController?
 
@@ -49,6 +48,14 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         transitionedWithUpdateDataResult = updateDataResult
         didTransitionToNextScreenExp.fulfill()
         completion()
+    }
+
+    func transitionToCountryNotListedScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol,
+        missingType: StripeIdentity.IndividualElement.MissingType
+    ) {
+        // no-op
     }
 
     func replaceCurrentScreen(with viewController: UIViewController) {

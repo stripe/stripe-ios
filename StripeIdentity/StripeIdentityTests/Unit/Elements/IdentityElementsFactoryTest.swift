@@ -40,38 +40,39 @@ final class IdentityElementsFactoryTest: XCTestCase {
 
     // Verifies that if no countries are provided, nil is returned
     func testIDNumberSectionEmptyCountries() {
-        XCTAssertNil(factory.makeIDNumberSection(countryToIDNumberTypes: [:]))
+        XCTAssertNil(factory.makeIDNumberSection(idNumberCountries: []))
     }
 
     // Verify the ID number field changes when a new country is selected
     func testIDNumberSectionCountrySelection() {
         // Note: Countries will be sorted into this order with US as the current country and english localization
-        let countryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
-            "US": .init(type: .US_SSN_LAST4, label: "US"),
-            "BR": .init(type: .BR_CPF, label: "BR"),
-            "CA": .init(type: nil, label: "CA"),
-            "IT": .init(type: nil, label: "IT"),
-        ]
+        let idNumberCountries = ["US", "BR", "CA", "IT"]
 
         guard
-            let section = factory.makeIDNumberSection(
-                countryToIDNumberTypes: countryToIDNumberTypes
+            let idNumberElement = factory.makeIDNumberSection(
+                idNumberCountries: idNumberCountries
             )
         else {
             return XCTFail("Expected section to be returned")
         }
-        guard let countryDropdown = section.elements.first as? DropdownFieldElement else {
+        guard
+            let countryDropdown = (idNumberElement.elements.first as? SectionElement)?.elements.first
+                as? DropdownFieldElement
+        else {
             return XCTFail("Expected a DropdownElement to be first")
         }
 
-        countryDropdown.didUpdate?(1)
-        verifyIDTextInput(section: section, expectedLabel: "BR", expectedType: .BR_CPF)
+        // only has two supported countries: US and BR
+        XCTAssertEqual(countryDropdown.items.count, 2)
+
         countryDropdown.didUpdate?(0)
-        verifyIDTextInput(section: section, expectedLabel: "US", expectedType: .US_SSN_LAST4)
-        countryDropdown.didUpdate?(3)
-        verifyIDTextInput(section: section, expectedLabel: "IT", expectedType: nil)
-        countryDropdown.didUpdate?(2)
-        verifyIDTextInput(section: section, expectedLabel: "CA", expectedType: nil)
+        verifyIDTextInput(
+            idNumberElement: idNumberElement,
+            expectedLabel: "Last 4 of Social Security number",
+            expectedType: .US_SSN_LAST4
+        )
+        countryDropdown.didUpdate?(1)
+        verifyIDTextInput(idNumberElement: idNumberElement, expectedLabel: "Individual CPF", expectedType: .BR_CPF)
     }
 }
 
@@ -79,13 +80,14 @@ final class IdentityElementsFactoryTest: XCTestCase {
 
 extension IdentityElementsFactoryTest {
     fileprivate func verifyIDTextInput(
-        section: SectionElement,
+        idNumberElement: IdNumberElement,
         expectedLabel: String,
         expectedType: IDNumberTextFieldConfiguration.IDNumberType?,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        guard let idElement = section.elements.last as? TextFieldElement else {
+        guard let idElement = (idNumberElement.elements[0] as? SectionElement)?.elements.last as? TextFieldElement
+        else {
             return XCTFail("Expected TextFieldElement", file: file, line: line)
         }
         guard let idNumConfig = idElement.configuration as? IDNumberTextFieldConfiguration else {

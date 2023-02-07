@@ -60,6 +60,11 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         trainingConsent: Bool,
         completion: @escaping () -> Void
     )
+
+    /// Transition to CountryNotListedViewController without any API request
+    func transitionToCountryNotListed(
+        missingType: IndividualElement.MissingType
+    )
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -77,12 +82,12 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     // MARK: API Response Properties
 
     #if DEBUG
-        // Make settable for tests only
-        var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
+    // Make settable for tests only
+    var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
     #else
-        /// Static content returned from the initial API request describing how to
-        /// configure the verification flow experience
-        private(set) var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
+    /// Static content returned from the initial API request describing how to
+    /// configure the verification flow experience
+    private(set) var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
     #endif
 
     /// If the VerificationPage was successfully submitted
@@ -279,6 +284,21 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 completion: completion
             )
         }
+    }
+
+    // MARK: - Transition without save
+    func transitionToCountryNotListed(missingType: IndividualElement.MissingType) {
+
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure("verificationPageResponse is nil")
+            return
+        }
+
+        flowController.transitionToCountryNotListedScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self,
+            missingType: missingType
+        )
     }
 
     /// * Assert verificationPageResponse to be correct, then transition with the PageDataResult.
