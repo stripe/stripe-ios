@@ -42,11 +42,26 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         showLoadingView(true)
-        // TODO(kgaidis): make an API call..then hide it
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.showContent()
-            self.showLoadingView(false)
-        }
+        dataSource.startVerificationSession()
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                self.showLoadingView(false)
+                switch result {
+                case .success:
+                    self.showContent()
+                case .failure(let error):
+                    self.dataSource.analyticsClient.log(
+                        eventName: "networking.verification.error",
+                        parameters: [
+                            // TODO(kgaidis): figure out a proper way to log this error
+                            "error": "here"
+                        ],
+                        pane: .networkingLinkVerification
+                    )
+                    print(error)
+                    // TODO(kgaidis): navigate to terminal error...
+                }
+            }
     }
     
     private func showContent() {

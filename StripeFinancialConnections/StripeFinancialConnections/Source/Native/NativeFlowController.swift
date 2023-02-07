@@ -734,15 +734,21 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkVerification:
-        let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
-            manifest: dataManager.manifest,
-            apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret,
-            analyticsClient: dataManager.analyticsClient
-        )
-        let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
-        networkingLinkVerificationViewController.delegate = nativeFlowController
-        viewController = networkingLinkVerificationViewController
+        if let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress {
+            let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
+                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
+                manifest: dataManager.manifest,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
+            networkingLinkVerificationViewController.delegate = nativeFlowController
+            viewController = networkingLinkVerificationViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .partnerAuth:
         if let institution = dataManager.institution {
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
