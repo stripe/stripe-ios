@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
@@ -19,6 +20,13 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
     private let dataSource: NetworkingLinkVerificationDataSource
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
+    
+    private lazy var loadingView: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator(size: .large)
+        activityIndicator.color = .textDisabled
+        activityIndicator.backgroundColor = .customBackgroundColor
+        return activityIndicator
+    }()
 
     init(dataSource: NetworkingLinkVerificationDataSource) {
         self.dataSource = dataSource
@@ -32,7 +40,16 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-
+        
+        showLoadingView(true)
+        // TODO(kgaidis): make an API call..then hide it
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.showContent()
+            self.showLoadingView(false)
+        }
+    }
+    
+    private func showContent() {
         let pane = PaneWithHeaderLayoutView(
             title: STPLocalizedString(
                 "Sign in to Link",
@@ -46,5 +63,20 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             footerView: nil
         )
         pane.addTo(view: view)
+    }
+    
+    private func showLoadingView(_ show: Bool) {
+        if show && loadingView.superview == nil {
+            // first-time we are showing this, so add the view to hierarchy
+            view.addAndPinSubview(loadingView)
+        }
+        
+        loadingView.isHidden = !show
+        if show {
+            loadingView.startAnimating()
+        } else {
+            loadingView.stopAnimating()
+        }
+        view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 }
