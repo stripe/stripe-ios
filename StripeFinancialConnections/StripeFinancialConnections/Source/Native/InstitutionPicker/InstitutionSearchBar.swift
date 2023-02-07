@@ -151,24 +151,23 @@ final class InstitutionSearchBar: UIView {
         layer.borderWidth = searchBarBorderWidth
     }
 
-    private var searchIndicatorActive: Bool = false
-
     func updateSearchingIndicator(_ isSearching: Bool) {
-        guard isSearching != self.searchIndicatorActive else { return }
-        self.searchIndicatorActive = isSearching
-
-        if isSearching {
-            let opacityAnimation = CABasicAnimation(keyPath: "opacity")
-            opacityAnimation.fromValue = 0.6
-            opacityAnimation.toValue = 0.25
-            opacityAnimation.repeatCount = 10000
-            opacityAnimation.duration = 0.3
-            opacityAnimation.autoreverses = true
-
-            searchIconView.layer.add(opacityAnimation, forKey: "pulseAnimation")
-        } else {
+        guard isSearching else {
             searchIconView.layer.removeAnimation(forKey: "pulseAnimation")
+            return
         }
+        guard searchIconView.layer.animation(forKey: "pulseAnimation") == nil else {
+            return
+        }
+
+        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+        opacityAnimation.fromValue = 0.6
+        opacityAnimation.toValue = 0.3
+        opacityAnimation.repeatCount = .infinity
+        opacityAnimation.timingFunction = CAMediaTimingFunction(name:CAMediaTimingFunctionName.easeInEaseOut)
+        opacityAnimation.duration = 0.3
+        opacityAnimation.autoreverses = true
+        searchIconView.layer.add(opacityAnimation, forKey: "pulseAnimation")
     }
 }
 
