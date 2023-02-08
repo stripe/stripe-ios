@@ -106,12 +106,12 @@ final class PartnerAuthViewController: UIViewController {
             authSessionId: authSession.id
         )
 
-        if authSession.isOauthNonOptional {
+        if authSession.isOauthNonOptional, let prepaneModel = authSession.display?.text?.oauthPrepane {
             let prepaneView = PrepaneView(
-                institutionName: institution.name,
-                institutionImageUrl: institution.icon?.default,
-                partner: authSession.partner,
-                isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
+                prepaneModel: prepaneModel,
+                didSelectURL: { [weak self] url in
+                    self?.didSelectURLInTextFromBackend(url)
+                },
                 didSelectContinue: { [weak self] in
                     if authSession.requiresNativeRedirect {
                         self?.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
@@ -536,6 +536,38 @@ final class PartnerAuthViewController: UIViewController {
 
         navigationItem.hidesBackButton = show
         loadingView.isHidden = !show
+    }
+
+    private func didSelectURLInTextFromBackend(_ url: URL) {
+        AuthFlowHelpers.handleURLInTextFromBackend(
+            url: url,
+            pane: .partnerAuth,
+            analyticsClient: dataSource.analyticsClient,
+            handleStripeScheme: { urlHost in
+                if urlHost == "data-access-notice" {
+                    if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?
+                        .dataAccessNotice
+                    {
+                        let consentBottomSheetModel = ConsentBottomSheetModel(
+                            title: dataAccessNoticeModel.title,
+                            subtitle: dataAccessNoticeModel.subtitle,
+                            body: ConsentBottomSheetModel.Body(
+                                bullets: dataAccessNoticeModel.body.bullets
+                            ),
+                            extraNotice: dataAccessNoticeModel.connectedAccountNotice,
+                            learnMore: dataAccessNoticeModel.learnMore,
+                            cta: dataAccessNoticeModel.cta
+                        )
+                        ConsentBottomSheetViewController.present(
+                            withModel: consentBottomSheetModel,
+                            didSelectUrl: { [weak self] url in
+                                self?.didSelectURLInTextFromBackend(url)
+                            }
+                        )
+                    }
+                }
+            }
+        )
     }
 }
 
