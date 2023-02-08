@@ -88,6 +88,11 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
 
+    func disableNetworking(
+        disabledReason: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
+
     // MARK: - Link API's
 
     func consumerSessionLookup(
@@ -441,6 +446,17 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointSaveAccountsToLink, parameters: body)
     }
 
+    func disableNetworking(
+        disabledReason: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        var body: [String: Any] = [
+            "client_secret": clientSecret,
+        ]
+        body["disabled_reason"] = disabledReason
+        return post(resource: APIEndpointDisableNetworking, parameters: body)
+    }
+
     // MARK: - Link API's [TODO(kgaidis): delete these later]
 
     func consumerSessionLookup(
@@ -475,3 +491,4 @@ private let APIEndpointAuthSessionsSelectedAccounts = "connections/auth_sessions
 private let APIEndpointAuthSessionsEvents = "connections/auth_sessions/events"
 // Networking
 private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
+private let APIEndpointDisableNetworking = "link_account_sessions/disable_networking"
