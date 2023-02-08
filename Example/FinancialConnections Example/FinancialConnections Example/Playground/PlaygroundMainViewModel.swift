@@ -24,6 +24,9 @@ final class PlaygroundMainViewModel: ObservableObject {
     @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow)! {
         didSet {
             PlaygroundUserDefaults.flow = flow.rawValue
+            if flow != .networking {
+                email = ""
+            }
         }
     }
 
@@ -66,6 +69,12 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var email: String = PlaygroundUserDefaults.email {
+        didSet {
+            PlaygroundUserDefaults.email = email
+        }
+    }
+
     @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
         didSet {
             PlaygroundUserDefaults.customPublicKey = customPublicKey
@@ -99,6 +108,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             enableAppToApp: enableAppToApp,
             enableTestMode: enableTestMode,
             flow: flow.rawValue,
+            email: email,
             customPublicKey: customPublicKey,
             customSecretKey: customSecretKey
         ) { [weak self] setupPlaygroundResponse in
@@ -139,6 +149,7 @@ private func SetupPlayground(
     enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
+    email: String,
     customPublicKey: String,
     customSecretKey: String,
     completionHandler: @escaping ([String: String]?) -> Void
@@ -154,6 +165,7 @@ private func SetupPlayground(
         requestBody["enable_test_mode"] = enableTestMode
         requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
+        requestBody["email"] = email
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
         return try! JSONSerialization.data(
