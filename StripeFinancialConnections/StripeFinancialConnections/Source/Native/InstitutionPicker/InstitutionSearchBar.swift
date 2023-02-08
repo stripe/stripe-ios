@@ -77,6 +77,17 @@ final class InstitutionSearchBar: UIView {
         ])
         return textFieldClearButton
     }()
+    private lazy var searchIconView: UIView = {
+        let searchIconImageView = UIImageView()
+        searchIconImageView.image = Image.search.makeImage()
+            .withTintColor(.textPrimary)
+        searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchIconImageView.widthAnchor.constraint(equalToConstant: 16),
+            searchIconImageView.heightAnchor.constraint(equalToConstant: 16),
+        ])
+        return searchIconImageView
+    }()
 
     init() {
         super.init(frame: .zero)
@@ -84,7 +95,7 @@ final class InstitutionSearchBar: UIView {
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
-                CreateSearchIconView(),
+                searchIconView,
                 textField,
                 textFieldClearButton,
             ]
@@ -139,6 +150,25 @@ final class InstitutionSearchBar: UIView {
         layer.borderColor = searchBarBorderColor.cgColor
         layer.borderWidth = searchBarBorderWidth
     }
+
+    func updateSearchingIndicator(_ isSearching: Bool) {
+        guard isSearching else {
+            searchIconView.layer.removeAnimation(forKey: "pulseAnimation")
+            return
+        }
+        guard searchIconView.layer.animation(forKey: "pulseAnimation") == nil else {
+            return
+        }
+
+        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+        opacityAnimation.fromValue = 0.6
+        opacityAnimation.toValue = 0.3
+        opacityAnimation.repeatCount = .infinity
+        opacityAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        opacityAnimation.duration = 0.3
+        opacityAnimation.autoreverses = true
+        searchIconView.layer.add(opacityAnimation, forKey: "pulseAnimation")
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -158,18 +188,6 @@ extension InstitutionSearchBar: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-}
-
-private func CreateSearchIconView() -> UIView {
-    let searchIconImageView = UIImageView()
-    searchIconImageView.image = Image.search.makeImage()
-        .withTintColor(.textPrimary)
-    searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        searchIconImageView.widthAnchor.constraint(equalToConstant: 16),
-        searchIconImageView.heightAnchor.constraint(equalToConstant: 16),
-    ])
-    return searchIconImageView
 }
 
 private class IncreasedHitTestTextField: UITextField {
