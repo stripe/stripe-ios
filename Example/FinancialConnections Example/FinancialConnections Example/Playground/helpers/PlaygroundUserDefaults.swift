@@ -35,6 +35,12 @@ final class PlaygroundUserDefaults {
     static var enableTestMode: Bool
 
     @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_EMAIL",
+        defaultValue: ""
+    )
+    static var email: String
+
+    @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_PUBLIC_KEY",
         defaultValue: ""
     )
