@@ -85,4 +85,5 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let assignmentEventId: String?
     let skipSuccessPane: Bool?
     let manualEntryMode: ManualEntryMode
+    let accountholderCustomerEmailAddress: String?
 }
