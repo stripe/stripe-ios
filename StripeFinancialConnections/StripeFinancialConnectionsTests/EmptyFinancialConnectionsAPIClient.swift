@@ -119,6 +119,13 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
     }
 
+    func disableNetworking(
+        disabledReason: String?,
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
+
     func consumerSessionLookup(
         emailAddress: String
     ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {

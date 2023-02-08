@@ -535,12 +535,32 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController
     ) {
-        let successViewController = CreatePaneViewController(
-            pane: .success,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(successViewController, animated: true)
+        pushPane(.success, animated: true)
+    }
+}
+
+// MARK: - NetworkingLinkLoginWarmupViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate {
+
+    func networkingLinkLoginWarmupViewControllerDidSelectContinue(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    ) {
+        pushPane(.networkingLinkVerification, animated: true)
+    }
+
+    func networkingLinkLoginWarmupViewControllerDidSelectSkip(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    ) {
+        pushPane(.institutionPicker, animated: true)
+    }
+
+    func networkingLinkLoginWarmupViewController(
+        _ viewController: NetworkingLinkLoginWarmupViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
     }
 }
 
@@ -749,8 +769,17 @@ private func CreatePaneViewController(
         assertionFailure("Not supported")
         viewController = nil
     case .networkingLinkLoginWarmup:
-        assertionFailure("Not supported")
-        viewController = nil
+        let networkingLinkWarmupDataSource = NetworkingLinkLoginWarmupDataSourceImplementation(
+            manifest: dataManager.manifest,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient
+        )
+        let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
+            dataSource: networkingLinkWarmupDataSource
+        )
+        networkingLinkWarmupViewController.delegate = nativeFlowController
+        viewController = networkingLinkWarmupViewController
 
     // client-side only panes below
     case .resetFlow:
