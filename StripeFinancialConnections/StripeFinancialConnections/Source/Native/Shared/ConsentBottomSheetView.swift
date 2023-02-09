@@ -187,7 +187,18 @@ private func CreateBulletinView(
 
     let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
-            imageView,
+            {
+                // add padding to the icon so its better aligned with text
+                let paddingStackView = UIStackView(arrangedSubviews: [imageView])
+                paddingStackView.isLayoutMarginsRelativeArrangement = true
+                paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                    top: 2,
+                    leading: 0,
+                    bottom: 0,
+                    trailing: 0
+                )
+                return paddingStackView
+            }(),
             BulletPointLabelView(
                 title: title,
                 content: subtitle,
@@ -245,6 +256,11 @@ private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
                 subtitle: "[Merchant] will use your account and routing number, balances and transactions when:",
                 body: ConsentBottomSheetModel.Body(
                     bullets: [
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--checkCircle-green-3x.png"),
+                            title: nil,
+                            content: "Transferring money between your bank account and Merchant"
+                        ),
                         FinancialConnectionsBulletPoint(
                             icon: FinancialConnectionsImage(default: nil),
                             title: nil,
