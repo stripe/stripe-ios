@@ -27,6 +27,11 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         activityIndicator.backgroundColor = .customBackgroundColor
         return activityIndicator
     }()
+    private lazy var bodyView: NetworkingLinkVerificationBodyView = {
+        let bodyView = NetworkingLinkVerificationBodyView(email: dataSource.accountholderCustomerEmailAddress)
+        bodyView.delegate = self
+        return bodyView
+    }()
 
     init(dataSource: NetworkingLinkVerificationDataSource) {
         self.dataSource = dataSource
@@ -74,7 +79,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                 "Enter the code sent to \(redactedPhoneNumber)",
                 "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
             ),
-            contentView: UIView(),
+            contentView: bodyView,
             footerView: nil
         )
         pane.addTo(view: view)
@@ -93,5 +98,15 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             loadingView.stopAnimating()
         }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+    }
+}
+
+// MARK: - NetworkingLinkVerificationBodyViewDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBodyViewDelegate {
+
+    func networkingLinkVerificationBodyView(_ view: NetworkingLinkVerificationBodyView, didEnterValidOTP otp: String) {
+        print(otp) // TODO(kgaidis): use OTP
     }
 }

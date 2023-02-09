@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol NetworkingLinkVerificationDataSource: AnyObject {
+    var accountholderCustomerEmailAddress: String { get }
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
@@ -17,7 +18,7 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
 
 final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVerificationDataSource {
 
-    private let accountholderCustomerEmailAddress: String
+    let accountholderCustomerEmailAddress: String
     let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
