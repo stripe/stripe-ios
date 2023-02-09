@@ -53,7 +53,10 @@ protocol FinancialConnectionsAPIClient {
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
 
-    func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession>
+    func completeFinancialConnectionsSession(
+        clientSecret: String,
+        terminalError: String?
+    ) -> Future<StripeAPI.FinancialConnectionsSession>
 
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
@@ -253,11 +256,15 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
 
-    func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
-        let body = [
+    func completeFinancialConnectionsSession(
+        clientSecret: String,
+        terminalError: String?
+    ) -> Future<StripeAPI.FinancialConnectionsSession> {
+        var body: [String: Any] = [
             "client_secret": clientSecret
         ]
-        return self.post(resource: APIEndpointComplete, object: body)
+        body["terminal_error"] = terminalError
+        return self.post(resource: APIEndpointComplete, parameters: body)
             .chained { (session: StripeAPI.FinancialConnectionsSession) in
                 if session.accounts.hasMore {
                     // de-paginate the accounts we get from the session because
@@ -282,7 +289,9 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                                     ),
                                     livemode: session.livemode,
                                     paymentAccount: session.paymentAccount,
-                                    bankAccountToken: session.bankAccountToken
+                                    bankAccountToken: session.bankAccountToken,
+                                    status: session.status,
+                                    statusDetails: session.statusDetails
                                 )
                             )
                         }

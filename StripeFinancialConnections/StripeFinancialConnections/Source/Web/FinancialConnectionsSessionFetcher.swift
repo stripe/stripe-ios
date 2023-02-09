@@ -56,7 +56,9 @@ class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher 
                         accounts: fullList,
                         livemode: session.livemode,
                         paymentAccount: session.paymentAccount,
-                        bankAccountToken: session.bankAccountToken
+                        bankAccountToken: session.bankAccountToken,
+                        status: session.status,
+                        statusDetails: session.statusDetails
                     )
                     return Promise(value: sessionWithFullAccountList)
                 }

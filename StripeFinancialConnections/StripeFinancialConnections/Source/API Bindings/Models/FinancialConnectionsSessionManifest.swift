@@ -45,6 +45,12 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case unparsable
     }
 
+    enum ManualEntryMode: String, SafeEnumCodable, Equatable {
+        case automatic
+        case custom
+        case unparsable
+    }
+
     // MARK: - Properties
 
     let accountholderIsLinkConsumer: Bool?
@@ -78,4 +84,5 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let experimentAssignments: [String: String]?
     let assignmentEventId: String?
     let skipSuccessPane: Bool?
+    let manualEntryMode: ManualEntryMode
 }

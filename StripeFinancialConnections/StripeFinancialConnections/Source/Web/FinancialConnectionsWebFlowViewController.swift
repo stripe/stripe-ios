@@ -144,7 +144,7 @@ extension FinancialConnectionsWebFlowViewController {
                 case .success(.success):
                     self.fetchSession()
                 case .success(.webCancelled):
-                    self.notifyDelegate(result: .canceled)
+                    self.fetchSession(webCancelled: true)
                 case .success(.nativeCancelled):
                     self.fetchSession(userDidCancelInNative: true)
                 case .failure(let error):
@@ -164,7 +164,7 @@ extension FinancialConnectionsWebFlowViewController {
         }
     }
 
-    private func fetchSession(userDidCancelInNative: Bool = false) {
+    private func fetchSession(userDidCancelInNative: Bool = false, webCancelled: Bool = false) {
         loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         loadingView.errorView.isHidden = true
         sessionFetcher
@@ -182,6 +182,12 @@ extension FinancialConnectionsWebFlowViewController {
                             || session.bankAccountToken != nil
                         {
                             self.notifyDelegate(result: .completed(session: session))
+                        } else {
+                            self.notifyDelegate(result: .canceled)
+                        }
+                    } else if webCancelled {
+                        if session.status == .cancelled && session.statusDetails?.cancelled?.reason == .customManualEntry {
+                            self.notifyDelegate(result: .failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
                         } else {
                             self.notifyDelegate(result: .canceled)
                         }
