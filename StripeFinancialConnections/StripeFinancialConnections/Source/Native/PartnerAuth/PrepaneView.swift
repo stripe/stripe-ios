@@ -23,6 +23,13 @@ final class PrepaneView: UIView {
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
+        let bodyContainsImage = prepaneModel.body.entries?.contains(where: {
+            if case .image = $0.content {
+                return true
+            } else {
+                return false
+            }
+        }) ?? false
         let paneLayoutView = PaneWithHeaderLayoutView(
             icon: {
                 if let institutionIcon = prepaneModel.institutionIcon,
@@ -43,12 +50,18 @@ final class PrepaneView: UIView {
             subtitle: nil,
             contentView: CreateContentView(
                 prepaneBodyModel: prepaneModel.body,
-                prepanePartnerNoticeModel: prepaneModel.partnerNotice,
+                // put the partner notice in the BODY if an image exists
+                // (...because we want to avoid the partner notice clipping the image)
+                prepanePartnerNoticeModel: bodyContainsImage ? prepaneModel.partnerNotice : nil,
                 didSelectURL: didSelectURL
             ),
             headerAndContentSpacing: 8,
             footerView: CreateFooterView(
                 prepaneCtaModel: prepaneModel.cta,
+                // put the partner notice in the FOOTER if an image does NOT exist
+                // (...because partner notice will not be able to clip image)
+                prepanePartnerNoticeModel: bodyContainsImage ? nil : prepaneModel.partnerNotice,
+                didSelectURL: didSelectURL,
                 view: self
             )
         )
@@ -110,6 +123,8 @@ private func CreateContentView(
 @available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
     prepaneCtaModel: FinancialConnectionsOAuthPrepane.OauthPrepaneCTA,
+    prepanePartnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice?,
+    didSelectURL: @escaping (URL) -> Void,
     view: PrepaneView
 ) -> UIView {
     let continueButton = Button(configuration: .financialConnectionsPrimary)
@@ -119,7 +134,22 @@ private func CreateFooterView(
     NSLayoutConstraint.activate([
         continueButton.heightAnchor.constraint(equalToConstant: 56)
     ])
-    return continueButton
+
+    let footerStackView = UIStackView()
+    footerStackView.axis = .vertical
+    footerStackView.spacing = 20
+
+    if let prepanePartnerNoticeModel = prepanePartnerNoticeModel {
+        footerStackView.addArrangedSubview(
+            CreatePartnerDisclosureView(
+                partnerNoticeModel: prepanePartnerNoticeModel,
+                didSelectURL: didSelectURL
+            )
+        )
+    }
+    footerStackView.addArrangedSubview(continueButton)
+
+    return footerStackView
 }
 
 @available(iOSApplicationExtension, unavailable)
