@@ -291,7 +291,10 @@ final class FinancialConnectionsUITests: XCTestCase {
         }
         institutionButton.tap()
 
-        let prepaneContinueButton = app.webViews.buttons["Continue"]
+        let prepaneContinueButton = app.webViews
+            .buttons
+            .containing(NSPredicate(format: "label CONTAINS 'Continue'"))
+            .firstMatch
         XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0))
         prepaneContinueButton.tap()
 
