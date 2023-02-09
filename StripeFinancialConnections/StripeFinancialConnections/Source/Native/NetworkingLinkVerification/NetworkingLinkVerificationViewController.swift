@@ -20,7 +20,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
     private let dataSource: NetworkingLinkVerificationDataSource
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
-    
+
     private lazy var loadingView: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.color = .textDisabled
@@ -40,15 +40,15 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+
         showLoadingView(true)
         dataSource.startVerificationSession()
             .observe { [weak self] result in
                 guard let self = self else { return }
                 self.showLoadingView(false)
                 switch result {
-                case .success:
-                    self.showContent()
+                case .success(let consumerSessionResponse):
+                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
                 case .failure(let error):
                     self.dataSource.analyticsClient.log(
                         eventName: "networking.verification.error",
@@ -63,29 +63,29 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                 }
             }
     }
-    
-    private func showContent() {
+
+    private func showContent(redactedPhoneNumber: String) {
         let pane = PaneWithHeaderLayoutView(
             title: STPLocalizedString(
                 "Sign in to Link",
-                "The title of a screen where users are informed that they can sign-in-to Link." // TODO(kgaidis): modify
+                "The title of a screen where users are informed that they can sign-in-to Link."
             ),
             subtitle: STPLocalizedString(
-                "Enter the code sent to PHONE_NUMBER_HERE",  // TODO(kgaidis): modify
-                "The subtitle/description of a screen where users are informed that they can sign-in-to Link."  // TODO(kgaidis): modify
+                "Enter the code sent to \(redactedPhoneNumber)",
+                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
             ),
             contentView: UIView(),
             footerView: nil
         )
         pane.addTo(view: view)
     }
-    
+
     private func showLoadingView(_ show: Bool) {
         if show && loadingView.superview == nil {
             // first-time we are showing this, so add the view to hierarchy
             view.addAndPinSubview(loadingView)
         }
-        
+
         loadingView.isHidden = !show
         if show {
             loadingView.startAnimating()

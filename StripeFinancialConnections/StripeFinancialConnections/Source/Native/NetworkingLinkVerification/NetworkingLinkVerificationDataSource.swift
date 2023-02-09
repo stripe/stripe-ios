@@ -11,8 +11,8 @@ import Foundation
 protocol NetworkingLinkVerificationDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    
-    func startVerificationSession() -> Future<Void>
+
+    func startVerificationSession() -> Future<ConsumerSessionResponse>
 }
 
 final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVerificationDataSource {
@@ -36,18 +36,27 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
-    
-    func startVerificationSession() -> Future<Void> {
+
+    func startVerificationSession() -> Future<ConsumerSessionResponse> {
         apiClient
             .consumerSessionLookup(
                 emailAddress: accountholderCustomerEmailAddress
             )
-            .chained { _ in
-                return Promise(value: ())
+            .chained { [weak self] (lookupConsumerSessionResponse: LookupConsumerSessionResponse) in
+                guard let self = self else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
+                }
+                if let consumerSessionClientSecret = lookupConsumerSessionResponse.consumerSession?.clientSecret {
+                    return self.apiClient.consumerSessionStartVerification(
+                        emailAddress: self.accountholderCustomerEmailAddress,
+                        otpType: "SMS",
+                        customEmailType: nil,
+                        connectionsMerchantName: nil,
+                        consumerSessionClientSecret: consumerSessionClientSecret
+                    )
+                } else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid consumerSessionLookup response: no consumerSession.clientSecret"))
+                }
             }
-        // TODO(kgaidis): chain more API calls
-//            .chained { lookupConsumerSessionResponse in
-//
-//            }
     }
 }

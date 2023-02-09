@@ -98,6 +98,14 @@ protocol FinancialConnectionsAPIClient {
     func consumerSessionLookup(
         emailAddress: String
     ) -> Future<LookupConsumerSessionResponse>
+
+    func consumerSessionStartVerification(
+        emailAddress: String,
+        otpType: String,
+        customEmailType: String?,
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -470,6 +478,26 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 .lowercased(),
         ]
         return post(resource: "consumers/sessions/lookup", parameters: parameters)
+    }
+
+    func consumerSessionStartVerification(
+        emailAddress: String,
+        otpType: String, // TODO(kgaidis): consider whether this should be an enum type SMS + EMAIL
+        customEmailType: String?, // TODO(kgaidis): consider whether this should be an enum type
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse> {
+        var parameters: [String: Any] = [
+            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+            "type": otpType,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "locale": Locale.current.identifier,
+        ]
+        parameters["custom_email_type"] = customEmailType
+        parameters["connections_merchant_name"] = connectionsMerchantName
+        return post(resource: "consumers/sessions/start_verification", parameters: parameters)
     }
 }
 

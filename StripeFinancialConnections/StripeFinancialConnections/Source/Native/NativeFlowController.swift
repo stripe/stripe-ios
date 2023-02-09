@@ -610,7 +610,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate {
-    
+
 }
 
 // MARK: - Static Helpers
