@@ -94,11 +94,11 @@ func buildRetrievingAccountsView() -> UIView {
     return ReusableInformationView(
         iconType: .loading,
         title: STPLocalizedString(
-            "Retrieving accounts",
+            "Pulling up your accounts",
             "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."
         ),
         subtitle: STPLocalizedString(
-            "Please wait while Stripe loads your accounts.",
+            "After this, there's just one more step.",
             "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."
         )
     )
