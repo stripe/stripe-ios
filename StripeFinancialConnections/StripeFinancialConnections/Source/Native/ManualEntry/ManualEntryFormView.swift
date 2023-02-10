@@ -64,7 +64,7 @@ final class ManualEntryFormView: UIView {
             title: "Account number",  // TODO: replace with String.Localized.accountNumber
             placeholder: "000123456789",
             footerText: STPLocalizedString(
-                "Your account can be checkings or savings.",
+                "Please enter a checking account.",
                 "A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings."
             )
         )
