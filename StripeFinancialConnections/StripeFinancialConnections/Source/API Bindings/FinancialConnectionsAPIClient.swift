@@ -112,6 +112,10 @@ protocol FinancialConnectionsAPIClient {
         otpType: String,
         consumerSessionClientSecret: String
     ) -> Future<ConsumerSessionResponse>
+
+    func markLinkVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -471,6 +475,15 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointDisableNetworking, parameters: body)
     }
 
+    func markLinkVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+        ]
+        return post(resource: APIEndpointLinkVerified, parameters: parameters)
+    }
+
     // MARK: - Link API's [TODO(kgaidis): delete these later]
 
     func consumerSessionLookup(
@@ -529,6 +542,7 @@ private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
 private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
 private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
 private let APIEndpointLinkMoreAccounts = "link_account_sessions/link_more_accounts"
+private let APIEndpointLinkVerified = "link_account_sessions/link_verified"
 private let APIEndpointComplete = "link_account_sessions/complete"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"

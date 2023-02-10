@@ -15,6 +15,7 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
+    func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
 }
 
 final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVerificationDataSource {
@@ -74,5 +75,9 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             otpType: "SMS",
             consumerSessionClientSecret: consumerSessionClientSecret
         )
+    }
+
+    func markLinkVerified() -> Future<FinancialConnectionsSessionManifest> {
+        return apiClient.markLinkVerified(clientSecret: clientSecret)
     }
 }

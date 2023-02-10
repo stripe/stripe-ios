@@ -113,15 +113,28 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
         view.otpTextField.text = "CONFIRMING OTP..."
 
         dataSource.confirmVerificationSession(otpCode: otpCode)
-            .observe { result in
+            .observe { [weak self] result in
+                guard let self = self else { return }
                 switch result {
-                case .success(let consumerSessionResponse):
-                    view.otpTextField.text = "SUCCESS...DOING OTHER THINGS"
-                    print(consumerSessionResponse)
-                    // TODO(kgaidis): make a call to `markLinkVerified`
+                case .success:
+                    view.otpTextField.text = "SUCCESS! CALLING markLinkVerified..."
+
+                    self.dataSource.markLinkVerified()
+                        .observe { result in
+                            switch result {
+                            case .success(let manifest):
+                                print(manifest)
+                                view.otpTextField.text = "markLinkVerified SUCCESS! Wait on accounts...)"
+                                // TODO(kgaidis): save the next pane to go to...
+                            case .failure(let error):
+                                print(error)
+                                view.otpTextField.text = "markLinkVerified FAILURE: \(error.localizedDescription)"
+                                // TODO(kgaidis): go to terminal error but double-check
+                            }
+                        }
                 case .failure(let error):
-                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
                     print(error)
+                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
                     // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
                 }
             }
