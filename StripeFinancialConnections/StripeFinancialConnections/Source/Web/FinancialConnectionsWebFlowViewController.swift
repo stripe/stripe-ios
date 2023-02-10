@@ -63,8 +63,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-
-        item.tintColor = UIColor.dynamic(light: .systemGray2, dark: .white)
+        item.tintColor = .textDisabled
         return item
     }()
 
@@ -96,7 +95,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
+        view.backgroundColor = .customBackgroundColor
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         view.addSubview(loadingView)
