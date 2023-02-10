@@ -22,6 +22,7 @@ class LoadingView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = Styling.errorLabelFont
+        label.textColor = .textPrimary
         return label
     }()
 
