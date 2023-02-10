@@ -531,12 +531,13 @@ workflows:
         stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
   deploy-paymentsheet-example:
+    envs:
+    - DEVELOPMENT_TEAM: 'Y28TH9SHX7'
     steps:
     - xcode-archive@4:
         inputs:
         - project_path: Stripe.xcworkspace
         - distribution_method: app-store
-        - configuration: DEVELOPMENT_TEAM=Y28TH9SHX7
         - scheme: PaymentSheet Example
     - deploy-to-bitrise-io@2: {}
     before_run:
