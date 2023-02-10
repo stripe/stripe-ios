@@ -67,12 +67,12 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
-                case .found(let consumerSession, let preferences):
+                case .found(let session):
                     completion(.success(
                         PaymentSheetLinkAccount(
-                            email: consumerSession.emailAddress,
-                            session: consumerSession,
-                            publishableKey: preferences.publishableKey,
+                            email: session.consumerSession.emailAddress,
+                            session: session.consumerSession,
+                            publishableKey: session.publishableKey,
                             apiClient: apiClient,
                             cookieStore: cookieStore
                         )
