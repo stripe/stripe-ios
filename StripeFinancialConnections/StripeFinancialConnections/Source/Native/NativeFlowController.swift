@@ -78,7 +78,9 @@ class NativeFlowController {
         let showConfirmationAlert =
             (navigationController.topViewController is AccountPickerViewController
                 || navigationController.topViewController is PartnerAuthViewController
-                || navigationController.topViewController is AttachLinkedPaymentAccountViewController)
+                || navigationController.topViewController is AttachLinkedPaymentAccountViewController
+                || navigationController.topViewController is NetworkingLinkSignupViewController
+                || navigationController.topViewController is NetworkingLinkVerificationViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
 }
@@ -616,6 +618,13 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
     ) {
         pushPane(nextPane, animated: true)
+    }
+
+    func networkingLinkVerificationViewController(
+        _ viewController: NetworkingLinkVerificationViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
     }
 }
 

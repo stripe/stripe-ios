@@ -497,24 +497,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "consumer_session_client_secret": consumerSessionClientSecret,
         ]
-        let pollingHelper = APIPollingHelper(
-            apiCall: { [weak self] in
-                guard let self = self else {
-                    return Promise(
-                        error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
-                    )
-                }
-                // TODO(kgaidis): double check whether this call should be polled
-                return self.get(
-                    resource: APIEndpointNetworkedAccounts,
-                    parameters: parameters
-                )
-            },
-            pollTimingOptions: APIPollingHelper<FinancialConnectionsNetworkedAccountsResponse>.PollTimingOptions(
-                initialPollDelay: 0
-            )
-        )
-        return pollingHelper.startPollingApiCall()
+        return get(resource: APIEndpointNetworkedAccounts, parameters: parameters)
     }
 
     // MARK: - Link API's [TODO(kgaidis): delete these later]

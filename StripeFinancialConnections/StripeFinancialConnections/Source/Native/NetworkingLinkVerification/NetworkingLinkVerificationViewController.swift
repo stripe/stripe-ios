@@ -16,6 +16,10 @@ protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
     )
+    func networkingLinkVerificationViewController(
+        _ viewController: NetworkingLinkVerificationViewController,
+        didReceiveTerminalError error: Error
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -66,8 +70,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                         ],
                         pane: .networkingLinkVerification
                     )
-                    print(error)
-                    // TODO(kgaidis): navigate to terminal error...
+                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
                 }
             }
     }
@@ -176,6 +179,7 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                                 print(error) // TODO(kgaidis): remove print
                                 view.otpTextField.text = "markLinkVerified FAILURE: \(error.localizedDescription)"
                                 // TODO(kgaidis): go to terminal error but double-check
+                                self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
                             }
                         }
                 case .failure(let error):
