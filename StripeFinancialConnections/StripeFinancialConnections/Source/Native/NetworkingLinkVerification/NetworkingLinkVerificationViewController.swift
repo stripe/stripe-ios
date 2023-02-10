@@ -12,7 +12,10 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
-
+    func networkingLinkVerificationViewController(
+        _ viewController: NetworkingLinkVerificationViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -120,20 +123,63 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                     view.otpTextField.text = "SUCCESS! CALLING markLinkVerified..."
 
                     self.dataSource.markLinkVerified()
-                        .observe { result in
+                        .observe { [weak self] result in
+                            guard let self = self else { return }
                             switch result {
                             case .success(let manifest):
-                                print(manifest)
-                                view.otpTextField.text = "markLinkVerified SUCCESS! Wait on accounts...)"
-                                // TODO(kgaidis): save the next pane to go to...
+                                view.otpTextField.text = "markLinkVerified SUCCESS! Wait on accounts..."
+
+                                self.dataSource.fetchNetworkedAccounts()
+                                    .observe { [weak self] result in
+                                        guard let self = self else { return }
+                                        switch result {
+                                        case .success(let networkedAccountsResponse):
+                                            let networkedAccounts = networkedAccountsResponse.data
+                                            if networkedAccounts.isEmpty {
+                                                self.dataSource.analyticsClient.log(
+                                                    eventName: "networking.verification.success_no_accounts",
+                                                    pane: .networkingLinkVerification
+                                                )
+                                                self.delegate?.networkingLinkVerificationViewController(
+                                                    self,
+                                                    didRequestNextPane: manifest.nextPane
+                                                )
+                                            } else {
+                                                self.dataSource.analyticsClient.log(
+                                                    eventName: "networking.verification.success",
+                                                    pane: .networkingLinkVerification
+                                                )
+                                                self.delegate?.networkingLinkVerificationViewController(
+                                                    self,
+                                                    didRequestNextPane: .linkAccountPicker
+                                                )
+                                            }
+                                        case .failure(let error):
+                                            // TODO(kgaidis): log the error using the standard error logging too
+                                            self.dataSource
+                                                .analyticsClient
+                                                .log(
+                                                    eventName: "networking.verification.error",
+                                                    parameters: [
+                                                        "error": "NetworkedAccountsRetrieveMethodError",
+                                                    ],
+                                                    pane: .networkingLinkVerification
+                                                )
+                                            print(error) // TODO(kgaidis): remove print
+                                            self.delegate?.networkingLinkVerificationViewController(
+                                                self,
+                                                didRequestNextPane: manifest.nextPane
+                                            )
+                                        }
+                                    }
                             case .failure(let error):
-                                print(error)
+                                print(error) // TODO(kgaidis): remove print
                                 view.otpTextField.text = "markLinkVerified FAILURE: \(error.localizedDescription)"
                                 // TODO(kgaidis): go to terminal error but double-check
                             }
                         }
                 case .failure(let error):
-                    print(error)
+                    print(error) // TODO(kgaidis): remove print
                     view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
                     // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
                 }

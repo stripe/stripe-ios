@@ -40,3 +40,7 @@ struct FinancialConnectionsAuthSessionAccounts: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let nextPane: FinancialConnectionsSessionManifest.NextPane
 }
+
+struct FinancialConnectionsNetworkedAccountsResponse: Decodable {
+    let data: [FinancialConnectionsPartnerAccount]
+}

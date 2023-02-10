@@ -93,6 +93,11 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
 
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsNetworkedAccountsResponse>
+
     // MARK: - Link API's
 
     func consumerSessionLookup(
@@ -484,6 +489,34 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointLinkVerified, parameters: parameters)
     }
 
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsNetworkedAccountsResponse> {
+        let parameters = [
+            "client_secret": clientSecret,
+            "consumer_session_client_secret": consumerSessionClientSecret,
+        ]
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
+                    )
+                }
+                // TODO(kgaidis): double check whether this call should be polled
+                return self.get(
+                    resource: APIEndpointNetworkedAccounts,
+                    parameters: parameters
+                )
+            },
+            pollTimingOptions: APIPollingHelper<FinancialConnectionsNetworkedAccountsResponse>.PollTimingOptions(
+                initialPollDelay: 0
+            )
+        )
+        return pollingHelper.startPollingApiCall()
+    }
+
     // MARK: - Link API's [TODO(kgaidis): delete these later]
 
     func consumerSessionLookup(
@@ -544,6 +577,7 @@ private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired
 private let APIEndpointLinkMoreAccounts = "link_account_sessions/link_more_accounts"
 private let APIEndpointLinkVerified = "link_account_sessions/link_verified"
 private let APIEndpointComplete = "link_account_sessions/complete"
+private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_accounts"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
 private let APIEndpointAuthSessions = "connections/auth_sessions"

@@ -16,6 +16,7 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
+    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
 }
 
 final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVerificationDataSource {
@@ -79,5 +80,15 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
 
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest> {
         return apiClient.markLinkVerified(clientSecret: clientSecret)
+    }
+
+    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
+        guard let consumerSessionClientSecret = consumerSessionClientSecret else {
+            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
+        }
+        return apiClient.fetchNetworkedAccounts(
+            clientSecret: clientSecret,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
     }
 }

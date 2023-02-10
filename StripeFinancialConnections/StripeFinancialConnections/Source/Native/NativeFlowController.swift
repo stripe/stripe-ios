@@ -611,6 +611,12 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate {
 
+    func networkingLinkVerificationViewController(
+        _ viewController: NetworkingLinkVerificationViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        pushPane(nextPane, animated: true)
+    }
 }
 
 // MARK: - Static Helpers
@@ -684,6 +690,9 @@ private func CreatePaneViewController(
         let picker = InstitutionPickerViewController(dataSource: dataSource)
         picker.delegate = nativeFlowController
         viewController = picker
+    case .linkAccountPicker:
+        assertionFailure("Not supported")
+        viewController = nil
     case .linkConsent:
         assertionFailure("Not supported")
         viewController = nil
