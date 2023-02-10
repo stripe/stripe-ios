@@ -14,6 +14,7 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
+    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
 }
 
 final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVerificationDataSource {
@@ -23,6 +24,8 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+
+    private var consumerSessionClientSecret: String?
 
     init(
         accountholderCustomerEmailAddress: String,
@@ -48,6 +51,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
                     return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
                 }
                 if let consumerSessionClientSecret = lookupConsumerSessionResponse.consumerSession?.clientSecret {
+                    self.consumerSessionClientSecret = consumerSessionClientSecret
                     return self.apiClient.consumerSessionStartVerification(
                         emailAddress: self.accountholderCustomerEmailAddress,
                         otpType: "SMS",
@@ -59,5 +63,16 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
                     return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid consumerSessionLookup response: no consumerSession.clientSecret"))
                 }
             }
+    }
+
+    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
+        guard let consumerSessionClientSecret = consumerSessionClientSecret else {
+            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
+        }
+        return apiClient.consumerSessionConfirmVerification(
+            otpCode: otpCode,
+            otpType: "SMS",
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
     }
 }

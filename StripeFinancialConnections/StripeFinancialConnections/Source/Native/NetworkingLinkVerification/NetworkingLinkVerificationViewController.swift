@@ -106,7 +106,24 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 @available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBodyViewDelegate {
 
-    func networkingLinkVerificationBodyView(_ view: NetworkingLinkVerificationBodyView, didEnterValidOTP otp: String) {
-        print(otp) // TODO(kgaidis): use OTP
+    func networkingLinkVerificationBodyView(
+        _ view: NetworkingLinkVerificationBodyView,
+        didEnterValidOTPCode otpCode: String
+    ) {
+        view.otpTextField.text = "CONFIRMING OTP..."
+
+        dataSource.confirmVerificationSession(otpCode: otpCode)
+            .observe { result in
+                switch result {
+                case .success(let consumerSessionResponse):
+                    view.otpTextField.text = "SUCCESS...DOING OTHER THINGS"
+                    print(consumerSessionResponse)
+                    // TODO(kgaidis): make a call to `markLinkVerified`
+                case .failure(let error):
+                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
+                    print(error)
+                    // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
+                }
+            }
     }
 }

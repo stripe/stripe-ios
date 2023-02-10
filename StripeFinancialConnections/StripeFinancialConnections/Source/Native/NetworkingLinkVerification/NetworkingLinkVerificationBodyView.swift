@@ -12,7 +12,10 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkVerificationBodyViewDelegate: AnyObject {
-    func networkingLinkVerificationBodyView(_ view: NetworkingLinkVerificationBodyView, didEnterValidOTP otp: String)
+    func networkingLinkVerificationBodyView(
+        _ view: NetworkingLinkVerificationBodyView,
+        didEnterValidOTPCode otpCode: String
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -20,7 +23,7 @@ final class NetworkingLinkVerificationBodyView: UIView {
 
     weak var delegate: NetworkingLinkVerificationBodyViewDelegate?
 
-    private lazy var otpTextField: UITextField = {
+    private(set) lazy var otpTextField: UITextField = {
        let textField = InsetTextField()
         textField.placeholder = "OTP"
         textField.keyboardType = .numberPad
@@ -61,8 +64,11 @@ final class NetworkingLinkVerificationBodyView: UIView {
             return
         }
 
-        if otp.count == 6 {
-            delegate?.networkingLinkVerificationBodyView(self, didEnterValidOTP: otp)
+        if otp.count == 6 && Int(otp) != nil {
+            delegate?.networkingLinkVerificationBodyView(
+                self,
+                didEnterValidOTPCode: otp
+            )
         }
     }
 }

@@ -106,6 +106,12 @@ protocol FinancialConnectionsAPIClient {
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
     ) -> Future<ConsumerSessionResponse>
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -498,6 +504,22 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         parameters["custom_email_type"] = customEmailType
         parameters["connections_merchant_name"] = connectionsMerchantName
         return post(resource: "consumers/sessions/start_verification", parameters: parameters)
+    }
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String, // TODO(kgaidis): consider whether this should be an enum type SMS + EMAIL
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse> {
+        let parameters: [String: Any] = [
+            "type": otpType,
+            "code": otpCode,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+        ]
+        return post(resource: "consumers/sessions/confirm_verification", parameters: parameters)
     }
 }
 
