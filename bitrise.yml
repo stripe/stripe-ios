@@ -531,8 +531,6 @@ workflows:
         stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
   deploy-paymentsheet-example:
-    envs:
-    - DEVELOPMENT_TEAM: 'Y28TH9SHX7'
     steps:
     - xcode-archive@4:
         inputs:
@@ -540,6 +538,8 @@ workflows:
         - distribution_method: app-store
         - scheme: PaymentSheet Example
     - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEVELOPMENT_TEAM: 'Y28TH9SHX7'
     before_run:
     - prep_all
 meta:
