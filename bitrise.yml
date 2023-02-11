@@ -536,10 +536,9 @@ workflows:
         inputs:
         - project_path: Stripe.xcworkspace
         - distribution_method: app-store
+        - xcodebuild_options: DEVELOPMENT_TEAM=Y28TH9SHX7
         - scheme: PaymentSheet Example
     - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEVELOPMENT_TEAM: 'Y28TH9SHX7'
     before_run:
     - prep_all
 meta:
