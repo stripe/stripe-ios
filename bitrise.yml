@@ -68,7 +68,7 @@ stages:
     - deploy-dry-run: {}
     - pod-lint-tests: {}
     - integration-all: {}
-    - deploy-paymentsheet-example: {}
+    - deploy-example-apps: {}
 workflows:
   basic-integration-tests:
     steps:
@@ -530,7 +530,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
-  deploy-paymentsheet-example:
+  deploy-example-apps:
     steps:
     - xcode-archive@4:
         inputs:
@@ -539,6 +539,13 @@ workflows:
         - automatic_code_signing: apple-id
         - xcodebuild_options: DEVELOPMENT_TEAM=Y28TH9SHX7
         - scheme: PaymentSheet Example
+    - xcode-archive@4:
+        inputs:
+        - project_path: Stripe.xcworkspace
+        - distribution_method: app-store
+        - automatic_code_signing: apple-id
+        - xcodebuild_options: DEVELOPMENT_TEAM=Y28TH9SHX7
+        - scheme: IdentityVerification Example
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
