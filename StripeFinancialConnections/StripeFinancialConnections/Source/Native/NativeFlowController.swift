@@ -615,8 +615,10 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
 
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        consumerSession: ConsumerSessionData
     ) {
+        dataManager.consumerSession = consumerSession
         pushPane(nextPane, animated: true)
     }
 
@@ -700,8 +702,22 @@ private func CreatePaneViewController(
         picker.delegate = nativeFlowController
         viewController = picker
     case .linkAccountPicker:
-        assertionFailure("Not supported")
-        viewController = nil
+        if let consumerSession = dataManager.consumerSession {
+            let linkAccountPickerDataSource = LinkAccountPickerDataSourceImplementation(
+                manifest: dataManager.manifest,
+                apiClient: dataManager.apiClient,
+                analyticsClient: dataManager.analyticsClient,
+                clientSecret: dataManager.clientSecret,
+                consumerSession: consumerSession
+            )
+            let linkAccountPickerViewController = LinkAccountPickerViewController(
+                dataSource: linkAccountPickerDataSource
+            )
+            viewController = linkAccountPickerViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .linkConsent:
         assertionFailure("Not supported")
         viewController = nil
