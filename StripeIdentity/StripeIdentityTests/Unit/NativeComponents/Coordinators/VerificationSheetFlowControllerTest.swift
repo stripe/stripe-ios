@@ -262,6 +262,34 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    // When verification type is document and requires Address, both .biometricConsent, .address will be missing
+    // should navigate to BiometricConsent
+    func testNextViewControllerBiometricConsentWithMissingAddress() throws {
+        let exp = expectation(description: "testNextViewControllerBiometricConsent")
+        try nextViewController(
+            missingRequirements: [.biometricConsent, .address],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, BiometricConsentViewController.self)
+                exp.fulfill()
+            }
+        )
+        wait(for: [exp], timeout: 1)
+    }
+
+    // When verification type is document and requires Address, both .biometricConsent, .idNumber will be missing
+    // should navigate to BiometricConsent
+    func testNextViewControllerBiometricConsentWithMissingIdNumber() throws {
+        let exp = expectation(description: "testNextViewControllerBiometricConsent")
+        try nextViewController(
+            missingRequirements: [.biometricConsent, .idNumber],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, BiometricConsentViewController.self)
+                exp.fulfill()
+            }
+        )
+        wait(for: [exp], timeout: 1)
+    }
+
     func testNextViewControllerDocumentSelect() throws {
         let exp = expectation(description: "testNextViewControllerDocumentSelect")
         try nextViewController(
@@ -274,27 +302,29 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    // TODO(IDPROD-2745): Re-enable when `IndividualViewController` is supported
-    // func testNextViewControllerIndividualFields() {
-    //    XCTAssertIs(nextViewController(
-    //        missingRequirements: [.address]
-    //    ), IndividualViewController.self)
-    //    XCTAssertIs(nextViewController(
-    //        missingRequirements: [.dob]
-    //    ), IndividualViewController.self)
-    //    XCTAssertIs(nextViewController(
-    //        missingRequirements: [.email]
-    //    ), IndividualViewController.self)
-    //    XCTAssertIs(nextViewController(
-    //        missingRequirements: [.idNumber]
-    //    ), IndividualViewController.self)
-    //    XCTAssertIs(nextViewController(
-    //        missingRequirements: [.name]
-    //    ), IndividualViewController.self)
-    //    XCTAssertIs(nextViewController(
-    //        missingRequirements: [.phoneNumber]
-    //    ), IndividualViewController.self)
-    // }
+    func testNextViewControllerIndividualFields() throws {
+        // When verification type is document and address/idNumber is requested,
+        // after user submitted consent and document, missing should only remain .address or .idNumber.
+        // should navigate to IndividualController
+        try verifyIndividualViewController([.address])
+        try verifyIndividualViewController([.idNumber])
+        // When verification type is not document, .name or .dob will be missing,
+        // should navigate to IndividualViewController
+        try verifyIndividualViewController([.name, .dob, .idNumber])
+        try verifyIndividualViewController([.name, .dob, .address])
+    }
+
+    func verifyIndividualViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) throws {
+        let exp = expectation(description: "testNextViewControllerIndividual")
+        try nextViewController(
+            missingRequirements: missingRequirements,
+            completion: { nextVC in
+                XCTAssertIs(nextVC, IndividualViewController.self)
+                exp.fulfill()
+            }
+        )
+        wait(for: [exp], timeout: 1)
+    }
 
     func testNextViewControllerDocumentCapture() throws {
         // Mock that user has selected document type
@@ -427,6 +457,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         XCTAssertEqual(viewControllers.map { $0.collectedFields }, mockCollectedFields)
         XCTAssertEqual(viewControllers.last?.didReset, true)
     }
+
 }
 
 extension VerificationSheetFlowControllerTest {

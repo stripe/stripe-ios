@@ -68,7 +68,9 @@ final class IdentityAnalyticsClient {
         case documentFileUpload = "file_upload"
         case selfieCapture = "selfie"
         case success = "confirmation"
+        case individual = "individual"
         case error = "error"
+        case countryNotListed = "countryNotListed"
     }
 
     /// Name of the scanner logged in scanning performance events

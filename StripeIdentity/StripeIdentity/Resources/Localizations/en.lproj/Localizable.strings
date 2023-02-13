@@ -93,6 +93,9 @@
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Personal ID number";
 
+/* Back button title for returning to the individual's perssonal infomation screen */
+"Personal Information" = "Personal Information";
+
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Photo Library";
 
