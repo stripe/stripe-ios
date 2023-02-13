@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+/// Section that collects Id number of different countries.
 class IdNumberElement: ContainerElement {
     var elements: [StripeUICore.Element]
 
@@ -62,7 +63,7 @@ class IdNumberElement: ContainerElement {
         section.delegate = self
     }
 
-    func colelctedIdNumber() -> StripeAPI.VerificationPageDataIdNumber {
+    func collectedIdNumber() -> StripeAPI.VerificationPageDataIdNumber {
         let selectedCountryCode = countryCodes[country.selectedIndex]
         if selectedCountryCode == "US" {
             return StripeAPI.VerificationPageDataIdNumber(

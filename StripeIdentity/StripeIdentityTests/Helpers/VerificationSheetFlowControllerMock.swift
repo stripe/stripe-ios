@@ -53,7 +53,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     func transitionToCountryNotListedScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
         sheetController: StripeIdentity.VerificationSheetControllerProtocol,
-        missingType: StripeIdentity.IndividualElement.MissingType
+        missingType: StripeIdentity.IndividualFormElement.MissingType
     ) {
         // no-op
     }

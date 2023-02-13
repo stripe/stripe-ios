@@ -37,7 +37,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     func transitionToCountryNotListedScreen(
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol,
-        missingType: IndividualElement.MissingType
+        missingType: IndividualFormElement.MissingType
     )
 
     func replaceCurrentScreen(
@@ -108,7 +108,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     func transitionToCountryNotListedScreen(
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol,
-        missingType: IndividualElement.MissingType
+        missingType: IndividualFormElement.MissingType
     ) {
         let staticContent: StripeAPI.VerificationPage
         do {

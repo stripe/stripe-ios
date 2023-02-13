@@ -19,7 +19,7 @@ final class IndividualElementTest: XCTestCase {
     )
 
     func testMissingIdNumberOnly() {
-        let element = IndividualElement(
+        let element = IndividualFormElement(
             individualContent: content,
             missing: [.idNumber],
             countryNotListedButtonClicked: { _ in }
@@ -35,7 +35,7 @@ final class IndividualElementTest: XCTestCase {
     }
 
     func testMissingAddressOnly() {
-        let element = IndividualElement(
+        let element = IndividualFormElement(
             individualContent: content,
             missing: [.address],
             countryNotListedButtonClicked: { _ in }
@@ -50,7 +50,7 @@ final class IndividualElementTest: XCTestCase {
     }
 
     func testMissingDobNameIdNumber() {
-        let element = IndividualElement(
+        let element = IndividualFormElement(
             individualContent: content,
             missing: [.dob, .name, .idNumber],
             countryNotListedButtonClicked: { _ in }
@@ -66,7 +66,7 @@ final class IndividualElementTest: XCTestCase {
     }
 
     func testMissingDobNameAddres() {
-        let element = IndividualElement(
+        let element = IndividualFormElement(
             individualContent: content,
             missing: [.dob, .name, .address],
             countryNotListedButtonClicked: { _ in }

@@ -13,7 +13,7 @@ import UIKit
 final class CountryNotListedViewController: IdentityFlowViewController {
 
     init(
-        missingType: IndividualElement.MissingType,
+        missingType: IndividualFormElement.MissingType,
         countryNotListedContent: StripeAPI.VerificationPageStaticContentCountryNotListedPage,
         sheetController: VerificationSheetControllerProtocol
     ) {

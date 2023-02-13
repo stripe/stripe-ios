@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class IndividualElement: ContainerElement {
+final class IndividualFormElement: ContainerElement {
     enum MissingType {
         case address
         case idNumber
@@ -32,7 +32,7 @@ final class IndividualElement: ContainerElement {
         var collectedAddress: StripeAPI.RequiredInternationalAddress?
 
         if let idNumberElement = idNumberElement {
-            collectedIdNumber = idNumberElement.colelctedIdNumber()
+            collectedIdNumber = idNumberElement.collectedIdNumber()
         }
 
         if let dobElement = dobElement {
@@ -159,7 +159,7 @@ final class IndividualElement: ContainerElement {
 }
 
 // MARK: - ElementDelegate
-extension IndividualElement: ElementDelegate {
+extension IndividualFormElement: ElementDelegate {
     func didUpdate(element: Element) {
         delegate?.didUpdate(element: element)
 

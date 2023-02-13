@@ -14,7 +14,7 @@ final class IndividualViewController: IdentityFlowViewController {
 
     let individualContent: StripeAPI.VerificationPageStaticContentIndividualPage
 
-    let individualElement: IndividualElement
+    let individualElement: IndividualFormElement
 
     let missing: Set<StripeAPI.VerificationPageFieldType>
 
@@ -31,7 +31,7 @@ final class IndividualViewController: IdentityFlowViewController {
     ) {
         self.individualContent = individualContent
         self.missing = missing.intersection([.name, .dob, .idNumber, .address])
-        individualElement = IndividualElement(
+        individualElement = IndividualFormElement(
             individualContent: individualContent,
             missing: missing,
             countryNotListedButtonClicked: { missingType in
