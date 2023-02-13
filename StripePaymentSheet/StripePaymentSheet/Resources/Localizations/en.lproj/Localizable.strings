@@ -277,3 +277,8 @@ the heading the screen itself. */
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
+/* Title for the contact information section. */
+"Contact information" = "Contact information";
+
+/* Title for name on card field. */
+"Name on card" = "Name on card";

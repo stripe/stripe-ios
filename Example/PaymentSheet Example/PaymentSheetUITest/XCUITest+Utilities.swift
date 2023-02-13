@@ -125,6 +125,9 @@ extension XCTestCase {
         // Wait for the screen to load
         XCTAssert(app.navigationBars["Test Playground"].waitForExistence(timeout: 10))
 
+        // Reset existing configuration.
+        app.buttons["(Reset)"].tap()
+
         for (setting, value) in settings {
             app.segmentedControls["\(setting)_selector"].buttons[value].tap()
         }

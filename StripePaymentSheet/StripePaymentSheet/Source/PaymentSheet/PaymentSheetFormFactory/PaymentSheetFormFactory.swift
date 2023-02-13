@@ -145,6 +145,21 @@ extension PaymentSheetFormFactory {
         }
     }
 
+    func makePhone(apiPath: String? = nil) -> PaymentMethodElementWrapper<PhoneNumberElement> {
+        let element = PhoneNumberElement(
+            defaultCountryCode: configuration.defaultBillingDetails.address.country,
+            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
+            theme: theme)
+        return PaymentMethodElementWrapper(element) { phoneField, params in
+            if let apiPath = apiPath {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = phoneField.phoneNumber?.string(as: .e164)
+            } else {
+                params.paymentMethodParams.nonnil_billingDetails.phone = phoneField.phoneNumber?.string(as: .e164)
+            }
+            return params
+        }
+    }
+
     func makeBSB(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.Account.makeBSB(defaultValue: nil, theme: theme)
         return PaymentMethodElementWrapper(element) { textField, params in
@@ -410,6 +425,22 @@ extension PaymentSheetFormFactory {
         label.numberOfLines = 0
         return StaticElement(view: label)
     }
+
+    func makeContactInformation(includeName: Bool, includeEmail: Bool, includePhone: Bool) -> SectionElement? {
+        let nameElement = includeName ? makeName() : nil
+        let emailElement = includeEmail ? makeEmail() : nil
+        let phoneElement = includePhone ? makePhone() : nil
+
+        let allElements: [Element?] = [nameElement, emailElement, phoneElement]
+        let elements = allElements.compactMap { $0 }
+
+        guard !allElements.isEmpty else { return nil }
+
+        return SectionElement(
+            title: STPLocalizedString("Contact information", "Title for the contact information section"),
+            elements: elements,
+            theme: theme)
+    }
 }
 
 // MARK: - Extension helpers
@@ -523,5 +554,18 @@ extension PaymentSheet.Appearance.Shadow {
         self.opacity = elementShadow.opacity
         self.offset = elementShadow.offset
         self.radius = elementShadow.radius
+    }
+}
+
+extension STPPaymentMethodAddress {
+    /// Convenience initializer to create a `STPPaymentMethodAddress` from a `PaymentSheet.Address`
+    convenience init(address: PaymentSheet.Address) {
+        self.init()
+        city = address.city
+        country = address.country
+        line1 = address.line1
+        line2 = address.line2
+        postalCode = address.postalCode
+        state = address.state
     }
 }

@@ -133,6 +133,7 @@ extension STPAPIClient {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
+
         let billingParams = billingDetails.consumersAPIParams
 
         var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
@@ -467,6 +468,9 @@ extension STPPaymentMethodBillingDetails {
 
     var consumersAPIParams: [String: Any] {
         var params = STPFormEncoder.dictionary(forObject: self)
+        // Consumers API doesn't support email or phone.
+        params["email"] = nil
+        params["phone"] = nil
         if let addressParams = address?.consumersAPIParams {
             params["address"] = nil
             params.merge(addressParams) { (_, new)  in new }
@@ -481,8 +485,34 @@ extension STPPaymentMethodAddress {
 
     var consumersAPIParams: [String: Any] {
         var params = STPFormEncoder.dictionary(forObject: self)
+        // The param naming for consumers API is different so we need to map the values.
+        params["line_1"] = params["line1"]
+        params["line1"] = nil
+        params["line_2"] = params["line2"]
+        params["line2"] = nil
+        params["locality"] = params["city"]
+        params["city"] = nil
+        params["administrative_area"] = params["state"]
+        params["state"] = nil
         params["country_code"] = params["country"]
         params["country"] = nil
+
+        // Consumers API doesn't like empty strings, turn any empties into nils.
+        if let line1 = params["line_1"] as? String, line1.isEmpty {
+            params["line_1"] = nil
+        }
+        if let line2 = params["line_2"] as? String, line2.isEmpty {
+            params["line_2"] = nil
+        }
+        if let locality = params["locality"] as? String, locality.isEmpty {
+            params["locality"] = nil
+        }
+        if let administrativeArea = params["administrative_area"] as? String, administrativeArea.isEmpty {
+            params["administrative_area"] = nil
+        }
+        if let countryCode = params["country_code"] as? String, countryCode.isEmpty {
+            params["country_code"] = nil
+        }
         return params
     }
 

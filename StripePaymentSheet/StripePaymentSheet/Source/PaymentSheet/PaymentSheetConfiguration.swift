@@ -135,7 +135,8 @@ extension PaymentSheet {
         /// web views used for additional authentication, e.g. 3DS2
         public var returnURL: String?
 
-        /// PaymentSheet pre-populates fields with the values provided.
+        /// These values will be attached to the Payment Method during checkout.
+        /// PaymentSheet will also pre-populate any visible fields with these values.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
@@ -161,6 +162,13 @@ extension PaymentSheet {
         /// Intentionally non-public.
         /// @see BillingAddressCollection
         var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
+
+        /// 🚧 Under construction
+        /// Describes how billing details should be collected.
+        /// All values default to `automatic`.
+        /// If `never` is used for a required field for the Payment Method used during checkout,
+        /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
+        @_spi(STP) public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
     }
 
     /// Configuration related to the Stripe Customer
@@ -229,10 +237,16 @@ extension PaymentSheet {
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            public let authorizationResultHandler: ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            public let authorizationResultHandler:
+                ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
-            public init(paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil, authorizationResultHandler: ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)? = nil) {
+            public init(
+                paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
+                authorizationResultHandler: (
+                    (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
+                )? = nil
+            ) {
                 self.paymentRequestHandler = paymentRequestHandler
                 self.authorizationResultHandler = authorizationResultHandler
             }
@@ -280,7 +294,14 @@ extension PaymentSheet {
         public var state: String?
 
         /// Initializes an Address
-        public init(city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+        public init(
+            city: String? = nil,
+            country: String? = nil,
+            line1: String? = nil,
+            line2: String? = nil,
+            postalCode: String? = nil,
+            state: String? = nil
+        ) {
             self.city = city
             self.country = country
             self.line1 = line1
@@ -307,4 +328,52 @@ extension PaymentSheet {
         public var phone: String?
     }
 
+    /// 🚧 Under construction
+    /// Configuration for how billing details are collected during checkout.
+    @_spi(STP) public struct BillingDetailsCollectionConfiguration: Equatable {
+        /// Billing details fields collection options.
+        public enum CollectionMode: CaseIterable {
+            /// The field will be collected depending on the Payment Method's requirements.
+            case automatic
+            /// The field will never be collected.
+            /// If this field is required by the Payment Method, you must provide it as part of `defaultBillingDetails`.
+            case never
+            /// The field will always be collected, even if it isn't required for the Payment Method.
+            case always
+        }
+
+        /// Billing address collection options.
+        public enum AddressCollectionMode: CaseIterable {
+            /// Only the fields required by the Payment Method will be collected, this may be none.
+            case automatic
+            /// Address will never be collected.
+            /// If the Payment Method requires a billing address, you must provide it as part of
+            /// `defaultBillingDetails`.
+            case never
+            /// Collect the full billing address, regardless of the Payment Method requirements.
+            case full
+        }
+
+        /// How to collect the name field.
+        /// Defaults to `automatic`.
+        public var name: CollectionMode = .automatic
+
+        /// How to collect the phone field.
+        /// Defaults to `automatic`.
+        public var phone: CollectionMode = .automatic
+
+        /// How to collect the email field.
+        /// Defaults to `automatic`.
+        public var email: CollectionMode = .automatic
+
+        /// How to collect the billing address.
+        /// Defaults to `automatic`.
+        public var address: AddressCollectionMode = .automatic
+
+        /// Whether the values included in `Configuration.defaultBillingDetails` should be attached to the payment
+        /// method, this includes fields that aren't displayed in the form.
+        ///
+        /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
+        public var attachDefaultsToPaymentMethod = false
+    }
 }
