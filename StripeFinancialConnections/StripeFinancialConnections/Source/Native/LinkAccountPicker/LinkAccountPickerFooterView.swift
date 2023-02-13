@@ -16,13 +16,18 @@ final class LinkAccountPickerFooterView: UIView {
     private let didSelectConnectAccount: () -> Void
 
     private lazy var connectAccountButton: Button = {
-        let linkAccountsButton = Button(configuration: .financialConnectionsPrimary)
-        linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
-        linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
+        let connectAccountButton = Button(configuration: .financialConnectionsPrimary)
+        connectAccountButton.title = STPLocalizedString(
+            "Connect account",
+            "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+        )
+        connectAccountButton.isEnabled = false // disable by default
+        connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
+        connectAccountButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            linkAccountsButton.heightAnchor.constraint(equalToConstant: 56)
+            connectAccountButton.heightAnchor.constraint(equalToConstant: 56)
         ])
-        return linkAccountsButton
+        return connectAccountButton
     }()
 
     init(
@@ -52,8 +57,6 @@ final class LinkAccountPickerFooterView: UIView {
         verticalStackView.spacing = 20
         addSubview(verticalStackView)
         addAndPinSubviewToSafeArea(verticalStackView)
-
-        didSelectAccounts(count: 0)  // set the button title
     }
 
     required init?(coder: NSCoder) {
@@ -64,13 +67,8 @@ final class LinkAccountPickerFooterView: UIView {
         didSelectConnectAccount()
     }
 
-    func didSelectAccounts(count numberOfAccountsSelected: Int) {
-        connectAccountButton.isEnabled = (numberOfAccountsSelected > 0)
-        
-        connectAccountButton.title = STPLocalizedString(
-            "Connect account",
-            "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
-        )
+    func enableButton(_ enableButton: Bool) {
+        connectAccountButton.isEnabled = enableButton
     }
 }
 

@@ -11,7 +11,7 @@ import Foundation
 protocol LinkAccountPickerDataSourceDelegate: AnyObject {
     func linkLinkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount?
     )
 }
 
@@ -19,11 +19,11 @@ protocol LinkAccountPickerDataSource: AnyObject {
 
     var delegate: LinkAccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
-    var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
+    var selectedAccount: FinancialConnectionsPartnerAccount? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
-    func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
+    func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount)
 }
 
 final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSource {
@@ -34,9 +34,9 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     private let clientSecret: String
     private let consumerSession: ConsumerSessionData
 
-    private(set) var selectedAccounts: [FinancialConnectionsPartnerAccount] = [] {
+    private(set) var selectedAccount: FinancialConnectionsPartnerAccount? {
         didSet {
-            delegate?.linkLinkAccountPickerDataSource(self, didSelectAccounts: selectedAccounts)
+            delegate?.linkLinkAccountPickerDataSource(self, didSelectAccount: selectedAccount)
         }
     }
     weak var delegate: LinkAccountPickerDataSourceDelegate?
@@ -63,8 +63,8 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         )
     }
 
-    func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
-        self.selectedAccounts = selectedAccounts
+    func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) {
+        self.selectedAccount = selectedAccount
     }
 
 //    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts> {

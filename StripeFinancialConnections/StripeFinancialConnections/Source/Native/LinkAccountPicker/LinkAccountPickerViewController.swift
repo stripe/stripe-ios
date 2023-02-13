@@ -37,7 +37,7 @@ final class LinkAccountPickerViewController: UIViewController {
     private var businessName: String? {
         return dataSource.manifest.businessName
     }
-
+    private weak var bodyView: LinkAccountPickerBodyView?
     private lazy var footerView: LinkAccountPickerFooterView = {
         return LinkAccountPickerFooterView(
             isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
@@ -48,14 +48,14 @@ final class LinkAccountPickerViewController: UIViewController {
                 guard let self = self else {
                     return
                 }
-                self.dataSource
-                    .analyticsClient
-                    .log(
-                        eventName: "click.link_accounts",
-                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.linkAccountPicker.rawValue]
-                    )
+//                self.dataSource
+//                    .analyticsClient
+//                    .log(
+//                        eventName: "click.link_accounts",
+//                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.linkAccountPicker.rawValue]
+//                    )
 
-                self.didSelectLinkAccounts()
+                self.didSelectConectAccount()
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] in
                 guard let self = self else { return }
@@ -105,6 +105,10 @@ final class LinkAccountPickerViewController: UIViewController {
     }
 
     private func displayAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
+        let bodyView = LinkAccountPickerBodyView(accounts: accounts)
+        bodyView.delegate = self
+        self.bodyView = bodyView
+        
         let paneLayoutView = PaneWithHeaderLayoutView(
             title: {
                 if let businessName = self.businessName {
@@ -117,20 +121,24 @@ final class LinkAccountPickerViewController: UIViewController {
                     )
                 }
             }(),
-            contentView: UIView(),
+            contentView: bodyView,
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
+        
+        bodyView.selectAccount(nil) // activate the logic to list all accounts
     }
 
-    private func didSelectLinkAccounts() {
-        let numberOfSelectedAccounts = dataSource.selectedAccounts.count
+    private func didSelectConectAccount() {
+        let numberOfSelectedAccounts = dataSource.selectedAccount == nil ? 0 : 1
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
             numberOfSelectedAccounts: numberOfSelectedAccounts,
             businessName: businessName
         )
         view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
 
+        
+        
 //        dataSource
 //            .selectAuthSessionAccounts()
 //            .observe(on: .main) { [weak self] result in
@@ -155,28 +163,32 @@ final class LinkAccountPickerViewController: UIViewController {
     }
 }
 
-// MARK: - LinkAccountPickerSelectionViewDelegate
+// MARK: - LinkAccountPickerBodyViewDelegate
 
-//@available(iOSApplicationExtension, unavailable)
-//extension LinkAccountPickerViewController: LinkAccountPickerSelectionViewDelegate {
-//
-//    func linkAccountPickerSelectionView(
-//        _ view: LinkAccountPickerSelectionView,
-//        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
-//    ) {
-//        dataSource.updateSelectedAccounts(selectedAccounts)
-//    }
-//}
+@available(iOSApplicationExtension, unavailable)
+extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
+    func linkAccountPickerBodyView(
+        _ view: LinkAccountPickerBodyView,
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
+    ) {
+        dataSource.updateSelectedAccount(selectedAccount)
+    }
+    
+    func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView) {
+        
+    }
+}
 
 // MARK: - LinkAccountPickerDataSourceDelegate
 
 @available(iOSApplicationExtension, unavailable)
 extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
+
     func linkLinkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount?
     ) {
-        footerView.didSelectAccounts(count: selectedAccounts.count)
-        // linkAccountPickerSelectionView?.selectAccounts(selectedAccounts)
+        bodyView?.selectAccount(selectedAccount)
+        footerView.enableButton(selectedAccount != nil)
     }
 }
