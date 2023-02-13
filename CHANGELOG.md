@@ -1,4 +1,4 @@
-## x.x.x yyyy-mm-dd
+## 23.3.4 2023-02-13
 ### Financial Connections
 * [Changed] Polished Financial Connections UI.
 
