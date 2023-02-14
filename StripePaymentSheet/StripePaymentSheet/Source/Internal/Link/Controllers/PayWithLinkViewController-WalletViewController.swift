@@ -307,6 +307,8 @@ private extension PayWithLinkViewController.WalletViewController {
                     "Are you sure you want to remove this linked account?",
                     "Title of confirmation prompt when removing a linked bank account."
                 )
+            case .unparsable:
+                return ""
             }
         }()
 
@@ -467,6 +469,8 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                     "Remove linked account",
                     "Title for a button that when tapped removes a linked bank account."
                 )
+            case .unparsable:
+                return ""
             }
         }()
         alertController.addAction(UIAlertAction(

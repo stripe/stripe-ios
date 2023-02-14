@@ -18,98 +18,66 @@ typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, payment
  
  For internal SDK use only
  */
-@objc(STP_Internal_ConsumerPaymentDetails)
-class ConsumerPaymentDetails: NSObject, STPAPIResponseDecodable {
-
+final class ConsumerPaymentDetails: Decodable {
     let stripeID: String
     let details: Details
     var isDefault: Bool
 
     // TODO(csabol) : Billing address
 
-    let allResponseFields: [AnyHashable: Any]
-
     init(stripeID: String,
          details: Details,
-         isDefault: Bool,
-         allResponseFields: [AnyHashable: Any]) {
+         isDefault: Bool) {
         self.stripeID = stripeID
         self.details = details
         self.isDefault = isDefault
-        self.allResponseFields = allResponseFields
-        super.init()
     }
 
-    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let dict = response?["redacted_payment_details"] as? [AnyHashable: Any] ?? response, // When this is from a list endpoint it isn't nested in redacted_payment_details
-              let stripeID = dict["id"] as? String,
-              let details = Details(dict),
-              let isDefault = dict["is_default"] as? Bool else {
-            return nil
-        }
-
-        return ConsumerPaymentDetails(stripeID: stripeID,
-                                      details: details,
-                                      isDefault: isDefault,
-                                      allResponseFields: dict) as? Self
+    private enum CodingKeys: String, CodingKey {
+        case stripeID = "id"
+        case isDefault
     }
 
-    class ShareResponse: NSObject, STPAPIResponseDecodable {
-        let paymentMethodID: String
-        let allResponseFields: [AnyHashable: Any]
-
-        init(paymentMethodID: String,
-             allResponseFields: [AnyHashable: Any]) {
-            self.paymentMethodID = paymentMethodID
-            self.allResponseFields = allResponseFields
-            super.init()
-        }
-
-        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-            guard let dict = response,
-                  let id = dict["payment_method"] as? String else {
-                return nil
-            }
-            return ShareResponse(paymentMethodID: id,
-                                 allResponseFields: dict) as? Self
-        }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.stripeID = try container.decode(String.self, forKey: .stripeID)
+        // The payment details are included in the dictionary, so we pass the whole dict to Details
+        self.details = try decoder.singleValueContainer().decode(Details.self)
+        self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
     }
-
 }
 
 // MARK: - Details
 /// :nodoc:
 extension ConsumerPaymentDetails {
-    enum DetailsType: String, CaseIterable {
-        case card
-        case bankAccount = "bank_account"
+    enum DetailsType: String, CaseIterable, SafeEnumCodable {
+        case card = "CARD"
+        case bankAccount = "BANK_ACCOUNT"
+        case unparsable = ""
     }
 
-    enum Details {
-
+    enum Details: SafeEnumDecodable {
         case card(card: Card)
         case bankAccount(bankAccount: BankAccount)
+        case unparsable
 
-        init?(_ response: [AnyHashable: Any]) {
-            guard let typeString = response["type"] as? String else {
-                return nil
-            }
+        private enum CodingKeys: String, CodingKey {
+            case type
+            case card = "cardDetails"
+            case bankAccount = "bankAccountDetails"
+        }
 
-            switch typeString.lowercased() {
-            case "card":
-                if let card = Card.decodedObject(fromAPIResponse: response) {
-                    self = .card(card: card)
-                } else {
-                    return nil
-                }
-            case "bank_account":
-                if let bankAccount = BankAccount.decodedObject(fromAPIResponse: response) {
-                    self = .bankAccount(bankAccount: bankAccount)
-                } else {
-                    return nil
-                }
-            default:
-                return nil
+        // Our JSON structure doesn't align with Swift's expected structure for enums with associated values, so we do custom decoding.
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let type = try container.decode(DetailsType.self, forKey: CodingKeys.type)
+            switch type {
+            case .card:
+                self = .card(card: try container.decode(Card.self, forKey: CodingKeys.card))
+            case .bankAccount:
+                self = .bankAccount(bankAccount: try container.decode(BankAccount.self, forKey: CodingKeys.bankAccount))
+            case .unparsable:
+                self = .unparsable
             }
         }
     }
@@ -120,6 +88,8 @@ extension ConsumerPaymentDetails {
             return .card
         case .bankAccount:
             return .bankAccount
+        case .unparsable:
+            return .unparsable
         }
     }
 }
@@ -128,94 +98,56 @@ extension ConsumerPaymentDetails {
 
 extension ConsumerPaymentDetails.Details {
     /// For internal SDK use only
-    @objc(STP_Internal_ConsumerPaymentDetails_CardChecks)
-    class CardChecks: NSObject, STPAPIResponseDecodable {
-        enum State: String {
+    final class CardChecks: Codable {
+        enum CVCCheck: String, SafeEnumCodable {
             case pass = "PASS"
             case fail = "FAIL"
             case unchecked = "UNCHECKED"
             case unavailable = "UNAVAILABLE"
             case stateInvalid = "STATE_INVALID"
             // Catch all
-            case unknown = "UNKNOWN"
+            case unparsable = ""
         }
 
-        let cvcCheck: State
+        let cvcCheck: CVCCheck
 
-        var allResponseFields: [AnyHashable: Any]
-
-        init(cvcCheck: State, allResponseFields: [AnyHashable: Any]) {
+        init(cvcCheck: CVCCheck) {
             self.cvcCheck = cvcCheck
-            self.allResponseFields = allResponseFields
-            super.init()
-        }
-
-        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-            guard
-                let dict = response,
-                let cvcCheck = dict["cvc_check"] as? String
-            else {
-                return nil
-            }
-
-            let cvcCheckState = State(rawValue: cvcCheck.uppercased()) ?? .unknown
-
-            return CardChecks(
-                cvcCheck: cvcCheckState,
-                allResponseFields: dict) as? Self
         }
     }
 }
 
 // MARK: - Details.Card
 extension ConsumerPaymentDetails.Details {
-    class Card: NSObject, STPAPIResponseDecodable {
-
+    final class Card: Codable {
         let expiryYear: Int
         let expiryMonth: Int
-        let brand: STPCardBrand
+        let brand: String
         let last4: String
         let checks: CardChecks?
 
-        let allResponseFields: [AnyHashable: Any]
-
-        /// A frontend convenience property, i.e. not part of the API Object
-        var cvc: String?
-
-        required init(expiryYear: Int,
-                      expiryMonth: Int,
-                      brand: String,
-                      last4: String,
-                      checks: CardChecks?,
-                      allResponseFields: [AnyHashable: Any]) {
-            self.expiryYear = expiryYear
-            self.expiryMonth = expiryMonth
-            self.brand = STPPaymentMethodCard.brand(from: brand.lowercased())
-            self.last4 = last4
-            self.checks = checks
-            self.allResponseFields = allResponseFields
-            super.init()
+        private enum CodingKeys: String, CodingKey {
+            case expiryYear = "expYear"
+            case expiryMonth = "expMonth"
+            case brand
+            case last4
+            case checks
         }
 
-        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-            guard let dict = response?["card_details"] as? [AnyHashable: Any],
-                  let expiryYear = dict["exp_year"] as? Int,
-                  let expiryMonth = dict["exp_month"] as? Int,
-                  let brand = dict["brand"] as? String,
-                  let last4 = dict["last4"] as? String else {
-                return nil
-            }
+        /// A frontend convenience property, i.e. not part of the API Object
+        /// As such this is deliberately omitted from CodingKeys
+        var cvc: String?
 
-            let checks = CardChecks.decodedObject(fromAPIResponse: dict["checks"] as? [AnyHashable: Any])
-
-            return Card(
-                expiryYear: expiryYear,
-                expiryMonth: expiryMonth,
-                brand: brand,
-                last4: last4,
-                checks: checks,
-                allResponseFields: dict
-            ) as? Self
+        init(expiryYear: Int,
+             expiryMonth: Int,
+             brand: String,
+             last4: String,
+             checks: CardChecks?) {
+            self.expiryYear = expiryYear
+            self.expiryMonth = expiryMonth
+            self.brand = brand
+            self.last4 = last4
+            self.checks = checks
         }
     }
 }
@@ -240,75 +172,31 @@ extension ConsumerPaymentDetails.Details.Card {
         return expiryDate.expired()
     }
 
+    var stpBrand: STPCardBrand {
+        return STPPaymentMethodCard.brand(from: brand)
+    }
+
 }
 
 // MARK: - Details.BankAccount
 extension ConsumerPaymentDetails.Details {
-    class BankAccount: NSObject, STPAPIResponseDecodable {
-
+    final class BankAccount: Codable {
         let iconCode: String?
         let name: String
         let last4: String
 
-        let allResponseFields: [AnyHashable: Any]
+        private enum CodingKeys: String, CodingKey {
+            case iconCode = "bankIconCode"
+            case name = "bankName"
+            case last4
+        }
 
         init(iconCode: String?,
              name: String,
-             last4: String,
-             allResponseFields: [AnyHashable: Any]) {
+             last4: String) {
             self.iconCode = iconCode
             self.name = name
             self.last4 = last4
-            self.allResponseFields = allResponseFields
-            super.init()
-        }
-
-        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-            guard let dict = response?["bank_account_details"] as? [AnyHashable: Any],
-                  let name = dict["bank_name"] as? String,
-                  let last4 = dict["last4"] as? String else {
-                      return nil
-                  }
-
-            return BankAccount(iconCode: dict["bank_icon_code"] as? String,
-                               name: name,
-                               last4: last4,
-                               allResponseFields: dict) as? Self
-        }
-    }
-}
-
-// MARK: - List Deserializer
-/// :nodoc:
-extension ConsumerPaymentDetails {
-    /**
-     Helper class to deserialize a list of ConsumerPaymentDetails from API responses
-     */
-    class ListDeserializer: NSObject, STPAPIResponseDecodable {
-        let allResponseFields: [AnyHashable: Any]
-        let paymentDetails: [ConsumerPaymentDetails]
-
-        required init(paymentDetails: [ConsumerPaymentDetails],
-                      allResponseFields: [AnyHashable: Any]) {
-            self.paymentDetails = paymentDetails
-            self.allResponseFields = allResponseFields
-            super.init()
-        }
-
-        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-            guard let response = response,
-                  let data = response["redacted_payment_details"] as? [[AnyHashable: Any]] else {
-                return nil
-            }
-
-            var paymentDetails = [ConsumerPaymentDetails]()
-            for entry in data {
-                if let paymentDetail = ConsumerPaymentDetails.decodedObject(fromAPIResponse: entry) {
-                    paymentDetails.append(paymentDetail)
-                }
-            }
-
-            return ListDeserializer(paymentDetails: paymentDetails, allResponseFields: response) as? Self
         }
     }
 }
@@ -320,6 +208,8 @@ extension ConsumerPaymentDetails {
             return "••••\(card.last4)"
         case .bankAccount(let bank):
             return "••••\(bank.last4)"
+        case .unparsable:
+            return ""
         }
     }
 
@@ -329,6 +219,8 @@ extension ConsumerPaymentDetails {
             return card.cvc
         case .bankAccount:
             return nil
+        case .unparsable:
+            return nil
         }
     }
 
@@ -336,7 +228,7 @@ extension ConsumerPaymentDetails {
         switch details {
         case .card(let card):
             // TODO(ramont): investigate why this returns optional
-            let cardBrandName = STPCardBrandUtilities.stringFrom(card.brand) ?? ""
+            let cardBrandName = STPCardBrandUtilities.stringFrom(card.stpBrand) ?? ""
             let digits = card.last4.map({ String($0) }).joined(separator: ", ")
             return String(
                 format: String.Localized.card_brand_ending_in_last_4,
@@ -350,6 +242,8 @@ extension ConsumerPaymentDetails {
                 bank.name,
                 digits
             )
+        case .unparsable:
+            return ""
         }
     }
 

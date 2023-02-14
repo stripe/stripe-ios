@@ -502,6 +502,8 @@ extension PaymentSheetLinkAccount {
                 supportedPaymentMethodTypes.append(.card)
             case .bankAccount:
                 supportedPaymentMethodTypes.append(.linkInstantDebit)
+            case .unparsable:
+                break
             }
         }
 
