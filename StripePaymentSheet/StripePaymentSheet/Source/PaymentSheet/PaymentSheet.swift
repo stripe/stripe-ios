@@ -117,6 +117,14 @@ public class PaymentSheet {
                     completion(.failed(error: PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
                     return
                 }
+                
+                // Early exit if Link or ACH is enabled in deferred mode
+                if !(intent is Intent) &&
+                    (paymentMethodTypes.contains(.link) ||
+                     paymentMethodTypes.contains(.linkInstantDebit) ||
+                     paymentMethodTypes.contains(.USBankAccount)) {
+                    completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Link and or US bank account cannot be enabled when using deferred intent creation.")))
+                }
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil

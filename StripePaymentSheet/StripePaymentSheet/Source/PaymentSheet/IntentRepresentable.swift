@@ -23,7 +23,7 @@ protocol IntentRepresentable: PaymentMethodRequirementProvider {
     /// - Note: Required to be non-nil when representing a PaymentIntent.
     var currency: String? { get }
     
-    /// Amount intended to be collected by this PaymentIntent.
+    /// Amount intended to be collected by this intent.
     /// - Note: Required to be non-nil when representing a PaymentIntent.
     var amount: Int? { get }
     
