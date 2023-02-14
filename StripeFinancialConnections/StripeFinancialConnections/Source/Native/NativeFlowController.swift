@@ -630,6 +630,35 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
     }
 }
 
+// MARK: - LinkAccountPickerViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        pushPane(nextPane, animated: true)
+    }
+    
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
+        institution: FinancialConnectionsInstitution
+    ) {
+        dataManager.institution = institution
+        dataManager.linkedAccounts = [selectedAccount]
+        pushPane(.success, animated: true)
+    }
+    
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
+    }
+}
+
 // MARK: - Static Helpers
 
 @available(iOSApplicationExtension, unavailable)
@@ -713,6 +742,7 @@ private func CreatePaneViewController(
             let linkAccountPickerViewController = LinkAccountPickerViewController(
                 dataSource: linkAccountPickerDataSource
             )
+            linkAccountPickerViewController.delegate = nativeFlowController
             viewController = linkAccountPickerViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")

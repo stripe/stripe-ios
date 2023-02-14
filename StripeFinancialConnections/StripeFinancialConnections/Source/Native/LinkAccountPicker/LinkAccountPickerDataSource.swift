@@ -23,6 +23,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
+    func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList>
     func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount)
 }
 
@@ -66,12 +67,12 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) {
         self.selectedAccount = selectedAccount
     }
-
-//    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts> {
-//        return apiClient.selectAuthSessionAccounts(
-//            clientSecret: clientSecret,
-//            authSessionId: authSession.id,
-//            selectedAccountIds: selectedAccounts.map({ $0.id })
-//        )
-//    }
+    
+    func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList> {
+        return apiClient.selectNetworkedAccounts(
+            selectedAccountIds: [selectedAccount.id],
+            clientSecret: clientSecret,
+            consumerSessionClientSecret: consumerSession.clientSecret
+        )
+    }
 }

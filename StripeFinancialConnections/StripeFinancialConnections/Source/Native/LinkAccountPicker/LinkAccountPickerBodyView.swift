@@ -73,8 +73,13 @@ final class LinkAccountPickerBodyView: UIView {
             verticalStackView.addArrangedSubview(accountRowView)
         }
         
-        // TODO:(kgaidis):
-        // add a add account button
+        let newAccountRowView = LinkAccountPickerNewAccountRowView(
+            didSelect: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
+            }
+        )
+        verticalStackView.addArrangedSubview(newAccountRowView)
     }
 }
 
@@ -114,7 +119,7 @@ struct LinkAccountPickerBodyView_Previews: PreviewProvider {
         VStack(alignment: .leading) {
             Spacer()
             LinkAccountPickerBodyViewUIViewRepresentable()
-                .frame(maxHeight:100)
+                .frame(maxHeight:120)
                 .padding()
             Spacer()
         }

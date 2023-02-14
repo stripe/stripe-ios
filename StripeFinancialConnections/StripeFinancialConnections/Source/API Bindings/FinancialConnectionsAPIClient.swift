@@ -97,6 +97,12 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String,
         consumerSessionClientSecret: String
     ) -> Future<FinancialConnectionsNetworkedAccountsResponse>
+    
+    func selectNetworkedAccounts(
+        selectedAccountIds: [String],
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsInstitutionList>
 
     // MARK: - Link API's
 
@@ -499,6 +505,19 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return get(resource: APIEndpointNetworkedAccounts, parameters: parameters)
     }
+    
+    func selectNetworkedAccounts(
+        selectedAccountIds: [String],
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsInstitutionList> {
+        let parameters: [String:Any] = [
+            "selected_accounts": selectedAccountIds,
+            "client_secret": clientSecret,
+            "consumer_session_client_secret": consumerSessionClientSecret,
+        ]
+        return post(resource: APIEndpointShareNetworkedAccount, parameters: parameters)
+    }
 
     // MARK: - Link API's [TODO(kgaidis): delete these later]
 
@@ -563,6 +582,7 @@ private let APIEndpointComplete = "link_account_sessions/complete"
 private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_accounts"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
+private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointAuthSessions = "connections/auth_sessions"
 private let APIEndpointAuthSessionsCancel = "connections/auth_sessions/cancel"
 private let APIEndpointAuthSessionsOAuthResults = "connections/auth_sessions/oauth_results"

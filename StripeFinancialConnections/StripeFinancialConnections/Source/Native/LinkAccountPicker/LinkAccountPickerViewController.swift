@@ -14,19 +14,19 @@ import UIKit
 protocol LinkAccountPickerViewControllerDelegate: AnyObject {
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
     )
-    func linkAccountPickerViewControllerDidSelectAnotherBank(_ viewController: LinkAccountPickerViewController)
-    func linkAccountPickerViewControllerDidSelectManualEntry(_ viewController: LinkAccountPickerViewController)
+    
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
+        institution: FinancialConnectionsInstitution
+    )
+    
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     )
-}
-
-enum LinkAccountPickerType {
-    case checkbox
-    case radioButton
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -48,13 +48,6 @@ final class LinkAccountPickerViewController: UIViewController {
                 guard let self = self else {
                     return
                 }
-//                self.dataSource
-//                    .analyticsClient
-//                    .log(
-//                        eventName: "click.link_accounts",
-//                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.linkAccountPicker.rawValue]
-//                    )
-
                 self.didSelectConectAccount()
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] in
@@ -99,7 +92,8 @@ final class LinkAccountPickerViewController: UIViewController {
                     self.displayAccounts(networkedAccountsResponse.data)
                 case .failure(let error):
                     print(error)
-                    break
+                    // TODO(kgaidis): log this error to analytics
+                    self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
                 }
             }
     }
@@ -130,36 +124,46 @@ final class LinkAccountPickerViewController: UIViewController {
     }
 
     private func didSelectConectAccount() {
-        let numberOfSelectedAccounts = dataSource.selectedAccount == nil ? 0 : 1
+        // TODO(kgaidis): implement step-up authentication
+        // TODO(kgaidis): implement repair bank account
+        
+        guard let selectedAccount = dataSource.selectedAccount else {
+            assertionFailure("user shouldn't be able to press the connect account button without an account")
+            delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+            return
+        }
+        
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
-            numberOfSelectedAccounts: numberOfSelectedAccounts,
+            numberOfSelectedAccounts: 1,
             businessName: businessName
         )
         view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
 
-        
-        
-//        dataSource
-//            .selectAuthSessionAccounts()
-//            .observe(on: .main) { [weak self] result in
-//                guard let self = self else { return }
-//                switch result {
-//                case .success(let linkedAccounts):
-//                    self.delegate?.linkAccountPickerViewController(
-//                        self,
-//                        didSelectAccounts: linkedAccounts.data
-//                    )
-//                case .failure(let error):
-//                    self.dataSource
-//                        .analyticsClient
-//                        .logUnexpectedError(
-//                            error,
-//                            errorName: "SelectAuthSessionAccountsError",
-//                            pane: .linkAccountPicker
-//                        )
-//                    self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
-//                }
-//            }
+        dataSource
+            .selectNetworkedAccount(selectedAccount)
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let institutionList):
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "click.link_accounts",
+                            pane: .linkAccountPicker
+                        )
+                    if let institution = institutionList.data.first {
+                        self.delegate?.linkAccountPickerViewController(self, didSelectAccount: selectedAccount, institution: institution)
+                    } else {
+                        // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
+                        // could still have a chance at successfully connecting their account
+                        self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+                    }
+                case .failure(let error):
+                    print(error)
+                    // TODO(kgaidis): log this error to analytics
+                    self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
+                }
+            }
     }
 }
 
@@ -175,7 +179,13 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
     }
     
     func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView) {
-        
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "click.new_account",
+                pane: .linkAccountPicker
+            )
+        delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
     }
 }
 
