@@ -55,8 +55,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         self.clientSecret = clientSecret
         self.consumerSession = consumerSession
     }
-    
-    
+
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
         return apiClient.fetchNetworkedAccounts(
             clientSecret: clientSecret,
@@ -67,7 +66,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) {
         self.selectedAccount = selectedAccount
     }
-    
+
     func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList> {
         return apiClient.selectNetworkedAccounts(
             selectedAccountIds: [selectedAccount.id],

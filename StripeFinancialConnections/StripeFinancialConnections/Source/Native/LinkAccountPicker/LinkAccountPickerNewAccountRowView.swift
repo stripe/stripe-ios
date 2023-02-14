@@ -62,7 +62,10 @@ private func CreateIconView() -> UIView {
 
 private func CreateTitleLabelView() -> UIView {
     let titleLabel = UILabel()
-    titleLabel.text = "New bank account" // TODO(kgaidis): localize
+    titleLabel.text = STPLocalizedString(
+        "New bank account",
+        "A button that allows users to add an additional bank account for future payments."
+    )
     titleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
     titleLabel.textColor = .textBrand
     titleLabel.lineBreakMode = .byCharWrapping
@@ -93,7 +96,7 @@ private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepr
     func makeUIView(context: Context) -> LinkAccountPickerNewAccountRowView {
         return LinkAccountPickerNewAccountRowView(didSelect: {})
     }
-    
+
     func updateUIView(_ uiView: LinkAccountPickerNewAccountRowView, context: Context) {}
 }
 

@@ -12,7 +12,6 @@ import UIKit
 final class LinkAccountPickerRowView: UIView {
 
     private let didSelect: () -> Void
-
     private var isSelected: Bool = false {
         didSet {
             layer.cornerRadius = 8
@@ -30,7 +29,6 @@ final class LinkAccountPickerRowView: UIView {
         let institutionIconView = InstitutionIconView(size: .small)
         return institutionIconView
     }()
-
     private lazy var labelRowView: AccountPickerLabelRowView = {
         return AccountPickerLabelRowView()
     }()
@@ -53,8 +51,10 @@ final class LinkAccountPickerRowView: UIView {
         }
         addAndPinSubviewToSafeArea(horizontalStackView)
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
-        addGestureRecognizer(tapGestureRecognizer)
+        if !isDisabled {
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+            addGestureRecognizer(tapGestureRecognizer)
+        }
 
         isSelected = false  // activate the setter to draw border
     }

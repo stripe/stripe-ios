@@ -97,7 +97,7 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String,
         consumerSessionClientSecret: String
     ) -> Future<FinancialConnectionsNetworkedAccountsResponse>
-    
+
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
@@ -505,13 +505,13 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return get(resource: APIEndpointNetworkedAccounts, parameters: parameters)
     }
-    
+
     func selectNetworkedAccounts(
         selectedAccountIds: [String],
         clientSecret: String,
         consumerSessionClientSecret: String
     ) -> Future<FinancialConnectionsInstitutionList> {
-        let parameters: [String:Any] = [
+        let parameters: [String: Any] = [
             "selected_accounts": selectedAccountIds,
             "client_secret": clientSecret,
             "consumer_session_client_secret": consumerSessionClientSecret,

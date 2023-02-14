@@ -16,13 +16,13 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
         _ viewController: LinkAccountPickerViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
     )
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
         institution: FinancialConnectionsInstitution
     )
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
@@ -74,7 +74,7 @@ final class LinkAccountPickerViewController: UIViewController {
         // link account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
         view.backgroundColor = .customBackgroundColor
-        
+
         fetchNetworkedAccounts()
     }
 
@@ -86,13 +86,18 @@ final class LinkAccountPickerViewController: UIViewController {
             .observe { [weak self] result in
                 guard let self = self else { return }
                 retreivingAccountsLoadingView.removeFromSuperview()
-                
+
                 switch result {
                 case .success(let networkedAccountsResponse):
                     self.displayAccounts(networkedAccountsResponse.data)
                 case .failure(let error):
-                    print(error)
-                    // TODO(kgaidis): log this error to analytics
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "FetchNetworkedAccountsError",
+                            pane: .accountPicker
+                        )
                     self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
                 }
             }
@@ -102,12 +107,17 @@ final class LinkAccountPickerViewController: UIViewController {
         let bodyView = LinkAccountPickerBodyView(accounts: accounts)
         bodyView.delegate = self
         self.bodyView = bodyView
-        
+
         let paneLayoutView = PaneWithHeaderLayoutView(
             title: {
                 if let businessName = self.businessName {
-                    // TODO(kgaidis): localize string
-                    return "Select an account to connect to \(businessName)"
+                    return String(
+                        format: STPLocalizedString(
+                            "Select an account to connect to %@",
+                            "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
+                        ),
+                        businessName
+                    )
                 } else {
                     return STPLocalizedString(
                         "Select an account to connect with this business",
@@ -119,20 +129,20 @@ final class LinkAccountPickerViewController: UIViewController {
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
-        
+
         bodyView.selectAccount(nil) // activate the logic to list all accounts
     }
 
     private func didSelectConectAccount() {
         // TODO(kgaidis): implement step-up authentication
         // TODO(kgaidis): implement repair bank account
-        
+
         guard let selectedAccount = dataSource.selectedAccount else {
             assertionFailure("user shouldn't be able to press the connect account button without an account")
             delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
             return
         }
-        
+
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
             numberOfSelectedAccounts: 1,
             businessName: businessName
@@ -159,8 +169,13 @@ final class LinkAccountPickerViewController: UIViewController {
                         self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
                     }
                 case .failure(let error):
-                    print(error)
-                    // TODO(kgaidis): log this error to analytics
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "SelectNetworkedAccountError",
+                            pane: .accountPicker
+                        )
                     self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                 }
             }
@@ -177,7 +192,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
     ) {
         dataSource.updateSelectedAccount(selectedAccount)
     }
-    
+
     func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView) {
         dataSource
             .analyticsClient

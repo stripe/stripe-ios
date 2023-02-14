@@ -80,7 +80,8 @@ class NativeFlowController {
                 || navigationController.topViewController is PartnerAuthViewController
                 || navigationController.topViewController is AttachLinkedPaymentAccountViewController
                 || navigationController.topViewController is NetworkingLinkSignupViewController
-                || navigationController.topViewController is NetworkingLinkVerificationViewController)
+                || navigationController.topViewController is NetworkingLinkVerificationViewController
+                || navigationController.topViewController is LinkAccountPickerViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
 }
@@ -640,7 +641,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
     ) {
         pushPane(nextPane, animated: true)
     }
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
@@ -650,7 +651,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         dataManager.linkedAccounts = [selectedAccount]
         pushPane(.success, animated: true)
     }
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error

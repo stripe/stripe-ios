@@ -106,7 +106,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
-    
+
     private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane) {
         if let consumerSession = dataSource.consumerSession {
             delegate?.networkingLinkVerificationViewController(

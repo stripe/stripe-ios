@@ -26,7 +26,7 @@ final class LinkAccountPickerBodyView: UIView {
 
     private let accounts: [FinancialConnectionsPartnerAccount]
     weak var delegate: LinkAccountPickerBodyViewDelegate?
-    
+
     private lazy var verticalStackView: UIStackView = {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
@@ -43,7 +43,7 @@ final class LinkAccountPickerBodyView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func selectAccount(_ selectedAccount: FinancialConnectionsPartnerAccount?) {
         // clear all previous state
         verticalStackView.arrangedSubviews.forEach { arrangedSubview in
@@ -72,7 +72,8 @@ final class LinkAccountPickerBodyView: UIView {
             )
             verticalStackView.addArrangedSubview(accountRowView)
         }
-        
+
+        // add a 'new bank account' button row
         let newAccountRowView = LinkAccountPickerNewAccountRowView(
             didSelect: { [weak self] in
                 guard let self = self else { return }
@@ -103,7 +104,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                     supportedPaymentMethodTypes: [.usBankAccount],
                     allowSelection: true,
                     allowSelectionMessage: nil
-                )
+                ),
             ]
         )
     }
@@ -119,7 +120,7 @@ struct LinkAccountPickerBodyView_Previews: PreviewProvider {
         VStack(alignment: .leading) {
             Spacer()
             LinkAccountPickerBodyViewUIViewRepresentable()
-                .frame(maxHeight:120)
+                .frame(maxHeight: 120)
                 .padding()
             Spacer()
         }
