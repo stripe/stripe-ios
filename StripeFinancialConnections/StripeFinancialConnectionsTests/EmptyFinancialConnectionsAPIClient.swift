@@ -75,7 +75,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsSessionManifest>()
     }
 
-    func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
+    func completeFinancialConnectionsSession(
+        clientSecret: String,
+        terminalError: String?
+    ) -> Future<StripeAPI.FinancialConnectionsSession> {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 

@@ -59,6 +59,10 @@ final class PartnerAuthViewController: UIViewController {
         return establishingConnectionLoadingView
     }()
 
+    private lazy var retrievingAccountsView: UIView = {
+        return buildRetrievingAccountsView()
+    }()
+
     init(dataSource: PartnerAuthDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
@@ -102,12 +106,12 @@ final class PartnerAuthViewController: UIViewController {
             authSessionId: authSession.id
         )
 
-        if authSession.isOauthNonOptional {
+        if authSession.isOauthNonOptional, let prepaneModel = authSession.display?.text?.oauthPrepane {
             let prepaneView = PrepaneView(
-                institutionName: institution.name,
-                institutionImageUrl: institution.icon?.default,
-                partner: authSession.partner,
-                isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
+                prepaneModel: prepaneModel,
+                didSelectURL: { [weak self] url in
+                    self?.didSelectURLInTextFromBackend(url)
+                },
                 didSelectContinue: { [weak self] in
                     if authSession.requiresNativeRedirect {
                         self?.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
@@ -484,7 +488,7 @@ final class PartnerAuthViewController: UIViewController {
     }
 
     private func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) {
-        showEstablishingConnectionLoadingView(true)
+        showRetrievingAccountsView(true)
         dataSource
             .authorizeAuthSession(authSession)
             .observe(on: .main) { [weak self] result in
@@ -502,10 +506,10 @@ final class PartnerAuthViewController: UIViewController {
                     // calling `showEstablishingConnectionLoadingView(false)` is
                     // defensive programming anyway
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-                        self?.showEstablishingConnectionLoadingView(false)
+                        self?.showRetrievingAccountsView(false)
                     }
                 case .failure(let error):
-                    self.showEstablishingConnectionLoadingView(false)  // important to come BEFORE showing error view so we avoid showing back button
+                    self.showRetrievingAccountsView(false)  // important to come BEFORE showing error view so we avoid showing back button
                     self.showErrorView(error)
                     assert(self.navigationItem.hidesBackButton)
                 }
@@ -517,13 +521,53 @@ final class PartnerAuthViewController: UIViewController {
     }
 
     private func showEstablishingConnectionLoadingView(_ show: Bool) {
-        if establishingConnectionLoadingView.superview == nil {
-            view.addAndPinSubviewToSafeArea(establishingConnectionLoadingView)
+        showView(loadingView: establishingConnectionLoadingView, show: show)
+    }
+
+    private func showRetrievingAccountsView(_ show: Bool) {
+        showView(loadingView: retrievingAccountsView, show: show)
+    }
+
+    private func showView(loadingView: UIView, show: Bool) {
+        if loadingView.superview == nil {
+            view.addAndPinSubviewToSafeArea(loadingView)
         }
-        view.bringSubviewToFront(establishingConnectionLoadingView)  // bring to front in-case something else is covering it
+        view.bringSubviewToFront(loadingView)  // bring to front in-case something else is covering it
 
         navigationItem.hidesBackButton = show
-        establishingConnectionLoadingView.isHidden = !show
+        loadingView.isHidden = !show
+    }
+
+    private func didSelectURLInTextFromBackend(_ url: URL) {
+        AuthFlowHelpers.handleURLInTextFromBackend(
+            url: url,
+            pane: .partnerAuth,
+            analyticsClient: dataSource.analyticsClient,
+            handleStripeScheme: { urlHost in
+                if urlHost == "data-access-notice" {
+                    if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?
+                        .dataAccessNotice
+                    {
+                        let consentBottomSheetModel = ConsentBottomSheetModel(
+                            title: dataAccessNoticeModel.title,
+                            subtitle: dataAccessNoticeModel.subtitle,
+                            body: ConsentBottomSheetModel.Body(
+                                bullets: dataAccessNoticeModel.body.bullets
+                            ),
+                            extraNotice: dataAccessNoticeModel.connectedAccountNotice,
+                            learnMore: dataAccessNoticeModel.learnMore,
+                            cta: dataAccessNoticeModel.cta
+                        )
+                        ConsentBottomSheetViewController.present(
+                            withModel: consentBottomSheetModel,
+                            didSelectUrl: { [weak self] url in
+                                self?.didSelectURLInTextFromBackend(url)
+                            }
+                        )
+                    }
+                }
+            }
+        )
     }
 }
 

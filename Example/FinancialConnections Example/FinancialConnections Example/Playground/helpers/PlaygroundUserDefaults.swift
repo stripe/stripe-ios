@@ -33,6 +33,18 @@ final class PlaygroundUserDefaults {
         defaultValue: false
     )
     static var enableTestMode: Bool
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_PUBLIC_KEY",
+        defaultValue: ""
+    )
+    static var customPublicKey: String
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_SECRET_KEY",
+        defaultValue: ""
+    )
+    static var customSecretKey: String
 }
 
 @propertyWrapper

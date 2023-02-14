@@ -21,6 +21,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     private var mockFlowController: VerificationSheetFlowControllerMock!
     private var controller: VerificationSheetController!
     private var mockAPIClient: IdentityAPIClientTestMock!
+    // swiftlint:disable:next weak_delegate
     private var mockDelegate: MockDelegate!
     private var mockMLModelLoader: IdentityMLModelLoaderMock!
     private var mockAnalyticsClient: MockAnalyticsClientV2!
@@ -101,7 +102,6 @@ final class VerificationSheetControllerTest: XCTestCase {
 
     func testLoadAndUpdateUI() throws {
         let mockResponse = try VerificationPageMock.response200.make()
-
         controller.loadAndUpdateUI()
 
         // Respond to request with success
@@ -141,7 +141,11 @@ final class VerificationSheetControllerTest: XCTestCase {
                     face: true,
                     idDocumentBack: true,
                     idDocumentFront: true,
-                    idDocumentType: true
+                    idDocumentType: true,
+                    idNumber: true,
+                    dob: true,
+                    name: true,
+                    address: true
                 ),
                 collectedData: mockData
             )

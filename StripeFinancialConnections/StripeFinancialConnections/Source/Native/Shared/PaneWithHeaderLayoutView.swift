@@ -32,12 +32,14 @@ final class PaneWithHeaderLayoutView {
         title: String,
         subtitle: String? = nil,
         contentView: UIView,
+        headerAndContentSpacing: CGFloat = 24.0,
         footerView: UIView?
     ) {
         self.paneWithCustomHeaderLayoutView = PaneWithCustomHeaderLayoutView(
             headerView: CreateHeaderView(icon: icon, title: title, subtitle: subtitle),
             headerTopMargin: icon != nil ? 8 : 16,
             contentView: contentView,
+            headerAndContentSpacing: headerAndContentSpacing,
             footerView: footerView
         )
     }

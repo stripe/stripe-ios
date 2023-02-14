@@ -65,6 +65,17 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
+        didSet {
+            PlaygroundUserDefaults.customPublicKey = customPublicKey
+        }
+    }
+    @Published var customSecretKey: String = PlaygroundUserDefaults.customSecretKey {
+        didSet {
+            PlaygroundUserDefaults.customSecretKey = customSecretKey
+        }
+    }
+
     @Published var isLoading: Bool = false
 
     init() {
@@ -86,7 +97,9 @@ final class PlaygroundMainViewModel: ObservableObject {
         SetupPlayground(
             enableAppToApp: enableAppToApp,
             enableTestMode: enableTestMode,
-            flow: flow.rawValue
+            flow: flow.rawValue,
+            customPublicKey: customPublicKey,
+            customSecretKey: customSecretKey
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
@@ -125,6 +138,8 @@ private func SetupPlayground(
     enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
+    customPublicKey: String,
+    customSecretKey: String,
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
@@ -138,6 +153,8 @@ private func SetupPlayground(
         requestBody["enable_test_mode"] = enableTestMode
         requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
+        requestBody["custom_public_key"] = customPublicKey
+        requestBody["custom_secret_key"] = customSecretKey
         return try! JSONSerialization.data(
             withJSONObject: requestBody,
             options: .prettyPrinted

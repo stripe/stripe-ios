@@ -40,7 +40,7 @@ class ConsentViewController: UIViewController {
                 // there are no known cases where we add a link to the title
                 // but we add this handling regardless in case this changes
                 // in the future
-                self?.didSelectURL(url)
+                self?.didSelectURLInTextFromBackend(url)
             }
         )
         return titleLabel
@@ -54,7 +54,7 @@ class ConsentViewController: UIViewController {
                 self?.didSelectAgree()
             },
             didSelectURL: { [weak self] url in
-                self?.didSelectURL(url)
+                self?.didSelectURLInTextFromBackend(url)
             }
         )
     }()
@@ -93,7 +93,7 @@ class ConsentViewController: UIViewController {
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consent.body.bullets,
                 didSelectURL: { [weak self] url in
-                    self?.didSelectURL(url)
+                    self?.didSelectURLInTextFromBackend(url)
                 }
             ),
             headerAndContentSpacing: 28.0,
@@ -131,79 +131,52 @@ class ConsentViewController: UIViewController {
             }
     }
 
-    // this function will get called when user taps
-    // on ANY link returned from backend
-    private func didSelectURL(_ url: URL) {
-        if let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
-            let eventName = urlParameters.queryItems?.first(where: { $0.name == "eventName" })?.value
-        {
-            dataSource
-                .analyticsClient
-                .log(
-                    eventName: eventName,
-                    parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.consent.rawValue]
-                )
-        }
-
-        if url.scheme == "stripe" {
-            if url.host == "manual-entry" {
-                delegate?.consentViewControllerDidSelectManuallyVerify(self)
-            } else if url.host == "data-access-notice" {
-                let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
-                let consentBottomSheetModel = ConsentBottomSheetModel(
-                    title: dataAccessNoticeModel.title,
-                    subtitle: dataAccessNoticeModel.subtitle,
-                    body: ConsentBottomSheetModel.Body(
-                        bullets: dataAccessNoticeModel.body.bullets
-                    ),
-                    extraNotice: dataAccessNoticeModel.connectedAccountNotice,
-                    learnMore: dataAccessNoticeModel.learnMore,
-                    cta: dataAccessNoticeModel.cta
-                )
-                PresentConsentBottomSheet(
-                    withModel: consentBottomSheetModel,
-                    didSelectUrl: { [weak self] url in
-                        self?.didSelectURL(url)
-                    }
-                )
-            } else if url.host == "legal-details-notice" {
-                let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
-                let consentBottomSheetModel = ConsentBottomSheetModel(
-                    title: legalDetailsNoticeModel.title,
-                    subtitle: nil,
-                    body: ConsentBottomSheetModel.Body(
-                        bullets: legalDetailsNoticeModel.body.bullets
-                    ),
-                    extraNotice: nil,
-                    learnMore: legalDetailsNoticeModel.learnMore,
-                    cta: legalDetailsNoticeModel.cta
-                )
-                PresentConsentBottomSheet(
-                    withModel: consentBottomSheetModel,
-                    didSelectUrl: { [weak self] url in
-                        self?.didSelectURL(url)
-                    }
-                )
+    private func didSelectURLInTextFromBackend(_ url: URL) {
+        AuthFlowHelpers.handleURLInTextFromBackend(
+            url: url,
+            pane: .consent,
+            analyticsClient: dataSource.analyticsClient,
+            handleStripeScheme: { urlHost in
+                if urlHost == "manual-entry" {
+                    delegate?.consentViewControllerDidSelectManuallyVerify(self)
+                } else if urlHost == "data-access-notice" {
+                    let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
+                    let consentBottomSheetModel = ConsentBottomSheetModel(
+                        title: dataAccessNoticeModel.title,
+                        subtitle: dataAccessNoticeModel.subtitle,
+                        body: ConsentBottomSheetModel.Body(
+                            bullets: dataAccessNoticeModel.body.bullets
+                        ),
+                        extraNotice: dataAccessNoticeModel.connectedAccountNotice,
+                        learnMore: dataAccessNoticeModel.learnMore,
+                        cta: dataAccessNoticeModel.cta
+                    )
+                    ConsentBottomSheetViewController.present(
+                        withModel: consentBottomSheetModel,
+                        didSelectUrl: { [weak self] url in
+                            self?.didSelectURLInTextFromBackend(url)
+                        }
+                    )
+                } else if urlHost == "legal-details-notice" {
+                    let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
+                    let consentBottomSheetModel = ConsentBottomSheetModel(
+                        title: legalDetailsNoticeModel.title,
+                        subtitle: nil,
+                        body: ConsentBottomSheetModel.Body(
+                            bullets: legalDetailsNoticeModel.body.bullets
+                        ),
+                        extraNotice: nil,
+                        learnMore: legalDetailsNoticeModel.learnMore,
+                        cta: legalDetailsNoticeModel.cta
+                    )
+                    ConsentBottomSheetViewController.present(
+                        withModel: consentBottomSheetModel,
+                        didSelectUrl: { [weak self] url in
+                            self?.didSelectURLInTextFromBackend(url)
+                        }
+                    )
+                }
             }
-        } else {
-            SFSafariViewController.present(url: url)
-        }
+        )
     }
-}
-
-@available(iOSApplicationExtension, unavailable)
-private func PresentConsentBottomSheet(
-    withModel model: ConsentBottomSheetModel,
-    didSelectUrl: @escaping (URL) -> Void
-) {
-    let consentBottomSheetViewController = ConsentBottomSheetViewController(
-        model: model,
-        didSelectURL: didSelectUrl
-    )
-    consentBottomSheetViewController.modalTransitionStyle = .crossDissolve
-    consentBottomSheetViewController.modalPresentationStyle = .overCurrentContext
-    // `false` for animations because we do a custom animation inside VC logic
-    UIViewController
-        .topMostViewController()?
-        .present(consentBottomSheetViewController, animated: false, completion: nil)
 }

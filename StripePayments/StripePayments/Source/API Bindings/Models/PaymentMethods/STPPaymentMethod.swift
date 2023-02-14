@@ -76,9 +76,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var affirm: STPPaymentMethodAffirm?
     /// If this is a US Bank Account PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUSBankAccount`), this contains additional details.
     @objc private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
-    /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     /// If this is an Cash App PaymentMethod (i.e. `self.type == STPPaymentMethodTypeCashApp`), this contains additional details.
     @objc private(set) public var cashApp: STPPaymentMethodCashApp?
+    /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
 

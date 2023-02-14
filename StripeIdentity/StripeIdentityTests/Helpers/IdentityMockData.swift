@@ -22,6 +22,11 @@ enum VerificationPageMock: String, MockData {
     case response200 = "VerificationPage_200"
     case requireLiveCapture = "VerificationPage_require_live_capture"
     case noSelfie = "VerificationPage_no_selfie"
+    case typeDocumentRequireIdNumber = "VerificationPage_type_doc_require_idNumber"
+    case typeDocumentRequireAddress = "VerificationPage_type_doc_require_address"
+    case typeDocumentRequireIdNumberAndAddress = "VerificationPage_type_doc_require_idNumber_and_address"
+    case typeIdNumber = "VerificationPage_type_idNumber"
+    case typeAddress = "VerificationPage_type_address"
 }
 
 enum VerificationPageDataMock: String, MockData {

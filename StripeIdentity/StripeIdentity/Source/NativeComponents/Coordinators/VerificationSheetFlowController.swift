@@ -34,6 +34,12 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func transitionToCountryNotListedScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol,
+        missingType: IndividualFormElement.MissingType
+    )
+
     func replaceCurrentScreen(
         with viewController: UIViewController
     )
@@ -55,7 +61,7 @@ final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
 
-    var delegate: VerificationSheetFlowControllerDelegate?
+    weak var delegate: VerificationSheetFlowControllerDelegate?
 
     private(set) var isUsingWebView = false
 
@@ -94,6 +100,37 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 to: viewController,
                 shouldAnimate: true,
                 completion: completion
+            )
+        }
+    }
+
+    /// Transitions to the CountryNotListedViewController in the flow with a 'push' animation.
+    func transitionToCountryNotListedScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol,
+        missingType: IndividualFormElement.MissingType
+    ) {
+        let staticContent: StripeAPI.VerificationPage
+        do {
+            staticContent = try staticContentResult.get()
+            self.transition(
+                to: CountryNotListedViewController(
+                    missingType: missingType,
+                    countryNotListedContent:
+                        staticContent.countryNotListed,
+                    sheetController: sheetController
+                ),
+                shouldAnimate: true,
+                completion: {}
+            )
+        } catch {
+            self.transition(
+                to: ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(error)
+                ),
+                shouldAnimate: true,
+                completion: {}
             )
         }
     }
@@ -249,6 +286,15 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
+        } else if !missingRequirements.isDisjoint(with: [.name, .dob]) {
+            // if missing .name or .dob, then verification type is not document.
+            // IndividualViewController is the only screen required for the verification.
+            return completion(
+                makeIndividualViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
         } else if missingRequirements.contains(.biometricConsent) {
             return completion(
                 makeBiometricConsentViewController(
@@ -287,6 +333,15 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     )
                 )
             }
+        } else if !missingRequirements.isDisjoint(with: [.address, .idNumber]) {
+            // if missing .address or .idNumber but not missing .name or .dob, then verification type is document.
+            // IndividualViewController is the screen after document collection.
+            return completion(
+                makeIndividualViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
         }
 
         // The client cannot create a screen for the missing requirement
@@ -299,6 +354,17 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     )
                 )
             )
+        )
+    }
+
+    func makeIndividualViewController(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        return IndividualViewController(
+            individualContent: staticContent.individual,
+            missing: staticContent.requirements.missing,
+            sheetController: sheetController
         )
     }
 
@@ -457,21 +523,21 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
-            return MockSimulatorCameraSession(
-                images: IdentityVerificationSheet.simulatorDocumentCameraImages
-            )
+        return MockSimulatorCameraSession(
+            images: IdentityVerificationSheet.simulatorDocumentCameraImages
+        )
         #else
-            return CameraSession()
+        return CameraSession()
         #endif
     }
 
     private func makeSelfieCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
-            return MockSimulatorCameraSession(
-                images: IdentityVerificationSheet.simulatorSelfieCameraImages
-            )
+        return MockSimulatorCameraSession(
+            images: IdentityVerificationSheet.simulatorSelfieCameraImages
+        )
         #else
-            return CameraSession()
+        return CameraSession()
         #endif
     }
 

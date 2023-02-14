@@ -26,7 +26,7 @@ protocol NativeFlowDataManager: AnyObject {
     var accountNumberLast4: String? { get set }
 
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
-    func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
+    func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
 }
 
 class NativeFlowAPIDataManager: NativeFlowDataManager {
@@ -97,11 +97,18 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        // Use server provided active AuthSession.
+        self.authSession = manifest.activeAuthSession
+        // If the server returns active institution use that, otherwise resort to initial institution.
+        self.institution = manifest.activeInstitution ?? manifest.initialInstitution
         didUpdateManifest()
     }
 
-    func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
-        return apiClient.completeFinancialConnectionsSession(clientSecret: clientSecret)
+    func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession> {
+        return apiClient.completeFinancialConnectionsSession(
+            clientSecret: clientSecret,
+            terminalError: terminalError
+        )
     }
 
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest) {
