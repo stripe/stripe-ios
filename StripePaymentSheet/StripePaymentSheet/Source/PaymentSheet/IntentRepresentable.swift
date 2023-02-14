@@ -16,7 +16,7 @@ protocol IntentRepresentable: PaymentMethodRequirementProvider {
     /// The list of payment method types that this Intent is allowed to use.
     var recommendedPaymentMethodTypes: [STPPaymentMethodType] { get }
     
-    // The list of payment method types that are not activated in your Stripe dashboard
+    // The list of payment method types that are not activated in your Stripe dashboard.
     var unactivatedPaymentMethodTypes: [STPPaymentMethodType] { get }
     
     /// Three-letter ISO currency code, in lowercase.
