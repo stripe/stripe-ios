@@ -188,6 +188,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingLinkSignupPane
         case is NetworkingLinkLoginWarmupViewController:
             return .networkingLinkLoginWarmup
+        case is NetworkingLinkVerificationViewController:
+            return .networkingLinkVerification
         default:
             return .unparsable
         }
