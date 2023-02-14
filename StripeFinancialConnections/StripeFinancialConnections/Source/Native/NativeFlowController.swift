@@ -534,7 +534,15 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
-
+    
+    func networkingLinkSignupViewController(
+        _ viewController: NetworkingLinkSignupViewController,
+        foundReturningConsumerWithSession consumerSession: ConsumerSessionData
+    ) {
+        dataManager.consumerSession = consumerSession
+        pushPane(.networkingSaveToLinkVerification, animated: true)
+    }
+    
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController
     ) {
@@ -810,6 +818,24 @@ private func CreatePaneViewController(
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
             networkingLinkVerificationViewController.delegate = nativeFlowController
             viewController = networkingLinkVerificationViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
+    case .networkingSaveToLinkVerification:
+        if let accountholderCustomerEmailAddress = dataManager.consumerSession?.emailAddress {
+            let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
+                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
+                manifest: dataManager.manifest,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let networkingSaveToLinkVerificationViewController = NetworkingSaveToLinkVerificationViewController(
+                dataSource: networkingSaveToLinkVerificationDataSource
+            )
+            // networkingLinkVerificationViewController.delegate = nativeFlowController TODO(kgaidis): set the delegate
+            viewController = networkingSaveToLinkVerificationViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
