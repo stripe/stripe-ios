@@ -41,3 +41,7 @@ struct FinancialConnectionsAuthSessionAccounts: Decodable {
     let nextPane: FinancialConnectionsSessionManifest.NextPane
     let skipAccountSelection: Bool?
 }
+
+struct FinancialConnectionsNetworkedAccountsResponse: Decodable {
+    let data: [FinancialConnectionsPartnerAccount]
+}
