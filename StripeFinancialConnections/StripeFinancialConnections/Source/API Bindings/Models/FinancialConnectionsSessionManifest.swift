@@ -20,6 +20,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case authOptions = "auth_options"
         case consent = "consent"
         case institutionPicker = "institution_picker"
+        case linkAccountPicker = "link_account_picker"
         case linkConsent = "link_consent"
         case linkLogin = "link_login"
         case manualEntry = "manual_entry"

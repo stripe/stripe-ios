@@ -93,11 +93,34 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
 
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsNetworkedAccountsResponse>
+
     // MARK: - Link API's
 
     func consumerSessionLookup(
         emailAddress: String
     ) -> Future<LookupConsumerSessionResponse>
+
+    func consumerSessionStartVerification(
+        emailAddress: String,
+        otpType: String,
+        customEmailType: String?,
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse>
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse>
+
+    func markLinkVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -457,6 +480,26 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointDisableNetworking, parameters: body)
     }
 
+    func markLinkVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+        ]
+        return post(resource: APIEndpointLinkVerified, parameters: parameters)
+    }
+
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> Future<FinancialConnectionsNetworkedAccountsResponse> {
+        let parameters = [
+            "client_secret": clientSecret,
+            "consumer_session_client_secret": consumerSessionClientSecret,
+        ]
+        return get(resource: APIEndpointNetworkedAccounts, parameters: parameters)
+    }
+
     // MARK: - Link API's [TODO(kgaidis): delete these later]
 
     func consumerSessionLookup(
@@ -471,6 +514,42 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return post(resource: "consumers/sessions/lookup", parameters: parameters)
     }
+
+    func consumerSessionStartVerification(
+        emailAddress: String,
+        otpType: String, // TODO(kgaidis): consider whether this should be an enum type SMS + EMAIL
+        customEmailType: String?, // TODO(kgaidis): consider whether this should be an enum type
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse> {
+        var parameters: [String: Any] = [
+            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+            "type": otpType,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "locale": Locale.current.identifier,
+        ]
+        parameters["custom_email_type"] = customEmailType
+        parameters["connections_merchant_name"] = connectionsMerchantName
+        return post(resource: "consumers/sessions/start_verification", parameters: parameters)
+    }
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String, // TODO(kgaidis): consider whether this should be an enum type SMS + EMAIL
+        consumerSessionClientSecret: String
+    ) -> Future<ConsumerSessionResponse> {
+        let parameters: [String: Any] = [
+            "type": otpType,
+            "code": otpCode,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+        ]
+        return post(resource: "consumers/sessions/confirm_verification", parameters: parameters)
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -479,7 +558,9 @@ private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
 private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
 private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
 private let APIEndpointLinkMoreAccounts = "link_account_sessions/link_more_accounts"
+private let APIEndpointLinkVerified = "link_account_sessions/link_verified"
 private let APIEndpointComplete = "link_account_sessions/complete"
+private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_accounts"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
 private let APIEndpointAuthSessions = "connections/auth_sessions"

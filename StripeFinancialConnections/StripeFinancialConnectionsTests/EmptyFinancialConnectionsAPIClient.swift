@@ -126,9 +126,40 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
     }
 
+    func fetchNetworkedAccounts(
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsNetworkedAccountsResponse> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsNetworkedAccountsResponse>()
+    }
+
+    func markLinkVerified(
+        clientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsSessionManifest> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
+
     func consumerSessionLookup(
         emailAddress: String
     ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {
         return Promise<StripeFinancialConnections.LookupConsumerSessionResponse>()
+    }
+
+    func consumerSessionStartVerification(
+        emailAddress: String,
+        otpType: String,
+        customEmailType: String?,
+        connectionsMerchantName: String?,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
+    }
+
+    func consumerSessionConfirmVerification(
+        otpCode: String,
+        otpType: String,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
     }
 }
