@@ -133,7 +133,7 @@ class PaymentSheetAPITest: XCTestCase {
                         PaymentSheet.confirm(
                             configuration: self.configuration,
                             authenticationContext: self,
-                            intent: paymentIntent,
+                            intent: paymentIntent as! Intent,
                             paymentOption: newCardPaymentOption,
                             paymentHandler: self.paymentHandler
                         ) { result in
@@ -235,7 +235,7 @@ class PaymentSheetAPITest: XCTestCase {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
                     authenticationContext: self,
-                    intent: paymentIntent,
+                    intent: paymentIntent as! Intent,
                     paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa")),
                     paymentHandler: self.paymentHandler
                 ) { result in

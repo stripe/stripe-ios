@@ -38,7 +38,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.name = "Name"
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
@@ -65,7 +65,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("eps")
         )
@@ -84,7 +84,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -107,7 +107,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -128,7 +128,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -162,7 +162,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -191,7 +191,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -214,7 +214,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -235,7 +235,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -266,7 +266,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
@@ -295,7 +295,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_dropdown() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
@@ -331,7 +331,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_KlarnaCountry_UndefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("klarna")
         )
@@ -360,7 +360,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_KlarnaCountry_DefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("klarna")
         )
@@ -390,7 +390,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_BSBNumber() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -411,7 +411,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_BSBNumber_withAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -434,7 +434,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_BSBNumber_UndefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -466,7 +466,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_BSBNumber_DefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -500,7 +500,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_AUBECSAccountNumber_UndefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -534,7 +534,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_AUBECSAccountNumber_DefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -571,7 +571,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_AUBECSAccountNumber() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -594,7 +594,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_AUBECSAccountNumber_withAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit")
         )
@@ -618,7 +618,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_BillingAddress_UndefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sofort")
         )
@@ -643,7 +643,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_Country_DefinedAPIPath_forSofort() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sofort")
         )
@@ -676,7 +676,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_Country() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sofort")
         )
@@ -694,7 +694,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_Country_withAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sofort")
         )
@@ -716,7 +716,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_Iban_UndefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
@@ -746,7 +746,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_Iban_DefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
@@ -780,7 +780,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_Iban() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
@@ -799,7 +799,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_Iban_withAPIPath() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
@@ -822,7 +822,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeFormElement_email_with_unknownField() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("luxe_bucks")
         )
@@ -866,7 +866,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         ]
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("au_becs_debit"),
             addressSpecProvider: addressSpecProvider
@@ -907,7 +907,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let addressSpecProvider = addressSpecProvider(countries: ["US", "FR"])
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mockPM"),
             addressSpecProvider: addressSpecProvider
@@ -937,7 +937,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let addressSpecProvider = addressSpecProvider(countries: ["US", "FR"])
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(STPFixtures.paymentIntent()) as Intent,
             configuration: configuration,
             paymentMethod: .dynamic("mockPM"),
             addressSpecProvider: addressSpecProvider
@@ -964,7 +964,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testNonCardsDontHaveCheckbox() {
         let configuration = PaymentSheet.Configuration()
-        let intent = Intent.paymentIntent(STPFixtures.paymentIntent())
+        let intent = Intent.paymentIntent(STPFixtures.paymentIntent()) as Intent
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(
@@ -1010,7 +1010,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(paymentIntent),
+            intent: .paymentIntent(paymentIntent) as Intent,
             configuration: configuration,
             paymentMethod: .card
         )
@@ -1022,7 +1022,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .EPS])
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(paymentIntent),
+            intent: .paymentIntent(paymentIntent) as Intent,
             configuration: configuration,
             paymentMethod: .card
         )
@@ -1055,7 +1055,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             ),
         ]
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(paymentIntent),
+            intent: .paymentIntent(paymentIntent) as Intent,
             configuration: configuration,
             paymentMethod: .card,
             addressSpecProvider: specProvider
@@ -1101,7 +1101,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             ),
         ]
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(paymentIntent),
+            intent: .paymentIntent(paymentIntent) as Intent,
             configuration: configuration,
             paymentMethod: .card,
             addressSpecProvider: specProvider
