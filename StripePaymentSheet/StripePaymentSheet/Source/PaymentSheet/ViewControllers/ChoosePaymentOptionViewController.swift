@@ -141,7 +141,7 @@ class ChoosePaymentOptionViewController: UIViewController {
 
         // Default to payment selection, as long as we have saved PMs or Apple Pay or Link is enabled.
         self.mode =
-            savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled
+            !savedPaymentMethods.isEmpty || isApplePayEnabled || isLinkEnabled
             ? .selectingSaved
             : .addingNew
 
