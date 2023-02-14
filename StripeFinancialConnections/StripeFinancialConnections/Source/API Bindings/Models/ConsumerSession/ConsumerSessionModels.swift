@@ -7,14 +7,19 @@
 
 import Foundation
 
-struct ConsumerSession: Decodable {
+struct ConsumerSessionData: Decodable {
     let clientSecret: String
     let emailAddress: String
     let redactedPhoneNumber: String
 }
 
 struct LookupConsumerSessionResponse: Decodable {
-    let consumerSession: ConsumerSession?
+    let consumerSession: ConsumerSessionData?
     let exists: Bool
     let accountId: String?
+}
+
+struct ConsumerSessionResponse: Decodable {
+    let consumerSession: ConsumerSessionData
+    let authSessionClientSecret: String?
 }
