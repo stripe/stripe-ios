@@ -71,8 +71,7 @@ class PaymentSheetAPITest: XCTestCase {
             }
     }
 
-    func fetchSetupIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void)
-    {
+    func fetchSetupIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void) {
         STPTestingAPIClient
             .shared()
             .createSetupIntent(
@@ -140,8 +139,9 @@ class PaymentSheetAPITest: XCTestCase {
                             switch result {
                             case .completed:
                                 // 3. Fetch the PI
-                                self.apiClient.retrievePaymentIntent(withClientSecret: clientSecret)
-                                { paymentIntent, _ in
+                                self.apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
+                                    paymentIntent,
+                                    _ in
                                     // Make sure the PI is succeeded and contains shipping
                                     XCTAssertNotNil(paymentIntent?.shipping)
                                     XCTAssertEqual(

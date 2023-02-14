@@ -29,16 +29,32 @@ import UIKit
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
     /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
     /// - Parameter billingDetails: Any information about the customer you've already collected.
-    @_spi(LinkOnly) public convenience init(paymentIntentClientSecret: String, returnURL: String? = nil, billingDetails: PaymentSheet.BillingDetails? = nil) {
-        self.init(intentSecret: .paymentIntent(clientSecret: paymentIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
+    @_spi(LinkOnly) public convenience init(
+        paymentIntentClientSecret: String,
+        returnURL: String? = nil,
+        billingDetails: PaymentSheet.BillingDetails? = nil
+    ) {
+        self.init(
+            intentSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            returnURL: returnURL,
+            billingDetails: billingDetails
+        )
     }
 
     /// Initializes a new `LinkPaymentController` instance.
     /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe SetupIntent object
     /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
     /// - Parameter billingDetails: Any information about the customer you've already collected.
-    @_spi(LinkOnly) public convenience init(setupIntentClientSecret: String, returnURL: String? = nil, billingDetails: PaymentSheet.BillingDetails? = nil) {
-        self.init(intentSecret: .setupIntent(clientSecret: setupIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
+    @_spi(LinkOnly) public convenience init(
+        setupIntentClientSecret: String,
+        returnURL: String? = nil,
+        billingDetails: PaymentSheet.BillingDetails? = nil
+    ) {
+        self.init(
+            intentSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+            returnURL: returnURL,
+            billingDetails: billingDetails
+        )
     }
 
     private init(intentSecret: IntentClientSecret, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
@@ -57,7 +73,10 @@ import UIKit
     /// - Note: Once `confirm(from:completion:)` completes successfully (i.e. when `result` is `.success`), calling this method is an error, as payment/setup intents should not be reused. Until then, you may call this method as many times as is necessary.
     /// - Parameter presentingViewController: The view controller to present the payment flow from.
     /// - Parameter completion: Called when the payment flow is dismissed. If the flow was completed successfully, the result will be `.success`, and you can call `confirm(from:completion:)` when you're ready to complete the payment. If it was not, the result will be `.failure` with an `Error` describing what happened; this will be `LinkPaymentController.Error.canceled` if the customer canceled the flow.
-    @_spi(LinkOnly) public func present(from presentingViewController: UIViewController, completion: @escaping (Result<Void, Swift.Error>) -> Void) {
+    @_spi(LinkOnly) public func present(
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<Void, Swift.Error>) -> Void
+    ) {
         Task {
             do {
                 try await present(from: presentingViewController)
@@ -76,7 +95,8 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
-        let linkController: PayWithLinkViewController = try await withCheckedThrowingContinuation { [self] continuation in
+        let linkController: PayWithLinkViewController = try await withCheckedThrowingContinuation {
+            [self] continuation in
             PaymentSheet.load(clientSecret: intentSecret, configuration: configuration) { result in
                 switch result {
                 case .success(let intent, _, let isLinkEnabled):
@@ -104,7 +124,8 @@ import UIKit
         }
 
         linkController.payWithLinkDelegate = self
-        linkController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
+        linkController.modalPresentationStyle =
+            UIDevice.current.userInterfaceIdiom == .pad
             ? .formSheet
             : .overFullScreen
 
@@ -119,7 +140,10 @@ import UIKit
     /// - Note: Once `completion` is called with a `.completed` result, this `LinkPaymentController` instance should no longer be used, as payment/setup intents should not be reused. Other results indicate cancellation or failure, and do not invalidate the instance.
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
     /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
-    @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController, completion: @escaping (PaymentSheetResult) -> Void) {
+    @_spi(LinkOnly) public func confirm(
+        from presentingViewController: UIViewController,
+        completion: @escaping (PaymentSheetResult) -> Void
+    ) {
         Task {
             do {
                 try await confirm(from: presentingViewController)
@@ -162,13 +186,18 @@ import UIKit
             }
         }
         guard let intent = intent, let paymentOption = paymentOption else {
-            assertionFailure("`confirm` should not be called without the customer authorizing Link. Make sure to call `present` first if your customer hasn't previously selected Link as a payment method.")
+            assertionFailure(
+                "`confirm` should not be called without the customer authorizing Link. Make sure to call `present` first if your customer hasn't previously selected Link as a payment method."
+            )
             throw PaymentSheetError.unknown(debugDescription: "confirm called without authorizing Link")
         }
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             PaymentSheet.confirm(
                 configuration: configuration,
-                authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default),
+                authenticationContext: AuthenticationContext(
+                    presentingViewController: presentingViewController,
+                    appearance: .default
+                ),
                 intent: intent,
                 paymentOption: paymentOption,
                 paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
@@ -207,7 +236,12 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension LinkPaymentController: PayWithLinkViewControllerDelegate {
-    func payWithLinkViewControllerDidConfirm(_ payWithLinkViewController: PayWithLinkViewController, intent: Intent, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult) -> Void) {
+    func payWithLinkViewControllerDidConfirm(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        intent: Intent,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult) -> Void
+    ) {
         self.intent = intent
         self.paymentOption = paymentOption
         completion(.completed)
@@ -217,7 +251,10 @@ extension LinkPaymentController: PayWithLinkViewControllerDelegate {
         payWithLinkContinuation?.resume(throwing: Error.canceled)
     }
 
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult
+    ) {
         switch result {
         case .canceled:
             payWithLinkContinuation?.resume(throwing: Error.canceled)

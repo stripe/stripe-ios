@@ -165,7 +165,8 @@ extension PaymentSheet {
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
         /// - Returns: An ordered list of `PaymentMethodType`s, including only the ones supported by this configuration.
-        static func filteredPaymentMethodTypes(from intent: IntentRepresentable, configuration: Configuration) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(from intent: IntentRepresentable, configuration: Configuration)
+            -> [PaymentMethodType]
         {
             var recommendedPaymentMethodTypes = intent.recommendedPaymentSheetMethodTypes
             if configuration.linkPaymentMethodsOnly {

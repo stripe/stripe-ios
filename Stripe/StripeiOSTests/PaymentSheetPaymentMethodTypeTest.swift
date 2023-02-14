@@ -45,7 +45,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 configuration: PaymentSheet.Configuration(),
                 intent: .paymentIntent(
                     STPFixtures.makePaymentIntent(setupFutureUsage: .offSession)
-                ) as Intent ,
+                ) as Intent,
                 supportedPaymentMethods: [.card]
             )
         )

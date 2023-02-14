@@ -67,7 +67,12 @@ extension PaymentSheet {
 
         private var intent: IntentRepresentable
         private let savedPaymentMethods: [STPPaymentMethod]
-        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+        lazy var paymentHandler: STPPaymentHandler = {
+            STPPaymentHandler(
+                apiClient: configuration.apiClient,
+                formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()
+            )
+        }()
 
         private let isLinkEnabled: Bool
 
@@ -133,9 +138,10 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(clientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
-                   configuration: configuration,
-                   completion: completion
+            create(
+                clientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+                configuration: configuration,
+                completion: completion
             )
         }
 
@@ -150,9 +156,10 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(clientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
-                   configuration: configuration,
-                   completion: completion
+            create(
+                clientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+                configuration: configuration,
+                completion: completion
             )
         }
 
@@ -170,9 +177,16 @@ extension PaymentSheet {
                     // Verify that there are payment method types available for the intent and configuration.
                     let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(
                         from: intent,
-                        configuration: configuration)
+                        configuration: configuration
+                    )
                     guard !paymentMethodTypes.isEmpty else {
-                        completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
+                        completion(
+                            .failure(
+                                PaymentSheetError.noPaymentMethodTypesAvailable(
+                                    intentPaymentMethods: intent.recommendedPaymentMethodTypes
+                                )
+                            )
+                        )
                         return
                     }
 
@@ -180,7 +194,8 @@ extension PaymentSheet {
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
                         isLinkEnabled: isLinkEnabled,
-                        configuration: configuration)
+                        configuration: configuration
+                    )
 
                     // Synchronously pre-load image into cache
                     if let paymentOption = manualFlow.paymentOption {
@@ -226,8 +241,9 @@ extension PaymentSheet {
             }
 
             if let linkAccount = LinkAccountContext.shared.account,
-               linkAccount.sessionState == .requiresVerification,
-               !linkAccount.hasStartedSMSVerification {
+                linkAccount.sessionState == .requiresVerification,
+                !linkAccount.hasStartedSMSVerification
+            {
                 let verificationController = LinkVerificationController(linkAccount: linkAccount)
                 verificationController.present(from: presentingViewController) { [weak self] result in
                     switch result {
@@ -252,13 +268,18 @@ extension PaymentSheet {
         ) {
             guard let paymentOption = _paymentOption else {
                 assertionFailure("`confirmPayment` should only be called when `paymentOption` is not nil")
-                let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with a nil paymentOption")
+                let error = PaymentSheetError.unknown(
+                    debugDescription: "confirmPayment was called with a nil paymentOption"
+                )
                 completion(.failed(error: error))
                 return
             }
 
-            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: configuration.appearance)
-            
+            let authenticationContext = AuthenticationContext(
+                presentingViewController: presentingViewController,
+                appearance: configuration.appearance
+            )
+
             // TODO(porter) Revisit deferred confirm flow
             guard let intent = intent as? Intent else {
                 fatalError("Can't currently support confirming deferred intents")
@@ -298,7 +319,7 @@ extension PaymentSheet {
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
                 isTestMode: configuration.apiClient.isTestmode,
-                didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
+                didCancelNative3DS2: didCancelNative3DS2 ?? {}  // TODO(MOBILESDK-864): Refactor this out.
             )
 
             // Workaround to silence a warning in the Catalyst target
@@ -351,8 +372,10 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     }
 
     func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams) {
-        let pollingVC = PollingViewController(currentAction: action,
-                                                      appearance: self.appearance)
+        let pollingVC = PollingViewController(
+            currentAction: action,
+            appearance: self.appearance
+        )
         presentingViewController.present(pollingVC, animated: true, completion: nil)
     }
 

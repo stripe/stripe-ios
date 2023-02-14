@@ -112,18 +112,34 @@ public class PaymentSheet {
             switch result {
             case .success(let intent, let savedPaymentMethods, let isLinkEnabled):
                 // Verify that there are payment method types available for the intent and configuration.
-                let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: self.configuration)
+                let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(
+                    from: intent,
+                    configuration: self.configuration
+                )
                 guard !paymentMethodTypes.isEmpty else {
-                    completion(.failed(error: PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
+                    completion(
+                        .failed(
+                            error: PaymentSheetError.noPaymentMethodTypesAvailable(
+                                intentPaymentMethods: intent.recommendedPaymentMethodTypes
+                            )
+                        )
+                    )
                     return
                 }
-                
+
                 // Early exit if Link or ACH is enabled in deferred mode
-                if !(intent is Intent) &&
-                    (paymentMethodTypes.contains(.link) ||
-                     paymentMethodTypes.contains(.linkInstantDebit) ||
-                     paymentMethodTypes.contains(.USBankAccount)) {
-                    completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Link and or US bank account cannot be enabled when using deferred intent creation.")))
+                if !(intent is Intent)
+                    && (paymentMethodTypes.contains(.link) || paymentMethodTypes.contains(.linkInstantDebit)
+                        || paymentMethodTypes.contains(.USBankAccount))
+                {
+                    completion(
+                        .failed(
+                            error: PaymentSheetError.unknown(
+                                debugDescription:
+                                    "Link and or US bank account cannot be enabled when using deferred intent creation."
+                            )
+                        )
+                    )
                 }
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
@@ -151,7 +167,7 @@ public class PaymentSheet {
                     let updateBottomSheet: () -> Void = {
                         self.bottomSheetViewController.contentStack = [paymentSheetVC]
                     }
-                    
+
                     // TODO(porter) Revisit Link for deferred workflow
                     guard let intent = intent as? Intent else {
                         fatalError("Link not currently supported in deferred workflow")
@@ -175,8 +191,9 @@ public class PaymentSheet {
                 }
 
                 if let linkAccount = LinkAccountContext.shared.account,
-                   linkAccount.sessionState == .requiresVerification,
-                   !linkAccount.hasStartedSMSVerification {
+                    linkAccount.sessionState == .requiresVerification,
+                    !linkAccount.hasStartedSMSVerification
+                {
                     let verificationController = LinkVerificationController(linkAccount: linkAccount)
                     verificationController.present(from: self.bottomSheetViewController) { result in
                         switch result {
@@ -229,7 +246,12 @@ public class PaymentSheet {
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+    lazy var paymentHandler: STPPaymentHandler = {
+        STPPaymentHandler(
+            apiClient: configuration.apiClient,
+            formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()
+        )
+    }()
 
     /// The parent view controller to present
     @available(iOSApplicationExtension, unavailable)
@@ -279,8 +301,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 authenticationContext: self.bottomSheetViewController,
                 intent: intent,
                 paymentOption: paymentOption,
-                paymentHandler: self.paymentHandler)
-            { result in
+                paymentHandler: self.paymentHandler
+            ) { result in
                 if case let .failed(error) = result {
                     self.mostRecentError = error
                 }
@@ -296,8 +318,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                  appearance: self.configuration.appearance)
+                        presentingViewController?.presentAsBottomSheet(
+                            self.bottomSheetViewController,
+                            appearance: self.configuration.appearance
+                        )
                     }
                     completion(result)
                 }
@@ -315,7 +339,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
-    func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: PaymentSheetViewController, result: PaymentSheetResult) {
+    func paymentSheetViewControllerDidFinish(
+        _ paymentSheetViewController: PaymentSheetViewController,
+        result: PaymentSheetResult
+    ) {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(result)
         }
@@ -369,8 +396,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             authenticationContext: self.bottomSheetViewController,
             intent: intent,
             paymentOption: paymentOption,
-            paymentHandler: self.paymentHandler)
-        { result in
+            paymentHandler: self.paymentHandler
+        ) { result in
             if case let .failed(error) = result {
                 self.mostRecentError = error
             }
