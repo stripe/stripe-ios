@@ -65,7 +65,7 @@ extension PaymentSheet {
 
         // MARK: - Private properties
 
-        private var intent: IntentAbstraction
+        private var intent: IntentRepresentable
         private let savedPaymentMethods: [STPPaymentMethod]
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
 
@@ -105,7 +105,7 @@ extension PaymentSheet {
         // MARK: - Initializer (Internal)
 
         required init(
-            intent: IntentAbstraction,
+            intent: IntentRepresentable,
             savedPaymentMethods: [STPPaymentMethod],
             isLinkEnabled: Bool,
             configuration: Configuration

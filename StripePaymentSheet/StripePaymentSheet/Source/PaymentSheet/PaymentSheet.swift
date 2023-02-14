@@ -13,75 +13,6 @@ import PassKit
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
-protocol IntentAbstraction: PaymentMethodRequirementProvider {
-    /// Extracts all the recommended `PaymentMethodType`s from the given `intent`.
-    /// - Returns: An ordered list of all the `PaymentMethodType`s for this `intent`.
-    var recommendedPaymentSheetMethodTypes: [PaymentSheet.PaymentMethodType] { get }
-    
-    var recommendedPaymentMethodTypes: [STPPaymentMethodType] { get }
-    
-    var isSettingUp: Bool { get }
-    
-    var unactivatedPaymentMethodTypes: [STPPaymentMethodType] { get }
-    
-    var currency: String? { get }
-    
-    var amount: Int? { get }
-    
-    var supportsLink: Bool { get }
-    
-    var isPaymentIntent: Bool { get }
-    
-    var callToAction: ConfirmButton.CallToActionType { get }
-    
-    var setupFutureUsage: STPPaymentIntentSetupFutureUsage? { get }
-}
-
-extension Intent: IntentAbstraction {
-    var recommendedPaymentSheetMethodTypes: [PaymentSheet.PaymentMethodType] {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            guard
-                let paymentMethodTypeStrings = paymentIntent.allResponseFields["payment_method_types"] as? [String]
-            else {
-                return []
-            }
-            let paymentTypesString =
-                paymentIntent.allResponseFields["ordered_payment_method_types"] as? [String]
-                ?? paymentMethodTypeStrings
-            return paymentTypesString.map { PaymentSheet.PaymentMethodType(from: $0) }
-        case .setupIntent(let setupIntent):
-            guard let paymentMethodTypeStrings = setupIntent.allResponseFields["payment_method_types"] as? [String]
-            else {
-                return []
-            }
-            let paymentTypesString =
-                setupIntent.allResponseFields["ordered_payment_method_types"] as? [String]
-                ?? paymentMethodTypeStrings
-            return paymentTypesString.map { PaymentSheet.PaymentMethodType(from: $0) }
-        }
-    }
-    
-    var amount: Int? {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.amount
-        case .setupIntent:
-            return nil
-        }
-    }
-    
-    var setupFutureUsage: STPPaymentIntentSetupFutureUsage? {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.setupFutureUsage
-        case .setupIntent:
-            return nil
-        }
-    }
-    
-}
-
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
 @frozen public enum PaymentSheetResult {
     /// The customer completed the payment or setup
@@ -504,7 +435,7 @@ private extension PaymentSheet {
 
     func verifyLinkSessionIfNeeded(
         with paymentOption: PaymentOption,
-        intent: IntentAbstraction,
+        intent: IntentRepresentable,
         completion: ((Bool) -> Void)? = nil
     ) {
         guard

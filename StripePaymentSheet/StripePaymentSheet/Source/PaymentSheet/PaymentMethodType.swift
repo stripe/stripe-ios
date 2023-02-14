@@ -165,7 +165,7 @@ extension PaymentSheet {
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
         /// - Returns: An ordered list of `PaymentMethodType`s, including only the ones supported by this configuration.
-        static func filteredPaymentMethodTypes(from intent: IntentAbstraction, configuration: Configuration) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(from intent: IntentRepresentable, configuration: Configuration) -> [PaymentMethodType]
         {
             var recommendedPaymentMethodTypes = intent.recommendedPaymentSheetMethodTypes
             if configuration.linkPaymentMethodsOnly {
@@ -212,7 +212,7 @@ extension PaymentSheet {
         static func supportsAdding(
             paymentMethod: PaymentMethodType,
             configuration: PaymentSheet.Configuration,
-            intent: IntentAbstraction,
+            intent: IntentRepresentable,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> Bool {
 
@@ -288,7 +288,7 @@ extension PaymentSheet {
         static func supportsSaveAndReuse(
             paymentMethod: PaymentMethodType,
             configuration: PaymentSheet.Configuration,
-            intent: IntentAbstraction,
+            intent: IntentRepresentable,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> Bool {
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
@@ -353,7 +353,7 @@ extension PaymentSheet {
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
-            intent: IntentAbstraction
+            intent: IntentRepresentable
         ) -> Bool {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
                 (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
@@ -377,7 +377,7 @@ extension PaymentSheet {
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
-            intent: IntentAbstraction,
+            intent: IntentRepresentable,
             supportedPaymentMethods: [STPPaymentMethodType]
         ) -> Bool {
             guard supportedPaymentMethods.contains(paymentMethod) else {

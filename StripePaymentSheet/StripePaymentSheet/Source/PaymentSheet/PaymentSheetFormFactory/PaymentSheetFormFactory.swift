@@ -28,7 +28,7 @@ class PaymentSheetFormFactory {
     }
     let saveMode: SaveMode
     let paymentMethod: PaymentSheet.PaymentMethodType
-    let intent: IntentAbstraction
+    let intent: IntentRepresentable
     let configuration: PaymentSheet.Configuration
     let addressSpecProvider: AddressSpecProvider
     let offerSaveToLinkWhenSupported: Bool
@@ -47,7 +47,7 @@ class PaymentSheetFormFactory {
     }
 
     init(
-        intent: IntentAbstraction,
+        intent: IntentRepresentable,
         configuration: PaymentSheet.Configuration,
         paymentMethod: PaymentSheet.PaymentMethodType,
         addressSpecProvider: AddressSpecProvider = .shared,

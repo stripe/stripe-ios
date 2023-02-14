@@ -24,7 +24,7 @@ protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
 @objc(STP_Internal_ChoosePaymentOptionViewController)
 class ChoosePaymentOptionViewController: UIViewController {
     // MARK: - Internal Properties
-    let intent: IntentAbstraction
+    let intent: IntentRepresentable
     let configuration: PaymentSheet.Configuration
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
@@ -120,7 +120,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     }
 
     required init(
-        intent: IntentAbstraction,
+        intent: IntentRepresentable,
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,

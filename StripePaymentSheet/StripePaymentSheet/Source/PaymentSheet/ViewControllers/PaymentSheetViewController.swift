@@ -52,7 +52,7 @@ class PaymentSheetViewController: UIViewController {
 
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
-    private(set) var intent: IntentAbstraction
+    private(set) var intent: IntentRepresentable
     enum Mode {
         case selectingSaved
         case addingNew
@@ -164,7 +164,7 @@ class PaymentSheetViewController: UIViewController {
     }
 
     required init(
-        intent: IntentAbstraction,
+        intent: IntentRepresentable,
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,

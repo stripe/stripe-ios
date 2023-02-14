@@ -95,7 +95,7 @@ class AddPaymentMethodViewController: UIViewController {
         return nil
     }
 
-    private let intent: IntentAbstraction
+    private let intent: IntentRepresentable
     private let configuration: PaymentSheet.Configuration
 
     private lazy var usBankAccountFormElement: USBankAccountPaymentMethodElement? = {
@@ -141,7 +141,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     required init(
-        intent: IntentAbstraction,
+        intent: IntentRepresentable,
         configuration: PaymentSheet.Configuration,
         delegate: AddPaymentMethodViewControllerDelegate
     ) {
