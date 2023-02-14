@@ -78,7 +78,9 @@ class NativeFlowController {
         let showConfirmationAlert =
             (navigationController.topViewController is AccountPickerViewController
                 || navigationController.topViewController is PartnerAuthViewController
-                || navigationController.topViewController is AttachLinkedPaymentAccountViewController)
+                || navigationController.topViewController is AttachLinkedPaymentAccountViewController
+                || navigationController.topViewController is NetworkingLinkSignupViewController
+                || navigationController.topViewController is NetworkingLinkVerificationViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
 }
@@ -606,6 +608,26 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
     }
 }
 
+// MARK: - NetworkingLinkVerificationViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate {
+
+    func networkingLinkVerificationViewController(
+        _ viewController: NetworkingLinkVerificationViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        pushPane(nextPane, animated: true)
+    }
+
+    func networkingLinkVerificationViewController(
+        _ viewController: NetworkingLinkVerificationViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
+    }
+}
+
 // MARK: - Static Helpers
 
 @available(iOSApplicationExtension, unavailable)
@@ -677,6 +699,9 @@ private func CreatePaneViewController(
         let picker = InstitutionPickerViewController(dataSource: dataSource)
         picker.delegate = nativeFlowController
         viewController = picker
+    case .linkAccountPicker:
+        assertionFailure("Not supported")
+        viewController = nil
     case .linkConsent:
         assertionFailure("Not supported")
         viewController = nil
@@ -727,8 +752,21 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkVerification:
-        assertionFailure("Not supported")
-        viewController = nil
+        if let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress {
+            let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
+                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
+                manifest: dataManager.manifest,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
+            networkingLinkVerificationViewController.delegate = nativeFlowController
+            viewController = networkingLinkVerificationViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .partnerAuth:
         if let institution = dataManager.institution {
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
