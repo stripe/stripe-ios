@@ -487,6 +487,30 @@
   }
 },
 {
+  "type": "zip",
+  "async": false,
+  "selector_icon": {
+      "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-zip.png",
+      "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-zip-2630ccbb067c387dbeaa61c3281004f2.svg"
+  },
+  "fields": [],
+  "next_action_spec": {
+      "confirm_response_status_specs": {
+      "requires_action": {
+          "type": "redirect_to_url"
+      }
+      },
+      "post_confirm_handling_pi_status_specs": {
+      "succeeded": {
+          "type": "finished"
+      },
+      "requires_action": {
+          "type": "canceled"
+      }
+      }
+  }
+},
+{
     "type": "card",
     "async": false,
     "fields": [

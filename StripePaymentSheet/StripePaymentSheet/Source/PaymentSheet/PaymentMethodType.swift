@@ -21,6 +21,8 @@ extension PaymentSheet {
                 return [.returnURL]
             case .dynamic("mobilepay"):
                 return [.returnURL]
+            case .dynamic("zip"):
+                return [.returnURL]
             default:
                 return [.unavailable]
             }
@@ -85,6 +87,8 @@ extension PaymentSheet {
                 return "Revolut Pay"
             } else if case .dynamic("mobilepay") = self {
                 return "MobilePay"
+            } else if case .dynamic("zip") = self {
+                return "Zip"
             } else if case .dynamic(let name) = self {
                 // TODO: We should introduce a display name in our model rather than presenting the payment method type
                 return name
