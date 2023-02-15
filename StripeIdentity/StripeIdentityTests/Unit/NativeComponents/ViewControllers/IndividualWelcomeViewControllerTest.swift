@@ -18,7 +18,7 @@ final class IndividualWelcomeViewControllerTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        
+
         vc = try! IndividualWelcomeViewController(
             brandLogo: UIImage(),
             welcomeContent: IndividualWelcomeViewControllerTest.mockVerificationPage.individualWelcome,

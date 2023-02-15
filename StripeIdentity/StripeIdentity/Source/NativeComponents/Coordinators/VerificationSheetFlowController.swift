@@ -38,7 +38,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol
     )
-    
+
     func transitionToCountryNotListedScreen(
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol,
@@ -108,7 +108,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
         }
     }
-    
+
     /// Transitions to the IndividualViewController in the flow with a 'push' animation.
     func transitionToIndividualScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
@@ -389,7 +389,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
         )
     }
-    
+
     func makeIndividualWelcomeViewController(
         staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol

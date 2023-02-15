@@ -41,10 +41,10 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
                     didTap: {
                         sheetController.transitionToIndividual()
                     }
-                )
+                ),
             ]
         )
-        
+
         super.init(sheetController: sheetController, analyticsScreenName: .individual_welcome)
 
         // If HTML fails to render, throw error since it's unacceptable to not
@@ -79,11 +79,11 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
             viewModel: flowViewModel
         )
     }
-    
+
     required init?(
         coder: NSCoder
     ) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }

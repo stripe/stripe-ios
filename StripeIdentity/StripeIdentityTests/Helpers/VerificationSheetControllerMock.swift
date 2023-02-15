@@ -125,7 +125,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     func transitionToCountryNotListed(missingType: StripeIdentity.IndividualFormElement.MissingType) {
         self.missingType = missingType
     }
-    
+
     func transitionToIndividual() {
         self.transitionedToIndividual = true
     }

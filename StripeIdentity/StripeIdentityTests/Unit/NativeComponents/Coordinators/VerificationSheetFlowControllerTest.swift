@@ -309,7 +309,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         try verifyIndividualViewController([.address])
         try verifyIndividualViewController([.idNumber])
     }
-    
+
     func testNextViewControllerIndividualWelcome() throws {
         // When verification type is not document, .name or .dob will be missing,
         // should navigate to IndividuleWelcomeViewController
@@ -328,7 +328,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         )
         wait(for: [exp], timeout: 1)
     }
-    
+
     func verifyIndividualWelcomeViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) throws {
         let exp = expectation(description: "testNextViewControllerIndividualWelcome")
         try nextViewController(

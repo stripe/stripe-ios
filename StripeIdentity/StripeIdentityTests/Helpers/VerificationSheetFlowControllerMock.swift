@@ -57,8 +57,11 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     ) {
         // no-op
     }
-    
-    func transitionToIndividualScreen(staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>, sheetController: StripeIdentity.VerificationSheetControllerProtocol) {
+
+    func transitionToIndividualScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+    ) {
         // no-op
     }
 
