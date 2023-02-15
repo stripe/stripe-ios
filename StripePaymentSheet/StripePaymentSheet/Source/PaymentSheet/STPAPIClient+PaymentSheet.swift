@@ -119,6 +119,37 @@ extension STPAPIClient {
             completion(.success(paymentIntentWithPreferences))
         }
     }
+    
+    // TODO(porter) Pass in deferred intent config from public API
+    func retrieveDeferredIntentWithPreferences(
+        completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
+    ) {
+        var parameters: [String: Any] = [:]
+        parameters["type"] = "payment_intent"
+        
+        var deferredIntent = [String: Any]()
+        deferredIntent["amount"] = "100"
+        deferredIntent["currency"] = "usd"
+        deferredIntent["setup_future_usage"] = "on_session"
+        deferredIntent["capture_method"] = "automatic"
+        deferredIntent["mode"] = "payment"
+//        deferredIntent["customer"] = "test"
+//        deferredIntent["on_behalf_of"] = "test"
+//        deferredIntent["payment_method_types"] = ["card", "klarna"]
+        parameters["deferred_intent"] = deferredIntent
+        parameters["locale"] = Locale.current.toLanguageTag()
+
+        APIRequest<STPPaymentIntent>.getWith(self,
+                                             endpoint: APIEndpointIntentWithPreferences,
+                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
+            guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
+                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            completion(.success(paymentIntentWithPreferences))
+        }
+    }
 
     func retrieveSetupIntentWithPreferences(
         withClientSecret secret: String,

@@ -92,4 +92,21 @@ class STPIntentWithPreferencesTest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
+    
+    func testDeferredIntentWithPreferences() {
+        let expectation = XCTestExpectation(description: "Retrieve Deferred Intent With Preferences")
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        client.retrieveDeferredIntentWithPreferences { result in
+            switch result {
+                case.success(let paymentIntentWithPreferences):
+                    expectation.fulfill()
+                    
+                    XCTAssertEqual(paymentIntentWithPreferences.amount, 100)
+                case .failure(let error):
+                    print(error)
+            }
+        }
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
 }
