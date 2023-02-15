@@ -61,6 +61,10 @@ extension IntentRepresentable {
             return .setup
         }
     }
+    
+    var isDeferredIntent: Bool {
+        return !(self is Intent)
+    }
 }
 
 extension Intent: IntentRepresentable {

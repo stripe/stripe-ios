@@ -128,7 +128,7 @@ public class PaymentSheet {
                 }
 
                 // Early exit if Link or ACH is enabled in deferred mode
-                if !(intent is Intent)
+                if intent.isDeferredIntent
                     && (paymentMethodTypes.contains(.link) || paymentMethodTypes.contains(.linkInstantDebit)
                         || paymentMethodTypes.contains(.USBankAccount))
                 {
