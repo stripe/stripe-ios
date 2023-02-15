@@ -9,36 +9,32 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
-    var accountholderCustomerEmailAddress: String { get }
-    var manifest: FinancialConnectionsSessionManifest { get }
+    var consumerSession: ConsumerSessionData { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    var consumerSession: ConsumerSessionData? { get }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
-    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
+    func saveToLink() -> Future<Void>
 }
 
 final class NetworkingSaveToLinkVerificationDataSourceImplementation: NetworkingSaveToLinkVerificationDataSource {
 
-    let accountholderCustomerEmailAddress: String
-    let manifest: FinancialConnectionsSessionManifest
+    private(set) var consumerSession: ConsumerSessionData
+    private let selectedAccountIds: [String]
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
-    private(set) var consumerSession: ConsumerSessionData?
-
     init(
-        accountholderCustomerEmailAddress: String,
-        manifest: FinancialConnectionsSessionManifest,
+        consumerSession: ConsumerSessionData,
+        selectedAccountIds: [String],
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
-        self.accountholderCustomerEmailAddress = accountholderCustomerEmailAddress
-        self.manifest = manifest
+        self.consumerSession = consumerSession
+        self.selectedAccountIds = selectedAccountIds
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
@@ -47,7 +43,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     func startVerificationSession() -> Future<ConsumerSessionResponse> {
         apiClient
             .consumerSessionLookup(
-                emailAddress: accountholderCustomerEmailAddress
+                emailAddress: consumerSession.emailAddress
             )
             .chained { [weak self] (lookupConsumerSessionResponse: LookupConsumerSessionResponse) in
                 guard let self = self else {
@@ -56,7 +52,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
                 if let consumerSession = lookupConsumerSessionResponse.consumerSession {
                     self.consumerSession = consumerSession
                     return self.apiClient.consumerSessionStartVerification(
-                        emailAddress: self.accountholderCustomerEmailAddress,
+                        emailAddress: consumerSession.emailAddress,
                         otpType: "SMS",
                         customEmailType: nil,
                         connectionsMerchantName: nil,
@@ -69,13 +65,10 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     }
 
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
-        }
         return apiClient.consumerSessionConfirmVerification(
             otpCode: otpCode,
             otpType: "SMS",
-            consumerSessionClientSecret: consumerSessionClientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret
         )
     }
 
@@ -83,13 +76,17 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         return apiClient.markLinkVerified(clientSecret: clientSecret)
     }
 
-    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
-        }
-        return apiClient.fetchNetworkedAccounts(
-            clientSecret: clientSecret,
-            consumerSessionClientSecret: consumerSessionClientSecret
+    func saveToLink() -> Future<Void> {
+        return apiClient.saveAccountsToLink(
+            emailAddress: nil,
+            phoneNumber: nil,
+            country: nil,
+            selectedAccountIds: selectedAccountIds,
+            consumerSessionClientSecret: consumerSession.clientSecret,
+            clientSecret: clientSecret
         )
+        .chained { _ in
+            return Promise(value: ())
+        }
     }
 }

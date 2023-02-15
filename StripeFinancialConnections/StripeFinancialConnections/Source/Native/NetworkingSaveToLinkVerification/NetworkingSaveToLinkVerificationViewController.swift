@@ -12,10 +12,9 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
-    func networkingSaveToLinkVerificationViewController(
+    func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData
+        error: Error?
     )
     func networkingSaveToLinkVerificationViewController(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
@@ -36,7 +35,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         return activityIndicator
     }()
     private lazy var bodyView: NetworkingSaveToLinkVerificationBodyView = {
-        let bodyView = NetworkingSaveToLinkVerificationBodyView(email: dataSource.accountholderCustomerEmailAddress)
+        let bodyView = NetworkingSaveToLinkVerificationBodyView(email: dataSource.consumerSession.emailAddress)
         bodyView.delegate = self
         return bodyView
     }()
@@ -106,19 +105,6 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
-
-    private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane) {
-        if let consumerSession = dataSource.consumerSession {
-            delegate?.networkingSaveToLinkVerificationViewController(
-                self,
-                didRequestNextPane: pane,
-                consumerSession: consumerSession
-            )
-        } else {
-            assertionFailure("logic error: did not have consumerSession")
-            delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
-        }
-    }
 }
 
 // MARK: - NetworkingSaveToLinkVerificationBodyViewDelegate
@@ -137,60 +123,51 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingSaveToLinkVe
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    view.otpTextField.text = "SUCCESS! CALLING markLinkVerified..."
-
-                    self.dataSource.markLinkVerified()
+                    view.otpTextField.text = "SUCCESS! CALLING saveToLink AND markLinkVerified..."
+                    
+                    self.dataSource.saveToLink()
                         .observe { [weak self] result in
                             guard let self = self else { return }
                             switch result {
-                            case .success(let manifest):
-                                view.otpTextField.text = "markLinkVerified SUCCESS! Wait on accounts..."
-
-                                self.dataSource.fetchNetworkedAccounts()
-                                    .observe { [weak self] result in
-                                        guard let self = self else { return }
-                                        switch result {
-                                        case .success(let networkedAccountsResponse):
-                                            let networkedAccounts = networkedAccountsResponse.data
-                                            if networkedAccounts.isEmpty {
-                                                self.dataSource.analyticsClient.log(
-                                                    eventName: "networking.verification.success_no_accounts",
-                                                    pane: .networkingSaveToLinkVerification
-                                                )
-                                                self.requestNextPane(manifest.nextPane)
-                                            } else {
-                                                self.dataSource.analyticsClient.log(
-                                                    eventName: "networking.verification.success",
-                                                    pane: .networkingSaveToLinkVerification
-                                                )
-                                                self.requestNextPane(.linkAccountPicker)
-                                            }
-                                        case .failure(let error):
-                                            // TODO(kgaidis): log the error using the standard error logging too
-                                            self.dataSource
-                                                .analyticsClient
-                                                .log(
-                                                    eventName: "networking.verification.error",
-                                                    parameters: [
-                                                        "error": "NetworkedAccountsRetrieveMethodError",
-                                                    ],
-                                                    pane: .networkingSaveToLinkVerification
-                                                )
-                                            print(error) // TODO(kgaidis): remove print
-                                            self.requestNextPane(manifest.nextPane)
-                                        }
-                                    }
+                            case .success:
+                                self.dataSource
+                                    .analyticsClient
+                                    .log(
+                                        eventName: "networking.verification.success",
+                                        pane: .networkingSaveToLinkVerification
+                                    )
+                                self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: nil)
                             case .failure(let error):
-                                print(error) // TODO(kgaidis): remove print
-                                view.otpTextField.text = "markLinkVerified FAILURE: \(error.localizedDescription)"
-                                // TODO(kgaidis): go to terminal error but double-check
-                                self.delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
+                                self.dataSource
+                                    .analyticsClient
+                                    .log(
+                                        eventName: "networking.verification.error",
+                                        pane: .networkingSaveToLinkVerification
+                                    )
+                                self.dataSource
+                                    .analyticsClient
+                                    .logUnexpectedError(
+                                        error, errorName: "SaveToLinkError",
+                                        pane: .networkingSaveToLinkVerification
+                                    )
+                                self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: error)
                             }
                         }
+                    
+                    self.dataSource.markLinkVerified()
+                        .observe { _ in
+                            // we ignore result
+                        }
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): remove print
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "ConfirmVerificationSessionError",
+                            pane: .networkingSaveToLinkVerification
+                        )
                     view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
-                    // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
+                    // TODO(kgaidis): display various known errors to OTP, or if unknown error, show terminal error
                 }
             }
     }

@@ -668,6 +668,26 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
     }
 }
 
+// MARK: - NetworkingSaveToLinkVerificationDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
+    func networkingSaveToLinkVerificationViewControllerDidFinish(
+        _ viewController: NetworkingSaveToLinkVerificationViewController,
+        error: Error?
+    ) {
+        // TODO(kgaidis): use the error to show a notice on success pane that saving to link failed...
+        pushPane(.success, animated: true)
+    }
+    
+    func networkingSaveToLinkVerificationViewController(
+        _ viewController: NetworkingSaveToLinkVerificationViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
+    }
+}
+
 // MARK: - Static Helpers
 
 @available(iOSApplicationExtension, unavailable)
@@ -823,10 +843,13 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingSaveToLinkVerification:
-        if let accountholderCustomerEmailAddress = dataManager.consumerSession?.emailAddress {
+        if
+            let consumerSession = dataManager.consumerSession,
+            let selectedAccountIds = dataManager.linkedAccounts?.map({ $0.id })
+        {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
-                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
-                manifest: dataManager.manifest,
+                consumerSession: consumerSession,
+                selectedAccountIds: selectedAccountIds,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient
@@ -834,7 +857,7 @@ private func CreatePaneViewController(
             let networkingSaveToLinkVerificationViewController = NetworkingSaveToLinkVerificationViewController(
                 dataSource: networkingSaveToLinkVerificationDataSource
             )
-            // networkingLinkVerificationViewController.delegate = nativeFlowController TODO(kgaidis): set the delegate
+            networkingSaveToLinkVerificationViewController.delegate = nativeFlowController
             viewController = networkingSaveToLinkVerificationViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
