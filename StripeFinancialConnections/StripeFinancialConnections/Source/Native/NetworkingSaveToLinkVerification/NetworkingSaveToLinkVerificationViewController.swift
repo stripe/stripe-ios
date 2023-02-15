@@ -86,7 +86,12 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                 "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
             ),
             contentView: bodyView,
-            footerView: nil
+            footerView: NetworkingSaveToLinkFooterView(
+                didSelectNotNow: { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: nil)
+                }
+            )
         )
         pane.addTo(view: view)
     }
@@ -124,7 +129,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingSaveToLinkVe
                 switch result {
                 case .success:
                     view.otpTextField.text = "SUCCESS! CALLING saveToLink AND markLinkVerified..."
-                    
+
                     self.dataSource.saveToLink()
                         .observe { [weak self] result in
                             guard let self = self else { return }
@@ -153,7 +158,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingSaveToLinkVe
                                 self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: error)
                             }
                         }
-                    
+
                     self.dataSource.markLinkVerified()
                         .observe { _ in
                             // we ignore result

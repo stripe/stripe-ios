@@ -81,6 +81,7 @@ class NativeFlowController {
                 || navigationController.topViewController is AttachLinkedPaymentAccountViewController
                 || navigationController.topViewController is NetworkingLinkSignupViewController
                 || navigationController.topViewController is NetworkingLinkVerificationViewController
+                || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
                 || navigationController.topViewController is LinkAccountPickerViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
@@ -534,7 +535,7 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
-    
+
     func networkingLinkSignupViewController(
         _ viewController: NetworkingLinkSignupViewController,
         foundReturningConsumerWithSession consumerSession: ConsumerSessionData
@@ -542,7 +543,7 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
         dataManager.consumerSession = consumerSession
         pushPane(.networkingSaveToLinkVerification, animated: true)
     }
-    
+
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController
     ) {
@@ -679,7 +680,7 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
         // TODO(kgaidis): use the error to show a notice on success pane that saving to link failed...
         pushPane(.success, animated: true)
     }
-    
+
     func networkingSaveToLinkVerificationViewController(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         didReceiveTerminalError error: Error

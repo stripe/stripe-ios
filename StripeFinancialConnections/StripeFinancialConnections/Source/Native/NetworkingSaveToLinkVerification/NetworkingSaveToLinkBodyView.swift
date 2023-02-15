@@ -76,7 +76,7 @@ final class NetworkingSaveToLinkVerificationBodyView: UIView {
 
 private func CreateEmailLabel(email: String) -> UIView {
     let emailLabel = UILabel()
-    emailLabel.text = "Signing in as \(email)" // TODO(kgaidis): wrap with localizable strings
+    emailLabel.text = String(format: STPLocalizedString("Signing in as %@", "A footnote that explains to the user that they are signing in as a user with a specific e-mail. '%@' is replaced with an e-mail, for example, 'Signing in as test@test.com'"), email)
     emailLabel.font = .stripeFont(forTextStyle: .captionTight)
     emailLabel.textColor = .textSecondary
     return emailLabel

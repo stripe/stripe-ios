@@ -53,7 +53,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }()
 
     private lazy var saveToLinkButton: StripeUICore.Button = {
-        let saveToLinkButton = Button(configuration: .primary())  // Button(configuration: .financialConnectionsPrimary)
+        let saveToLinkButton = Button(configuration: .financialConnectionsPrimary)
         saveToLinkButton.title = saveToLinkButtonText
         saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +64,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }()
 
     private lazy var notNowButton: StripeUICore.Button = {
-        let saveToLinkButton = Button(configuration: .secondary())  // Button(configuration: .financialConnectionsSecondary)
+        let saveToLinkButton = Button(configuration: .financialConnectionsSecondary)
         saveToLinkButton.title = notNowButtonText
         saveToLinkButton.addTarget(self, action: #selector(didSelectNotNowButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
