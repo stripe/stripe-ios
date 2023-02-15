@@ -91,7 +91,8 @@ extension STPAPIClient {
 extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
-
+    typealias STPElementsSessionWithPreferencesCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
+    
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
         completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
@@ -122,24 +123,20 @@ extension STPAPIClient {
     
     // TODO(porter) Pass in deferred intent config from public API
     func retrieveDeferredIntentWithPreferences(
-        completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
+        completion: @escaping STPElementsSessionWithPreferencesCompletionBlock
     ) {
         var parameters: [String: Any] = [:]
-        parameters["type"] = "payment_intent"
+        parameters["key"] = publishableKey
+        parameters["type"] = "deferred_intent"
+        parameters["locale"] = Locale.current.toLanguageTag()
         
         var deferredIntent = [String: Any]()
-        deferredIntent["amount"] = "100"
-        deferredIntent["currency"] = "usd"
-        deferredIntent["setup_future_usage"] = "on_session"
-        deferredIntent["capture_method"] = "automatic"
         deferredIntent["mode"] = "payment"
-//        deferredIntent["customer"] = "test"
-//        deferredIntent["on_behalf_of"] = "test"
-//        deferredIntent["payment_method_types"] = ["card", "klarna"]
+        deferredIntent["amount"] = "2000"
+        deferredIntent["currency"] = "usd"
         parameters["deferred_intent"] = deferredIntent
-        parameters["locale"] = Locale.current.toLanguageTag()
 
-        APIRequest<STPPaymentIntent>.getWith(self,
+        APIRequest<STPElementsSession>.getWith(self,
                                              endpoint: APIEndpointIntentWithPreferences,
                                              parameters: parameters) { paymentIntentWithPreferences, _, error in
             guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
