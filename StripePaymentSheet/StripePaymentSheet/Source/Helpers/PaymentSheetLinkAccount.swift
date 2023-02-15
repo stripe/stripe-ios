@@ -502,7 +502,7 @@ extension PaymentSheetLinkAccount {
         supportedPaymentDetailsTypes.formIntersection(fundingSourceDetailsTypes)
 
         // Special testmode handling
-        if !intent.livemode && Self.emailSupportsMultipleFundingSourcesOnTestMode(email) {
+        if apiClient.isTestmode && Self.emailSupportsMultipleFundingSourcesOnTestMode(email) {
             supportedPaymentDetailsTypes.insert(.bankAccount)
         }
 
