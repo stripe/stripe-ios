@@ -34,6 +34,11 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func transitionToIndividualScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    )
+    
     func transitionToCountryNotListedScreen(
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         sheetController: VerificationSheetControllerProtocol,
@@ -100,6 +105,34 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 to: viewController,
                 shouldAnimate: true,
                 completion: completion
+            )
+        }
+    }
+    
+    /// Transitions to the IndividualViewController in the flow with a 'push' animation.
+    func transitionToIndividualScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        let staticContent: StripeAPI.VerificationPage
+        do {
+            staticContent = try staticContentResult.get()
+            self.transition(
+                to: makeIndividualViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                ),
+                shouldAnimate: true,
+                completion: {}
+            )
+        } catch {
+            self.transition(
+                to: ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(error)
+                ),
+                shouldAnimate: true,
+                completion: {}
             )
         }
     }
@@ -288,9 +321,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
         } else if !missingRequirements.isDisjoint(with: [.name, .dob]) {
             // if missing .name or .dob, then verification type is not document.
-            // IndividualViewController is the only screen required for the verification.
+            // Transition to IndividualWelcomeViewController.
             return completion(
-                makeIndividualViewController(
+                makeIndividualWelcomeViewController(
                     staticContent: staticContent,
                     sheetController: sheetController
                 )
@@ -355,6 +388,26 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         )
+    }
+    
+    func makeIndividualWelcomeViewController(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        do {
+            return try IndividualWelcomeViewController(
+                brandLogo: brandLogo,
+                welcomeContent: staticContent.individualWelcome,
+                sheetController: sheetController
+            )
+        } catch {
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(
+                    VerificationSheetFlowControllerError.unknown(error)
+                )
+            )
+        }
     }
 
     func makeIndividualViewController(
