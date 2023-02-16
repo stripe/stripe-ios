@@ -22,6 +22,11 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
         institution: FinancialConnectionsInstitution
     )
+    
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
+    )
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
@@ -134,7 +139,6 @@ final class LinkAccountPickerViewController: UIViewController {
     }
 
     private func didSelectConectAccount() {
-        // TODO(kgaidis): implement step-up authentication
         // TODO(kgaidis): implement repair bank account
 
         guard let selectedAccount = dataSource.selectedAccount else {
@@ -142,43 +146,49 @@ final class LinkAccountPickerViewController: UIViewController {
             delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
             return
         }
+        
+        if dataSource.manifest.stepUpAuthenticationRequired == true {
+            delegate?.linkAccountPickerViewController(self, requestedStepUpVerificationWithSelectedAccount: selectedAccount)
+        } else {
+            let linkingAccountsLoadingView = LinkingAccountsLoadingView(
+                numberOfSelectedAccounts: 1,
+                businessName: businessName
+            )
+            view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
 
-        let linkingAccountsLoadingView = LinkingAccountsLoadingView(
-            numberOfSelectedAccounts: 1,
-            businessName: businessName
-        )
-        view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
-
-        dataSource
-            .selectNetworkedAccount(selectedAccount)
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let institutionList):
-                    self.dataSource
-                        .analyticsClient
-                        .log(
-                            eventName: "click.link_accounts",
-                            pane: .linkAccountPicker
-                        )
-                    if let institution = institutionList.data.first {
-                        self.delegate?.linkAccountPickerViewController(self, didSelectAccount: selectedAccount, institution: institution)
-                    } else {
-                        // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
-                        // could still have a chance at successfully connecting their account
-                        self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+            dataSource
+                .selectNetworkedAccount(selectedAccount)
+                .observe { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let institutionList):
+                        self.dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "click.link_accounts",
+                                pane: .linkAccountPicker
+                            )
+                        if let institution = institutionList.data.first {
+                            self.delegate?.linkAccountPickerViewController(self, didSelectAccount: selectedAccount, institution: institution)
+                        } else {
+                            // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
+                            // could still have a chance at successfully connecting their account
+                            self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+                        }
+                    case .failure(let error):
+                        self.dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                error,
+                                errorName: "SelectNetworkedAccountError",
+                                pane: .accountPicker
+                            )
+                        self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                     }
-                case .failure(let error):
-                    self.dataSource
-                        .analyticsClient
-                        .logUnexpectedError(
-                            error,
-                            errorName: "SelectNetworkedAccountError",
-                            pane: .accountPicker
-                        )
-                    self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                 }
-            }
+        }
+
+        
     }
 }
 

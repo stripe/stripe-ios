@@ -644,6 +644,7 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
+    
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
@@ -659,6 +660,14 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         dataManager.institution = institution
         dataManager.linkedAccounts = [selectedAccount]
         pushPane(.success, animated: true)
+    }
+    
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
+    ) {
+        dataManager.linkedAccounts = [selectedAccount]
+        pushPane(.networkingLinkStepUpVerification, animated: true)
     }
 
     func linkAccountPickerViewController(

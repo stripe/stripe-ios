@@ -89,4 +89,5 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let skipSuccessPane: Bool?
     let manualEntryMode: ManualEntryMode
     let accountholderCustomerEmailAddress: String?
+    let stepUpAuthenticationRequired: Bool?
 }

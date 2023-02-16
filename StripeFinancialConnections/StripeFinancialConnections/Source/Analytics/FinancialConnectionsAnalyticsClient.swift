@@ -181,6 +181,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingLinkLoginWarmup
         case is NetworkingLinkVerificationViewController:
             return .networkingLinkVerification
+        case is NetworkingLinkStepUpVerificationViewController:
+            return .networkingLinkStepUpVerification
         case is NetworkingSaveToLinkVerificationViewController:
             return .networkingSaveToLinkVerification
         case is LinkAccountPickerViewController:
