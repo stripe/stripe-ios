@@ -182,10 +182,9 @@ extension PaymentSheetFormFactory {
 
     func makePaypalMandate(intent: Intent) -> StaticElement {
         let mandateText: String = {
-            switch intent {
-            case .paymentIntent:
+            if intent.isPaymentIntent {
                 return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
-            case .setupIntent:
+            } else {
                 return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
             }
         }()
