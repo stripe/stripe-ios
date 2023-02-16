@@ -80,9 +80,9 @@ protocol FinancialConnectionsAPIClient {
     // MARK: - Networking
 
     func saveAccountsToLink(
-        emailAddress: String,
-        phoneNumber: String,
-        country: String,
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
         selectedAccountIds: [String],
         consumerSessionClientSecret: String?,
         clientSecret: String
@@ -453,24 +453,24 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     // MARK: - Networking
 
     func saveAccountsToLink(
-        emailAddress: String,
-        phoneNumber: String,
-        country: String,
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
         selectedAccountIds: [String],
         consumerSessionClientSecret: String?,
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
             "client_secret": clientSecret,
-            "email_address":
-                emailAddress
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .lowercased(),
-            "phone_number": phoneNumber,
-            "country": country,
-            "locale": Locale.current.identifier,
             "selected_accounts": selectedAccountIds,
+            "expand": ["active_auth_session"],
         ]
+        body["email_address"] = emailAddress?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        body["phone_number"] = phoneNumber
+        body["country"] = country
+        body["locale"] = (phoneNumber != nil) ? Locale.current.identifier : nil
         body["consumer_session_client_secret"] = consumerSessionClientSecret
         return post(resource: APIEndpointSaveAccountsToLink, parameters: body)
     }
@@ -481,6 +481,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsSessionManifest> {
         var body: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
         ]
         body["disabled_reason"] = disabledReason
         return post(resource: APIEndpointDisableNetworking, parameters: body)
@@ -491,6 +492,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     ) -> Future<FinancialConnectionsSessionManifest> {
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
         ]
         return post(resource: APIEndpointLinkVerified, parameters: parameters)
     }
