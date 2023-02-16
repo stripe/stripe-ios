@@ -113,6 +113,13 @@ extension PaymentSheet {
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+
+                    // Paypal requires mandate_data if setting up
+                    if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal
+                        && paymentIntent.setupFutureUsage == .offSession
+                    {
+                        paymentIntentParams.mandateData = .makeWithInferredValues()
+                    }
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
@@ -123,6 +130,10 @@ extension PaymentSheet {
             case .setupIntent(let setupIntent):
                 let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
                 setupIntentParams.returnURL = configuration.returnURL
+                // Paypal requires mandate_data if setting up
+                if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal {
+                    setupIntentParams.mandateData = .makeWithInferredValues()
+                }
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
@@ -301,12 +312,12 @@ extension PaymentSheet {
                     switch result {
                     case .success(let paymentMethods):
                         // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
+                        // TODO: We're fetching the customer's saved card and us_bank_account PMs, and then filtering - this is backwards!
                         let savedPaymentMethods =
                             paymentMethods
                             .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                             .filter {
-                                PaymentMethodType.supportsSaveAndReuse(
-                                    paymentMethod: $0.paymentSheetPaymentMethodType(),
+                                $0.paymentSheetPaymentMethodType().supportsSavedPaymentMethod(
                                     configuration: configuration,
                                     intent: intent
                                 )
