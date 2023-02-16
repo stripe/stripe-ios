@@ -103,7 +103,7 @@ class PaymentSheetAPITest: XCTestCase {
             case .success(let clientSecret):
                 // 1. Load the PI
                 PaymentSheet.load(
-                    clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret),
+                    clientSecret: RetrievableIntent.paymentIntent(clientSecret: clientSecret),
                     configuration: self.configuration
                 ) { result in
                     switch result {
@@ -185,7 +185,7 @@ class PaymentSheetAPITest: XCTestCase {
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
-                    clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret),
+                    clientSecret: RetrievableIntent.setupIntent(clientSecret: clientSecret),
                     configuration: self.configuration
                 ) { result in
                     switch result {
@@ -224,7 +224,7 @@ class PaymentSheetAPITest: XCTestCase {
 
             // 1. Load the PI
             PaymentSheet.load(
-                clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret),
+                clientSecret: RetrievableIntent.paymentIntent(clientSecret: clientSecret),
                 configuration: self.configuration
             ) { result in
                 guard case .success(let paymentIntent, _, _) = result else {
@@ -287,7 +287,7 @@ class PaymentSheetAPITest: XCTestCase {
             }
 
             PaymentSheet.load(
-                clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret),
+                clientSecret: RetrievableIntent.setupIntent(clientSecret: clientSecret),
                 configuration: self.configuration
             ) { result in
                 defer { expectation.fulfill() }

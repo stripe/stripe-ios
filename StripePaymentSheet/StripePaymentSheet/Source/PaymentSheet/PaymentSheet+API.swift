@@ -297,7 +297,7 @@ extension PaymentSheet {
 
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
-        clientSecret: IntentClientSecret,
+        clientSecret: RetrievableIntent,
         configuration: Configuration,
         completion: @escaping (LoadingResult) -> Void
     ) {

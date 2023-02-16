@@ -157,7 +157,7 @@ extension PaymentSheet {
         }
 
         static func create(
-            clientSecret: IntentClientSecret,
+            clientSecret: RetrievableIntent,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {

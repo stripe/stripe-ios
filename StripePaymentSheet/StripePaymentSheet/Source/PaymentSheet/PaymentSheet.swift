@@ -31,8 +31,9 @@ import UIKit
     case failed(error: Error)
 }
 
-//    @frozen?
-@_spi(STP) public enum InitializationMode {
+// TODO(porter) Use @frozen?
+/// TODO doc comment
+@_spi(STP) @frozen public enum InitializationMode {
     case paymentIntentClientSecret(String)
     case setupIntentClientSecret(String)
     case deferredIntent(PaymentSheet.IntentConfiguration)
@@ -52,7 +53,7 @@ public class PaymentSheet {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     public convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
         self.init(
-            intentClientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            retrievableIntent: .paymentIntent(clientSecret: paymentIntentClientSecret),
             configuration: configuration
         )
     }
@@ -62,7 +63,7 @@ public class PaymentSheet {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     public convenience init(setupIntentClientSecret: String, configuration: Configuration) {
         self.init(
-            intentClientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+            retrievableIntent: .setupIntent(clientSecret: setupIntentClientSecret),
             configuration: configuration
         )
     }
@@ -71,26 +72,26 @@ public class PaymentSheet {
         switch mode {
         case .paymentIntentClientSecret(let paymentIntentClientSecret):
             self.init(
-                intentClientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+                retrievableIntent: .paymentIntent(clientSecret: paymentIntentClientSecret),
                 configuration: configuration
             )
         case .setupIntentClientSecret(let setupIntentClientSecret):
             self.init(
-                intentClientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+                retrievableIntent: .setupIntent(clientSecret: setupIntentClientSecret),
                 configuration: configuration
             )
         case .deferredIntent(let intentConfig):
             self.init(
-                intentClientSecret: .defferedIntent(intentConfig: intentConfig),
+                retrievableIntent: .defferedIntent(intentConfig: intentConfig),
                 configuration: configuration
             )
         }
     }
 
-    required init(intentClientSecret: IntentClientSecret, configuration: Configuration) {
+    required init(retrievableIntent: RetrievableIntent, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
-        self.intentClientSecret = intentClientSecret
+        self.retrievableIntent = retrievableIntent
         self.configuration = configuration
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration)
     }
@@ -133,7 +134,7 @@ public class PaymentSheet {
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
-            clientSecret: intentClientSecret,
+            clientSecret: retrievableIntent,
             configuration: configuration
         ) { result in
             switch result {
@@ -236,7 +237,7 @@ public class PaymentSheet {
     // MARK: - Internal Properties
 
     /// The client secret this instance was initialized with
-    let intentClientSecret: IntentClientSecret
+    let retrievableIntent: RetrievableIntent
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
