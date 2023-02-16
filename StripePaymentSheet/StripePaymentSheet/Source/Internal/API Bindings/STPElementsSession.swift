@@ -9,10 +9,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// The response returned by v1/elements/sessions
-@_spi(STP) public class STPElementsSession: NSObject {
-
-    /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this ElementsSession is allowed to use.
-    public let paymentMethodTypes: [NSNumber]
+@_spi(STP) public final class STPElementsSession: NSObject {
 
     /// The ordered payment method preference for this ElementsSession.
     public let orderedPaymentMethodTypes: [STPPaymentMethodType]
@@ -36,7 +33,6 @@ import Foundation
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPElementsSession.self), self),
-            "paymentMethodTypes = \(String(describing: paymentMethodTypes))",
             "orderedPaymentMethodTypes = \(String(describing: orderedPaymentMethodTypes))",
             "unactivatedPaymentMethodTypes = \(String(describing: unactivatedPaymentMethodTypes))",
             "linkSettings = \(String(describing: linkSettings))",
@@ -49,7 +45,6 @@ import Foundation
 
     private init(
         allResponseFields: [AnyHashable: Any],
-        paymentMethodTypes: [NSNumber],
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
         countryCode: String?,
@@ -57,7 +52,6 @@ import Foundation
         paymentMethodSpecs: [[AnyHashable: Any]]?
     ) {
         self.allResponseFields = allResponseFields
-        self.paymentMethodTypes = paymentMethodTypes
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         self.countryCode = countryCode
@@ -76,16 +70,12 @@ extension STPElementsSession: STPAPIResponseDecodable {
         else {
             return nil
         }
+        let unactivatedPaymentMethodTypeStrings = dict["unactivated_payment_method_types"] as? [String] ?? []
 
         return STPElementsSession(
             allResponseFields: dict,
-            paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
-            orderedPaymentMethodTypes: STPPaymentMethod.paymentMethodTypes(
-                from: paymentMethodTypeStrings
-            ),
-            unactivatedPaymentMethodTypes: STPPaymentMethod.paymentMethodTypes(
-                from: dict["unactivated_payment_method_types"] as? [String] ?? []
-            ),
+            orderedPaymentMethodTypes: paymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
+            unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             countryCode: paymentMethodPrefDict["country_code"] as? String,
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
