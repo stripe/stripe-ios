@@ -102,7 +102,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            setupFutureUsage: .onSession),
                                                             captureMethod: .automatic,
                                                             paymentMethodTypes: ["card", "cashapp"])
-        
+
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {
             case .success(let elementsSession):
@@ -126,7 +126,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     func testRetrieveElementSession_deferredSetup() {
         let expectation = XCTestExpectation(description: "Retrieve ElementsSession")
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -135,7 +135,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            setupFutureUsage: .onSession),
                                                             captureMethod: .automatic,
                                                             paymentMethodTypes: ["card", "cashapp"])
-        
+
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {
             case .success(let elementsSession):

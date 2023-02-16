@@ -438,12 +438,12 @@ extension PaymentSheet {
                     }
                 }
             }
-            
+
         case .defferedIntent(let intentConfig):
             let deferredIntentHandlerCompletionBlock: ((STPElementsSession) -> Void) = { elementsSession in
                 intentPromise.resolve(with: .deferredIntent(elementsSession))
             }
-            
+
             configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig) { result in
                 switch result {
                 case .success(let elementsSession):

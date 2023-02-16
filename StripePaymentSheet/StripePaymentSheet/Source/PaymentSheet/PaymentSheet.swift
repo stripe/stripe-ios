@@ -67,7 +67,7 @@ public class PaymentSheet {
             configuration: configuration
         )
     }
-    
+
     @_spi(STP) public convenience init(mode: InitializationMode, configuration: Configuration) {
         switch mode {
         case .paymentIntentClientSecret(let paymentIntentClientSecret):

@@ -20,7 +20,7 @@ import Foundation
         enum CaptureMethod: String {
             /// Stripe automatically captures funds when the customer authorizes the payment.
             case automatic = "automatic"
-            
+
             /// Place a hold on the funds when the customer authorizes the payment, but don’t capture the funds until later. (Not all payment methods support this.)
             case manual = "manual"
         }
@@ -29,11 +29,11 @@ import Foundation
         enum SetupFutureUsage: String {
             /// Indicating your customer may or may not be in your checkout flow.
             case offSession = "off_session"
-            
+
             /// Indicating you intend to only reuse the payment method when your customer is present in your checkout flow.
             case onSession = "on_session"
         }
-        
+
         /// Filters out payment methods based on intended use.
         enum Mode {
             case payment(
@@ -45,10 +45,10 @@ import Foundation
                 setupFutureUsage: SetupFutureUsage? = nil
             )
             case setup(
-              /// Filters out payment methods based on supported currency.
-              currency: String?,
-              /// Indicates that you intend to make future payments with this Intents’s payment method.
-              setupFutureUsage: SetupFutureUsage
+                /// Filters out payment methods based on supported currency.
+                currency: String?,
+                /// Indicates that you intend to make future payments with this Intents’s payment method.
+                setupFutureUsage: SetupFutureUsage
             )
         }
     }
