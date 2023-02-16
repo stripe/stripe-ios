@@ -103,7 +103,8 @@ class STPIntentWithPreferencesTest: XCTestCase {
                 XCTAssertNotNil(deferredIntent)
                 XCTAssertEqual(deferredIntent.countryCode, "US")
                 XCTAssertNotNil(deferredIntent.linkSettings)
-
+                XCTAssertNotNil(deferredIntent.paymentMethodSpecs)
+                
                 XCTAssertEqual(
                     deferredIntent.orderedPaymentMethodTypes,
                     [STPPaymentMethodType.card, STPPaymentMethodType.cashApp, STPPaymentMethodType.USBankAccount]

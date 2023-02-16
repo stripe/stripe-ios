@@ -24,8 +24,8 @@ public class STPElementsSession: NSObject {
     /// Country code of the user.
     @_spi(STP) public let countryCode: String?
 
-    /// A map describing payment method types form specs
-    @_spi(STP) public let paymentMethodSpecs: Any?
+    /// A map describing payment method types form specs.
+    @_spi(STP) public let paymentMethodSpecs: [[AnyHashable: Any]]?
 
     @objc public let allResponseFields: [AnyHashable: Any]
 
@@ -52,7 +52,7 @@ public class STPElementsSession: NSObject {
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
         countryCode: String?,
         linkSettings: LinkSettings?,
-        paymentMethodSpecs: Any?
+        paymentMethodSpecs: [[AnyHashable: Any]]?
     ) {
         self.allResponseFields = allResponseFields
         self.countryCode = countryCode
@@ -88,7 +88,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
             ),
-            paymentMethodSpecs: dict["payment_method_specs"]
+            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]]
         ) as? Self
     }
 
