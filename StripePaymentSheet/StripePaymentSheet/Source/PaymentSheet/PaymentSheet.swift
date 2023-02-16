@@ -32,6 +32,7 @@ import UIKit
 }
 
 /// TODO(porter) doc comment
+/// 🚧 Under construction
 @_spi(STP) @frozen public enum InitializationMode {
     case paymentIntentClientSecret(String)
     case setupIntentClientSecret(String)

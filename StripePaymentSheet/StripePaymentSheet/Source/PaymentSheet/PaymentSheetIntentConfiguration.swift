@@ -8,6 +8,7 @@
 import Foundation
 
 @_spi(STP) public extension PaymentSheet {
+    /// 🚧 Under construction
     struct IntentConfiguration {
         /// Filters out payment methods based on intended use.
         var mode: Mode
