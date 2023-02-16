@@ -312,7 +312,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testNextViewControllerIndividualWelcome() throws {
         // When verification type is not document, .name or .dob will be missing,
-        // should navigate to IndividuleWelcomeViewController
+        // should navigate to IndividualWelcomeViewController
         try verifyIndividualWelcomeViewController([.name, .dob, .idNumber])
         try verifyIndividualWelcomeViewController([.name, .dob, .address])
     }
