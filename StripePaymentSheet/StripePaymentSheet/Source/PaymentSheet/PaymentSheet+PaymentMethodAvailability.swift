@@ -91,6 +91,9 @@ extension Intent: PaymentMethodRequirementProvider {
                 reqs.append(.validUSBankVerificationMethod)
             }
             return reqs
+        case .deferredIntent:
+            // TODO(DeferredIntent): Allow ACHv2
+            return []
         }
     }
 }

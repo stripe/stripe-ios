@@ -27,6 +27,8 @@ extension Intent {
             return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
         case .setupIntent:
             return .setup
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent) - use mode")
         }
     }
 
@@ -36,6 +38,8 @@ extension Intent {
             return paymentIntent.linkSettings?.fundingSources
         case .setupIntent(let setupIntent):
             return setupIntent.linkSettings?.fundingSources
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent) - use link_settings in response")
         }
     }
 
@@ -45,6 +49,8 @@ extension Intent {
             return paymentIntent.countryCode
         case .setupIntent(let setupIntent):
             return setupIntent.countryCode
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent) - use country code in response")
         }
     }
 }
