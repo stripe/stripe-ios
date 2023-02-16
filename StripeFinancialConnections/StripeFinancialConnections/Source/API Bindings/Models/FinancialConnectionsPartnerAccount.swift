@@ -39,4 +39,5 @@ struct FinancialConnectionsDisabledPartnerAccount {
 struct FinancialConnectionsAuthSessionAccounts: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let nextPane: FinancialConnectionsSessionManifest.NextPane
+    let skipAccountSelection: Bool?
 }

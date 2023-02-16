@@ -69,6 +69,28 @@ public extension StripeAPI {
             }
         }
 
+        enum Status: String, SafeEnumCodable, Equatable {
+            case pending
+            case succeeded
+            case failed
+            case cancelled
+            case unparsable
+        }
+
+        struct StatusDetails: Decodable {
+            struct CancelledStatusDetails: Decodable {
+                enum TerminalStateReason: String, SafeEnumCodable, Equatable {
+                    case other
+                    case customManualEntry = "custom_manual_entry"
+                    case unparsable
+                }
+
+                let reason: TerminalStateReason
+            }
+
+            let cancelled: CancelledStatusDetails?
+        }
+
         // MARK: - Properties
 
         public let clientSecret: String
@@ -77,6 +99,8 @@ public extension StripeAPI {
         public let livemode: Bool
         @_spi(STP) public let paymentAccount: PaymentAccount?
         @_spi(STP) public let bankAccountToken: BankAccountToken?
+        let status: Status?
+        let statusDetails: StatusDetails?
 
         // MARK: - Internal Init
 
@@ -86,7 +110,9 @@ public extension StripeAPI {
             accounts: FinancialConnectionsSession.AccountList,
             livemode: Bool,
             paymentAccount: PaymentAccount?,
-            bankAccountToken: BankAccountToken?
+            bankAccountToken: BankAccountToken?,
+            status: Status?,
+            statusDetails: StatusDetails?
         ) {
             self.clientSecret = clientSecret
             self.id = id
@@ -94,6 +120,8 @@ public extension StripeAPI {
             self.livemode = livemode
             self.paymentAccount = paymentAccount
             self.bankAccountToken = bankAccountToken
+            self.status = status
+            self.statusDetails = statusDetails
         }
 
         // MARK: - Decodable
@@ -106,6 +134,8 @@ public extension StripeAPI {
             case livemode = "livemode"
             case paymentAccount = "payment_account"
             case bankAccountToken = "bank_account_token"
+            case status = "status"
+            case statusDetails = "status_details"
         }
 
         public init(from decoder: Decoder) throws {
@@ -122,7 +152,9 @@ public extension StripeAPI {
                 accounts: accounts,
                 livemode: try container.decode(Bool.self, forKey: .livemode),
                 paymentAccount: try? container.decode(PaymentAccount.self, forKey: .paymentAccount),
-                bankAccountToken: try? container.decode(BankAccountToken.self, forKey: .bankAccountToken)
+                bankAccountToken: try? container.decode(BankAccountToken.self, forKey: .bankAccountToken),
+                status: try? container.decode(Status.self, forKey: .status),
+                statusDetails: try? container.decode(StatusDetails.self, forKey: .statusDetails)
             )
         }
     }

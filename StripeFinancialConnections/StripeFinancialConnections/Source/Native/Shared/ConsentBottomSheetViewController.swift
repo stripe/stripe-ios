@@ -119,3 +119,25 @@ extension ConsentBottomSheetViewController: UIGestureRecognizerDelegate {
         return touch.view === self.view
     }
 }
+
+// MARK: - Presenting
+
+@available(iOSApplicationExtension, unavailable)
+extension ConsentBottomSheetViewController {
+
+    static func present(
+        withModel model: ConsentBottomSheetModel,
+        didSelectUrl: @escaping (URL) -> Void
+    ) {
+        let consentBottomSheetViewController = ConsentBottomSheetViewController(
+            model: model,
+            didSelectURL: didSelectUrl
+        )
+        consentBottomSheetViewController.modalTransitionStyle = .crossDissolve
+        consentBottomSheetViewController.modalPresentationStyle = .overCurrentContext
+        // `false` for animations because we do a custom animation inside VC logic
+        UIViewController
+            .topMostViewController()?
+            .present(consentBottomSheetViewController, animated: false, completion: nil)
+    }
+}

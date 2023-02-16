@@ -22,6 +22,12 @@ struct IdentityElementsFactory {
     let locale: Locale
     let addressSpecProvider: AddressSpecProvider
 
+    static let supportedCountryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
+        "US": .init(type: .US_SSN_LAST4, label: "Last 4 of Social Security number"),
+        "BR": .init(type: .BR_CPF, label: "Individual CPF"),
+        "SG": .init(type: .SG_NRIC_OR_FIN, label: "NRIC or FIN"),
+    ]
+
     init(
         locale: Locale = .current,
         addressSpecProvider: AddressSpecProvider = .shared
@@ -50,54 +56,22 @@ struct IdentityElementsFactory {
 
     /// Creates a section with a country dropdown and ID number input.
     /// - Parameters:
-    ///   - countryToIDNumberTypes: Map of accepted country codes which we can accept ID numbers from to the ID type.
-    func makeIDNumberSection(countryToIDNumberTypes: [String: IDNumberSpec]) -> SectionElement? {
+    ///   - idNumberCountires: Array of accepted country codes which we can accept ID numbers from to the ID type.
+    func makeIDNumberSection(idNumberCountries: [String]) -> IdNumberElement? {
+        let countryToIDNumberTypes = IdentityElementsFactory.supportedCountryToIDNumberTypes.filter(
+            { idNumberCountries.contains($0.key) }
+        )
         guard !countryToIDNumberTypes.isEmpty else {
             return nil
         }
 
-        // TODO(mludowise|IDPROD-2543): We'll need to tweak this to better
-        // handle unsupported countries.
-
-        let sortedCountryCodes = locale.sortedByTheirLocalizedNames(
-            Array(countryToIDNumberTypes.keys),
-            thisRegionFirst: true
-        )
-
-        let country = DropdownFieldElement.Address.makeCountry(
-            label: String.Localized.country,
-            countryCodes: sortedCountryCodes,
-            locale: locale
-        )
-
-        let defaultCountrySpec = countryToIDNumberTypes[sortedCountryCodes[country.selectedIndex]]
-        let id = TextFieldElement(
-            configuration: IDNumberTextFieldConfiguration(spec: defaultCountrySpec)
-        )
-        let section = SectionElement(
-            title: String.Localized.id_number_title,
-            elements: [country, id]
-        )
-
-        // Change ID input based on country selection
-        country.didUpdate = { index in
-            let selectedCountryCode = sortedCountryCodes[index]
-            let id = TextFieldElement(
-                configuration: IDNumberTextFieldConfiguration(
-                    spec: countryToIDNumberTypes[selectedCountryCode]
-                )
-            )
-            section.elements = [country, id]
-        }
-
-        return section
+        return IdNumberElement(countryToIDNumberTypes: countryToIDNumberTypes, locale: locale)
     }
 
     // MARK: DOB
 
     func makeDateOfBirth() -> DateFieldElement {
         return DateFieldElement(
-            label: String.Localized.date_of_birth,
             maximumDate: Date(),
             locale: locale
         )

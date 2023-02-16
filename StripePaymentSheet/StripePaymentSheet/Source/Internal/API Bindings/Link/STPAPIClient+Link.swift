@@ -13,6 +13,13 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 
 extension STPAPIClient {
+    struct DetailsResponse: Decodable {
+        let redactedPaymentDetails: ConsumerPaymentDetails
+    }
+
+    struct DetailsListResponse: Decodable {
+        let redactedPaymentDetails: [ConsumerPaymentDetails]
+    }
 
     func lookupConsumerSession(
         for email: String?,
@@ -136,13 +143,9 @@ extension STPAPIClient {
             "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
         ]
 
-        APIRequest<ConsumerPaymentDetails>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters,
-            completion: completion
-        )
+        post(resource: endpoint, parameters: parameters, ephemeralKeySecret: consumerAccountPublishableKey) { (result: Result<DetailsResponse, Error>) in
+            completion(result.map { $0.redactedPaymentDetails })
+        }
     }
 
     func createPaymentDetails(
@@ -163,13 +166,9 @@ extension STPAPIClient {
             "is_default": true,
         ]
 
-        APIRequest<ConsumerPaymentDetails>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters,
-            completion: completion
-        )
+        post(resource: endpoint, parameters: parameters, ephemeralKeySecret: consumerAccountPublishableKey) { (result: Result<DetailsResponse, Error>) in
+            completion(result.map { $0.redactedPaymentDetails })
+        }
     }
 
     func startVerification(
@@ -285,13 +284,8 @@ extension STPAPIClient {
             "types": ["card", "bank_account"],
         ]
 
-        APIRequest<ConsumerPaymentDetails.ListDeserializer>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { result in
-            completion(result.map { $0.paymentDetails })
+        post(resource: endpoint, parameters: parameters, ephemeralKeySecret: consumerAccountPublishableKey) { (result: Result<DetailsListResponse, Error>) in
+            completion(result.map { $0.redactedPaymentDetails })
         }
     }
 
@@ -345,13 +339,9 @@ extension STPAPIClient {
             parameters["is_default"] = isDefault
         }
 
-        APIRequest<ConsumerPaymentDetails>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters,
-            completion: completion
-        )
+        post(resource: endpoint, parameters: parameters, ephemeralKeySecret: consumerAccountPublishableKey) { (result: Result<DetailsResponse, Error>) in
+            completion(result.map { $0.redactedPaymentDetails })
+        }
     }
 
     func logout(
