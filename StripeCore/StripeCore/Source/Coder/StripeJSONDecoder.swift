@@ -690,15 +690,15 @@ extension STPDecodingContainerProtocol {
                 )
             }
             return convertedArray as! T
-        case is SafeEnumCodable.Type:
+        case is SafeEnumDecodable.Type:
             do {
                 let decoder = _stpinternal_JSONDecoder(jsonObject: object)
                 decoder.userInfo = userInfo
                 decoder.codingPath = codingPath
                 return try T(from: decoder)
             } catch Swift.DecodingError.dataCorrupted {
-                let enumCodableType = T.self as! (SafeEnumCodable.Type)
-                return enumCodableType.unparsable as! T
+                let enumDecodableType = T.self as! (SafeEnumDecodable.Type)
+                return enumDecodableType.unparsable as! T
             }
         default:
             let decoder = _stpinternal_JSONDecoder(jsonObject: object)

@@ -57,8 +57,7 @@ extension PaymentSheetLinkAccountTests {
             expiryMonth: 1,
             brand: "visa",
             last4: "4242",
-            checks: nil,
-            allResponseFields: [:]
+            checks: nil
         )
 
         card.cvc = cvc
@@ -66,8 +65,7 @@ extension PaymentSheetLinkAccountTests {
         return ConsumerPaymentDetails(
             stripeID: "1",
             details: .card(card: card),
-            isDefault: true,
-            allResponseFields: [:]
+            isDefault: true
         )
     }
 

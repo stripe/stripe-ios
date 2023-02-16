@@ -359,7 +359,7 @@ class ConsumerSessionTests: XCTestCase {
                 switch paymentDetails.details {
                 case .card(let card):
                     XCTAssertEqual(newExpiryDate, card.expiryDate)
-                case .bankAccount:
+                case .bankAccount, .unparsable:
                     XCTFail("Unexpected payment details type")
                 }
             case .failure(let error):
