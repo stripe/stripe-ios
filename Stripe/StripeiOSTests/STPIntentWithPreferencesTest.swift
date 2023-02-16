@@ -107,17 +107,17 @@ class STPIntentWithPreferencesTest: XCTestCase {
                 
                 XCTAssertEqual(
                     deferredIntent.orderedPaymentMethodTypes,
-                    [STPPaymentMethodType.card, STPPaymentMethodType.cashApp, STPPaymentMethodType.USBankAccount]
+                    [STPPaymentMethodType.card, STPPaymentMethodType.cashApp]
                 )
 
                 XCTAssertEqual(
                     deferredIntent.paymentMethodTypes,
-                    STPPaymentMethod.types(from: ["card", "cashapp", "us_bank_account"])
+                    STPPaymentMethod.types(from: ["card", "cashapp"])
                 )
 
                 XCTAssertEqual(
                     deferredIntent.unactivatedPaymentMethodTypes,
-                    [STPPaymentMethodType.cashApp, STPPaymentMethodType.USBankAccount]
+                    [STPPaymentMethodType.cashApp]
                 )
 
                 expectation.fulfill()

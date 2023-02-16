@@ -136,6 +136,7 @@ extension STPAPIClient {
         deferredIntent["mode"] = "payment"
         deferredIntent["amount"] = "2000"
         deferredIntent["currency"] = "usd"
+        deferredIntent["payment_method_types"] = ["card", "cashapp"]
         parameters["deferred_intent"] = deferredIntent
 
         APIRequest<STPElementsSession>.getWith(
