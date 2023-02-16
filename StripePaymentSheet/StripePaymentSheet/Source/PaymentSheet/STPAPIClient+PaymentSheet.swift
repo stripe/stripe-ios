@@ -141,11 +141,11 @@ extension STPAPIClient {
             deferredIntent["mode"] = "payment"
             deferredIntent["amount"] = amount
             deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage
+            deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
         case .setup(currency: let currency, setupFutureUsage: let setupFutureUsage):
             deferredIntent["mode"] = "setup"
             deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage
+            deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
         }
         
         parameters["deferred_intent"] = deferredIntent
