@@ -20,10 +20,10 @@ import Foundation
         /// Controls when the funds will be captured from the customer’s account.
         enum CaptureMethod: String {
             /// Stripe automatically captures funds when the customer authorizes the payment.
-            case automatic = "automatic"
+            case automatic
 
             /// Place a hold on the funds when the customer authorizes the payment, but don’t capture the funds until later. (Not all payment methods support this.)
-            case manual = "manual"
+            case manual
         }
 
         /// Indicates that you intend to make future payments with this Intents’s payment method.
