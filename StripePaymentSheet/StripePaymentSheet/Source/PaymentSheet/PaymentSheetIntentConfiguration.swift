@@ -13,9 +13,9 @@ import Foundation
         /// Filters out payment methods based on intended use.
         var mode: Mode
         /// Filters out payment methods based on their support for manual capture.
-        var captureMethod: CaptureMethod? = nil
+        var captureMethod: CaptureMethod?
         /// An explicit list of payment method types displayed to the customer.
-        var paymentMethodTypes: [String]? = nil
+        var paymentMethodTypes: [String]?
 
         /// Controls when the funds will be captured from the customer’s account.
         enum CaptureMethod: String {
