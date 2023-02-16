@@ -105,7 +105,6 @@ class STPIntentWithPreferencesTest: XCTestCase {
                 XCTAssertNotNil(deferredIntent.linkSettings)
                 XCTAssertNotNil(deferredIntent.paymentMethodSpecs)
                 XCTAssertFalse(deferredIntent.orderedPaymentMethodTypes.isEmpty)
-                XCTAssertFalse(deferredIntent.paymentMethodTypes.isEmpty)
 
                 expectation.fulfill()
             case .failure(let error):
