@@ -14,7 +14,8 @@ import UIKit
 protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        consumerSession: ConsumerSessionData
     )
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
@@ -105,6 +106,19 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
+
+    private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane) {
+        if let consumerSession = dataSource.consumerSession {
+            delegate?.networkingLinkVerificationViewController(
+                self,
+                didRequestNextPane: pane,
+                consumerSession: consumerSession
+            )
+        } else {
+            assertionFailure("logic error: did not have consumerSession")
+            delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
+        }
+    }
 }
 
 // MARK: - NetworkingLinkVerificationBodyViewDelegate
@@ -143,19 +157,13 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                                                     eventName: "networking.verification.success_no_accounts",
                                                     pane: .networkingLinkVerification
                                                 )
-                                                self.delegate?.networkingLinkVerificationViewController(
-                                                    self,
-                                                    didRequestNextPane: manifest.nextPane
-                                                )
+                                                self.requestNextPane(manifest.nextPane)
                                             } else {
                                                 self.dataSource.analyticsClient.log(
                                                     eventName: "networking.verification.success",
                                                     pane: .networkingLinkVerification
                                                 )
-                                                self.delegate?.networkingLinkVerificationViewController(
-                                                    self,
-                                                    didRequestNextPane: .linkAccountPicker
-                                                )
+                                                self.requestNextPane(.linkAccountPicker)
                                             }
                                         case .failure(let error):
                                             // TODO(kgaidis): log the error using the standard error logging too
@@ -169,10 +177,7 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                                                     pane: .networkingLinkVerification
                                                 )
                                             print(error) // TODO(kgaidis): remove print
-                                            self.delegate?.networkingLinkVerificationViewController(
-                                                self,
-                                                didRequestNextPane: manifest.nextPane
-                                            )
+                                            self.requestNextPane(manifest.nextPane)
                                         }
                                     }
                             case .failure(let error):

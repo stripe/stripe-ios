@@ -139,6 +139,14 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
     }
 
+    func selectNetworkedAccounts(
+        selectedAccountIds: [String],
+        clientSecret: String,
+        consumerSessionClientSecret: String
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsInstitutionList> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsInstitutionList>()
+    }
+
     func consumerSessionLookup(
         emailAddress: String
     ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {
