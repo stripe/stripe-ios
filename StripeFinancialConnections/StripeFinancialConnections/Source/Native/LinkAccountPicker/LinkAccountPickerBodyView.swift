@@ -46,9 +46,7 @@ final class LinkAccountPickerBodyView: UIView {
 
     func selectAccount(_ selectedAccount: FinancialConnectionsPartnerAccount?) {
         // clear all previous state
-        verticalStackView.arrangedSubviews.forEach { arrangedSubview in
-            arrangedSubview.removeFromSuperview()
-        }
+        verticalStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         // list all accounts
         accounts.forEach { account in

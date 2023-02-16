@@ -55,8 +55,7 @@ final class LinkAccountPickerFooterView: UIView {
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 20
-        addSubview(verticalStackView)
-        addAndPinSubviewToSafeArea(verticalStackView)
+        addAndPinSubview(verticalStackView)
     }
 
     required init?(coder: NSCoder) {

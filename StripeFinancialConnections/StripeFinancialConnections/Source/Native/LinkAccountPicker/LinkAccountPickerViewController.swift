@@ -209,7 +209,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
 
-    func linkLinkAccountPickerDataSource(
+    func linkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount?
     ) {

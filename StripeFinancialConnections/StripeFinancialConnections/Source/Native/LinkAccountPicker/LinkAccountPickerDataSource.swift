@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol LinkAccountPickerDataSourceDelegate: AnyObject {
-    func linkLinkAccountPickerDataSource(
+    func linkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount?
     )
@@ -37,7 +37,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
 
     private(set) var selectedAccount: FinancialConnectionsPartnerAccount? {
         didSet {
-            delegate?.linkLinkAccountPickerDataSource(self, didSelectAccount: selectedAccount)
+            delegate?.linkAccountPickerDataSource(self, didSelectAccount: selectedAccount)
         }
     }
     weak var delegate: LinkAccountPickerDataSourceDelegate?
