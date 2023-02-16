@@ -36,7 +36,12 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
         return activityIndicator
     }()
     private lazy var bodyView: NetworkingLinkStepUpVerificationBodyView = {
-        let bodyView = NetworkingLinkStepUpVerificationBodyView(email: dataSource.accountholderCustomerEmailAddress)
+        let bodyView = NetworkingLinkStepUpVerificationBodyView(
+            email: dataSource.accountholderCustomerEmailAddress,
+            didSelectResendCode: { [weak self] in
+                self?.didSelectResendCode()
+            }
+        )
         bodyView.delegate = self
         return bodyView
     }()
@@ -79,12 +84,14 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     private func showContent(redactedPhoneNumber: String) {
         let pane = PaneWithHeaderLayoutView(
             title: STPLocalizedString(
-                "Sign in to Link",
-                "The title of a screen where users are informed that they can sign-in-to Link."
+                "Check your email to confirm your identity",
+                "The title of a screen where users are asked to enter a one-time-password (OTP) that they received in their email."
             ),
-            subtitle: STPLocalizedString(
-                "Enter the code sent to \(redactedPhoneNumber)",
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
+            subtitle: String(
+                format: STPLocalizedString(
+                    "To keep your Link account safe, we periodically need to confirm you're you. Enter the code sent to your email %@.",
+                    "The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'."
+                ), "**\(dataSource.accountholderCustomerEmailAddress)**" // make the e-mail bold
             ),
             contentView: bodyView,
             footerView: nil
@@ -117,6 +124,15 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
         } else {
             assertionFailure("logic error: did not have consumerSession")
             delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
+        }
+    }
+    
+    private func didSelectResendCode() {
+        bodyView.isResendingCode(true)
+        // TODO(kgaidis): make an API call
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) { [weak self] in
+            guard let self = self else { return }
+            self.bodyView.isResendingCode(false)
         }
     }
 }

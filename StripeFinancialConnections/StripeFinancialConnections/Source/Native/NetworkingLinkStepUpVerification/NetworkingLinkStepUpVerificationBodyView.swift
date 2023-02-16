@@ -21,6 +21,8 @@ protocol NetworkingLinkStepUpVerificationBodyViewDelegate: AnyObject {
 @available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
+    private let email: String
+    private let didSelectResendCode: () -> Void
     weak var delegate: NetworkingLinkStepUpVerificationBodyViewDelegate?
 
     private(set) lazy var otpTextField: UITextField = {
@@ -42,18 +44,33 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
         return textField
     }()
+    
+    private lazy var footnoteHorizontalStackView: UIStackView = {
+        let footnoteHorizontalStackView = UIStackView()
+        footnoteHorizontalStackView.axis = .horizontal
+        footnoteHorizontalStackView.spacing = 8
+        footnoteHorizontalStackView.alignment = .center
+        return footnoteHorizontalStackView
+    }()
 
-    init(email: String) {
+    init(
+        email: String,
+        didSelectResendCode: @escaping () -> Void
+    ) {
+        self.email = email
+        self.didSelectResendCode = didSelectResendCode
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 otpTextField,
-                CreateEmailLabel(email: email),
+                footnoteHorizontalStackView,
             ]
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 20
         addAndPinSubview(verticalStackView)
+        
+        setupFootnoteView(isResendingCode: false)
     }
 
     required init?(coder: NSCoder) {
@@ -72,14 +89,92 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
             )
         }
     }
+    
+    func isResendingCode(_ isResendingCode: Bool) {
+        setupFootnoteView(isResendingCode: isResendingCode)
+    }
+    
+    private func setupFootnoteView(isResendingCode: Bool) {
+        // clear all previous state
+        footnoteHorizontalStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        footnoteHorizontalStackView.addArrangedSubview(
+            CreateEmailLabel(email: email)
+        )
+        footnoteHorizontalStackView.addArrangedSubview(
+            CreateCreateDotLabel()
+        )
+        footnoteHorizontalStackView.addArrangedSubview(
+            CreateResendCodeLabel(
+                isEnabled: !isResendingCode,
+                didSelect: didSelectResendCode
+            )
+        )
+        if isResendingCode {
+            footnoteHorizontalStackView.addArrangedSubview(
+                CreateResendCodeLoadingView()
+            )
+            let spacerView = UIView()
+            footnoteHorizontalStackView.addArrangedSubview(spacerView)
+        }
+    }
 }
 
 private func CreateEmailLabel(email: String) -> UIView {
     let emailLabel = UILabel()
-    emailLabel.text = "Signing in as \(email)" // TODO(kgaidis): wrap with localizable strings
+    emailLabel.text = "\(email)"
     emailLabel.font = .stripeFont(forTextStyle: .captionTight)
     emailLabel.textColor = .textSecondary
     return emailLabel
+}
+
+private func CreateCreateDotLabel() -> UIView {
+    let dotLabel = UILabel()
+    dotLabel.text = "•"
+    dotLabel.font = .stripeFont(forTextStyle: .captionTight)
+    dotLabel.textColor = .textDisabled
+    return dotLabel
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreateResendCodeLabel(isEnabled: Bool, didSelect: @escaping () -> Void) -> UIView {
+    let resendCodeLabel = ClickableLabel(
+        font: .stripeFont(forTextStyle: .captionTightEmphasized),
+        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        textColor: .textDisabled,
+        alignCenter: false
+    )
+    let text = "Resend code" // TODO(kgaidis): localize
+    if isEnabled {
+        resendCodeLabel.setText(
+            "[\(text)](https://www.just-fire-action.com)",
+            action: { _ in
+                didSelect()
+            }
+        )
+    } else {
+        resendCodeLabel.setText(text)
+    }
+    return resendCodeLabel
+}
+
+private func CreateResendCodeLoadingView() -> UIView {
+    let activityIndicator = ActivityIndicator(size: .medium)
+    activityIndicator.color = .textDisabled
+    activityIndicator.startAnimating()
+    
+    // `ActivityIndicator` is hard-coded to have specific sizes, so here we scale it to our needs
+    let mediumIconDiameter: CGFloat = 20
+    let desiredIconDiameter: CGFloat = 12
+    let transform = CGAffineTransform(scaleX: desiredIconDiameter / mediumIconDiameter, y: desiredIconDiameter / mediumIconDiameter)
+    activityIndicator.transform = transform
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        activityIndicator.widthAnchor.constraint(equalToConstant: desiredIconDiameter),
+        activityIndicator.heightAnchor.constraint(equalToConstant: desiredIconDiameter),
+    ])
+    return activityIndicator
 }
 
 #if DEBUG
@@ -91,7 +186,8 @@ private struct NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable: UIVi
 
     func makeUIView(context: Context) -> NetworkingLinkStepUpVerificationBodyView {
         NetworkingLinkStepUpVerificationBodyView(
-            email: "test@stripe.com"
+            email: "test@stripe.com",
+            didSelectResendCode: {}
         )
     }
 

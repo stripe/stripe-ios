@@ -16,6 +16,7 @@ import UIKit
 ///
 /// Purposefully NOT a `UIView` subclass because it should only be used via
 /// `addToView` helper function.
+@available(iOSApplicationExtension, unavailable)
 final class PaneWithHeaderLayoutView {
 
     enum Icon {
@@ -49,6 +50,7 @@ final class PaneWithHeaderLayoutView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 private func CreateHeaderView(
     icon: PaneWithHeaderLayoutView.Icon?,
     title: String,
@@ -72,6 +74,7 @@ private func CreateHeaderView(
     return headerStackView
 }
 
+@available(iOSApplicationExtension, unavailable)
 private func CreateIconView(iconType: PaneWithHeaderLayoutView.Icon) -> UIView {
     switch iconType {
     case .view(let view):
@@ -79,6 +82,7 @@ private func CreateIconView(iconType: PaneWithHeaderLayoutView.Icon) -> UIView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIView {
     let labelStackView = HitTestStackView()
     labelStackView.axis = .vertical
@@ -92,11 +96,13 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
     labelStackView.addArrangedSubview(titleLabel)
 
     if let subtitle = subtitle {
-        let subtitleLabel = UILabel()
-        subtitleLabel.font = .stripeFont(forTextStyle: .body)
-        subtitleLabel.textColor = .textSecondary
-        subtitleLabel.numberOfLines = 0
-        subtitleLabel.text = subtitle
+        let subtitleLabel = ClickableLabel(
+            font: .stripeFont(forTextStyle: .body),
+            boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            textColor: .textSecondary
+        )
+        subtitleLabel.setText(subtitle)
         labelStackView.addArrangedSubview(subtitleLabel)
     }
 

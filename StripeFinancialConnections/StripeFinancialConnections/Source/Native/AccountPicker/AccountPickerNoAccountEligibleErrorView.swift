@@ -11,6 +11,7 @@ import Foundation
 import UIKit
 
 // Same as Stripe.js `AccountNoneEligibleForPaymentMethodFailure`
+@available(iOSApplicationExtension, unavailable)
 final class AccountPickerNoAccountEligibleErrorView: UIView {
 
     init(
