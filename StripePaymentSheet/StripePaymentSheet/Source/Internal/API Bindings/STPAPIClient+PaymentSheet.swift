@@ -134,7 +134,7 @@ extension STPAPIClient {
 
         var deferredIntent = [String: Any]()
         deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
-        deferredIntent["capture_method"] = intentConfig.captureMethod
+        deferredIntent["capture_method"] = intentConfig.captureMethod?.rawValue
 
         switch intentConfig.mode {
         case .payment(amount: let amount, currency: let currency, setupFutureUsage: let setupFutureUsage):
