@@ -27,24 +27,22 @@ disabled_rules:
   - xctfail_message
   - no_fallthrough_only
   - closure_parameter_position
-  # The following rules were disabled during the initial cleanup, if it causes too much trouble to fix
-  # violations in future changes they can be disabled on a case by case basis.
-  # - shorthand_operator
-  # - for_where  
-  # - empty_count
-  # - overridden_super_call
-  # - redundant_string_enum_value
-  # - class_delegate_protocol
-  # - reduce_boolean
-  # - unused_setter_value
-  # - notification_center_detachment
-  # - private_outlet
+  # Rules to potentially enable in the future
+  - shorthand_operator
+  - for_where  
+  - empty_count
+  - overridden_super_call
+  - redundant_string_enum_value
+  - class_delegate_protocol
+  - reduce_boolean
+  - unused_setter_value
+  - notification_center_detachment
+  - private_outlet
 
 opt_in_rules:
   - colon
   - comma
   - control_statement
-  - empty_count
   # - force_unwrapping  # Enable one day...
   - joined_default_parameter
   - leading_whitespace
@@ -62,12 +60,7 @@ opt_in_rules:
   - trailing_semicolon
   - trailing_whitespace
   - closure_spacing
-  - weak_delegate
-  - discouraged_object_literal
-  - unowned_variable_capture
-  - single_test_class
-  # The following rules were disabled during the initial cleanup, if it causes too much trouble to fix
-  # violations in future changes they can be disabled on a case by case basis.
+  # Rules to potentially enable in the future
   # - weak_delegate
   # - discouraged_object_literal
   # - unowned_variable_capture
@@ -81,11 +74,6 @@ excluded:
   - vendor
   - build*
   - .build
-
-line_length:
-  ignores_comments: true
-  ignores_urls: true
-  ignores_interpolated_strings: true
 
 identifier_name:
   allowed_symbols: _
