@@ -68,6 +68,8 @@ public class PaymentSheet {
         )
     }
 
+    /// TODO(porter) doc comment
+    /// 🚧 Under construction
     @_spi(STP) public convenience init(mode: InitializationMode, configuration: Configuration) {
         switch mode {
         case .paymentIntentClientSecret(let paymentIntentClientSecret):
@@ -236,7 +238,7 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
 
-    /// The client secret this instance was initialized with
+    /// The retrievable intent this instance was initialized with
     let retrievableIntent: RetrievableIntent
 
     /// A user-supplied completion block. Nil until `present` is called.

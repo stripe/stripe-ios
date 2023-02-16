@@ -371,7 +371,7 @@ extension PaymentSheet {
             }
         }
 
-        // Fetch PaymentIntent or SetupIntent
+        // Fetch PaymentIntent, SetupIntent, or ElementsSession
         switch retrievableIntent {
         case .paymentIntent(let clientSecret):
             let paymentIntentHandlerCompletionBlock: ((STPPaymentIntent) -> Void) = { paymentIntent in
