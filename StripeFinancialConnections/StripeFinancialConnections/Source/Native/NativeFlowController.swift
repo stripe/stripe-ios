@@ -846,11 +846,11 @@ private func CreatePaneViewController(
     case .networkingSaveToLinkVerification:
         if
             let consumerSession = dataManager.consumerSession,
-            let selectedAccountIds = dataManager.linkedAccounts?.map({ $0.id })
+            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
         {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 consumerSession: consumerSession,
-                selectedAccountIds: selectedAccountIds,
+                selectedAccountId: selectedAccountId,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient

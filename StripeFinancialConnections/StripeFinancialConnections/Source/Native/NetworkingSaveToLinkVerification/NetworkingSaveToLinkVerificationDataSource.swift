@@ -21,20 +21,20 @@ protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
 final class NetworkingSaveToLinkVerificationDataSourceImplementation: NetworkingSaveToLinkVerificationDataSource {
 
     private(set) var consumerSession: ConsumerSessionData
-    private let selectedAccountIds: [String]
+    private let selectedAccountId: String
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
     init(
         consumerSession: ConsumerSessionData,
-        selectedAccountIds: [String],
+        selectedAccountId: String,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.consumerSession = consumerSession
-        self.selectedAccountIds = selectedAccountIds
+        self.selectedAccountId = selectedAccountId
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
@@ -81,7 +81,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
             emailAddress: nil,
             phoneNumber: nil,
             country: nil,
-            selectedAccountIds: selectedAccountIds,
+            selectedAccountIds: [selectedAccountId],
             consumerSessionClientSecret: consumerSession.clientSecret,
             clientSecret: clientSecret
         )
