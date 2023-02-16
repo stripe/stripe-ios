@@ -92,19 +92,36 @@ class STPIntentWithPreferencesTest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     func testDeferredIntentWithPreferences() {
         let expectation = XCTestExpectation(description: "Retrieve Deferred Intent With Preferences")
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         client.retrieveDeferredIntentWithPreferences { result in
             switch result {
-                case.success(let paymentIntentWithPreferences):
-                    expectation.fulfill()
-                    
-                    XCTAssertEqual(paymentIntentWithPreferences.amount, 100)
-                case .failure(let error):
-                    print(error)
+            case .success(let deferredIntent):
+                XCTAssertNotNil(deferredIntent)
+                XCTAssertEqual(deferredIntent.countryCode, "US")
+                XCTAssertNotNil(deferredIntent.linkSettings)
+
+                XCTAssertEqual(
+                    deferredIntent.orderedPaymentMethodTypes,
+                    [STPPaymentMethodType.card, STPPaymentMethodType.cashApp, STPPaymentMethodType.USBankAccount]
+                )
+
+                XCTAssertEqual(
+                    deferredIntent.paymentMethodTypes,
+                    STPPaymentMethod.types(from: ["card", "cashapp", "us_bank_account"])
+                )
+
+                XCTAssertEqual(
+                    deferredIntent.unactivatedPaymentMethodTypes,
+                    [STPPaymentMethodType.cashApp, STPPaymentMethodType.USBankAccount]
+                )
+
+                expectation.fulfill()
+            case .failure(let error):
+                print(error)
             }
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)

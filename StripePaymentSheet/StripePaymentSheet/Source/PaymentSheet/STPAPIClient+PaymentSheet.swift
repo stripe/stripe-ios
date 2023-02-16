@@ -92,7 +92,7 @@ extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
     typealias STPElementsSessionWithPreferencesCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
-    
+
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
         completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
@@ -109,9 +109,11 @@ extension STPAPIClient {
         parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
 
-        APIRequest<STPPaymentIntent>.getWith(self,
-                                             endpoint: APIEndpointIntentWithPreferences,
-                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
+        APIRequest<STPPaymentIntent>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { paymentIntentWithPreferences, _, error in
             guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
@@ -120,7 +122,7 @@ extension STPAPIClient {
             completion(.success(paymentIntentWithPreferences))
         }
     }
-    
+
     // TODO(porter) Pass in deferred intent config from public API
     func retrieveDeferredIntentWithPreferences(
         completion: @escaping STPElementsSessionWithPreferencesCompletionBlock
@@ -129,16 +131,18 @@ extension STPAPIClient {
         parameters["key"] = publishableKey
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
-        
+
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "payment"
         deferredIntent["amount"] = "2000"
         deferredIntent["currency"] = "usd"
         parameters["deferred_intent"] = deferredIntent
 
-        APIRequest<STPElementsSession>.getWith(self,
-                                             endpoint: APIEndpointIntentWithPreferences,
-                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
+        APIRequest<STPElementsSession>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { paymentIntentWithPreferences, _, error in
             guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
@@ -164,9 +168,11 @@ extension STPAPIClient {
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
 
-        APIRequest<STPSetupIntent>.getWith(self,
-                                           endpoint: APIEndpointIntentWithPreferences,
-                                           parameters: parameters) { setupIntentWithPreferences, _, error in
+        APIRequest<STPSetupIntent>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { setupIntentWithPreferences, _, error in
 
             guard let setupIntentWithPreferences = setupIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
