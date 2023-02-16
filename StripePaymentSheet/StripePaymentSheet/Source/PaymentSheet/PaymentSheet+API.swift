@@ -430,6 +430,11 @@ extension PaymentSheet {
                     }
                 }
             }
+            
+        case .defferedIntent(let intentConfig):
+            let deferredIntentHandlerCompletionBlock: ((STPElementsSession) -> Void) = { elementsSession in
+                intentPromise.resolve(with: .deferredIntent(elementsSession))
+            }
         }
 
         // List the Customer's saved PaymentMethods

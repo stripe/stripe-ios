@@ -96,6 +96,8 @@ enum IntentClientSecret {
 
     /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     case setupIntent(clientSecret: String)
+    
+    case defferedIntent(intentConfig: PaymentSheet.IntentConfiguration)
 }
 
 // MARK: - IntentConfirmParams

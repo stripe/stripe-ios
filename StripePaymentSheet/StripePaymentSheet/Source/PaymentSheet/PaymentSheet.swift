@@ -31,6 +31,13 @@ import UIKit
     case failed(error: Error)
 }
 
+//    @frozen?
+@_spi(STP) public enum InitializationMode {
+    case paymentIntentClientSecret(String)
+    case setupIntentClientSecret(String)
+    case deferredIntent(PaymentSheet.IntentConfiguration)
+}
+
 /// A drop-in class that presents a sheet for a customer to complete their payment
 public class PaymentSheet {
     /// This contains all configurable properties of PaymentSheet
@@ -58,6 +65,26 @@ public class PaymentSheet {
             intentClientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
             configuration: configuration
         )
+    }
+    
+    @_spi(STP) public convenience init(mode: InitializationMode, configuration: Configuration) {
+        switch mode {
+        case .paymentIntentClientSecret(let paymentIntentClientSecret):
+            self.init(
+                intentClientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+                configuration: configuration
+            )
+        case .setupIntentClientSecret(let setupIntentClientSecret):
+            self.init(
+                intentClientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+                configuration: configuration
+            )
+        case .deferredIntent(let intentConfig):
+            self.init(
+                intentClientSecret: .defferedIntent(intentConfig: intentConfig),
+                configuration: configuration
+            )
+        }
     }
 
     required init(intentClientSecret: IntentClientSecret, configuration: Configuration) {
