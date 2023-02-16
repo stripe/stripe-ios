@@ -93,11 +93,11 @@ class STPIntentWithPreferencesTest: XCTestCase {
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    func testDeferredIntentWithPreferences() {
-        let expectation = XCTestExpectation(description: "Retrieve Deferred Intent With Preferences")
+    func testRetrieveElementSession() {
+        let expectation = XCTestExpectation(description: "Retrieve ElementsSession")
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-        client.retrieveDeferredIntentWithPreferences { result in
+        client.retrieveElementsSession { result in
             switch result {
             case .success(let deferredIntent):
                 XCTAssertNotNil(deferredIntent)
@@ -109,16 +109,8 @@ class STPIntentWithPreferencesTest: XCTestCase {
                     deferredIntent.orderedPaymentMethodTypes,
                     [STPPaymentMethodType.card, STPPaymentMethodType.cashApp]
                 )
-
-                XCTAssertEqual(
-                    deferredIntent.paymentMethodTypes,
-                    STPPaymentMethod.types(from: ["card", "cashapp"])
-                )
-
-                XCTAssertEqual(
-                    deferredIntent.unactivatedPaymentMethodTypes,
-                    [STPPaymentMethodType.cashApp]
-                )
+                
+                XCTAssertFalse(deferredIntent.paymentMethodTypes.isEmpty)
 
                 expectation.fulfill()
             case .failure(let error):

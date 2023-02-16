@@ -7,10 +7,11 @@
 
 import Foundation
 
-public class STPElementsSession: NSObject {
+/// The response returned by v1/elements/sessions
+@_spi(STP) public class STPElementsSession: NSObject {
 
     /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this ElementsSession is allowed to use.
-    @objc public let paymentMethodTypes: [NSNumber]
+    @_spi(STP) @objc public let paymentMethodTypes: [NSNumber]
 
     /// The ordered payment method preference for this ElementsSession.
     @_spi(STP) public let orderedPaymentMethodTypes: [STPPaymentMethodType]
@@ -27,7 +28,7 @@ public class STPElementsSession: NSObject {
     /// A map describing payment method types form specs.
     @_spi(STP) public let paymentMethodSpecs: [[AnyHashable: Any]]?
 
-    @objc public let allResponseFields: [AnyHashable: Any]
+    @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
     @objc public override var description: String {

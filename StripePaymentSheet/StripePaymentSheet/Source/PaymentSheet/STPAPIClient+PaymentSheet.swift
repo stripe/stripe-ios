@@ -91,7 +91,7 @@ extension STPAPIClient {
 extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
-    typealias STPElementsSessionWithPreferencesCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
+    typealias STPElementsSessionCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
 
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
@@ -124,8 +124,8 @@ extension STPAPIClient {
     }
 
     // TODO(porter) Pass in deferred intent config from public API
-    func retrieveDeferredIntentWithPreferences(
-        completion: @escaping STPElementsSessionWithPreferencesCompletionBlock
+    func retrieveElementsSession(
+        completion: @escaping STPElementsSessionCompletionBlock
     ) {
         var parameters: [String: Any] = [:]
         parameters["key"] = publishableKey
