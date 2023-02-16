@@ -1,3 +1,7 @@
+## x.x.x yyyy-mm-dd
+### PaymentSheet
+* [Added] Adds support for setting up PayPal using a SetupIntent or a PaymentIntent w/ setup_future_usage=off_session. Note: PayPal is in beta.
+
 ## 23.3.4 2023-02-13
 ### Financial Connections
 * [Changed] Polished Financial Connections UI.
