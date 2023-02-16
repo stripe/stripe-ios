@@ -71,6 +71,9 @@ class PaymentSheetFormFactory {
             }
         case .setupIntent:
             saveMode = .merchantRequired
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
+
         }
         self.intent = intent
         self.configuration = configuration

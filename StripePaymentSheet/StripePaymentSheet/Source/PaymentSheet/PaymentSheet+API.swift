@@ -128,6 +128,9 @@ extension PaymentSheet {
                     with: authenticationContext,
                     completion: paymentHandlerCompletion
                 )
+            // MARK: ↪ Deferred Intent
+            case .deferredIntent:
+                fatalError("TODO(DeferredIntent)")
             }
 
         // MARK: - Saved Payment Method
@@ -173,7 +176,9 @@ extension PaymentSheet {
                     with: authenticationContext,
                     completion: paymentHandlerCompletion
                 )
-
+            // MARK: ↪ Deferred Intent
+            case .deferredIntent:
+                fatalError("TODO(DeferredIntent)")
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -198,6 +203,8 @@ extension PaymentSheet {
                         with: authenticationContext,
                         completion: paymentHandlerCompletion
                     )
+                case .deferredIntent:
+                    fatalError("TODO(DeferredIntent)")
                 }
             }
 

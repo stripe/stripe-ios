@@ -124,6 +124,8 @@ extension STPApplePayContext {
                     PKPaymentSummaryItem(label: "\(configuration.merchantDisplayName)", amount: .one, type: .pending),
                 ]
             }
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)

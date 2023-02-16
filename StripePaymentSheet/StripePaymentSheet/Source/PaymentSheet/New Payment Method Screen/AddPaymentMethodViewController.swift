@@ -348,6 +348,8 @@ class AddPaymentMethodViewController: UIViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent): Support ACHv2")
         }
     }
 }
