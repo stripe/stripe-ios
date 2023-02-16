@@ -164,6 +164,7 @@ extension PaymentSheet {
         /// - Parameter intent: The `intent` to extract `PaymentMethodType`s from.
         /// - Returns: An ordered list of all the `PaymentMethodType`s for this `intent`.
         static func recommendedPaymentMethodTypes(from intent: Intent) -> [PaymentMethodType] {
+            // We look at the raw `allResponseFields` because some strings may have been parsed into STPPaymentMethodType.unknown
             switch intent {
             case .paymentIntent(let paymentIntent):
                 guard
@@ -184,6 +185,8 @@ extension PaymentSheet {
                     setupIntent.allResponseFields["ordered_payment_method_types"] as? [String]
                     ?? paymentMethodTypeStrings
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
+            case .deferredIntent:
+                fatalError("TODO(DeferredIntent) - use ordered_payment_method_types from v1/elements/sessions")
             }
         }
 

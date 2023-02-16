@@ -17,19 +17,11 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent or a SetupIntent
+/// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-
-    var livemode: Bool {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.livemode
-        case .setupIntent(let si):
-            return si.livemode
-        }
-    }
+    case deferredIntent
 
     var clientSecret: String {
         switch self {
@@ -37,6 +29,8 @@ enum Intent {
             return pi.clientSecret
         case .setupIntent(let si):
             return si.clientSecret
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
@@ -46,6 +40,8 @@ enum Intent {
             return pi.unactivatedPaymentMethodTypes
         case .setupIntent(let si):
             return si.unactivatedPaymentMethodTypes
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
@@ -56,15 +52,20 @@ enum Intent {
             return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
     var isPaymentIntent: Bool {
-        if case .paymentIntent = self {
+        switch self {
+        case .paymentIntent:
             return true
+        case .setupIntent:
+            return false
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
-
-        return false
     }
 
     var currency: String? {
@@ -73,6 +74,8 @@ enum Intent {
             return pi.currency
         case .setupIntent:
             return nil
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
@@ -83,6 +86,8 @@ enum Intent {
             return paymentIntent.setupFutureUsage != .none
         case .setupIntent:
             return true
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 }
@@ -117,7 +122,8 @@ class IntentConfirmParams {
 
     var paymentSheetLabel: String {
         if let linkedBank = linkedBank,
-           let last4 = linkedBank.last4 {
+            let last4 = linkedBank.last4
+        {
             return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
@@ -126,7 +132,8 @@ class IntentConfirmParams {
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let linkedBank = linkedBank,
-           let bankName = linkedBank.bankName {
+            let bankName = linkedBank.bankName
+        {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
             return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)
@@ -206,16 +213,16 @@ extension STPConfirmPaymentMethodOptions {
 
     /**
      Sets `payment_method_options[x][setup_future_usage]` where x is either "card" or "us_bank_account"
-     
+
      `setup_future_usage` controls whether or not the payment method should be saved to the Customer and is only set if:
         1. We're displaying a "Save this pm for future payments" checkbox
         2. The PM type is card or US bank
-     
+
      - Parameter paymentMethodType: This method no-ops unless the type is either `.card` or `.USBankAccount`
      - Note: PaymentSheet uses this `setup_future_usage` (SFU) value very differently from the top-level one:
         We read the top-level SFU to know the merchant’s desired save behavior
         We write payment method options SFU to set the customer’s desired save behavior
-     
+
      */
     func setSetupFutureUsageIfNecessary(
         _ shouldSave: Bool,

@@ -113,6 +113,7 @@ extension PaymentSheet {
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+
                     // Paypal requires mandate_data if setting up
                     if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal
                         && paymentIntent.setupFutureUsage == .offSession
@@ -138,6 +139,9 @@ extension PaymentSheet {
                     with: authenticationContext,
                     completion: paymentHandlerCompletion
                 )
+            // MARK: ↪ Deferred Intent
+            case .deferredIntent:
+                fatalError("TODO(DeferredIntent)")
             }
 
         // MARK: - Saved Payment Method
@@ -183,7 +187,9 @@ extension PaymentSheet {
                     with: authenticationContext,
                     completion: paymentHandlerCompletion
                 )
-
+            // MARK: ↪ Deferred Intent
+            case .deferredIntent:
+                fatalError("TODO(DeferredIntent)")
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -208,6 +214,8 @@ extension PaymentSheet {
                         with: authenticationContext,
                         completion: paymentHandlerCompletion
                     )
+                case .deferredIntent:
+                    fatalError("TODO(DeferredIntent)")
                 }
             }
 
