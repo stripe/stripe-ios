@@ -144,6 +144,8 @@ class PaymentSheetViewController: UIViewController {
                 return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
             case .setupIntent:
                 return .setup
+            case .deferredIntent:
+                fatalError("TODO(DeferredIntent) - Use amount & currency if mode = payment")
             }
         }()
 

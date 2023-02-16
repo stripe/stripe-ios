@@ -17,10 +17,11 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent or a SetupIntent
+/// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
+    case deferredIntent
 
     var clientSecret: String {
         switch self {
@@ -28,6 +29,8 @@ enum Intent {
             return pi.clientSecret
         case .setupIntent(let si):
             return si.clientSecret
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
@@ -37,6 +40,8 @@ enum Intent {
             return pi.unactivatedPaymentMethodTypes
         case .setupIntent(let si):
             return si.unactivatedPaymentMethodTypes
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
@@ -47,15 +52,20 @@ enum Intent {
             return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
     var isPaymentIntent: Bool {
-        if case .paymentIntent = self {
+        switch self {
+        case .paymentIntent:
             return true
+        case .setupIntent:
+            return false
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
-
-        return false
     }
 
     var currency: String? {
@@ -64,6 +74,8 @@ enum Intent {
             return pi.currency
         case .setupIntent:
             return nil
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 
@@ -74,6 +86,8 @@ enum Intent {
             return paymentIntent.setupFutureUsage != .none
         case .setupIntent:
             return true
+        case .deferredIntent:
+            fatalError("TODO(DeferredIntent)")
         }
     }
 }

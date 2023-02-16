@@ -185,6 +185,8 @@ extension PaymentSheet {
                     setupIntent.allResponseFields["ordered_payment_method_types"] as? [String]
                     ?? paymentMethodTypeStrings
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
+            case .deferredIntent:
+                fatalError("TODO(DeferredIntent) - use ordered_payment_method_types from v1/elements/sessions")
             }
         }
 
