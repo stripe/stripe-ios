@@ -11,24 +11,24 @@ import Foundation
 @_spi(STP) public class STPElementsSession: NSObject {
 
     /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this ElementsSession is allowed to use.
-    @_spi(STP) @objc public let paymentMethodTypes: [NSNumber]
+    public let paymentMethodTypes: [NSNumber]
 
     /// The ordered payment method preference for this ElementsSession.
-    @_spi(STP) public let orderedPaymentMethodTypes: [STPPaymentMethodType]
+    public let orderedPaymentMethodTypes: [STPPaymentMethodType]
 
     /// A list of payment method types that are not activated in live mode, but activated in test mode.
-    @_spi(STP) public let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
+    public let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
 
     /// Link-specific settings for this ElementsSession.
-    @_spi(STP) public let linkSettings: LinkSettings?
+    public let linkSettings: LinkSettings?
 
     /// Country code of the user.
-    @_spi(STP) public let countryCode: String?
+    public let countryCode: String?
 
     /// A map describing payment method types form specs.
-    @_spi(STP) public let paymentMethodSpecs: [[AnyHashable: Any]]?
+    public let paymentMethodSpecs: [[AnyHashable: Any]]?
 
-    @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
     @objc public override var description: String {
