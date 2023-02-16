@@ -27,6 +27,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case manualEntrySuccess = "manual_entry_success"
         case networkingLinkLoginWarmup = "networking_link_login_warmup"
         case networkingLinkSignupPane = "networking_link_signup_pane"
+        case networkingLinkStepUpVerification = "networking_link_step_up_verification"
         case networkingLinkVerification = "networking_link_verification"
         case networkingSaveToLinkVerification = "networking_save_to_link_verification"
         case partnerAuth = "partner_auth"
