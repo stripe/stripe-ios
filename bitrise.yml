@@ -191,10 +191,10 @@ workflows:
     steps:
     - set-xcode-build-number@1:
         inputs:
-        - plist_path: '"Example/PaymentSheet Example/PaymentSheet Example/Info.plist"'
+        - plist_path: '$BITRISE_SOURCE_DIR/Example/PaymentSheet Example/PaymentSheet Example/Info.plist'
     - set-xcode-build-number@1:
         inputs:
-        - plist_path: '"Example/IdentityVerification Example/IdentityVerification Example/Info.plist"'
+        - plist_path: '$BITRISE_SOURCE_DIR/Example/IdentityVerification Example/IdentityVerification Example/Info.plist'
     - xcode-archive@4:
         inputs:
         - project_path: Stripe.xcworkspace
