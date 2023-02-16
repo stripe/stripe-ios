@@ -187,7 +187,7 @@ public class STPPaymentIntentParams: NSObject {
             // Identifier
             "stripeId = \(String(describing: stripeId))",
             // PaymentIntentParams details (alphabetical)
-            "clientSecret = \((clientSecret.count > 0) ? "<redacted>" : "")",
+            "clientSecret = \(!clientSecret.isEmpty ? "<redacted>" : "")",
             "receiptEmail = \(String(describing: receiptEmail))",
             "returnURL = \(String(describing: returnURL))",
             "savePaymentMethod = \(String(describing: savePaymentMethod?.boolValue))",
