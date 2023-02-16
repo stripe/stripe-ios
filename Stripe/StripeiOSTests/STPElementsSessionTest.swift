@@ -9,7 +9,7 @@ import Foundation
 @testable@_spi(STP) import StripePayments
 
 class STPElementsSessionTest: XCTestCase {
-    
+
     // MARK: - Description Tests
     func testDescription() {
         let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
@@ -20,44 +20,48 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertTrue(desc.contains(NSStringFromClass(type(of: elementsSession).self)))
         XCTAssertGreaterThan((desc.count), 500, "Custom description should be long")
     }
-    
+
     // MARK: - STPAPIResponseDecodable Tests
     func testDecodedObjectFromAPIResponseMapping() {
         let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        
+
         XCTAssertEqual(
             elementsSession.paymentMethodTypes,
-            STPPaymentMethod.types(from: ["card",
-                                              "link",
-                                              "us_bank_account",
-                                              "afterpay_clearpay",
-                                              "klarna",
-                                              "cashapp",
-                                              "alipay",
-                                              "wechat_pay"])
+            STPPaymentMethod.types(from: [
+                "card",
+                "link",
+                "us_bank_account",
+                "afterpay_clearpay",
+                "klarna",
+                "cashapp",
+                "alipay",
+                "wechat_pay",
+            ])
         )
-        
+
         XCTAssertEqual(
             elementsSession.orderedPaymentMethodTypes,
-            [STPPaymentMethodType.card,
-             STPPaymentMethodType.link,
-             STPPaymentMethodType.USBankAccount,
-             STPPaymentMethodType.afterpayClearpay,
-             STPPaymentMethodType.klarna,
-             STPPaymentMethodType.cashApp,
-             STPPaymentMethodType.alipay,
-             STPPaymentMethodType.weChatPay]
+            [
+                STPPaymentMethodType.card,
+                STPPaymentMethodType.link,
+                STPPaymentMethodType.USBankAccount,
+                STPPaymentMethodType.afterpayClearpay,
+                STPPaymentMethodType.klarna,
+                STPPaymentMethodType.cashApp,
+                STPPaymentMethodType.alipay,
+                STPPaymentMethodType.weChatPay,
+            ]
         )
-        
+
         XCTAssertEqual(
             elementsSession.unactivatedPaymentMethodTypes,
             [STPPaymentMethodType.cashApp]
         )
-        
+
         XCTAssertNotNil(elementsSession.linkSettings)
         XCTAssertEqual(elementsSession.countryCode, "US")
         XCTAssertNotNil(elementsSession.paymentMethodSpecs)
     }
-    
+
 }
