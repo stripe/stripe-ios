@@ -92,4 +92,26 @@ class STPIntentWithPreferencesTest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
+
+    func testRetrieveElementSession() {
+        let expectation = XCTestExpectation(description: "Retrieve ElementsSession")
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        client.retrieveElementsSession { result in
+            switch result {
+            case .success(let deferredIntent):
+                XCTAssertNotNil(deferredIntent)
+                XCTAssertEqual(deferredIntent.countryCode, "US")
+                XCTAssertNotNil(deferredIntent.linkSettings)
+                XCTAssertNotNil(deferredIntent.paymentMethodSpecs)
+                XCTAssertFalse(deferredIntent.orderedPaymentMethodTypes.isEmpty)
+                XCTAssertFalse(deferredIntent.paymentMethodTypes.isEmpty)
+
+                expectation.fulfill()
+            case .failure(let error):
+                print(error)
+            }
+        }
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
 }
