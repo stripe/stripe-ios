@@ -9,16 +9,16 @@ import Foundation
 
 public class STPElementsSession: NSObject {
 
-    /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this PaymentIntent is allowed to use.
+    /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this ElementsSession is allowed to use.
     @objc public let paymentMethodTypes: [NSNumber]
 
-    /// The ordered payment method preference for this PaymentIntent
+    /// The ordered payment method preference for this ElementsSession.
     @_spi(STP) public let orderedPaymentMethodTypes: [STPPaymentMethodType]
 
-    /// A list of payment method types that are not activated in live mode, but activated in test mode
+    /// A list of payment method types that are not activated in live mode, but activated in test mode.
     @_spi(STP) public let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
 
-    /// Link-specific settings for this PaymentIntent.
+    /// Link-specific settings for this ElementsSession.
     @_spi(STP) public let linkSettings: LinkSettings?
 
     /// Country code of the user.
