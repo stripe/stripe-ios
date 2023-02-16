@@ -117,7 +117,8 @@ class IntentConfirmParams {
 
     var paymentSheetLabel: String {
         if let linkedBank = linkedBank,
-           let last4 = linkedBank.last4 {
+            let last4 = linkedBank.last4
+        {
             return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
@@ -126,7 +127,8 @@ class IntentConfirmParams {
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let linkedBank = linkedBank,
-           let bankName = linkedBank.bankName {
+            let bankName = linkedBank.bankName
+        {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
             return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)
@@ -206,16 +208,16 @@ extension STPConfirmPaymentMethodOptions {
 
     /**
      Sets `payment_method_options[x][setup_future_usage]` where x is either "card" or "us_bank_account"
-     
+
      `setup_future_usage` controls whether or not the payment method should be saved to the Customer and is only set if:
         1. We're displaying a "Save this pm for future payments" checkbox
         2. The PM type is card or US bank
-     
+
      - Parameter paymentMethodType: This method no-ops unless the type is either `.card` or `.USBankAccount`
      - Note: PaymentSheet uses this `setup_future_usage` (SFU) value very differently from the top-level one:
         We read the top-level SFU to know the merchant’s desired save behavior
         We write payment method options SFU to set the customer’s desired save behavior
-     
+
      */
     func setSetupFutureUsageIfNecessary(
         _ shouldSave: Bool,
