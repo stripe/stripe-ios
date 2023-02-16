@@ -55,11 +55,11 @@ public class STPElementsSession: NSObject {
         paymentMethodSpecs: [[AnyHashable: Any]]?
     ) {
         self.allResponseFields = allResponseFields
+        self.paymentMethodTypes = paymentMethodTypes
+        self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
+        self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         self.countryCode = countryCode
         self.linkSettings = linkSettings
-        self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
-        self.paymentMethodTypes = paymentMethodTypes
-        self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         self.paymentMethodSpecs = paymentMethodSpecs
         super.init()
     }
