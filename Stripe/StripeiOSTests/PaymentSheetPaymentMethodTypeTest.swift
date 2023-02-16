@@ -150,7 +150,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testCantSetupSEPAFamily() {
         // All SEPA family pms...
         for pm in sepaFamily {
-            // ...can't be added...
+            // ...can't be used for PIs...
             XCTAssertFalse(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
@@ -165,7 +165,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
             // ...and can't be set up
             XCTAssertFalse(
-                PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
+                PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: makeConfiguration(hasReturnURL: true),
                     intent: .setupIntent(STPFixtures.setupIntent()),
@@ -594,33 +594,22 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types[0], .card)
     }
 
-    func testSupportsAdding() {
+    func testUnknownPMTypeIsUnsupported() {
         let paymentIntent = constructPI(paymentMethodTypes: ["luxe_bucks"])!
-        let intent = Intent.paymentIntent(paymentIntent)
-        var configuration = PaymentSheet.Configuration()
-        configuration.returnURL = "http://return-to-url"
-
-        XCTAssertFalse(
-            PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: .dynamic("luxe_bucks"),
-                configuration: configuration,
-                intent: intent
-            )
-        )
-    }
-    func testSupportsSaveAndReuse() {
         let setupIntent = constructSI(paymentMethodTypes: ["luxe_bucks"])!
-        let intent = Intent.setupIntent(setupIntent)
+        let paymentMethod = PaymentSheet.PaymentMethodType.dynamic("luxe_bucks")
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
 
-        XCTAssertFalse(
-            PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
-                paymentMethod: .dynamic("luxe_bucks"),
-                configuration: configuration,
-                intent: intent
+        for intent in [Intent.setupIntent(setupIntent), Intent.paymentIntent(paymentIntent)] {
+            XCTAssertFalse(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: paymentMethod,
+                    configuration: configuration,
+                    intent: intent
+                )
             )
-        )
+        }
     }
 
     func testSupport() {

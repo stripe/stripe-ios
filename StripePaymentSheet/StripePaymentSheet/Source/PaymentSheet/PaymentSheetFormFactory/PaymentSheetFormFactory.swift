@@ -54,12 +54,8 @@ class PaymentSheetFormFactory {
         case let .paymentIntent(paymentIntent):
             let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
             let hasCustomer = configuration.customer != nil
-            let isPaymentMethodSaveable = PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
-                paymentMethod: paymentMethod,
-                configuration: configuration,
-                intent: intent
-            )
-            switch (merchantRequiresSave, hasCustomer, isPaymentMethodSaveable) {
+            let supportsSaveForFutureUseCheckbox = paymentMethod.supportsSaveForFutureUseCheckbox()
+            switch (merchantRequiresSave, hasCustomer, supportsSaveForFutureUseCheckbox) {
             case (true, _, _):
                 saveMode = .merchantRequired
             case (false, true, true):
@@ -94,6 +90,9 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             return FormElement(autoSectioningElements: [makeCashAppMandate()], theme: theme)
+        } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
+            // Paypal requires mandate when setting up
+            return FormElement(autoSectioningElements: [makePaypalMandate(intent: intent)], theme: theme)
         }
 
         // 2. Element-based forms defined in JSON
@@ -165,14 +164,30 @@ extension PaymentSheetFormFactory {
     }
 
     func makeSepaMandate() -> StaticElement {
+        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
         return StaticElement(
-            view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme)
+            view: SimpleMandateTextView(mandateText: mandateText, theme: theme)
         )
     }
 
     func makeCashAppMandate() -> StaticElement {
+        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName)
         return StaticElement(
-            view: CashAppMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme)
+            view: SimpleMandateTextView(mandateText: mandateText, theme: theme)
+        )
+    }
+
+    func makePaypalMandate(intent: Intent) -> StaticElement {
+        let mandateText: String = {
+            switch intent {
+            case .paymentIntent:
+                return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
+            case .setupIntent:
+                return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
+            }
+        }()
+        return StaticElement(
+            view: SimpleMandateTextView(mandateText: mandateText, theme: theme)
         )
     }
 
