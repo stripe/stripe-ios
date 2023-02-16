@@ -30,7 +30,7 @@ enum Intent {
         case .setupIntent(let si):
             return si.clientSecret
         case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+            fatalError("TODO(DeferredIntent): Handle when we add confirm")
         }
     }
 
@@ -40,8 +40,8 @@ enum Intent {
             return pi.unactivatedPaymentMethodTypes
         case .setupIntent(let si):
             return si.unactivatedPaymentMethodTypes
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(let elementsSession):
+            return elementsSession.unactivatedPaymentMethodTypes
         }
     }
 
@@ -52,8 +52,8 @@ enum Intent {
             return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(let elementsSession):
+            return elementsSession.orderedPaymentMethodTypes
         }
     }
 
@@ -64,7 +64,7 @@ enum Intent {
         case .setupIntent:
             return false
         case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+            fatalError("TODO(DeferredIntent): Needs to switch on the init object mode")
         }
     }
 
@@ -75,7 +75,7 @@ enum Intent {
         case .setupIntent:
             return nil
         case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+            fatalError("TODO(DeferredIntent): Needs to switch on the init object mode")
         }
     }
 
@@ -87,7 +87,7 @@ enum Intent {
         case .setupIntent:
             return true
         case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+            fatalError("TODO(DeferredIntent): Needs to switch on the init object mode")
         }
     }
 }

@@ -332,17 +332,17 @@ class AddPaymentMethodViewController: UIViewController {
             }
         }
         switch intent {
-        case .paymentIntent:
+        case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
-                clientSecret: intent.clientSecret,
+                clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent:
+        case .setupIntent(let setupIntent):
             client.collectBankAccountForSetup(
-                clientSecret: intent.clientSecret,
+                clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 params: params,
                 from: viewController,

@@ -114,10 +114,6 @@ class STPIntentWithPreferencesTest: XCTestCase {
                     elementsSession.orderedPaymentMethodTypes,
                     [STPPaymentMethodType.card, STPPaymentMethodType.cashApp]
                 )
-                XCTAssertEqual(
-                    elementsSession.paymentMethodTypes,
-                    STPPaymentMethod.types(from: ["card", "cashapp"])
-                )
 
                 expectation.fulfill()
             case .failure(let error):
@@ -146,10 +142,6 @@ class STPIntentWithPreferencesTest: XCTestCase {
                 XCTAssertEqual(
                     elementsSession.orderedPaymentMethodTypes,
                     [STPPaymentMethodType.card, STPPaymentMethodType.cashApp]
-                )
-                XCTAssertEqual(
-                    elementsSession.paymentMethodTypes,
-                    STPPaymentMethod.types(from: ["card", "cashapp"])
                 )
 
                 expectation.fulfill()

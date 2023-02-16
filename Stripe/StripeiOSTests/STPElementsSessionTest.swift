@@ -7,6 +7,7 @@
 
 import Foundation
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
 
 class STPElementsSessionTest: XCTestCase {
 
@@ -25,20 +26,6 @@ class STPElementsSessionTest: XCTestCase {
     func testDecodedObjectFromAPIResponseMapping() {
         let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-
-        XCTAssertEqual(
-            elementsSession.paymentMethodTypes,
-            STPPaymentMethod.types(from: [
-                "card",
-                "link",
-                "us_bank_account",
-                "afterpay_clearpay",
-                "klarna",
-                "cashapp",
-                "alipay",
-                "wechat_pay",
-            ])
-        )
 
         XCTAssertEqual(
             elementsSession.orderedPaymentMethodTypes,
