@@ -81,6 +81,7 @@ class NativeFlowController {
                 || navigationController.topViewController is AttachLinkedPaymentAccountViewController
                 || navigationController.topViewController is NetworkingLinkSignupViewController
                 || navigationController.topViewController is NetworkingLinkVerificationViewController
+                || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
                 || navigationController.topViewController is LinkAccountPickerViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
@@ -535,6 +536,14 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
 
+    func networkingLinkSignupViewController(
+        _ viewController: NetworkingLinkSignupViewController,
+        foundReturningConsumerWithSession consumerSession: ConsumerSessionData
+    ) {
+        dataManager.consumerSession = consumerSession
+        pushPane(.networkingSaveToLinkVerification, animated: true)
+    }
+
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController
     ) {
@@ -654,6 +663,26 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
+    }
+}
+
+// MARK: - NetworkingSaveToLinkVerificationDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
+    func networkingSaveToLinkVerificationViewControllerDidFinish(
+        _ viewController: NetworkingSaveToLinkVerificationViewController,
+        error: Error?
+    ) {
+        // TODO(kgaidis): use the error to show a notice on success pane that saving to link failed...
+        pushPane(.success, animated: true)
+    }
+
+    func networkingSaveToLinkVerificationViewController(
+        _ viewController: NetworkingSaveToLinkVerificationViewController,
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
@@ -810,6 +839,27 @@ private func CreatePaneViewController(
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
             networkingLinkVerificationViewController.delegate = nativeFlowController
             viewController = networkingLinkVerificationViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
+    case .networkingSaveToLinkVerification:
+        if
+            let consumerSession = dataManager.consumerSession,
+            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+        {
+            let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
+                consumerSession: consumerSession,
+                selectedAccountId: selectedAccountId,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let networkingSaveToLinkVerificationViewController = NetworkingSaveToLinkVerificationViewController(
+                dataSource: networkingSaveToLinkVerificationDataSource
+            )
+            networkingSaveToLinkVerificationViewController.delegate = nativeFlowController
+            viewController = networkingSaveToLinkVerificationViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
