@@ -11,6 +11,10 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
+    func networkingLinkSignupViewController(
+        _ viewController: NetworkingLinkSignupViewController,
+        foundReturningConsumerWithSession consumerSession: ConsumerSessionData
+    )
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController
     )
@@ -142,7 +146,12 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             eventName: "networking.returning_consumer",
                             pane: .networkingLinkSignupPane
                         )
-                        // TODO(kgaidis): push pane manually to `networking_save_to_link_verification`
+                        if let consumerSession = response.consumerSession {
+                            // TODO(kgaidis): check whether its fair to assume that we will always have a consumer sesion here
+                            self.delegate?.networkingLinkSignupViewController(self, foundReturningConsumerWithSession: consumerSession)
+                        } else {
+                            // TODO(kgaidis): show terminal error?
+                        }
                     } else {
                         self.dataSource.analyticsClient.log(
                             eventName: "networking.new_consumer",

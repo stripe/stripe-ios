@@ -109,9 +109,9 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     }
 
     func saveAccountsToLink(
-        emailAddress: String,
-        phoneNumber: String,
-        country: String,
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
         selectedAccountIds: [String],
         consumerSessionClientSecret: String?,
         clientSecret: String
