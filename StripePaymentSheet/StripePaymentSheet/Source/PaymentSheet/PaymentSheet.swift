@@ -31,8 +31,7 @@ import UIKit
     case failed(error: Error)
 }
 
-// TODO(porter) Use @frozen?
-/// TODO doc comment
+/// TODO(porter) doc comment
 @_spi(STP) @frozen public enum InitializationMode {
     case paymentIntentClientSecret(String)
     case setupIntentClientSecret(String)
@@ -134,7 +133,7 @@ public class PaymentSheet {
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
-            clientSecret: retrievableIntent,
+            retrievableIntent: retrievableIntent,
             configuration: configuration
         ) { result in
             switch result {

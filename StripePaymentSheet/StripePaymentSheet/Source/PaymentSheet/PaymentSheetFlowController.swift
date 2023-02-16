@@ -133,7 +133,7 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(clientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            create(retrievableIntent: .paymentIntent(clientSecret: paymentIntentClientSecret),
                    configuration: configuration,
                    completion: completion
             )
@@ -150,19 +150,21 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(clientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+            create(retrievableIntent: .setupIntent(clientSecret: setupIntentClientSecret),
                    configuration: configuration,
                    completion: completion
             )
         }
+        
+        // TODO add flow controller init
 
         static func create(
-            clientSecret: RetrievableIntent,
+            retrievableIntent: RetrievableIntent,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
             PaymentSheet.load(
-                clientSecret: clientSecret,
+                retrievableIntent: retrievableIntent,
                 configuration: configuration
             ) { result in
                 switch result {

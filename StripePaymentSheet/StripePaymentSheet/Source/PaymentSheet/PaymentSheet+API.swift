@@ -297,7 +297,7 @@ extension PaymentSheet {
 
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
-        clientSecret: RetrievableIntent,
+        retrievableIntent: RetrievableIntent,
         configuration: Configuration,
         completion: @escaping (LoadingResult) -> Void
     ) {
@@ -372,7 +372,7 @@ extension PaymentSheet {
         }
 
         // Fetch PaymentIntent or SetupIntent
-        switch clientSecret {
+        switch retrievableIntent {
         case .paymentIntent(let clientSecret):
             let paymentIntentHandlerCompletionBlock: ((STPPaymentIntent) -> Void) = { paymentIntent in
                 guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {

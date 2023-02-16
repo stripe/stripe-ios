@@ -17,7 +17,7 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 @_spi(LinkOnly) public class LinkPaymentController {
 
-    private let intentSecret: RetrievableIntent
+    private let retrievableIntent: RetrievableIntent
     private let configuration: PaymentSheet.Configuration
 
     private var intent: Intent?
@@ -42,7 +42,7 @@ import UIKit
     }
 
     private init(intentSecret: RetrievableIntent, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
-        self.intentSecret = intentSecret
+        self.retrievableIntent = intentSecret
         var configuration = PaymentSheet.Configuration()
         configuration.linkPaymentMethodsOnly = true
         configuration.returnURL = returnURL
@@ -77,7 +77,7 @@ import UIKit
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
         let linkController: PayWithLinkViewController = try await withCheckedThrowingContinuation { [self] continuation in
-            PaymentSheet.load(clientSecret: intentSecret, configuration: configuration) { result in
+            PaymentSheet.load(retrievableIntent: retrievableIntent, configuration: configuration) { result in
                 switch result {
                 case .success(let intent, _, let isLinkEnabled):
                     guard isLinkEnabled else {
@@ -137,7 +137,7 @@ import UIKit
         if (intent == nil || paymentOption == nil) && LinkAccountService().hasSessionCookie {
             // If the customer has a Link cookie, `present` may not need to have been called - try to load here
             paymentOption = try await withCheckedThrowingContinuation { [self] continuation in
-                PaymentSheet.load(clientSecret: intentSecret, configuration: configuration) { result in
+                PaymentSheet.load(retrievableIntent: retrievableIntent, configuration: configuration) { result in
                     switch result {
                     case .success(let intent, _, let isLinkEnabled):
                         guard isLinkEnabled else {

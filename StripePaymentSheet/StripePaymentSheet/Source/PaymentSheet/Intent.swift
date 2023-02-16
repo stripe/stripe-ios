@@ -102,7 +102,7 @@ enum RetrievableIntent {
     /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     case setupIntent(clientSecret: String)
 
-    /// The intent config of a Stripe deferred intent
+    /// The `IntentConfiguration` of a Stripe deferred intent
     case defferedIntent(intentConfig: PaymentSheet.IntentConfiguration)
 }
 

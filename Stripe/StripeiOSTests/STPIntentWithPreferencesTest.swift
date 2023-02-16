@@ -132,8 +132,8 @@ class STPIntentWithPreferencesTest: XCTestCase {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
-                                                                           setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
+                                                                           setupFutureUsage: .offSession),
+                                                            captureMethod: .manual,
                                                             paymentMethodTypes: ["card", "cashapp"])
 
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
