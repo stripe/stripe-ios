@@ -12,6 +12,7 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
     var accountholderCustomerEmailAddress: String { get }
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var consumerSession: ConsumerSessionData? { get }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
@@ -27,7 +28,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
-    private var consumerSessionClientSecret: String?
+    private(set) var consumerSession: ConsumerSessionData?
 
     init(
         accountholderCustomerEmailAddress: String,
@@ -52,14 +53,14 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
                 guard let self = self else {
                     return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
                 }
-                if let consumerSessionClientSecret = lookupConsumerSessionResponse.consumerSession?.clientSecret {
-                    self.consumerSessionClientSecret = consumerSessionClientSecret
+                if let consumerSession = lookupConsumerSessionResponse.consumerSession {
+                    self.consumerSession = consumerSession
                     return self.apiClient.consumerSessionStartVerification(
                         emailAddress: self.accountholderCustomerEmailAddress,
                         otpType: "SMS",
                         customEmailType: nil,
                         connectionsMerchantName: nil,
-                        consumerSessionClientSecret: consumerSessionClientSecret
+                        consumerSessionClientSecret: consumerSession.clientSecret
                     )
                 } else {
                     return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid consumerSessionLookup response: no consumerSession.clientSecret"))
@@ -68,7 +69,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     }
 
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSessionClientSecret else {
+        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
             return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
         }
         return apiClient.consumerSessionConfirmVerification(
@@ -83,7 +84,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
-        guard let consumerSessionClientSecret = consumerSessionClientSecret else {
+        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
             return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
         }
         return apiClient.fetchNetworkedAccounts(

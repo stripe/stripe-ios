@@ -25,6 +25,7 @@ final class NetworkingLinkVerificationBodyView: UIView {
 
     private(set) lazy var otpTextField: UITextField = {
        let textField = InsetTextField()
+        textField.textColor = .textPrimary
         textField.placeholder = "OTP"
         textField.keyboardType = .numberPad
         textField.layer.cornerRadius = 8
