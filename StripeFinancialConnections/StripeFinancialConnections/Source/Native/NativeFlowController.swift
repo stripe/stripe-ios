@@ -80,7 +80,8 @@ class NativeFlowController {
                 || navigationController.topViewController is PartnerAuthViewController
                 || navigationController.topViewController is AttachLinkedPaymentAccountViewController
                 || navigationController.topViewController is NetworkingLinkSignupViewController
-                || navigationController.topViewController is NetworkingLinkVerificationViewController)
+                || navigationController.topViewController is NetworkingLinkVerificationViewController
+                || navigationController.topViewController is LinkAccountPickerViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
 }
@@ -615,13 +616,44 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
 
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        consumerSession: ConsumerSessionData
     ) {
+        dataManager.consumerSession = consumerSession
         pushPane(nextPane, animated: true)
     }
 
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
+    }
+}
+
+// MARK: - LinkAccountPickerViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        pushPane(nextPane, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
+        institution: FinancialConnectionsInstitution
+    ) {
+        dataManager.institution = institution
+        dataManager.linkedAccounts = [selectedAccount]
+        pushPane(.success, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
@@ -700,8 +732,23 @@ private func CreatePaneViewController(
         picker.delegate = nativeFlowController
         viewController = picker
     case .linkAccountPicker:
-        assertionFailure("Not supported")
-        viewController = nil
+        if let consumerSession = dataManager.consumerSession {
+            let linkAccountPickerDataSource = LinkAccountPickerDataSourceImplementation(
+                manifest: dataManager.manifest,
+                apiClient: dataManager.apiClient,
+                analyticsClient: dataManager.analyticsClient,
+                clientSecret: dataManager.clientSecret,
+                consumerSession: consumerSession
+            )
+            let linkAccountPickerViewController = LinkAccountPickerViewController(
+                dataSource: linkAccountPickerDataSource
+            )
+            linkAccountPickerViewController.delegate = nativeFlowController
+            viewController = linkAccountPickerViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .linkConsent:
         assertionFailure("Not supported")
         viewController = nil
