@@ -109,7 +109,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                     deferredIntent.orderedPaymentMethodTypes,
                     [STPPaymentMethodType.card, STPPaymentMethodType.cashApp]
                 )
-                
+
                 XCTAssertFalse(deferredIntent.paymentMethodTypes.isEmpty)
 
                 expectation.fulfill()
