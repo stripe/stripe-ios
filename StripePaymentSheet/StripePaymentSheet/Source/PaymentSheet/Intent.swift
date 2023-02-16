@@ -21,7 +21,7 @@ import UIKit
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-    case deferredIntent
+    case deferredIntent(STPElementsSession)
 
     var clientSecret: String {
         switch self {

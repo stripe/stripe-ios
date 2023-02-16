@@ -443,6 +443,15 @@ extension PaymentSheet {
             let deferredIntentHandlerCompletionBlock: ((STPElementsSession) -> Void) = { elementsSession in
                 intentPromise.resolve(with: .deferredIntent(elementsSession))
             }
+            
+            configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig) { result in
+                switch result {
+                case .success(let elementsSession):
+                    deferredIntentHandlerCompletionBlock(elementsSession)
+                case .failure(let error):
+                    intentPromise.reject(with: error)
+                }
+            }
         }
 
         // List the Customer's saved PaymentMethods

@@ -16,15 +16,15 @@ import Foundation
         var paymentMethodTypes: [String]? = nil
 
         /// TODO
-        enum CaptureMethod {
-            case automatic
-            case manual
+        enum CaptureMethod: String {
+            case automatic = "automatic"
+            case manual = "manual"
         }
 
         /// TODO
-        enum SetupFutureUsage {
-            case offSession
-            case onSession
+        enum SetupFutureUsage: String {
+            case offSession = "off_session"
+            case onSession = "on_session"
         }
 
         enum Mode {

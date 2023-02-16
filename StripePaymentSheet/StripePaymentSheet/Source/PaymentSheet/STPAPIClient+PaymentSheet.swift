@@ -123,20 +123,31 @@ extension STPAPIClient {
         }
     }
 
-    // TODO(porter) Pass in deferred intent config from public API
     func retrieveElementsSession(
+        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         completion: @escaping STPElementsSessionCompletionBlock
     ) {
         var parameters: [String: Any] = [:]
         parameters["key"] = publishableKey
-        parameters["type"] = "deferred_intent"
+        parameters["type"] = "deferred_intent" // TODO(porter) hardcoded to deferred for now
         parameters["locale"] = Locale.current.toLanguageTag()
 
         var deferredIntent = [String: Any]()
-        deferredIntent["mode"] = "payment"
-        deferredIntent["amount"] = "2000"
-        deferredIntent["currency"] = "usd"
-        deferredIntent["payment_method_types"] = ["card", "cashapp"]
+        deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
+        deferredIntent["capture_method"] = intentConfig.captureMethod
+        
+        switch intentConfig.mode {
+        case .payment(amount: let amount, currency: let currency, setupFutureUsage: let setupFutureUsage):
+            deferredIntent["mode"] = "payment"
+            deferredIntent["amount"] = amount
+            deferredIntent["currency"] = currency
+            deferredIntent["setup_future_usage"] = setupFutureUsage
+        case .setup(currency: let currency, setupFutureUsage: let setupFutureUsage):
+            deferredIntent["mode"] = "setup"
+            deferredIntent["currency"] = currency
+            deferredIntent["setup_future_usage"] = setupFutureUsage
+        }
+        
         parameters["deferred_intent"] = deferredIntent
 
         APIRequest<STPElementsSession>.getWith(
