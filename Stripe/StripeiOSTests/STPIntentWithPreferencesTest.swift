@@ -93,18 +93,56 @@ class STPIntentWithPreferencesTest: XCTestCase {
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    func testRetrieveElementSession() {
+    func testRetrieveElementSession_deferredPayment() {
         let expectation = XCTestExpectation(description: "Retrieve ElementsSession")
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-        client.retrieveElementsSession { result in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
+                                                                           currency: "USD",
+                                                                           setupFutureUsage: .onSession),
+                                                            captureMethod: .automatic,
+                                                            paymentMethodTypes: ["card", "cashapp"])
+
+        client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {
-            case .success(let deferredIntent):
-                XCTAssertNotNil(deferredIntent)
-                XCTAssertEqual(deferredIntent.countryCode, "US")
-                XCTAssertNotNil(deferredIntent.linkSettings)
-                XCTAssertNotNil(deferredIntent.paymentMethodSpecs)
-                XCTAssertFalse(deferredIntent.orderedPaymentMethodTypes.isEmpty)
+            case .success(let elementsSession):
+                XCTAssertNotNil(elementsSession)
+                XCTAssertEqual(elementsSession.countryCode, "US")
+                XCTAssertNotNil(elementsSession.linkSettings)
+                XCTAssertNotNil(elementsSession.paymentMethodSpecs)
+                XCTAssertEqual(
+                    elementsSession.orderedPaymentMethodTypes,
+                    [STPPaymentMethodType.card, STPPaymentMethodType.cashApp]
+                )
+
+                expectation.fulfill()
+            case .failure(let error):
+                print(error)
+            }
+        }
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testRetrieveElementSession_deferredSetup() {
+        let expectation = XCTestExpectation(description: "Retrieve ElementsSession")
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
+                                                                           setupFutureUsage: .offSession),
+                                                            captureMethod: .manual,
+                                                            paymentMethodTypes: ["card", "cashapp"])
+
+        client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
+            switch result {
+            case .success(let elementsSession):
+                XCTAssertNotNil(elementsSession)
+                XCTAssertEqual(elementsSession.countryCode, "US")
+                XCTAssertNotNil(elementsSession.linkSettings)
+                XCTAssertNotNil(elementsSession.paymentMethodSpecs)
+                XCTAssertEqual(
+                    elementsSession.orderedPaymentMethodTypes,
+                    [STPPaymentMethodType.card, STPPaymentMethodType.cashApp]
+                )
 
                 expectation.fulfill()
             case .failure(let error):

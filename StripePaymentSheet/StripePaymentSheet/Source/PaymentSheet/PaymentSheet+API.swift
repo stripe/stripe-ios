@@ -297,7 +297,7 @@ extension PaymentSheet {
 
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
-        clientSecret: IntentClientSecret,
+        mode: InitializationMode,
         configuration: Configuration,
         completion: @escaping (LoadingResult) -> Void
     ) {
@@ -371,9 +371,9 @@ extension PaymentSheet {
             }
         }
 
-        // Fetch PaymentIntent or SetupIntent
-        switch clientSecret {
-        case .paymentIntent(let clientSecret):
+        // Fetch PaymentIntent, SetupIntent, or ElementsSession
+        switch mode {
+        case .paymentIntentClientSecret(let clientSecret):
             let paymentIntentHandlerCompletionBlock: ((STPPaymentIntent) -> Void) = { paymentIntent in
                 guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
                     // Error if the PaymentIntent is in a terminal state
@@ -406,7 +406,7 @@ extension PaymentSheet {
                     }
                 }
             }
-        case .setupIntent(let clientSecret):
+        case .setupIntentClientSecret(let clientSecret):
             let setupIntentHandlerCompletionBlock: ((STPSetupIntent) -> Void) = { setupIntent in
                 guard ![.succeeded, .canceled].contains(setupIntent.status) else {
                     // Error if the SetupIntent is in a terminal state
@@ -436,6 +436,20 @@ extension PaymentSheet {
 
                         setupIntentHandlerCompletionBlock(setupIntent)
                     }
+                }
+            }
+
+        case .deferredIntent(let intentConfig):
+            let deferredIntentHandlerCompletionBlock: ((STPElementsSession) -> Void) = { elementsSession in
+                intentPromise.resolve(with: .deferredIntent(elementsSession))
+            }
+
+            configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig) { result in
+                switch result {
+                case .success(let elementsSession):
+                    deferredIntentHandlerCompletionBlock(elementsSession)
+                case .failure(let error):
+                    intentPromise.reject(with: error)
                 }
             }
         }
