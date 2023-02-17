@@ -118,7 +118,6 @@ extension STPApplePayContext {
                 configuration: PaymentSheet.Configuration,
                 applePay: PaymentSheet.ApplePayConfiguration
     ) -> PKPaymentRequest {
-
         func paymentRequest(with currency: String, amount: Int) -> PKPaymentRequest {
             var paymentRequest: PKPaymentRequest
             paymentRequest = StripeAPI.paymentRequest(
