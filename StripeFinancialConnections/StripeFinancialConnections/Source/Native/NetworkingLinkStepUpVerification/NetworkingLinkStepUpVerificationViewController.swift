@@ -15,7 +15,7 @@ protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData
+        consumerSession: ConsumerSessionData?
     )
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
@@ -37,7 +37,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     }()
     private lazy var bodyView: NetworkingLinkStepUpVerificationBodyView = {
         let bodyView = NetworkingLinkStepUpVerificationBodyView(
-            email: dataSource.accountholderCustomerEmailAddress,
+            email: dataSource.consumerSession.emailAddress,
             didSelectResendCode: { [weak self] in
                 self?.didSelectResendCode()
             }
@@ -58,25 +58,64 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-
+        startVerificationSession()
+    }
+    
+    private func startVerificationSession() {
         showLoadingView(true)
-        dataSource.startVerificationSession()
+        let handleFailure: (_ error: Error, _ errorName: String) -> Void = { [weak self] error, errorName in
+            guard let self = self else { return }
+            self.dataSource.analyticsClient.log(
+                eventName: "networking.verification.step_up.error",
+                parameters: [
+                    "error": errorName
+                ],
+                pane: .networkingLinkStepUpVerification
+            )
+            self.dataSource.analyticsClient.logUnexpectedError(
+                error,
+                errorName: errorName,
+                pane: .networkingLinkStepUpVerification
+            )
+            self.delegate?.networkingLinkStepUpVerificationViewController(
+                self,
+                didReceiveTerminalError: error
+            )
+        }
+        dataSource.lookupConsumerSession()
             .observe { [weak self] result in
                 guard let self = self else { return }
-                self.showLoadingView(false)
                 switch result {
-                case .success(let consumerSessionResponse):
-                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
+                case .success(let lookupConsumerSessionResponse):
+                    if lookupConsumerSessionResponse.exists {
+                        self.dataSource.startVerificationSession()
+                            .observe { [weak self] result in
+                                guard let self = self else { return }
+                                switch result {
+                                case .success(let consumerSessionResponse):
+                                    self.showLoadingView(false)
+                                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
+                                case .failure(let error):
+                                    handleFailure(error, "StartVerificationSessionError")
+                                }
+                            }
+                    } else {
+                        // consumer not found
+                        self.dataSource.analyticsClient.log(
+                            eventName: "networking.verification.step_up.error",
+                            parameters: [
+                                "error": "ConsumerNotFoundError",
+                            ],
+                            pane: .networkingLinkStepUpVerification
+                        )
+                        self.delegate?.networkingLinkStepUpVerificationViewController(
+                            self,
+                            didRequestNextPane: .institutionPicker,
+                            consumerSession: lookupConsumerSessionResponse.consumerSession! // TODO(kgaidis): fix this force-cast
+                        )
+                    }
                 case .failure(let error):
-                    self.dataSource.analyticsClient.log(
-                        eventName: "networking.verification.error",
-                        parameters: [
-                            // TODO(kgaidis): figure out a proper way to log this error
-                            "error": "here"
-                        ],
-                        pane: .networkingLinkStepUpVerification
-                    )
-                    self.delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveTerminalError: error)
+                    handleFailure(error, "LookupConsumerSessionError")
                 }
             }
     }
@@ -91,7 +130,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
                 format: STPLocalizedString(
                     "To keep your Link account safe, we periodically need to confirm you're you. Enter the code sent to your email %@.",
                     "The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'."
-                ), "**\(dataSource.accountholderCustomerEmailAddress)**" // make the e-mail bold
+                ), "**\(dataSource.consumerSession.emailAddress)**" // asterisks make the e-mail bold
             ),
             contentView: bodyView,
             footerView: nil
@@ -115,16 +154,11 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     }
 
     private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane) {
-        if let consumerSession = dataSource.consumerSession {
-            delegate?.networkingLinkStepUpVerificationViewController(
-                self,
-                didRequestNextPane: pane,
-                consumerSession: consumerSession
-            )
-        } else {
-            assertionFailure("logic error: did not have consumerSession")
-            delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
-        }
+        delegate?.networkingLinkStepUpVerificationViewController(
+            self,
+            didRequestNextPane: pane,
+            consumerSession: dataSource.consumerSession
+        )
     }
     
     private func didSelectResendCode() {
@@ -148,66 +182,66 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingLinkStepUpVe
     ) {
         view.otpTextField.text = "CONFIRMING OTP..."
 
-        dataSource.confirmVerificationSession(otpCode: otpCode)
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success:
-                    view.otpTextField.text = "SUCCESS! CALLING markLinkVerified..."
-
-                    self.dataSource.markLinkVerified()
-                        .observe { [weak self] result in
-                            guard let self = self else { return }
-                            switch result {
-                            case .success(let manifest):
-                                view.otpTextField.text = "markLinkVerified SUCCESS! Wait on accounts..."
-
-                                self.dataSource.fetchNetworkedAccounts()
-                                    .observe { [weak self] result in
-                                        guard let self = self else { return }
-                                        switch result {
-                                        case .success(let networkedAccountsResponse):
-                                            let networkedAccounts = networkedAccountsResponse.data
-                                            if networkedAccounts.isEmpty {
-                                                self.dataSource.analyticsClient.log(
-                                                    eventName: "networking.verification.success_no_accounts",
-                                                    pane: .networkingLinkStepUpVerification
-                                                )
-                                                self.requestNextPane(manifest.nextPane)
-                                            } else {
-                                                self.dataSource.analyticsClient.log(
-                                                    eventName: "networking.verification.success",
-                                                    pane: .networkingLinkStepUpVerification
-                                                )
-                                                self.requestNextPane(.linkAccountPicker)
-                                            }
-                                        case .failure(let error):
-                                            // TODO(kgaidis): log the error using the standard error logging too
-                                            self.dataSource
-                                                .analyticsClient
-                                                .log(
-                                                    eventName: "networking.verification.error",
-                                                    parameters: [
-                                                        "error": "NetworkedAccountsRetrieveMethodError",
-                                                    ],
-                                                    pane: .networkingLinkStepUpVerification
-                                                )
-                                            print(error) // TODO(kgaidis): remove print
-                                            self.requestNextPane(manifest.nextPane)
-                                        }
-                                    }
-                            case .failure(let error):
-                                print(error) // TODO(kgaidis): remove print
-                                view.otpTextField.text = "markLinkVerified FAILURE: \(error.localizedDescription)"
-                                // TODO(kgaidis): go to terminal error but double-check
-                                self.delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveTerminalError: error)
-                            }
-                        }
-                case .failure(let error):
-                    print(error) // TODO(kgaidis): remove print
-                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
-                    // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
-                }
-            }
+//        dataSource.confirmVerificationSession(otpCode: otpCode)
+//            .observe { [weak self] result in
+//                guard let self = self else { return }
+//                switch result {
+//                case .success:
+//                    view.otpTextField.text = "SUCCESS! CALLING markLinkVerified..."
+//
+//                    self.dataSource.markLinkVerified()
+//                        .observe { [weak self] result in
+//                            guard let self = self else { return }
+//                            switch result {
+//                            case .success(let manifest):
+//                                view.otpTextField.text = "markLinkVerified SUCCESS! Wait on accounts..."
+//
+//                                self.dataSource.fetchNetworkedAccounts()
+//                                    .observe { [weak self] result in
+//                                        guard let self = self else { return }
+//                                        switch result {
+//                                        case .success(let networkedAccountsResponse):
+//                                            let networkedAccounts = networkedAccountsResponse.data
+//                                            if networkedAccounts.isEmpty {
+//                                                self.dataSource.analyticsClient.log(
+//                                                    eventName: "networking.verification.success_no_accounts",
+//                                                    pane: .networkingLinkStepUpVerification
+//                                                )
+//                                                self.requestNextPane(manifest.nextPane)
+//                                            } else {
+//                                                self.dataSource.analyticsClient.log(
+//                                                    eventName: "networking.verification.success",
+//                                                    pane: .networkingLinkStepUpVerification
+//                                                )
+//                                                self.requestNextPane(.linkAccountPicker)
+//                                            }
+//                                        case .failure(let error):
+//                                            // TODO(kgaidis): log the error using the standard error logging too
+//                                            self.dataSource
+//                                                .analyticsClient
+//                                                .log(
+//                                                    eventName: "networking.verification.error",
+//                                                    parameters: [
+//                                                        "error": "NetworkedAccountsRetrieveMethodError",
+//                                                    ],
+//                                                    pane: .networkingLinkStepUpVerification
+//                                                )
+//                                            print(error) // TODO(kgaidis): remove print
+//                                            self.requestNextPane(manifest.nextPane)
+//                                        }
+//                                    }
+//                            case .failure(let error):
+//                                print(error) // TODO(kgaidis): remove print
+//                                view.otpTextField.text = "markLinkVerified FAILURE: \(error.localizedDescription)"
+//                                // TODO(kgaidis): go to terminal error but double-check
+//                                self.delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveTerminalError: error)
+//                            }
+//                        }
+//                case .failure(let error):
+//                    print(error) // TODO(kgaidis): remove print
+//                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
+//                    // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
+//                }
+//            }
     }
 }

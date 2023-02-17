@@ -9,73 +9,71 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol NetworkingLinkStepUpVerificationDataSource: AnyObject {
-    var accountholderCustomerEmailAddress: String { get }
+    var consumerSession: ConsumerSessionData { get }
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    var consumerSession: ConsumerSessionData? { get }
 
+    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
-    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
+//    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
 }
 
 final class NetworkingLinkStepUpVerificationDataSourceImplementation: NetworkingLinkStepUpVerificationDataSource {
 
-    let accountholderCustomerEmailAddress: String
+    private(set) var consumerSession: ConsumerSessionData
     let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
-    private(set) var consumerSession: ConsumerSessionData?
-
     init(
-        accountholderCustomerEmailAddress: String,
+        consumerSession: ConsumerSessionData,
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
-        self.accountholderCustomerEmailAddress = accountholderCustomerEmailAddress
+        self.consumerSession = consumerSession
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
-
-    func startVerificationSession() -> Future<ConsumerSessionResponse> {
-        apiClient
+    
+    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
+        return apiClient
             .consumerSessionLookup(
-                emailAddress: accountholderCustomerEmailAddress
+                emailAddress: consumerSession.emailAddress
             )
-            .chained { [weak self] (lookupConsumerSessionResponse: LookupConsumerSessionResponse) in
-                guard let self = self else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
-                }
+            .chained { [weak self] lookupConsumerSessionResponse in
                 if let consumerSession = lookupConsumerSessionResponse.consumerSession {
-                    self.consumerSession = consumerSession
-                    return self.apiClient.consumerSessionStartVerification(
-                        emailAddress: self.accountholderCustomerEmailAddress,
-                        otpType: "SMS",
-                        customEmailType: nil,
-                        connectionsMerchantName: nil,
-                        consumerSessionClientSecret: consumerSession.clientSecret
-                    )
-                } else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid consumerSessionLookup response: no consumerSession.clientSecret"))
+                    self?.consumerSession = consumerSession
                 }
+                return Promise(value: lookupConsumerSessionResponse)
             }
     }
 
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
+    func startVerificationSession() -> Future<ConsumerSessionResponse> {
+        return apiClient.consumerSessionStartVerification(
+            emailAddress: consumerSession.emailAddress,
+            otpType: "EMAIL",
+            customEmailType: "NETWORKED_CONNECTIONS_OTP_EMAIL",
+            connectionsMerchantName: manifest.businessName,
+            consumerSessionClientSecret: consumerSession.clientSecret
+        )
+        .chained { [weak self] consumerSessionResponse in
+            self?.consumerSession = consumerSessionResponse.consumerSession
+            return Promise(value: consumerSessionResponse)
         }
+    }
+
+    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
         return apiClient.consumerSessionConfirmVerification(
             otpCode: otpCode,
             otpType: "SMS",
-            consumerSessionClientSecret: consumerSessionClientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret
         )
     }
 
@@ -83,13 +81,10 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         return apiClient.markLinkVerified(clientSecret: clientSecret)
     }
 
-    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
-        }
-        return apiClient.fetchNetworkedAccounts(
-            clientSecret: clientSecret,
-            consumerSessionClientSecret: consumerSessionClientSecret
-        )
-    }
+//    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
+//        return apiClient.fetchNetworkedAccounts(
+//            clientSecret: clientSecret,
+//            consumerSessionClientSecret: consumerSessionClientSecret
+//        )
+//    }
 }

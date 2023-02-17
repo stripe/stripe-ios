@@ -702,7 +702,15 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDelegate {
-
+    
+    func networkingLinkStepUpVerificationViewController(
+        _ viewController: NetworkingLinkStepUpVerificationViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        consumerSession: ConsumerSessionData?
+    ) {
+        
+    }
+    
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
@@ -896,9 +904,9 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkStepUpVerification:
-        if let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress {
+        if let consumerSession = dataManager.consumerSession {
             let networkingLinkStepUpVerificationDataSource = NetworkingLinkStepUpVerificationDataSourceImplementation(
-                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
+                consumerSession: consumerSession,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
