@@ -39,7 +39,7 @@ final class PlaygroundUserDefaults {
         defaultValue: ""
     )
     static var email: String
-    
+
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TRANSACTIONS_PERMISSION",
         defaultValue: false

@@ -644,7 +644,7 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
@@ -661,7 +661,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         dataManager.linkedAccounts = [selectedAccount]
         pushPane(.success, animated: true)
     }
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
@@ -702,22 +702,13 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDelegate {
-    
+
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData?
+        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution
     ) {
-        
-    }
-    
-    func networkingLinkStepUpVerificationViewController(
-        _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData
-    ) {
-        dataManager.consumerSession = consumerSession
-        pushPane(nextPane, animated: true)
+        dataManager.institution = institution
+        pushPane(.success, animated: true)
     }
 
     func networkingLinkStepUpVerificationViewController(
@@ -725,6 +716,12 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func networkingLinkStepUpVerificationViewControllerEncounteredSoftError(
+        _ viewController: NetworkingLinkStepUpVerificationViewController
+    ) {
+        pushPane(.institutionPicker, animated: true)
     }
 }
 
@@ -904,9 +901,13 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingLinkStepUpVerification:
-        if let consumerSession = dataManager.consumerSession {
+        if
+            let consumerSession = dataManager.consumerSession,
+            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+        {
             let networkingLinkStepUpVerificationDataSource = NetworkingLinkStepUpVerificationDataSourceImplementation(
                 consumerSession: consumerSession,
+                selectedAccountId: selectedAccountId,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,

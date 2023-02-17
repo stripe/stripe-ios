@@ -10,38 +10,40 @@ import Foundation
 
 protocol NetworkingLinkStepUpVerificationDataSource: AnyObject {
     var consumerSession: ConsumerSessionData { get }
-    var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
-    func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
-//    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
+    func markLinkStepUpAuthenticationVerified() -> Future<FinancialConnectionsSessionManifest>
+    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList>
 }
 
 final class NetworkingLinkStepUpVerificationDataSourceImplementation: NetworkingLinkStepUpVerificationDataSource {
 
     private(set) var consumerSession: ConsumerSessionData
-    let manifest: FinancialConnectionsSessionManifest
+    private let selectedAccountId: String
+    private let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
     init(
         consumerSession: ConsumerSessionData,
+        selectedAccountId: String,
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.consumerSession = consumerSession
+        self.selectedAccountId = selectedAccountId
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
-    
+
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
         return apiClient
             .consumerSessionLookup(
@@ -72,19 +74,20 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
         return apiClient.consumerSessionConfirmVerification(
             otpCode: otpCode,
-            otpType: "SMS",
+            otpType: "EMAIL",
             consumerSessionClientSecret: consumerSession.clientSecret
         )
     }
 
-    func markLinkVerified() -> Future<FinancialConnectionsSessionManifest> {
-        return apiClient.markLinkVerified(clientSecret: clientSecret)
+    func markLinkStepUpAuthenticationVerified() -> Future<FinancialConnectionsSessionManifest> {
+        return apiClient.markLinkStepUpAuthenticationVerified(clientSecret: clientSecret)
     }
 
-//    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
-//        return apiClient.fetchNetworkedAccounts(
-//            clientSecret: clientSecret,
-//            consumerSessionClientSecret: consumerSessionClientSecret
-//        )
-//    }
+    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList> {
+        return apiClient.selectNetworkedAccounts(
+            selectedAccountIds: [selectedAccountId],
+            clientSecret: clientSecret,
+            consumerSessionClientSecret: consumerSession.clientSecret
+        )
+    }
 }

@@ -79,7 +79,7 @@ struct PlaygroundMainView: View {
                                 .autocapitalization(.none)
                         }
                     }
-                    
+
                     Section(header: Text("PERMISSIONS")) {
                         Toggle("Transactions \(viewModel.flow == .networking ? "(enable step-up verification)" : "")", isOn: $viewModel.enableTransactionsPermission)
                     }

@@ -74,7 +74,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.email = email
         }
     }
-    
+
     @Published var enableTransactionsPermission: Bool = PlaygroundUserDefaults.enableTransactionsPermission {
         didSet {
             PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission

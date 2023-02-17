@@ -44,7 +44,7 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
         return textField
     }()
-    
+
     private lazy var footnoteHorizontalStackView: UIStackView = {
         let footnoteHorizontalStackView = UIStackView()
         footnoteHorizontalStackView.axis = .horizontal
@@ -69,7 +69,7 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 20
         addAndPinSubview(verticalStackView)
-        
+
         setupFootnoteView(isResendingCode: false)
     }
 
@@ -89,15 +89,15 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
             )
         }
     }
-    
+
     func isResendingCode(_ isResendingCode: Bool) {
         setupFootnoteView(isResendingCode: isResendingCode)
     }
-    
+
     private func setupFootnoteView(isResendingCode: Bool) {
         // clear all previous state
         footnoteHorizontalStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
+
         footnoteHorizontalStackView.addArrangedSubview(
             CreateEmailLabel(email: email)
         )
@@ -163,7 +163,7 @@ private func CreateResendCodeLoadingView() -> UIView {
     let activityIndicator = ActivityIndicator(size: .medium)
     activityIndicator.color = .textDisabled
     activityIndicator.startAnimating()
-    
+
     // `ActivityIndicator` is hard-coded to have specific sizes, so here we scale it to our needs
     let mediumIconDiameter: CGFloat = 20
     let desiredIconDiameter: CGFloat = 12

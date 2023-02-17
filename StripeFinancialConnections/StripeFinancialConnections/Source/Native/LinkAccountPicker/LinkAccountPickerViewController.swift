@@ -22,7 +22,7 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
         institution: FinancialConnectionsInstitution
     )
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
@@ -146,7 +146,7 @@ final class LinkAccountPickerViewController: UIViewController {
             delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
             return
         }
-        
+
         if dataSource.manifest.stepUpAuthenticationRequired == true {
             delegate?.linkAccountPickerViewController(self, requestedStepUpVerificationWithSelectedAccount: selectedAccount)
         } else {
@@ -187,8 +187,6 @@ final class LinkAccountPickerViewController: UIViewController {
                     }
                 }
         }
-
-        
     }
 }
 
