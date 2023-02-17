@@ -27,8 +27,13 @@ extension Intent {
             return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
         case .setupIntent:
             return .setup
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent) - use mode")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(amount: let amount, currency: let currency, _):
+                return .pay(amount: amount, currency: currency)
+            case .setup:
+                return .setup
+            }
         }
     }
 
@@ -38,8 +43,8 @@ extension Intent {
             return paymentIntent.linkSettings?.fundingSources
         case .setupIntent(let setupIntent):
             return setupIntent.linkSettings?.fundingSources
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent) - use link_settings in response")
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.fundingSources
         }
     }
 
@@ -49,8 +54,8 @@ extension Intent {
             return paymentIntent.countryCode
         case .setupIntent(let setupIntent):
             return setupIntent.countryCode
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent) - use country code in response")
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.countryCode
         }
     }
 }
