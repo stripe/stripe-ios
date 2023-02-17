@@ -116,7 +116,8 @@ extension STPApplePayContext {
     private static func createPaymentRequest(
                 intent: Intent,
                 configuration: PaymentSheet.Configuration,
-                applePay: PaymentSheet.ApplePayConfiguration) -> PKPaymentRequest {
+                applePay: PaymentSheet.ApplePayConfiguration
+    ) -> PKPaymentRequest {
 
         func paymentRequest(with currency: String, amount: Int) -> PKPaymentRequest {
             var paymentRequest: PKPaymentRequest
