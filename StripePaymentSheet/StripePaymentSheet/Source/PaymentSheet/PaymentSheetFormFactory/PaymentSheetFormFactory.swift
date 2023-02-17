@@ -64,7 +64,7 @@ class PaymentSheetFormFactory {
                 return .none
             }
         }
-        
+
         switch intent {
         case let .paymentIntent(paymentIntent):
             saveMode = saveModeFor(merchantRequiresSave: paymentIntent.setupFutureUsage != .none)

@@ -29,7 +29,7 @@ extension Intent {
             return .setup
         case .deferredIntent(_, let intentConfig):
             switch intentConfig.mode {
-            case .payment(amount: let amount, currency: let currency, _):
+            case .payment(let amount, let currency, _):
                 return .pay(amount: amount, currency: currency)
             case .setup:
                 return .setup

@@ -88,7 +88,7 @@ extension STPApplePayContext {
         guard let applePay = configuration.applePay else {
             return nil
         }
-        
+
         var paymentRequest = createPaymentRequest(intent: intent,
                                                   configuration: configuration,
                                                   applePay: applePay)
@@ -112,11 +112,11 @@ extension STPApplePayContext {
             return nil
         }
     }
-    
+
     private static func createPaymentRequest(intent: Intent,
                                       configuration: PaymentSheet.Configuration,
                                       applePay: PaymentSheet.ApplePayConfiguration) -> PKPaymentRequest {
-       
+
         func paymentRequest(with currency: String, amount: Int) -> PKPaymentRequest {
             var paymentRequest: PKPaymentRequest
             paymentRequest = StripeAPI.paymentRequest(
@@ -139,7 +139,7 @@ extension STPApplePayContext {
             }
             return paymentRequest
         }
-        
+
         func setupPaymentRequest() -> PKPaymentRequest {
             var paymentRequest: PKPaymentRequest
             paymentRequest = StripeAPI.paymentRequest(
@@ -156,10 +156,10 @@ extension STPApplePayContext {
                     PKPaymentSummaryItem(label: "\(configuration.merchantDisplayName)", amount: .one, type: .pending),
                 ]
             }
-            
+
             return paymentRequest
         }
-        
+
         switch intent {
         case .paymentIntent(let paymentIntent):
             return paymentRequest(with: paymentIntent.currency, amount: paymentIntent.amount)
