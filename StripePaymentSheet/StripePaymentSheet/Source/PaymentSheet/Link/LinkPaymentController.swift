@@ -17,7 +17,7 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 @_spi(LinkOnly) public class LinkPaymentController {
 
-    private let retrievableIntent: RetrievableIntent
+    private let mode: InitializationMode
     private let configuration: PaymentSheet.Configuration
 
     private var intent: Intent?
@@ -30,7 +30,7 @@ import UIKit
     /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
     /// - Parameter billingDetails: Any information about the customer you've already collected.
     @_spi(LinkOnly) public convenience init(paymentIntentClientSecret: String, returnURL: String? = nil, billingDetails: PaymentSheet.BillingDetails? = nil) {
-        self.init(intentSecret: .paymentIntent(clientSecret: paymentIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
+        self.init(intentSecret: .paymentIntentClientSecret(paymentIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
     }
 
     /// Initializes a new `LinkPaymentController` instance.
@@ -38,11 +38,11 @@ import UIKit
     /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
     /// - Parameter billingDetails: Any information about the customer you've already collected.
     @_spi(LinkOnly) public convenience init(setupIntentClientSecret: String, returnURL: String? = nil, billingDetails: PaymentSheet.BillingDetails? = nil) {
-        self.init(intentSecret: .setupIntent(clientSecret: setupIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
+        self.init(intentSecret: .setupIntentClientSecret(setupIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
     }
 
-    private init(intentSecret: RetrievableIntent, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
-        self.retrievableIntent = intentSecret
+    private init(intentSecret: InitializationMode, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
+        self.mode = intentSecret
         var configuration = PaymentSheet.Configuration()
         configuration.linkPaymentMethodsOnly = true
         configuration.returnURL = returnURL
@@ -77,7 +77,7 @@ import UIKit
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
         let linkController: PayWithLinkViewController = try await withCheckedThrowingContinuation { [self] continuation in
-            PaymentSheet.load(retrievableIntent: retrievableIntent, configuration: configuration) { result in
+            PaymentSheet.load(mode: mode, configuration: configuration) { result in
                 switch result {
                 case .success(let intent, _, let isLinkEnabled):
                     guard isLinkEnabled else {
@@ -137,7 +137,7 @@ import UIKit
         if (intent == nil || paymentOption == nil) && LinkAccountService().hasSessionCookie {
             // If the customer has a Link cookie, `present` may not need to have been called - try to load here
             paymentOption = try await withCheckedThrowingContinuation { [self] continuation in
-                PaymentSheet.load(retrievableIntent: retrievableIntent, configuration: configuration) { result in
+                PaymentSheet.load(mode: mode, configuration: configuration) { result in
                     switch result {
                     case .success(let intent, _, let isLinkEnabled):
                         guard isLinkEnabled else {

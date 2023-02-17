@@ -133,7 +133,7 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(retrievableIntent: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            create(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
                    configuration: configuration,
                    completion: completion
             )
@@ -150,44 +150,26 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(retrievableIntent: .setupIntent(clientSecret: setupIntentClientSecret),
+            create(mode: .setupIntentClientSecret(setupIntentClientSecret),
                    configuration: configuration,
                    completion: completion
             )
         }
 
+        /// 🚧 Under construction
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the Intent.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
         /// - Parameter mode: The mode used to initialize PaymentSheet
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(STP) public static func create(mode: InitializationMode,
-                                             configuration: PaymentSheet.Configuration,
-                                             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void) {
-            switch mode {
-            case .paymentIntentClientSecret(let paymentIntentClientSecret):
-                create(retrievableIntent: .paymentIntent(clientSecret: paymentIntentClientSecret),
-                       configuration: configuration,
-                       completion: completion)
-            case .setupIntentClientSecret(let setupIntentClientSecret):
-                create(retrievableIntent: .setupIntent(clientSecret: setupIntentClientSecret),
-                       configuration: configuration,
-                       completion: completion)
-            case .deferredIntent(let intentConfig):
-                create(retrievableIntent: .defferedIntent(intentConfig: intentConfig),
-                       configuration: configuration,
-                       completion: completion)
-            }
-        }
-
-        static func create(
-            retrievableIntent: RetrievableIntent,
+        @_spi(STP) public static func create(
+            mode: InitializationMode,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
             PaymentSheet.load(
-                retrievableIntent: retrievableIntent,
+                mode: mode,
                 configuration: configuration
             ) { result in
                 switch result {

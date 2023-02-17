@@ -53,7 +53,7 @@ public class PaymentSheet {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     public convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
         self.init(
-            retrievableIntent: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            mode: .paymentIntentClientSecret(paymentIntentClientSecret),
             configuration: configuration
         )
     }
@@ -63,37 +63,17 @@ public class PaymentSheet {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     public convenience init(setupIntentClientSecret: String, configuration: Configuration) {
         self.init(
-            retrievableIntent: .setupIntent(clientSecret: setupIntentClientSecret),
+            mode: .setupIntentClientSecret(setupIntentClientSecret),
             configuration: configuration
         )
     }
 
     /// TODO(porter) doc comment
     /// 🚧 Under construction
-    @_spi(STP) public convenience init(mode: InitializationMode, configuration: Configuration) {
-        switch mode {
-        case .paymentIntentClientSecret(let paymentIntentClientSecret):
-            self.init(
-                retrievableIntent: .paymentIntent(clientSecret: paymentIntentClientSecret),
-                configuration: configuration
-            )
-        case .setupIntentClientSecret(let setupIntentClientSecret):
-            self.init(
-                retrievableIntent: .setupIntent(clientSecret: setupIntentClientSecret),
-                configuration: configuration
-            )
-        case .deferredIntent(let intentConfig):
-            self.init(
-                retrievableIntent: .defferedIntent(intentConfig: intentConfig),
-                configuration: configuration
-            )
-        }
-    }
-
-    required init(retrievableIntent: RetrievableIntent, configuration: Configuration) {
+    @_spi(STP) public required init(mode: InitializationMode, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
-        self.retrievableIntent = retrievableIntent
+        self.mode = mode
         self.configuration = configuration
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration)
     }
@@ -136,7 +116,7 @@ public class PaymentSheet {
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
-            retrievableIntent: retrievableIntent,
+            mode: mode,
             configuration: configuration
         ) { result in
             switch result {
@@ -239,7 +219,7 @@ public class PaymentSheet {
     // MARK: - Internal Properties
 
     /// The retrievable intent this instance was initialized with
-    let retrievableIntent: RetrievableIntent
+    let mode: InitializationMode
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?

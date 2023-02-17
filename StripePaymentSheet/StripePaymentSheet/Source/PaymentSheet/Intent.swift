@@ -92,20 +92,6 @@ enum Intent {
     }
 }
 
-// MARK: - RetrievableIntent
-
-/// An internal type representing types of intents that can be retrieved from Stripe
-enum RetrievableIntent {
-    /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
-    case paymentIntent(clientSecret: String)
-
-    /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
-    case setupIntent(clientSecret: String)
-
-    /// The `IntentConfiguration` of a Stripe deferred intent
-    case defferedIntent(intentConfig: PaymentSheet.IntentConfiguration)
-}
-
 // MARK: - IntentConfirmParams
 
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
