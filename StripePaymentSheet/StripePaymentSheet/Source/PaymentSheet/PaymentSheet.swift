@@ -218,7 +218,7 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
 
-    /// The retrievable intent this instance was initialized with
+    /// The initialization mode this instance was initialized with
     let mode: InitializationMode
 
     /// A user-supplied completion block. Nil until `present` is called.
