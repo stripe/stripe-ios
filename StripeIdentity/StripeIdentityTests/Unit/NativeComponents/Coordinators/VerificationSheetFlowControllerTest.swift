@@ -308,10 +308,13 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // should navigate to IndividualController
         try verifyIndividualViewController([.address])
         try verifyIndividualViewController([.idNumber])
+    }
+
+    func testNextViewControllerIndividualWelcome() throws {
         // When verification type is not document, .name or .dob will be missing,
-        // should navigate to IndividualViewController
-        try verifyIndividualViewController([.name, .dob, .idNumber])
-        try verifyIndividualViewController([.name, .dob, .address])
+        // should navigate to IndividualWelcomeViewController
+        try verifyIndividualWelcomeViewController([.name, .dob, .idNumber])
+        try verifyIndividualWelcomeViewController([.name, .dob, .address])
     }
 
     func verifyIndividualViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) throws {
@@ -320,6 +323,18 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             missingRequirements: missingRequirements,
             completion: { nextVC in
                 XCTAssertIs(nextVC, IndividualViewController.self)
+                exp.fulfill()
+            }
+        )
+        wait(for: [exp], timeout: 1)
+    }
+
+    func verifyIndividualWelcomeViewController(_ missingRequirements: Set<StripeAPI.VerificationPageFieldType>) throws {
+        let exp = expectation(description: "testNextViewControllerIndividualWelcome")
+        try nextViewController(
+            missingRequirements: missingRequirements,
+            completion: { nextVC in
+                XCTAssertIs(nextVC, IndividualWelcomeViewController.self)
                 exp.fulfill()
             }
         )

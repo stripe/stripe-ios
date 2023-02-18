@@ -40,6 +40,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didSaveDocumentBackAndTransition = false
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
+    var transitionedToIndividual: Bool = false
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
@@ -123,6 +124,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     func transitionToCountryNotListed(missingType: StripeIdentity.IndividualFormElement.MissingType) {
         self.missingType = missingType
+    }
+
+    func transitionToIndividual() {
+        self.transitionedToIndividual = true
     }
 
 }
