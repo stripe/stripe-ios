@@ -65,6 +65,9 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func transitionToCountryNotListed(
         missingType: IndividualFormElement.MissingType
     )
+
+    /// Transition to IndividualViewController without any API request
+    func transitionToIndividual()
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -309,6 +312,18 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             staticContentResult: verificationPageResponse,
             sheetController: self,
             missingType: missingType
+        )
+    }
+
+    func transitionToIndividual() {
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure("verificationPageResponse is nil")
+            return
+        }
+
+        flowController.transitionToIndividualScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self
         )
     }
 

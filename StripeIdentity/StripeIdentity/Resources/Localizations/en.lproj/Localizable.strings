@@ -209,6 +209,9 @@
    Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
 
+/* Back button title for returning to welcome screen of Identity verification */
+"Welcome" = "Welcome";
+
 /* Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
 

@@ -60,6 +60,7 @@ final class IndividualFormElement: ContainerElement {
                 line2: addressElement.line2!.text.isEmpty ? nil : addressElement.line2!.text,
                 city: addressElement.city?.text,
                 postalCode: addressElement.postalCode?.text,
+                state: addressElement.state?.rawData,
                 country: addressElement.selectedCountryCode
             )
         }
