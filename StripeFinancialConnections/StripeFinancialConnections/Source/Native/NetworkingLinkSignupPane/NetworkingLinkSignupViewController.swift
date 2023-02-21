@@ -99,7 +99,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private func didSelectSaveToLink() {
         // TODO(kgaidis): on save to link, make a network call to saveToLinkNetwork...whether SUCCESS or FAILURE...we push to success pane...
         dataSource.saveToLink(
-            emailAddress: formView.emailAddressTextField.text ?? "",
+            emailAddress: formView.emailElement.emailAddressString ?? "",
             phoneNumber: formView.phoneNumberTextField.text ?? "",
             countryCode: "US"  // TODO(kgaidis): fix the country code
         )
@@ -130,14 +130,15 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
 @available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDelegate {
-
-    func networkingLinkSignupBodyFormViewDidEnterValidEmail(_ view: NetworkingLinkSignupBodyFormView) {
-        guard let emailAddress = view.emailAddressTextField.text else {
-            return
-        }
+    
+    func networkingLinkSignupBodyFormView(
+        _ bodyFormView: NetworkingLinkSignupBodyFormView,
+        didEnterValidEmailAddress emailAddress: String
+    ) {
+        bodyFormView.emailElement.startAnimating()
         dataSource
             .lookup(emailAddress: emailAddress)
-            .observe { [weak self] result in
+            .observe { [weak self, weak bodyFormView] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let response):
@@ -168,6 +169,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         pane: .networkingLinkSignupPane
                     )
                 }
+                bodyFormView?.emailElement.stopAnimating()
             }
     }
 }
