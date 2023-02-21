@@ -1283,7 +1283,8 @@ public class STPPaymentHandler: NSObject {
             }
 
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
-                _handleRedirect(to: mobileAuthURL, withReturn: returnURL)
+                let resultingRedirectURL = self.followRedirects(to: mobileAuthURL, urlSession: URLSession.shared)
+                _handleRedirectToExternalBrowser(to: resultingRedirectURL, withReturn: returnURL)
 
             } else {
                 currentAction.complete(
@@ -1310,6 +1311,14 @@ public class STPPaymentHandler: NSObject {
             defer {
                 blockingDataTaskSemaphore.signal()
             }
+            
+            // Check if the request failed due to attempting to redirect to an app universal link for Cash App
+            if let nsError = error as? NSError, let errorUrl = nsError.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
+                if errorUrl.contains("cashme://cash.app"), let universalLink = URL(string: errorUrl) {
+                    resultingUrl = universalLink
+                }
+            }
+            
             guard error == nil,
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode),
