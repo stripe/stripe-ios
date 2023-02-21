@@ -116,7 +116,7 @@ class ConfirmButton: UIView {
 
         applyCornerRadius()
         update()
-        
+
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didBecomeActive),
                                                name: UIApplication.willEnterForegroundNotification,
@@ -136,11 +136,11 @@ class ConfirmButton: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         self.buyButton.update(status: state, callToAction: callToAction, animated: false)
     }
-    
+
     @objc private func didBecomeActive() {
         self.buyButton.update(status: self.state, callToAction: self.callToAction, animated: false)
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
