@@ -21,6 +21,8 @@ struct IdentityElementsFactory {
 
     let locale: Locale
     let addressSpecProvider: AddressSpecProvider
+    
+    let dateFormatter: DateFormatter
 
     static let supportedCountryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
         "US": .init(type: .US_SSN_LAST4, label: "Last 4 of Social Security number"),
@@ -34,6 +36,9 @@ struct IdentityElementsFactory {
     ) {
         self.locale = locale
         self.addressSpecProvider = addressSpecProvider
+        
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.dateFormat = "MM / dd / yyyy"
     }
 
     // MARK: Name
@@ -70,10 +75,17 @@ struct IdentityElementsFactory {
 
     // MARK: DOB
 
-    func makeDateOfBirth() -> DateFieldElement {
-        return DateFieldElement(
-            maximumDate: Date(),
-            locale: locale
+    func makeDateOfBirthSection() -> SectionElement {
+        return  SectionElement(
+            title: String.Localized.date_of_birth,
+            elements: [DateFieldElement(
+                label: "MM / DD / YYYY",
+                minimumDate: dateFormatter.date(from: "01 / 01 / 1990"),
+                maximumDate: Date(),
+                locale: locale,
+                customDateFormatter: dateFormatter
+                )
+            ]
         )
     }
 

@@ -100,10 +100,7 @@ final class IndividualFormElement: ContainerElement {
             nameElement = nil
         }
         if missing.contains(.dob) {
-            dobElement = SectionElement(
-                title: String.Localized.date_of_birth,
-                elements: [elementsFactory.makeDateOfBirth()]
-            )
+            dobElement = elementsFactory.makeDateOfBirthSection()
             elements.append(dobElement!)
         } else {
             dobElement = nil
