@@ -99,7 +99,7 @@ enum Intent {
         case .deferredIntent(_, let intentConfig):
             switch intentConfig.mode {
             case .payment(_, _, let setupFutureUsage):
-                return setupFutureUsage != .none
+                return setupFutureUsage != nil
             case .setup:
                 return true
             }
