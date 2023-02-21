@@ -80,6 +80,7 @@ class NativeFlowController {
                 || navigationController.topViewController is PartnerAuthViewController
                 || navigationController.topViewController is AttachLinkedPaymentAccountViewController
                 || navigationController.topViewController is NetworkingLinkSignupViewController
+                || navigationController.topViewController is NetworkingLinkStepUpVerificationViewController
                 || navigationController.topViewController is NetworkingLinkVerificationViewController
                 || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
                 || navigationController.topViewController is LinkAccountPickerViewController)

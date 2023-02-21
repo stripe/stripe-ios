@@ -60,11 +60,29 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        startVerificationSession()
+        startVerificationSession(
+            willStart: { [weak self] in
+                self?.showLoadingView(true)
+            },
+            didStart: { [weak self] redactedPhoneNumber in
+                self?.showLoadingView(false)
+                self?.showContent(redactedPhoneNumber: redactedPhoneNumber)
+            },
+            didFailStart: { [weak self] in
+                self?.showLoadingView(false)
+            }
+        )
     }
 
-    private func startVerificationSession() {
-        showLoadingView(true)
+    // We encapsulate `startVerificationSession` with "event handlers/blocks" because its used in two places:
+    // 1. When first presenting the pane
+    // 2. Any time user presses "Resend code" button
+    private func startVerificationSession(
+        willStart: @escaping () -> Void,
+        didStart: @escaping (_ redactedPhoneNumber: String) -> Void,
+        didFailStart: @escaping () -> Void
+    ) {
+        willStart()
         let handleFailure: (_ error: Error, _ errorName: String) -> Void = { [weak self] error, errorName in
             guard let self = self else { return }
             self.dataSource.analyticsClient.log(
@@ -83,6 +101,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
                 self,
                 didReceiveTerminalError: error
             )
+            didFailStart()
         }
         dataSource.lookupConsumerSession()
             .observe { [weak self] result in
@@ -91,12 +110,10 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
                 case .success(let lookupConsumerSessionResponse):
                     if lookupConsumerSessionResponse.exists {
                         self.dataSource.startVerificationSession()
-                            .observe { [weak self] result in
-                                guard let self = self else { return }
+                            .observe { result in
                                 switch result {
                                 case .success(let consumerSessionResponse):
-                                    self.showLoadingView(false)
-                                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
+                                    didStart(consumerSessionResponse.consumerSession.redactedPhoneNumber)
                                 case .failure(let error):
                                     handleFailure(error, "StartVerificationSessionError")
                                 }
@@ -111,6 +128,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
                             pane: .networkingLinkStepUpVerification
                         )
                         self.delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
+                        didFailStart()
                     }
                 case .failure(let error):
                     handleFailure(error, "LookupConsumerSessionError")
@@ -152,12 +170,17 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     }
 
     private func didSelectResendCode() {
-        bodyView.isResendingCode(true)
-        // TODO(kgaidis): make an API call
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) { [weak self] in
-            guard let self = self else { return }
-            self.bodyView.isResendingCode(false)
-        }
+        startVerificationSession(
+            willStart: { [weak self] in
+                self?.bodyView.isResendingCode(true)
+            },
+            didStart: { [weak self] _ in
+                self?.bodyView.isResendingCode(false)
+            },
+            didFailStart: { [weak self] in
+                self?.bodyView.isResendingCode(false)
+            }
+        )
     }
 }
 
