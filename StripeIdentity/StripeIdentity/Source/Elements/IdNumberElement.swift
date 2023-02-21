@@ -32,7 +32,8 @@ class IdNumberElement: ContainerElement {
         country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country,
             countryCodes: countryCodes,
-            locale: locale
+            locale: locale,
+            disableDropdownWithSingleCountry: true
         )
 
         let defaultCountrySpec = countryToIDNumberTypes[countryCodes[country.selectedIndex]]
