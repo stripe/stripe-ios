@@ -35,12 +35,12 @@ final class DateFieldElementTest: XCTestCase {
         let element = DateFieldElement(label: "", defaultDate: oct1_2021, minimumDate: oct3_2021)
         XCTAssertNil(element.selectedDate)
     }
-    
+
     func testCustomDateformatter() {
-        let timeZone = TimeZone(secondsFromGMT:0)
+        let timeZone = TimeZone(secondsFromGMT: 0)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMddyyyy"
-        
+
         let element = DateFieldElement(timeZone: timeZone!, customDateFormatter: dateFormatter)
         // Emulate a user changing the picker and hitting done button
         element.datePickerView.date = oct3_2021

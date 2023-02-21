@@ -21,7 +21,7 @@ struct IdentityElementsFactory {
 
     let locale: Locale
     let addressSpecProvider: AddressSpecProvider
-    
+
     let dateFormatter: DateFormatter
 
     static let supportedCountryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
@@ -36,7 +36,7 @@ struct IdentityElementsFactory {
     ) {
         self.locale = locale
         self.addressSpecProvider = addressSpecProvider
-        
+
         self.dateFormatter = DateFormatter()
         self.dateFormatter.dateFormat = "MM / dd / yyyy"
     }
@@ -84,7 +84,7 @@ struct IdentityElementsFactory {
                 maximumDate: Date(),
                 locale: locale,
                 customDateFormatter: dateFormatter
-                )
+                ),
             ]
         )
     }
