@@ -21,7 +21,7 @@ import UIKit
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-    case deferredIntent(STPElementsSession)
+    case deferredIntent(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
 
     var clientSecret: String {
         switch self {
@@ -40,7 +40,7 @@ enum Intent {
             return pi.unactivatedPaymentMethodTypes
         case .setupIntent(let si):
             return si.unactivatedPaymentMethodTypes
-        case .deferredIntent(let elementsSession):
+        case .deferredIntent(let elementsSession, _):
             return elementsSession.unactivatedPaymentMethodTypes
         }
     }
@@ -52,7 +52,7 @@ enum Intent {
             return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
-        case .deferredIntent(let elementsSession):
+        case .deferredIntent(let elementsSession, _):
             return elementsSession.orderedPaymentMethodTypes
         }
     }
@@ -63,8 +63,13 @@ enum Intent {
             return true
         case .setupIntent:
             return false
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Needs to switch on the init object mode")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment:
+                return true
+            case .setup:
+                return false
+            }
         }
     }
 
@@ -74,8 +79,13 @@ enum Intent {
             return pi.currency
         case .setupIntent:
             return nil
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Needs to switch on the init object mode")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, let currency, _):
+                return currency
+            case .setup(let currency, _):
+                return currency
+            }
         }
     }
 
@@ -86,8 +96,13 @@ enum Intent {
             return paymentIntent.setupFutureUsage != .none
         case .setupIntent:
             return true
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Needs to switch on the init object mode")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage):
+                return setupFutureUsage != nil
+            case .setup:
+                return true
+            }
         }
     }
 }

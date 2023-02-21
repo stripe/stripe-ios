@@ -441,7 +441,7 @@ extension PaymentSheet {
 
         case .deferredIntent(let intentConfig):
             let deferredIntentHandlerCompletionBlock: ((STPElementsSession) -> Void) = { elementsSession in
-                intentPromise.resolve(with: .deferredIntent(elementsSession))
+                intentPromise.resolve(with: .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig))
             }
 
             configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig) { result in
