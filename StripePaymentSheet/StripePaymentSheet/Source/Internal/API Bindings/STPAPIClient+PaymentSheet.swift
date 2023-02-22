@@ -154,13 +154,13 @@ extension STPAPIClient {
             self,
             endpoint: APIEndpointIntentWithPreferences,
             parameters: parameters
-        ) { paymentIntentWithPreferences, _, error in
-            guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
+        ) { elementsSession, _, error in
+            guard let elementsSession = elementsSession else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
             }
 
-            completion(.success(paymentIntentWithPreferences))
+            completion(.success(elementsSession))
         }
     }
 
