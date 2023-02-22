@@ -70,6 +70,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
         view.backgroundColor = .customBackgroundColor
 
         let pane = PaneWithHeaderLayoutView(
@@ -101,6 +102,9 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         pane.addTo(view: view)
 
+        // if user drags, dismiss keyboard so the CTA buttons can be shown
+        pane.scrollView.keyboardDismissMode = .onDrag
+
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
         if let emailAddress = emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(dataSource.manifest.accountholderCustomerEmailAddress)
@@ -121,8 +125,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
             )
         dataSource.saveToLink(
             emailAddress: formView.emailElement.emailAddressString ?? "",
-            phoneNumber: formView.phoneNumberTextField.text ?? "",
-            countryCode: "US"  // TODO(kgaidis): fix the country code
+            phoneNumber: formView.phoneNumberElement.phoneNumber?.number ?? "",
+            countryCode: formView.phoneNumberElement.phoneNumber?.countryCode ?? "US"
         )
         .observe { [weak self] result in
             guard let self = self else { return }
@@ -155,8 +159,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
     private func adjustSaveToLinkButtonDisabledState() {
         let isEmailValid = formView.emailElement.validationState.isValid
-        // TODO(kgaidis): add phone number validation
-        footerView.enableSaveToLinkButton(isEmailValid)
+        let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
+        footerView.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
 }
 
@@ -198,9 +202,14 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             eventName: "networking.new_consumer",
                             pane: .networkingLinkSignupPane
                         )
-                        self.formView.showPhoneNumberTextFieldIfNeeded()
+                        let didShowPhoneNumberFieldForTheFirstTime = self.formView.showPhoneNumberFieldIfNeeded()
+                        if didShowPhoneNumberFieldForTheFirstTime {
+                            // in case user needs to slowly re-type the e-mail,
+                            // we want to only jump to the phone number the
+                            // first time they enter the e-mail
+                            self.formView.beginEditingPhoneNumberField()
+                        }
                         self.footerView.showSaveToLinkButtonIfNeeded()
-                        self.adjustSaveToLinkButtonDisabledState()
                     }
                 case .failure(let error):
                     self.dataSource.analyticsClient.logUnexpectedError(
@@ -217,7 +226,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
             }
     }
 
-    func networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(_ view: NetworkingLinkSignupBodyFormView) {
+    func networkingLinkSignupBodyFormViewDidUpdateFields(_ view: NetworkingLinkSignupBodyFormView) {
         adjustSaveToLinkButtonDisabledState()
     }
 }
