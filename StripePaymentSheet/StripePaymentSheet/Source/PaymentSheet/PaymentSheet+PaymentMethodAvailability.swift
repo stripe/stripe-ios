@@ -153,11 +153,11 @@ extension PaymentSheet {
     }
 
     enum PaymentMethodExclusionReason: Equatable {
-        /// This payment method is supported by PaymentSheet and the current configuration/intent
+        /// This payment method is supported by PaymentSheet and the current configuration and intent
         case supported
-        /// This payment method is supported by PaymentSheet and/or the current configuration/intent
+        /// This payment method is not supported by PaymentSheet and/or the current configuration or intent
         case notSupported
-        /// This payment method is not activated in the Stripe Dashboard
+        /// This payment method is not activated in live mode in the Stripe Dashboard
         case unactivated
         /// This payment method has requirements not met by the configuration or intent
         case missingRequirements([PaymentMethodTypeRequirement])
