@@ -146,7 +146,7 @@ extension PaymentSheet {
             case .financialConnectionsSDK:
                 return "financialConnectionsSDK: The FinancialConnections must be linked."
             case .validUSBankVerificationMethod:
-                return "validUSBankVerificationMethod: Requires a valid us bank verification method."
+                return "validUSBankVerificationMethod: Requires a valid US bank verification method."
             }
         }
 
