@@ -1322,10 +1322,10 @@ public class STPPaymentHandler: NSObject {
                 blockingDataTaskSemaphore.signal()
             }
 
-            // Check if the request failed due to attempting to redirect to an app universal link for Cash App
-            if let errorUrl = (error as? NSError)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
-                if errorUrl.contains("cashme://cash.app"), let universalLink = URL(string: errorUrl) {
-                    resultingUrl = universalLink
+            // Check if the request failed due to attempting to redirect to a custom Scheme URL for Cash App
+            if let errorUrl = (error as NSError?)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
+                if errorUrl.contains("cashme://cash.app"), let customSchemeAppURL = URL(string: errorUrl) {
+                    resultingUrl = customSchemeAppURL
                 }
             }
 
