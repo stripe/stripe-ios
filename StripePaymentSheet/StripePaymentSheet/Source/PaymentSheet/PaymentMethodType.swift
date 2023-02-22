@@ -186,8 +186,9 @@ extension PaymentSheet {
                     ?? paymentMethodTypeStrings
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
             case .deferredIntent(let elementsSession, _):
+                let paymentMethodPrefs = elementsSession.allResponseFields["payment_method_preference"] as? [AnyHashable: Any]
                 let paymentTypesString =
-                elementsSession.allResponseFields["ordered_payment_method_types"] as? [String]
+                paymentMethodPrefs?["ordered_payment_method_types"] as? [String]
                     ?? []
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
             }

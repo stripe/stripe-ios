@@ -31,16 +31,16 @@ import UIKit
     case failed(error: Error)
 }
 
-/// TODO(porter) doc comment
-/// 🚧 Under construction
-@_spi(STP) @frozen public enum InitializationMode {
-    case paymentIntentClientSecret(String)
-    case setupIntentClientSecret(String)
-    case deferredIntent(PaymentSheet.IntentConfiguration)
-}
-
 /// A drop-in class that presents a sheet for a customer to complete their payment
 public class PaymentSheet {
+    /// TODO(porter) doc comment
+    /// 🚧 Under construction
+    @_spi(STP) @frozen public enum InitializationMode {
+        case paymentIntentClientSecret(String)
+        case setupIntentClientSecret(String)
+        case deferredIntent(PaymentSheet.IntentConfiguration)
+    }
+
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
 

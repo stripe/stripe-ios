@@ -10,6 +10,18 @@ import Foundation
 @_spi(STP) public extension PaymentSheet {
     /// 🚧 Under construction
     struct IntentConfiguration {
+
+        /// Creates a `PaymentSheet.IntentConfiguration` with the given values
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - captureMethod: The capture method of this intent, either automatic or manual, defaults to automatic
+        ///   - paymentMethodTypes: The payment method types for the intent
+        public init(mode: Mode, captureMethod: CaptureMethod = .automatic, paymentMethodTypes: [String]? = nil) {
+            self.mode = mode
+            self.captureMethod = captureMethod
+            self.paymentMethodTypes = paymentMethodTypes
+        }
+
         /// Filters out payment methods based on intended use.
         var mode: Mode
         /// Filters out payment methods based on their support for manual capture.
@@ -18,7 +30,7 @@ import Foundation
         var paymentMethodTypes: [String]?
 
         /// Controls when the funds will be captured from the customer’s account.
-        enum CaptureMethod: String {
+        public enum CaptureMethod: String {
             /// Stripe automatically captures funds when the customer authorizes the payment.
             case automatic
 
@@ -27,7 +39,7 @@ import Foundation
         }
 
         /// Indicates that you intend to make future payments with this Intents’s payment method.
-        enum SetupFutureUsage: String {
+        public enum SetupFutureUsage: String {
             /// Indicating your customer may or may not be in your checkout flow.
             case offSession = "off_session"
 
@@ -36,7 +48,7 @@ import Foundation
         }
 
         /// Filters out payment methods based on intended use.
-        enum Mode {
+        public enum Mode {
             case payment(
                 /// Shown in Apple Pay, Buy now pay later UIs, the Pay button, and influences available payment methods.
                 amount: Int,
