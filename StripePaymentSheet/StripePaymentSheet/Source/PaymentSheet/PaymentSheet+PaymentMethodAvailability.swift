@@ -144,7 +144,7 @@ extension PaymentSheet {
             case .userSupportsDelayedPaymentMethods:
                 return "userSupportsDelayedPaymentMethods: PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
             case .financialConnectionsSDK:
-                return "financialConnectionsSDK: The FinancialConnections must be linked."
+                return "financialConnectionsSDK: The FinancialConnections SDK must be linked."
             case .validUSBankVerificationMethod:
                 return "validUSBankVerificationMethod: Requires a valid US bank verification method."
             }
