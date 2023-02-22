@@ -112,7 +112,7 @@ extension STPPaymentMethodOptions.USBankAccount.VerificationMethod {
 typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequirement
 
 extension PaymentSheet {
-    enum PaymentMethodTypeRequirement {
+    enum PaymentMethodTypeRequirement: Comparable {
 
         /// A special case that indicates the payment method is unavailable
         case unavailable
@@ -183,8 +183,9 @@ extension PaymentSheet {
                 return true
             case (.unactivated, .unactivated):
                 return true
-            case (.missingRequirements, .missingRequirements): // consider them equal even if requirements are not equal
-                return true
+            case (.missingRequirements(let requirements), .missingRequirements(let otherRequirements)):
+                // don't care about the ordering
+                return requirements.sorted(by: { $0 >= $1 }) == otherRequirements.sorted(by: { $0 >= $1 })
             default:
                 return false
             }
