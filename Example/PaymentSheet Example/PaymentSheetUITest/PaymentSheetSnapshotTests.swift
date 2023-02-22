@@ -489,8 +489,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
                 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            captureMethod: .automatic,
-                                                            paymentMethodTypes: ["card", "affirm"])
+                                                            captureMethod: .automatic)
         
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
@@ -501,13 +500,23 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
-                                                            paymentMethodTypes: ["card", "affirm"])
+                                                            captureMethod: .automatic)
         
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
+    
+    func testPaymentSheetAppearance_deferredIntent() {
+        stubNewCustomerResponse()
+        
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
+                                                            captureMethod: .automatic)
+        preparePaymentSheet(appearance: .snapshotTestTheme, intentConfig: intentConfig)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     
     func testPaymentSheetWithLink_deferredIntent() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
@@ -515,8 +524,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
-                                                            paymentMethodTypes: ["card", "link"])
+                                                            captureMethod: .automatic)
         
         preparePaymentSheet(
             automaticPaymentMethods: false,
@@ -1052,7 +1060,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             mode = .deferredIntent(intentConfig)
         }
         
-        self.paymentSheet = PaymentSheet(mode: mode, configuration: configuration)
+        self.paymentSheet = PaymentSheet(mode: mode, configuration: config)
     }
 
     private func presentPaymentSheet(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {

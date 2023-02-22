@@ -16,7 +16,7 @@ import Foundation
         ///   - mode: The mode of this intent, either payment or setup
         ///   - captureMethod: The capture method of this intent, either automatic or manual
         ///   - paymentMethodTypes: The payment method types for the intent
-        public init(mode: Mode, captureMethod: CaptureMethod, paymentMethodTypes: [String]?) {
+        public init(mode: Mode, captureMethod: CaptureMethod, paymentMethodTypes: [String]? = nil) {
             self.mode = mode
             self.captureMethod = captureMethod
             self.paymentMethodTypes = paymentMethodTypes
