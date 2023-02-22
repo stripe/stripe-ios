@@ -11,6 +11,11 @@ import Foundation
     /// 🚧 Under construction
     struct IntentConfiguration {
         
+        /// Creates a `PaymentSheet.IntentConfiguration` with the given values
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - captureMethod: The capture method of this intent, either automatic or manual
+        ///   - paymentMethodTypes: The payment method types for the intent
         public init(mode: Mode, captureMethod: CaptureMethod, paymentMethodTypes: [String]?) {
             self.mode = mode
             self.captureMethod = captureMethod
