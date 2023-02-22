@@ -222,7 +222,7 @@ extension PaymentSheet {
                 if exclusionReason != .supported {
                     // This payment method is being flitered out, log the reason/s why
                     #if DEBUG
-                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met. \(exclusionReason.description)\n")
+                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(exclusionReason.description)\n")
                     #endif
                 }
 
