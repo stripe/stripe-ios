@@ -409,8 +409,7 @@ extension PaymentSheet {
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
         ///   - supportedPaymentMethods: a list of supported payment method types
-        /// - Returns: nil if the configuration satisfies the requirements and if `paymentMethod` is contained in `supportedPaymentMethods`,
-        /// otherwise returns a `PaymentMethodExclusionReason` detailing why it is not supported
+        /// - Returns: a `PaymentMethodExclusionReason` detailing why or why not this payment method is supported
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
