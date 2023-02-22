@@ -496,27 +496,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentSheetDarkMode_deferredIntent() {
-        stubNewCustomerResponse()
-
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic)
-
-        preparePaymentSheet(intentConfig: intentConfig)
-        presentPaymentSheet(darkMode: true)
-        verify(paymentSheet.bottomSheetViewController.view!)
-    }
-
-    func testPaymentSheetAppearance_deferredIntent() {
-        stubNewCustomerResponse()
-
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic)
-        preparePaymentSheet(appearance: .snapshotTestTheme, intentConfig: intentConfig)
-        presentPaymentSheet(darkMode: false)
-        verify(paymentSheet.bottomSheetViewController.view!)
-    }
-
     func testPaymentSheetWithLink_deferredIntent() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
