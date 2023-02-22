@@ -393,7 +393,8 @@ extension PaymentSheet {
             }
             let supports = Set(requirements).isSubset(of: fulfilledRequirements)
             if !supports {
-
+                let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
+                return .missingRequirements(Array(missingRequirements))
             }
 
             return .supported
