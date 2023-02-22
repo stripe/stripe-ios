@@ -215,4 +215,132 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
         XCTAssertTrue(delegate.didFinish)
         waitForExpectations(timeout: 2, handler: nil)
     }
+
+    // Tests for race condition where the promise for fetching payment methods
+    // finishes in the context of intializing the sut, and `addCardViewControllerFooterView`
+    // is set directly after init, while internalViewController is `STPAddCardViewController`
+    func testSetAfterInit_addCardViewControllerFooterView_STPAddCardViewController() {
+        let customer = STPFixtures.customerWithNoSources()
+        let config = STPFixtures.paymentConfiguration()
+        config.applePayEnabled = false
+        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
+        let sut = buildViewController(
+            with: customer,
+            paymentMethods: [],
+            configuration: config,
+            delegate: delegate
+        )
+        sut.addCardViewControllerFooterView = UIView(frame: CGRectZero)
+        guard let payMethodsInternal = sut.internalViewController as? STPAddCardViewController else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(payMethodsInternal.customFooterView)
+    }
+
+    // Tests for race condition where the promise for fetching payment methods
+    // finishes in the context of intializing the sut, and the `paymentOptionsViewControllerFooterView`
+    // is set directly after init, while internalViewController is `STPPaymentOptionsInternalViewController`
+    func testSetAfterInit_paymentOptionsViewControllerFooterView_STPPaymentOptionsInternalViewController() {
+        let customer = STPFixtures.customerWithSingleCardTokenSource()
+        let paymentMethods = [STPFixtures.paymentMethod()]
+        let config = STPFixtures.paymentConfiguration()
+        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
+        let sut = buildViewController(
+            with: customer,
+            paymentMethods: paymentMethods.compactMap { $0 },
+            configuration: config,
+            delegate: delegate
+        )
+        sut.paymentOptionsViewControllerFooterView = UIView(frame: CGRectZero)
+        guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(payMethodsInternal.customFooterView)
+    }
+
+    // Tests for race condition where the promise for fetching payment methods
+    // finishes in the context of init the sut, and the `addCardViewControllerFooterView`
+    // is set directly after init, while internalViewController is `STPPaymentOptionsInternalViewController`
+    func testSetAfterInit_addCardViewControllerFooterView_STPPaymentOptionsInternalViewController() {
+        let customer = STPFixtures.customerWithSingleCardTokenSource()
+        let paymentMethods = [STPFixtures.paymentMethod()]
+        let config = STPFixtures.paymentConfiguration()
+        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
+        let sut = buildViewController(
+            with: customer,
+            paymentMethods: paymentMethods.compactMap { $0 },
+            configuration: config,
+            delegate: delegate
+        )
+        sut.addCardViewControllerFooterView = UIView(frame: CGRectZero)
+        guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(payMethodsInternal.addCardViewControllerCustomFooterView)
+    }
+
+    // Tests for race condition where the promise for fetching payment methods
+    // finishes in the context of init the sut, and the `prefilledInformation`
+    // is set directly after init, while internalViewController is `STPPaymentOptionsInternalViewController`
+    func testSetAfterInit_prefilledInformation_STPPaymentOptionsInternalViewController() {
+        let customer = STPFixtures.customerWithSingleCardTokenSource()
+        let paymentMethods = [STPFixtures.paymentMethod()]
+        let config = STPFixtures.paymentConfiguration()
+        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
+        let sut = buildViewController(
+            with: customer,
+            paymentMethods: paymentMethods.compactMap { $0 },
+            configuration: config,
+            delegate: delegate
+        )
+        let userInformation = STPUserInformation()
+        let address = STPAddress()
+        address.name = "John Doe"
+        address.line1 = "123 Main"
+        address.city = "Seattle"
+        address.state = "Washington"
+        address.postalCode = "98104"
+        address.phone = "2065551234"
+        userInformation.billingAddress = address
+        sut.prefilledInformation = userInformation
+        guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(payMethodsInternal.prefilledInformation)
+    }
+
+    // Tests for race condition where the promise for fetching payment methods
+    // finishes in the context of init the sut, and the `prefilledInformation`
+    // is set directly after init, while internalViewController is `STPAddCardViewController`
+    func testSetAfterInit_prefilledInformation_STPAddCardViewController() {
+        let customer = STPFixtures.customerWithNoSources()
+        let config = STPFixtures.paymentConfiguration()
+        config.applePayEnabled = false
+        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
+        let sut = buildViewController(
+            with: customer,
+            paymentMethods: [],
+            configuration: config,
+            delegate: delegate
+        )
+        let userInformation = STPUserInformation()
+        let address = STPAddress()
+        address.name = "John Doe"
+        address.line1 = "123 Main"
+        address.city = "Seattle"
+        address.state = "Washington"
+        address.postalCode = "98104"
+        address.phone = "2065551234"
+        userInformation.billingAddress = address
+        sut.prefilledInformation = userInformation
+        guard let payMethodsInternal = sut.internalViewController as? STPAddCardViewController else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(payMethodsInternal.prefilledInformation)
+    }
 }
