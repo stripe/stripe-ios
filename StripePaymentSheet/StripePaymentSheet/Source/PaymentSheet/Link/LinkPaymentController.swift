@@ -17,7 +17,7 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 @_spi(LinkOnly) public class LinkPaymentController {
 
-    private let mode: InitializationMode
+    private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
 
     private var intent: Intent?
@@ -41,7 +41,7 @@ import UIKit
         self.init(intentSecret: .setupIntentClientSecret(setupIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
     }
 
-    private init(intentSecret: InitializationMode, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
+    private init(intentSecret: PaymentSheet.InitializationMode, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
         self.mode = intentSecret
         var configuration = PaymentSheet.Configuration()
         configuration.linkPaymentMethodsOnly = true
