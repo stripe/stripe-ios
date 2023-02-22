@@ -482,15 +482,15 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     // MARK: Deferred intent tests
-    
+
     func testPaymentSheet_deferredIntent() {
         stubNewCustomerResponse()
-                
+
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
                                                             captureMethod: .automatic)
-        
+
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -501,15 +501,15 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
                                                             captureMethod: .automatic)
-        
+
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetAppearance_deferredIntent() {
         stubNewCustomerResponse()
-        
+
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
                                                             captureMethod: .automatic)
         preparePaymentSheet(appearance: .snapshotTestTheme, intentConfig: intentConfig)
@@ -517,7 +517,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    
     func testPaymentSheetWithLink_deferredIntent() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
@@ -525,7 +524,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
                                                             captureMethod: .automatic)
-        
+
         preparePaymentSheet(
             automaticPaymentMethods: false,
             intentConfig: intentConfig
@@ -1054,12 +1053,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             config.applePay = nil
         }
         StripeAPI.defaultPublishableKey = "pk_test_123456789"
-        
+
         var mode: PaymentSheet.InitializationMode = .paymentIntentClientSecret("pi_111111_secret_000000")
         if let intentConfig = intentConfig {
             mode = .deferredIntent(intentConfig)
         }
-        
+
         self.paymentSheet = PaymentSheet(mode: mode, configuration: config)
     }
 

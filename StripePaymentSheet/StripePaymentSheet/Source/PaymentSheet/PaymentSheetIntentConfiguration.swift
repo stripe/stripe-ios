@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) public extension PaymentSheet {
     /// 🚧 Under construction
     struct IntentConfiguration {
-        
+
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
@@ -21,7 +21,7 @@ import Foundation
             self.captureMethod = captureMethod
             self.paymentMethodTypes = paymentMethodTypes
         }
-        
+
         /// Filters out payment methods based on intended use.
         var mode: Mode
         /// Filters out payment methods based on their support for manual capture.
