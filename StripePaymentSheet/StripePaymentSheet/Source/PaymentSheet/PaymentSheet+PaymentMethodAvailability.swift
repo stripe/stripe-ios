@@ -131,7 +131,7 @@ extension PaymentSheet {
 
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
-        
+
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
             switch self {
@@ -151,7 +151,7 @@ extension PaymentSheet {
         }
 
     }
-    
+
     enum PaymentMethodExclusionReason: Equatable {
         /// This payment method is supported by PaymentSheet and the current configuration/intent
         case supported
@@ -161,7 +161,7 @@ extension PaymentSheet {
         case unactivated
         /// This payment method has requirements not met by the configuration or intent
         case missingRequirements([PaymentMethodTypeRequirement])
-        
+
         var description: String {
             switch self {
             case .supported:
@@ -171,10 +171,10 @@ extension PaymentSheet {
             case .unactivated:
                 return "Activated for test mode but not activated for live mode:. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
-                return "\(missingRequirements.reduce("") {$0 + $1.debugDescription}) "
+                return "\(missingRequirements.reduce("") { $0 + $1.debugDescription }) "
             }
         }
-        
+
         static func ==(lhs: PaymentMethodExclusionReason, rhs: PaymentMethodExclusionReason) -> Bool {
             switch (lhs, rhs) {
             case (.notSupported, .notSupported):

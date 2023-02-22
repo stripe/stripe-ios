@@ -218,14 +218,14 @@ extension PaymentSheet {
                     supportedPaymentMethods: configuration.linkPaymentMethodsOnly
                         ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
-                
+
                 if exclusionReason != .supported {
                     // This payment method is being flitered out, log the reason/s why
                     #if DEBUG
                     print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met. \(exclusionReason.description)\n")
                     #endif
                 }
-                
+
                 return exclusionReason == .supported
             }
         }
@@ -393,12 +393,12 @@ extension PaymentSheet {
             }
             let supports = Set(requirements).isSubset(of: fulfilledRequirements)
             if !supports {
-                
+
             }
-            
+
             return .supported
         }
-        
+
         /// Returns true if the passed configuration satisfies the passed in `requirements` and this payment method is in the list of supported payment methods
         /// This function is to be used with payment method types thar have bindings support and can be represented as a `STPPaymentMethodType`
         /// Use this function over `configurationSatisfiesRequirements` when the payment method in quesiton can be represented as a `STPPaymentMethodType`
@@ -444,7 +444,7 @@ extension PaymentSheet {
                 let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
                 return .missingRequirements(Array(missingRequirements))
             }
-            
+
             return .supported
         }
     }
