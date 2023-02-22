@@ -1284,7 +1284,17 @@ public class STPPaymentHandler: NSObject {
 
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
                 let resultingRedirectURL = self.followRedirects(to: mobileAuthURL, urlSession: URLSession.shared)
-                _handleRedirectToExternalBrowser(to: resultingRedirectURL, withReturn: returnURL)
+                _handleRedirectToExternalBrowser(to: resultingRedirectURL, withReturn: returnURL) { [weak self] openedUrl in
+                    // Failed to open URL cash app not installed
+                    if !openedUrl {
+                        self?.currentAction?.complete(with: .failed, error: self?._error(
+                            for: .requiredAppNotAvailable,
+                            userInfo: [
+                                "STPIntentAction": authenticationAction.description
+                            ]
+                        ))
+                    }
+                }
 
             } else {
                 currentAction.complete(
@@ -1535,7 +1545,7 @@ public class STPPaymentHandler: NSObject {
 
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
+    @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?, completion: ((Bool) -> ())? = nil) {
         if let redirectShim = _redirectShim {
             redirectShim(url, returnURL, false)
         }
@@ -1562,7 +1572,8 @@ public class STPPaymentHandler: NSObject {
         UIApplication.shared.open(
             url,
             options: options,
-            completionHandler: { _ in
+            completionHandler: { success in
+                completion?(success)
                 NotificationCenter.default.addObserver(
                     self,
                     selector: #selector(self._handleWillForegroundNotification),
