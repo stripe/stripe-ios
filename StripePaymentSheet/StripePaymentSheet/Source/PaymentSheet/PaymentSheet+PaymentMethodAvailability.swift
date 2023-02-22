@@ -151,4 +151,43 @@ extension PaymentSheet {
         }
 
     }
+    
+    enum PaymentMethodExclusionReason: Equatable {
+        /// This payment method is supported by PaymentSheet and the current configuration/intent
+        case supported
+        /// This payment method is supported by PaymentSheet and/or the current configuration/intent
+        case notSupported
+        /// This payment method is not activated in the Stripe Dashboard
+        case unactivated
+        /// This payment method has requirements not met by the configuration or intent
+        case missingRequirements([PaymentMethodTypeRequirement])
+        
+        var description: String {
+            switch self {
+            case .supported:
+                return "Supported by PaymentSheet."
+            case .notSupported:
+                return "Not currently supported by PaymentSheet."
+            case .unactivated:
+                return "Activated for test mode but not activated for live mode:. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
+            case .missingRequirements(let missingRequirements):
+                return "\(missingRequirements.reduce("") {$0 + $1.debugDescription}) "
+            }
+        }
+        
+        static func ==(lhs: PaymentMethodExclusionReason, rhs: PaymentMethodExclusionReason) -> Bool {
+            switch (lhs, rhs) {
+            case (.notSupported, .notSupported):
+                return true
+            case (.supported, .supported):
+                return true
+            case (.unactivated, .unactivated):
+                return true
+            case (.missingRequirements, .missingRequirements): // consider them equal even if requirements are not equal
+                return true
+            default:
+                return false
+            }
+        }
+    }
 }
