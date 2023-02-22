@@ -16,6 +16,9 @@ protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
         _ view: NetworkingLinkSignupBodyFormView,
         didEnterValidEmailAddress emailAddress: String
     )
+    func networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(
+        _ view: NetworkingLinkSignupBodyFormView
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -63,7 +66,7 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         ])
         return emailElement
     }()
-    
+
     private(set) lazy var phoneNumberTextField: UITextField = {
         let phoneNumberTextField = InsetTextField()
         phoneNumberTextField.placeholder = "Phone number"
@@ -84,7 +87,7 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         emailSection,
     ], theme: theme)
     private var debounceEmailTimer: Timer?
-    private var lastValidEmailNotifiedToDelegate: String?
+    private var lastValidEmail: String?
 
     init() {
         super.init(frame: .zero)
@@ -104,6 +107,17 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         // TODO(kgaidis): also add a little label together with phone numebr text field
     }
 
+    func prefillEmailAddress(_ emailAddress: String?) {
+        guard let emailAddress = emailAddress, !emailAddress.isEmpty else {
+            return
+        }
+        emailElement.emailAddressElement.setText(emailAddress)
+    }
+
+    func beginEditingEmailAddressField() {
+        emailElement.beginEditing()
+    }
+
     @objc private func phoneNumberTextFieldDidChange() {
         print("\(phoneNumberTextField.text!)")
     }
@@ -112,10 +126,9 @@ final class NetworkingLinkSignupBodyFormView: UIView {
 @available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkSignupBodyFormView: ElementDelegate {
     func didUpdate(element: StripeUICore.Element) {
-        
-        if let emailAddress = emailElement.emailAddressString {
-            switch emailElement.validationState {
-            case .valid:
+        switch emailElement.validationState {
+        case .valid:
+            if let emailAddress = emailElement.emailAddressString {
                 debounceEmailTimer?.invalidate()
                 debounceEmailTimer = Timer.scheduledTimer(
                     withTimeInterval: 0.3,
@@ -124,24 +137,25 @@ extension NetworkingLinkSignupBodyFormView: ElementDelegate {
                     guard let self = self else { return }
                     if
                         self.emailElement.validationState.isValid,
-                        // `lastValidEmailNotifiedToDelegate` ensures that we only
+                        // `lastValidEmail` ensures that we only
                         // fire the delegate ONCE per unique valid email
-                        emailAddress != self.lastValidEmailNotifiedToDelegate
+                        emailAddress != self.lastValidEmail
                     {
-                        self.lastValidEmailNotifiedToDelegate = emailAddress
+                        self.lastValidEmail = emailAddress
                         self.delegate?.networkingLinkSignupBodyFormView(
                             self,
                             didEnterValidEmailAddress: emailAddress
                         )
                     }
                 }
-            case .invalid(error: _, shouldDisplay: _):
-                // errors are displayed automatically by the component
-                lastValidEmailNotifiedToDelegate = nil
             }
+        case .invalid:
+            // errors are displayed automatically by the component
+            lastValidEmail = nil
+            delegate?.networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(self)
         }
     }
-    
+
     func continueToNextField(element: StripeUICore.Element) {}
 }
 
