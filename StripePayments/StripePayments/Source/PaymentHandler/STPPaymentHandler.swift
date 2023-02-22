@@ -1562,7 +1562,7 @@ public class STPPaymentHandler: NSObject {
         UIApplication.shared.open(
             url,
             options: options,
-            completionHandler: { success in
+            completionHandler: { _ in
                 NotificationCenter.default.addObserver(
                     self,
                     selector: #selector(self._handleWillForegroundNotification),
