@@ -1313,7 +1313,7 @@ public class STPPaymentHandler: NSObject {
             }
 
             // Check if the request failed due to attempting to redirect to an app universal link for Cash App
-            if let nsError = error as? NSError, let errorUrl = nsError.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
+            if let errorUrl = (error as? NSError)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
                 if errorUrl.contains("cashme://cash.app"), let universalLink = URL(string: errorUrl) {
                     resultingUrl = universalLink
                 }
