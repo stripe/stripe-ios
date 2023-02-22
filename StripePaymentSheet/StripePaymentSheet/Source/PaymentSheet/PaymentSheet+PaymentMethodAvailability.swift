@@ -131,6 +131,24 @@ extension PaymentSheet {
 
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
+        
+        /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
+        var debugDescription: String {
+            switch self {
+            case .unavailable:
+                return "unavailable: This payment method is not available."
+            case .returnURL:
+                return "returnURL: A return URL must be set, see https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url"
+            case .shippingAddress:
+                return "shippingAddress: A shipping address must be present on the Intent or collected through the Address Element and populated on PaymentSheet.Configuration.shippingDetails. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping and https://stripe.com/docs/elements/address-element/collect-addresses?platform=ios#ios-pre-fill-billing"
+            case .userSupportsDelayedPaymentMethods:
+                return "userSupportsDelayedPaymentMethods: PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
+            case .financialConnectionsSDK:
+                return "financialConnectionsSDK: The FinancialConnections must be linked."
+            case .validUSBankVerificationMethod:
+                return "validUSBankVerificationMethod: Requires a valid us bank verification method."
+            }
+        }
 
     }
 }
