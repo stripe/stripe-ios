@@ -11,6 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 final class AccountNumberRetrievalErrorView: UIView {
 
     init(
