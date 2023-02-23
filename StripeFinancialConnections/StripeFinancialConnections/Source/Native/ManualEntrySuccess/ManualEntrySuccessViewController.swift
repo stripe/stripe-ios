@@ -9,10 +9,12 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 protocol ManualEntrySuccessViewControllerDelegate: AnyObject {
     func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController)
 }
 
+@available(iOSApplicationExtension, unavailable)
 final class ManualEntrySuccessViewController: UIViewController {
 
     private let microdepositVerificationMethod: MicrodepositVerificationMethod?
@@ -86,6 +88,7 @@ final class ManualEntrySuccessViewController: UIViewController {
 
 // MARK: - Helpers
 
+@available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) -> UIView {
     let doneButton = Button(configuration: .financialConnectionsPrimary)
     doneButton.title = "Done"  // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
