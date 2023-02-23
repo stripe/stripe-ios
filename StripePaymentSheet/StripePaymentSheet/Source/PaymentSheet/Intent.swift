@@ -21,7 +21,7 @@ import UIKit
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-    case deferredIntent
+    case deferredIntent(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
 
     var clientSecret: String {
         switch self {
@@ -30,7 +30,7 @@ enum Intent {
         case .setupIntent(let si):
             return si.clientSecret
         case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+            fatalError("TODO(DeferredIntent): Handle when we add confirm")
         }
     }
 
@@ -40,8 +40,8 @@ enum Intent {
             return pi.unactivatedPaymentMethodTypes
         case .setupIntent(let si):
             return si.unactivatedPaymentMethodTypes
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.unactivatedPaymentMethodTypes
         }
     }
 
@@ -52,8 +52,8 @@ enum Intent {
             return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.orderedPaymentMethodTypes
         }
     }
 
@@ -63,8 +63,13 @@ enum Intent {
             return true
         case .setupIntent:
             return false
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment:
+                return true
+            case .setup:
+                return false
+            }
         }
     }
 
@@ -74,8 +79,13 @@ enum Intent {
             return pi.currency
         case .setupIntent:
             return nil
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, let currency, _):
+                return currency
+            case .setup(let currency, _):
+                return currency
+            }
         }
     }
 
@@ -86,21 +96,15 @@ enum Intent {
             return paymentIntent.setupFutureUsage != .none
         case .setupIntent:
             return true
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage):
+                return setupFutureUsage != nil
+            case .setup:
+                return true
+            }
         }
     }
-}
-
-// MARK: - IntentClientSecret
-
-/// An internal type representing a PaymentIntent or SetupIntent client secret
-enum IntentClientSecret {
-    /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
-    case paymentIntent(clientSecret: String)
-
-    /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
-    case setupIntent(clientSecret: String)
 }
 
 // MARK: - IntentConfirmParams

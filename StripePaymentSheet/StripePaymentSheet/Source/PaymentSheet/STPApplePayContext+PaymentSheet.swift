@@ -88,45 +88,11 @@ extension STPApplePayContext {
         guard let applePay = configuration.applePay else {
             return nil
         }
-        var paymentRequest: PKPaymentRequest
-        switch intent {
-        case .paymentIntent(let paymentIntent):
-            paymentRequest = StripeAPI.paymentRequest(
-                withMerchantIdentifier: applePay.merchantId,
-                country: applePay.merchantCountryCode,
-                currency: paymentIntent.currency
-            )
-            if let paymentSummaryItems = applePay.paymentSummaryItems {
-                // Use the merchant supplied paymentSummaryItems
-                paymentRequest.paymentSummaryItems = paymentSummaryItems
-            } else {
-                // Automatically configure paymentSummaryItems
-                let decimalAmount = NSDecimalNumber.stp_decimalNumber(
-                    withAmount: paymentIntent.amount,
-                    currency: paymentIntent.currency
-                )
-                paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: configuration.merchantDisplayName, amount: decimalAmount, type: .final),
-                ]
-            }
-        case .setupIntent:
-            paymentRequest = StripeAPI.paymentRequest(
-                withMerchantIdentifier: applePay.merchantId,
-                country: applePay.merchantCountryCode,
-                currency: "USD"  // currency is required but unused
-            )
-            if let paymentSummaryItems = applePay.paymentSummaryItems {
-                // Use the merchant supplied paymentSummaryItems
-                paymentRequest.paymentSummaryItems = paymentSummaryItems
-            } else {
-                // Automatically configure paymentSummaryItems.
-                paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: "\(configuration.merchantDisplayName)", amount: .one, type: .pending),
-                ]
-            }
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
-        }
+
+        var paymentRequest = createPaymentRequest(intent: intent,
+                                                  configuration: configuration,
+                                                  applePay: applePay)
+
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
@@ -144,6 +110,69 @@ extension STPApplePayContext {
             // Since Apple Pay failed to start, nil it out now
             delegate.selfRetainer = nil
             return nil
+        }
+    }
+
+    private static func createPaymentRequest(
+                intent: Intent,
+                configuration: PaymentSheet.Configuration,
+                applePay: PaymentSheet.ApplePayConfiguration
+    ) -> PKPaymentRequest {
+        func paymentRequest(with currency: String, amount: Int) -> PKPaymentRequest {
+            var paymentRequest: PKPaymentRequest
+            paymentRequest = StripeAPI.paymentRequest(
+                withMerchantIdentifier: applePay.merchantId,
+                country: applePay.merchantCountryCode,
+                currency: currency
+            )
+            if let paymentSummaryItems = applePay.paymentSummaryItems {
+                // Use the merchant supplied paymentSummaryItems
+                paymentRequest.paymentSummaryItems = paymentSummaryItems
+            } else {
+                // Automatically configure paymentSummaryItems
+                let decimalAmount = NSDecimalNumber.stp_decimalNumber(
+                    withAmount: amount,
+                    currency: currency
+                )
+                paymentRequest.paymentSummaryItems = [
+                    PKPaymentSummaryItem(label: configuration.merchantDisplayName, amount: decimalAmount, type: .final),
+                ]
+            }
+            return paymentRequest
+        }
+
+        func setupPaymentRequest() -> PKPaymentRequest {
+            var paymentRequest: PKPaymentRequest
+            paymentRequest = StripeAPI.paymentRequest(
+                withMerchantIdentifier: applePay.merchantId,
+                country: applePay.merchantCountryCode,
+                currency: "USD"  // currency is required but unused
+            )
+            if let paymentSummaryItems = applePay.paymentSummaryItems {
+                // Use the merchant supplied paymentSummaryItems
+                paymentRequest.paymentSummaryItems = paymentSummaryItems
+            } else {
+                // Automatically configure paymentSummaryItems.
+                paymentRequest.paymentSummaryItems = [
+                    PKPaymentSummaryItem(label: "\(configuration.merchantDisplayName)", amount: .one, type: .pending),
+                ]
+            }
+
+            return paymentRequest
+        }
+
+        switch intent {
+        case .paymentIntent(let paymentIntent):
+            return paymentRequest(with: paymentIntent.currency, amount: paymentIntent.amount)
+        case .setupIntent:
+            return setupPaymentRequest()
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(let amount, let currency, _):
+                return paymentRequest(with: currency, amount: amount)
+            case .setup:
+                return setupPaymentRequest()
+            }
         }
     }
 }

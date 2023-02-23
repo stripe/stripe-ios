@@ -1284,7 +1284,7 @@ public class STPPaymentHandler: NSObject {
 
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
                 let resultingRedirectURL = self.followRedirects(to: mobileAuthURL, urlSession: URLSession.shared)
-                _handleRedirect(to: resultingRedirectURL, withReturn: returnURL)
+                _handleRedirect(to: resultingRedirectURL, fallbackURL: mobileAuthURL, return: returnURL)
 
             } else {
                 currentAction.complete(
@@ -1311,6 +1311,14 @@ public class STPPaymentHandler: NSObject {
             defer {
                 blockingDataTaskSemaphore.signal()
             }
+
+            // Check if the request failed due to attempting to redirect to a custom Scheme URL for Cash App
+            if let errorUrl = (error as NSError?)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
+                if errorUrl.contains("cashme://cash.app"), let customSchemeAppURL = URL(string: errorUrl) {
+                    resultingUrl = customSchemeAppURL
+                }
+            }
+
             guard error == nil,
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode),
@@ -1409,10 +1417,11 @@ public class STPPaymentHandler: NSObject {
                                         currentAction.complete(with: .succeeded, error: nil)
                                     } else {
                                         // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
+                                        // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                                        let shouldRetryForCard = retrievedPaymentIntent?.paymentMethod?.type == .card && retrievedPaymentIntent?.nextAction?.type == .useStripeSDK
+                                        let shouldRetryForCashApp = retrievedPaymentIntent?.paymentMethod?.type == .cashApp
                                         if retryCount > 0
-                                            && retrievedPaymentIntent?.paymentMethod?.type == .card
-                                            && retrievedPaymentIntent?.nextAction?.type
-                                                == .useStripeSDK
+                                            && (shouldRetryForCard || shouldRetryForCashApp)
                                         {
                                             self._retryWithExponentialDelay(retryCount: retryCount) {
                                                 self._retrieveAndCheckIntentForCurrentAction(

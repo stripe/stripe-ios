@@ -112,7 +112,7 @@ extension STPPaymentMethodOptions.USBankAccount.VerificationMethod {
 typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequirement
 
 extension PaymentSheet {
-    enum PaymentMethodTypeRequirement {
+    enum PaymentMethodTypeRequirement: Comparable {
 
         /// A special case that indicates the payment method is unavailable
         case unavailable
@@ -132,5 +132,63 @@ extension PaymentSheet {
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
 
+        /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
+        var debugDescription: String {
+            switch self {
+            case .unavailable:
+                return "unavailable: This payment method is not available."
+            case .returnURL:
+                return "returnURL: A return URL must be set, see https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url"
+            case .shippingAddress:
+                return "shippingAddress: A shipping address must be present on the Intent or collected through the Address Element and populated on PaymentSheet.Configuration.shippingDetails. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping and https://stripe.com/docs/elements/address-element/collect-addresses?platform=ios#ios-pre-fill-billing"
+            case .userSupportsDelayedPaymentMethods:
+                return "userSupportsDelayedPaymentMethods: PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
+            case .financialConnectionsSDK:
+                return "financialConnectionsSDK: The FinancialConnections SDK must be linked."
+            case .validUSBankVerificationMethod:
+                return "validUSBankVerificationMethod: Requires a valid US bank verification method."
+            }
+        }
+
+    }
+
+    enum PaymentMethodAvailabilityStatus: Equatable {
+        /// This payment method is supported by PaymentSheet and the current configuration and intent
+        case supported
+        /// This payment method is not supported by PaymentSheet and/or the current configuration or intent
+        case notSupported
+        /// This payment method is not activated in live mode in the Stripe Dashboard
+        case unactivated
+        /// This payment method has requirements not met by the configuration or intent
+        case missingRequirements([PaymentMethodTypeRequirement])
+
+        var description: String {
+            switch self {
+            case .supported:
+                return "Supported by PaymentSheet."
+            case .notSupported:
+                return "Not currently supported by PaymentSheet."
+            case .unactivated:
+                return "Activated for test mode but not activated for live mode:. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
+            case .missingRequirements(let missingRequirements):
+                return "\(missingRequirements.reduce("") { $0 + $1.debugDescription }) "
+            }
+        }
+
+        static func ==(lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
+            switch (lhs, rhs) {
+            case (.notSupported, .notSupported):
+                return true
+            case (.supported, .supported):
+                return true
+            case (.unactivated, .unactivated):
+                return true
+            case (.missingRequirements(let requirements), .missingRequirements(let otherRequirements)):
+                // don't care about the ordering
+                return requirements.sorted(by: { $0 >= $1 }) == otherRequirements.sorted(by: { $0 >= $1 })
+            default:
+                return false
+            }
+        }
     }
 }

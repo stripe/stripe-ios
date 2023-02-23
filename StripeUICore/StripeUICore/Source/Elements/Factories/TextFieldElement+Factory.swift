@@ -46,7 +46,7 @@ import UIKit
         }
 
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-            return .init(type: .namePhonePad, textContentType: textContentType, autocapitalization: .words)
+            return .init(type: .default, textContentType: textContentType, autocapitalization: .words)
         }
 
         private static func label(for type: NameType) -> String {

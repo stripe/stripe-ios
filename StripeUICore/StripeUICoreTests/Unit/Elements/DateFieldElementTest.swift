@@ -36,6 +36,20 @@ final class DateFieldElementTest: XCTestCase {
         XCTAssertNil(element.selectedDate)
     }
 
+    func testCustomDateformatter() {
+        let timeZone = TimeZone(secondsFromGMT: 0)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMddyyyy"
+
+        let element = DateFieldElement(timeZone: timeZone!, customDateFormatter: dateFormatter)
+        // Emulate a user changing the picker and hitting done button
+        element.datePickerView.date = oct3_2021
+        element.didSelectDate()
+        element.didFinish(element.pickerFieldView)
+
+        XCTAssertEqual(element.pickerFieldView.displayText, "10032021")
+    }
+
     func testDidUpdate() {
         var date: Date?
         let element = DateFieldElement(label: "", didUpdate: { date = $0 })

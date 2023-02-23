@@ -50,25 +50,33 @@ class PaymentSheetFormFactory {
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
     ) {
-        switch intent {
-        case let .paymentIntent(paymentIntent):
-            let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
+        func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
             let hasCustomer = configuration.customer != nil
             let supportsSaveForFutureUseCheckbox = paymentMethod.supportsSaveForFutureUseCheckbox()
             switch (merchantRequiresSave, hasCustomer, supportsSaveForFutureUseCheckbox) {
             case (true, _, _):
-                saveMode = .merchantRequired
+                return .merchantRequired
             case (false, true, true):
-                saveMode = .userSelectable
+                return .userSelectable
             case (false, true, false):
                 fallthrough
             case (false, false, _):
-                saveMode = .none
+                return .none
             }
+        }
+
+        switch intent {
+        case let .paymentIntent(paymentIntent):
+            saveMode = saveModeFor(merchantRequiresSave: paymentIntent.setupFutureUsage != .none)
         case .setupIntent:
             saveMode = .merchantRequired
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent)")
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage):
+                saveMode = saveModeFor(merchantRequiresSave: setupFutureUsage != .none)
+            case .setup:
+                saveMode = .merchantRequired
+            }
 
         }
         self.intent = intent

@@ -33,6 +33,16 @@ final class DropdownFieldElementTest: XCTestCase {
         XCTAssertEqual(element.selectedIndex, 0)
     }
 
+    func testDisableDropdownWithSingleElement() {
+        let multipleElements = DropdownFieldElement(items: items, defaultIndex: -1, label: "", disableDropdownWithSingleElement: true)
+
+        XCTAssertEqual(multipleElements.pickerFieldView.isUserInteractionEnabled, true)
+
+        let singleElement = DropdownFieldElement(items: [DropdownFieldElement.DropdownItem(pickerDisplayName: "Item", labelDisplayName: "Item", accessibilityValue: "Item", rawData: "Item")], defaultIndex: -1, label: "", disableDropdownWithSingleElement: true)
+
+        XCTAssertEqual(singleElement.pickerFieldView.isUserInteractionEnabled, false)
+    }
+
     func testDidUpdate() {
         var index: Int?
         let element = DropdownFieldElement(items: items, label: "", didUpdate: { index = $0 })

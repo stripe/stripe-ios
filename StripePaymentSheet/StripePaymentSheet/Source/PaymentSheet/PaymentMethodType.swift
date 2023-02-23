@@ -185,8 +185,12 @@ extension PaymentSheet {
                     setupIntent.allResponseFields["ordered_payment_method_types"] as? [String]
                     ?? paymentMethodTypeStrings
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
-            case .deferredIntent:
-                fatalError("TODO(DeferredIntent) - use ordered_payment_method_types from v1/elements/sessions")
+            case .deferredIntent(let elementsSession, _):
+                let paymentMethodPrefs = elementsSession.allResponseFields["payment_method_preference"] as? [AnyHashable: Any]
+                let paymentTypesString =
+                paymentMethodPrefs?["ordered_payment_method_types"] as? [String]
+                    ?? []
+                return paymentTypesString.map { PaymentMethodType(from: $0) }
             }
         }
 
@@ -207,14 +211,23 @@ extension PaymentSheet {
                 }
             }
 
-            return recommendedPaymentMethodTypes.filter {
-                PaymentSheet.PaymentMethodType.supportsAdding(
-                    paymentMethod: $0,
+            return recommendedPaymentMethodTypes.filter { paymentMethodType in
+                let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: paymentMethodType,
                     configuration: configuration,
                     intent: intent,
                     supportedPaymentMethods: configuration.linkPaymentMethodsOnly
                         ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
+
+                if availabilityStatus != .supported {
+                    // This payment method is being flitered out, log the reason/s why
+                    #if DEBUG
+                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(availabilityStatus.description)\n")
+                    #endif
+                }
+
+                return availabilityStatus == .supported
             }
         }
 
@@ -225,13 +238,13 @@ extension PaymentSheet {
         ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
         ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
-        /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func supportsAdding(
             paymentMethod: PaymentMethodType,
             configuration: PaymentSheet.Configuration,
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
-        ) -> Bool {
+        ) -> PaymentMethodAvailabilityStatus {
 
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
@@ -247,7 +260,7 @@ extension PaymentSheet {
                     )
                 }
 
-                return false
+                return .notSupported
             }
 
             let requirements: [PaymentMethodTypeRequirement]
@@ -357,7 +370,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 intent: intent,
                 supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
-            )
+            ) == .supported
         }
 
         /// Returns true if the passed configuration satsifies the passed in `requirements`
@@ -369,18 +382,23 @@ extension PaymentSheet {
         ///   - requirements: a list of requirements to be satisfied
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
-        /// - Returns: true if the configuration satisfies the requirements
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
             intent: Intent
-        ) -> Bool {
+        ) -> PaymentMethodAvailabilityStatus {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
                 (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
                 return accumulator + element.fulfilledRequirements
             }
             let supports = Set(requirements).isSubset(of: fulfilledRequirements)
-            return supports
+            if !supports {
+                let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
+                return .missingRequirements(Array(missingRequirements))
+            }
+
+            return .supported
         }
 
         /// Returns true if the passed configuration satisfies the passed in `requirements` and this payment method is in the list of supported payment methods
@@ -392,21 +410,21 @@ extension PaymentSheet {
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
         ///   - supportedPaymentMethods: a list of supported payment method types
-        /// - Returns: true if the configuration satisfies the requirements and if `paymentMethod` is contained in `supportedPaymentMethods`
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method is supported
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType]
-        ) -> Bool {
+        ) -> PaymentMethodAvailabilityStatus {
             guard supportedPaymentMethods.contains(paymentMethod) else {
-                return false
+                return .notSupported
             }
 
             // Hide a payment method type if we are in live mode and it is unactivated
             if !configuration.apiClient.isTestmode && intent.unactivatedPaymentMethodTypes.contains(paymentMethod) {
-                return false
+                return .unactivated
             }
 
             let fulfilledRequirements = [configuration, intent].reduce([]) {
@@ -423,7 +441,12 @@ extension PaymentSheet {
                 }
             }
 
-            return supports
+            if !supports {
+                let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
+                return .missingRequirements(Array(missingRequirements))
+            }
+
+            return .supported
         }
     }
 }
