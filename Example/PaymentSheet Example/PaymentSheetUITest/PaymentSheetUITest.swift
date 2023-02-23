@@ -434,6 +434,37 @@ class PaymentSheetUITest: XCTestCase {
 
     }
 
+    func testZipPaymentMethod() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",  // new customer
+                "automatic_payment_methods": "on",
+                "currency": "AUD",
+                "merchant_country_code": "AU",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        let payButton = app.buttons["Pay A$50.99"]
+
+        // Select Cash App
+        guard let zip = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Zip")
+        else {
+            XCTFail()
+            return
+        }
+        zip.tap()
+
+        // Attempt payment
+        payButton.tap()
+
+        // Close the webview, no need to see the successful pay
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+    
     func testCashAppPaymentMethod() throws {
         loadPlayground(
             app,
