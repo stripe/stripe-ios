@@ -212,7 +212,7 @@ extension PaymentSheet {
             }
 
             return recommendedPaymentMethodTypes.filter { paymentMethodType in
-                let exclusionReason = PaymentSheet.PaymentMethodType.supportsAdding(
+                let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
                     configuration: configuration,
                     intent: intent,
@@ -220,14 +220,14 @@ extension PaymentSheet {
                         ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
 
-                if exclusionReason != .supported {
+                if availabilityStatus != .supported {
                     // This payment method is being flitered out, log the reason/s why
                     #if DEBUG
-                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(exclusionReason.description)\n")
+                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(availabilityStatus.description)\n")
                     #endif
                 }
 
-                return exclusionReason == .supported
+                return availabilityStatus == .supported
             }
         }
 
@@ -238,7 +238,7 @@ extension PaymentSheet {
         ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
         ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
-        /// - Returns: a `PaymentMethodExclusionReason` detailing why or why not this payment method can be added
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func supportsAdding(
             paymentMethod: PaymentMethodType,
             configuration: PaymentSheet.Configuration,
@@ -382,7 +382,7 @@ extension PaymentSheet {
         ///   - requirements: a list of requirements to be satisfied
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
-        /// - Returns: a `PaymentMethodExclusionReason` detailing why or why not this payment method can be added
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
@@ -410,7 +410,7 @@ extension PaymentSheet {
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
         ///   - supportedPaymentMethods: a list of supported payment method types
-        /// - Returns: a `PaymentMethodExclusionReason` detailing why or why not this payment method is supported
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method is supported
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
