@@ -27,19 +27,20 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     /// Returns false, card not in `supportedPaymentMethods`
     func testSupportsAdding_notInSupportedList_noRequirementsNeeded() {
-        XCTAssertFalse(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .card,
                 configuration: PaymentSheet.Configuration(),
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
                 supportedPaymentMethods: []
             )
+            , .notSupported
         )
     }
 
     /// Returns true, card in `supportedPaymentMethods` and has no additional requirements
     func testSupportsAdding_inSupportedList_noRequirementsNeeded() {
-        XCTAssertTrue(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .card,
                 configuration: PaymentSheet.Configuration(),
@@ -47,19 +48,21 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     STPFixtures.makePaymentIntent(setupFutureUsage: .offSession)
                 ),
                 supportedPaymentMethods: [.card]
-            )
+            ),
+            .supported
         )
     }
 
     /// Returns true, card in `supportedPaymentMethods` and has no additional requirements
     func testSupportsAdding_inSupportedList_noRequirementsNeededButProvided() {
-        XCTAssertTrue(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .card,
                 configuration: makeConfiguration(hasReturnURL: true),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                 supportedPaymentMethods: [.card]
-            )
+            ),
+            .supported
         )
     }
 
@@ -67,25 +70,27 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met
     func testSupportsAdding_inSupportedList_urlConfiguredRequired() {
-        XCTAssertTrue(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: PaymentSheet.PaymentMethodType.dynamic("ideal"),
                 configuration: makeConfiguration(hasReturnURL: true),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                 supportedPaymentMethods: [.iDEAL]
-            )
+            ),
+            .supported
         )
     }
 
     /// Returns true, iDEAL in `supportedPaymentMethods` but URL requirement not is met
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredButNotProvided() {
-        XCTAssertFalse(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: PaymentSheet.PaymentMethodType.dynamic("ideal"),
                 configuration: makeConfiguration(),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                 supportedPaymentMethods: [.iDEAL]
-            )
+            ),
+            .missingRequirements([.returnURL])
         )
     }
 
@@ -93,49 +98,53 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     /// Returns false, Afterpay in `supportedPaymentMethods` but shipping requirement not is met
     func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingShipping() {
-        XCTAssertFalse(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
                 configuration: makeConfiguration(hasReturnURL: true),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
-            )
+            ),
+            .missingRequirements([.shippingAddress])
         )
     }
 
-    /// Returns false, Afterpay in `supportedPaymentMethods` but URL requirement not is met
+    /// Returns false, Afterpay in `supportedPaymentMethods` but URL and shipping requirement not is met
     func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingURL() {
-        XCTAssertFalse(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
                 configuration: makeConfiguration(hasReturnURL: false),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
-            )
+            ),
+            .missingRequirements([.shippingAddress, .returnURL])
         )
     }
 
     /// Returns true, Afterpay in `supportedPaymentMethods` and both URL and shipping requirements are met
     func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_bothMet() {
         // Afterpay should be supported if PI has shipping...
-        XCTAssertTrue(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
                 configuration: makeConfiguration(hasReturnURL: true),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: true)),
                 supportedPaymentMethods: [.afterpayClearpay]
-            )
+            ),
+            .supported
         )
         // ...and also if configuration.allowsPaymentMethodsThatRequireShipping is true
         var config = makeConfiguration(hasReturnURL: true)
         config.allowsPaymentMethodsRequiringShippingAddress = true
-        XCTAssertTrue(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
                 configuration: config,
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
-            )
+            ),
+            .supported
         )
     }
 
@@ -151,7 +160,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // All SEPA family pms...
         for pm in sepaFamily {
             // ...can't be used for PIs...
-            XCTAssertFalse(
+            XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: makeConfiguration(hasReturnURL: true),
@@ -160,17 +169,19 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                         STPFixtures.makePaymentIntent(setupFutureUsage: .offSession)
                     ),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
-                )
+                ),
+                .missingRequirements([.unavailable, .userSupportsDelayedPaymentMethods])
             )
 
             // ...and can't be set up
-            XCTAssertFalse(
+            XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: makeConfiguration(hasReturnURL: true),
                     intent: .setupIntent(STPFixtures.setupIntent()),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
-                )
+                ),
+                .missingRequirements([.unavailable, .userSupportsDelayedPaymentMethods])
             )
         }
     }
@@ -182,13 +193,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.dynamic("bancontact"),
         ]
         for pm in sepaFamilySynchronous {
-            XCTAssertTrue(
+            XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: makeConfiguration(hasReturnURL: true),
                     intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
-                )
+                ),
+                .supported
             )
         }
 
@@ -199,22 +211,24 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // ...SEPA and sofort also need allowsDelayedPaymentMethod:
         for pm in sepaFamilyAsynchronous {
             var config = makeConfiguration(hasReturnURL: true)
-            XCTAssertFalse(
+            XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: config,
                     intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
-                )
+                ),
+                .missingRequirements([.userSupportsDelayedPaymentMethods])
             )
             config.allowsDelayedPaymentMethods = true
-            XCTAssertTrue(
+            XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: config,
                     intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
-                )
+                ),
+                .supported
             )
         }
     }
@@ -241,23 +255,25 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             )
             switch verificationMethod {
             case .automatic, .instantOrSkip, .instant:
-                XCTAssertTrue(
+                XCTAssertEqual(
                     PaymentSheet.PaymentMethodType.supportsAdding(
                         paymentMethod: .USBankAccount,
                         configuration: configuration,
                         intent: .paymentIntent(pi),
                         supportedPaymentMethods: [.USBankAccount]
-                    )
+                    ),
+                    .supported
                 )
 
             case .skip, .microdeposits, .unknown:
-                XCTAssertFalse(
+                XCTAssertEqual(
                     PaymentSheet.PaymentMethodType.supportsAdding(
                         paymentMethod: .USBankAccount,
                         configuration: configuration,
                         intent: .paymentIntent(pi),
                         supportedPaymentMethods: [.USBankAccount]
-                    )
+                    ),
+                    .missingRequirements([.validUSBankVerificationMethod])
                 )
             }
         }
@@ -602,12 +618,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         configuration.returnURL = "http://return-to-url"
 
         for intent in [Intent.setupIntent(setupIntent), Intent.paymentIntent(paymentIntent)] {
-            XCTAssertFalse(
+            XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethod,
                     configuration: configuration,
                     intent: intent
-                )
+                ),
+                .missingRequirements([.unavailable])
             )
         }
     }
@@ -618,12 +635,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
 
-        XCTAssertTrue(
+        XCTAssertEqual(
             PaymentSheet.PaymentMethodType.configurationSatisfiesRequirements(
                 requirements: [.returnURL],
                 configuration: configuration,
                 intent: intent
-            )
+            ),
+            .supported
         )
     }
 
