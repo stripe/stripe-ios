@@ -88,6 +88,22 @@ enum Intent {
             }
         }
     }
+    
+    var amount: Int? {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.amount
+        case .setupIntent:
+            return nil
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(let amount, _, _):
+                return amount
+            case .setup:
+                return nil
+            }
+        }
+    }
 
     /// True if this ia PaymentIntent with sfu not equal to none or a SetupIntent
     var isSettingUp: Bool {

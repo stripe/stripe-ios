@@ -220,6 +220,14 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
     }
+    
+    func testDeferredIntentLoads() {
+        
+    }
+    
+    func testDeferredIntentLoadsFlowController() {
+        
+    }
 
     func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
         loadPlayground(

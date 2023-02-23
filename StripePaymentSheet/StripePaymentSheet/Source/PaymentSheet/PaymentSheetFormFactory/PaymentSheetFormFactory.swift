@@ -340,27 +340,28 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        guard case let .paymentIntent(paymentIntent) = intent else {
-            assertionFailure()
+        guard let amount = intent.amount, let currency = intent.currency else {
+            assertionFailure("After requires a non-nil amount and currency")
             return nil
         }
+        
         return StaticElement(
             view: AfterpayPriceBreakdownView(
-                amount: paymentIntent.amount,
-                currency: paymentIntent.currency,
+                amount: amount,
+                currency: currency,
                 theme: theme
             )
         )
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        guard case let .paymentIntent(paymentIntent) = intent else {
-            assertionFailure("Klarna only be used with a PaymentIntent")
+        guard let currency = intent.currency else {
+            assertionFailure("Klarna requires a non-nil currency")
             return nil
         }
-
+        
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(
-            KlarnaHelper.availableCountries(currency: paymentIntent.currency)
+            KlarnaHelper.availableCountries(currency: currency)
         )
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(

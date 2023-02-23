@@ -11,7 +11,7 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 import Contacts
 import PassKit
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -35,6 +35,8 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var customCTALabelTextField: UITextField!
+    @IBOutlet weak var initModeSelector: UISegmentedControl!
+    
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
@@ -71,6 +73,11 @@ class PaymentSheetTestPlayground: UIViewController {
         case payment
         case paymentWithSetup = "payment_with_setup"
         case setup
+    }
+    
+    enum InitMode {
+        case normal
+        case deferred
     }
 
     enum ShippingMode {
@@ -185,6 +192,17 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
+    
+    var initMode: InitMode {
+        switch initModeSelector.selectedSegmentIndex {
+        case 0:
+            return .normal
+        case 1:
+            return .deferred
+        default:
+            return .normal
+        }
+    }
 
     var shippingMode: ShippingMode {
         switch shippingInfoSelector.selectedSegmentIndex {
@@ -245,6 +263,24 @@ class PaymentSheetTestPlayground: UIViewController {
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
         return configuration
+    }
+    
+    var intentConfig: PaymentSheet.IntentConfiguration {
+        
+        switch intentMode {
+        case .payment:
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD",
+                                                                   setupFutureUsage: nil),
+                                                                captureMethod: .automatic)
+        case .paymentWithSetup:
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD",
+                                                                   setupFutureUsage: .offSession),
+                                                                captureMethod: .automatic)
+        case .setup:
+            return PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
+                                                                   setupFutureUsage: .offSession),
+                                                                captureMethod: .automatic)
+        }
     }
 
     var addressDetails: AddressViewController.AddressDetails?
@@ -321,12 +357,23 @@ class PaymentSheetTestPlayground: UIViewController {
     @objc
     func didTapCheckoutButton() {
         let mc: PaymentSheet
-        switch intentMode {
-        case .payment, .paymentWithSetup:
-            mc = PaymentSheet(paymentIntentClientSecret: clientSecret!, configuration: configuration)
-        case .setup:
-            mc = PaymentSheet(setupIntentClientSecret: clientSecret!, configuration: configuration)
+        let mode: PaymentSheet.InitializationMode
+        
+        switch self.initMode {
+            
+        case .normal:
+            switch self.intentMode {
+            case .payment, .paymentWithSetup:
+                mode = .paymentIntentClientSecret(self.clientSecret!)
+            case .setup:
+                mode = .setupIntentClientSecret(self.clientSecret!)
+            }
+        case .deferred:
+            mode = .deferredIntent(self.intentConfig)
         }
+        
+        mc = PaymentSheet(mode: mode, configuration: configuration)
+        
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
@@ -485,20 +532,28 @@ extension PaymentSheetTestPlayground {
                 }
 
                 self.checkoutButton.isEnabled = true
-                switch self.intentMode {
-                case .payment, .paymentWithSetup:
-                    PaymentSheet.FlowController.create(
-                        paymentIntentClientSecret: self.clientSecret!,
-                        configuration: self.configuration,
-                        completion: completion
-                    )
-                case .setup:
-                    PaymentSheet.FlowController.create(
-                        setupIntentClientSecret: self.clientSecret!,
-                        configuration: self.configuration,
-                        completion: completion
-                    )
+                
+                let mode: PaymentSheet.InitializationMode
+                
+                switch self.initMode {
+                    
+                case .normal:
+                    switch self.intentMode {
+                    case .payment, .paymentWithSetup:
+                        mode = .paymentIntentClientSecret(self.clientSecret!)
+                    case .setup:
+                        mode = .setupIntentClientSecret(self.clientSecret!)
+                    }
+                    
+                case .deferred:
+                    mode = .deferredIntent(self.intentConfig)
                 }
+                
+                PaymentSheet.FlowController.create(
+                    mode: mode,
+                    configuration: self.configuration,
+                    completion: completion
+                )
             }
         }
         task.resume()
