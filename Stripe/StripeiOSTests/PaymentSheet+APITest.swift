@@ -103,7 +103,7 @@ class PaymentSheetAPITest: XCTestCase {
             case .success(let clientSecret):
                 // 1. Load the PI
                 PaymentSheet.load(
-                    clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret),
+                    mode: .paymentIntentClientSecret(clientSecret),
                     configuration: self.configuration
                 ) { result in
                     switch result {
@@ -185,7 +185,7 @@ class PaymentSheetAPITest: XCTestCase {
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
-                    clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret),
+                    mode: .setupIntentClientSecret(clientSecret),
                     configuration: self.configuration
                 ) { result in
                     switch result {
@@ -208,6 +208,37 @@ class PaymentSheetAPITest: XCTestCase {
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    func testPaymentSheetLoadWithDeferredIntent() {
+        let expectation = XCTestExpectation(description: "Load PaymentSheet")
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
+                                                                           currency: "USD",
+                                                                           setupFutureUsage: .onSession),
+                                                            captureMethod: .automatic,
+                                                            paymentMethodTypes: types)
+
+        PaymentSheet.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: self.configuration
+        ) { result in
+            switch result {
+            case .success(let elementsSession, let paymentMethods, _):
+                XCTAssertEqual(
+                    Set(elementsSession.recommendedPaymentMethodTypes),
+                    Set(expected)
+                )
+                XCTAssertEqual(paymentMethods, [])
+                expectation.fulfill()
+            case .failure(let error):
+                print(error)
+            }
+        }
+
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
     func testPaymentSheetLoadAndConfirmWithPaymentIntentAttachedPaymentMethod() {
         let expectation = XCTestExpectation(
             description: "Load PaymentIntent with an attached payment method"
@@ -224,7 +255,7 @@ class PaymentSheetAPITest: XCTestCase {
 
             // 1. Load the PI
             PaymentSheet.load(
-                clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret),
+                mode: .paymentIntentClientSecret(clientSecret),
                 configuration: self.configuration
             ) { result in
                 guard case .success(let paymentIntent, _, _) = result else {
@@ -287,7 +318,7 @@ class PaymentSheetAPITest: XCTestCase {
             }
 
             PaymentSheet.load(
-                clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret),
+                mode: .setupIntentClientSecret(clientSecret),
                 configuration: self.configuration
             ) { result in
                 defer { expectation.fulfill() }

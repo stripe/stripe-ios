@@ -90,10 +90,14 @@ import UIKit
         locale: Locale = .current,
         timeZone: TimeZone = .current,
         theme: ElementsUITheme = .default,
+        customDateFormatter: DateFormatter? = nil,
         didUpdate: DidUpdateSelectedDate? = nil
     ) {
         self.label = label
         self.theme = theme
+        if let customDateFormatter = customDateFormatter {
+            self.dateFormatter = customDateFormatter
+        }
         dateFormatter.locale = locale
         dateFormatter.timeZone = timeZone
 

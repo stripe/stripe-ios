@@ -50,27 +50,34 @@ class PaymentSheetFormFactory {
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
     ) {
-        switch intent {
-        case let .paymentIntent(paymentIntent):
-            let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
+        func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
             let hasCustomer = configuration.customer != nil
-            let isPaymentMethodSaveable = PaymentSheet.PaymentMethodType.supportsSaveAndReuse(
-                paymentMethod: paymentMethod,
-                configuration: configuration,
-                intent: intent
-            )
-            switch (merchantRequiresSave, hasCustomer, isPaymentMethodSaveable) {
+            let supportsSaveForFutureUseCheckbox = paymentMethod.supportsSaveForFutureUseCheckbox()
+            switch (merchantRequiresSave, hasCustomer, supportsSaveForFutureUseCheckbox) {
             case (true, _, _):
-                saveMode = .merchantRequired
+                return .merchantRequired
             case (false, true, true):
-                saveMode = .userSelectable
+                return .userSelectable
             case (false, true, false):
                 fallthrough
             case (false, false, _):
-                saveMode = .none
+                return .none
             }
+        }
+
+        switch intent {
+        case let .paymentIntent(paymentIntent):
+            saveMode = saveModeFor(merchantRequiresSave: paymentIntent.setupFutureUsage != .none)
         case .setupIntent:
             saveMode = .merchantRequired
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage):
+                saveMode = saveModeFor(merchantRequiresSave: setupFutureUsage != .none)
+            case .setup:
+                saveMode = .merchantRequired
+            }
+
         }
         self.intent = intent
         self.configuration = configuration
@@ -94,6 +101,9 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             return FormElement(autoSectioningElements: [makeCashAppMandate()], theme: theme)
+        } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
+            // Paypal requires mandate when setting up
+            return FormElement(autoSectioningElements: [makePaypalMandate(intent: intent)], theme: theme)
         }
 
         // 2. Element-based forms defined in JSON
@@ -165,14 +175,29 @@ extension PaymentSheetFormFactory {
     }
 
     func makeSepaMandate() -> StaticElement {
+        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
         return StaticElement(
-            view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme)
+            view: SimpleMandateTextView(mandateText: mandateText, theme: theme)
         )
     }
 
     func makeCashAppMandate() -> StaticElement {
+        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName)
         return StaticElement(
-            view: CashAppMandateView(merchantDisplayName: configuration.merchantDisplayName, theme: theme)
+            view: SimpleMandateTextView(mandateText: mandateText, theme: theme)
+        )
+    }
+
+    func makePaypalMandate(intent: Intent) -> StaticElement {
+        let mandateText: String = {
+            if intent.isPaymentIntent {
+                return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
+            } else {
+                return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
+            }
+        }()
+        return StaticElement(
+            view: SimpleMandateTextView(mandateText: mandateText, theme: theme)
         )
     }
 

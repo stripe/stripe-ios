@@ -72,8 +72,9 @@ import Foundation
             return "###.###.###-##"
         case .BR_CPF_CNPJ:
             return "###.###.###/###-##"
-        case .US_SSN_LAST4,
-            .none:
+        case .US_SSN_LAST4:
+            return "••• - •• - ####"
+        case .none:
             return nil
         case .some(.SG_NRIC_OR_FIN):
             return nil
