@@ -33,7 +33,9 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
-        let formView = NetworkingLinkSignupBodyFormView(accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber)
+        let formView = NetworkingLinkSignupBodyFormView(
+            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber
+        )
         formView.delegate = self
         return formView
     }()
@@ -111,8 +113,6 @@ final class NetworkingLinkSignupViewController: UIViewController {
         } else {
             formView.beginEditingEmailAddressField()
         }
-
-        // TODO(kgaidis): pre-fill phone number
     }
 
     private func didSelectSaveToLink() {
@@ -152,7 +152,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             self.footerView.setIsLoading(false)
         }
     }
-    
+
     private func didSelectURLInTextFromBackend(_ url: URL) {
         AuthFlowHelpers.handleURLInTextFromBackend(
             url: url,
@@ -209,7 +209,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             eventName: "networking.new_consumer",
                             pane: .networkingLinkSignupPane
                         )
-                        
+
                         let didShowPhoneNumberFieldForTheFirstTime = self.formView.showPhoneNumberFieldIfNeeded()
                         // in case user needs to slowly re-type the e-mail,
                         // we want to only jump to the phone number the

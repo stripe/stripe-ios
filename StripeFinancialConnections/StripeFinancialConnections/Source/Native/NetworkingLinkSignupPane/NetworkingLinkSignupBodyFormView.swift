@@ -27,15 +27,39 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     private let accountholderPhoneNumber: String?
     weak var delegate: NetworkingLinkSignupBodyFormViewDelegate?
 
-    private lazy var verticalStackView: UIStackView = {
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                formElement.view
-            ]
+    private lazy var formElement = FormElement(
+        elements: [
+            emailSection,
+            phoneNumberSection,
+        ],
+        theme: theme
+    )
+    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
+    private (set) lazy var emailElement: LinkEmailElement = {
+        let emailElement = LinkEmailElement(theme: theme)
+        emailElement.indicatorTintColor = .textPrimary
+        emailElement.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emailElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
+        ])
+        return emailElement
+    }()
+    private lazy var phoneNumberSection = SectionElement(
+        elements: [phoneNumberElement],
+        theme: theme
+    )
+    private(set) lazy var phoneNumberElement: PhoneNumberElement = {
+        let phoneNumberElement = PhoneNumberElement(
+            // TODO(kgaidis): Stripe.js selects country via Stripe.js library
+            defaultCountryCode: nil, // the component automatically selects this based off locale
+            defaultPhoneNumber: accountholderPhoneNumber,
+            theme: theme
         )
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
-        return verticalStackView
+        phoneNumberElement.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            phoneNumberElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
+        ])
+        return phoneNumberElement
     }()
     private lazy var theme: ElementsUITheme = {
         var theme: ElementsUITheme = .default
@@ -59,44 +83,14 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         }()
         return theme
     }()
-    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
-    private (set) lazy var emailElement: LinkEmailElement = {
-        let emailElement = LinkEmailElement(theme: theme)
-        emailElement.indicatorTintColor = .textPrimary
-        emailElement.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            emailElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
-        ])
-        return emailElement
-    }()
-    private(set) lazy var phoneNumberElement: PhoneNumberElement = {
-        let phoneNumberElement = PhoneNumberElement(
-            // TODO(kgaidis): Stripe.js selects country via Stripe.js library
-            defaultCountryCode: nil, // the component automatically selects this based off locale
-            defaultPhoneNumber: accountholderPhoneNumber,
-            theme: theme
-        )
-        phoneNumberElement.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            phoneNumberElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
-        ])
-        return phoneNumberElement
-    }()
-    private lazy var phoneNumberSection = SectionElement(
-        elements: [phoneNumberElement],
-        theme: theme
-    )
-    private lazy var formElement = FormElement(elements: [
-        emailSection, phoneNumberSection
-    ], theme: theme)
     private var debounceEmailTimer: Timer?
     private var lastValidEmail: String?
 
     init(accountholderPhoneNumber: String?) {
         self.accountholderPhoneNumber = accountholderPhoneNumber
         super.init(frame: .zero)
-        addAndPinSubview(verticalStackView)
-        formElement.delegate = self // the `formElement` "steals" the delegate from `emailElement`
+        addAndPinSubview(formElement.view)
+        formElement.delegate = self
         phoneNumberSection.view.isHidden = true
     }
 
@@ -115,7 +109,6 @@ final class NetworkingLinkSignupBodyFormView: UIView {
             hidden: false,
             animated: true
         )
-        // TODO(kgaidis): also add a little label together with phone numebr text field
         return true // phone number is shown for the first time
     }
 
@@ -129,7 +122,7 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     func beginEditingEmailAddressField() {
         emailElement.beginEditing()
     }
-    
+
     func endEditingEmailAddressField() {
         emailElement.view.endEditing(true)
     }
@@ -209,31 +202,3 @@ struct NetworkingLinkSignupBodyFormView_Previews: PreviewProvider {
 }
 
 #endif
-
-private class InsetTextField: UITextField {
-
-    private let padding = UIEdgeInsets(
-        top: 0,
-        left: 10,
-        bottom: 0,
-        right: 10
-    )
-
-    override open func textRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func placeholderRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func editingRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-}
