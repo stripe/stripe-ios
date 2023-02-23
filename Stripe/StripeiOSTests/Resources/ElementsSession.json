@@ -1,0 +1,199 @@
+{
+  "account_id": null,
+  "apple_pay_preference": "enabled",
+  "business_name": "Mobile Example Account",
+  "experiments": {
+    "element_link_autofill_in_link_authentication_element": "control",
+    "element_link_autofill_in_payment_element": "control_test",
+    "elements_link_aa": "control",
+    "elements_link_in_payment_element_only": "treatment",
+    "elements_link_in_payment_element_only_holdback": "control",
+    "elements_link_longterm_holdback": "control",
+    "lpm_discoverability_upe_experiment_1": "control"
+  },
+  "experiments_data": {
+    "arb_id": "35386406-1724-456b-ab1d-a4c4d8659098",
+    "experiment_assignments": {
+      "element_link_autofill_in_link_authentication_element": "control",
+      "element_link_autofill_in_payment_element": "control_test",
+      "elements_link_aa": "control",
+      "elements_link_in_payment_element_only": "treatment",
+      "elements_link_in_payment_element_only_holdback": "control",
+      "elements_link_longterm_holdback": "control",
+      "lpm_discoverability_upe_experiment_1": "control"
+    }
+  },
+  "flags": {
+    "elements_disable_paypal_express": true,
+    "elements_enable_blik": true,
+    "elements_enable_br_card_installments": false,
+    "elements_enable_deferred_intent": false,
+    "elements_enable_demo_pay": false,
+    "elements_enable_express_checkout": false,
+    "elements_enable_external_payment_method_paypal": false,
+    "elements_enable_external_payment_method_venmo": false,
+    "elements_enable_mobilepay": false,
+    "elements_enable_mx_card_installments": false,
+    "elements_enable_payment_element_vertical_layout": false,
+    "elements_enable_revolut_pay": false,
+    "elements_link_enable_email_domain_correction": false,
+    "elements_lpm_discoverability_downward_arrow": false,
+    "elements_lpm_discoverability_rotating_cycle": false,
+    "elements_web_lpm_server_driven_ui": true,
+    "financial_connections_enable_deferred_intent_flow": false,
+    "merchant_success_log_element_is_visible": true
+  },
+  "google_pay_preference": "enabled",
+  "link_consumer_info": null,
+  "link_settings": {
+    "link_authenticated_change_event_enabled": false,
+    "link_bank_incentives_enabled": false,
+    "link_bank_onboarding_enabled": false,
+    "link_crypto_onramp_bank_upsell": false,
+    "link_crypto_onramp_elements_logout_disabled": false,
+    "link_crypto_onramp_force_cvc_reverification": false,
+    "link_elements_is_crypto_onramp": false,
+    "link_elements_pageload_sign_up_disabled": false,
+    "link_email_verification_login_enabled": false,
+    "link_financial_incentives_experiment_enabled": false,
+    "link_funding_sources": [
+      "CARD"
+    ],
+    "link_instant_debits_create_link_account_session_on_instantiation": false,
+    "link_local_storage_login_enabled": false,
+    "link_m2_default_integration_enabled": true,
+    "link_only_for_payment_method_types_enabled": false,
+    "link_passthrough_mode_enabled": false,
+    "link_pay_button_element_enabled": true,
+    "link_session_storage_login_enabled": true
+  },
+  "merchant_country": "US",
+  "merchant_currency": "usd",
+  "merchant_id": "acct_1HvTI7Lu5o3P18Zp",
+  "meta_pay_signed_container_context": null,
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+    "card",
+    "link",
+    "apple_pay",
+    "google_pay",
+    "us_bank_account",
+    "afterpay_clearpay",
+    "klarna",
+    "cashapp",
+    "alipay",
+    "wechat_pay"
+  ],
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+      "card",
+      "link",
+      "us_bank_account",
+      "afterpay_clearpay",
+      "klarna",
+      "cashapp",
+      "alipay",
+      "wechat_pay"
+    ],
+    "type": "deferred_intent"
+  },
+  "payment_method_specs": [
+    {
+      "async": false,
+      "fields": [
+        {
+          "type": "afterpay_header"
+        },
+        {
+          "api_path": {
+            "v1": "billing_details[name]"
+          },
+          "type": "name"
+        },
+        {
+          "api_path": {
+            "v1": "billing_details[email]"
+          },
+          "type": "email"
+        },
+        {
+          "allowed_country_codes": null,
+          "type": "billing_address"
+        }
+      ],
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-afterpay@3x-6776ded2b20306c85d02639aea1e7dc5.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-afterpay-abedc6b87e4e9f917e22bbe6648ba809.svg"
+      },
+      "type": "afterpay_clearpay"
+    },
+    {
+      "async": false,
+      "fields": [],
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alipay.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/alipay-22c167d415e209c71b2ac68b7fbc9f43.svg"
+      },
+      "type": "alipay"
+    },
+    {
+      "async": false,
+      "fields": [],
+      "type": "card"
+    },
+    {
+      "async": false,
+      "fields": [],
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
+      },
+      "type": "cashapp"
+    },
+    {
+      "async": false,
+      "fields": [
+        {
+          "type": "klarna_header"
+        },
+        {
+          "api_path": {
+            "v1": "billing_details[email]"
+          },
+          "type": "email"
+        },
+        {
+          "api_path": {
+            "v1": "billing_details[address][country]"
+          },
+          "type": "klarna_country"
+        }
+      ],
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-klarna@3x-d8624aa9a5662d719a44d16b9fcca0be.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-klarna-bb91aa8f173a3c72931696b0f752ec73.svg"
+      },
+      "type": "klarna"
+    },
+    {
+      "async": false,
+      "fields": [],
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/wechat_pay.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-wechat-pay-f62a5a27f646cb5f596c610475d14444.svg"
+      },
+      "type": "wechat_pay"
+    }
+  ],
+  "paypal_express_config": {
+    "client_id": null,
+    "paypal_merchant_id": null
+  },
+  "session_id": "elements_session_1MFNQu2rLVE",
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": ["cashapp"]
+}

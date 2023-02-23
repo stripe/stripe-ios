@@ -91,6 +91,7 @@ extension STPAPIClient {
 extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
+    typealias STPElementsSessionCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
 
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
@@ -108,15 +109,58 @@ extension STPAPIClient {
         parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
 
-        APIRequest<STPPaymentIntent>.getWith(self,
-                                             endpoint: APIEndpointIntentWithPreferences,
-                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
+        APIRequest<STPPaymentIntent>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { paymentIntentWithPreferences, _, error in
             guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
             }
 
             completion(.success(paymentIntentWithPreferences))
+        }
+    }
+
+    func retrieveElementsSession(
+        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
+        completion: @escaping STPElementsSessionCompletionBlock
+    ) {
+        var parameters: [String: Any] = [:]
+        parameters["key"] = publishableKey
+        parameters["type"] = "deferred_intent" // TODO(porter) hardcoded to deferred for now
+        parameters["locale"] = Locale.current.toLanguageTag()
+
+        var deferredIntent = [String: Any]()
+        deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
+        deferredIntent["capture_method"] = intentConfig.captureMethod?.rawValue
+
+        switch intentConfig.mode {
+        case .payment(amount: let amount, currency: let currency, setupFutureUsage: let setupFutureUsage):
+            deferredIntent["mode"] = "payment"
+            deferredIntent["amount"] = amount
+            deferredIntent["currency"] = currency
+            deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
+        case .setup(currency: let currency, setupFutureUsage: let setupFutureUsage):
+            deferredIntent["mode"] = "setup"
+            deferredIntent["currency"] = currency
+            deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
+        }
+
+        parameters["deferred_intent"] = deferredIntent
+
+        APIRequest<STPElementsSession>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { elementsSession, _, error in
+            guard let elementsSession = elementsSession else {
+                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            completion(.success(elementsSession))
         }
     }
 
@@ -136,9 +180,11 @@ extension STPAPIClient {
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
 
-        APIRequest<STPSetupIntent>.getWith(self,
-                                           endpoint: APIEndpointIntentWithPreferences,
-                                           parameters: parameters) { setupIntentWithPreferences, _, error in
+        APIRequest<STPSetupIntent>.getWith(
+            self,
+            endpoint: APIEndpointIntentWithPreferences,
+            parameters: parameters
+        ) { setupIntentWithPreferences, _, error in
 
             guard let setupIntentWithPreferences = setupIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))

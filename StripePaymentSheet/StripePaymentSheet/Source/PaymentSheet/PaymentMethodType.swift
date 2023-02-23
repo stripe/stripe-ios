@@ -168,6 +168,7 @@ extension PaymentSheet {
         /// - Parameter intent: The `intent` to extract `PaymentMethodType`s from.
         /// - Returns: An ordered list of all the `PaymentMethodType`s for this `intent`.
         static func recommendedPaymentMethodTypes(from intent: Intent) -> [PaymentMethodType] {
+            // We look at the raw `allResponseFields` because some strings may have been parsed into STPPaymentMethodType.unknown
             switch intent {
             case .paymentIntent(let paymentIntent):
                 guard
@@ -187,6 +188,12 @@ extension PaymentSheet {
                 let paymentTypesString =
                     setupIntent.allResponseFields["ordered_payment_method_types"] as? [String]
                     ?? paymentMethodTypeStrings
+                return paymentTypesString.map { PaymentMethodType(from: $0) }
+            case .deferredIntent(let elementsSession, _):
+                let paymentMethodPrefs = elementsSession.allResponseFields["payment_method_preference"] as? [AnyHashable: Any]
+                let paymentTypesString =
+                paymentMethodPrefs?["ordered_payment_method_types"] as? [String]
+                    ?? []
                 return paymentTypesString.map { PaymentMethodType(from: $0) }
             }
         }
@@ -208,31 +215,40 @@ extension PaymentSheet {
                 }
             }
 
-            return recommendedPaymentMethodTypes.filter {
-                PaymentSheet.PaymentMethodType.supportsAdding(
-                    paymentMethod: $0,
+            return recommendedPaymentMethodTypes.filter { paymentMethodType in
+                let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: paymentMethodType,
                     configuration: configuration,
                     intent: intent,
                     supportedPaymentMethods: configuration.linkPaymentMethodsOnly
                         ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
+
+                if availabilityStatus != .supported {
+                    // This payment method is being flitered out, log the reason/s why
+                    #if DEBUG
+                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(availabilityStatus.description)\n")
+                    #endif
+                }
+
+                return availabilityStatus == .supported
             }
         }
 
-        /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
+        /// Returns whether or not PaymentSheet should display the given `paymentMethod` as an option to the customer.
         /// Note: This doesn't affect the availability of saved PMs.
         /// - Parameters:
         ///   - paymentMethod: the `STPPaymentMethodType` in question
         ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
         ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
-        /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func supportsAdding(
             paymentMethod: PaymentMethodType,
             configuration: PaymentSheet.Configuration,
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
-        ) -> Bool {
+        ) -> PaymentMethodAvailabilityStatus {
 
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
@@ -248,42 +264,64 @@ extension PaymentSheet {
                     )
                 }
 
-                return false
+                return .notSupported
             }
 
-            // if the intent is a SI or PI+sfu, then use the save and reuse requirements
+            let requirements: [PaymentMethodTypeRequirement]
+
+            // We have different requirements depending on whether or not the intent is setting up the payment method for future use
             if intent.isSettingUp {
-                return supportsSaveAndReuse(
-                    paymentMethod: paymentMethod,
-                    configuration: configuration,
-                    intent: intent
-                )
+                requirements = {
+                    switch stpPaymentMethodType {
+                    case .card:
+                        return []
+                    case .alipay, .payPal:
+                        return [.returnURL]
+                    case .USBankAccount:
+                        return [.userSupportsDelayedPaymentMethods]
+                    case .iDEAL, .bancontact, .sofort:
+                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                        // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unavailable]
+                    case .SEPADebit:
+                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                        return [.userSupportsDelayedPaymentMethods, .unavailable]
+                    case .bacsDebit:
+                        return [.returnURL, .userSupportsDelayedPaymentMethods]
+                    case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
+                        .affirm, .cashApp, .unknown:
+                        return [.unavailable]
+                    @unknown default:
+                        return [.unavailable]
+                    }
+                }()
+            } else {
+                requirements = {
+                    switch stpPaymentMethodType {
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay:
+                        return []
+                    case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
+                        .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
+                        return [.returnURL]
+                    case .USBankAccount:
+                        return [
+                            .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
+                            .validUSBankVerificationMethod,
+                        ]
+                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit:
+                        return [.userSupportsDelayedPaymentMethods]
+                    case .bacsDebit, .sofort:
+                        return [.returnURL, .userSupportsDelayedPaymentMethods]
+                    case .afterpayClearpay, .affirm:
+                        return [.returnURL, .shippingAddress]
+                    case .link, .unknown:
+                        return [.unavailable]
+                    @unknown default:
+                        return [.unavailable]
+                    }
+                }()
             }
-
-            // if this is a PI with a `STPPaymentMethodType` use the following requirements
-            let requirements: [PaymentMethodTypeRequirement] = {
-                switch stpPaymentMethodType {
-                case .blik, .card, .cardPresent, .UPI, .weChatPay:
-                    return []
-                case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                    .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
-                    return [.returnURL]
-                case .USBankAccount:
-                    return [
-                        .userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod,
-                    ]
-                case .OXXO, .boleto, .AUBECSDebit, .SEPADebit:
-                    return [.userSupportsDelayedPaymentMethods]
-                case .bacsDebit, .sofort:
-                    return [.returnURL, .userSupportsDelayedPaymentMethods]
-                case .afterpayClearpay, .affirm:
-                    return [.returnURL, .shippingAddress]
-                case .link, .unknown:
-                    return [.unavailable]
-                @unknown default:
-                    return [.unavailable]
-                }
-            }()
 
             return configurationSupports(
                 paymentMethod: stpPaymentMethodType,
@@ -295,67 +333,48 @@ extension PaymentSheet {
             // TODO: We need a way to model this information in our common model
         }
 
-        /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use, set up, and reuse
-        /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent or saved payment method
-        /// - Parameters:
-        ///   - paymentMethod: the `STPPaymentMethodType` in question
-        ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
-        ///   - intent: a intent object
-        ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
-        /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
-        static func supportsSaveAndReuse(
-            paymentMethod: PaymentMethodType,
-            configuration: PaymentSheet.Configuration,
-            intent: Intent,
-            supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
-        ) -> Bool {
-            guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
-                if case .dynamic = paymentMethod {
-                    return configurationSatisfiesRequirements(
-                        requirements: paymentMethod.supportsSaveAndReuseRequirements(),
-                        configuration: configuration,
-                        intent: intent
-                    )
-                }
-
+        /// Returns whether or not we can show a "☑️ Save for future use" checkbox to the customer
+        func supportsSaveForFutureUseCheckbox() -> Bool {
+            guard let stpPaymentMethodType = stpPaymentMethodType else {
+                // At the time of writing, we only support cards and us bank accounts.
+                // These should both have an `stpPaymentMethodType`, so I'm avoiding handling this guard condition
                 return false
             }
+            // This payment method and its requirements are hardcoded on the client
+            switch stpPaymentMethodType {
+            case .card, .USBankAccount:
+                return true
+            default:
+                return false
+            }
+        }
 
+        /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
+        /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
+        /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
+        func supportsSavedPaymentMethod(configuration: Configuration, intent: Intent) -> Bool {
+            guard let stpPaymentMethodType = stpPaymentMethodType else {
+                // At the time of writing, we only support cards and us bank accounts.
+                // These should both have an `stpPaymentMethodType`, so I'm avoiding handling this guard condition
+                return false
+            }
             let requirements: [PaymentMethodTypeRequirement] = {
                 switch stpPaymentMethodType {
                 case .card:
                     return []
-                case .alipay:
-                    return [.returnURL]
                 case .USBankAccount:
                     return [.userSupportsDelayedPaymentMethods]
-                case .iDEAL, .bancontact, .sofort:
-                    // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                    // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
-                    return [.returnURL, .userSupportsDelayedPaymentMethods, .unavailable]
-                case .SEPADebit:
-                    // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                    return [.userSupportsDelayedPaymentMethods, .unavailable]
-                case .bacsDebit:
-                    return [.returnURL, .userSupportsDelayedPaymentMethods]
-                case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
-                    .affirm, .cashApp, .unknown:
-                    return [.unavailable]
-                @unknown default:
+                default:
                     return [.unavailable]
                 }
             }()
-
-            return configurationSupports(
+            return Self.configurationSupports(
                 paymentMethod: stpPaymentMethodType,
                 requirements: requirements,
                 configuration: configuration,
                 intent: intent,
-                supportedPaymentMethods: supportedPaymentMethods
-            )
-
-            // TODO: We need a way to model this information in our common model
+                supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
+            ) == .supported
         }
 
         /// Returns true if the passed configuration satsifies the passed in `requirements`
@@ -367,18 +386,23 @@ extension PaymentSheet {
         ///   - requirements: a list of requirements to be satisfied
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
-        /// - Returns: true if the configuration satisfies the requirements
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
             intent: Intent
-        ) -> Bool {
+        ) -> PaymentMethodAvailabilityStatus {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
                 (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
                 return accumulator + element.fulfilledRequirements
             }
             let supports = Set(requirements).isSubset(of: fulfilledRequirements)
-            return supports
+            if !supports {
+                let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
+                return .missingRequirements(Array(missingRequirements))
+            }
+
+            return .supported
         }
 
         /// Returns true if the passed configuration satisfies the passed in `requirements` and this payment method is in the list of supported payment methods
@@ -390,21 +414,21 @@ extension PaymentSheet {
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
         ///   - supportedPaymentMethods: a list of supported payment method types
-        /// - Returns: true if the configuration satisfies the requirements and if `paymentMethod` is contained in `supportedPaymentMethods`
+        /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method is supported
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType]
-        ) -> Bool {
+        ) -> PaymentMethodAvailabilityStatus {
             guard supportedPaymentMethods.contains(paymentMethod) else {
-                return false
+                return .notSupported
             }
 
             // Hide a payment method type if we are in live mode and it is unactivated
             if !configuration.apiClient.isTestmode && intent.unactivatedPaymentMethodTypes.contains(paymentMethod) {
-                return false
+                return .unactivated
             }
 
             let fulfilledRequirements = [configuration, intent].reduce([]) {
@@ -421,7 +445,12 @@ extension PaymentSheet {
                 }
             }
 
-            return supports
+            if !supports {
+                let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
+                return .missingRequirements(Array(missingRequirements))
+            }
+
+            return .supported
         }
     }
 }

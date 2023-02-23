@@ -14,6 +14,7 @@ extension StripeAPI {
         let line2: String?
         let city: String?
         let postalCode: String?
+        let state: String?
         let country: String?
     }
 }

@@ -95,8 +95,6 @@ let project = Project(
             name: "PaymentSheet Example",
             buildAction: .buildAction(targets: [
                 "PaymentSheet Example",
-                "PaymentSheetUITest",
-                "PaymentSheetLocalizationScreenshotGenerator",
             ]),
             testAction: .targets(
                 [

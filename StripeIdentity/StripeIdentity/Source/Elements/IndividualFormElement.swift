@@ -60,6 +60,7 @@ final class IndividualFormElement: ContainerElement {
                 line2: addressElement.line2!.text.isEmpty ? nil : addressElement.line2!.text,
                 city: addressElement.city?.text,
                 postalCode: addressElement.postalCode?.text,
+                state: addressElement.state?.rawData,
                 country: addressElement.selectedCountryCode
             )
         }
@@ -99,10 +100,7 @@ final class IndividualFormElement: ContainerElement {
             nameElement = nil
         }
         if missing.contains(.dob) {
-            dobElement = SectionElement(
-                title: String.Localized.date_of_birth,
-                elements: [elementsFactory.makeDateOfBirth()]
-            )
+            dobElement = elementsFactory.makeDateOfBirthSection()
             elements.append(dobElement!)
         } else {
             dobElement = nil

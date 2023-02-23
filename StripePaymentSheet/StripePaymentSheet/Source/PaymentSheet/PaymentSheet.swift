@@ -33,6 +33,14 @@ import UIKit
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
 public class PaymentSheet {
+    /// TODO(porter) doc comment
+    /// 🚧 Under construction
+    @_spi(STP) @frozen public enum InitializationMode {
+        case paymentIntentClientSecret(String)
+        case setupIntentClientSecret(String)
+        case deferredIntent(PaymentSheet.IntentConfiguration)
+    }
+
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
 
@@ -45,7 +53,7 @@ public class PaymentSheet {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     public convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
         self.init(
-            intentClientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            mode: .paymentIntentClientSecret(paymentIntentClientSecret),
             configuration: configuration
         )
     }
@@ -55,15 +63,17 @@ public class PaymentSheet {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     public convenience init(setupIntentClientSecret: String, configuration: Configuration) {
         self.init(
-            intentClientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+            mode: .setupIntentClientSecret(setupIntentClientSecret),
             configuration: configuration
         )
     }
 
-    required init(intentClientSecret: IntentClientSecret, configuration: Configuration) {
+    /// TODO(porter) doc comment
+    /// 🚧 Under construction
+    @_spi(STP) public required init(mode: InitializationMode, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
-        self.intentClientSecret = intentClientSecret
+        self.mode = mode
         self.configuration = configuration
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration)
     }
@@ -106,7 +116,7 @@ public class PaymentSheet {
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
-            clientSecret: intentClientSecret,
+            mode: mode,
             configuration: configuration
         ) { result in
             switch result {
@@ -208,8 +218,8 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
 
-    /// The client secret this instance was initialized with
-    let intentClientSecret: IntentClientSecret
+    /// The initialization mode this instance was initialized with
+    let mode: InitializationMode
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
