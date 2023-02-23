@@ -80,6 +80,10 @@ struct PlaygroundMainView: View {
                         }
                     }
 
+                    Section(header: Text("PERMISSIONS")) {
+                        Toggle("Transactions \(viewModel.flow == .networking ? "(enable step-up verification)" : "")", isOn: $viewModel.enableTransactionsPermission)
+                    }
+
                     Section(header: Text("CUSTOM KEYS")) {
                         TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
                         TextField("Secret Key (sk_)", text: $viewModel.customSecretKey)

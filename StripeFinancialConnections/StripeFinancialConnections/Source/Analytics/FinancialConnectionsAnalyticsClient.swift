@@ -77,7 +77,7 @@ extension FinancialConnectionsAnalyticsClient {
 
     func logExpectedError(
         _ error: Error,
-        errorName: String?,
+        errorName: String,
         pane: FinancialConnectionsSessionManifest.NextPane?
     ) {
         log(
@@ -90,7 +90,7 @@ extension FinancialConnectionsAnalyticsClient {
 
     func logUnexpectedError(
         _ error: Error,
-        errorName: String?,
+        errorName: String,
         pane: FinancialConnectionsSessionManifest.NextPane?
     ) {
         log(
@@ -103,7 +103,7 @@ extension FinancialConnectionsAnalyticsClient {
 
     private func log(
         error: Error,
-        errorName: String?,
+        errorName: String,
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane?
     ) {
@@ -181,6 +181,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingLinkLoginWarmup
         case is NetworkingLinkVerificationViewController:
             return .networkingLinkVerification
+        case is NetworkingLinkStepUpVerificationViewController:
+            return .networkingLinkStepUpVerification
         case is NetworkingSaveToLinkVerificationViewController:
             return .networkingSaveToLinkVerification
         case is LinkAccountPickerViewController:

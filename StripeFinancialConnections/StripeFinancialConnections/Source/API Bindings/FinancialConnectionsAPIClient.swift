@@ -104,6 +104,10 @@ protocol FinancialConnectionsAPIClient {
         consumerSessionClientSecret: String
     ) -> Future<FinancialConnectionsInstitutionList>
 
+    func markLinkStepUpAuthenticationVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest>
+
     // MARK: - Link API's
 
     func consumerSessionLookup(
@@ -521,6 +525,16 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointShareNetworkedAccount, parameters: parameters)
     }
 
+    func markLinkStepUpAuthenticationVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "expand": ["active_auth_session"],
+        ]
+        return post(resource: APIEndpointLinkStepUpAuthenticationVerified, parameters: parameters)
+    }
+
     // MARK: - Link API's [TODO(kgaidis): delete these later]
 
     func consumerSessionLookup(
@@ -579,12 +593,9 @@ private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
 private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
 private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
 private let APIEndpointLinkMoreAccounts = "link_account_sessions/link_more_accounts"
-private let APIEndpointLinkVerified = "link_account_sessions/link_verified"
 private let APIEndpointComplete = "link_account_sessions/complete"
-private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_accounts"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
-private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointAuthSessions = "connections/auth_sessions"
 private let APIEndpointAuthSessionsCancel = "connections/auth_sessions/cancel"
 private let APIEndpointAuthSessionsOAuthResults = "connections/auth_sessions/oauth_results"
@@ -593,5 +604,9 @@ private let APIEndpointAuthSessionsAccounts = "connections/auth_sessions/account
 private let APIEndpointAuthSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
 private let APIEndpointAuthSessionsEvents = "connections/auth_sessions/events"
 // Networking
-private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
 private let APIEndpointDisableNetworking = "link_account_sessions/disable_networking"
+private let APIEndpointLinkStepUpAuthenticationVerified = "link_account_sessions/link_step_up_authentication_verified"
+private let APIEndpointLinkVerified = "link_account_sessions/link_verified"
+private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_accounts"
+private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
+private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
