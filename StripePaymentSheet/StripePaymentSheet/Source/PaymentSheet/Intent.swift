@@ -88,7 +88,7 @@ enum Intent {
             }
         }
     }
-    
+
     var amount: Int? {
         switch self {
         case .paymentIntent(let pi):

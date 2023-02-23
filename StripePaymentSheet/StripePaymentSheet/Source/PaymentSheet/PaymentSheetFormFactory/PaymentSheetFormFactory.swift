@@ -344,7 +344,7 @@ extension PaymentSheetFormFactory {
             assertionFailure("After requires a non-nil amount and currency")
             return nil
         }
-        
+
         return StaticElement(
             view: AfterpayPriceBreakdownView(
                 amount: amount,
@@ -359,7 +359,7 @@ extension PaymentSheetFormFactory {
             assertionFailure("Klarna requires a non-nil currency")
             return nil
         }
-        
+
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(
             KlarnaHelper.availableCountries(currency: currency)
         )

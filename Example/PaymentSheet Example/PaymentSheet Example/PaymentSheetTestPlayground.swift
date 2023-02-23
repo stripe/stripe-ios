@@ -36,7 +36,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var customCTALabelTextField: UITextField!
     @IBOutlet weak var initModeSelector: UISegmentedControl!
-    
+
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
@@ -74,7 +74,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case paymentWithSetup = "payment_with_setup"
         case setup
     }
-    
+
     enum InitMode {
         case normal
         case deferred
@@ -192,7 +192,7 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
-    
+
     var initMode: InitMode {
         switch initModeSelector.selectedSegmentIndex {
         case 0:
@@ -264,9 +264,9 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
         return configuration
     }
-    
+
     var intentConfig: PaymentSheet.IntentConfiguration {
-        
+
         switch intentMode {
         case .payment:
             return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD",
@@ -358,9 +358,9 @@ class PaymentSheetTestPlayground: UIViewController {
     func didTapCheckoutButton() {
         let mc: PaymentSheet
         let mode: PaymentSheet.InitializationMode
-        
+
         switch self.initMode {
-            
+
         case .normal:
             switch self.intentMode {
             case .payment, .paymentWithSetup:
@@ -371,9 +371,9 @@ class PaymentSheetTestPlayground: UIViewController {
         case .deferred:
             mode = .deferredIntent(self.intentConfig)
         }
-        
+
         mc = PaymentSheet(mode: mode, configuration: configuration)
-        
+
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
@@ -532,11 +532,11 @@ extension PaymentSheetTestPlayground {
                 }
 
                 self.checkoutButton.isEnabled = true
-                
+
                 let mode: PaymentSheet.InitializationMode
-                
+
                 switch self.initMode {
-                    
+
                 case .normal:
                     switch self.intentMode {
                     case .payment, .paymentWithSetup:
@@ -544,11 +544,11 @@ extension PaymentSheetTestPlayground {
                     case .setup:
                         mode = .setupIntentClientSecret(self.clientSecret!)
                     }
-                    
+
                 case .deferred:
                     mode = .deferredIntent(self.intentConfig)
                 }
-                
+
                 PaymentSheet.FlowController.create(
                     mode: mode,
                     configuration: self.configuration,
