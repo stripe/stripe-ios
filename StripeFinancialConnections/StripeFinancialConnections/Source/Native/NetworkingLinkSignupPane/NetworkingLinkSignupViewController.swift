@@ -33,7 +33,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
-        let formView = NetworkingLinkSignupBodyFormView()
+        let formView = NetworkingLinkSignupBodyFormView(accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber)
         formView.delegate = self
         return formView
     }()
@@ -83,14 +83,14 @@ final class NetworkingLinkSignupViewController: UIViewController {
                                 "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
                         ),
                         content:
-                            "Connect your account faster on [Merchant] and thousands of sites."
+                            "Connect your account faster on [Merchant] and everywhere Link is accepted."
                     ),
                     FinancialConnectionsBulletPoint(
                         icon: FinancialConnectionsImage(
                             default:
                                 "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
                         ),
-                        content: "Link with Stripe encrypts your data and never shares your login details."
+                        content: "Link encrypts your data and never shares your login details."
                     ),
                 ],
                 formView: formView,
@@ -152,9 +152,16 @@ final class NetworkingLinkSignupViewController: UIViewController {
             self.footerView.setIsLoading(false)
         }
     }
-
+    
     private func didSelectURLInTextFromBackend(_ url: URL) {
-
+        AuthFlowHelpers.handleURLInTextFromBackend(
+            url: url,
+            pane: .networkingLinkSignupPane,
+            analyticsClient: dataSource.analyticsClient,
+            handleStripeScheme: { _ in
+                // no custom stripe scheme is handled
+            }
+        )
     }
 
     private func adjustSaveToLinkButtonDisabledState() {
@@ -202,12 +209,21 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             eventName: "networking.new_consumer",
                             pane: .networkingLinkSignupPane
                         )
+                        
                         let didShowPhoneNumberFieldForTheFirstTime = self.formView.showPhoneNumberFieldIfNeeded()
+                        // in case user needs to slowly re-type the e-mail,
+                        // we want to only jump to the phone number the
+                        // first time they enter the e-mail
                         if didShowPhoneNumberFieldForTheFirstTime {
-                            // in case user needs to slowly re-type the e-mail,
-                            // we want to only jump to the phone number the
-                            // first time they enter the e-mail
-                            self.formView.beginEditingPhoneNumberField()
+                            let didPrefillPhoneNumber = (self.formView.phoneNumberElement.phoneNumber?.number ?? "").count > 1
+                            // if the phone number is pre-filled, we don't focus on the phone number field
+                            if !didPrefillPhoneNumber {
+                                self.formView.beginEditingPhoneNumberField()
+                            } else {
+                                // user is done with e-mail AND phone number, so dismiss the keyboard
+                                // so they can see the "Save to Link" button
+                                self.formView.endEditingEmailAddressField()
+                            }
                         }
                         self.footerView.showSaveToLinkButtonIfNeeded()
                     }

@@ -24,6 +24,7 @@ protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
 @available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkSignupBodyFormView: UIView {
 
+    private let accountholderPhoneNumber: String?
     weak var delegate: NetworkingLinkSignupBodyFormViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
@@ -52,6 +53,8 @@ final class NetworkingLinkSignupBodyFormView: UIView {
             colors.danger = .textCritical
             colors.placeholderText = .textSecondary
             colors.textFieldText = .textPrimary
+            colors.parentBackground = .customBackgroundColor
+            colors.background = .customBackgroundColor
             return colors
         }()
         return theme
@@ -68,8 +71,10 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     }()
     private(set) lazy var phoneNumberElement: PhoneNumberElement = {
         let phoneNumberElement = PhoneNumberElement(
-            defaultCountryCode: "US",
-            defaultPhoneNumber: nil, theme: theme
+            // TODO(kgaidis): Stripe.js selects country via Stripe.js library
+            defaultCountryCode: nil, // the component automatically selects this based off locale
+            defaultPhoneNumber: accountholderPhoneNumber,
+            theme: theme
         )
         phoneNumberElement.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -87,7 +92,8 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     private var debounceEmailTimer: Timer?
     private var lastValidEmail: String?
 
-    init() {
+    init(accountholderPhoneNumber: String?) {
+        self.accountholderPhoneNumber = accountholderPhoneNumber
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         formElement.delegate = self // the `formElement` "steals" the delegate from `emailElement`
@@ -122,6 +128,10 @@ final class NetworkingLinkSignupBodyFormView: UIView {
 
     func beginEditingEmailAddressField() {
         emailElement.beginEditing()
+    }
+    
+    func endEditingEmailAddressField() {
+        emailElement.view.endEditing(true)
     }
 
     func beginEditingPhoneNumberField() {
@@ -180,7 +190,7 @@ import SwiftUI
 private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkSignupBodyFormView {
-        NetworkingLinkSignupBodyFormView()
+        NetworkingLinkSignupBodyFormView(accountholderPhoneNumber: nil)
     }
 
     func updateUIView(_ uiView: NetworkingLinkSignupBodyFormView, context: Context) {}
