@@ -152,7 +152,7 @@ extension PaymentSheet {
 
     }
 
-    enum PaymentMethodExclusionReason: Equatable {
+    enum PaymentMethodAvailabilityStatus: Equatable {
         /// This payment method is supported by PaymentSheet and the current configuration and intent
         case supported
         /// This payment method is not supported by PaymentSheet and/or the current configuration or intent
@@ -175,7 +175,7 @@ extension PaymentSheet {
             }
         }
 
-        static func ==(lhs: PaymentMethodExclusionReason, rhs: PaymentMethodExclusionReason) -> Bool {
+        static func ==(lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
             switch (lhs, rhs) {
             case (.notSupported, .notSupported):
                 return true

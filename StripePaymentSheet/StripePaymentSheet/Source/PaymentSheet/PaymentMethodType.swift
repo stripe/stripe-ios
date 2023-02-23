@@ -244,7 +244,7 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
-        ) -> PaymentMethodExclusionReason {
+        ) -> PaymentMethodAvailabilityStatus {
 
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
@@ -387,7 +387,7 @@ extension PaymentSheet {
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentSheet.Configuration,
             intent: Intent
-        ) -> PaymentMethodExclusionReason {
+        ) -> PaymentMethodAvailabilityStatus {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
                 (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
                 return accumulator + element.fulfilledRequirements
@@ -417,7 +417,7 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType]
-        ) -> PaymentMethodExclusionReason {
+        ) -> PaymentMethodAvailabilityStatus {
             guard supportedPaymentMethods.contains(paymentMethod) else {
                 return .notSupported
             }
