@@ -170,4 +170,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
         return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
     }
+
+    func markLinkStepUpAuthenticationVerified(
+        clientSecret: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
+        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
+    }
 }

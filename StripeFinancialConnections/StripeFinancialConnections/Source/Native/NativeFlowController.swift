@@ -80,6 +80,7 @@ class NativeFlowController {
                 || navigationController.topViewController is PartnerAuthViewController
                 || navigationController.topViewController is AttachLinkedPaymentAccountViewController
                 || navigationController.topViewController is NetworkingLinkSignupViewController
+                || navigationController.topViewController is NetworkingLinkStepUpVerificationViewController
                 || navigationController.topViewController is NetworkingLinkVerificationViewController
                 || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
                 || navigationController.topViewController is LinkAccountPickerViewController)
@@ -644,6 +645,7 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
@@ -659,6 +661,14 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         dataManager.institution = institution
         dataManager.linkedAccounts = [selectedAccount]
         pushPane(.success, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
+    ) {
+        dataManager.linkedAccounts = [selectedAccount]
+        pushPane(.networkingLinkStepUpVerification, animated: true)
     }
 
     func linkAccountPickerViewController(
@@ -686,6 +696,33 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+}
+
+// MARK: - NetworkingLinkStepUpVerificationViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDelegate {
+
+    func networkingLinkStepUpVerificationViewController(
+        _ viewController: NetworkingLinkStepUpVerificationViewController,
+        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution
+    ) {
+        dataManager.institution = institution
+        pushPane(.success, animated: true)
+    }
+
+    func networkingLinkStepUpVerificationViewController(
+        _ viewController: NetworkingLinkStepUpVerificationViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
+    }
+
+    func networkingLinkStepUpVerificationViewControllerEncounteredSoftError(
+        _ viewController: NetworkingLinkStepUpVerificationViewController
+    ) {
+        pushPane(.institutionPicker, animated: true)
     }
 }
 
@@ -860,6 +897,28 @@ private func CreatePaneViewController(
             )
             networkingSaveToLinkVerificationViewController.delegate = nativeFlowController
             viewController = networkingSaveToLinkVerificationViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
+    case .networkingLinkStepUpVerification:
+        if
+            let consumerSession = dataManager.consumerSession,
+            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+        {
+            let networkingLinkStepUpVerificationDataSource = NetworkingLinkStepUpVerificationDataSourceImplementation(
+                consumerSession: consumerSession,
+                selectedAccountId: selectedAccountId,
+                manifest: dataManager.manifest,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let networkingLinkStepUpVerificationViewController = NetworkingLinkStepUpVerificationViewController(
+                dataSource: networkingLinkStepUpVerificationDataSource
+            )
+            networkingLinkStepUpVerificationViewController.delegate = nativeFlowController
+            viewController = networkingLinkStepUpVerificationViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
