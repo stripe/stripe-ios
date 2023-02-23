@@ -111,16 +111,16 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         prefilledInfo.billingAddress = address
         sut.prefilledInformation = prefilledInfo
 
-        let nameCell = sut.addressViewModel.addressCells.first{ $0.type == .name }!
+        let nameCell = sut.addressViewModel.addressCells.first { $0.type == .name }!
         XCTAssertEqual( nameCell.contents, "John Smith Doe")
 
-        let line1Cell = sut.addressViewModel.addressCells.first{ $0.type == .line1 }!
+        let line1Cell = sut.addressViewModel.addressCells.first { $0.type == .line1 }!
         XCTAssertEqual( line1Cell.contents, "55 John St")
 
-        let cityCell = sut.addressViewModel.addressCells.first{ $0.type == .city }!
+        let cityCell = sut.addressViewModel.addressCells.first { $0.type == .city }!
         XCTAssertEqual( cityCell.contents, "Harare")
 
-        let zipCell = sut.addressViewModel.addressCells.first{ $0.type == .zip }!
+        let zipCell = sut.addressViewModel.addressCells.first { $0.type == .zip }!
         XCTAssertEqual( zipCell.contents, "10002")
     }
 

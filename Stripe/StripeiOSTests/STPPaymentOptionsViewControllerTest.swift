@@ -230,7 +230,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             configuration: config,
             delegate: delegate
         )
-        sut.addCardViewControllerFooterView = UIView(frame: CGRectZero)
+        sut.addCardViewControllerFooterView = UIView()
         guard let payMethodsInternal = sut.internalViewController as? STPAddCardViewController else {
             XCTFail()
             return
@@ -252,7 +252,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             configuration: config,
             delegate: delegate
         )
-        sut.paymentOptionsViewControllerFooterView = UIView(frame: CGRectZero)
+        sut.paymentOptionsViewControllerFooterView = UIView()
         guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
             XCTFail()
             return
@@ -274,7 +274,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             configuration: config,
             delegate: delegate
         )
-        sut.addCardViewControllerFooterView = UIView(frame: CGRectZero)
+        sut.addCardViewControllerFooterView = UIView()
         guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
             XCTFail()
             return
