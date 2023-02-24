@@ -72,7 +72,7 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
 // MARK: - PaymentMethodElement
 extension PaymentMethodElementWrapper: PaymentMethodElement {
     func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        guard let defaultsApplier else { return params }
+        guard let defaultsApplier = defaultsApplier else { return params }
         return defaultsApplier(element, params)
     }
 
