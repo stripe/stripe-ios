@@ -79,6 +79,9 @@
 /* Text of a notification shown to the user when a login code is successfully sent via SMS. */
 "Code sent" = "Code sent";
 
+/* Title for the contact information section */
+"Contact information" = "Contact information";
+
 /* Label for identifying the default payment method. */
 "Default" = "Default";
 
@@ -109,6 +112,9 @@ re-entering the security code (CVV/CVC). */
 
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
+
+/* Label for name on card field */
+"Name on card" = "Name on card";
 
 /* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
 "Not %@?" = "Not %@?";
@@ -277,8 +283,3 @@ the heading the screen itself. */
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
-/* Title for the contact information section. */
-"Contact information" = "Contact information";
-
-/* Title for name on card field. */
-"Name on card" = "Name on card";
