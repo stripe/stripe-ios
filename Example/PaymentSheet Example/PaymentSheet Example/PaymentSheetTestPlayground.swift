@@ -266,18 +266,17 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var intentConfig: PaymentSheet.IntentConfiguration {
-
         switch intentMode {
         case .payment:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD",
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency,
                                                                    setupFutureUsage: nil),
                                                                 captureMethod: .automatic)
         case .paymentWithSetup:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD",
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic)
         case .setup:
-            return PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
+            return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic)
         }
@@ -360,7 +359,6 @@ class PaymentSheetTestPlayground: UIViewController {
         let mode: PaymentSheet.InitializationMode
 
         switch self.initMode {
-
         case .normal:
             switch self.intentMode {
             case .payment, .paymentWithSetup:
