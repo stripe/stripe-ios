@@ -464,7 +464,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
-    
+
     func testCashAppPaymentMethod() throws {
         loadPlayground(
             app,
