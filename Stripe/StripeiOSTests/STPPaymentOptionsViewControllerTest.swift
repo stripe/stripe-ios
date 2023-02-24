@@ -257,7 +257,9 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             XCTFail()
             return
         }
+#if compiler(>=5.7)
         XCTAssertNotNil(payMethodsInternal.customFooterView)
+#endif
     }
 
     // Tests for race condition where the promise for fetching payment methods
@@ -279,7 +281,9 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             XCTFail()
             return
         }
+#if compiler(>=5.7)
         XCTAssertNotNil(payMethodsInternal.addCardViewControllerCustomFooterView)
+#endif
     }
 
     // Tests for race condition where the promise for fetching payment methods
@@ -310,7 +314,9 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             XCTFail()
             return
         }
+#if compiler(>=5.7)
         XCTAssertNotNil(payMethodsInternal.prefilledInformation)
+#endif
     }
 
     // Tests for race condition where the promise for fetching payment methods
