@@ -63,10 +63,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     }
 
     private var _customFooterView: UIView?
-    // @objc was added to this field in order to overcome
-    // a bug in Xcode13 w/ our unit test:
-    // testSetAfterInit_paymentOptionsViewControllerFooterView_STPPaymentOptionsInternalViewController
-    @objc var customFooterView: UIView? {
+    var customFooterView: UIView? {
         get {
             _customFooterView
         }
@@ -91,14 +88,9 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             tableView?.tableFooterView = _customFooterView
         }
     }
-    // @objc was added to this field in order to overcome
-    // a bug in Xcode13 w/ our unit test:
-    // testSetAfterInit_addCardViewControllerFooterView_STPPaymentOptionsInternalViewController
-    @objc var addCardViewControllerCustomFooterView: UIView?
-    // @objc was added to this field in order to overcome
-    // a bug in xcode13 w/ our unit test:
-    // testSetAfterInit_prefilledInformation_STPPaymentOptionsInternalViewController
-    @objc var prefilledInformation: STPUserInformation?
+
+    var addCardViewControllerCustomFooterView: UIView?
+    var prefilledInformation: STPUserInformation?
     private var configuration: STPPaymentConfiguration?
     private var apiAdapter: STPBackendAPIAdapter?
     private var shippingAddress: STPAddress?
