@@ -268,15 +268,15 @@ class PaymentSheetTestPlayground: UIViewController {
     var intentConfig: PaymentSheet.IntentConfiguration {
         switch intentMode {
         case .payment:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency,
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency.rawValue,
                                                                    setupFutureUsage: nil),
                                                                 captureMethod: .automatic)
         case .paymentWithSetup:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency,
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic)
         case .setup:
-            return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency,
+            return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic)
         }
@@ -561,6 +561,7 @@ extension PaymentSheetTestPlayground {
 struct PaymentSheetPlaygroundSettings: Codable {
     static let nsUserDefaultsKey = "playgroundSettings"
     let modeSelectorValue: Int
+    let initModeSelectorValue: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
     let merchantCountryCode: Int
@@ -578,6 +579,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
         return PaymentSheetPlaygroundSettings(
             modeSelectorValue: 0,
+            initModeSelectorValue: 0,
             customerModeSelectorValue: 0,
             currencySelectorValue: 0,
             merchantCountryCode: 0,
@@ -623,6 +625,7 @@ extension PaymentSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() {
         let settings = PaymentSheetPlaygroundSettings(
             modeSelectorValue: modeSelector.selectedSegmentIndex,
+            initModeSelectorValue: initModeSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             currencySelectorValue: currencySelector.selectedSegmentIndex,
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
@@ -661,6 +664,7 @@ extension PaymentSheetTestPlayground {
         currencySelector.selectedSegmentIndex = settings.currencySelectorValue
         merchantCountryCodeSelector.selectedSegmentIndex = settings.merchantCountryCode
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
+        initModeSelector.selectedSegmentIndex = settings.initModeSelectorValue
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
