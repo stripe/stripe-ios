@@ -434,7 +434,7 @@ extension PaymentSheetFormFactory {
         let allElements: [Element?] = [nameElement, emailElement, phoneElement]
         let elements = allElements.compactMap { $0 }
 
-        guard !allElements.isEmpty else { return nil }
+        guard !elements.isEmpty else { return nil }
 
         return SectionElement(
             title: STPLocalizedString("Contact information", "Title for the contact information section"),

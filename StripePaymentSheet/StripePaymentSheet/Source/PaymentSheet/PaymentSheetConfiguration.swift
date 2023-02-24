@@ -135,8 +135,7 @@ extension PaymentSheet {
         /// web views used for additional authentication, e.g. 3DS2
         public var returnURL: String?
 
-        /// These values will be attached to the Payment Method during checkout.
-        /// PaymentSheet will also pre-populate any visible fields with these values.
+        /// PaymentSheet pre-populates fields with the values provided.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
