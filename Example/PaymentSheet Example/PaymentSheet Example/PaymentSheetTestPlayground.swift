@@ -266,19 +266,29 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var intentConfig: PaymentSheet.IntentConfiguration {
+        var paymentMethodTypes: [String]? = nil
+        
+        // if automatic payment methods is off use what is returned back from the intent
+        if automaticPaymentMethodsSelector.selectedSegmentIndex == 1 {
+            paymentMethodTypes = self.paymentMethodTypes
+        }
+        
         switch intentMode {
         case .payment:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency.rawValue,
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: nil),
-                                                                captureMethod: .automatic)
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes)
         case .paymentWithSetup:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: currency.rawValue,
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
-                                                                captureMethod: .automatic)
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes)
         case .setup:
             return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
-                                                                captureMethod: .automatic)
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes)
         }
     }
 
@@ -287,6 +297,8 @@ class PaymentSheetTestPlayground: UIViewController {
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
+    var paymentMethodTypes: [String]?
+    var amount: Int?
     var checkoutEndpoint: String = defaultCheckoutEndpoint
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
@@ -509,6 +521,8 @@ extension PaymentSheetTestPlayground {
             self.clientSecret = json["intentClientSecret"]
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
+            self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
+            self.amount = Int(json["amount"] ?? "")
             StripeAPI.defaultPublishableKey = json["publishableKey"]
             let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
                 switch result {
