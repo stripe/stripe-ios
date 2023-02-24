@@ -20,7 +20,7 @@ class IdNumberElement: ContainerElement {
 
     let countryCodes: [String]
     let country: DropdownFieldElement
-    let id: TextFieldElement
+    var id: TextFieldElement
 
     init(countryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec], locale: Locale) {
 
@@ -53,12 +53,12 @@ class IdNumberElement: ContainerElement {
         // Change ID input based on country selection
         country.didUpdate = { index in
             let selectedCountryCode = self.countryCodes[index]
-            let id = TextFieldElement(
+            self.id = TextFieldElement(
                 configuration: IDNumberTextFieldConfiguration(
                     spec: countryToIDNumberTypes[selectedCountryCode]
                 )
             )
-            section.elements = [self.country, id]
+            section.elements = [self.country, self.id]
         }
 
         section.delegate = self
