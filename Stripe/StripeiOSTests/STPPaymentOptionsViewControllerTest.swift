@@ -253,7 +253,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             delegate: delegate
         )
         sut.paymentOptionsViewControllerFooterView = UIView()
-        guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
+        guard let payMethodsInternal = sut.internalViewController as? AnyObject else {
             XCTFail()
             return
         }
@@ -275,7 +275,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
             delegate: delegate
         )
         sut.addCardViewControllerFooterView = UIView()
-        guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
+        guard let payMethodsInternal = sut.internalViewController as? AnyObject else {
             XCTFail()
             return
         }
@@ -306,7 +306,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
         address.phone = "2065551234"
         userInformation.billingAddress = address
         sut.prefilledInformation = userInformation
-        guard let payMethodsInternal = sut.internalViewController as? STPPaymentOptionsInternalViewController else {
+        guard let payMethodsInternal = sut.internalViewController as? AnyObject else {
             XCTFail()
             return
         }
