@@ -220,7 +220,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
     }
-    
+
     func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
         loadPlayground(
             app,
@@ -603,7 +603,7 @@ extension PaymentSheetUITest {
             app,
             settings: [
                 "init_mode": "Deferred",
-                "mode": "Setup"
+                "mode": "Setup",
             ]
         )
 
@@ -630,13 +630,13 @@ extension PaymentSheetUITest {
 
         // TODO(porter) Finish test when we can confirm server side
     }
-    
+
     func testDeferredSetupIntent_FlowController() {
         loadPlayground(
             app,
             settings: [
                 "init_mode": "Deferred",
-                "mode": "Setup"
+                "mode": "Setup",
             ]
         )
 
@@ -649,7 +649,6 @@ extension PaymentSheetUITest {
         // TODO(porter) Finish test when we can confirm server side
     }
 }
-
 
 // MARK: - Link
 
