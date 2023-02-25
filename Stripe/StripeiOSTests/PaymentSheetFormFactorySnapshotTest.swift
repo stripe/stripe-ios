@@ -14,7 +14,7 @@ import XCTest
 final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
-        recordMode = true
+//        recordMode = true
     }
 
     func testCard_AutomaticFields_NoDefaults() {
