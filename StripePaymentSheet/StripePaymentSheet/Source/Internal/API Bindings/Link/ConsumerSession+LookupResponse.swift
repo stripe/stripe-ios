@@ -6,22 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
-import UIKit
+import Foundation
+@_spi(STP) import StripeCore
 
 extension ConsumerSession {
-    struct Preferences {
-        let publishableKey: String
-    }
-
-    class LookupResponse: NSObject, STPAPIResponseDecodable {
-        let allResponseFields: [AnyHashable: Any]
-
+    final class LookupResponse: Decodable {
         enum ResponseType {
-            case found(
-                consumerSession: ConsumerSession,
-                preferences: ConsumerSession.Preferences
-            )
+            case found(consumerSession: SessionWithPublishableKey)
 
             // errorMessage can be used internally to differentiate between
             // a not found because of an unrecognized email or a not found
@@ -34,40 +25,28 @@ extension ConsumerSession {
 
         let responseType: ResponseType
 
-        init(_ responseType: ResponseType,
-             allResponseFields: [AnyHashable: Any]) {
+        init(_ responseType: ResponseType) {
             self.responseType = responseType
-            self.allResponseFields = allResponseFields
-            super.init()
         }
 
-        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-            guard let response = response,
-                  let exists = response["exists"] as? Bool else {
-                return nil
-            }
+        private enum CodingKeys: String, CodingKey {
+            case exists
+            case errorMessage
+        }
+
+        convenience init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let exists = try container.decode(Bool.self, forKey: .exists)
+            let responseType: ResponseType
 
             if exists {
-                if let consumerSession = ConsumerSession.decodedObject(fromAPIResponse: response),
-                   let publishableKey = response["publishable_key"] as? String {
-                    return LookupResponse(
-                        .found(
-                            consumerSession: consumerSession,
-                            preferences: .init(publishableKey: publishableKey)
-                        ),
-                        allResponseFields: response
-                    ) as? Self
-                } else {
-                    return nil
-                }
+                let session = try decoder.singleValueContainer().decode(SessionWithPublishableKey.self)
+                responseType = .found(consumerSession: session)
             } else {
-                if let errorMessage = response["error_message"] as? String {
-                    return LookupResponse(.notFound(errorMessage: errorMessage),
-                                          allResponseFields: response) as? Self
-                } else {
-                    return nil
-                }
+                let errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage) ?? NSError.stp_unexpectedErrorMessage()
+                responseType = .notFound(errorMessage: errorMessage)
             }
+            self.init(responseType)
         }
     }
 }

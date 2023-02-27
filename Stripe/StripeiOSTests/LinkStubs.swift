@@ -92,9 +92,7 @@ extension LinkStubs {
             emailAddress: "user@example.com",
             redactedPhoneNumber: "1********55",
             verificationSessions: [],
-            authSessionClientSecret: nil,
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
-            allResponseFields: [:]
+            supportedPaymentDetailsTypes: [.card, .bankAccount]
         )
     }
 

@@ -127,7 +127,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             switch result {
             case .success(let signupResponse):
                 self?.currentSession = signupResponse.consumerSession
-                self?.publishableKey = signupResponse.preferences.publishableKey
+                self?.publishableKey = signupResponse.publishableKey
                 self?.cookieStore.write(key: .lastSignupEmail, value: email)
                 completion(.success(()))
             case .failure(let error):
@@ -427,9 +427,9 @@ private extension PaymentSheetLinkAccount {
             switch result {
             case .success(let response):
                 switch response.responseType {
-                case .found(let consumerSession, let preferences):
-                    self?.currentSession = consumerSession
-                    self?.publishableKey = preferences.publishableKey
+                case .found(let session):
+                    self?.currentSession = session.consumerSession
+                    self?.publishableKey = session.publishableKey
                     completion(.success(()))
                 case .notFound(let errorMessage):
                     completion(
@@ -492,14 +492,10 @@ extension PaymentSheetLinkAccount {
             return []
         }
 
-        var supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = .init(
-            currentSession.supportedPaymentDetailsTypes ?? []
-        )
-
-        // Take the intersection of the consumer session types and the merchant-provided Link funding sources
         let fundingSourceDetailsTypes = Set(fundingSources.compactMap { $0.detailsType })
 
-        supportedPaymentDetailsTypes.formIntersection(fundingSourceDetailsTypes)
+        // Take the intersection of the consumer session types and the merchant-provided Link funding sources
+        var supportedPaymentDetailsTypes = fundingSourceDetailsTypes.intersection(currentSession.supportedPaymentDetailsTypes)
 
         // Special testmode handling
         if apiClient.isTestmode && Self.emailSupportsMultipleFundingSourcesOnTestMode(email) {
