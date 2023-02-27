@@ -58,6 +58,7 @@
 		2E4C37C73AD202C8A3DD2E4E /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FF291A25EA43D4D100983B /* LoadingViewController.swift */; };
 		2E905BE50CD92581DE5DE2C3 /* bank_icon_pnc@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30899FA9130D11BD8B5AB04D /* bank_icon_pnc@3x.png */; };
 		2EDF4115FDC40A5B0672CCFD /* Locale+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DCF73BEC0CC35D4CE30361 /* Locale+Link.swift */; };
+		311AC53D6C76953E9B70148A /* ConsumerSession+PublishableKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D61B52BFA201D25E8F6428 /* ConsumerSession+PublishableKey.swift */; };
 		335A19D93A5979557DB4CA4D /* PaymentMethodElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5012364ED0F2EEC6EC2AB52 /* PaymentMethodElementWrapper.swift */; };
 		3643E4FD274CA9A9958E7353 /* STPElementsSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A72C837E19F66E090B836 /* STPElementsSession.swift */; };
 		36E95DEC3638D9B010F6D920 /* LinkPaymentMethodPicker-AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E0D2E092A8C90FDCCFFEFB /* LinkPaymentMethodPicker-AddButton.swift */; };
@@ -161,7 +162,6 @@
 		9DFF9283F0B902CC1D895B86 /* PaymentSheet-Configuration+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFC50A10875C88BF089C0F4 /* PaymentSheet-Configuration+Link.swift */; };
 		A004B1B972B70E3EBEB645D2 /* LinkBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50434DAF9CCFBD78DD4C144F /* LinkBadgeView.swift */; };
 		A24A58FFCA993E475F155476 /* icon-pm-cashapp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D61C808E70E0A21BB2C6F0C /* icon-pm-cashapp@3x.png */; };
-		A2FD2311E18CE9DE6D03E3D7 /* ConsumerSession-SignupResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3911C5EBA59BB21280736390 /* ConsumerSession-SignupResponse.swift */; };
 		A4CD99B2032CBFA7F957B1B8 /* String+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982014B36F49D902CD04AF5C /* String+AutoComplete.swift */; };
 		A4FF52567582E9774AE13348 /* PaymentDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981F958E99945A0318D47BBF /* PaymentDetails.swift */; };
 		A567FB1A034E032B509F5BBC /* bank_icon_usbank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 650D96BC1D236D2E578986A0 /* bank_icon_usbank@3x.png */; };
@@ -339,7 +339,6 @@
 		36AAEA8E481F9A63FA28E982 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		37130B660E4A5D6297F83EE8 /* LinkKeyboardAvoidingScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkKeyboardAvoidingScrollView.swift; sourceTree = "<group>"; };
 		3898FF5D7EBA6D48F7B16647 /* Date+Distance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Distance.swift"; sourceTree = "<group>"; };
-		3911C5EBA59BB21280736390 /* ConsumerSession-SignupResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsumerSession-SignupResponse.swift"; sourceTree = "<group>"; };
 		39CACBC680B9BE62FDADA139 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3ABC9ED6F9F77E753272B449 /* IntentStatusPoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentStatusPoller.swift; sourceTree = "<group>"; };
 		3BD6332FC5A3AE72AA22CC40 /* LinkSecureCookieStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSecureCookieStore.swift; sourceTree = "<group>"; };
@@ -526,6 +525,7 @@
 		DED8A6A623A5F47A2DCEAF25 /* LinkNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeView.swift; sourceTree = "<group>"; };
 		DFE1AD470EF60E8D06B0F369 /* bank_icon_td@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_icon_td@3x.png"; sourceTree = "<group>"; };
 		E24023F6043D24F2EFA160BC /* PayWithLinkViewController-VerifyAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-VerifyAccountViewController.swift"; sourceTree = "<group>"; };
+		E2D61B52BFA201D25E8F6428 /* ConsumerSession+PublishableKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsumerSession+PublishableKey.swift"; sourceTree = "<group>"; };
 		E32B3AC4CC1C4F2DEEC5F292 /* WalletHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHeaderView.swift; sourceTree = "<group>"; };
 		E41AA4E90E5BB28D588FDE51 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5240ECFD40B8605939C4E09 /* LinkMoreInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMoreInfoView.swift; sourceTree = "<group>"; };
@@ -736,9 +736,9 @@
 			isa = PBXGroup;
 			children = (
 				B27E4E798A8E7E37D886FBF2 /* CookieStore */,
-				3911C5EBA59BB21280736390 /* ConsumerSession-SignupResponse.swift */,
 				D0CE026F53D10DA10D7BC4E7 /* ConsumerSession.swift */,
 				4208AD2E0A737F5E0F00DE48 /* ConsumerSession+LookupResponse.swift */,
+				E2D61B52BFA201D25E8F6428 /* ConsumerSession+PublishableKey.swift */,
 				981F958E99945A0318D47BBF /* PaymentDetails.swift */,
 				F1E614E8481658A027599A92 /* STPAPIClient+Link.swift */,
 				441C3414745D483C9A47ED0B /* VerificationSession.swift */,
@@ -1524,7 +1524,7 @@
 				1AF3BBA86D643AAF26CD0E2B /* StripePaymentSheet+Exports.swift in Sources */,
 				73F3E8DCF2314972A162B2A3 /* StripePaymentSheetBundleLocator.swift in Sources */,
 				73EE441CF71707651109CE19 /* ConsumerSession+LookupResponse.swift in Sources */,
-				A2FD2311E18CE9DE6D03E3D7 /* ConsumerSession-SignupResponse.swift in Sources */,
+				311AC53D6C76953E9B70148A /* ConsumerSession+PublishableKey.swift in Sources */,
 				2BEA2A103AD3EE94D60A06D4 /* ConsumerSession.swift in Sources */,
 				D4BF6AD858469EE410B4B1F5 /* LinkCookieStore.swift in Sources */,
 				28C48495A59E7CE3EC5363F2 /* LinkInMemoryCookieStore.swift in Sources */,
