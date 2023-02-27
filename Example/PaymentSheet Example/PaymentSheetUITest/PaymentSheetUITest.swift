@@ -610,6 +610,77 @@ class PaymentSheetUITest: XCTestCase {
     }
 }
 
+extension PaymentSheetUITest {
+
+    // MARK: Deferred tests
+
+    func testDeferredPaymentIntent() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred"
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        let payButton = app.buttons["Pay $10.00"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+
+        // TODO(porter) Finish test when we can confirm server side
+    }
+
+    func testDeferredSetupIntent() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "mode": "Setup",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        let setupButton = app.buttons["Set up"]
+        XCTAssertTrue(setupButton.waitForExistence(timeout: 10.0))
+
+        // TODO(porter) Finish test when we can confirm server side
+    }
+
+    func testDeferredPaymentIntent_FlowController() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred"
+            ]
+        )
+
+        let selectButton = app.buttons["present_saved_pms"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
+        selectButton.tap()
+        let selectText = app.staticTexts["Select your payment method"]
+        XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
+
+        // TODO(porter) Finish test when we can confirm server side
+    }
+
+    func testDeferredSetupIntent_FlowController() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "mode": "Setup",
+            ]
+        )
+
+        let selectButton = app.buttons["present_saved_pms"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
+        selectButton.tap()
+        let selectText = app.staticTexts["Select your payment method"]
+        XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
+
+        // TODO(porter) Finish test when we can confirm server side
+    }
+}
+
 // MARK: - Link
 
 extension PaymentSheetUITest {

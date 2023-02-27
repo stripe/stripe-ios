@@ -11,7 +11,7 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 import Contacts
 import PassKit
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -35,6 +35,8 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var customCTALabelTextField: UITextField!
+    @IBOutlet weak var initModeSelector: UISegmentedControl!
+
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
@@ -71,6 +73,11 @@ class PaymentSheetTestPlayground: UIViewController {
         case payment
         case paymentWithSetup = "payment_with_setup"
         case setup
+    }
+
+    enum InitMode {
+        case normal
+        case deferred
     }
 
     enum ShippingMode {
@@ -186,6 +193,17 @@ class PaymentSheetTestPlayground: UIViewController {
         }
     }
 
+    var initMode: InitMode {
+        switch initModeSelector.selectedSegmentIndex {
+        case 0:
+            return .normal
+        case 1:
+            return .deferred
+        default:
+            return .normal
+        }
+    }
+
     var shippingMode: ShippingMode {
         switch shippingInfoSelector.selectedSegmentIndex {
         case 0: return .on
@@ -247,11 +265,40 @@ class PaymentSheetTestPlayground: UIViewController {
         return configuration
     }
 
+    var intentConfig: PaymentSheet.IntentConfiguration {
+        var paymentMethodTypes: [String]?
+
+        // if automatic payment methods is off use what is returned back from the intent
+        if automaticPaymentMethodsSelector.selectedSegmentIndex == 1 {
+            paymentMethodTypes = self.paymentMethodTypes
+        }
+
+        switch intentMode {
+        case .payment:
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+                                                                   setupFutureUsage: nil),
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes)
+        case .paymentWithSetup:
+            return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+                                                                   setupFutureUsage: .offSession),
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes)
+        case .setup:
+            return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
+                                                                   setupFutureUsage: .offSession),
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes)
+        }
+    }
+
     var addressDetails: AddressViewController.AddressDetails?
 
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
+    var paymentMethodTypes: [String]?
+    var amount: Int?
     var checkoutEndpoint: String = defaultCheckoutEndpoint
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
@@ -321,12 +368,22 @@ class PaymentSheetTestPlayground: UIViewController {
     @objc
     func didTapCheckoutButton() {
         let mc: PaymentSheet
-        switch intentMode {
-        case .payment, .paymentWithSetup:
-            mc = PaymentSheet(paymentIntentClientSecret: clientSecret!, configuration: configuration)
-        case .setup:
-            mc = PaymentSheet(setupIntentClientSecret: clientSecret!, configuration: configuration)
+        let mode: PaymentSheet.InitializationMode
+
+        switch self.initMode {
+        case .normal:
+            switch self.intentMode {
+            case .payment, .paymentWithSetup:
+                mode = .paymentIntentClientSecret(self.clientSecret!)
+            case .setup:
+                mode = .setupIntentClientSecret(self.clientSecret!)
+            }
+        case .deferred:
+            mode = .deferredIntent(self.intentConfig)
         }
+
+        mc = PaymentSheet(mode: mode, configuration: configuration)
+
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
@@ -464,6 +521,8 @@ extension PaymentSheetTestPlayground {
             self.clientSecret = json["intentClientSecret"]
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
+            self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
+            self.amount = Int(json["amount"] ?? "")
             StripeAPI.defaultPublishableKey = json["publishableKey"]
             let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
                 switch result {
@@ -485,20 +544,28 @@ extension PaymentSheetTestPlayground {
                 }
 
                 self.checkoutButton.isEnabled = true
-                switch self.intentMode {
-                case .payment, .paymentWithSetup:
-                    PaymentSheet.FlowController.create(
-                        paymentIntentClientSecret: self.clientSecret!,
-                        configuration: self.configuration,
-                        completion: completion
-                    )
-                case .setup:
-                    PaymentSheet.FlowController.create(
-                        setupIntentClientSecret: self.clientSecret!,
-                        configuration: self.configuration,
-                        completion: completion
-                    )
+
+                let mode: PaymentSheet.InitializationMode
+
+                switch self.initMode {
+
+                case .normal:
+                    switch self.intentMode {
+                    case .payment, .paymentWithSetup:
+                        mode = .paymentIntentClientSecret(self.clientSecret!)
+                    case .setup:
+                        mode = .setupIntentClientSecret(self.clientSecret!)
+                    }
+
+                case .deferred:
+                    mode = .deferredIntent(self.intentConfig)
                 }
+
+                PaymentSheet.FlowController.create(
+                    mode: mode,
+                    configuration: self.configuration,
+                    completion: completion
+                )
             }
         }
         task.resume()
@@ -508,6 +575,7 @@ extension PaymentSheetTestPlayground {
 struct PaymentSheetPlaygroundSettings: Codable {
     static let nsUserDefaultsKey = "playgroundSettings"
     let modeSelectorValue: Int
+    let initModeSelectorValue: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
     let merchantCountryCode: Int
@@ -525,6 +593,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
         return PaymentSheetPlaygroundSettings(
             modeSelectorValue: 0,
+            initModeSelectorValue: 0,
             customerModeSelectorValue: 0,
             currencySelectorValue: 0,
             merchantCountryCode: 0,
@@ -570,6 +639,7 @@ extension PaymentSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() {
         let settings = PaymentSheetPlaygroundSettings(
             modeSelectorValue: modeSelector.selectedSegmentIndex,
+            initModeSelectorValue: initModeSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             currencySelectorValue: currencySelector.selectedSegmentIndex,
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
@@ -608,6 +678,7 @@ extension PaymentSheetTestPlayground {
         currencySelector.selectedSegmentIndex = settings.currencySelectorValue
         merchantCountryCodeSelector.selectedSegmentIndex = settings.merchantCountryCode
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
+        initModeSelector.selectedSegmentIndex = settings.initModeSelectorValue
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
