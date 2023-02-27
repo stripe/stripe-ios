@@ -46,7 +46,7 @@ final class IdentityTextButtonElement: Element {
 fileprivate extension Button.Configuration {
     static var identityTextButtonConfiguration: Button.Configuration {
         var identityCountryNotListed = Button.Configuration.plain()
-        identityCountryNotListed.font = .boldSystemFont(ofSize: 15)
+        identityCountryNotListed.font = ElementsUI.sectionTitleFont
         return identityCountryNotListed
     }
 }
