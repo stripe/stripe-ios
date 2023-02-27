@@ -165,7 +165,7 @@ private func SetupPlayground(
     if !enableTestMode && email == "test@test.com" {
         assertionFailure("\(email) will not work with livemode, it will return rate limit exceeded")
     }
-    
+
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
     let endpoint = "/setup_playground"
     let url = URL(string: baseURL + endpoint)!

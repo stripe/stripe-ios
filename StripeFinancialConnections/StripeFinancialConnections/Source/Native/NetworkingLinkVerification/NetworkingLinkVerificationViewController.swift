@@ -121,14 +121,14 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                 "The title of a screen where users are informed that they can sign-in-to Link."
             ),
             subtitle: STPLocalizedString(
-                "Enter the code sent to \(redactedPhoneNumber)",
+                "Enter the code sent to \(redactedPhoneNumber)", // TODO(kgaidis): polish how the redacted phone numnber is displayed
                 "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
             ),
             contentView: bodyView,
             footerView: nil
         )
         pane.addTo(view: view)
-        
+
         bodyView.otpTextField.becomeFirstResponder()
     }
 
@@ -172,7 +172,7 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
     ) {
         bodyView.otpTextField.resignFirstResponder()
         // TODO(kgaidis): consider implementing a loading/grayed-out state for `otpTextField`
-        
+
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in
                 guard let self = self else { return }
@@ -234,9 +234,28 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                             }
                         }
                 case .failure(let error):
-                    bodyView.otpTextField.performInvalidCodeAnimation(shouldClearValue: false)
-                    // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
-                    bodyView.showErrorText(error.localizedDescription)
+                    if let errorMessage = AuthFlowHelpers.networkingOTPErrorMessage(fromError: error, otpType: "SMS") {
+                        self.dataSource
+                            .analyticsClient
+                            .logExpectedError(
+                                error,
+                                errorName: "ConfirmVerificationSessionError",
+                                pane: .networkingLinkVerification
+                            )
+
+                        bodyView.otpTextField.performInvalidCodeAnimation(shouldClearValue: false)
+                        bodyView.showErrorText(errorMessage)
+                    } else {
+                        self.dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                error,
+                                errorName: "ConfirmVerificationSessionError",
+                                pane: .networkingLinkVerification
+                            )
+
+                        self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+                    }
                 }
             }
     }

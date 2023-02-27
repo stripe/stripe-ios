@@ -55,7 +55,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
                 return Promise(value: lookupConsumerSessionResponse)
             }
     }
-    
+
     func startVerificationSession() -> Future<ConsumerSessionResponse> {
         guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
             return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid startVerificationSession call: no consumerSession.clientSecret"))

@@ -22,7 +22,7 @@ protocol NetworkingLinkVerificationBodyViewDelegate: AnyObject {
 final class NetworkingLinkVerificationBodyView: UIView {
 
     weak var delegate: NetworkingLinkVerificationBodyViewDelegate?
-    
+
     private lazy var otpVerticalStackView: UIStackView = {
         let otpVerticalStackView = UIStackView(
             arrangedSubviews: [
@@ -71,16 +71,16 @@ final class NetworkingLinkVerificationBodyView: UIView {
 
     @objc private func otpTextFieldDidChange() {
         showErrorText(nil) // clear the error
-        
+
         if otpTextField.isComplete {
             delegate?.networkingLinkVerificationBodyView(self, didEnterValidOTPCode: otpTextField.value)
         }
     }
-    
+
     func showErrorText(_ errorText: String?) {
         lastErrorView?.removeFromSuperview()
         lastErrorView = nil
-        
+
         if let errorText = errorText {
             // TODO(kgaidis): rename & move `ManualEntryErrorView` to be more generic
             let errorView = ManualEntryErrorView(text: errorText)
