@@ -230,7 +230,6 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                                         errorName: "MarkLinkVerifiedError",
                                         pane: .networkingLinkVerification
                                     )
-                                // TODO(kgaidis): go to terminal error but double-check
                                 self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
                             }
                         }
