@@ -623,7 +623,7 @@ extension PaymentSheetUITest {
         )
 
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay $10.00"]
+        let payButton = app.buttons["Pay $50.99"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
 
         // TODO(porter) Finish test when we can confirm server side
