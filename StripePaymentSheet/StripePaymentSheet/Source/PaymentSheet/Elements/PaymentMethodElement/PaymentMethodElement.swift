@@ -78,10 +78,6 @@ extension SectionElement: PaymentMethodElement {
 }
 
 extension StaticElement: PaymentMethodElement {
-    func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        return params
-    }
-
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         return params
     }

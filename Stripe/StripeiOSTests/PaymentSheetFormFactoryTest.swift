@@ -262,26 +262,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
 
-    func testPhoneValueWrittenToLocationDefinedAPIPath() {
-        var configuration = PaymentSheet.Configuration()
-        configuration.defaultBillingDetails.phone = "+15555555555"
-        let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
-            paymentMethod: .dynamic("mock_payment_method")
-        )
-        let phoneElement = factory.makePhone(apiPath: "custom_location[phone]")
-        let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
-
-        let updatedParams = phoneElement.updateParams(params: params)
-
-        XCTAssertEqual(
-            updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[phone]"]
-                as! String,
-            "+15555555555"
-        )
-    }
-
     func testPhoneValueWrittenToDefaultLocation() {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.phone = "+15555555555"

@@ -145,17 +145,13 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makePhone(apiPath: String? = nil) -> PaymentMethodElementWrapper<PhoneNumberElement> {
+    func makePhone() -> PaymentMethodElementWrapper<PhoneNumberElement> {
         let element = PhoneNumberElement(
             defaultCountryCode: configuration.defaultBillingDetails.address.country,
             defaultPhoneNumber: configuration.defaultBillingDetails.phone,
             theme: theme)
         return PaymentMethodElementWrapper(element) { phoneField, params in
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] = phoneField.phoneNumber?.string(as: .e164)
-            } else {
-                params.paymentMethodParams.nonnil_billingDetails.phone = phoneField.phoneNumber?.string(as: .e164)
-            }
+            params.paymentMethodParams.nonnil_billingDetails.phone = phoneField.phoneNumber?.string(as: .e164)
             return params
         }
     }
