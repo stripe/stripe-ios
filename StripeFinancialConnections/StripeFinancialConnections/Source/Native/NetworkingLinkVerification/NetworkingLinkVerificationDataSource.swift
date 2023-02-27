@@ -14,6 +14,7 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var consumerSession: ConsumerSessionData? { get }
 
+    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
@@ -44,28 +45,29 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         self.analyticsClient = analyticsClient
     }
 
-    func startVerificationSession() -> Future<ConsumerSessionResponse> {
+    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
         apiClient
             .consumerSessionLookup(
                 emailAddress: accountholderCustomerEmailAddress
             )
-            .chained { [weak self] (lookupConsumerSessionResponse: LookupConsumerSessionResponse) in
-                guard let self = self else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
-                }
-                if let consumerSession = lookupConsumerSessionResponse.consumerSession {
-                    self.consumerSession = consumerSession
-                    return self.apiClient.consumerSessionStartVerification(
-                        emailAddress: self.accountholderCustomerEmailAddress,
-                        otpType: "SMS",
-                        customEmailType: nil,
-                        connectionsMerchantName: nil,
-                        consumerSessionClientSecret: consumerSession.clientSecret
-                    )
-                } else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid consumerSessionLookup response: no consumerSession.clientSecret"))
-                }
+            .chained { [weak self] lookupConsumerSessionResponse in
+                self?.consumerSession = lookupConsumerSessionResponse.consumerSession
+                return Promise(value: lookupConsumerSessionResponse)
             }
+    }
+    
+    func startVerificationSession() -> Future<ConsumerSessionResponse> {
+        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
+            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid startVerificationSession call: no consumerSession.clientSecret"))
+        }
+        return apiClient.consumerSessionStartVerification(
+            emailAddress: self.accountholderCustomerEmailAddress,
+            otpType: "SMS",
+            customEmailType: nil,
+            connectionsMerchantName: nil,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
     }
 
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {

@@ -15,7 +15,7 @@ protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData
+        consumerSession: ConsumerSessionData?
     )
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
@@ -55,23 +55,61 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
 
         showLoadingView(true)
-        dataSource.startVerificationSession()
+        dataSource.lookupConsumerSession()
             .observe { [weak self] result in
                 guard let self = self else { return }
-                self.showLoadingView(false)
                 switch result {
-                case .success(let consumerSessionResponse):
-                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
+                case .success(let lookupConsumerSessionResponse):
+                    if lookupConsumerSessionResponse.exists {
+                        self.dataSource.startVerificationSession()
+                            .observe { [weak self] result in
+                                guard let self = self else { return }
+                                self.showLoadingView(false)
+                                switch result {
+                                case .success(let consumerSessionResponse):
+                                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
+                                case .failure(let error):
+                                    self.dataSource.analyticsClient.logUnexpectedError(
+                                        error,
+                                        errorName: "StartVerificationSessionError",
+                                        pane: .networkingLinkVerification
+                                    )
+                                    self.dataSource.analyticsClient.log(
+                                        eventName: "networking.verification.error",
+                                        parameters: [
+                                            "error": "StartVerificationSession"
+                                        ],
+                                        pane: .networkingLinkVerification
+                                    )
+                                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+                                }
+                            }
+                    } else {
+                        self.dataSource.analyticsClient.log(
+                            eventName: "networking.verification.error",
+                            parameters: [
+                                "error": "ConsumerNotFoundError"
+                            ],
+                            pane: .networkingLinkVerification
+                        )
+                        self.delegate?.networkingLinkVerificationViewController(self, didRequestNextPane: .institutionPicker, consumerSession: nil)
+                        self.showLoadingView(false)
+                    }
                 case .failure(let error):
+                    self.dataSource.analyticsClient.logUnexpectedError(
+                        error,
+                        errorName: "LookupConsumerSessionError",
+                        pane: .networkingLinkVerification
+                    )
                     self.dataSource.analyticsClient.log(
                         eventName: "networking.verification.error",
                         parameters: [
-                            // TODO(kgaidis): figure out a proper way to log this error
-                            "error": "here"
+                            "error": "LookupConsumerSession"
                         ],
                         pane: .networkingLinkVerification
                     )
                     self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+                    self.showLoadingView(false)
                 }
             }
     }
