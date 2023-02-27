@@ -237,7 +237,15 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     /// If you've already collected some information from your user, you can set it
     /// here and it'll be automatically filled out when possible/appropriate in any UI
     /// that the payment context creates.
-    @objc public var prefilledInformation: STPUserInformation?
+    @objc public var prefilledInformation: STPUserInformation? {
+        didSet {
+            if let payMethodsInternal = internalViewController as? STPPaymentOptionsInternalViewController {
+                payMethodsInternal.prefilledInformation = prefilledInformation
+            } else if let payMethodsInternal = internalViewController as? STPAddCardViewController {
+                payMethodsInternal.prefilledInformation = prefilledInformation
+            }
+        }
+    }
     /// @note This is no longer recommended as of v18.3.0 - the SDK automatically saves the Stripe ID of the last selected
     /// payment method using NSUserDefaults and displays it as the default pre-selected option.  You can override this behavior
     /// by setting this property.
@@ -249,13 +257,29 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     /// When the footer view needs to be resized, it will be sent a
     /// `sizeThatFits:` call. The view should respond correctly to this method in order
     /// to be sized and positioned properly.
-    @objc public var paymentOptionsViewControllerFooterView: UIView?
+    @objc public var paymentOptionsViewControllerFooterView: UIView? {
+        didSet {
+            if let payMethodsInternal = internalViewController as? STPPaymentOptionsInternalViewController {
+                payMethodsInternal.customFooterView = paymentOptionsViewControllerFooterView
+            }
+        }
+    }
+
     /// A view that will be placed as the footer of the view controller when it is
     /// showing the add card view.
     /// When the footer view needs to be resized, it will be sent a
     /// `sizeThatFits:` call. The view should respond correctly to this method in order
     /// to be sized and positioned properly.
-    @objc public var addCardViewControllerFooterView: UIView?
+    @objc public var addCardViewControllerFooterView: UIView? {
+        didSet {
+            if let payMethodsInternal = internalViewController as? STPPaymentOptionsInternalViewController {
+                payMethodsInternal.addCardViewControllerCustomFooterView = addCardViewControllerFooterView
+            } else if let payMethodsInternal = internalViewController as? STPAddCardViewController {
+                payMethodsInternal.customFooterView = addCardViewControllerFooterView
+            }
+        }
+    }
+
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared
     public var apiClient: STPAPIClient = .shared
