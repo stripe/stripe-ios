@@ -266,13 +266,13 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var intentConfig: PaymentSheet.IntentConfiguration {
-        var paymentMethodTypes: [String]? = nil
-        
+        var paymentMethodTypes: [String]?
+
         // if automatic payment methods is off use what is returned back from the intent
         if automaticPaymentMethodsSelector.selectedSegmentIndex == 1 {
             paymentMethodTypes = self.paymentMethodTypes
         }
-        
+
         switch intentMode {
         case .payment:
             return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
