@@ -90,6 +90,8 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             footerView: nil
         )
         pane.addTo(view: view)
+        
+        bodyView.otpTextField.becomeFirstResponder()
     }
 
     private func showLoadingView(_ show: Bool) {
@@ -127,25 +129,22 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBodyViewDelegate {
 
     func networkingLinkVerificationBodyView(
-        _ view: NetworkingLinkVerificationBodyView,
+        _ bodyView: NetworkingLinkVerificationBodyView,
         didEnterValidOTPCode otpCode: String
     ) {
-        view.otpTextField.text = "CONFIRMING OTP..."
-
+        bodyView.otpTextField.resignFirstResponder()
+        // TODO(kgaidis): consider implementing a loading/grayed-out state for `otpTextField`
+        
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    view.otpTextField.text = "SUCCESS! CALLING markLinkVerified..."
-
                     self.dataSource.markLinkVerified()
                         .observe { [weak self] result in
                             guard let self = self else { return }
                             switch result {
                             case .success(let manifest):
-                                view.otpTextField.text = "markLinkVerified SUCCESS! Wait on accounts..."
-
                                 self.dataSource.fetchNetworkedAccounts()
                                     .observe { [weak self] result in
                                         guard let self = self else { return }
@@ -166,7 +165,13 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                                                 self.requestNextPane(.linkAccountPicker)
                                             }
                                         case .failure(let error):
-                                            // TODO(kgaidis): log the error using the standard error logging too
+                                            self.dataSource
+                                                .analyticsClient
+                                                .logUnexpectedError(
+                                                    error,
+                                                    errorName: "FetchNetworkedAccountsError",
+                                                    pane: .networkingLinkVerification
+                                                )
                                             self.dataSource
                                                 .analyticsClient
                                                 .log(
@@ -176,21 +181,25 @@ extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBo
                                                     ],
                                                     pane: .networkingLinkVerification
                                                 )
-                                            print(error) // TODO(kgaidis): remove print
                                             self.requestNextPane(manifest.nextPane)
                                         }
                                     }
                             case .failure(let error):
-                                print(error) // TODO(kgaidis): remove print
-                                view.otpTextField.text = "markLinkVerified FAILURE: \(error.localizedDescription)"
+                                self.dataSource
+                                    .analyticsClient
+                                    .logUnexpectedError(
+                                        error,
+                                        errorName: "MarkLinkVerifiedError",
+                                        pane: .networkingLinkVerification
+                                    )
                                 // TODO(kgaidis): go to terminal error but double-check
                                 self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
                             }
                         }
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): remove print
-                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
+                    bodyView.otpTextField.performInvalidCodeAnimation(shouldClearValue: false)
                     // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
+                    bodyView.showErrorText(error.localizedDescription)
                 }
             }
     }
