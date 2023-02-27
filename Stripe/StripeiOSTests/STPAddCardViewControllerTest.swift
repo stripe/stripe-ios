@@ -91,6 +91,39 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
         XCTAssertNoThrow(sut.viewDidLoad())
     }
 
+    func testPrefilledBillingAddress_viewDidLoadHappensBeforeSettingAddress() {
+        let config = STPFixtures.paymentConfiguration()
+        config.requiredBillingAddressFields = .full
+        let sut = STPAddCardViewController(
+            configuration: config,
+            theme: STPTheme.defaultTheme
+        )
+        XCTAssertNoThrow(sut.loadView())
+        XCTAssertNoThrow(sut.viewDidLoad())
+
+        let address = STPAddress()
+        address.name = "John Smith Doe"
+        address.line1 = "55 John St"
+        address.city = "Harare"
+        address.postalCode = "10002"
+
+        let prefilledInfo = STPUserInformation()
+        prefilledInfo.billingAddress = address
+        sut.prefilledInformation = prefilledInfo
+
+        let nameCell = sut.addressViewModel.addressCells.first { $0.type == .name }!
+        XCTAssertEqual( nameCell.contents, "John Smith Doe")
+
+        let line1Cell = sut.addressViewModel.addressCells.first { $0.type == .line1 }!
+        XCTAssertEqual( line1Cell.contents, "55 John St")
+
+        let cityCell = sut.addressViewModel.addressCells.first { $0.type == .city }!
+        XCTAssertEqual( cityCell.contents, "Harare")
+
+        let zipCell = sut.addressViewModel.addressCells.first { $0.type == .zip }!
+        XCTAssertEqual( zipCell.contents, "10002")
+    }
+
     func testPrefilledBillingAddress_addAddress() {
         // Zimbabwe does not require zip codes, while the default locale for tests (US) does
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW") as Locale) {
