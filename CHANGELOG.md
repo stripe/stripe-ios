@@ -1,3 +1,7 @@
+## x.x.x yyyy-mm-dd
+### Basic Integration
+* [Fixed] Race condition reported in #2302
+
 ## 23.4.0 2023-02-21
 ### PaymentSheet
 * [Added] Adds support for setting up PayPal using a SetupIntent or a PaymentIntent w/ setup_future_usage=off_session. Note: PayPal is in beta.
