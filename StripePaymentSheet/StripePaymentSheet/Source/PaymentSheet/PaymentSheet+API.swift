@@ -141,7 +141,7 @@ extension PaymentSheet {
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
-                handleDeferredConfirm(configuration: configuration,
+                confirmDeferredIntentNewPaymentMethod(configuration: configuration,
                                       intentConfig: intentConfig,
                                       paymentMethodParams: confirmParams.paymentMethodParams,
                                       shouldSavePaymentMethod: confirmParams.shouldSavePaymentMethod,
@@ -223,7 +223,7 @@ extension PaymentSheet {
                         completion: paymentHandlerCompletion
                     )
                 case .deferredIntent(_, let intentConfig):
-                    handleDeferredConfirm(configuration: configuration,
+                    confirmDeferredIntentNewPaymentMethod(configuration: configuration,
                                           intentConfig: intentConfig,
                                           paymentMethodParams: paymentMethodParams,
                                           shouldSavePaymentMethod: nil,
@@ -578,7 +578,7 @@ extension PaymentSheet {
         // TODO(porter) Deferred intent confirmation handling
     }
 
-    private static func handleDeferredConfirm(configuration: PaymentSheet.Configuration,
+    private static func confirmDeferredIntentNewPaymentMethod(configuration: PaymentSheet.Configuration,
                                               intentConfig: IntentConfiguration,
                                               paymentMethodParams: STPPaymentMethodParams,
                                               shouldSavePaymentMethod: Bool?,
