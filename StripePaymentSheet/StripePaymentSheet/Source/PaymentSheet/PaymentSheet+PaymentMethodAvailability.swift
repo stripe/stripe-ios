@@ -160,7 +160,7 @@ extension PaymentSheet {
         /// This payment method is not activated in live mode in the Stripe Dashboard
         case unactivated
         /// This payment method has requirements not met by the configuration or intent
-        case missingRequirements([PaymentMethodTypeRequirement])
+        case missingRequirements(Set<PaymentMethodTypeRequirement>)
 
         var description: String {
             switch self {
@@ -177,12 +177,10 @@ extension PaymentSheet {
 
         static func ==(lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
             switch (lhs, rhs) {
-            case (.notSupported, .notSupported):
-                return true
-            case (.supported, .supported):
-                return true
-            case (.unactivated, .unactivated):
-                return true
+            case (.notSupported, .notSupported),
+                 (.supported, .supported),
+                 (.unactivated, .unactivated):
+                  return true
             case (.missingRequirements(let requirements), .missingRequirements(let otherRequirements)):
                 // don't care about the ordering
                 return requirements.sorted(by: { $0 >= $1 }) == otherRequirements.sorted(by: { $0 >= $1 })
