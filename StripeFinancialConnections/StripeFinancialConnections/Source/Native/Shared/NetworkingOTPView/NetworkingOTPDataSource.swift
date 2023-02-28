@@ -8,6 +8,10 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+protocol NetworkingOTPDataSourceDelegate: AnyObject {
+    func networkingOTPDataSource(_ dataSource: NetworkingOTPDataSource, didUpdateConsumerSession consumerSession: ConsumerSessionData)
+}
+
 protocol NetworkingOTPDataSource: AnyObject {
     var otpType: String { get }
     var emailAddress: String { get }
@@ -26,8 +30,15 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    weak var delegate: NetworkingOTPDataSourceDelegate?
 
-    private(set) var consumerSession: ConsumerSessionData?
+    private(set) var consumerSession: ConsumerSessionData? {
+        didSet {
+            if let consumerSession = consumerSession {
+                delegate?.networkingOTPDataSource(self, didUpdateConsumerSession: consumerSession)
+            }
+        }
+    }
 
     init(
         otpType: String,
