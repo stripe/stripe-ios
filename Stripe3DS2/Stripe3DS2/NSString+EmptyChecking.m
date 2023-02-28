@@ -23,5 +23,3 @@
 }
 
 @end
-
-void _stds_import_nsstring_emptychecking() {}
