@@ -711,6 +711,70 @@ extension PaymentSheetUITest {
 
         // TODO(porter) Finish test when we can confirm server side
     }
+    
+    func testDeferferedIntentLinkSignup() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "init_mode": "Deferred"
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        let payWithLinkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+        payWithLinkButton.tap()
+
+        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        XCTAssertTrue(modal.waitForExistence(timeout: 10))
+
+        let emailField = modal.textFields["Email"]
+        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+
+        let phoneField = modal.textFields["Phone"]
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+        phoneField.typeText("3105551234")
+
+        // The name field is only required for non-US countries. Only fill it out if it exists.
+        let nameField = modal.textFields["Name"]
+        if nameField.exists {
+            nameField.tap()
+            nameField.typeText("Jane Done")
+        }
+
+        // Terms and privacy policy
+        for linkText in ["Terms", "Privacy Policy"] {
+            modal.links[linkText].tap()
+            let closeTermsButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+            XCTAssert(closeTermsButton.waitForExistence(timeout: 10))
+            closeTermsButton.tap()
+        }
+
+        modal.buttons["Join Link"].tap()
+
+        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
+        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
+        // method operate on the correct card form.
+        try fillCardData(app, container: modal)
+
+        // Pay!
+        let payButton = modal.buttons["Pay $50.99"]
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
+        payButton.tap()
+        
+        let confirmText = app.staticTexts["Confirm handler invoked"]
+        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
+
+        // TODO(porter) Finish test when we can confirm server side
+    }
 }
 
 // MARK: - Link
