@@ -11,15 +11,32 @@ import Foundation
     /// 🚧 Under construction
     struct IntentConfiguration {
 
+        /// - Parameters:
+        ///   - paymentMethodId: The id of the PaymentMethod representing the customer's payment details.
+        ///     If you need to inspect payment method details, you can fetch the PaymentMethod object using this id on your server. Otherwise, you can ignore this.
+        ///   - shouldSavePaymentMethod: If your server passes 'confirm=true' when it creates the PaymentIntent or SetupIntent, set `setup_future_usage` on the PaymentIntent or SetupIntent in accordance with this value.
+        ///     If we displayed a "Save this payment method for future use" checkbox to the customer, the value is true/false if the checkbox is selected/deselected.
+        ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server.
+        public typealias ConfirmHandler = (
+            _ paymentMethodID: String,
+            _ shouldSavePaymentMethod: Bool?,
+            _ intentCreationCallback: ((Result<String, Error>) -> Void)
+        ) -> Void
+
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
         ///   - captureMethod: The capture method of this intent, either automatic or manual, defaults to automatic
         ///   - paymentMethodTypes: The payment method types for the intent
-        public init(mode: Mode, captureMethod: CaptureMethod = .automatic, paymentMethodTypes: [String]? = nil) {
+        ///   - confirmHandler: The handler to be called when the user taps the "Pay" button
+        public init(mode: Mode,
+                    captureMethod: CaptureMethod = .automatic,
+                    paymentMethodTypes: [String]? = nil,
+                    confirmHandler: @escaping ConfirmHandler) {
             self.mode = mode
             self.captureMethod = captureMethod
             self.paymentMethodTypes = paymentMethodTypes
+            self.confirmHandler = confirmHandler
         }
 
         /// Filters out payment methods based on intended use.
@@ -28,6 +45,14 @@ import Foundation
         var captureMethod: CaptureMethod?
         /// An explicit list of payment method types displayed to the customer.
         var paymentMethodTypes: [String]?
+
+        /// TODO(porter) doc comment
+        var isServerSideConfirmation: Bool = false
+
+        /// Called when the customer confirms payment.
+        /// Your implementation should create a PaymentIntent or SetupIntent on the server and call the `intentCreationCallback` with its client secret or an error if one occurred.
+        /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
+        var confirmHandler: ConfirmHandler
 
         /// Controls when the funds will be captured from the customer’s account.
         public enum CaptureMethod: String {

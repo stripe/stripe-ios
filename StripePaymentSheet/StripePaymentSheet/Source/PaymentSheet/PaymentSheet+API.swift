@@ -140,8 +140,12 @@ extension PaymentSheet {
                     completion: paymentHandlerCompletion
                 )
             // MARK: ↪ Deferred Intent
-            case .deferredIntent:
-                fatalError("TODO(DeferredIntent)")
+            case .deferredIntent(_, let intentConfig):
+                handleDeferredConfirm(configuration: configuration,
+                                      intentConfig: intentConfig,
+                                      paymentMethodParams: confirmParams.paymentMethodParams,
+                                      shouldSavePaymentMethod: confirmParams.shouldSavePaymentMethod,
+                                      completion: completion)
             }
 
         // MARK: - Saved Payment Method
@@ -188,8 +192,11 @@ extension PaymentSheet {
                     completion: paymentHandlerCompletion
                 )
             // MARK: ↪ Deferred Intent
-            case .deferredIntent:
-                fatalError("TODO(DeferredIntent)")
+            case .deferredIntent(_, let intentConfig):
+                // Pass in nil for `shouldSavePaymentMethod` since this is a saved payment method
+                intentConfig.confirmHandler(paymentMethod.stripeId,
+                                            nil,
+                                            _handleIntentCreation(_:))
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -214,8 +221,12 @@ extension PaymentSheet {
                         with: authenticationContext,
                         completion: paymentHandlerCompletion
                     )
-                case .deferredIntent:
-                    fatalError("TODO(DeferredIntent)")
+                case .deferredIntent(_, let intentConfig):
+                    handleDeferredConfirm(configuration: configuration,
+                                          intentConfig: intentConfig,
+                                          paymentMethodParams: paymentMethodParams,
+                                          shouldSavePaymentMethod: nil,
+                                          completion: completion)
                 }
             }
 
@@ -560,6 +571,37 @@ extension PaymentSheet {
             return nil
         }
         return params
+    }
+
+    private static func _handleIntentCreation(_ result: Result<String, Error>) {
+        // TODO(porter) Deferred intent confirmation handling
+    }
+
+    private static func handleDeferredConfirm(configuration: PaymentSheet.Configuration,
+                                              intentConfig: IntentConfiguration,
+                                              paymentMethodParams: STPPaymentMethodParams,
+                                              shouldSavePaymentMethod: Bool?,
+                                              completion: @escaping (PaymentSheetResult) -> Void) {
+        configuration.apiClient.createPaymentMethod(with: paymentMethodParams) {
+            paymentMethod,
+            error in
+            if let error = error {
+                completion(.failed(error: error))
+                return
+            }
+
+            guard let paymentMethod = paymentMethod else {
+                let paymentMethodCreationError = PaymentSheetError.unknown(
+                    debugDescription: "Failed to create a payment method."
+                )
+                completion(.failed(error: paymentMethodCreationError))
+                return
+            }
+
+            intentConfig.confirmHandler(paymentMethod.stripeId,
+                                        shouldSavePaymentMethod,
+                                        _handleIntentCreation(_:))
+        }
     }
 }
 
