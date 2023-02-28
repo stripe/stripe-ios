@@ -593,7 +593,7 @@ extension PaymentSheet {
 
             guard let paymentMethod = paymentMethod else {
                 let paymentMethodCreationError = PaymentSheetError.unknown(
-                    debugDescription: "Failed to create a payment method."
+                    debugDescription: "Failed to create a new payment method."
                 )
                 completion(.failed(error: paymentMethodCreationError))
                 return
