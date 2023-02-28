@@ -278,17 +278,20 @@ class PaymentSheetTestPlayground: UIViewController {
             return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: nil),
                                                                 captureMethod: .automatic,
-                                                    paymentMethodTypes: paymentMethodTypes)
+                                                    paymentMethodTypes: paymentMethodTypes,
+                                                    confirmHandler: confirmHandler(_:_:_:))
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
-                                                    paymentMethodTypes: paymentMethodTypes)
+                                                    paymentMethodTypes: paymentMethodTypes,
+                                                    confirmHandler: confirmHandler(_:_:_:))
         case .setup:
             return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
-                                                    paymentMethodTypes: paymentMethodTypes)
+                                                    paymentMethodTypes: paymentMethodTypes,
+                                                    confirmHandler: confirmHandler(_:_:_:))
         }
     }
 
@@ -630,6 +633,35 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
     }
     func cancelTapped() {
         self.navigationController?.dismiss(animated: true)
+    }
+}
+
+extension PaymentSheetTestPlayground {
+
+    func confirmHandler(_ paymentMethodID: String,
+                        _ shouldSavePaymentMethod: Bool?,
+                        _ intentCreationCallback: (Result<String, Error>) -> Void) {
+        let alertController = UIAlertController(title: "Confirm handler invoked",
+                                                message: nil,
+                                                preferredStyle: .alert)
+        self.visibleViewController?.present(alertController, animated: true, completion: nil)
+    }
+
+}
+
+// TODO(porter) Remove once deferred can be tested E2E
+private extension UIViewController {
+    /// The visible view controller from a given view controller
+    var visibleViewController: UIViewController? {
+        if let navigationController = self as? UINavigationController {
+            return navigationController.topViewController?.visibleViewController
+        } else if let tabBarController = self as? UITabBarController {
+            return tabBarController.selectedViewController?.visibleViewController
+        } else if let presentedViewController = presentedViewController {
+            return presentedViewController.visibleViewController
+        } else {
+            return self
+        }
     }
 }
 

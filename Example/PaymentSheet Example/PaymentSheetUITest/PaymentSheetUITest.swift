@@ -623,8 +623,12 @@ extension PaymentSheetUITest {
         )
 
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay $50.99"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Pay $50.99"].tap()
+
+        let confirmText = app.staticTexts["Confirm handler invoked"]
+        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
 
         // TODO(porter) Finish test when we can confirm server side
     }
@@ -639,8 +643,12 @@ extension PaymentSheetUITest {
         )
 
         app.buttons["Checkout (Complete)"].tap()
-        let setupButton = app.buttons["Set up"]
-        XCTAssertTrue(setupButton.waitForExistence(timeout: 10.0))
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Set up"].tap()
+
+        let confirmText = app.staticTexts["Confirm handler invoked"]
+        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
 
         // TODO(porter) Finish test when we can confirm server side
     }
@@ -659,6 +667,18 @@ extension PaymentSheetUITest {
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
 
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+
+        let confirmText = app.staticTexts["Confirm handler invoked"]
+        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
+
         // TODO(porter) Finish test when we can confirm server side
     }
 
@@ -676,6 +696,18 @@ extension PaymentSheetUITest {
         selectButton.tap()
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+
+        let confirmText = app.staticTexts["Confirm handler invoked"]
+        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
 
         // TODO(porter) Finish test when we can confirm server side
     }
