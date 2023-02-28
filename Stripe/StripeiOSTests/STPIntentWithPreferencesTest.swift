@@ -101,7 +101,8 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
                                                             captureMethod: .automatic,
-                                                            paymentMethodTypes: ["card", "cashapp"])
+                                                            paymentMethodTypes: ["card", "cashapp"],
+                                                            confirmHandler: { _, _, _ in })
 
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {
@@ -130,7 +131,8 @@ class STPIntentWithPreferencesTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
                                                             captureMethod: .manual,
-                                                            paymentMethodTypes: ["card", "cashapp"])
+                                                            paymentMethodTypes: ["card", "cashapp"],
+                                                            confirmHandler: { _, _, _ in })
 
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {

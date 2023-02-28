@@ -197,6 +197,7 @@ extension PaymentSheet {
                 intentConfig.confirmHandler(paymentMethod.stripeId,
                                             nil,
                                             _handleIntentCreation(_:))
+                completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -601,6 +602,7 @@ extension PaymentSheet {
             intentConfig.confirmHandler(paymentMethod.stripeId,
                                         shouldSavePaymentMethod,
                                         _handleIntentCreation(_:))
+            completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
         }
     }
 }
