@@ -14,9 +14,9 @@ import Foundation
         /// - Parameters:
         ///   - paymentMethodId: The id of the PaymentMethod representing the customer's payment details.
         ///     If you need to inspect payment method details, you can fetch the PaymentMethod object using this id on your server. Otherwise, you can ignore this.
-        ///   - shouldSavePaymentMethod: If your server passes 'confirm=true' when it creates the PaymentIntent or SetupIntent, set `setup_future_usage` on the PaymentIntent or SetupIntent in accordance with this value.
-        ///     If we displayed a "Save this payment method for future use" checkbox to the customer, the value is true/false if the checkbox is selected/deselected.
-        ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server.
+        ///   - shouldSavePaymentMethod: This is `true` if the customer selected the "Save this payment method for future use" checkbox.
+        ///     You can ignore this property unless your server confirms the PaymentIntent. If it does, set `setup_future_usage` on the PaymentIntent to `off_session` if this is `true`.
+        ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         public typealias ConfirmHandler = (
             _ paymentMethodID: String,
             _ shouldSavePaymentMethod: Bool?,
@@ -46,7 +46,7 @@ import Foundation
         /// An explicit list of payment method types displayed to the customer.
         var paymentMethodTypes: [String]?
 
-        /// TODO(porter) doc comment
+        /// If your server confirms the PaymentIntent or SetupIntent, set this to `true`.
         var isServerSideConfirmation: Bool = false
 
         /// Called when the customer confirms payment.

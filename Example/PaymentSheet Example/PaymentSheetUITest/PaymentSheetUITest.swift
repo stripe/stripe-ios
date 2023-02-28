@@ -711,7 +711,7 @@ extension PaymentSheetUITest {
 
         // TODO(porter) Finish test when we can confirm server side
     }
-    
+
     func testDeferferedIntentLinkSignup() throws {
         loadPlayground(
             app,
@@ -719,7 +719,7 @@ extension PaymentSheetUITest {
                 "customer_mode": "new",
                 "automatic_payment_methods": "off",
                 "link": "on",
-                "init_mode": "Deferred"
+                "init_mode": "Deferred",
             ]
         )
 
@@ -769,7 +769,7 @@ extension PaymentSheetUITest {
         expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
         waitForExpectations(timeout: 10, handler: nil)
         payButton.tap()
-        
+
         let confirmText = app.staticTexts["Confirm handler invoked"]
         XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
 
