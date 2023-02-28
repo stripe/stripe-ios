@@ -579,10 +579,10 @@ extension PaymentSheet {
     }
 
     private static func confirmDeferredIntentNewPaymentMethod(configuration: PaymentSheet.Configuration,
-                                              intentConfig: IntentConfiguration,
-                                              paymentMethodParams: STPPaymentMethodParams,
-                                              shouldSavePaymentMethod: Bool?,
-                                              completion: @escaping (PaymentSheetResult) -> Void) {
+                                                              intentConfig: IntentConfiguration,
+                                                              paymentMethodParams: STPPaymentMethodParams,
+                                                              shouldSavePaymentMethod: Bool?,
+                                                              completion: @escaping (PaymentSheetResult) -> Void) {
         configuration.apiClient.createPaymentMethod(with: paymentMethodParams) {
             paymentMethod,
             error in
