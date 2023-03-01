@@ -20,10 +20,12 @@
       "containerPath" : "container:Stripe.xcodeproj",
       "identifier" : "ADF894AA8F6022D9BED17346",
       "name" : "StripeiOS"
-    }
+    },
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "skippedTests" : [
         "PaymentMethodMessagingViewSnapshotTests",
         "STPCardBINMetadataTests",
