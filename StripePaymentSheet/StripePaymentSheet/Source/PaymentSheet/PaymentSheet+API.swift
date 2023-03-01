@@ -193,13 +193,15 @@ extension PaymentSheet {
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
-                // Pass in false for `shouldSavePaymentMethod` since this is a saved payment method
                 if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
+                    // Pass in false for `shouldSavePaymentMethod` since this is a saved payment method
                     serverConfirmHandler(paymentMethod.stripeId,
                                                 false,
                                                 _handleIntentCreation(_:))
+                } else if let confirmHandler = intentConfig.confirmHandler {
+                    confirmHandler(paymentMethod.stripeId, _handleIntentCreation(_:))
                 } else {
-                    intentConfig.confirmHandler?(paymentMethod.stripeId, _handleIntentCreation(_:))
+                    fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
                 }
 
                 completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
@@ -228,6 +230,7 @@ extension PaymentSheet {
                         completion: paymentHandlerCompletion
                     )
                 case .deferredIntent(_, let intentConfig):
+                    // Pass in false for `shouldSavePaymentMethod` since we are using Link
                     confirmDeferredIntentNewPaymentMethod(configuration: configuration,
                                           intentConfig: intentConfig,
                                           paymentMethodParams: paymentMethodParams,
@@ -606,10 +609,12 @@ extension PaymentSheet {
 
             if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
                 serverConfirmHandler(paymentMethod.stripeId,
-                                     shouldSavePaymentMethod,
+                                            shouldSavePaymentMethod,
                                             _handleIntentCreation(_:))
+            } else if let confirmHandler = intentConfig.confirmHandler {
+                confirmHandler(paymentMethod.stripeId, _handleIntentCreation(_:))
             } else {
-                intentConfig.confirmHandler?(paymentMethod.stripeId, _handleIntentCreation(_:))
+                fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
             }
 
             completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
