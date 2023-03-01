@@ -193,10 +193,15 @@ extension PaymentSheet {
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
-                // Pass in nil for `shouldSavePaymentMethod` since this is a saved payment method
-                intentConfig.confirmHandler(paymentMethod.stripeId,
-                                            nil,
-                                            _handleIntentCreation(_:))
+                // Pass in false for `shouldSavePaymentMethod` since this is a saved payment method
+                if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
+                    serverConfirmHandler(paymentMethod.stripeId,
+                                                false,
+                                                _handleIntentCreation(_:))
+                } else {
+                    intentConfig.confirmHandler?(paymentMethod.stripeId, _handleIntentCreation(_:))
+                }
+
                 completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
             }
         // MARK: - Link
@@ -226,7 +231,7 @@ extension PaymentSheet {
                     confirmDeferredIntentNewPaymentMethod(configuration: configuration,
                                           intentConfig: intentConfig,
                                           paymentMethodParams: paymentMethodParams,
-                                          shouldSavePaymentMethod: nil,
+                                          shouldSavePaymentMethod: false,
                                           completion: completion)
                 }
             }
@@ -581,7 +586,7 @@ extension PaymentSheet {
     private static func confirmDeferredIntentNewPaymentMethod(configuration: PaymentSheet.Configuration,
                                                               intentConfig: IntentConfiguration,
                                                               paymentMethodParams: STPPaymentMethodParams,
-                                                              shouldSavePaymentMethod: Bool?,
+                                                              shouldSavePaymentMethod: Bool,
                                                               completion: @escaping (PaymentSheetResult) -> Void) {
         configuration.apiClient.createPaymentMethod(with: paymentMethodParams) {
             paymentMethod,
@@ -599,9 +604,14 @@ extension PaymentSheet {
                 return
             }
 
-            intentConfig.confirmHandler(paymentMethod.stripeId,
-                                        shouldSavePaymentMethod,
-                                        _handleIntentCreation(_:))
+            if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
+                serverConfirmHandler(paymentMethod.stripeId,
+                                     shouldSavePaymentMethod,
+                                            _handleIntentCreation(_:))
+            } else {
+                intentConfig.confirmHandler?(paymentMethod.stripeId, _handleIntentCreation(_:))
+            }
+
             completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
         }
     }

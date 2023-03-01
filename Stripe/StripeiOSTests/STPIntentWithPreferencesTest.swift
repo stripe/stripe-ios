@@ -102,7 +102,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            setupFutureUsage: .onSession),
                                                             captureMethod: .automatic,
                                                             paymentMethodTypes: ["card", "cashapp"],
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _ in })
 
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {
@@ -132,7 +132,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            setupFutureUsage: .offSession),
                                                             captureMethod: .manual,
                                                             paymentMethodTypes: ["card", "cashapp"],
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _ in })
 
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {

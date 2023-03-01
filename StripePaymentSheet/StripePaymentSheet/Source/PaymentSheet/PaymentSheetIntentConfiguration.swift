@@ -14,13 +14,22 @@ import Foundation
         /// - Parameters:
         ///   - paymentMethodId: The id of the PaymentMethod representing the customer's payment details.
         ///     If you need to inspect payment method details, you can fetch the PaymentMethod object using this id on your server. Otherwise, you can ignore this.
-        ///   - shouldSavePaymentMethod: This is `true` if the customer selected the "Save this payment method for future use" checkbox.
-        ///     You can ignore this property unless your server confirms the PaymentIntent. If it does, set `setup_future_usage` on the PaymentIntent to `off_session` if this is `true`.
         ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         public typealias ConfirmHandler = (
             _ paymentMethodID: String,
-            _ shouldSavePaymentMethod: Bool?,
             _ intentCreationCallback: ((Result<String, Error>) -> Void)
+        ) -> Void
+
+        /// - Parameters:
+        ///   - paymentMethodId: The id of the PaymentMethod representing the customer's payment details.
+        ///     If you need to inspect payment method details, you can fetch the PaymentMethod object using this id on your server. Otherwise, you can ignore this.
+        ///   - shouldSavePaymentMethod: This is `true` if the customer selected the "Save this payment method for future use" checkbox.
+        ///     Set `setup_future_usage` on the PaymentIntent to `off_session` if this is `true`.
+        ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
+        public typealias ConfirmHandlerForServerSideConfirmation = (
+          _ paymentMethodID: String,
+          _ shouldSavePaymentMethod: Bool,
+          _ intentCreationCallback: ((Result<String, Error>) -> Void)
         ) -> Void
 
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
@@ -39,6 +48,22 @@ import Foundation
             self.confirmHandler = confirmHandler
         }
 
+        /// Creates a `PaymentSheet.IntentConfiguration` with the given values
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - captureMethod: The capture method of this intent, either automatic or manual, defaults to automatic
+        ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - confirmHandlerForServerSideConfirmation: The handler to be called when the user taps the "Pay" button
+        public init(mode: Mode,
+                    captureMethod: CaptureMethod = .automatic,
+                    paymentMethodTypes: [String]? = nil,
+                    confirmHandlerForServerSideConfirmation: @escaping ConfirmHandlerForServerSideConfirmation) {
+            self.mode = mode
+            self.captureMethod = captureMethod
+            self.paymentMethodTypes = paymentMethodTypes
+            self.confirmHandlerForServerSideConfirmation = confirmHandlerForServerSideConfirmation
+        }
+
         /// Filters out payment methods based on intended use.
         var mode: Mode
         /// Filters out payment methods based on their support for manual capture.
@@ -52,7 +77,13 @@ import Foundation
         /// Called when the customer confirms payment.
         /// Your implementation should create a PaymentIntent or SetupIntent on the server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
-        var confirmHandler: ConfirmHandler
+        var confirmHandler: ConfirmHandler?
+
+        /// For advanced users who need server-side confirmation.
+        /// Called when the customer confirms payment.
+        /// Your implementation should create and confirm a PaymentIntent or SetupIntent on the server and call the `intentCreationCallback` with its client secret or an error if one occurred.
+        /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
+        var confirmHandlerForServerSideConfirmation: ConfirmHandlerForServerSideConfirmation?
 
         /// Controls when the funds will be captured from the customer’s account.
         public enum CaptureMethod: String {

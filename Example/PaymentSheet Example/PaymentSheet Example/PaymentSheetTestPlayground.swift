@@ -279,19 +279,19 @@ class PaymentSheetTestPlayground: UIViewController {
                                                                    setupFutureUsage: nil),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:_:))
+                                                    confirmHandler: confirmHandler(_:_:))
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:_:))
+                                                    confirmHandler: confirmHandler(_:_:))
         case .setup:
             return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:_:))
+                                                    confirmHandler: confirmHandler(_:_:))
         }
     }
 
@@ -639,7 +639,6 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
 extension PaymentSheetTestPlayground {
 
     func confirmHandler(_ paymentMethodID: String,
-                        _ shouldSavePaymentMethod: Bool?,
                         _ intentCreationCallback: (Result<String, Error>) -> Void) {
         let alertController = UIAlertController(title: "Confirm handler invoked",
                                                 message: nil,

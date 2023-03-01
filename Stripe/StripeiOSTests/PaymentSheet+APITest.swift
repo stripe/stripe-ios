@@ -215,7 +215,7 @@ class PaymentSheetAPITest: XCTestCase {
 
         let types = ["ideal", "card", "bancontact", "sofort"]
         let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             // TODO(porter) Invoke result callback to finish flow
             callbackExpectation.fulfill()
         }
