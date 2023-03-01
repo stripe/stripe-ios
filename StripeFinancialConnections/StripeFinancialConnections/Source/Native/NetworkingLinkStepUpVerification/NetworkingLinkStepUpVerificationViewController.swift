@@ -40,13 +40,20 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     private lazy var bodyView: NetworkingLinkStepUpVerificationBodyView = {
         let bodyView = NetworkingLinkStepUpVerificationBodyView(
             email: dataSource.consumerSession.emailAddress,
+            otpView: otpView,
             didSelectResendCode: { [weak self] in
                 self?.didSelectResendCode()
             }
         )
-        bodyView.delegate = self
         return bodyView
     }()
+    private lazy var otpView: NetworkingOTPView = {
+        let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
+        otpView.delegate = self
+        return otpView
+    }()
+    // used to track whether we show loading view when calling `lookupConsumerAndStartVerification`
+    private var didShowContent: Bool = false
 
     init(dataSource: NetworkingLinkStepUpVerificationDataSource) {
         self.dataSource = dataSource
@@ -60,83 +67,32 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        startVerificationSession(
-            willStart: { [weak self] in
-                self?.showLoadingView(true)
-            },
-            didStart: { [weak self] redactedPhoneNumber in
-                self?.showLoadingView(false)
-                self?.showContent(redactedPhoneNumber: redactedPhoneNumber)
-            },
-            didFailStart: { [weak self] in
-                self?.showLoadingView(false)
-            }
+
+        otpView.lookupConsumerAndStartVerification()
+    }
+
+    private func handleFailure(error: Error, errorName: String) {
+        dataSource.analyticsClient.log(
+            eventName: "networking.verification.step_up.error",
+            parameters: [
+                "error": errorName
+            ],
+            pane: .networkingLinkStepUpVerification
+        )
+        dataSource.analyticsClient.logUnexpectedError(
+            error,
+            errorName: errorName,
+            pane: .networkingLinkStepUpVerification
+        )
+        delegate?.networkingLinkStepUpVerificationViewController(
+            self,
+            didReceiveTerminalError: error
         )
     }
 
-    // We encapsulate `startVerificationSession` with "event handlers/blocks" because its used in two places:
-    // 1. When first presenting the pane
-    // 2. Any time user presses "Resend code" button
-    private func startVerificationSession(
-        willStart: @escaping () -> Void,
-        didStart: @escaping (_ redactedPhoneNumber: String) -> Void,
-        didFailStart: @escaping () -> Void
-    ) {
-        willStart()
-        let handleFailure: (_ error: Error, _ errorName: String) -> Void = { [weak self] error, errorName in
-            guard let self = self else { return }
-            self.dataSource.analyticsClient.log(
-                eventName: "networking.verification.step_up.error",
-                parameters: [
-                    "error": errorName
-                ],
-                pane: .networkingLinkStepUpVerification
-            )
-            self.dataSource.analyticsClient.logUnexpectedError(
-                error,
-                errorName: errorName,
-                pane: .networkingLinkStepUpVerification
-            )
-            self.delegate?.networkingLinkStepUpVerificationViewController(
-                self,
-                didReceiveTerminalError: error
-            )
-            didFailStart()
-        }
-        dataSource.lookupConsumerSession()
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let lookupConsumerSessionResponse):
-                    if lookupConsumerSessionResponse.exists {
-                        self.dataSource.startVerificationSession()
-                            .observe { result in
-                                switch result {
-                                case .success(let consumerSessionResponse):
-                                    didStart(consumerSessionResponse.consumerSession.redactedPhoneNumber)
-                                case .failure(let error):
-                                    handleFailure(error, "StartVerificationSessionError")
-                                }
-                            }
-                    } else {
-                        // consumer not found
-                        self.dataSource.analyticsClient.log(
-                            eventName: "networking.verification.step_up.error",
-                            parameters: [
-                                "error": "ConsumerNotFoundError",
-                            ],
-                            pane: .networkingLinkStepUpVerification
-                        )
-                        self.delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
-                        didFailStart()
-                    }
-                case .failure(let error):
-                    handleFailure(error, "LookupConsumerSessionError")
-                }
-            }
-    }
-
     private func showContent(redactedPhoneNumber: String) {
+        didShowContent = true
+
         let pane = PaneWithHeaderLayoutView(
             title: STPLocalizedString(
                 "Check your email to confirm your identity",
@@ -170,92 +126,108 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     }
 
     private func didSelectResendCode() {
-        startVerificationSession(
-            willStart: { [weak self] in
-                self?.bodyView.isResendingCode(true)
-            },
-            didStart: { [weak self] _ in
-                self?.bodyView.isResendingCode(false)
-            },
-            didFailStart: { [weak self] in
-                self?.bodyView.isResendingCode(false)
-            }
-        )
+        otpView.lookupConsumerAndStartVerification()
     }
 }
 
-// MARK: - NetworkingLinkStepUpVerificationBodyViewDelegate
+// MARK: - NetworkingOTPViewDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension NetworkingLinkStepUpVerificationViewController: NetworkingLinkStepUpVerificationBodyViewDelegate {
+extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDelegate {
 
-    func networkingLinkStepUpVerificationBodyView(
-        _ view: NetworkingLinkStepUpVerificationBodyView,
-        didEnterValidOTPCode otpCode: String
-    ) {
-        view.otpTextField.text = "CONFIRMING OTP..."
+    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
+        if !didShowContent {
+            showLoadingView(true)
+        } else {
+            bodyView.isResendingCode(true)
+        }
+    }
 
-        dataSource.confirmVerificationSession(otpCode: otpCode)
+    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
+        // side-note: it is redundant to call `showLoadingView` & `isResendingCode` because
+        // usually only one needs to be hidden, but this keeps the code simple
+        showLoadingView(false)
+        bodyView.isResendingCode(false)
+
+        dataSource.analyticsClient.log(
+            eventName: "networking.verification.step_up.error",
+            parameters: [
+                "error": "ConsumerNotFoundError",
+            ],
+            pane: .networkingLinkStepUpVerification
+        )
+        delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
+        // side-note: it is redundant to call both (`showLoadingView` & `isResendingCode`) because
+        // only one needs to be hidden (depends on the state), but this keeps the code simple
+        showLoadingView(false)
+        bodyView.isResendingCode(false)
+
+        handleFailure(error: error, errorName: "LookupConsumerSessionError")
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
+        // it's important to call this BEFORE we call `showContent` because of `didShowContent`
+        if !didShowContent {
+            showLoadingView(false)
+        } else {
+            bodyView.isResendingCode(false)
+        }
+
+        showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
+        // side-note: it is redundant to call `showLoadingView` & `isResendingCode` because
+        // usually only one needs to be hidden, but this keeps the code simple
+        showLoadingView(false)
+        bodyView.isResendingCode(false)
+
+        handleFailure(error: error, errorName: "StartVerificationSessionError")
+    }
+
+    func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        dataSource.markLinkStepUpAuthenticationVerified()
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    view.otpTextField.text = "SUCCESS! CALLING markLinkStepUpAuthenticationVerified..."
-
-                    self.dataSource.markLinkStepUpAuthenticationVerified()
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "networking.verification.step_up.success",
+                            pane: .networkingLinkStepUpVerification
+                        )
+                    self.dataSource.selectNetworkedAccount()
                         .observe { [weak self] result in
                             guard let self = self else { return }
                             switch result {
-                            case .success:
-                                view.otpTextField.text = "SUCCESS! CALLING selectNetworkedAccount..."
+                            case .success(let institutionList):
                                 self.dataSource
                                     .analyticsClient
                                     .log(
-                                        eventName: "networking.verification.step_up.success",
+                                        eventName: "click.link_accounts",
                                         pane: .networkingLinkStepUpVerification
                                     )
-                                self.dataSource.selectNetworkedAccount()
-                                    .observe { [weak self] result in
-                                        guard let self = self else { return }
-                                        switch result {
-                                        case .success(let institutionList):
-                                            self.dataSource
-                                                .analyticsClient
-                                                .log(
-                                                    eventName: "click.link_accounts",
-                                                    pane: .networkingLinkStepUpVerification
-                                                )
 
-                                            if let institution = institutionList.data.first {
-                                                self.delegate?.networkingLinkStepUpVerificationViewController(
-                                                    self,
-                                                    didCompleteVerificationWithInstitution: institution
-                                                )
-                                            } else {
-                                                // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
-                                                // could still have a chance at successfully connecting their account
-                                                self.delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
-                                            }
-                                        case .failure(let error):
-                                            self.dataSource
-                                                .analyticsClient
-                                                .logUnexpectedError(
-                                                    error,
-                                                    errorName: "SelectNetworkedAccountError",
-                                                    pane: .networkingLinkStepUpVerification
-                                                )
-                                            self.delegate?.networkingLinkStepUpVerificationViewController(
-                                                self,
-                                                didReceiveTerminalError: error
-                                            )
-                                        }
-                                    }
+                                if let institution = institutionList.data.first {
+                                    self.delegate?.networkingLinkStepUpVerificationViewController(
+                                        self,
+                                        didCompleteVerificationWithInstitution: institution
+                                    )
+                                } else {
+                                    // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
+                                    // could still have a chance at successfully connecting their account
+                                    self.delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
+                                }
                             case .failure(let error):
                                 self.dataSource
                                     .analyticsClient
                                     .logUnexpectedError(
                                         error,
-                                        errorName: "MarkLinkStepUpAuthenticationVerifiedError",
+                                        errorName: "SelectNetworkedAccountError",
                                         pane: .networkingLinkStepUpVerification
                                     )
                                 self.delegate?.networkingLinkStepUpVerificationViewController(
@@ -265,10 +237,22 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingLinkStepUpVe
                             }
                         }
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): remove print
-                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
-                    // TODO(kgaidis): display various known errors, or if unknown error, show terminal error
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "MarkLinkStepUpAuthenticationVerifiedError",
+                            pane: .networkingLinkStepUpVerification
+                        )
+                    self.delegate?.networkingLinkStepUpVerificationViewController(
+                        self,
+                        didReceiveTerminalError: error
+                    )
                 }
             }
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
+        delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveTerminalError: error)
     }
 }

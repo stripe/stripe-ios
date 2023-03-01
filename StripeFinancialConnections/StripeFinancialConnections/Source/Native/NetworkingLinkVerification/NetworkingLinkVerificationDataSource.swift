@@ -45,6 +45,8 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
             emailAddress: accountholderCustomerEmailAddress,
+            customEmailType: nil,
+            connectionsMerchantName: nil,
             apiClient: apiClient,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient
@@ -71,7 +73,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
 // MARK: - NetworkingOTPDataSourceDelegate
 
 extension NetworkingLinkVerificationDataSourceImplementation: NetworkingOTPDataSourceDelegate {
-    
+
     func networkingOTPDataSource(_ dataSource: NetworkingOTPDataSource, didUpdateConsumerSession consumerSession: ConsumerSessionData) {
         self.consumerSession = consumerSession
     }

@@ -27,6 +27,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
 
     let otpType: String
     let emailAddress: String
+    let customEmailType: String?
+    let connectionsMerchantName: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -43,12 +45,16 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     init(
         otpType: String,
         emailAddress: String,
+        customEmailType: String?,
+        connectionsMerchantName: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.otpType = otpType
         self.emailAddress = emailAddress
+        self.customEmailType = customEmailType
+        self.connectionsMerchantName = connectionsMerchantName
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
@@ -72,8 +78,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         return apiClient.consumerSessionStartVerification(
             emailAddress: emailAddress,
             otpType: otpType,
-            customEmailType: nil,
-            connectionsMerchantName: nil,
+            customEmailType: customEmailType,
+            connectionsMerchantName: connectionsMerchantName,
             consumerSessionClientSecret: consumerSessionClientSecret
         ).chained { [weak self] consumerSessionResponse in
             self?.consumerSession = consumerSessionResponse.consumerSession

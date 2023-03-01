@@ -15,20 +15,20 @@ protocol NetworkingOTPViewDelegate: AnyObject {
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView)
     func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView)
     func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error)
-    
+
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData)
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error)
-    
+
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView)
     func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error)
 }
 
 @available(iOSApplicationExtension, unavailable)
 final class NetworkingOTPView: UIView {
-    
+
     private let dataSource: NetworkingOTPDataSource
     weak var delegate: NetworkingOTPViewDelegate?
-    
+
     private lazy var verticalStackView: UIStackView = {
         let otpVerticalStackView = UIStackView(
             arrangedSubviews: [
@@ -57,17 +57,17 @@ final class NetworkingOTPView: UIView {
         return theme
     }()
     private var lastErrorView: UIView?
-    
+
     init(dataSource: NetworkingOTPDataSource) {
         self.dataSource = dataSource
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc private func otpTextFieldDidChange() {
         showErrorText(nil) // clear the error
 
@@ -87,7 +87,7 @@ final class NetworkingOTPView: UIView {
             verticalStackView.addArrangedSubview(errorView)
         }
     }
-    
+
     func lookupConsumerAndStartVerification() {
         delegate?.networkingOTPViewWillStartConsumerLookup(self)
         dataSource.lookupConsumerSession()
@@ -102,7 +102,7 @@ final class NetworkingOTPView: UIView {
                                 switch result {
                                 case .success(let consumerSessionResponse):
                                     self.delegate?.networkingOTPView(self, didStartVerification: consumerSessionResponse.consumerSession)
-                                    
+
                                     // call this AFTER the delegate to ensure that the delegate-handler
                                     // adds the OTP view to the view-hierarchy
                                     self.otpTextField.becomeFirstResponder()
@@ -118,11 +118,11 @@ final class NetworkingOTPView: UIView {
                 }
             }
     }
-    
+
     private func userDidEnterValidOTPCode(_ otpCode: String) {
         otpTextField.resignFirstResponder()
         // TODO(kgaidis): consider implementing a loading/grayed-out state for `otpTextField`
-        
+
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in
                 guard let self = self else { return }

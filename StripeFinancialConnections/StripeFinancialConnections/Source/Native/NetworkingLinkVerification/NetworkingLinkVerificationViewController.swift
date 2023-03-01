@@ -112,11 +112,11 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
 @available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
-    
+
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
         showLoadingView(true)
     }
-    
+
     func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
         dataSource.analyticsClient.log(
             eventName: "networking.verification.error",
@@ -128,7 +128,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
         delegate?.networkingLinkVerificationViewController(self, didRequestNextPane: .institutionPicker, consumerSession: nil)
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
     }
-    
+
     func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
         dataSource.analyticsClient.logUnexpectedError(
             error,
@@ -145,15 +145,15 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
         delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
     }
-    
+
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
         showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
     }
-    
+
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-        
+
         dataSource.analyticsClient.logUnexpectedError(
             error,
             errorName: "StartVerificationSessionError",
@@ -168,7 +168,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
         )
         delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
     }
-    
+
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
         dataSource.markLinkVerified()
             .observe { [weak self] result in
@@ -226,8 +226,8 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                 }
             }
     }
-    
+
     func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
         delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
-    }   
+    }
 }
