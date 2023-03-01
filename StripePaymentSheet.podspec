@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
   s.source_files                   = 'StripePaymentSheet/StripePaymentSheet/Source/**/*.swift'
   s.ios.resource_bundle            = { 'StripePaymentSheet' => 'StripePaymentSheet/StripePaymentSheet/Resources/**/*.{lproj,png,xcassets,json}' }
   s.dependency                       'StripeCore', s.version.to_s
+  s.dependency                       'StripeLinkCore', s.version.to_s
   s.dependency                       'StripePayments', s.version.to_s
   s.dependency                       'StripePaymentsUI', s.version.to_s
   s.dependency                       'StripeApplePay', s.version.to_s

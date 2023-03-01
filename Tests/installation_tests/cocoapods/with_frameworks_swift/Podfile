@@ -11,6 +11,7 @@ target 'CocoapodsTest' do
   pod 'StripeCameraCore', path: '../../../..'
   pod 'StripeCore', path: '../../../..'
   pod 'StripeUICore', path: '../../../..'
+  pod 'StripeLinkCore', path: '../../../..'
   pod 'StripePayments', path: '../../../..'
   pod 'StripePaymentsUI', path: '../../../..'
   pod 'StripePaymentSheet', path: '../../../..'

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		005B83F229B0098B002E5314 /* StripeLinkCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B83F129B0098B002E5314 /* StripeLinkCore.xcframework */; };
 		04E6FCE71B714AC2000C8759 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCE61B714AC2000C8759 /* AppDelegate.swift */; };
 		04E6FCE91B714AC2000C8759 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCE81B714AC2000C8759 /* ViewController.swift */; };
 		04E6FCEC1B714AC2000C8759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEA1B714AC2000C8759 /* Main.storyboard */; };
@@ -63,6 +64,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		005B83F129B0098B002E5314 /* StripeLinkCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeLinkCore.xcframework; path = Carthage/Build/StripeLinkCore.xcframework; sourceTree = "<group>"; };
 		04E6FCE11B714AC2000C8759 /* CarthageTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarthageTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E6FCE51B714AC2000C8759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04E6FCE61B714AC2000C8759 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				3137B69427437E3500CE7F5C /* StripeApplePay.xcframework in Frameworks */,
 				E6AA24ED2744ABE000FD205E /* StripeCameraCore.xcframework in Frameworks */,
 				E6A36A5C26BA4E0E002A4427 /* StripeIdentity.xcframework in Frameworks */,
+				005B83F229B0098B002E5314 /* StripeLinkCore.xcframework in Frameworks */,
 				31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */,
 				E6AFFAF526E972950067462F /* StripeUICore.xcframework in Frameworks */,
 			);
@@ -193,6 +196,7 @@
 				E6F05EA92687C76F00614D61 /* StripeCore.xcframework */,
 				3C4D20AC273C673200BC6444 /* StripeFinancialConnections.xcframework */,
 				3BD9808E27431DFE00B09BCD /* StripeCardScan.xcframework */,
+				005B83F129B0098B002E5314 /* StripeLinkCore.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

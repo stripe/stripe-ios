@@ -39,6 +39,7 @@ let project = Project(
             resources: "PaymentSheet Example/Resources/**",
             dependencies: [
                 .project(target: "StripeCore", path: "//StripeCore"),
+                .project(target: "StripeLinkCore", path: "//StripeLinkCore"),
                 .project(target: "StripeUICore", path: "//StripeUICore"),
                 .project(target: "StripeApplePay", path: "//StripeApplePay"),
                 .project(target: "Stripe3DS2", path: "//Stripe3DS2"),
