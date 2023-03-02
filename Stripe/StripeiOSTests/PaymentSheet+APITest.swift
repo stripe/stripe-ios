@@ -270,7 +270,7 @@ class PaymentSheetAPITest: XCTestCase {
         wait(for: [loadExpectation, confirmExpectation, callbackExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    func testPaymentSheetLoadWithDeferredIntent_serverSideConfirmation() {
+    func testPaymentSheetLoadAndConfirmWithDeferredIntent_serverSideConfirmation() {
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         let confirmExpectation = XCTestExpectation(description: "Confirm deferred intent")
         let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
