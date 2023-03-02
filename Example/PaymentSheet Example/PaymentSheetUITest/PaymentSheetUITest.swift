@@ -775,6 +775,42 @@ extension PaymentSheetUITest {
 
         // TODO(porter) Finish test when we can confirm server side
     }
+    
+    func testDeferredPaymentIntent_ApplePay() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred"
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+        
+        let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
+        _ = applePay.wait(for: .runningForeground, timeout: 10)
+
+        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+        
+        var cardButton = applePay.buttons.containing(predicate).firstMatch
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+        cardButton.forceTapElement()
+
+        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+        cardButton.forceTapElement()
+
+        let payButton = applePay.buttons["Pay with Passcode"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+        payButton.forceTapElement()
+
+        let confirmText = app.staticTexts["Confirm handler invoked"]
+        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
+
+        // TODO(porter) Finish test when we can confirm server side
+    }
 }
 
 // MARK: - Link
