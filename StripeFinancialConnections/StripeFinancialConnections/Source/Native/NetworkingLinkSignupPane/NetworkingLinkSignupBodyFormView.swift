@@ -16,7 +16,7 @@ protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
         _ view: NetworkingLinkSignupBodyFormView,
         didEnterValidEmailAddress emailAddress: String
     )
-    func networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(
+    func networkingLinkSignupBodyFormViewDidUpdateFields(
         _ view: NetworkingLinkSignupBodyFormView
     )
 }
@@ -24,17 +24,42 @@ protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
 @available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkSignupBodyFormView: UIView {
 
+    private let accountholderPhoneNumber: String?
     weak var delegate: NetworkingLinkSignupBodyFormViewDelegate?
 
-    private lazy var verticalStackView: UIStackView = {
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                formElement.view
-            ]
+    private lazy var formElement = FormElement(
+        elements: [
+            emailSection,
+            phoneNumberSection,
+        ],
+        theme: theme
+    )
+    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
+    private (set) lazy var emailElement: LinkEmailElement = {
+        let emailElement = LinkEmailElement(theme: theme)
+        emailElement.indicatorTintColor = .textPrimary
+        emailElement.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emailElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
+        ])
+        return emailElement
+    }()
+    private lazy var phoneNumberSection = SectionElement(
+        elements: [phoneNumberElement],
+        theme: theme
+    )
+    private(set) lazy var phoneNumberElement: PhoneNumberElement = {
+        let phoneNumberElement = PhoneNumberElement(
+            // TODO(kgaidis): Stripe.js selects country via Stripe.js library
+            defaultCountryCode: nil, // the component automatically selects this based off locale
+            defaultPhoneNumber: accountholderPhoneNumber,
+            theme: theme
         )
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
-        return verticalStackView
+        phoneNumberElement.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            phoneNumberElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
+        ])
+        return phoneNumberElement
     }()
     private lazy var theme: ElementsUITheme = {
         var theme: ElementsUITheme = .default
@@ -52,59 +77,39 @@ final class NetworkingLinkSignupBodyFormView: UIView {
             colors.danger = .textCritical
             colors.placeholderText = .textSecondary
             colors.textFieldText = .textPrimary
+            colors.parentBackground = .customBackgroundColor
+            colors.background = .customBackgroundColor
             return colors
         }()
         return theme
     }()
-    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
-    private (set) lazy var emailElement: LinkEmailElement = {
-        let emailElement = LinkEmailElement(theme: theme)
-        emailElement.indicatorTintColor = .textPrimary
-        emailElement.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            emailElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
-        ])
-        return emailElement
-    }()
-
-    private(set) lazy var phoneNumberTextField: UITextField = {
-        let phoneNumberTextField = InsetTextField()
-        phoneNumberTextField.placeholder = "Phone number"
-        phoneNumberTextField.layer.cornerRadius = 8
-        phoneNumberTextField.layer.borderColor = UIColor.textBrand.cgColor
-        phoneNumberTextField.layer.borderWidth = 2.0
-        phoneNumberTextField.addTarget(
-            self,
-            action: #selector(phoneNumberTextFieldDidChange),
-            for: .editingChanged
-        )
-        NSLayoutConstraint.activate([
-            phoneNumberTextField.heightAnchor.constraint(equalToConstant: 56)
-        ])
-        return phoneNumberTextField
-    }()
-    private lazy var formElement = FormElement(elements: [
-        emailSection,
-    ], theme: theme)
     private var debounceEmailTimer: Timer?
     private var lastValidEmail: String?
 
-    init() {
+    init(accountholderPhoneNumber: String?) {
+        self.accountholderPhoneNumber = accountholderPhoneNumber
         super.init(frame: .zero)
-        addAndPinSubview(verticalStackView)
-        formElement.delegate = self // the `formElement` "steals" the delegate from `emailElement`
+        addAndPinSubview(formElement.view)
+        formElement.delegate = self
+        phoneNumberSection.view.isHidden = true
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func showPhoneNumberTextFieldIfNeeded() {
-        guard phoneNumberTextField.superview == nil else {
-            return  // already added
+    // returns `true` if the phone number field was shown for the first time
+    func showPhoneNumberFieldIfNeeded() -> Bool {
+        let isPhoneNumberFieldHidden = phoneNumberSection.view.isHidden
+        guard isPhoneNumberFieldHidden else {
+            return false // phone number field is already shown
         }
-        verticalStackView.addArrangedSubview(phoneNumberTextField)
-        // TODO(kgaidis): also add a little label together with phone numebr text field
+        formElement.setElements(
+            [emailSection, phoneNumberSection],
+            hidden: false,
+            animated: true
+        )
+        return true // phone number is shown for the first time
     }
 
     func prefillEmailAddress(_ emailAddress: String?) {
@@ -118,20 +123,32 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         emailElement.beginEditing()
     }
 
-    @objc private func phoneNumberTextFieldDidChange() {
-        print("\(phoneNumberTextField.text!)")
+    func endEditingEmailAddressField() {
+        emailElement.view.endEditing(true)
+    }
+
+    func beginEditingPhoneNumberField() {
+        _ = phoneNumberElement.beginEditing()
     }
 }
 
 @available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkSignupBodyFormView: ElementDelegate {
     func didUpdate(element: StripeUICore.Element) {
+        delegate?.networkingLinkSignupBodyFormViewDidUpdateFields(self)
+
         switch emailElement.validationState {
         case .valid:
             if let emailAddress = emailElement.emailAddressString {
                 debounceEmailTimer?.invalidate()
                 debounceEmailTimer = Timer.scheduledTimer(
-                    withTimeInterval: 0.3,
+                    // TODO(kgaidis): discuss this logic w/ team; Stripe.js is constant 0.3
+                    //
+                    // a valid e-mail will transition the user to the phone number
+                    // field (sometimes prematurely), so we increase debounce if
+                    // if there's a high chance the e-mail is not yet finished
+                    // being typed (high chance of not finishing == not .com suffix)
+                    withTimeInterval: emailAddress.hasSuffix(".com") ? 0.3 : 1.0,
                     repeats: false
                 ) { [weak self] _ in
                     guard let self = self else { return }
@@ -152,7 +169,6 @@ extension NetworkingLinkSignupBodyFormView: ElementDelegate {
         case .invalid:
             // errors are displayed automatically by the component
             lastValidEmail = nil
-            delegate?.networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(self)
         }
     }
 
@@ -167,7 +183,7 @@ import SwiftUI
 private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkSignupBodyFormView {
-        NetworkingLinkSignupBodyFormView()
+        NetworkingLinkSignupBodyFormView(accountholderPhoneNumber: nil)
     }
 
     func updateUIView(_ uiView: NetworkingLinkSignupBodyFormView, context: Context) {}
@@ -178,7 +194,7 @@ struct NetworkingLinkSignupBodyFormView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {
             NetworkingLinkSignupBodyFormViewUIViewRepresentable()
-                .frame(maxHeight: 100)
+                .frame(maxHeight: 200)
                 .padding()
             Spacer()
         }
@@ -186,31 +202,3 @@ struct NetworkingLinkSignupBodyFormView_Previews: PreviewProvider {
 }
 
 #endif
-
-private class InsetTextField: UITextField {
-
-    private let padding = UIEdgeInsets(
-        top: 0,
-        left: 10,
-        bottom: 0,
-        right: 10
-    )
-
-    override open func textRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func placeholderRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func editingRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-}
