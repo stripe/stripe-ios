@@ -336,7 +336,7 @@ workflows:
   framework-tests-xcode-143:
     steps: []
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=14.5
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
     after_run:
     - framework-tests
     meta:
