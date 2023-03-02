@@ -47,6 +47,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         emailAddress: String,
         customEmailType: String?,
         connectionsMerchantName: String?,
+        consumerSession: ConsumerSessionData?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
@@ -55,6 +56,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.emailAddress = emailAddress
         self.customEmailType = customEmailType
         self.connectionsMerchantName = connectionsMerchantName
+        self.consumerSession = consumerSession
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient

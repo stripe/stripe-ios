@@ -146,6 +146,10 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
     }
 
+    func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
+        // no-op
+    }
+
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
         showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)

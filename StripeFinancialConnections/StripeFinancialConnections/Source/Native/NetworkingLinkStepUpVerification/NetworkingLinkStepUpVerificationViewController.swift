@@ -168,6 +168,10 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
         handleFailure(error: error, errorName: "LookupConsumerSessionError")
     }
 
+    func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
+        // no-op
+    }
+
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         // it's important to call this BEFORE we call `showContent` because of `didShowContent`
         if !didShowContent {
