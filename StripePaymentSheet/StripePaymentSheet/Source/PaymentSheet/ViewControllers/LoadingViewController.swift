@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol LoadingViewControllerDelegate: AnyObject {
     func shouldDismiss(_ loadingViewController: LoadingViewController)

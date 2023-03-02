@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
 import UIKit
+@_spi(STP) import StripeUICore
 
 /// A UIScrollView subclass that actively prevents its content from being covered by the software keyboard.
 /// For internal SDK use only

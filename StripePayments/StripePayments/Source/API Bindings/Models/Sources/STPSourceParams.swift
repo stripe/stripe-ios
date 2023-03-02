@@ -487,7 +487,7 @@ extension STPSourceParams {
                 "quantity": item.quantity,
                 "amount": item.totalAmount,
                 "currency": currency,
-            ])
+            ] as [String : Any])
             amount = Int(item.totalAmount.uint32Value) + amount
         }
         params.amount = NSNumber(value: amount)

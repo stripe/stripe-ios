@@ -1,5 +1,5 @@
 //
-//  UIKit+PaymentSheet.swift
+//  UIKitPaymentSheetAdditions.swift
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 11/10/20.
@@ -8,9 +8,9 @@
 
 import Foundation
 import PassKit
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-import UIKit
 
 enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button

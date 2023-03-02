@@ -7,11 +7,11 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 private class CardScanningEasilyTappableButton: UIButton {
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {

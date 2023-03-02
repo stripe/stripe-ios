@@ -8,9 +8,9 @@
 
 import Foundation
 import MapKit
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-import UIKit
 
 protocol AutoCompleteViewControllerDelegate: AnyObject {
 

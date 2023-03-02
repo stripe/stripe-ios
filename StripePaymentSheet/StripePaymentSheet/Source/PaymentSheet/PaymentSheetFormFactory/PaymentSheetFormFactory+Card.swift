@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import UIKit
+
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-import UIKit
 
 extension PaymentSheetFormFactory {
     func makeCard(theme: ElementsUITheme = .default) -> PaymentMethodElement {

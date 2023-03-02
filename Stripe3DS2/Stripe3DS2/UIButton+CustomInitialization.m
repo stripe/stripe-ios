@@ -63,4 +63,4 @@ static const CGFloat kDefaultButtonContentInset = (CGFloat)12.0;
 
 NS_ASSUME_NONNULL_END
 
-void _stds_import_uibutton_custominitialization() {}
+void _stds_import_uibutton_custominitialization(void) {}

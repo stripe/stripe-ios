@@ -7,9 +7,9 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-import UIKit
 
 protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)

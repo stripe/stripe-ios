@@ -7,8 +7,8 @@
 //
 
 import SafariServices
-@_spi(STP) import StripeUICore
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView)

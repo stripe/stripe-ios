@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
-import UIKit
 
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)

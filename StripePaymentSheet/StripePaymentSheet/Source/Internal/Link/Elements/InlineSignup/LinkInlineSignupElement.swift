@@ -6,8 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
 import UIKit
+
+@_spi(STP) import StripeUICore
 
 final class LinkInlineSignupElement: Element {
 

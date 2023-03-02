@@ -5,8 +5,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
 import UIKit
+
+@_spi(STP) import StripeUICore
 
 /// The BottomSheetPresentationController is the middle layer between the presentingViewController
 /// and the presentedViewController.

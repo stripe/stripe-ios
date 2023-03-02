@@ -6,8 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
 import UIKit
+
+@_spi(STP) import StripePayments
 
 extension ConsumerSession {
     struct VerificationSession: Codable {

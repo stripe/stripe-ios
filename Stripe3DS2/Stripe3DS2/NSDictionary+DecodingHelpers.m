@@ -146,4 +146,4 @@
 
 @end
 
-void _stds_import_nsdictionary_decodinghelpers() {}
+void _stds_import_nsdictionary_decodinghelpers(void) {}

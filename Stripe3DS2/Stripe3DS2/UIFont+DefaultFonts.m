@@ -40,4 +40,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-void _stds_import_uifont_defaultfonts() {}
+void _stds_import_uifont_defaultfonts(void) {}

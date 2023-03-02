@@ -8,11 +8,11 @@
 
 import AVFoundation
 import Foundation
+import UIKit
+import Vision
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
-import UIKit
-import Vision
 
 enum STPCardScannerError: Int {
     /// Camera not available.

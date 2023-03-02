@@ -8,9 +8,9 @@
 
 import Foundation
 import PassKit
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
-import UIKit
 
 // MARK: - Configuration
 extension PaymentSheet {

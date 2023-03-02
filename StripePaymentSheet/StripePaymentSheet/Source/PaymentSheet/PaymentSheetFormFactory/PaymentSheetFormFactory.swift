@@ -6,12 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import SwiftUI
+import UIKit
+
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import SwiftUI
-import UIKit
 
 /**
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an

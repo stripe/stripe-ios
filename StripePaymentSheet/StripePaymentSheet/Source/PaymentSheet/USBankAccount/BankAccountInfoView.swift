@@ -5,9 +5,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
+
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 protocol BankAccountInfoViewDelegate {
     func didTapXIcon()

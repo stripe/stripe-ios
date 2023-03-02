@@ -7,9 +7,9 @@
 //
 import Foundation
 import SafariServices
+import UIKit
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 @objc(STP_Internal_AUBECSLegalTermsView)
 final class AUBECSLegalTermsView: UIView {

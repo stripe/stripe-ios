@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 protocol LinkInstantDebitMandateViewDelegate: AnyObject {
     /// Called when the user taps on a link.

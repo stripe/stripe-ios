@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Security
 
 /// A secure cookie store backed by Keychain.
 final class LinkSecureCookieStore: LinkCookieStore {

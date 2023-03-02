@@ -37,7 +37,6 @@ extension UINavigationController {
     }
 }
 
-@available(iOS 13.0, *)
 extension UINavigationBarAppearance {
     fileprivate func copyButtonAppearance(from other: UINavigationBarAppearance) {
         // Button appearances will be undefined if using the default configuration.

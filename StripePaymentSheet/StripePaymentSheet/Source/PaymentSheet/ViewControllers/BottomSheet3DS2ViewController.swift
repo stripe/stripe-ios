@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
-import UIKit
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(

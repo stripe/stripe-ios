@@ -29,4 +29,4 @@
 
 @end
 
-void _stds_import_nslayoutconstraint_layoutsupport() {}
+void _stds_import_nslayoutconstraint_layoutsupport(void) {}

@@ -7,7 +7,6 @@
 //
 import UIKit
 
-@available(iOS 13.0, *)
 class AppleCreditCardOcr: CreditCardOcrImplementation {
     override func recognizeCard(
         in fullImage: CGImage,

@@ -7,11 +7,11 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 /// A Element that contains a SectionElement for card details, whose view depends on the availability of card scanning:
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.

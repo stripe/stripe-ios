@@ -7,10 +7,10 @@
 //
 import Foundation
 import SafariServices
+import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_AfterpayPriceBreakdownView)

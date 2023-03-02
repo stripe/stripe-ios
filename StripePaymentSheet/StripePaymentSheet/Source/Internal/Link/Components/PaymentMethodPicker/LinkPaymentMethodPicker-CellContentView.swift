@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 extension LinkPaymentMethodPicker {
 

@@ -24,7 +24,6 @@ class MockEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
 }
 
 @objcMembers
-@available(iOS 13.0, *)
 @objc class Testing_StaticCustomerContext_Objc: Testing_StaticCustomerContext {
 
 }

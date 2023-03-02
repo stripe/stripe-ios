@@ -38,4 +38,4 @@
 
 @end
 
-void _stds_import_uiview_layoutsupport() {}
+void _stds_import_uiview_layoutsupport(void) {}

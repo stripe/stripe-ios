@@ -6,11 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 // TODO(ramont): Remove after migrating to modern bindings
 fileprivate extension ConsumerPaymentDetails {

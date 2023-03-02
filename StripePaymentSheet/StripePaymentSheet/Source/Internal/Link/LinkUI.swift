@@ -5,8 +5,9 @@
 //  Created by Ramon Torres on 11/12/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
-@_spi(STP) import StripeUICore
+
 import UIKit
+@_spi(STP) import StripeUICore
 
 enum LinkUI {
 

@@ -7,11 +7,11 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-import UIKit
 
 /**
  A view that wraps a normal section and adds a "Scan card" button. Tapping the button displays a card scan view below the section.

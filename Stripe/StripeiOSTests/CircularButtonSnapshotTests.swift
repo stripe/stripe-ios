@@ -15,7 +15,6 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-@available(iOS 13.0, *)
 class CircularButtonSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
