@@ -643,6 +643,7 @@ extension PaymentSheetTestPlayground {
         let alertController = UIAlertController(title: "Confirm handler invoked",
                                                 message: nil,
                                                 preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.visibleViewController?.present(alertController, animated: true, completion: nil)
     }
 
