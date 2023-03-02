@@ -18,6 +18,7 @@ final class MerchantDataAccessView: HitTestView {
         isStripeDirect: Bool,
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        isNetworking: Bool,
         didSelectLearnMore: @escaping () -> Void
     ) {
         super.init(frame: .zero)
@@ -64,7 +65,16 @@ final class MerchantDataAccessView: HitTestView {
         let learnMoreString = "[\(String.Localized.learn_more)](\(learnMoreUrlString))"
 
         let finalString: String
-        if isStripeDirect {
+        if isNetworking {
+            let localizedPermissionFullString = String(
+                format: STPLocalizedString(
+                    "%@ through Link.",
+                    "A sentence that describes what users banking data is accessible to Link. For example, the full sentence may say 'Account details, transactions, balances through Link.'"
+                ),
+                permissionString
+            )
+            finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
+        } else if isStripeDirect {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         } else {
             let localizedPermissionFullString = String(
@@ -167,6 +177,7 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
             isStripeDirect: isStripeDirect,
             businessName: businessName,
             permissions: permissions,
+            isNetworking: false,
             didSelectLearnMore: {}
         )
     }

@@ -45,7 +45,7 @@ final class LinkAccountPickerViewController: UIViewController {
     private weak var bodyView: LinkAccountPickerBodyView?
     private lazy var footerView: LinkAccountPickerFooterView = {
         return LinkAccountPickerFooterView(
-            isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
+            isStripeDirect: false,
             businessName: businessName,
             permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
