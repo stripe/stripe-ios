@@ -38,14 +38,14 @@ stages:
     workflows:
     - framework-tests: {}
     - framework-tests-xcode-13: {}
-    - export-builds-xcode-143: {}
+    - test-builds-xcode-143: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
-    - export-builds-xcode-143: {}
+    - test-builds-xcode-143: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -331,18 +331,13 @@ workflows:
       bitrise.io:
         stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
-  export-builds-xcode-143:
+  test-builds-xcode-143:
     steps:
-    - fastlane@3:
+    - xcode-build-for-test@2:
         inputs:
-        - lane: export_builds
-        title: fastlane export_builds
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
+        - scheme: AllStripeFrameworks
     before_run:
     - prep_all
-    after_run:
-    - upload_logs
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
