@@ -75,7 +75,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }()
 
     init(
-        aboveCtaText: String = "Stripe's [Terms](www.stripe.com) and [Privacy Policy](www.stripe.com)",
+        aboveCtaText: String = "By saving your account to Link, you agree to Link’s [Terms](https://link.co/terms) and [Privacy Policy](https://link.co/privacy)",
         saveToLinkButtonText: String = "Save to Link",
         notNowButtonText: String = "Not now",
         didSelectSaveToLink: @escaping () -> Void,

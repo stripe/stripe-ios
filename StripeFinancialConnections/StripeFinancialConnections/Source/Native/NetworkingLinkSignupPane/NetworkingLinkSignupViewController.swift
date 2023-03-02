@@ -33,7 +33,9 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
-        let formView = NetworkingLinkSignupBodyFormView()
+        let formView = NetworkingLinkSignupBodyFormView(
+            accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber
+        )
         formView.delegate = self
         return formView
     }()
@@ -70,6 +72,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
         view.backgroundColor = .customBackgroundColor
 
         let pane = PaneWithHeaderLayoutView(
@@ -82,14 +85,14 @@ final class NetworkingLinkSignupViewController: UIViewController {
                                 "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
                         ),
                         content:
-                            "Connect your account faster on [Merchant] and thousands of sites."
+                            "Connect your account faster on [Merchant] and everywhere Link is accepted."
                     ),
                     FinancialConnectionsBulletPoint(
                         icon: FinancialConnectionsImage(
                             default:
                                 "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
                         ),
-                        content: "Link with Stripe encrypts your data and never shares your login details."
+                        content: "Link encrypts your data and never shares your login details."
                     ),
                 ],
                 formView: formView,
@@ -101,14 +104,15 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         pane.addTo(view: view)
 
+        // if user drags, dismiss keyboard so the CTA buttons can be shown
+        pane.scrollView.keyboardDismissMode = .onDrag
+
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
         if let emailAddress = emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(dataSource.manifest.accountholderCustomerEmailAddress)
         } else {
             formView.beginEditingEmailAddressField()
         }
-
-        // TODO(kgaidis): pre-fill phone number
     }
 
     private func didSelectSaveToLink() {
@@ -121,8 +125,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
             )
         dataSource.saveToLink(
             emailAddress: formView.emailElement.emailAddressString ?? "",
-            phoneNumber: formView.phoneNumberTextField.text ?? "",
-            countryCode: "US"  // TODO(kgaidis): fix the country code
+            phoneNumber: formView.phoneNumberElement.phoneNumber?.number ?? "",
+            countryCode: formView.phoneNumberElement.phoneNumber?.countryCode ?? "US"
         )
         .observe { [weak self] result in
             guard let self = self else { return }
@@ -150,13 +154,20 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }
 
     private func didSelectURLInTextFromBackend(_ url: URL) {
-
+        AuthFlowHelpers.handleURLInTextFromBackend(
+            url: url,
+            pane: .networkingLinkSignupPane,
+            analyticsClient: dataSource.analyticsClient,
+            handleStripeScheme: { _ in
+                // no custom stripe scheme is handled
+            }
+        )
     }
 
     private func adjustSaveToLinkButtonDisabledState() {
         let isEmailValid = formView.emailElement.validationState.isValid
-        // TODO(kgaidis): add phone number validation
-        footerView.enableSaveToLinkButton(isEmailValid)
+        let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
+        footerView.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
 }
 
@@ -198,9 +209,23 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             eventName: "networking.new_consumer",
                             pane: .networkingLinkSignupPane
                         )
-                        self.formView.showPhoneNumberTextFieldIfNeeded()
+
+                        let didShowPhoneNumberFieldForTheFirstTime = self.formView.showPhoneNumberFieldIfNeeded()
+                        // in case user needs to slowly re-type the e-mail,
+                        // we want to only jump to the phone number the
+                        // first time they enter the e-mail
+                        if didShowPhoneNumberFieldForTheFirstTime {
+                            let didPrefillPhoneNumber = (self.formView.phoneNumberElement.phoneNumber?.number ?? "").count > 1
+                            // if the phone number is pre-filled, we don't focus on the phone number field
+                            if !didPrefillPhoneNumber {
+                                self.formView.beginEditingPhoneNumberField()
+                            } else {
+                                // user is done with e-mail AND phone number, so dismiss the keyboard
+                                // so they can see the "Save to Link" button
+                                self.formView.endEditingEmailAddressField()
+                            }
+                        }
                         self.footerView.showSaveToLinkButtonIfNeeded()
-                        self.adjustSaveToLinkButtonDisabledState()
                     }
                 case .failure(let error):
                     self.dataSource.analyticsClient.logUnexpectedError(
@@ -217,7 +242,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
             }
     }
 
-    func networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(_ view: NetworkingLinkSignupBodyFormView) {
+    func networkingLinkSignupBodyFormViewDidUpdateFields(_ view: NetworkingLinkSignupBodyFormView) {
         adjustSaveToLinkButtonDisabledState()
     }
 }
