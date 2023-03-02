@@ -24,9 +24,6 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
-    // we get this after starting verification
-    private var consumerSessionClientSecret: String?
-
     init(
         manifest: FinancialConnectionsSessionManifest,
         selectedAccountIds: [String],
@@ -48,8 +45,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     func saveToLink(emailAddress: String, phoneNumber: String, countryCode: String) -> Future<Void> {
         return apiClient.saveAccountsToLink(
             emailAddress: emailAddress,
-            phoneNumber: phoneNumber,  // TODO(kgaidis): double-check how we only support US phone numbers? // ex. "+12345642332"
-            country: countryCode,  // ex. "US"
+            phoneNumber: phoneNumber,
+            country: countryCode, // ex. "US"
             selectedAccountIds: selectedAccountIds,
             consumerSessionClientSecret: nil,
             clientSecret: clientSecret
