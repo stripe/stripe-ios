@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 final class ManualEntryErrorView: UIView {
 
     init(text: String) {
@@ -32,11 +33,13 @@ final class ManualEntryErrorView: UIView {
             warningIconImageView.heightAnchor.constraint(equalToConstant: warningIconWidthAndHeight),
         ])
 
-        let errorLabel = UILabel()
-        errorLabel.font = errorLabelFont
-        errorLabel.textColor = .textCritical
-        errorLabel.numberOfLines = 0
-        errorLabel.text = text
+        let errorLabel = ClickableLabel(
+            font: errorLabelFont,
+            boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            textColor: .textCritical
+        )
+        errorLabel.setText(text)
         errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
         let horizontalStackView = UIStackView(
