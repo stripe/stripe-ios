@@ -34,7 +34,6 @@ class MockSTPPaymentOptionsViewControllerDelegate: NSObject, STPPaymentOptionsVi
 
 }
 
-@available(iOS 13.0, *)
 class STPPaymentOptionsViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
