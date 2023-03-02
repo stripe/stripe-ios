@@ -225,7 +225,7 @@ extension PaymentSheet {
                 )
 
                 if availabilityStatus != .supported {
-                    // This payment method is being flitered out, log the reason/s why
+                    // This payment method is being filtered out, log the reason/s why
                     #if DEBUG
                     print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(availabilityStatus.description)\n")
                     #endif
@@ -399,7 +399,7 @@ extension PaymentSheet {
             let supports = Set(requirements).isSubset(of: fulfilledRequirements)
             if !supports {
                 let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
-                return .missingRequirements(Array(missingRequirements))
+                return .missingRequirements(missingRequirements)
             }
 
             return .supported
@@ -447,7 +447,7 @@ extension PaymentSheet {
 
             if !supports {
                 let missingRequirements = Set(requirements).subtracting(fulfilledRequirements)
-                return .missingRequirements(Array(missingRequirements))
+                return .missingRequirements(missingRequirements)
             }
 
             return .supported
