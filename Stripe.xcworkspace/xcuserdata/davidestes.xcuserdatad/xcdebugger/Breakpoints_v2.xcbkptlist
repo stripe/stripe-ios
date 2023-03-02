@@ -1,0 +1,1161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "6DFDF7FC-5484-415D-AF67-A36C19990A91"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C0C25324-7B1F-4598-9EC4-1172796498E2"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePaymentSheet/StripePaymentSheet/Source/PaymentSheet/PaymentSheetConfiguration.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "ApplePayConfiguration"
+            landmarkType = "14">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "178F4B70-A6C7-4929-AB2D-6CF1C73949EE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/APIRequest.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "parseResponse(_:body:error:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "178F4B70-A6C7-4929-AB2D-6CF1C73949EE - 8ff9c80eedfef84"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.APIRequest.parseResponse&lt;&#x3c4;_0_0 where &#x3c4;_1_0: StripePayments.STPAPIResponseDecodable&gt;(_: Swift.Optional&lt;__C.NSURLResponse&gt;, body: Swift.Optional&lt;Foundation.Data&gt;, error: Swift.Optional&lt;Swift.Error&gt;, completion: (Swift.Optional&lt;&#x3c4;_1_0&gt;, Swift.Optional&lt;__C.NSHTTPURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/APIRequest.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "175"
+                  endingLineNumber = "175"
+                  offsetFromSymbolStart = "1492">
+               </Location>
+               <Location
+                  uuid = "178F4B70-A6C7-4929-AB2D-6CF1C73949EE - 8ff9c80eedfefe7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.APIRequest.parseResponse&lt;&#x3c4;_0_0 where &#x3c4;_1_0: StripePayments.STPAPIResponseDecodable&gt;(_: Swift.Optional&lt;__C.NSURLResponse&gt;, body: Swift.Optional&lt;Foundation.Data&gt;, error: Swift.Optional&lt;Swift.Error&gt;, completion: (Swift.Optional&lt;&#x3c4;_1_0&gt;, Swift.Optional&lt;__C.NSHTTPURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/APIRequest.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "176"
+                  endingLineNumber = "176"
+                  offsetFromSymbolStart = "1524">
+               </Location>
+               <Location
+                  uuid = "178F4B70-A6C7-4929-AB2D-6CF1C73949EE - 8ff9c80eedfefe7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.APIRequest.parseResponse&lt;&#x3c4;_0_0 where &#x3c4;_1_0: StripePayments.STPAPIResponseDecodable&gt;(_: Swift.Optional&lt;__C.NSURLResponse&gt;, body: Swift.Optional&lt;Foundation.Data&gt;, error: Swift.Optional&lt;Swift.Error&gt;, completion: (Swift.Optional&lt;&#x3c4;_1_0&gt;, Swift.Optional&lt;__C.NSHTTPURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/APIRequest.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "176"
+                  endingLineNumber = "176"
+                  offsetFromSymbolStart = "1564">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "429C9934-3A83-42B3-8F90-1C179786B1D7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "429C9934-3A83-42B3-8F90-1C179786B1D7 - 77531465a234cb52"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "79"
+                  endingLineNumber = "79"
+                  offsetFromSymbolStart = "2948">
+               </Location>
+               <Location
+                  uuid = "429C9934-3A83-42B3-8F90-1C179786B1D7 - 77531465a234cb52"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "79"
+                  endingLineNumber = "79"
+                  offsetFromSymbolStart = "2344">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3A4BDE1B-66E7-441C-AF2F-F7175B563182"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3A4BDE1B-66E7-441C-AF2F-F7175B563182 - 77531465a234cee6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "1152">
+               </Location>
+               <Location
+                  uuid = "3A4BDE1B-66E7-441C-AF2F-F7175B563182 - 77531465a234cee6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "1204">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "614B69C2-A4DB-4CF8-A926-76FA61103E35"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "614B69C2-A4DB-4CF8-A926-76FA61103E35 - 77531465a234ce7a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55"
+                  offsetFromSymbolStart = "656">
+               </Location>
+               <Location
+                  uuid = "614B69C2-A4DB-4CF8-A926-76FA61103E35 - 77531465a234ce7a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55"
+                  offsetFromSymbolStart = "736">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "73585267-38BA-411C-BB86-EF2301109CD6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stripe3DS2/Stripe3DS2/NSDictionary+DecodingHelpers.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "-_stds_stringForKey:validator:required:error:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C70D5BA4-7AA2-4BE9-A223-42DA8F4C461A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripeCore/StripeCore/Source/Categories/NSError+Stripe.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "stp_genericFailedToParseResponseError()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A49A31C8-B7FF-4486-861E-515A6A280164"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A49A31C8-B7FF-4486-861E-515A6A280164 - 77531465a234b0d1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "316">
+               </Location>
+               <Location
+                  uuid = "A49A31C8-B7FF-4486-861E-515A6A280164 - 77531465a234b0d1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "408">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "916ED35F-BE5F-4557-9BD9-2E1909AB850F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "916ED35F-BE5F-4557-9BD9-2E1909AB850F - 77531465a234b0b0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "3068">
+               </Location>
+               <Location
+                  uuid = "916ED35F-BE5F-4557-9BD9-2E1909AB850F - 77531465a234b0b0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "2460">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1963EEB4-9DC8-4485-A8F3-C79FA7FB8BC8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1963EEB4-9DC8-4485-A8F3-C79FA7FB8BC8 - 77531465a234cf9b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "592">
+               </Location>
+               <Location
+                  uuid = "1963EEB4-9DC8-4485-A8F3-C79FA7FB8BC8 - 77531465a234cf9b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "632">
+               </Location>
+               <Location
+                  uuid = "1963EEB4-9DC8-4485-A8F3-C79FA7FB8BC8 - 77531465a234cf9b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "672">
+               </Location>
+               <Location
+                  uuid = "1963EEB4-9DC8-4485-A8F3-C79FA7FB8BC8 - 77531465a234cf9b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "712">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "801EB133-1D16-400C-BCC7-B520B996275B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "801EB133-1D16-400C-BCC7-B520B996275B - 77531465a234cffe"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "51"
+                  endingLineNumber = "51"
+                  offsetFromSymbolStart = "516">
+               </Location>
+               <Location
+                  uuid = "801EB133-1D16-400C-BCC7-B520B996275B - 77531465a234cffe"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "51"
+                  endingLineNumber = "51"
+                  offsetFromSymbolStart = "596">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F73DC3CB-3541-4E27-B2F1-2D2C0DC9CB39"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F73DC3CB-3541-4E27-B2F1-2D2C0DC9CB39 - 77531465a234cf3c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "49"
+                  endingLineNumber = "49"
+                  offsetFromSymbolStart = "436">
+               </Location>
+               <Location
+                  uuid = "F73DC3CB-3541-4E27-B2F1-2D2C0DC9CB39 - 77531465a234cf3c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "49"
+                  endingLineNumber = "49"
+                  offsetFromSymbolStart = "520">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E83AAECC-7B33-4625-824E-1212064F8CC4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Internal/API Bindings/STP3DS2AuthenticateResponse.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E83AAECC-7B33-4625-824E-1212064F8CC4 - 77531465a234cf72"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47"
+                  offsetFromSymbolStart = "392">
+               </Location>
+               <Location
+                  uuid = "E83AAECC-7B33-4625-824E-1212064F8CC4 - 77531465a234cf72"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; Swift.Optional&lt;Self&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Internal/API%20Bindings/STP3DS2AuthenticateResponse.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47"
+                  offsetFromSymbolStart = "476">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A4D9D892-8645-4A4F-8149-E288941D1ABA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Helpers/STPBINController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "init(from:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EB97D531-8313-4C05-A1A0-DB5636A9F718"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stripe/StripeiOSTests/STPBinRangeTest.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "testBinRangesForNumber()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "82AAEAFF-BF12-489A-9B0A-E5462C057A98"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stripe/StripeiOSTests/STPCardBINMetadataTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "testAPICall()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "336CABD6-7920-40C5-B43D-C31528CC8436"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stripe/StripeiOSTests/STPCardBINMetadataTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "testAPICall()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "24AD8C4F-CE02-4805-BB11-240639AB1AA7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "509"
+            endingLineNumber = "509"
+            landmarkName = "decodeResponse(data:error:response:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "99BF932F-51BA-48AA-8593-34B37E3A5DCD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stripe/StripeiOSTests/STPCardBINMetadataTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "testAPICall()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C06E50CF-F9C9-41D8-8346-4E7579E971C3"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "457"
+            endingLineNumber = "457"
+            landmarkName = "currentYear()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C06E50CF-F9C9-41D8-8346-4E7579E971C3 - 4900b7ce2c45e3a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.currentYear() -&gt; Swift.Int"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "445"
+                  endingLineNumber = "445"
+                  offsetFromSymbolStart = "328">
+               </Location>
+               <Location
+                  uuid = "C06E50CF-F9C9-41D8-8346-4E7579E971C3 - dfbf3cd03dd58516"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "444"
+                  endingLineNumber = "444"
+                  offsetFromSymbolStart = "624">
+               </Location>
+               <Location
+                  uuid = "C06E50CF-F9C9-41D8-8346-4E7579E971C3 - cc1d8380a266b16"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.cardNumberFormat(forCardNumber: Swift.String) -&gt; Swift.Array&lt;__C.NSNumber&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "444"
+                  endingLineNumber = "444"
+                  offsetFromSymbolStart = "604">
+               </Location>
+               <Location
+                  uuid = "C06E50CF-F9C9-41D8-8346-4E7579E971C3 - 25524cdb4cb70a7e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.stringIsValidLuhn(Swift.String) -&gt; Swift.Bool"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "457"
+                  endingLineNumber = "457"
+                  offsetFromSymbolStart = "820">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
+            landmarkName = "possibleBrands(forNumber:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - a05452a483cad468"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Set&lt;StripePayments.STPCardBrand&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "434"
+                  endingLineNumber = "434"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - bab47f42c109a7b4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Set&lt;StripePayments.STPCardBrand&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "435"
+                  endingLineNumber = "435"
+                  offsetFromSymbolStart = "116">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - 6f89ed220854fd0c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "434"
+                  endingLineNumber = "434"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - dfbf3cd03dd582ee"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "436"
+                  endingLineNumber = "436"
+                  offsetFromSymbolStart = "124">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - dfbf3cd03dd582ee"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "436"
+                  endingLineNumber = "436"
+                  offsetFromSymbolStart = "140">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - 7a594ee0b46a2b7f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.cardNumberFormat(for: StripePayments.STPCardBrand) -&gt; Swift.Array&lt;__C.NSNumber&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "434"
+                  endingLineNumber = "434"
+                  offsetFromSymbolStart = "180">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - dfbf3cd03dd58573"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "447"
+                  endingLineNumber = "447"
+                  offsetFromSymbolStart = "320">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - 2acae971d4258db2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (StripePayments.STPBINRange) -&gt; StripePayments.STPCardBrand in closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "447"
+                  endingLineNumber = "447"
+                  offsetFromSymbolStart = "8">
+               </Location>
+               <Location
+                  uuid = "3600C2A5-7D08-470B-BAB9-8C4B975F7396 - 25524cdb4cb70955"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.stringIsValidLuhn(Swift.String) -&gt; Swift.Bool"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "448"
+                  endingLineNumber = "448"
+                  offsetFromSymbolStart = "160">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "82B571B9-C82E-4331-823C-3A3BF5AB3E20"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stripe/StripeiOSTests/STPCardValidatorTest.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "450"
+            endingLineNumber = "450"
+            landmarkName = "testCBCFetch()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "82B571B9-C82E-4331-823C-3A3BF5AB3E20 - f0f70772eac14b20"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; () in StripeiOS_Tests.STPCardValidatorTest.testCBCFetch() -&gt; ()"
+                  moduleName = "StripeiOS_Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/Stripe/StripeiOSTests/STPCardValidatorTest.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "447"
+                  endingLineNumber = "447"
+                  offsetFromSymbolStart = "376">
+               </Location>
+               <Location
+                  uuid = "82B571B9-C82E-4331-823C-3A3BF5AB3E20 - f0f70772eac14b20"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; () in StripeiOS_Tests.STPCardValidatorTest.testCBCFetch() -&gt; ()"
+                  moduleName = "StripeiOS_Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/Stripe/StripeiOSTests/STPCardValidatorTest.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "447"
+                  endingLineNumber = "447"
+                  offsetFromSymbolStart = "184">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3720BC93-AF9E-4FD6-AD47-C469CACD9FC4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "449"
+            endingLineNumber = "449"
+            landmarkName = "possibleBrands(forNumber:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3720BC93-AF9E-4FD6-AD47-C469CACD9FC4 - dfbf3cd03dd582ee"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "436"
+                  endingLineNumber = "436"
+                  offsetFromSymbolStart = "124">
+               </Location>
+               <Location
+                  uuid = "3720BC93-AF9E-4FD6-AD47-C469CACD9FC4 - dfbf3cd03dd582ee"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "436"
+                  endingLineNumber = "436"
+                  offsetFromSymbolStart = "140">
+               </Location>
+               <Location
+                  uuid = "3720BC93-AF9E-4FD6-AD47-C469CACD9FC4 - 7a594ee0b46a2b31"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.cardNumberFormat(for: StripePayments.STPCardBrand) -&gt; Swift.Array&lt;__C.NSNumber&gt;"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "436"
+                  endingLineNumber = "436"
+                  offsetFromSymbolStart = "340">
+               </Location>
+               <Location
+                  uuid = "3720BC93-AF9E-4FD6-AD47-C469CACD9FC4 - dfbf3cd03dd584b1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;StripePayments.STPBINRange&gt;, Swift.Error&gt;) -&gt; () in static StripePayments.STPCardValidator.possibleBrands(forNumber: Swift.String, completion: (Swift.Result&lt;Swift.Set&lt;StripePayments.STPCardBrand&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "449"
+                  endingLineNumber = "449"
+                  offsetFromSymbolStart = "476">
+               </Location>
+               <Location
+                  uuid = "3720BC93-AF9E-4FD6-AD47-C469CACD9FC4 - 25524cdb4cb70976"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static StripePayments.STPCardValidator.stringIsValidLuhn(Swift.String) -&gt; Swift.Bool"
+                  moduleName = "StripePayments"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/davidestes/stripe/stripe-ios/StripePayments/StripePayments/Source/Helpers/STPCardValidator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "449"
+                  endingLineNumber = "449"
+                  offsetFromSymbolStart = "168">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AA1F8E4B-C967-4525-8DA0-65039DAE3DBA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripeCore/StripeCore/Source/Telemetry/STPTelemetryClient.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "deviceModel"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2C7E4F81-92BE-4CB0-B4D5-991CB3BC32CE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Example/PaymentSheet Example/PaymentSheet Example/PaymentSheetTestPlayground.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "277"
+            endingLineNumber = "277"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "74722A8E-9501-44F5-9D14-9EFCDDCA5869"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripeCore/StripeCore/Source/Categories/NSError+StripeCore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "13"
+            endingLineNumber = "13"
+            landmarkName = "stp_unexpectedErrorMessage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "23BFDE4C-5B1A-4331-99E0-24CBFD2640CD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/API Bindings/Models/ACH/LinkAccountSession.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "init(stripeID:livemode:clientSecret:allResponseFields:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E180498A-7A20-4E1C-9177-A7B99A9F4980"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePayments/StripePayments/Source/API Bindings/Models/ACH/LinkAccountSession.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "decodedObject(fromAPIResponse:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F2771572-8C98-4D69-9CAC-7D626B1CD4D3"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripeCore/StripeCore/Source/API Bindings/STPAPIClient.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "477"
+            endingLineNumber = "477"
+            landmarkName = "sendRequest(request:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "12FF992B-68D9-4EFE-BC50-5E6D3C364907"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StripePaymentSheet/StripePaymentSheet/Source/PaymentSheet/Views/PaymentSheetUIKitAdditions.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "11"
+            endingLineNumber = "11"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
