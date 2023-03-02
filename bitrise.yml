@@ -38,12 +38,14 @@ stages:
     workflows:
     - framework-tests: {}
     - framework-tests-xcode-13: {}
+    - framework-tests-xcode-143: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
+    - framework-tests-xcode-143: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -329,7 +331,17 @@ workflows:
     - upload_logs
     meta:
       bitrise.io:
-        stack: osx-xcode-13.2.x
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
+  framework-tests-xcode-143:
+    steps: []
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=14.5
+    after_run:
+    - framework-tests
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.2.x
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
