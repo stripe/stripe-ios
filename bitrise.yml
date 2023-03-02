@@ -333,12 +333,14 @@ workflows:
       bitrise.io:
         stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
-  framework-tests-xcode-143:
-    steps: []
+  export-builds-xcode-143:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: export_builds
+        title: fastlane export_builds
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
-    after_run:
-    - framework-tests
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
