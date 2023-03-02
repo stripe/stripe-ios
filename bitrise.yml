@@ -336,6 +336,8 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
     before_run:
     - prep_all
     meta:
