@@ -17,7 +17,6 @@ import OHHTTPStubsSwift
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-@available(iOS 13.0, *)
 class STPApplePayContextFunctionalTestAPIClient: STPAPIClient {
     @objc var applePayContext: STPApplePayContext?
     @objc var shouldSimulateCancelAfterConfirmBegins: Bool = false

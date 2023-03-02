@@ -389,7 +389,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                     "event_name": eventName,
                     "client_timestamp": clientTimestamp,
                     "raw_event_details": "{}",
-                ],
+                ] as [String : Any],
             ],
         ]
         body["key"] = publishableKey

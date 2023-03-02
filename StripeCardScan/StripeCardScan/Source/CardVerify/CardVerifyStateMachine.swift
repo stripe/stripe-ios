@@ -156,7 +156,6 @@ class CardVerifyStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachinePro
     }
 }
 
-@available(iOS 13.0, *)
 class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachineProtocol {
     var requiredLastFour: String?
     var requiredBin: String?

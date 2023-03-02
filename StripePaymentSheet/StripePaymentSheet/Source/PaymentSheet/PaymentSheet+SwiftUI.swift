@@ -11,7 +11,6 @@
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension View {
@@ -91,7 +90,6 @@ extension View {
     }
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
@@ -131,7 +129,6 @@ extension PaymentSheet {
     }
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController {
@@ -210,7 +207,6 @@ extension PaymentSheet.FlowController {
     }
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {

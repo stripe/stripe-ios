@@ -14,7 +14,6 @@ import OCMock
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-@available(iOS 13.0, *)
 class STPPaymentOptionsViewControllerTest: XCTestCase {
     class MockSTPPaymentOptionsViewControllerDelegate: NSObject,
         STPPaymentOptionsViewControllerDelegate

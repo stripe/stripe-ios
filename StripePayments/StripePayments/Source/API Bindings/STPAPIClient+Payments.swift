@@ -731,7 +731,7 @@ extension STPAPIClient {
         appParams["deviceRenderOptions"] = [
             "sdkInterface": "03",
             "sdkUiType": ["01", "02", "03", "04", "05"],
-        ]
+        ] as [String : Any]
         appParams["sdkMaxTimeout"] = String(format: "%02ld", maxTimeout)
         let appData = try? JSONSerialization.data(
             withJSONObject: appParams,
