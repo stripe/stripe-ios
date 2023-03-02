@@ -83,7 +83,10 @@ private func CreateContinueButton(
 
 private func CreateContinueButtonLabelView(email: String) -> UIView {
     let continueLabel = UILabel()
-    continueLabel.text = "Continue as"
+    continueLabel.text = STPLocalizedString(
+        "Continue as",
+        "Leading text that comes before an e-mail. For example, it might say 'Continue as username@gmail.com'. This text will be combined together to form a button which, when pressed, will automatically log-in the user with their e-mail."
+    )
     continueLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
     continueLabel.textColor = .textSecondary
 
@@ -118,6 +121,14 @@ private func CreateArrowIconView() -> UIView {
 private func CreateSkipButton(
     didSelectSkip: @escaping () -> Void
 ) -> UIView {
+    let leadingText = STPLocalizedString(
+        "Not you?",
+        "Leading text that comes before a button. For example, it will say 'Not you? Continue without signing in'. Pressing 'Continue without signing in' will allow the user to continue through the Bank Authentication Flow."
+    )
+    let continueButtonText = STPLocalizedString(
+        "Continue without signing in",
+        "Text for a butoon. Pressing it will allow the user to continue through the Bank Authentication Flow."
+    )
     let skipLabel = ClickableLabel(
         font: .stripeFont(forTextStyle: .captionTight),
         boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
@@ -125,7 +136,7 @@ private func CreateSkipButton(
         textColor: .textSecondary
     )
     skipLabel.setText(
-        "Not you? [Continue without signing in](stripe://fakeurl)",
+        "\(leadingText) [\(continueButtonText)](stripe://no-url-action-handler-will-be-used)",
         action: { _ in
             didSelectSkip()
         }
