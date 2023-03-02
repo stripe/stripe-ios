@@ -17,7 +17,7 @@ import Foundation
         ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         public typealias ConfirmHandler = (
             _ paymentMethodID: String,
-            _ intentCreationCallback: ((Result<String, Error>) -> Void)
+            _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
         /// - Parameters:
@@ -29,7 +29,7 @@ import Foundation
         public typealias ConfirmHandlerForServerSideConfirmation = (
           _ paymentMethodID: String,
           _ shouldSavePaymentMethod: Bool,
-          _ intentCreationCallback: ((Result<String, Error>) -> Void)
+          _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
