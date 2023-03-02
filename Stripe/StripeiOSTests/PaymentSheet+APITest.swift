@@ -40,6 +40,26 @@ class PaymentSheetAPITest: XCTestCase {
         return config
     }()
 
+    lazy var newCardPaymentOption: PaymentSheet.PaymentOption = {
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.cvc = "123"
+        cardParams.expYear = 32
+        cardParams.expMonth = 12
+        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
+            confirmParams: .init(
+                params: .init(
+                    card: cardParams,
+                    billingDetails: .init(),
+                    metadata: nil
+                ),
+                type: .card
+            )
+        )
+
+        return newCardPaymentOption
+    }()
+
     override class func setUp() {
         super.setUp()
         // `PaymentSheet.load()` uses the `LinkAccountService` to lookup the Link user account.
@@ -114,27 +134,12 @@ class PaymentSheetAPITest: XCTestCase {
                         )
                         XCTAssertEqual(paymentMethods, [])
                         // 2. Confirm the intent with a new card
-                        let cardParams = STPPaymentMethodCardParams()
-                        cardParams.number = "4242424242424242"
-                        cardParams.cvc = "123"
-                        cardParams.expYear = 32
-                        cardParams.expMonth = 12
-                        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
-                            confirmParams: .init(
-                                params: .init(
-                                    card: cardParams,
-                                    billingDetails: .init(),
-                                    metadata: nil
-                                ),
-                                type: .card
-                            )
-                        )
 
                         PaymentSheet.confirm(
                             configuration: self.configuration,
                             authenticationContext: self,
                             intent: paymentIntent,
-                            paymentOption: newCardPaymentOption,
+                            paymentOption: self.newCardPaymentOption,
                             paymentHandler: self.paymentHandler
                         ) { result in
                             switch result {
@@ -208,35 +213,118 @@ class PaymentSheetAPITest: XCTestCase {
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    func testPaymentSheetLoadWithDeferredIntent() {
-        let expectation = XCTestExpectation(description: "Load PaymentSheet")
+    func testPaymentSheetLoadAndConfirmWithDeferredIntent() {
+        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
+        let confirmExpectation = XCTestExpectation(description: "Confirm deferred intent")
+        let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
+
         let types = ["ideal", "card", "bancontact", "sofort"]
         let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
-
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
+            // TODO(porter) Invoke result callback to finish flow
+            callbackExpectation.fulfill()
+        }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
                                                             captureMethod: .automatic,
-                                                            paymentMethodTypes: types)
+                                                            paymentMethodTypes: types,
+                                                            confirmHandler: confirmHandler)
+        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         PaymentSheet.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration
         ) { result in
             switch result {
-            case .success(let elementsSession, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _):
                 XCTAssertEqual(
-                    Set(elementsSession.recommendedPaymentMethodTypes),
+                    Set(intent.recommendedPaymentMethodTypes),
                     Set(expected)
                 )
                 XCTAssertEqual(paymentMethods, [])
-                expectation.fulfill()
+                loadExpectation.fulfill()
+
+                PaymentSheet.confirm(configuration: self.configuration,
+                                     authenticationContext: self,
+                                     intent: .deferredIntent(elementsSession: elementsSession,
+                                                             intentConfig: intentConfig),
+                                     paymentOption: self.newCardPaymentOption,
+                                     paymentHandler: self.paymentHandler) { result in
+                    switch result {
+                    case .completed:
+                        confirmExpectation.fulfill()
+                    case .canceled:
+                        XCTFail("Confirm canceled")
+                    case .failed(let error):
+                        XCTFail("Failed to confirm: \(error)")
+                    }
+                }
+
             case .failure(let error):
                 print(error)
             }
         }
 
-        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+        wait(for: [loadExpectation, confirmExpectation, callbackExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testPaymentSheetLoadAndConfirmWithDeferredIntent_serverSideConfirmation() {
+        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
+        let confirmExpectation = XCTestExpectation(description: "Confirm deferred intent")
+        let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
+
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
+        let serverSideConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandlerForServerSideConfirmation = {_, _, _ in
+            // TODO(porter) Invoke result callback to finish flow
+            callbackExpectation.fulfill()
+        }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
+                                                                           currency: "USD",
+                                                                           setupFutureUsage: .onSession),
+                                                            captureMethod: .automatic,
+                                                            paymentMethodTypes: types,
+                                                            confirmHandlerForServerSideConfirmation: serverSideConfirmHandler)
+        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        PaymentSheet.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: self.configuration
+        ) { result in
+            switch result {
+            case .success(let intent, let paymentMethods, _):
+                XCTAssertEqual(
+                    Set(intent.recommendedPaymentMethodTypes),
+                    Set(expected)
+                )
+                XCTAssertEqual(paymentMethods, [])
+                loadExpectation.fulfill()
+
+                PaymentSheet.confirm(configuration: self.configuration,
+                                     authenticationContext: self,
+                                     intent: .deferredIntent(elementsSession: elementsSession,
+                                                             intentConfig: intentConfig),
+                                     paymentOption: self.newCardPaymentOption,
+                                     paymentHandler: self.paymentHandler) { result in
+                    switch result {
+                    case .completed:
+                        confirmExpectation.fulfill()
+                    case .canceled:
+                        XCTFail("Confirm canceled")
+                    case .failed(let error):
+                        XCTFail("Failed to confirm: \(error)")
+                    }
+                }
+
+            case .failure(let error):
+                print(error)
+            }
+        }
+
+        wait(for: [loadExpectation, confirmExpectation, callbackExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntentAttachedPaymentMethod() {

@@ -140,8 +140,12 @@ extension PaymentSheet {
                     completion: paymentHandlerCompletion
                 )
             // MARK: ↪ Deferred Intent
-            case .deferredIntent:
-                fatalError("TODO(DeferredIntent)")
+            case .deferredIntent(_, let intentConfig):
+                confirmDeferredIntentNewPaymentMethod(configuration: configuration,
+                                      intentConfig: intentConfig,
+                                      paymentMethodParams: confirmParams.paymentMethodParams,
+                                      shouldSavePaymentMethod: confirmParams.shouldSavePaymentMethod,
+                                      completion: completion)
             }
 
         // MARK: - Saved Payment Method
@@ -188,8 +192,19 @@ extension PaymentSheet {
                     completion: paymentHandlerCompletion
                 )
             // MARK: ↪ Deferred Intent
-            case .deferredIntent:
-                fatalError("TODO(DeferredIntent)")
+            case .deferredIntent(_, let intentConfig):
+                if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
+                    // Pass in false for `shouldSavePaymentMethod` since this is a saved payment method
+                    serverConfirmHandler(paymentMethod.stripeId,
+                                                false,
+                                                _handleIntentCreation(_:))
+                } else if let confirmHandler = intentConfig.confirmHandler {
+                    confirmHandler(paymentMethod.stripeId, _handleIntentCreation(_:))
+                } else {
+                    fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
+                }
+
+                completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -214,8 +229,13 @@ extension PaymentSheet {
                         with: authenticationContext,
                         completion: paymentHandlerCompletion
                     )
-                case .deferredIntent:
-                    fatalError("TODO(DeferredIntent)")
+                case .deferredIntent(_, let intentConfig):
+                    // Pass in false for `shouldSavePaymentMethod` since we are using Link
+                    confirmDeferredIntentNewPaymentMethod(configuration: configuration,
+                                          intentConfig: intentConfig,
+                                          paymentMethodParams: paymentMethodParams,
+                                          shouldSavePaymentMethod: false,
+                                          completion: completion)
                 }
             }
 
@@ -560,6 +580,45 @@ extension PaymentSheet {
             return nil
         }
         return params
+    }
+
+    private static func _handleIntentCreation(_ result: Result<String, Error>) {
+        // TODO(porter) Deferred intent confirmation handling
+    }
+
+    private static func confirmDeferredIntentNewPaymentMethod(configuration: PaymentSheet.Configuration,
+                                                              intentConfig: IntentConfiguration,
+                                                              paymentMethodParams: STPPaymentMethodParams,
+                                                              shouldSavePaymentMethod: Bool,
+                                                              completion: @escaping (PaymentSheetResult) -> Void) {
+        configuration.apiClient.createPaymentMethod(with: paymentMethodParams) {
+            paymentMethod,
+            error in
+            if let error = error {
+                completion(.failed(error: error))
+                return
+            }
+
+            guard let paymentMethod = paymentMethod else {
+                let paymentMethodCreationError = PaymentSheetError.unknown(
+                    debugDescription: "Failed to create a new payment method."
+                )
+                completion(.failed(error: paymentMethodCreationError))
+                return
+            }
+
+            if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
+                serverConfirmHandler(paymentMethod.stripeId,
+                                            shouldSavePaymentMethod,
+                                            _handleIntentCreation(_:))
+            } else if let confirmHandler = intentConfig.confirmHandler {
+                confirmHandler(paymentMethod.stripeId, _handleIntentCreation(_:))
+            } else {
+                fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
+            }
+
+            completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
+        }
     }
 }
 
