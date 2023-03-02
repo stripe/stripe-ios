@@ -23,31 +23,40 @@ final class NetworkingLinkVerificationBodyView: UIView {
 
     weak var delegate: NetworkingLinkVerificationBodyViewDelegate?
 
-    private(set) lazy var otpTextField: UITextField = {
-       let textField = InsetTextField()
-        textField.textColor = .textPrimary
-        textField.placeholder = "OTP"
-        textField.keyboardType = .numberPad
-        textField.layer.cornerRadius = 8
-        textField.layer.borderColor = UIColor.textBrand.cgColor
-        textField.layer.borderWidth = 2.0
-        textField.addTarget(
-            self,
-            action: #selector(otpTextFieldDidChange),
-            for: .editingChanged
+    private lazy var otpVerticalStackView: UIStackView = {
+        let otpVerticalStackView = UIStackView(
+            arrangedSubviews: [
+                otpTextField,
+            ]
         )
-        NSLayoutConstraint.activate([
-            textField.heightAnchor.constraint(equalToConstant: 56)
-        ])
-
-        return textField
+        otpVerticalStackView.axis = .vertical
+        otpVerticalStackView.spacing = 8
+        return otpVerticalStackView
     }()
+    // TODO(kgaidis): make changes to `OneTimeCodeTextField` to
+    // make the font larger
+    private(set) lazy var otpTextField: OneTimeCodeTextField = {
+        let otpTextField = OneTimeCodeTextField(numberOfDigits: 6, theme: theme)
+        otpTextField.tintColor = .textBrand
+        otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
+        return otpTextField
+    }()
+    private lazy var theme: ElementsUITheme = {
+        var theme: ElementsUITheme = .default
+        theme.colors = {
+            var colors = ElementsUITheme.Color()
+            colors.border = .borderNeutral
+            return colors
+        }()
+        return theme
+    }()
+    private var lastErrorView: UIView?
 
     init(email: String) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                otpTextField,
+                otpVerticalStackView,
                 CreateEmailLabel(email: email),
             ]
         )
@@ -61,22 +70,29 @@ final class NetworkingLinkVerificationBodyView: UIView {
     }
 
     @objc private func otpTextFieldDidChange() {
-        guard let otp = otpTextField.text else {
-            return
-        }
+        showErrorText(nil) // clear the error
 
-        if otp.count == 6 && Int(otp) != nil {
-            delegate?.networkingLinkVerificationBodyView(
-                self,
-                didEnterValidOTPCode: otp
-            )
+        if otpTextField.isComplete {
+            delegate?.networkingLinkVerificationBodyView(self, didEnterValidOTPCode: otpTextField.value)
+        }
+    }
+
+    func showErrorText(_ errorText: String?) {
+        lastErrorView?.removeFromSuperview()
+        lastErrorView = nil
+
+        if let errorText = errorText {
+            // TODO(kgaidis): rename & move `ManualEntryErrorView` to be more generic
+            let errorView = ManualEntryErrorView(text: errorText)
+            self.lastErrorView = errorView
+            otpVerticalStackView.addArrangedSubview(errorView)
         }
     }
 }
 
 private func CreateEmailLabel(email: String) -> UIView {
     let emailLabel = UILabel()
-    emailLabel.text = "Signing in as \(email)" // TODO(kgaidis): wrap with localizable strings
+    emailLabel.text = String(format: STPLocalizedString("Signing in as %@", "A footnote that explains the user that when they enter an one-time-password code (OTP), they will be signing in as the email in this footnote. '%@' is replaced with an email, for examle: 'Signing in as user@gmail.com'."), email)
     emailLabel.font = .stripeFont(forTextStyle: .captionTight)
     emailLabel.textColor = .textSecondary
     return emailLabel
@@ -112,31 +128,3 @@ struct NetworkingLinkVerificationBodyView_Previews: PreviewProvider {
 }
 
 #endif
-
-private class InsetTextField: UITextField { // TODO(kgaidis): cleanup/delete after using Stripe's components
-
-    private let padding = UIEdgeInsets(
-        top: 0,
-        left: 10,
-        bottom: 0,
-        right: 10
-    )
-
-    override open func textRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func placeholderRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func editingRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-}

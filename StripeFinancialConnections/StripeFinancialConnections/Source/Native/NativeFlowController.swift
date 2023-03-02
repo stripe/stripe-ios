@@ -636,9 +636,11 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData
+        consumerSession: ConsumerSessionData?
     ) {
-        dataManager.consumerSession = consumerSession
+        if let consumerSession = consumerSession {
+            dataManager.consumerSession = consumerSession
+        }
         pushPane(nextPane, animated: true)
     }
 
