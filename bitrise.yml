@@ -331,7 +331,7 @@ workflows:
     - upload_logs
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-13.2.x
         machine_type_id: g2-m1.8core
   framework-tests-xcode-143:
     steps: []
@@ -341,7 +341,7 @@ workflows:
     - framework-tests
     meta:
       bitrise.io:
-        stack: osx-xcode-14.2.x
+        stack: osx-xcode-14.3.x-ventura
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
