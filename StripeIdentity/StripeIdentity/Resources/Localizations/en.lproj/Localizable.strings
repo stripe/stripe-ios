@@ -38,7 +38,10 @@
 "Could not capture image" = "Could not capture image";
 
 /* Label for Date of birth field */
-"Date of birth" = "Date of birth";
+"Date of Birth" = "Date of Birth";
+
+/* Message for invalid Date of birth field */
+"Date of birth does not look valid" = "Date of birth does not look valid";
 
 /* Title of identity document file upload screen */
 "File upload" = "File upload";

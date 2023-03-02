@@ -362,11 +362,11 @@ extension StripeUICore.Button {
 
 // MARK: - Button.Configuration
 extension Button.Configuration {
-    
+
     static var buttonFont: UIFont {
         return IdentityUI.preferredFont(forTextStyle: .body, weight: .medium)
     }
-    
+
     /// The default button configuration.
     static func identityPrimary() -> Self {
         var configuration: Button.Configuration = .primary()
