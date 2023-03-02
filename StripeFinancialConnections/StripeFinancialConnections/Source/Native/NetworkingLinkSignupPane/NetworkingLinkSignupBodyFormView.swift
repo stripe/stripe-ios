@@ -12,7 +12,13 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
-    func networkingLinkSignupBodyFormViewDidEnterValidEmail(_ view: NetworkingLinkSignupBodyFormView)
+    func networkingLinkSignupBodyFormView(
+        _ view: NetworkingLinkSignupBodyFormView,
+        didEnterValidEmailAddress emailAddress: String
+    )
+    func networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(
+        _ view: NetworkingLinkSignupBodyFormView
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -23,37 +29,50 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     private lazy var verticalStackView: UIStackView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                emailAddressTextField
+                formElement.view
             ]
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 12
         return verticalStackView
     }()
-    private(set) lazy var emailAddressTextField: UITextField = {
-        let emailAddressTextField = InsetTextField()
-        emailAddressTextField.placeholder = "Email address (needs to end with .com)"
-        emailAddressTextField.layer.cornerRadius = 8
-        emailAddressTextField.layer.borderColor = UIColor.textBrand.cgColor
-        emailAddressTextField.layer.borderWidth = 2.0
-        emailAddressTextField.delegate = self
-        emailAddressTextField.addTarget(
-            self,
-            action: #selector(emailAddressTextFieldDidChange),
-            for: .editingChanged
-        )
-        NSLayoutConstraint.activate([
-            emailAddressTextField.heightAnchor.constraint(equalToConstant: 56)
-        ])
-        return emailAddressTextField
+    private lazy var theme: ElementsUITheme = {
+        var theme: ElementsUITheme = .default
+        theme.borderWidth = 1
+        theme.cornerRadius = 8
+        theme.shadow = nil
+        theme.fonts = {
+            var fonts = ElementsUITheme.Font()
+            fonts.subheadline = .stripeFont(forTextStyle: .body)
+            return fonts
+        }()
+        theme.colors = {
+            var colors = ElementsUITheme.Color()
+            colors.border = .borderNeutral
+            colors.danger = .textCritical
+            colors.placeholderText = .textSecondary
+            colors.textFieldText = .textPrimary
+            return colors
+        }()
+        return theme
     }()
+    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
+    private (set) lazy var emailElement: LinkEmailElement = {
+        let emailElement = LinkEmailElement(theme: theme)
+        emailElement.indicatorTintColor = .textPrimary
+        emailElement.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emailElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
+        ])
+        return emailElement
+    }()
+
     private(set) lazy var phoneNumberTextField: UITextField = {
         let phoneNumberTextField = InsetTextField()
         phoneNumberTextField.placeholder = "Phone number"
         phoneNumberTextField.layer.cornerRadius = 8
         phoneNumberTextField.layer.borderColor = UIColor.textBrand.cgColor
         phoneNumberTextField.layer.borderWidth = 2.0
-        phoneNumberTextField.delegate = self
         phoneNumberTextField.addTarget(
             self,
             action: #selector(phoneNumberTextFieldDidChange),
@@ -64,10 +83,16 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         ])
         return phoneNumberTextField
     }()
+    private lazy var formElement = FormElement(elements: [
+        emailSection,
+    ], theme: theme)
+    private var debounceEmailTimer: Timer?
+    private var lastValidEmail: String?
 
     init() {
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
+        formElement.delegate = self // the `formElement` "steals" the delegate from `emailElement`
     }
 
     required init?(coder: NSCoder) {
@@ -82,16 +107,15 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         // TODO(kgaidis): also add a little label together with phone numebr text field
     }
 
-    @objc private func emailAddressTextFieldDidChange() {
-        guard let emailAddress = emailAddressTextField.text else {
+    func prefillEmailAddress(_ emailAddress: String?) {
+        guard let emailAddress = emailAddress, !emailAddress.isEmpty else {
             return
         }
+        emailElement.emailAddressElement.setText(emailAddress)
+    }
 
-        // TODO(kgaidis): validate e-mail
-
-        if emailAddress.hasSuffix(".com") {
-            delegate?.networkingLinkSignupBodyFormViewDidEnterValidEmail(self)
-        }
+    func beginEditingEmailAddressField() {
+        emailElement.beginEditing()
     }
 
     @objc private func phoneNumberTextFieldDidChange() {
@@ -100,23 +124,39 @@ final class NetworkingLinkSignupBodyFormView: UIView {
 }
 
 @available(iOSApplicationExtension, unavailable)
-extension NetworkingLinkSignupBodyFormView: UITextFieldDelegate {
-
-    func textField(
-        _ textField: UITextField,
-        shouldChangeCharactersIn range: NSRange,
-        replacementString string: String
-    ) -> Bool {
-        return true
+extension NetworkingLinkSignupBodyFormView: ElementDelegate {
+    func didUpdate(element: StripeUICore.Element) {
+        switch emailElement.validationState {
+        case .valid:
+            if let emailAddress = emailElement.emailAddressString {
+                debounceEmailTimer?.invalidate()
+                debounceEmailTimer = Timer.scheduledTimer(
+                    withTimeInterval: 0.3,
+                    repeats: false
+                ) { [weak self] _ in
+                    guard let self = self else { return }
+                    if
+                        self.emailElement.validationState.isValid,
+                        // `lastValidEmail` ensures that we only
+                        // fire the delegate ONCE per unique valid email
+                        emailAddress != self.lastValidEmail
+                    {
+                        self.lastValidEmail = emailAddress
+                        self.delegate?.networkingLinkSignupBodyFormView(
+                            self,
+                            didEnterValidEmailAddress: emailAddress
+                        )
+                    }
+                }
+            }
+        case .invalid:
+            // errors are displayed automatically by the component
+            lastValidEmail = nil
+            delegate?.networkingLinkSignupBodyFormViewDidEnterInvalidEmailAddress(self)
+        }
     }
 
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-
-    }
+    func continueToNextField(element: StripeUICore.Element) {}
 }
 
 #if DEBUG
@@ -138,7 +178,7 @@ struct NetworkingLinkSignupBodyFormView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {
             NetworkingLinkSignupBodyFormViewUIViewRepresentable()
-                .frame(maxHeight: 200)
+                .frame(maxHeight: 100)
                 .padding()
             Spacer()
         }
