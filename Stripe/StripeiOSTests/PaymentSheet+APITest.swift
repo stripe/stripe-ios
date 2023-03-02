@@ -39,7 +39,7 @@ class PaymentSheetAPITest: XCTestCase {
         }
         return config
     }()
-    
+
     lazy var newCardPaymentOption: PaymentSheet.PaymentOption = {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
@@ -56,7 +56,7 @@ class PaymentSheetAPITest: XCTestCase {
                 type: .card
             )
         )
-        
+
         return newCardPaymentOption
     }()
 
