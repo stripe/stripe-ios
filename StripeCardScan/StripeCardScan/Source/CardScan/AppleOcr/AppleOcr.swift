@@ -1,7 +1,6 @@
 import UIKit
 import Vision
 
-@available(iOS 13.0, *)
 struct AppleOcr {
     static func configure() {
         // warm up the model eventually
