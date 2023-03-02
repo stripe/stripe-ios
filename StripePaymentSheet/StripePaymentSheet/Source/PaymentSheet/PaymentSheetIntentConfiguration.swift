@@ -71,9 +71,6 @@ import Foundation
         /// An explicit list of payment method types displayed to the customer.
         var paymentMethodTypes: [String]?
 
-        /// If your server confirms the PaymentIntent or SetupIntent, set this to `true`.
-        var isServerSideConfirmation: Bool = false
-
         /// Called when the customer confirms payment.
         /// Your implementation should create a PaymentIntent or SetupIntent on the server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.

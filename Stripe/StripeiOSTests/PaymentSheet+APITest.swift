@@ -39,6 +39,26 @@ class PaymentSheetAPITest: XCTestCase {
         }
         return config
     }()
+    
+    lazy var newCardPaymentOption: PaymentSheet.PaymentOption = {
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.cvc = "123"
+        cardParams.expYear = 32
+        cardParams.expMonth = 12
+        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
+            confirmParams: .init(
+                params: .init(
+                    card: cardParams,
+                    billingDetails: .init(),
+                    metadata: nil
+                ),
+                type: .card
+            )
+        )
+        
+        return newCardPaymentOption
+    }()
 
     override class func setUp() {
         super.setUp()
@@ -114,27 +134,12 @@ class PaymentSheetAPITest: XCTestCase {
                         )
                         XCTAssertEqual(paymentMethods, [])
                         // 2. Confirm the intent with a new card
-                        let cardParams = STPPaymentMethodCardParams()
-                        cardParams.number = "4242424242424242"
-                        cardParams.cvc = "123"
-                        cardParams.expYear = 32
-                        cardParams.expMonth = 12
-                        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
-                            confirmParams: .init(
-                                params: .init(
-                                    card: cardParams,
-                                    billingDetails: .init(),
-                                    metadata: nil
-                                ),
-                                type: .card
-                            )
-                        )
 
                         PaymentSheet.confirm(
                             configuration: self.configuration,
                             authenticationContext: self,
                             intent: paymentIntent,
-                            paymentOption: newCardPaymentOption,
+                            paymentOption: self.newCardPaymentOption,
                             paymentHandler: self.paymentHandler
                         ) { result in
                             switch result {
@@ -241,27 +246,11 @@ class PaymentSheetAPITest: XCTestCase {
                 XCTAssertEqual(paymentMethods, [])
                 loadExpectation.fulfill()
 
-                let cardParams = STPPaymentMethodCardParams()
-                cardParams.number = "4242424242424242"
-                cardParams.cvc = "123"
-                cardParams.expYear = 32
-                cardParams.expMonth = 12
-                let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
-                    confirmParams: .init(
-                        params: .init(
-                            card: cardParams,
-                            billingDetails: .init(),
-                            metadata: nil
-                        ),
-                        type: .card
-                    )
-                )
-
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
                                      intent: .deferredIntent(elementsSession: elementsSession,
                                                              intentConfig: intentConfig),
-                                     paymentOption: newCardPaymentOption,
+                                     paymentOption: self.newCardPaymentOption,
                                      paymentHandler: self.paymentHandler) { result in
                     switch result {
                     case .completed:
@@ -314,27 +303,11 @@ class PaymentSheetAPITest: XCTestCase {
                 XCTAssertEqual(paymentMethods, [])
                 loadExpectation.fulfill()
 
-                let cardParams = STPPaymentMethodCardParams()
-                cardParams.number = "4242424242424242"
-                cardParams.cvc = "123"
-                cardParams.expYear = 32
-                cardParams.expMonth = 12
-                let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
-                    confirmParams: .init(
-                        params: .init(
-                            card: cardParams,
-                            billingDetails: .init(),
-                            metadata: nil
-                        ),
-                        type: .card
-                    )
-                )
-
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
                                      intent: .deferredIntent(elementsSession: elementsSession,
                                                              intentConfig: intentConfig),
-                                     paymentOption: newCardPaymentOption,
+                                     paymentOption: self.newCardPaymentOption,
                                      paymentHandler: self.paymentHandler) { result in
                     switch result {
                     case .completed:
