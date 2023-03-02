@@ -38,14 +38,14 @@ stages:
     workflows:
     - framework-tests: {}
     - framework-tests-xcode-13: {}
-    - framework-tests-xcode-143: {}
+    - export-builds-xcode-143: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
-    - framework-tests-xcode-143: {}
+    - export-builds-xcode-143: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
