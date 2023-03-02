@@ -341,6 +341,10 @@ workflows:
         title: fastlane export_builds
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
