@@ -14,9 +14,8 @@ protocol NetworkingOTPDataSourceDelegate: AnyObject {
 
 protocol NetworkingOTPDataSource: AnyObject {
     var otpType: String { get }
-    var emailAddress: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    var consumerSession: ConsumerSessionData? { get }
+    var pane: FinancialConnectionsSessionManifest.NextPane { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
@@ -26,27 +25,28 @@ protocol NetworkingOTPDataSource: AnyObject {
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
 
     let otpType: String
-    let emailAddress: String
-    let customEmailType: String?
-    let connectionsMerchantName: String?
-    private let apiClient: FinancialConnectionsAPIClient
-    private let clientSecret: String
-    let analyticsClient: FinancialConnectionsAnalyticsClient
-    weak var delegate: NetworkingOTPDataSourceDelegate?
-
-    private(set) var consumerSession: ConsumerSessionData? {
+    private let emailAddress: String
+    private let customEmailType: String?
+    private let connectionsMerchantName: String?
+    private var consumerSession: ConsumerSessionData? {
         didSet {
             if let consumerSession = consumerSession {
                 delegate?.networkingOTPDataSource(self, didUpdateConsumerSession: consumerSession)
             }
         }
     }
+    let pane: FinancialConnectionsSessionManifest.NextPane
+    private let apiClient: FinancialConnectionsAPIClient
+    private let clientSecret: String
+    let analyticsClient: FinancialConnectionsAnalyticsClient
+    weak var delegate: NetworkingOTPDataSourceDelegate?
 
     init(
         otpType: String,
         emailAddress: String,
         customEmailType: String?,
         connectionsMerchantName: String?,
+        pane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
@@ -56,6 +56,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.emailAddress = emailAddress
         self.customEmailType = customEmailType
         self.connectionsMerchantName = connectionsMerchantName
+        self.pane = pane
         self.consumerSession = consumerSession
         self.apiClient = apiClient
         self.clientSecret = clientSecret

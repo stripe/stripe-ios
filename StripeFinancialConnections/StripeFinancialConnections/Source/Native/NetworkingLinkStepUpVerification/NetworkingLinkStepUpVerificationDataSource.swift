@@ -46,6 +46,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
             emailAddress: consumerSession.emailAddress,
             customEmailType: "NETWORKED_CONNECTIONS_OTP_EMAIL",
             connectionsMerchantName: manifest.businessName,
+            pane: .networkingLinkStepUpVerification,
             consumerSession: nil,
             apiClient: apiClient,
             clientSecret: clientSecret,

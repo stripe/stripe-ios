@@ -142,7 +142,7 @@ final class NetworkingOTPView: UIView {
                             .logExpectedError(
                                 error,
                                 errorName: "ConfirmVerificationSessionError",
-                                pane: .networkingLinkVerification // TODO(kgaidis): adjust the pane
+                                pane: self.dataSource.pane
                             )
 
                         self.otpTextField.performInvalidCodeAnimation(shouldClearValue: false)
@@ -153,7 +153,7 @@ final class NetworkingOTPView: UIView {
                             .logUnexpectedError(
                                 error,
                                 errorName: "ConfirmVerificationSessionError",
-                                pane: .networkingLinkVerification // TODO(kgaidis): adjust the pane
+                                pane: self.dataSource.pane
                             )
                         self.delegate?.networkingOTPView(self, didTerminallyFailToConfirmVerification: error)
                     }

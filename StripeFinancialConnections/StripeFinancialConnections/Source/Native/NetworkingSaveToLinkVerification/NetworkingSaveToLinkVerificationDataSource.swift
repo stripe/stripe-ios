@@ -45,6 +45,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
             emailAddress: consumerSession.emailAddress,
             customEmailType: nil,
             connectionsMerchantName: nil,
+            pane: .networkingSaveToLinkVerification,
             consumerSession: consumerSession,
             apiClient: apiClient,
             clientSecret: clientSecret,

@@ -47,6 +47,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             emailAddress: accountholderCustomerEmailAddress,
             customEmailType: nil,
             connectionsMerchantName: nil,
+            pane: .networkingLinkVerification,
             consumerSession: nil,
             apiClient: apiClient,
             clientSecret: clientSecret,
