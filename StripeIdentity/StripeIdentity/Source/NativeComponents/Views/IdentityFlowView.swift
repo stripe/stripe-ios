@@ -34,14 +34,8 @@ class IdentityFlowView: UIView {
             trailing: 16
         )
 
-        static var buttonFont: UIFont {
-            return IdentityUI.preferredFont(forTextStyle: .body, weight: .medium)
-        }
-
         static func buttonConfiguration(isPrimary: Bool) -> Button.Configuration {
-            var config: Button.Configuration = isPrimary ? .primary() : .secondary()
-            config.font = buttonFont
-            return config
+            return isPrimary ? .identityPrimary() : .identitySecondary()
         }
     }
 
@@ -363,5 +357,28 @@ extension StripeUICore.Button {
         )
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
+    }
+}
+
+// MARK: - Button.Configuration
+extension Button.Configuration {
+    
+    static var buttonFont: UIFont {
+        return IdentityUI.preferredFont(forTextStyle: .body, weight: .medium)
+    }
+    
+    /// The default button configuration.
+    static func identityPrimary() -> Self {
+        var configuration: Button.Configuration = .primary()
+        configuration.font = buttonFont
+        configuration.disabledForegroundColor = .systemGray
+        return configuration
+    }
+
+    /// A less prominent button.
+    static func identitySecondary() -> Self {
+        var configuration: Button.Configuration = .secondary()
+        configuration.font = buttonFont
+        return configuration
     }
 }

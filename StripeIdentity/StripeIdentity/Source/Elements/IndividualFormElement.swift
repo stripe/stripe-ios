@@ -150,12 +150,6 @@ final class IndividualFormElement: ContainerElement {
         stack.axis = .vertical
         stack.spacing = ElementsUI.formSpacing
 
-        if let idNumberElement = idNumberElement {
-            stack.setCustomSpacing(0, after: idNumberElement.view)
-        }
-        if let addressElement = addressElement {
-            stack.setCustomSpacing(0, after: addressElement.view)
-        }
         view = stack
 
         elements.forEach { $0.delegate = self }
