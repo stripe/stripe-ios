@@ -86,7 +86,11 @@ class IdentityFlowView: UIView {
     private let headerView = HeaderView()
     private let insetContentView = UIView()
 
-    private let scrollView = UIScrollView()
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.keyboardDismissMode = .onDrag
+        return scrollView
+    }()
 
     private let scrollContainerStackView: UIStackView = {
         let stackView = UIStackView()
