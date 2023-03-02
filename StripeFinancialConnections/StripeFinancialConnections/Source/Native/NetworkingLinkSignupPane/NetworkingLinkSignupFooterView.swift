@@ -106,6 +106,10 @@ class NetworkingLinkSignupFooterView: HitTestView {
         buttonVerticalStack.addArrangedSubview(notNowButton)
     }
 
+    func enableSaveToLinkButton(_ enable: Bool) {
+        saveToLinkButton.isEnabled = enable
+    }
+
     @objc private func didSelectSaveToLinkButton() {
         didSelectSaveToLink()
     }
@@ -115,7 +119,6 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }
 
     func setIsLoading(_ isLoading: Bool) {
-        // TODO(kgaidis): remove if not necessary
         saveToLinkButton.isLoading = isLoading
     }
 }

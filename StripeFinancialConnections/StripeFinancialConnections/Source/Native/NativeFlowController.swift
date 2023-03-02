@@ -546,9 +546,18 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
     }
 
     func networkingLinkSignupViewControllerDidFinish(
-        _ viewController: NetworkingLinkSignupViewController
+        _ viewController: NetworkingLinkSignupViewController,
+        withError error: Error?
     ) {
+        // TODO(kgaidis): show small error on success pane if error != nil
         pushPane(.success, animated: true)
+    }
+
+    func networkingLinkSignupViewController(
+        _ viewController: NetworkingLinkSignupViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
     }
 }
 
