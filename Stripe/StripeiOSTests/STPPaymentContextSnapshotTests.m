@@ -9,7 +9,6 @@
 #import <OCMock/OCMock.h>
 #import "StripeiOS_Tests-Swift.h"
 
-#import "FBSnapshotTestCase+STPViewControllerLoading.h"
 #import "STPFixtures.h"
 #import "STPMocks.h"
 #import "STPTestUtils.h"
