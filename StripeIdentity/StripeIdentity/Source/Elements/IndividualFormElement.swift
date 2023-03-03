@@ -38,8 +38,9 @@ final class IndividualFormElement: ContainerElement {
         if let dobElement = dobElement {
             let dobDate = Calendar.current.dateComponents(
                 [.day, .month, .year],
-                from: (dobElement.elements[0] as! DateFieldElement).selectedDate!
+                from: dateFormatter.date(from: (dobElement.elements[0] as! TextFieldElement).text)!
             )
+
             collectedDob = StripeAPI.VerificationPageDataDob(
                 day: String(dobDate.day!),
                 month: String(dobDate.month!),
@@ -81,6 +82,7 @@ final class IndividualFormElement: ContainerElement {
     let idNumberElement: IdNumberElement?
     let idCountryNotListedButtonElement: IdentityTextButtonElement?
     let countryNotListedButtonClicked: CountryNotListedButtonClicked
+    let dateFormatter: DateFormatter
     weak var delegate: StripeUICore.ElementDelegate?
 
     init(
@@ -89,6 +91,10 @@ final class IndividualFormElement: ContainerElement {
         countryNotListedButtonClicked: @escaping CountryNotListedButtonClicked
     ) {
         self.countryNotListedButtonClicked = countryNotListedButtonClicked
+        self.dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMddyyyy"
+        dateFormatter.locale = .current
+        dateFormatter.timeZone = .current
         let elementsFactory = IdentityElementsFactory()
 
         elements = [Element]()
@@ -144,12 +150,6 @@ final class IndividualFormElement: ContainerElement {
         stack.axis = .vertical
         stack.spacing = ElementsUI.formSpacing
 
-        if let idNumberElement = idNumberElement {
-            stack.setCustomSpacing(0, after: idNumberElement.view)
-        }
-        if let addressElement = addressElement {
-            stack.setCustomSpacing(0, after: addressElement.view)
-        }
         view = stack
 
         elements.forEach { $0.delegate = self }

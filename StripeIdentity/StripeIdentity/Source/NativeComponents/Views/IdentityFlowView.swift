@@ -34,23 +34,9 @@ class IdentityFlowView: UIView {
             trailing: 16
         )
 
-        static var buttonFont: UIFont {
-            return IdentityUI.preferredFont(forTextStyle: .body, weight: .medium)
-        }
-
         static func buttonConfiguration(isPrimary: Bool) -> Button.Configuration {
-            var config: Button.Configuration = isPrimary ? .primary() : .secondary()
-            config.font = buttonFont
-            return config
+            return isPrimary ? .identityPrimary() : .identitySecondary()
         }
-
-        static let buttonBackgroundBlurStyle: UIBlurEffect.Style = {
-            if #available(iOS 13.0, *) {
-                return .systemUltraThinMaterial
-            } else {
-                return .regular
-            }
-        }()
     }
 
     struct ViewModel {
@@ -94,7 +80,11 @@ class IdentityFlowView: UIView {
     private let headerView = HeaderView()
     private let insetContentView = UIView()
 
-    private let scrollView = UIScrollView()
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.keyboardDismissMode = .onDrag
+        return scrollView
+    }()
 
     private let scrollContainerStackView: UIStackView = {
         let stackView = UIStackView()
@@ -113,11 +103,11 @@ class IdentityFlowView: UIView {
         return stackView
     }()
 
-    private let buttonBackgroundBlurView = UIVisualEffectView(
-        effect: UIBlurEffect(
-            style: Style.buttonBackgroundBlurStyle
-        )
-    )
+    private let buttonBackgroundView: UIView = {
+        let buttonBackgroundView = UIView()
+        buttonBackgroundView.backgroundColor = .systemBackground
+        return buttonBackgroundView
+    }()
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -125,6 +115,7 @@ class IdentityFlowView: UIView {
     private var contentViewModel: ContentViewModel?
     private var buttons: [Button] = []
     private var buttonTapActions: [() -> Void] = []
+    private var initialScrollViewBottomInsect: CGFloat?
 
     // MARK: - Init
 
@@ -163,7 +154,7 @@ class IdentityFlowView: UIView {
 
         // Adjust bottom inset to make space for keyboard
         let bottomInset =
-            isKeyboardHidden ? 0 : (endFrame.height - frame.height + scrollView.frame.maxY)
+            isKeyboardHidden ? initialScrollViewBottomInsect! : (endFrame.height - frame.height + scrollView.frame.maxY)
         scrollView.contentInset.bottom = bottomInset
         scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.horizontalScrollIndicatorInsets.bottom = bottomInset
@@ -175,13 +166,15 @@ class IdentityFlowView: UIView {
         // Update the scrollView's inset based on the height of the button
         // container so that the content displays above the container plus
         // buttonSpacing when scrolled all the way to the bottom
-        let bottomInset = buttonBackgroundBlurView.frame.height + Style.buttonSpacing
+        let bottomInset = buttonBackgroundView.frame.height + Style.buttonSpacing
         scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.contentInset.bottom = bottomInset
 
         if scrollView.contentSize.height > 0 {
             flowViewDelegate?.scrollViewFullyLaiedOut(scrollView)
         }
+
+        initialScrollViewBottomInsect = scrollView.contentInset.bottom
     }
 }
 
@@ -196,21 +189,21 @@ extension IdentityFlowView {
 
         // Arrange container stack view: scroll + button
         addAndPinSubview(scrollView)
-        addSubview(buttonBackgroundBlurView)
-        buttonBackgroundBlurView.contentView.addAndPinSubviewToSafeArea(
+        addSubview(buttonBackgroundView)
+        buttonBackgroundView.addAndPinSubviewToSafeArea(
             buttonStackView,
             insets: Style.buttonInsets
         )
     }
 
     fileprivate func installConstraints() {
-        buttonBackgroundBlurView.translatesAutoresizingMaskIntoConstraints = false
+        buttonBackgroundView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // Constrain buttons to bottom
-            buttonBackgroundBlurView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            buttonBackgroundBlurView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            buttonBackgroundBlurView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            buttonBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            buttonBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            buttonBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
             // Make scroll view's content full-width
             scrollView.contentLayoutGuide.leadingAnchor.constraint(
@@ -233,10 +226,10 @@ extension IdentityFlowView {
     fileprivate func configureButtons(with buttonViewModels: [ViewModel.Button]) {
         // If there are no buttons to display, hide the container view
         guard buttonViewModels.count > 0 else {
-            buttonBackgroundBlurView.isHidden = true
+            buttonBackgroundView.isHidden = true
             return
         }
-        buttonBackgroundBlurView.isHidden = false
+        buttonBackgroundView.isHidden = false
 
         // Configure buttons and tapActions based from models after we ensure
         // there are the right number of buttons
@@ -364,5 +357,28 @@ extension StripeUICore.Button {
         )
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
+    }
+}
+
+// MARK: - Button.Configuration
+extension Button.Configuration {
+
+    static var buttonFont: UIFont {
+        return IdentityUI.preferredFont(forTextStyle: .body, weight: .medium)
+    }
+
+    /// The default button configuration.
+    static func identityPrimary() -> Self {
+        var configuration: Button.Configuration = .primary()
+        configuration.font = buttonFont
+        configuration.disabledForegroundColor = .systemGray
+        return configuration
+    }
+
+    /// A less prominent button.
+    static func identitySecondary() -> Self {
+        var configuration: Button.Configuration = .secondary()
+        configuration.font = buttonFont
+        return configuration
     }
 }

@@ -78,13 +78,8 @@ struct IdentityElementsFactory {
     func makeDateOfBirthSection() -> SectionElement {
         return  SectionElement(
             title: String.Localized.date_of_birth,
-            elements: [DateFieldElement(
-                label: "MM / DD / YYYY",
-                minimumDate: dateFormatter.date(from: "01 / 01 / 1990"),
-                maximumDate: Date(),
-                locale: locale,
-                customDateFormatter: dateFormatter
-                ),
+            elements: [
+                TextFieldElement(configuration: TextFieldElement.IdentityDobConfiguration())
             ]
         )
     }
@@ -109,5 +104,78 @@ extension IDNumberTextFieldConfiguration {
             type: spec?.type,
             label: spec?.label ?? String.Localized.personal_id_number
         )
+    }
+}
+
+extension TextFieldElement {
+    // MARK: - Dob
+    struct IdentityDobConfiguration: TextFieldElementConfiguration {
+        private let dateFormatter: DateFormatter
+        private let minDate: Date
+        private let maxDate: Date = Date()
+
+        init() {
+            self.dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMddyyyy"
+            dateFormatter.locale = .current
+            dateFormatter.timeZone = .current
+            minDate = dateFormatter.date(from: "01011900")!
+        }
+
+        var label = "MM / DD / YYYY"
+
+        var disallowedCharacters: CharacterSet = CharacterSet.stp_asciiDigit.inverted
+
+        public func makeDisplayText(for text: String) -> NSAttributedString {
+            var result: [Character] = []
+
+            for (index, char) in text.enumerated() {
+                if index < 2 {
+                    result.append(char)
+                } else if index == 2 {
+                    result.append(" ")
+                    result.append("/")
+                    result.append(" ")
+                    result.append(char)
+                } else if index < 4 {
+                    result.append(char)
+                } else if index == 4 {
+                    result.append(" ")
+                    result.append("/")
+                    result.append(" ")
+                    result.append(char)
+                } else {
+                    result.append(char)
+                }
+            }
+
+            return NSAttributedString(string: String(result))
+        }
+
+        func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+            return .init(
+                type: .asciiCapableNumberPad,
+                textContentType: nil,
+                autocapitalization: .none
+            )
+        }
+
+        func maxLength(for text: String) -> Int {
+            return 8
+        }
+
+        func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
+            // check date range
+            guard let date = dateFormatter.date(from: text) else {
+                return .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.date_of_birth_invalid))
+            }
+
+            if date > minDate && date < maxDate {
+                return .valid
+            } else {
+                return .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.date_of_birth_invalid))
+            }
+        }
+
     }
 }
