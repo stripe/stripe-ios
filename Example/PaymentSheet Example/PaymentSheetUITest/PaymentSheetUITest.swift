@@ -775,7 +775,7 @@ extension PaymentSheetUITest {
 
         // TODO(porter) Finish test when we can confirm server side
     }
-    
+
     func testDeferredPaymentIntent_ApplePay() {
         loadPlayground(
             app,
@@ -788,12 +788,12 @@ extension PaymentSheetUITest {
         let applePayButton = app.buttons["apple_pay_button"]
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
         applePayButton.tap()
-        
+
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
         let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
-        
+
         var cardButton = applePay.buttons.containing(predicate).firstMatch
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
         cardButton.forceTapElement()
