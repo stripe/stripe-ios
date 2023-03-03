@@ -11,10 +11,8 @@ import Foundation
 protocol NetworkingLinkStepUpVerificationDataSource: AnyObject {
     var consumerSession: ConsumerSessionData { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
-    func startVerificationSession() -> Future<ConsumerSessionResponse>
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkStepUpAuthenticationVerified() -> Future<FinancialConnectionsSessionManifest>
     func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList>
 }
@@ -27,6 +25,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let networkingOTPDataSource: NetworkingOTPDataSource
 
     init(
         consumerSession: ConsumerSessionData,
@@ -42,41 +41,19 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-    }
-
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
-        return apiClient
-            .consumerSessionLookup(
-                emailAddress: consumerSession.emailAddress
-            )
-            .chained { [weak self] lookupConsumerSessionResponse in
-                if let consumerSession = lookupConsumerSessionResponse.consumerSession {
-                    self?.consumerSession = consumerSession
-                }
-                return Promise(value: lookupConsumerSessionResponse)
-            }
-    }
-
-    func startVerificationSession() -> Future<ConsumerSessionResponse> {
-        return apiClient.consumerSessionStartVerification(
-            emailAddress: consumerSession.emailAddress,
+        let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "EMAIL",
+            emailAddress: consumerSession.emailAddress,
             customEmailType: "NETWORKED_CONNECTIONS_OTP_EMAIL",
             connectionsMerchantName: manifest.businessName,
-            consumerSessionClientSecret: consumerSession.clientSecret
+            pane: .networkingLinkStepUpVerification,
+            consumerSession: nil,
+            apiClient: apiClient,
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
         )
-        .chained { [weak self] consumerSessionResponse in
-            self?.consumerSession = consumerSessionResponse.consumerSession
-            return Promise(value: consumerSessionResponse)
-        }
-    }
-
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        return apiClient.consumerSessionConfirmVerification(
-            otpCode: otpCode,
-            otpType: "EMAIL",
-            consumerSessionClientSecret: consumerSession.clientSecret
-        )
+        self.networkingOTPDataSource = networkingOTPDataSource
+        networkingOTPDataSource.delegate = self
     }
 
     func markLinkStepUpAuthenticationVerified() -> Future<FinancialConnectionsSessionManifest> {
@@ -89,5 +66,17 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
             clientSecret: clientSecret,
             consumerSessionClientSecret: consumerSession.clientSecret
         )
+    }
+}
+
+// MARK: - NetworkingOTPDataSourceDelegate
+
+extension NetworkingLinkStepUpVerificationDataSourceImplementation: NetworkingOTPDataSourceDelegate {
+
+    func networkingOTPDataSource(
+        _ dataSource: NetworkingOTPDataSource,
+        didUpdateConsumerSession consumerSession: ConsumerSessionData
+    ) {
+        self.consumerSession = consumerSession
     }
 }

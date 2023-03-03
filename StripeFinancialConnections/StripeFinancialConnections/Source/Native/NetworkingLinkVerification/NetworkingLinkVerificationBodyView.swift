@@ -11,52 +11,13 @@ import Foundation
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-protocol NetworkingLinkVerificationBodyViewDelegate: AnyObject {
-    func networkingLinkVerificationBodyView(
-        _ view: NetworkingLinkVerificationBodyView,
-        didEnterValidOTPCode otpCode: String
-    )
-}
-
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkVerificationBodyView: UIView {
 
-    weak var delegate: NetworkingLinkVerificationBodyViewDelegate?
-
-    private lazy var otpVerticalStackView: UIStackView = {
-        let otpVerticalStackView = UIStackView(
-            arrangedSubviews: [
-                otpTextField,
-            ]
-        )
-        otpVerticalStackView.axis = .vertical
-        otpVerticalStackView.spacing = 8
-        return otpVerticalStackView
-    }()
-    // TODO(kgaidis): make changes to `OneTimeCodeTextField` to
-    // make the font larger
-    private(set) lazy var otpTextField: OneTimeCodeTextField = {
-        let otpTextField = OneTimeCodeTextField(numberOfDigits: 6, theme: theme)
-        otpTextField.tintColor = .textBrand
-        otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
-        return otpTextField
-    }()
-    private lazy var theme: ElementsUITheme = {
-        var theme: ElementsUITheme = .default
-        theme.colors = {
-            var colors = ElementsUITheme.Color()
-            colors.border = .borderNeutral
-            return colors
-        }()
-        return theme
-    }()
-    private var lastErrorView: UIView?
-
-    init(email: String) {
+    init(email: String, otpView: UIView) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                otpVerticalStackView,
+                otpView,
                 CreateEmailLabel(email: email),
             ]
         )
@@ -67,26 +28,6 @@ final class NetworkingLinkVerificationBodyView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    @objc private func otpTextFieldDidChange() {
-        showErrorText(nil) // clear the error
-
-        if otpTextField.isComplete {
-            delegate?.networkingLinkVerificationBodyView(self, didEnterValidOTPCode: otpTextField.value)
-        }
-    }
-
-    func showErrorText(_ errorText: String?) {
-        lastErrorView?.removeFromSuperview()
-        lastErrorView = nil
-
-        if let errorText = errorText {
-            // TODO(kgaidis): rename & move `ManualEntryErrorView` to be more generic
-            let errorView = ManualEntryErrorView(text: errorText)
-            self.lastErrorView = errorView
-            otpVerticalStackView.addArrangedSubview(errorView)
-        }
     }
 }
 
@@ -107,7 +48,8 @@ private struct NetworkingLinkVerificationBodyViewUIViewRepresentable: UIViewRepr
 
     func makeUIView(context: Context) -> NetworkingLinkVerificationBodyView {
         NetworkingLinkVerificationBodyView(
-            email: "test@stripe.com"
+            email: "test@stripe.com",
+            otpView: UIView()
         )
     }
 

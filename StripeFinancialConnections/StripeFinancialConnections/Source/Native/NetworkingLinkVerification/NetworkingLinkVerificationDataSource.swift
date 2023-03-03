@@ -13,10 +13,8 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var consumerSession: ConsumerSessionData? { get }
+    var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
-    func startVerificationSession() -> Future<ConsumerSessionResponse>
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
 }
@@ -28,6 +26,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let networkingOTPDataSource: NetworkingOTPDataSource
 
     private(set) var consumerSession: ConsumerSessionData?
 
@@ -43,42 +42,19 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-    }
-
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
-        apiClient
-            .consumerSessionLookup(
-                emailAddress: accountholderCustomerEmailAddress
-            )
-            .chained { [weak self] lookupConsumerSessionResponse in
-                self?.consumerSession = lookupConsumerSessionResponse.consumerSession
-                return Promise(value: lookupConsumerSessionResponse)
-            }
-    }
-
-    func startVerificationSession() -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid startVerificationSession call: no consumerSession.clientSecret"))
-        }
-        return apiClient.consumerSessionStartVerification(
-            emailAddress: self.accountholderCustomerEmailAddress,
+        let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
+            emailAddress: accountholderCustomerEmailAddress,
             customEmailType: nil,
             connectionsMerchantName: nil,
-            consumerSessionClientSecret: consumerSessionClientSecret
+            pane: .networkingLinkVerification,
+            consumerSession: nil,
+            apiClient: apiClient,
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
         )
-
-    }
-
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
-        }
-        return apiClient.consumerSessionConfirmVerification(
-            otpCode: otpCode,
-            otpType: "SMS",
-            consumerSessionClientSecret: consumerSessionClientSecret
-        )
+        self.networkingOTPDataSource = networkingOTPDataSource
+        networkingOTPDataSource.delegate = self
     }
 
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest> {
@@ -93,5 +69,14 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             clientSecret: clientSecret,
             consumerSessionClientSecret: consumerSessionClientSecret
         )
+    }
+}
+
+// MARK: - NetworkingOTPDataSourceDelegate
+
+extension NetworkingLinkVerificationDataSourceImplementation: NetworkingOTPDataSourceDelegate {
+
+    func networkingOTPDataSource(_ dataSource: NetworkingOTPDataSource, didUpdateConsumerSession consumerSession: ConsumerSessionData) {
+        self.consumerSession = consumerSession
     }
 }
