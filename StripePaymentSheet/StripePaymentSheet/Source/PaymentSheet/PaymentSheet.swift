@@ -66,6 +66,7 @@ public class PaymentSheet {
         )
     }
 
+    /// 🚧 Under construction
     /// Initializes a PaymentSheet
     /// - Parameter intentConfig: The `IntentConfiguration` object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
