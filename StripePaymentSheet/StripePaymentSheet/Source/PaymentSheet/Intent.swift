@@ -23,17 +23,6 @@ enum Intent {
     case setupIntent(STPSetupIntent)
     case deferredIntent(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
 
-    var clientSecret: String {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.clientSecret
-        case .setupIntent(let si):
-            return si.clientSecret
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Handle when we add confirm")
-        }
-    }
-
     var unactivatedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):

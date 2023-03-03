@@ -20,8 +20,15 @@ extension String.Localized {
 
     static var date_of_birth: String {
         STPLocalizedString(
-            "Date of birth",
+            "Date of Birth",
             "Label for Date of birth field"
+        )
+    }
+
+    static var date_of_birth_invalid: String {
+        STPLocalizedString(
+            "Date of birth does not look valid",
+            "Message for invalid Date of birth field"
         )
     }
 

@@ -24,10 +24,10 @@ extension STPApplePayContext {
         var selfRetainer: ApplePayContextClosureDelegate?
         let authorizationResultHandler:
             ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
-        let clientSecret: String
+        let intent: Intent
 
         init(
-            clientSecret: String,
+            intent: Intent,
             authorizationResultHandler: (
                 (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
             )?,
@@ -35,7 +35,7 @@ extension STPApplePayContext {
         ) {
             self.completion = completion
             self.authorizationResultHandler = authorizationResultHandler
-            self.clientSecret = clientSecret
+            self.intent = intent
             super.init()
             self.selfRetainer = self
         }
@@ -46,7 +46,33 @@ extension STPApplePayContext {
             paymentInformation: PKPayment,
             completion: @escaping STPIntentClientSecretCompletionBlock
         ) {
-            completion(clientSecret, nil)
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                completion(paymentIntent.clientSecret, nil)
+            case .setupIntent(let setupIntent):
+                completion(setupIntent.clientSecret, nil)
+            case .deferredIntent(_, let intentConfig):
+                if let confirmHandler = intentConfig.confirmHandler {
+                    confirmHandler(paymentMethod.id, { result in
+                        switch result {
+                        case .success(let clientSecret):
+                            completion(clientSecret, nil)
+                        case .failure(let error):
+                            completion(nil, error)
+                        }
+                    })
+                } else if let serverSideConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
+                    let shouldSavePaymentMethod = false // The customer isn't requesting to save the payment method
+                    serverSideConfirmHandler(paymentMethod.id, shouldSavePaymentMethod, { result in
+                        switch result {
+                        case .success(let clientSecret):
+                            completion(clientSecret, nil)
+                        case .failure(let error):
+                            completion(nil, error)
+                        }
+                    })
+                }
+            }
         }
 
         func applePayContext(
@@ -97,7 +123,7 @@ extension STPApplePayContext {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
         let delegate = ApplePayContextClosureDelegate(
-            clientSecret: intent.clientSecret,
+            intent: intent,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
             completion: completion
         )
