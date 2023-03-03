@@ -11,43 +11,13 @@ import Foundation
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-protocol NetworkingSaveToLinkVerificationBodyViewDelegate: AnyObject {
-    func networkingSaveToLinkVerificationBodyView(
-        _ view: NetworkingSaveToLinkVerificationBodyView,
-        didEnterValidOTPCode otpCode: String
-    )
-}
-
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingSaveToLinkVerificationBodyView: UIView {
 
-    weak var delegate: NetworkingSaveToLinkVerificationBodyViewDelegate?
-
-    private(set) lazy var otpTextField: UITextField = {
-       let textField = InsetTextField()
-        textField.textColor = .textPrimary
-        textField.placeholder = "OTP"
-        textField.keyboardType = .numberPad
-        textField.layer.cornerRadius = 8
-        textField.layer.borderColor = UIColor.textBrand.cgColor
-        textField.layer.borderWidth = 2.0
-        textField.addTarget(
-            self,
-            action: #selector(otpTextFieldDidChange),
-            for: .editingChanged
-        )
-        NSLayoutConstraint.activate([
-            textField.heightAnchor.constraint(equalToConstant: 56)
-        ])
-
-        return textField
-    }()
-
-    init(email: String) {
+    init(email: String, otpView: UIView) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                otpTextField,
+                otpView,
                 CreateEmailLabel(email: email),
             ]
         )
@@ -58,19 +28,6 @@ final class NetworkingSaveToLinkVerificationBodyView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    @objc private func otpTextFieldDidChange() {
-        guard let otp = otpTextField.text else {
-            return
-        }
-
-        if otp.count == 6 && Int(otp) != nil {
-            delegate?.networkingSaveToLinkVerificationBodyView(
-                self,
-                didEnterValidOTPCode: otp
-            )
-        }
     }
 }
 
@@ -91,7 +48,8 @@ private struct NetworkingSaveToLinkVerificationBodyViewUIViewRepresentable: UIVi
 
     func makeUIView(context: Context) -> NetworkingSaveToLinkVerificationBodyView {
         NetworkingSaveToLinkVerificationBodyView(
-            email: "test@stripe.com"
+            email: "test@stripe.com",
+            otpView: UIView()
         )
     }
 
@@ -112,31 +70,3 @@ struct NetworkingSaveToLinkVerificationBodyView_Previews: PreviewProvider {
 }
 
 #endif
-
-private class InsetTextField: UITextField { // TODO(kgaidis): cleanup/delete after using Stripe's components
-
-    private let padding = UIEdgeInsets(
-        top: 0,
-        left: 10,
-        bottom: 0,
-        right: 10
-    )
-
-    override open func textRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func placeholderRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func editingRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-}
