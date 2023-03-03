@@ -158,12 +158,29 @@ extension PaymentSheet {
 
         /// 🚧 Under construction
         /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// This asynchronously loads the Customer's payment methods, their default payment method.
+        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
+        /// - Parameter intentConfig: The `IntentConfiguration` object
+        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+        /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
+        @_spi(STP) public static func create(
+            intentConfig: IntentConfiguration,
+            configuration: PaymentSheet.Configuration,
+            completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
+        ) {
+            create(mode: .deferredIntent(intentConfig),
+                   configuration: configuration,
+                   completion: completion
+            )
+        }
+
+        /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the Intent.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
         /// - Parameter mode: The mode used to initialize PaymentSheet
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(STP) public static func create(
+        static func create(
             mode: InitializationMode,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void

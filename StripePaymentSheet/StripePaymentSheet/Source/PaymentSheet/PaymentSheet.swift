@@ -33,9 +33,7 @@ import UIKit
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
 public class PaymentSheet {
-    /// TODO(porter) doc comment
-    /// 🚧 Under construction
-    @_spi(STP) @frozen public enum InitializationMode {
+    enum InitializationMode {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
@@ -68,9 +66,18 @@ public class PaymentSheet {
         )
     }
 
-    /// TODO(porter) doc comment
     /// 🚧 Under construction
-    @_spi(STP) public required init(mode: InitializationMode, configuration: Configuration) {
+    /// Initializes a PaymentSheet
+    /// - Parameter intentConfig: The `IntentConfiguration` object
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+    @_spi(STP) public convenience init(intentConfig: IntentConfiguration, configuration: Configuration) {
+        self.init(
+            mode: .deferredIntent(intentConfig),
+            configuration: configuration
+        )
+    }
+
+    required init(mode: InitializationMode, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
