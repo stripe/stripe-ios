@@ -62,8 +62,8 @@ extension STPApplePayContext {
                         }
                     })
                 } else if let serverSideConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
-                    // Don't save Apple Pay PMs
-                    serverSideConfirmHandler(paymentMethod.id, false, { result in
+                    let shouldSavePaymentMethod = false // The customer isn't requesting to save the payment method
+                    serverSideConfirmHandler(paymentMethod.id, shouldSavePaymentMethod, { result in
                         switch result {
                         case .success(let clientSecret):
                             completion(clientSecret, nil)
