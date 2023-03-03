@@ -18,6 +18,7 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let supportedPaymentMethodTypes: [FinancialConnectionsPaymentMethodType]
     let allowSelection: Bool?
     let allowSelectionMessage: String?
+    let status: String?
 
     var allowSelectionNonOptional: Bool {
         return allowSelection ?? true

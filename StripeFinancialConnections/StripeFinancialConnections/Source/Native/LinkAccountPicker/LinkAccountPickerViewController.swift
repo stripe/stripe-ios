@@ -45,7 +45,7 @@ final class LinkAccountPickerViewController: UIViewController {
     private weak var bodyView: LinkAccountPickerBodyView?
     private lazy var footerView: LinkAccountPickerFooterView = {
         return LinkAccountPickerFooterView(
-            isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
+            isStripeDirect: false,
             businessName: businessName,
             permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
@@ -173,7 +173,7 @@ final class LinkAccountPickerViewController: UIViewController {
                         } else {
                             // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
                             // could still have a chance at successfully connecting their account
-                            self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+                            self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker) // TODO(kgaidis): double check whether this fall-back is fine...maybe we add support for success pane having no institution...
                         }
                     case .failure(let error):
                         self.dataSource
