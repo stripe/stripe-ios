@@ -84,6 +84,7 @@ private func CreateDataAccessDisclosureView(
                 isStripeDirect: isStripeDirect,
                 businessName: businessName,
                 permissions: permissions,
+                isNetworking: true,
                 didSelectLearnMore: didSelectLearnMore
             ),
         ]
