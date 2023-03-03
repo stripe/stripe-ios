@@ -51,7 +51,7 @@ final class LinkAccountPickerBodyView: UIView {
         // list all accounts
         accounts.forEach { account in
             let accountRowView = LinkAccountPickerRowView(
-                isDisabled: false,
+                isDisabled: account.status != "active",
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -60,6 +60,7 @@ final class LinkAccountPickerBodyView: UIView {
                     )
                 }
             )
+            // TODO(kgaidis): when we implement repair logic, this will have new text
             let rowTitles = AccountPickerHelpers.rowTitles(forAccount: account)
             accountRowView.configure(
                 institutionImageUrl: nil, // TODO(kgaidis): get image url from backend
@@ -101,7 +102,20 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                     currency: "USD",
                     supportedPaymentMethodTypes: [.usBankAccount],
                     allowSelection: true,
-                    allowSelectionMessage: nil
+                    allowSelectionMessage: nil,
+                    status: "active"
+                ),
+                FinancialConnectionsPartnerAccount(
+                    id: "abc",
+                    name: "Advantage Plus Checking",
+                    displayableAccountNumbers: "1324",
+                    linkedAccountId: nil,
+                    balanceAmount: 100000,
+                    currency: "USD",
+                    supportedPaymentMethodTypes: [.usBankAccount],
+                    allowSelection: true,
+                    allowSelectionMessage: nil,
+                    status: "disabled"
                 ),
             ]
         )
@@ -118,7 +132,7 @@ struct LinkAccountPickerBodyView_Previews: PreviewProvider {
         VStack(alignment: .leading) {
             Spacer()
             LinkAccountPickerBodyViewUIViewRepresentable()
-                .frame(maxHeight: 120)
+                .frame(maxHeight: 200)
                 .padding()
             Spacer()
         }
