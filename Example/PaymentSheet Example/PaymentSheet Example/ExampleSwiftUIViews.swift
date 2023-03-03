@@ -10,6 +10,8 @@ import StripePaymentSheet
 import SwiftUI
 
 struct ExamplePaymentButtonView: View {
+    @Environment(\.isEnabled) private var isEnabled
+
     var body: some View {
         HStack {
             Text("Buy").fontWeight(.bold)
@@ -17,7 +19,7 @@ struct ExamplePaymentButtonView: View {
         .frame(minWidth: 200)
         .padding()
         .foregroundColor(.white)
-        .background(Color.blue)
+        .background(isEnabled ? Color.blue : Color.blue.opacity(0.5))
         .cornerRadius(6)
         .accessibility(identifier: "Buy button")
     }
