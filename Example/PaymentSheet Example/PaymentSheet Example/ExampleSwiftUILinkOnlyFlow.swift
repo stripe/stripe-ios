@@ -24,6 +24,7 @@ struct ExampleSwiftUILinkOnlyFlow: View {
                         case .success:
                             model.linkSelected = true
                         case .failure(let error):
+                            model.linkSelected = false
                             print(error)
                         }
                     })
