@@ -1,3 +1,7 @@
+## Next Release
+### PaymentSheet
+* `StripePaymentSheet` now requires `StripeLinkCore`. See `MIGRATING.md` for more info.
+
 ## 23.4.1 2023-02-27
 ### PaymentSheet
 * [Added] Debug logging to help identify why specific payment methods are not showing up in PaymentSheet.
