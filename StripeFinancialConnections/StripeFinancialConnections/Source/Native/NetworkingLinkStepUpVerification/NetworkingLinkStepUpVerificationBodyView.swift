@@ -11,39 +11,10 @@ import Foundation
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-protocol NetworkingLinkStepUpVerificationBodyViewDelegate: AnyObject {
-    func networkingLinkStepUpVerificationBodyView(
-        _ view: NetworkingLinkStepUpVerificationBodyView,
-        didEnterValidOTPCode otpCode: String
-    )
-}
-
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
     private let email: String
     private let didSelectResendCode: () -> Void
-    weak var delegate: NetworkingLinkStepUpVerificationBodyViewDelegate?
-
-    private(set) lazy var otpTextField: UITextField = {
-       let textField = InsetTextField()
-        textField.textColor = .textPrimary
-        textField.placeholder = "OTP"
-        textField.keyboardType = .numberPad
-        textField.layer.cornerRadius = 8
-        textField.layer.borderColor = UIColor.textBrand.cgColor
-        textField.layer.borderWidth = 2.0
-        textField.addTarget(
-            self,
-            action: #selector(otpTextFieldDidChange),
-            for: .editingChanged
-        )
-        NSLayoutConstraint.activate([
-            textField.heightAnchor.constraint(equalToConstant: 56)
-        ])
-
-        return textField
-    }()
 
     private lazy var footnoteHorizontalStackView: UIStackView = {
         let footnoteHorizontalStackView = UIStackView()
@@ -55,6 +26,7 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
     init(
         email: String,
+        otpView: UIView,
         didSelectResendCode: @escaping () -> Void
     ) {
         self.email = email
@@ -62,7 +34,7 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                otpTextField,
+                otpView,
                 footnoteHorizontalStackView,
             ]
         )
@@ -75,19 +47,6 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    @objc private func otpTextFieldDidChange() {
-        guard let otp = otpTextField.text else {
-            return
-        }
-
-        if otp.count == 6 && Int(otp) != nil {
-            delegate?.networkingLinkStepUpVerificationBodyView(
-                self,
-                didEnterValidOTPCode: otp
-            )
-        }
     }
 
     func isResendingCode(_ isResendingCode: Bool) {
@@ -187,6 +146,7 @@ private struct NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable: UIVi
     func makeUIView(context: Context) -> NetworkingLinkStepUpVerificationBodyView {
         NetworkingLinkStepUpVerificationBodyView(
             email: "test@stripe.com",
+            otpView: UIView(),
             didSelectResendCode: {}
         )
     }
@@ -208,31 +168,3 @@ struct NetworkingLinkStepUpVerificationBodyView_Previews: PreviewProvider {
 }
 
 #endif
-
-private class InsetTextField: UITextField { // TODO(kgaidis): cleanup/delete after using Stripe's components
-
-    private let padding = UIEdgeInsets(
-        top: 0,
-        left: 10,
-        bottom: 0,
-        right: 10
-    )
-
-    override open func textRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func placeholderRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func editingRect(
-        forBounds bounds: CGRect
-    ) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-}

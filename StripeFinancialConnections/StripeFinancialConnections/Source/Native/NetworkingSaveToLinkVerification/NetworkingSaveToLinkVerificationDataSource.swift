@@ -11,6 +11,7 @@ import Foundation
 protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
     var consumerSession: ConsumerSessionData { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
@@ -25,6 +26,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let networkingOTPDataSource: NetworkingOTPDataSource
 
     init(
         consumerSession: ConsumerSessionData,
@@ -38,6 +40,19 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
+            otpType: "SMS",
+            emailAddress: consumerSession.emailAddress,
+            customEmailType: nil,
+            connectionsMerchantName: nil,
+            pane: .networkingSaveToLinkVerification,
+            consumerSession: consumerSession,
+            apiClient: apiClient,
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
+        )
+        self.networkingOTPDataSource = networkingOTPDataSource
+        networkingOTPDataSource.delegate = self
     }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse> {
@@ -88,5 +103,14 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         .chained { _ in
             return Promise(value: ())
         }
+    }
+}
+
+// MARK: - NetworkingOTPDataSourceDelegate
+
+extension NetworkingSaveToLinkVerificationDataSourceImplementation: NetworkingOTPDataSourceDelegate {
+
+    func networkingOTPDataSource(_ dataSource: NetworkingOTPDataSource, didUpdateConsumerSession consumerSession: ConsumerSessionData) {
+        self.consumerSession = consumerSession
     }
 }

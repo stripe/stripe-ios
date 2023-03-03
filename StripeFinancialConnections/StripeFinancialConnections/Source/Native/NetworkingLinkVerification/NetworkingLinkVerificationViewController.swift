@@ -36,9 +36,16 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         return activityIndicator
     }()
     private lazy var bodyView: NetworkingLinkVerificationBodyView = {
-        let bodyView = NetworkingLinkVerificationBodyView(email: dataSource.accountholderCustomerEmailAddress)
-        bodyView.delegate = self
+        let bodyView = NetworkingLinkVerificationBodyView(
+            email: dataSource.accountholderCustomerEmailAddress,
+            otpView: otpView
+        )
         return bodyView
+    }()
+    private lazy var otpView: NetworkingOTPView = {
+        let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
+        otpView.delegate = self
+        return otpView
     }()
 
     init(dataSource: NetworkingLinkVerificationDataSource) {
@@ -53,65 +60,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-
-        showLoadingView(true)
-        dataSource.lookupConsumerSession()
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let lookupConsumerSessionResponse):
-                    if lookupConsumerSessionResponse.exists {
-                        self.dataSource.startVerificationSession()
-                            .observe { [weak self] result in
-                                guard let self = self else { return }
-                                self.showLoadingView(false)
-                                switch result {
-                                case .success(let consumerSessionResponse):
-                                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
-                                case .failure(let error):
-                                    self.dataSource.analyticsClient.logUnexpectedError(
-                                        error,
-                                        errorName: "StartVerificationSessionError",
-                                        pane: .networkingLinkVerification
-                                    )
-                                    self.dataSource.analyticsClient.log(
-                                        eventName: "networking.verification.error",
-                                        parameters: [
-                                            "error": "StartVerificationSession"
-                                        ],
-                                        pane: .networkingLinkVerification
-                                    )
-                                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
-                                }
-                            }
-                    } else {
-                        self.dataSource.analyticsClient.log(
-                            eventName: "networking.verification.error",
-                            parameters: [
-                                "error": "ConsumerNotFoundError"
-                            ],
-                            pane: .networkingLinkVerification
-                        )
-                        self.delegate?.networkingLinkVerificationViewController(self, didRequestNextPane: .institutionPicker, consumerSession: nil)
-                        self.showLoadingView(false)
-                    }
-                case .failure(let error):
-                    self.dataSource.analyticsClient.logUnexpectedError(
-                        error,
-                        errorName: "LookupConsumerSessionError",
-                        pane: .networkingLinkVerification
-                    )
-                    self.dataSource.analyticsClient.log(
-                        eventName: "networking.verification.error",
-                        parameters: [
-                            "error": "LookupConsumerSession"
-                        ],
-                        pane: .networkingLinkVerification
-                    )
-                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
-                    self.showLoadingView(false)
-                }
-            }
+        otpView.lookupConsumerAndStartVerification()
     }
 
     private func showContent(redactedPhoneNumber: String) {
@@ -128,8 +77,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             footerView: nil
         )
         pane.addTo(view: view)
-
-        bodyView.otpTextField.becomeFirstResponder()
     }
 
     private func showLoadingView(_ show: Bool) {
@@ -161,102 +108,130 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     }
 }
 
-// MARK: - NetworkingLinkVerificationBodyViewDelegate
+// MARK: - NetworkingOTPViewDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension NetworkingLinkVerificationViewController: NetworkingLinkVerificationBodyViewDelegate {
+extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
 
-    func networkingLinkVerificationBodyView(
-        _ bodyView: NetworkingLinkVerificationBodyView,
-        didEnterValidOTPCode otpCode: String
-    ) {
-        bodyView.otpTextField.resignFirstResponder()
-        // TODO(kgaidis): consider implementing a loading/grayed-out state for `otpTextField`
+    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
+        showLoadingView(true)
+    }
 
-        dataSource.confirmVerificationSession(otpCode: otpCode)
+    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
+        dataSource.analyticsClient.log(
+            eventName: "networking.verification.error",
+            parameters: [
+                "error": "ConsumerNotFoundError"
+            ],
+            pane: .networkingLinkVerification
+        )
+        delegate?.networkingLinkVerificationViewController(self, didRequestNextPane: .institutionPicker, consumerSession: nil)
+        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
+        dataSource.analyticsClient.logUnexpectedError(
+            error,
+            errorName: "LookupConsumerSessionError",
+            pane: .networkingLinkVerification
+        )
+        dataSource.analyticsClient.log(
+            eventName: "networking.verification.error",
+            parameters: [
+                "error": "LookupConsumerSession"
+            ],
+            pane: .networkingLinkVerification
+        )
+        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
+    }
+
+    func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
+        // no-op
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
+        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
+        showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
+        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
+
+        dataSource.analyticsClient.logUnexpectedError(
+            error,
+            errorName: "StartVerificationSessionError",
+            pane: .networkingLinkVerification
+        )
+        dataSource.analyticsClient.log(
+            eventName: "networking.verification.error",
+            parameters: [
+                "error": "StartVerificationSession"
+            ],
+            pane: .networkingLinkVerification
+        )
+        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+    }
+
+    func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        dataSource.markLinkVerified()
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success:
-                    self.dataSource.markLinkVerified()
+                case .success(let manifest):
+                    self.dataSource.fetchNetworkedAccounts()
                         .observe { [weak self] result in
                             guard let self = self else { return }
                             switch result {
-                            case .success(let manifest):
-                                self.dataSource.fetchNetworkedAccounts()
-                                    .observe { [weak self] result in
-                                        guard let self = self else { return }
-                                        switch result {
-                                        case .success(let networkedAccountsResponse):
-                                            let networkedAccounts = networkedAccountsResponse.data
-                                            if networkedAccounts.isEmpty {
-                                                self.dataSource.analyticsClient.log(
-                                                    eventName: "networking.verification.success_no_accounts",
-                                                    pane: .networkingLinkVerification
-                                                )
-                                                self.requestNextPane(manifest.nextPane)
-                                            } else {
-                                                self.dataSource.analyticsClient.log(
-                                                    eventName: "networking.verification.success",
-                                                    pane: .networkingLinkVerification
-                                                )
-                                                self.requestNextPane(.linkAccountPicker)
-                                            }
-                                        case .failure(let error):
-                                            self.dataSource
-                                                .analyticsClient
-                                                .logUnexpectedError(
-                                                    error,
-                                                    errorName: "FetchNetworkedAccountsError",
-                                                    pane: .networkingLinkVerification
-                                                )
-                                            self.dataSource
-                                                .analyticsClient
-                                                .log(
-                                                    eventName: "networking.verification.error",
-                                                    parameters: [
-                                                        "error": "NetworkedAccountsRetrieveMethodError",
-                                                    ],
-                                                    pane: .networkingLinkVerification
-                                                )
-                                            self.requestNextPane(manifest.nextPane)
-                                        }
-                                    }
+                            case .success(let networkedAccountsResponse):
+                                let networkedAccounts = networkedAccountsResponse.data
+                                if networkedAccounts.isEmpty {
+                                    self.dataSource.analyticsClient.log(
+                                        eventName: "networking.verification.success_no_accounts",
+                                        pane: .networkingLinkVerification
+                                    )
+                                    self.requestNextPane(manifest.nextPane)
+                                } else {
+                                    self.dataSource.analyticsClient.log(
+                                        eventName: "networking.verification.success",
+                                        pane: .networkingLinkVerification
+                                    )
+                                    self.requestNextPane(.linkAccountPicker)
+                                }
                             case .failure(let error):
                                 self.dataSource
                                     .analyticsClient
                                     .logUnexpectedError(
                                         error,
-                                        errorName: "MarkLinkVerifiedError",
+                                        errorName: "FetchNetworkedAccountsError",
                                         pane: .networkingLinkVerification
                                     )
-                                self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+                                self.dataSource
+                                    .analyticsClient
+                                    .log(
+                                        eventName: "networking.verification.error",
+                                        parameters: [
+                                            "error": "NetworkedAccountsRetrieveMethodError",
+                                        ],
+                                        pane: .networkingLinkVerification
+                                    )
+                                self.requestNextPane(manifest.nextPane)
                             }
                         }
                 case .failure(let error):
-                    if let errorMessage = AuthFlowHelpers.networkingOTPErrorMessage(fromError: error, otpType: "SMS") {
-                        self.dataSource
-                            .analyticsClient
-                            .logExpectedError(
-                                error,
-                                errorName: "ConfirmVerificationSessionError",
-                                pane: .networkingLinkVerification
-                            )
-
-                        bodyView.otpTextField.performInvalidCodeAnimation(shouldClearValue: false)
-                        bodyView.showErrorText(errorMessage)
-                    } else {
-                        self.dataSource
-                            .analyticsClient
-                            .logUnexpectedError(
-                                error,
-                                errorName: "ConfirmVerificationSessionError",
-                                pane: .networkingLinkVerification
-                            )
-
-                        self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
-                    }
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "MarkLinkVerifiedError",
+                            pane: .networkingLinkVerification
+                        )
+                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
                 }
             }
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
+        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
     }
 }

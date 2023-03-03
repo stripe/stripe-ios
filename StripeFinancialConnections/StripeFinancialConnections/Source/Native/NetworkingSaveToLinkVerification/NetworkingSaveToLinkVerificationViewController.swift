@@ -35,9 +35,16 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         return activityIndicator
     }()
     private lazy var bodyView: NetworkingSaveToLinkVerificationBodyView = {
-        let bodyView = NetworkingSaveToLinkVerificationBodyView(email: dataSource.consumerSession.emailAddress)
-        bodyView.delegate = self
+        let bodyView = NetworkingSaveToLinkVerificationBodyView(
+            email: dataSource.consumerSession.emailAddress,
+            otpView: otpView
+        )
         return bodyView
+    }()
+    private lazy var otpView: NetworkingOTPView = {
+        let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
+        otpView.delegate = self
+        return otpView
     }()
 
     init(dataSource: NetworkingSaveToLinkVerificationDataSource) {
@@ -53,26 +60,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
 
-        showLoadingView(true)
-        dataSource.startVerificationSession()
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                self.showLoadingView(false)
-                switch result {
-                case .success(let consumerSessionResponse):
-                    self.showContent(redactedPhoneNumber: consumerSessionResponse.consumerSession.redactedPhoneNumber)
-                case .failure(let error):
-                    self.dataSource.analyticsClient.log(
-                        eventName: "networking.verification.error",
-                        parameters: [
-                            // TODO(kgaidis): figure out a proper way to log this error
-                            "error": "here"
-                        ],
-                        pane: .networkingSaveToLinkVerification
-                    )
-                    self.delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
-                }
-            }
+        otpView.startVerification()
     }
 
     private func showContent(redactedPhoneNumber: String) {
@@ -112,68 +100,86 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     }
 }
 
-// MARK: - NetworkingSaveToLinkVerificationBodyViewDelegate
+// MARK: - NetworkingOTPViewDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension NetworkingSaveToLinkVerificationViewController: NetworkingSaveToLinkVerificationBodyViewDelegate {
+extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDelegate {
 
-    func networkingSaveToLinkVerificationBodyView(
-        _ view: NetworkingSaveToLinkVerificationBodyView,
-        didEnterValidOTPCode otpCode: String
-    ) {
-        view.otpTextField.text = "CONFIRMING OTP..."
+    func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
+        showLoadingView(true)
+    }
 
-        dataSource.confirmVerificationSession(otpCode: otpCode)
+    func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
+        showLoadingView(false)
+        showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
+        showLoadingView(false)
+        dataSource.analyticsClient.log(
+            eventName: "networking.verification.error",
+            parameters: [
+                "error": "StartVerificationSessionError"
+            ],
+            pane: .networkingSaveToLinkVerification
+        )
+        dataSource.analyticsClient.logUnexpectedError(
+            error,
+            errorName: "StartVerificationSessionError",
+            pane: .networkingSaveToLinkVerification
+        )
+        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
+    }
+
+    func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        dataSource.saveToLink()
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    view.otpTextField.text = "SUCCESS! CALLING saveToLink AND markLinkVerified..."
-
-                    self.dataSource.saveToLink()
-                        .observe { [weak self] result in
-                            guard let self = self else { return }
-                            switch result {
-                            case .success:
-                                self.dataSource
-                                    .analyticsClient
-                                    .log(
-                                        eventName: "networking.verification.success",
-                                        pane: .networkingSaveToLinkVerification
-                                    )
-                                self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: nil)
-                            case .failure(let error):
-                                self.dataSource
-                                    .analyticsClient
-                                    .log(
-                                        eventName: "networking.verification.error",
-                                        pane: .networkingSaveToLinkVerification
-                                    )
-                                self.dataSource
-                                    .analyticsClient
-                                    .logUnexpectedError(
-                                        error, errorName: "SaveToLinkError",
-                                        pane: .networkingSaveToLinkVerification
-                                    )
-                                self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: error)
-                            }
-                        }
-
-                    self.dataSource.markLinkVerified()
-                        .observe { _ in
-                            // we ignore result
-                        }
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "networking.verification.success",
+                            pane: .networkingSaveToLinkVerification
+                        )
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: nil)
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
-                        .logUnexpectedError(
-                            error,
-                            errorName: "ConfirmVerificationSessionError",
+                        .log(
+                            eventName: "networking.verification.error",
                             pane: .networkingSaveToLinkVerification
                         )
-                    view.otpTextField.text = "FAILURE...\(error.localizedDescription)"
-                    // TODO(kgaidis): display various known errors to OTP, or if unknown error, show terminal error
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error, errorName: "SaveToLinkError",
+                            pane: .networkingSaveToLinkVerification
+                        )
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: error)
                 }
             }
+
+        dataSource.markLinkVerified()
+            .observe { _ in
+                // we ignore result
+            }
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
+        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
+    }
+
+    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
+        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
+    }
+
+    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
+        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
+    }
+
+    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
+        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
     }
 }
