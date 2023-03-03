@@ -371,21 +371,18 @@ class PaymentSheetTestPlayground: UIViewController {
     @objc
     func didTapCheckoutButton() {
         let mc: PaymentSheet
-        let mode: PaymentSheet.InitializationMode
 
         switch self.initMode {
         case .normal:
             switch self.intentMode {
             case .payment, .paymentWithSetup:
-                mode = .paymentIntentClientSecret(self.clientSecret!)
+                mc = PaymentSheet(paymentIntentClientSecret: self.clientSecret!, configuration: configuration)
             case .setup:
-                mode = .setupIntentClientSecret(self.clientSecret!)
+                mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
             }
         case .deferred:
-            mode = .deferredIntent(self.intentConfig)
+            mc = PaymentSheet(intentConfig: intentConfig, configuration: configuration)
         }
-
-        mc = PaymentSheet(mode: mode, configuration: configuration)
 
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
@@ -548,27 +545,30 @@ extension PaymentSheetTestPlayground {
 
                 self.checkoutButton.isEnabled = true
 
-                let mode: PaymentSheet.InitializationMode
-
                 switch self.initMode {
-
                 case .normal:
                     switch self.intentMode {
                     case .payment, .paymentWithSetup:
-                        mode = .paymentIntentClientSecret(self.clientSecret!)
+                        PaymentSheet.FlowController.create(
+                            paymentIntentClientSecret: self.clientSecret!,
+                            configuration: self.configuration,
+                            completion: completion
+                        )
                     case .setup:
-                        mode = .setupIntentClientSecret(self.clientSecret!)
+                        PaymentSheet.FlowController.create(
+                            setupIntentClientSecret: self.clientSecret!,
+                            configuration: self.configuration,
+                            completion: completion
+                        )
                     }
 
                 case .deferred:
-                    mode = .deferredIntent(self.intentConfig)
+                    PaymentSheet.FlowController.create(
+                        intentConfig: self.intentConfig,
+                        configuration: self.configuration,
+                        completion: completion
+                    )
                 }
-
-                PaymentSheet.FlowController.create(
-                    mode: mode,
-                    configuration: self.configuration,
-                    completion: completion
-                )
             }
         }
         task.resume()
