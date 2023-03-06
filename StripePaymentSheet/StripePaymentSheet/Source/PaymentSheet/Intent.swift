@@ -118,7 +118,7 @@ enum Intent {
         case .setupIntent(let setupIntent):
             return setupIntent.status == .requiresPaymentMethod
         case .deferredIntent:
-            return false // TODO(porter) Maybe should be true?
+            return true // Deferred intents cannot have a payment method attached to them
         }
     }
 }

@@ -213,8 +213,6 @@ extension PaymentSheet {
                 } else {
                     fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
                 }
-
-                completion(.completed) // TODO(porter) Do we want this, move into _handleIntentCreation?
             }
         // MARK: - Link
         case .link(let confirmOption):
