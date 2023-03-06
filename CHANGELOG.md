@@ -1,4 +1,4 @@
-## x.x.x yyyy-mm-dd
+## 23.4.2 2023-03-06
 ### Identity
 * [Added] ID/Address verification.
 
