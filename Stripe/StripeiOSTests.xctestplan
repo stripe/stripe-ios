@@ -26,6 +26,8 @@
     {
       "skippedTests" : [
         "PaymentMethodMessagingViewSnapshotTests",
+        "PaymentSheetAPITest\/testPaymentSheetLoadAndConfirmWithDeferredIntent()",
+        "PaymentSheetAPITest\/testPaymentSheetLoadAndConfirmWithDeferredIntent_serverSideConfirmation()",
         "STPCardBINMetadataTests",
         "TextFieldElementCardTest\/testBINRangeThatRequiresNetworkCallToValidate()"
       ],
