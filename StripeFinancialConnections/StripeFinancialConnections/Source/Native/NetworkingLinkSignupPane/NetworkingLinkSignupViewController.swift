@@ -123,9 +123,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 eventName: "click.save_to_link",
                 pane: .networkingLinkSignupPane
             )
+
         dataSource.saveToLink(
             emailAddress: formView.emailElement.emailAddressString ?? "",
-            phoneNumber: formView.phoneNumberElement.phoneNumber?.number ?? "",
+            phoneNumber: formView.phoneNumberElement.phoneNumber?.string(as: .e164) ?? "",
             countryCode: formView.phoneNumberElement.phoneNumber?.countryCode ?? "US"
         )
         .observe { [weak self] result in
