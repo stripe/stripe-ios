@@ -1,3 +1,7 @@
+## 23.4.2 2023-03-06
+### Identity
+* [Added] ID/Address verification.
+
 ## 23.4.1 2023-02-27
 ### PaymentSheet
 * [Added] Debug logging to help identify why specific payment methods are not showing up in PaymentSheet.
