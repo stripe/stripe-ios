@@ -110,6 +110,17 @@ enum Intent {
             }
         }
     }
+    
+    var requiresPaymentMethod: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.status == .requiresPaymentMethod
+        case .setupIntent(let setupIntent):
+            return setupIntent.status == .requiresPaymentMethod
+        case .deferredIntent:
+            return false // TODO(porter) Maybe should be true?
+        }
+    }
 }
 
 // MARK: - IntentConfirmParams

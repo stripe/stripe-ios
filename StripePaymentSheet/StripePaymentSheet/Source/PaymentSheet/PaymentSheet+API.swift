@@ -591,7 +591,7 @@ extension PaymentSheet {
         }
         return params
     }
-
+    
     /// - Note: Should only be invoked by merchant code via the `IntentConfiguration.ConfirmHandler.intentCreationCallback`
     private static func _handleIntentCreation(_ result: Result<String, Error>) {
         guard let deferredContext = DeferredIntentContext.current else {
@@ -603,21 +603,7 @@ extension PaymentSheet {
             if deferredContext.isServerSideConfirmation {
                 // TODO(porter) Handle when the intent is confirmed server side
             } else {
-                // Retrieve either the payment or setup intent, then confirm it
-                deferredContext.configuration.apiClient.retrieveIntent(for: deferredContext.intentConfig,
-                                                                          withClientSecret: clientSecret) { result in
-                    switch result {
-                    case .success(let intent):
-                        confirm(configuration: deferredContext.configuration,
-                                authenticationContext: deferredContext.authenticationContext,
-                                intent: intent,
-                                paymentOption: deferredContext.paymentOption,
-                                paymentHandler: deferredContext.paymentHandler,
-                                completion: deferredContext.completion)
-                    case .failure(let error):
-                        deferredContext.completion(.failed(error: error))
-                    }
-                }
+                confirmClientSide(for: deferredContext, with: clientSecret)
             }
         case .failure(let error):
             deferredContext.completion(.failed(error: error))
@@ -653,6 +639,30 @@ extension PaymentSheet {
                 confirmHandler(paymentMethod.stripeId, _handleIntentCreation(_:))
             } else {
                 fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
+            }
+        }
+    }
+    
+    private static func confirmClientSide(for deferredContext: DeferredIntentContext, with clientSecret: String) {
+        // Retrieve either the payment or setup intent, then confirm it client side
+        deferredContext.configuration.apiClient.retrieveIntent(for: deferredContext.intentConfig,
+                                                                  withClientSecret: clientSecret) { result in
+            switch result {
+            case .success(let intent):
+                guard !intent.requiresPaymentMethod else {
+                    let error = PaymentSheetError.unknown(debugDescription: "Intent was not created with a payment method id attached.")
+                    deferredContext.completion(.failed(error: error))
+                    return
+                }
+                
+                confirm(configuration: deferredContext.configuration,
+                        authenticationContext: deferredContext.authenticationContext,
+                        intent: intent,
+                        paymentOption: deferredContext.paymentOption,
+                        paymentHandler: deferredContext.paymentHandler,
+                        completion: deferredContext.completion)
+            case .failure(let error):
+                deferredContext.completion(.failed(error: error))
             }
         }
     }
