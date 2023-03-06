@@ -775,7 +775,8 @@ private func CreatePaneViewController(
                 institution: institution,
                 linkedAccountId: linkedAccountId,
                 analyticsClient: dataManager.analyticsClient,
-                authSessionId: dataManager.authSession?.id
+                authSessionId: dataManager.authSession?.id,
+                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
             )
             let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
                 dataSource: dataSource
