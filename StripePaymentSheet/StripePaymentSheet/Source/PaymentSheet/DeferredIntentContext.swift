@@ -15,13 +15,13 @@ class DeferredIntentContext {
     let authenticationContext: STPAuthenticationContext
     let paymentHandler: STPPaymentHandler
     let completion: PaymentSheetResultCompletionBlock
-    
+
     var isServerSideConfirmation: Bool {
         return intentConfig.confirmHandlerForServerSideConfirmation != nil
     }
-    
+
     static var current: DeferredIntentContext?
-    
+
     init(configuration: PaymentSheet.Configuration,
          intentConfig: PaymentSheet.IntentConfiguration,
          paymentOption: PaymentOption,

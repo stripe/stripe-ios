@@ -110,7 +110,7 @@ enum Intent {
             }
         }
     }
-    
+
     var requiresPaymentMethod: Bool {
         switch self {
         case .paymentIntent(let paymentIntent):
