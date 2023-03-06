@@ -91,6 +91,7 @@ extension STPAPIClient {
 extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
+    typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
     typealias STPElementsSessionCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
 
     func retrievePaymentIntentWithPreferences(
@@ -192,6 +193,33 @@ extension STPAPIClient {
             }
 
             completion(.success(setupIntentWithPreferences))
+        }
+    }
+
+    func retrieveIntent(
+        for intentConfig: PaymentSheet.IntentConfiguration,
+        withClientSecret secret: String,
+        completion: @escaping STPIntentCompletionBlock
+    ) {
+        switch intentConfig.mode {
+        case .payment:
+            retrievePaymentIntent(withClientSecret: secret) { paymentIntent, error in
+                guard let paymentIntent = paymentIntent else {
+                    completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                    return
+                }
+
+                completion(.success(.paymentIntent(paymentIntent)))
+            }
+        case .setup:
+            retrieveSetupIntent(withClientSecret: secret) { setupIntent, error in
+                guard let setupIntent = setupIntent else {
+                    completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                    return
+                }
+
+                completion(.success(.setupIntent(setupIntent)))
+            }
         }
     }
 }
