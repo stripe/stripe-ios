@@ -780,6 +780,38 @@ extension PaymentSheetUITest {
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
         cardButton.forceTapElement()
 
+        // Fill out billing details if required
+        let addBillingDetailsButton = applePay.buttons["Add Billing Address"]
+        if addBillingDetailsButton.waitForExistence(timeout: 4.0) {
+            addBillingDetailsButton.tap()
+
+            let firstNameCell = applePay.tables.cells["First Name"]
+            firstNameCell.tap()
+            firstNameCell.typeText("Jane")
+
+            let lastNameCell = applePay.tables.cells["Last Name"]
+            lastNameCell.tap()
+            lastNameCell.typeText("Doe")
+
+            let streetCell = applePay.tables.cells["Street, Search Contact or Address"]
+            streetCell.tap()
+            streetCell.typeText("One Apple Park Way")
+
+            let cityCell = applePay.tables.cells["City"]
+            cityCell.tap()
+            cityCell.typeText("Cupertino")
+
+            let stateCell = applePay.tables.cells["State"]
+            stateCell.tap()
+            stateCell.typeText("CA")
+
+            let zipCell = applePay.tables.cells["ZIP"]
+            zipCell.tap()
+            zipCell.typeText("95014")
+
+            applePay.buttons["Done"].tap()
+        }
+
         cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
         cardButton.forceTapElement()
