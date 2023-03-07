@@ -660,7 +660,7 @@ extension PaymentSheet {
         }
     }
 
-    private static func handleServerConfirmedIntent(deferredContext: DeferredIntentContext, clientSecret: (String)) {
+    private static func handleServerConfirmedIntent(deferredContext: DeferredIntentContext, clientSecret: String) {
         func handleStatus(status: STPPaymentHandlerActionStatus, error: Error?) {
             switch status {
             case .succeeded:
