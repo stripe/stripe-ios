@@ -30,10 +30,10 @@ protocol PaymentMethodElement: Element {
 // MARK: - Default implementations
 extension ContainerElement {
     func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        applyDefaultsHierarchichally(params: params)
+        applyDefaultsRecursively(params: params)
     }
 
-    func applyDefaultsHierarchichally(params: IntentConfirmParams) -> IntentConfirmParams {
+    func applyDefaultsRecursively(params: IntentConfirmParams) -> IntentConfirmParams {
         return elements.filter({ $0.view.isHidden == false })
             .reduce(params) { (params: IntentConfirmParams, element: Element) in
                 switch element {
@@ -67,13 +67,13 @@ extension ContainerElement {
 
 extension FormElement: PaymentMethodElement {
     func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        applyDefaultsHierarchichally(params: params)
+        applyDefaultsRecursively(params: params)
     }
 }
 
 extension SectionElement: PaymentMethodElement {
     func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        applyDefaultsHierarchichally(params: params)
+        applyDefaultsRecursively(params: params)
     }
 }
 
