@@ -1,6 +1,6 @@
 ## x.x.x yyyy-mm-dd
 ### Payments
-* [Added] API binding support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay).
+* [Added] API bindings support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay).
 ### PaymentSheet
 * [Added] Support for Cash App Pay in PaymentSheet.
 
