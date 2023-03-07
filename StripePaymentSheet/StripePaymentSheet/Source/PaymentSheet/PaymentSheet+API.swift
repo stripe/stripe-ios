@@ -647,12 +647,6 @@ extension PaymentSheet {
                                                                   withClientSecret: clientSecret) { result in
             switch result {
             case .success(let intent):
-                guard !intent.requiresPaymentMethod else {
-                    let error = PaymentSheetError.unknown(debugDescription: "Intent was not created with a payment method id attached.")
-                    deferredContext.completion(.failed(error: error))
-                    return
-                }
-
                 confirm(configuration: deferredContext.configuration,
                         authenticationContext: deferredContext.authenticationContext,
                         intent: intent,

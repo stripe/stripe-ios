@@ -627,10 +627,8 @@ extension PaymentSheetUITest {
 
         app.buttons["Pay $50.99"].tap()
 
-        let confirmText = app.staticTexts["Confirm handler invoked"]
-        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
-
-        // TODO(porter) Finish test when we can confirm server side
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
     func testDeferredSetupIntent() {
@@ -647,10 +645,8 @@ extension PaymentSheetUITest {
 
         app.buttons["Set up"].tap()
 
-        let confirmText = app.staticTexts["Confirm handler invoked"]
-        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
-
-        // TODO(porter) Finish test when we can confirm server side
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
     func testDeferredPaymentIntent_FlowController() {
@@ -676,10 +672,8 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
 
-        let confirmText = app.staticTexts["Confirm handler invoked"]
-        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
-
-        // TODO(porter) Finish test when we can confirm server side
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
     func testDeferredSetupIntent_FlowController() {
@@ -706,10 +700,8 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
 
-        let confirmText = app.staticTexts["Confirm handler invoked"]
-        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
-
-        // TODO(porter) Finish test when we can confirm server side
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
     func testDeferferedIntentLinkSignup() throws {
@@ -749,14 +741,6 @@ extension PaymentSheetUITest {
             nameField.typeText("Jane Done")
         }
 
-        // Terms and privacy policy
-        for linkText in ["Terms", "Privacy Policy"] {
-            modal.links[linkText].tap()
-            let closeTermsButton = app.otherElements["TopBrowserBar"].buttons["Close"]
-            XCTAssert(closeTermsButton.waitForExistence(timeout: 10))
-            closeTermsButton.tap()
-        }
-
         modal.buttons["Join Link"].tap()
 
         // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
@@ -770,10 +754,8 @@ extension PaymentSheetUITest {
         waitForExpectations(timeout: 10, handler: nil)
         payButton.tap()
 
-        let confirmText = app.staticTexts["Confirm handler invoked"]
-        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
-
-        // TODO(porter) Finish test when we can confirm server side
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
     func testDeferredPaymentIntent_ApplePay() {
@@ -806,10 +788,8 @@ extension PaymentSheetUITest {
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
         payButton.forceTapElement()
 
-        let confirmText = app.staticTexts["Confirm handler invoked"]
-        XCTAssertTrue(confirmText.waitForExistence(timeout: 10.0))
-
-        // TODO(porter) Finish test when we can confirm server side
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 }
 

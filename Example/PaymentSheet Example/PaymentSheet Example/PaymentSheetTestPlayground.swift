@@ -639,30 +639,15 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
 extension PaymentSheetTestPlayground {
 
     func confirmHandler(_ paymentMethodID: String,
-                        _ intentCreationCallback: (Result<String, Error>) -> Void) {
-        let alertController = UIAlertController(title: "Confirm handler invoked",
-                                                message: nil,
-                                                preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.visibleViewController?.present(alertController, animated: true, completion: nil)
-    }
-
-}
-
-// TODO(porter) Remove once deferred can be tested E2E
-private extension UIViewController {
-    /// The visible view controller from a given view controller
-    var visibleViewController: UIViewController? {
-        if let navigationController = self as? UINavigationController {
-            return navigationController.topViewController?.visibleViewController
-        } else if let tabBarController = self as? UITabBarController {
-            return tabBarController.selectedViewController?.visibleViewController
-        } else if let presentedViewController = presentedViewController {
-            return presentedViewController.visibleViewController
-        } else {
-            return self
+                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        if intentConfig.confirmHandlerForServerSideConfirmation == nil {
+            // Client-side confirmation, simulate a delay like we are doing validation on our backend
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                intentCreationCallback(.success(self.clientSecret!))
+            }
         }
     }
+
 }
 
 // MARK: - Helpers

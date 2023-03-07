@@ -110,17 +110,6 @@ enum Intent {
             }
         }
     }
-
-    var requiresPaymentMethod: Bool {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.status == .requiresPaymentMethod
-        case .setupIntent(let setupIntent):
-            return setupIntent.status == .requiresPaymentMethod
-        case .deferredIntent:
-            return true // Deferred intents cannot have a payment method attached to them
-        }
-    }
 }
 
 // MARK: - IntentConfirmParams
