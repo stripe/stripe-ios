@@ -218,8 +218,8 @@ class PaymentSheetAPITest: XCTestCase {
         let confirmExpectation = XCTestExpectation(description: "Confirm deferred intent")
         let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
 
-        let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
+        let types = ["card", "cashapp"]
+        let expected: [STPPaymentMethodType] = [.card, .cashApp]
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             // TODO(porter) Invoke result callback to finish flow
             callbackExpectation.fulfill()
@@ -275,8 +275,8 @@ class PaymentSheetAPITest: XCTestCase {
         let confirmExpectation = XCTestExpectation(description: "Confirm deferred intent")
         let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
 
-        let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
+        let types = ["card", "cashapp"]
+        let expected: [STPPaymentMethodType] = [.card, .cashApp]
         let serverSideConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandlerForServerSideConfirmation = {_, _, _ in
             // TODO(porter) Invoke result callback to finish flow
             callbackExpectation.fulfill()
