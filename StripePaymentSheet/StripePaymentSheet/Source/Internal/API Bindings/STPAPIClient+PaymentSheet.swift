@@ -195,7 +195,12 @@ extension STPAPIClient {
             completion(.success(setupIntentWithPreferences))
         }
     }
-
+    
+    /// Retrieves either the Paymnet or Setup intent for the intent configuration
+    /// - Parameters:
+    ///   - intentConfig: a `PaymentSheet.IntentConfiguration`
+    ///   - secret: The client secret of the intent to be retreved
+    ///   - completion: completion callback for when the request completes
     func retrieveIntent(
         for intentConfig: PaymentSheet.IntentConfiguration,
         withClientSecret secret: String,

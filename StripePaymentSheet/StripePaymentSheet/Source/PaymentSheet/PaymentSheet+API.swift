@@ -36,6 +36,7 @@ extension PaymentSheet {
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
 
+        // If processing a deferred intent, store state for later processing
         if case .deferredIntent(_, let intentConfig) = intent {
             DeferredIntentContext.current = .init(configuration: configuration,
                                                   intentConfig: intentConfig,
