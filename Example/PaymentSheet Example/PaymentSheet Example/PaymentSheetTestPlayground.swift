@@ -534,7 +534,7 @@ extension PaymentSheetTestPlayground {
             "merchant_country_code": merchantCountryCode.rawValue,
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
-            "use_link": linkSelector.selectedSegmentIndex = 0,
+            "use_link": linkSelector.selectedSegmentIndex == 0,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
@@ -689,7 +689,7 @@ extension PaymentSheetTestPlayground {
                         _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         let session = URLSession.shared
-        let url = URL(string: checkoutEndpoint)!
+        let url = URL(string: PaymentSheetTestPlayground.confirmEndpoint)!
 
         let body = [
             "client_secret": clientSecret!,
@@ -697,6 +697,7 @@ extension PaymentSheetTestPlayground {
             "merchant_country_code": merchantCountryCode.rawValue,
             "should_save_payment_method": shouldSavePaymentMethod,
             "mode": intentConfig.mode.requestBody,
+            "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)
@@ -707,13 +708,13 @@ extension PaymentSheetTestPlayground {
             guard
                 error == nil,
                 let data = data,
-                let json = try? JSONDecoder().decode([String: String].self, from: data)
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
-                intentCreationCallback(.failure(error!))
+                intentCreationCallback(.failure(error ?? ServerSideConfirmationError.unknown))
                 return
             }
 
-            guard let clientSecret = json["client_secret"] else {
+            guard let clientSecret = json["client_secret"] as? String else {
                 intentCreationCallback(.failure(ServerSideConfirmationError.clientSecretNotFound))
                 return
             }
@@ -740,6 +741,7 @@ extension PaymentSheet.IntentConfiguration.Mode {
 
 enum ServerSideConfirmationError: Error {
     case clientSecretNotFound
+    case unknown
 }
 
 // MARK: - Helpers

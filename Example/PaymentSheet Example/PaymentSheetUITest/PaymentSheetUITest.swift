@@ -1041,6 +1041,93 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
+
+    func testPaymentSheetCustomSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "apple_pay": "off",  // disable Apple Pay
+                // This test case is testing a feature not available when Link is on,
+                // so we must manually turn off Link.
+                "automatic_payment_methods": "off",
+                "link": "off",
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        var paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        paymentMethodButton.tap()
+        try! fillCardData(app)
+
+        // toggle save this card on and off
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
+        if expectDefaultSelectionOn {
+            XCTAssertTrue(saveThisCardToggle.isSelected)
+        } else {
+            XCTAssertFalse(saveThisCardToggle.isSelected)
+        }
+        saveThisCardToggle.tap()
+        if expectDefaultSelectionOn {
+            XCTAssertFalse(saveThisCardToggle.isSelected)
+        } else {
+            XCTAssertTrue(saveThisCardToggle.isSelected)
+            saveThisCardToggle.tap()  // toggle back off
+
+        }
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+
+        // Complete payment
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+        var successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
+
+        // Reload w/ same customer
+        reload(app)
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        paymentMethodButton.tap()
+        try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
+        // toggle save this card on
+        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        if !expectDefaultSelectionOn {
+            saveThisCardToggle.tap()
+        }
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+
+        // Complete payment
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+        successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
+
+        // Reload w/ same customer
+        reload(app)
+
+        // return to payment method selector
+        paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        paymentMethodButton.tap()
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+        editButton.tap()
+
+        let removeButton = app.buttons["Remove"]
+        XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
+        removeButton.tap()
+
+        let confirmRemoval = app.alerts.buttons["Remove"]
+        XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
+        confirmRemoval.tap()
+
+        XCTAssertTrue(app.cells.count == 1)
+    }
 }
 
 // MARK: - Link
