@@ -612,9 +612,9 @@ class PaymentSheetUITest: XCTestCase {
 
 extension PaymentSheetUITest {
 
-    // MARK: Deferred tests
+    // MARK: Deferred tests (client-side)
 
-    func testDeferredPaymentIntent() {
+    func testDeferredPaymentIntent_ClientSideConfirmation() {
         loadPlayground(
             app,
             settings: [
@@ -631,7 +631,7 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferredSetupIntent() {
+    func testDeferredSetupIntent_ClientSideConfirmation() {
         loadPlayground(
             app,
             settings: [
@@ -649,7 +649,7 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferredPaymentIntent_FlowController() {
+    func testDeferredPaymentIntent_FlowController_ClientSideConfirmation() {
         loadPlayground(
             app,
             settings: [
@@ -676,7 +676,7 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferredSetupIntent_FlowController() {
+    func testDeferredSetupIntent_FlowController_ClientSideConfirmation() {
         loadPlayground(
             app,
             settings: [
@@ -704,7 +704,7 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferferedIntentLinkSignup() throws {
+    func testDeferferedIntentLinkSignup_ClientSideConfirmation() throws {
         loadPlayground(
             app,
             settings: [
@@ -758,11 +758,229 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferredPaymentIntent_ApplePay() {
+    func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
         loadPlayground(
             app,
             settings: [
                 "init_mode": "Deferred"
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
+        _ = applePay.wait(for: .runningForeground, timeout: 10)
+
+        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+
+        var cardButton = applePay.buttons.containing(predicate).firstMatch
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+        cardButton.forceTapElement()
+
+        // Fill out billing details if required
+        let addBillingDetailsButton = applePay.buttons["Add Billing Address"]
+        if addBillingDetailsButton.waitForExistence(timeout: 4.0) {
+            addBillingDetailsButton.tap()
+
+            let firstNameCell = applePay.tables.cells["First Name"]
+            firstNameCell.tap()
+            firstNameCell.typeText("Jane")
+
+            let lastNameCell = applePay.tables.cells["Last Name"]
+            lastNameCell.tap()
+            lastNameCell.typeText("Doe")
+
+            let streetCell = applePay.tables.cells["Street, Search Contact or Address"]
+            streetCell.tap()
+            streetCell.typeText("One Apple Park Way")
+
+            let cityCell = applePay.tables.cells["City"]
+            cityCell.tap()
+            cityCell.typeText("Cupertino")
+
+            let stateCell = applePay.tables.cells["State"]
+            stateCell.tap()
+            stateCell.typeText("CA")
+
+            let zipCell = applePay.tables.cells["ZIP"]
+            zipCell.tap()
+            zipCell.typeText("95014")
+
+            applePay.buttons["Done"].tap()
+        }
+
+        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+        cardButton.forceTapElement()
+
+        let payButton = applePay.buttons["Pay with Passcode"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+        payButton.forceTapElement()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    // MARK: Deferred tests (server-side)
+
+    func testDeferredPaymentIntent_ServerSideConfirmation() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Pay $50.99"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testDeferredSetupIntent_ServerSideConfirmation() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "mode": "Setup",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Set up"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testDeferredPaymentIntent_FlowController_ServerSideConfirmation() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        let selectButton = app.buttons["present_saved_pms"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
+        selectButton.tap()
+        let selectText = app.staticTexts["Select your payment method"]
+        XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testDeferredSetupIntent_FlowController_ServerSideConfirmation() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "mode": "Setup",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        let selectButton = app.buttons["present_saved_pms"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
+        selectButton.tap()
+        let selectText = app.staticTexts["Select your payment method"]
+        XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testDeferferedIntentLinkSignup_ServerSideConfirmation() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        let payWithLinkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+        payWithLinkButton.tap()
+
+        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        XCTAssertTrue(modal.waitForExistence(timeout: 10))
+
+        let emailField = modal.textFields["Email"]
+        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+
+        let phoneField = modal.textFields["Phone"]
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+        phoneField.typeText("3105551234")
+
+        // The name field is only required for non-US countries. Only fill it out if it exists.
+        let nameField = modal.textFields["Name"]
+        if nameField.exists {
+            nameField.tap()
+            nameField.typeText("Jane Done")
+        }
+
+        modal.buttons["Join Link"].tap()
+
+        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
+        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
+        // method operate on the correct card form.
+        try fillCardData(app, container: modal)
+
+        // Pay!
+        let payButton = modal.buttons["Pay $50.99"]
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
+        payButton.tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
             ]
         )
 

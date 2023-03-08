@@ -16,8 +16,16 @@ import SwiftUI
 import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
-    static let endpointSelectorEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/endpoints"
-    static let defaultCheckoutEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
+    static let baseEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
+    static var endpointSelectorEndpoint: String {
+        return "\(baseEndpoint)/endpoints"
+    }
+    static var defaultCheckoutEndpoint: String {
+        return "\(baseEndpoint)/checkout"
+    }
+    static var confirmEndpoint: String {
+        return "\(baseEndpoint)/confirm_intent"
+    }
 
     static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings?
 
@@ -36,6 +44,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var customCTALabelTextField: UITextField!
     @IBOutlet weak var initModeSelector: UISegmentedControl!
+    @IBOutlet weak var confirmModeSelector: UISegmentedControl!
 
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
@@ -273,25 +282,50 @@ class PaymentSheetTestPlayground: UIViewController {
             paymentMethodTypes = self.paymentMethodTypes
         }
 
+        // Client-side configuration
+        if confirmModeSelector.selectedSegmentIndex == 0 {
+            switch intentMode {
+            case .payment:
+                return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+                                                                       setupFutureUsage: nil),
+                                                                    captureMethod: .automatic,
+                                                        paymentMethodTypes: paymentMethodTypes,
+                                                        confirmHandler: confirmHandler(_:_:))
+            case .paymentWithSetup:
+                return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+                                                                       setupFutureUsage: .offSession),
+                                                                    captureMethod: .automatic,
+                                                        paymentMethodTypes: paymentMethodTypes,
+                                                        confirmHandler: confirmHandler(_:_:))
+            case .setup:
+                return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
+                                                                       setupFutureUsage: .offSession),
+                                                                    captureMethod: .automatic,
+                                                        paymentMethodTypes: paymentMethodTypes,
+                                                        confirmHandler: confirmHandler(_:_:))
+            }
+        }
+
+        // Otherwise server-side configuration
         switch intentMode {
         case .payment:
             return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: nil),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:))
+                                                    confirmHandlerForServerSideConfirmation: confirmHandler(_:_:_:))
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:))
+                                                    confirmHandlerForServerSideConfirmation: confirmHandler(_:_:_:))
         case .setup:
             return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:))
+                                                    confirmHandlerForServerSideConfirmation: confirmHandler(_:_:_:))
         }
     }
 
@@ -500,7 +534,7 @@ extension PaymentSheetTestPlayground {
             "merchant_country_code": merchantCountryCode.rawValue,
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
-            "use_link": linkSelector.selectedSegmentIndex == 0,
+            "use_link": linkSelector.selectedSegmentIndex = 0,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
@@ -579,6 +613,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
     static let nsUserDefaultsKey = "playgroundSettings"
     let modeSelectorValue: Int
     let initModeSelectorValue: Int
+    let confirmModeSelector: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
     let merchantCountryCode: Int
@@ -597,6 +632,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
         return PaymentSheetPlaygroundSettings(
             modeSelectorValue: 0,
             initModeSelectorValue: 0,
+            confirmModeSelector: 0,
             customerModeSelectorValue: 0,
             currencySelectorValue: 0,
             merchantCountryCode: 0,
@@ -636,18 +672,74 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
     }
 }
 
+// MARK: Deferred intent callbacks
 extension PaymentSheetTestPlayground {
 
+    // Client-side confirmation handler
     func confirmHandler(_ paymentMethodID: String,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        if intentConfig.confirmHandlerForServerSideConfirmation == nil {
-            // Client-side confirmation, simulate a delay like we are doing validation on our backend
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                intentCreationCallback(.success(self.clientSecret!))
-            }
+        // Client-side confirmation, simulate a delay like we are doing validation on our backend
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            intentCreationCallback(.success(self.clientSecret!))
         }
     }
 
+    // Server-side confirmation handler
+    func confirmHandler(_ paymentMethodID: String,
+                        _ shouldSavePaymentMethod: Bool,
+                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        let session = URLSession.shared
+        let url = URL(string: checkoutEndpoint)!
+
+        let body = [
+            "client_secret": clientSecret!,
+            "payment_method_id": paymentMethodID,
+            "merchant_country_code": merchantCountryCode.rawValue,
+            "should_save_payment_method": shouldSavePaymentMethod,
+            "mode": intentConfig.mode.requestBody,
+        ] as [String: Any]
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = json
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = session.dataTask(with: urlRequest) { data, _, error in
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONDecoder().decode([String: String].self, from: data)
+            else {
+                intentCreationCallback(.failure(error!))
+                return
+            }
+
+            guard let clientSecret = json["client_secret"] else {
+                intentCreationCallback(.failure(ServerSideConfirmationError.clientSecretNotFound))
+                return
+            }
+
+            intentCreationCallback(.success(clientSecret))
+        }
+
+        task.resume()
+    }
+}
+
+extension PaymentSheet.IntentConfiguration.Mode {
+    var requestBody: String {
+        switch self {
+        case .payment:
+            return "payment"
+        case .setup:
+            return "setup"
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+
+enum ServerSideConfirmationError: Error {
+    case clientSecretNotFound
 }
 
 // MARK: - Helpers
@@ -657,6 +749,7 @@ extension PaymentSheetTestPlayground {
         let settings = PaymentSheetPlaygroundSettings(
             modeSelectorValue: modeSelector.selectedSegmentIndex,
             initModeSelectorValue: initModeSelector.selectedSegmentIndex,
+            confirmModeSelector: confirmModeSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             currencySelectorValue: currencySelector.selectedSegmentIndex,
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
@@ -696,6 +789,7 @@ extension PaymentSheetTestPlayground {
         merchantCountryCodeSelector.selectedSegmentIndex = settings.merchantCountryCode
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
         initModeSelector.selectedSegmentIndex = settings.initModeSelectorValue
+        confirmModeSelector.selectedSegmentIndex = settings.confirmModeSelector
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
