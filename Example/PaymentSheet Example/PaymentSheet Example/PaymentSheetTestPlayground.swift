@@ -46,6 +46,11 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var initModeSelector: UISegmentedControl!
     @IBOutlet weak var confirmModeSelector: UISegmentedControl!
 
+    @IBOutlet weak var attachDefaultSelector: UISegmentedControl!
+    @IBOutlet weak var collectNameSelector: UISegmentedControl!
+    @IBOutlet weak var collectEmailSelector: UISegmentedControl!
+    @IBOutlet weak var collectPhoneSelector: UISegmentedControl!
+    @IBOutlet weak var collectAddressSelector: UISegmentedControl!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
@@ -233,7 +238,7 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.defaultBillingDetails.phone = "+13105551234"
             configuration.defaultBillingDetails.address = .init(
                 city: "San Francisco",
-                country: "CA",
+                country: "US",
                 line1: "510 Townsend St.",
                 postalCode: "94102",
                 state: "California"
@@ -252,8 +257,15 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.primaryButtonLabel = customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         }
 
+        configuration.billingDetailsCollectionConfiguration.name = .allCases[collectNameSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.phone = .allCases[collectPhoneSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.email = .allCases[collectEmailSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.address = .allCases[collectAddressSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = attachDefaultSelector.selectedSegmentIndex == 0
+
         return configuration
     }
+
     var addressConfiguration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
         if case .onWithDefaults = shippingMode {
@@ -627,6 +639,11 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let linkSelectorValue: Int
     let customCtaLabel: String?
     let checkoutEndpoint: String?
+    let attachDefaults: Bool
+    let collectName: Int
+    let collectEmail: Int
+    let collectPhone: Int
+    let collectAddress: Int
 
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
         return PaymentSheetPlaygroundSettings(
@@ -644,7 +661,12 @@ struct PaymentSheetPlaygroundSettings: Codable {
             shippingInfoSelectorValue: 0,
             linkSelectorValue: 1,
             customCtaLabel: nil,
-            checkoutEndpoint: PaymentSheetTestPlayground.defaultCheckoutEndpoint
+            checkoutEndpoint: PaymentSheetTestPlayground.defaultCheckoutEndpoint,
+            attachDefaults: false,
+            collectName: 0,
+            collectEmail: 0,
+            collectPhone: 0,
+            collectAddress: 0
         )
     }
 }
@@ -763,7 +785,12 @@ extension PaymentSheetTestPlayground {
             shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
             linkSelectorValue: linkSelector.selectedSegmentIndex,
             customCtaLabel: customCTALabelTextField.text,
-            checkoutEndpoint: checkoutEndpoint
+            checkoutEndpoint: checkoutEndpoint,
+            attachDefaults: attachDefaultSelector.selectedSegmentIndex == 0,
+            collectName: collectNameSelector.selectedSegmentIndex,
+            collectEmail: collectEmailSelector.selectedSegmentIndex,
+            collectPhone: collectPhoneSelector.selectedSegmentIndex,
+            collectAddress: collectAddressSelector.selectedSegmentIndex
         )
         let data = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
@@ -797,6 +824,11 @@ extension PaymentSheetTestPlayground {
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
         customCTALabelTextField.text = settings.customCtaLabel
         checkoutEndpoint = settings.checkoutEndpoint ?? PaymentSheetTestPlayground.defaultCheckoutEndpoint
+        attachDefaultSelector.selectedSegmentIndex = settings.attachDefaults ? 0 : 1
+        collectNameSelector.selectedSegmentIndex = settings.collectName
+        collectEmailSelector.selectedSegmentIndex = settings.collectEmail
+        collectPhoneSelector.selectedSegmentIndex = settings.collectPhone
+        collectAddressSelector.selectedSegmentIndex = settings.collectAddress
     }
 }
 
