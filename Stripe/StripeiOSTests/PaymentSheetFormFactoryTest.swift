@@ -1263,14 +1263,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 zipNameType: .zip
             ),
         ]
+
+        let expectation = expectation(description: "FormSpecs loaded")
+        FormSpecProvider.shared.load { _ in
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
             configuration: configuration,
             paymentMethod: .dynamic("afterpay_clearpay"),
             addressSpecProvider: specProvider
         )
-        let cardForm = factory.makeCard()
-        let params = cardForm.applyDefaults(params: IntentConfirmParams(type: .card))
+        let form = factory.make()
+        let params = form.applyDefaults(params: IntentConfirmParams(type: .dynamic("afterpay_clearpay")))
 
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.name, "Jane Doe")
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.email, "foo@bar.com")
@@ -1324,8 +1331,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("afterpay_clearpay"),
             addressSpecProvider: specProvider
         )
-        let formElement = factory.make()
-        let params = formElement.applyDefaults(params: IntentConfirmParams(type: .card))
+        let form = factory.make()
+        let params = form.applyDefaults(params: IntentConfirmParams(type: .dynamic("afterpay_clearpay")))
 
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.name)
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.email)
