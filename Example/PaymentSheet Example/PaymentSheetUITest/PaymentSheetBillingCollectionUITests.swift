@@ -598,4 +598,318 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
     }
 
+    func testLpm_Afterpay_AutomaticFields_WithDefaultAddress() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "guestmode",
+                "currency": "USD",
+                "merchant_country_code": "US",
+                "apple_pay": "off",
+                "shipping": "on w/ defaults",
+                "automatic_payment_methods": "off",
+                "link": "off",
+                "attach_defaults": "off",
+                "collect_name": "auto",
+                "collect_email": "auto",
+                "collect_phone": "auto",
+                "collect_address": "auto",
+            ]
+        )
+
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+
+        // The defaults should be loaded, just need to save them.
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertTrue(saveAddressButton.isEnabled)
+        saveAddressButton.tap()
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "afterpay_clearpay")
+        else {
+            XCTFail()
+            return
+        }
+        cell.tap()
+
+        XCTAssertTrue(app.textFields["Email"].exists)
+        XCTAssertTrue(app.textFields["Full name"].exists)
+        XCTAssertFalse(app.textFields["Phone"].exists)
+        XCTAssertTrue(app.staticTexts["Billing address"].exists)
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.textFields["Address line 1"].value as? String, "510 Townsend St.")
+        XCTAssertEqual(app.textFields["Address line 2"].value as? String, "")
+        XCTAssertEqual(app.textFields["City"].value as? String, "San Francisco")
+        XCTAssertEqual(app.textFields["State"].value as? String, "California")
+        XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
+
+        let name = app.textFields["Full name"]
+        name.tap()
+        name.typeText("Jane Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("foo@bar.com")
+        email.typeText(XCUIKeyboardKey.return.rawValue)
+
+        // Complete payment
+        app.buttons["Pay $50.99"].tap()
+        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        authorizeButton.waitForExistenceAndTap(timeout: 10.0)
+        let successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
+    }
+
+    func testLpm_Afterpay_AllFields_WithDefaults() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "guestmode",
+                "currency": "USD",
+                "merchant_country_code": "US",
+                "apple_pay": "off",
+                "shipping": "on w/ defaults",
+                "automatic_payment_methods": "off",
+                "link": "off",
+                "default_billing_address": "on",
+                "attach_defaults": "on",
+                "collect_name": "always",
+                "collect_email": "always",
+                "collect_phone": "always",
+                "collect_address": "full",
+            ]
+        )
+
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+
+        // The defaults should be loaded, just need to save them.
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertTrue(saveAddressButton.isEnabled)
+        saveAddressButton.tap()
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "afterpay_clearpay")
+        else {
+            XCTFail()
+            return
+        }
+        cell.tap()
+
+        XCTAssertFalse(app.textFields["Email"].exists)
+        XCTAssertEqual(app.textFields["Phone"].value as? String, "(310) 555-1234")
+        XCTAssertEqual(app.textFields["Full name"].value as? String, "Jane Doe")
+        XCTAssertTrue(app.staticTexts["Billing address"].exists)
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.textFields["Address line 1"].value as? String, "510 Townsend St.")
+        XCTAssertEqual(app.textFields["Address line 2"].value as? String, "")
+        XCTAssertEqual(app.textFields["City"].value as? String, "San Francisco")
+        XCTAssertEqual(app.textFields["State"].value as? String, "California")
+        XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
+
+        // Complete payment
+        app.buttons["Pay $50.99"].tap()
+        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        authorizeButton.waitForExistenceAndTap(timeout: 10.0)
+        let successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
+    }
+
+    func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "guestmode",
+                "currency": "USD",
+                "merchant_country_code": "US",
+                "apple_pay": "off",
+                "shipping": "on w/ defaults",
+                "automatic_payment_methods": "off",
+                "link": "off",
+                "default_billing_address": "on",
+                "attach_defaults": "on",
+                "collect_name": "never",
+                "collect_email": "never",
+                "collect_phone": "never",
+                "collect_address": "never",
+            ]
+        )
+
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+
+        // The defaults should be loaded, just need to save them.
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertTrue(saveAddressButton.isEnabled)
+        saveAddressButton.tap()
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "afterpay_clearpay")
+        else {
+            XCTFail()
+            return
+        }
+        cell.tap()
+
+        XCTAssertFalse(app.textFields["Email"].exists)
+        XCTAssertFalse(app.textFields["Full name"].exists)
+        XCTAssertFalse(app.textFields["Phone"].exists)
+        XCTAssertFalse(app.staticTexts["Billing address"].exists)
+        XCTAssertFalse(app.textFields["Country or region"].exists)
+        XCTAssertFalse(app.textFields["Address line 1"].exists)
+        XCTAssertFalse(app.textFields["Address line 2"].exists)
+        XCTAssertFalse(app.textFields["City"].exists)
+        XCTAssertFalse(app.textFields["State"].exists)
+        XCTAssertFalse(app.textFields["ZIP"].exists)
+
+        // Complete payment
+        app.buttons["Pay $50.99"].tap()
+        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        authorizeButton.waitForExistenceAndTap(timeout: 10.0)
+        let successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
+    }
+
+    func testLpm_Klarna_AutomaticFields() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "guestmode",
+                "currency": "USD",
+                "merchant_country_code": "US",
+                "apple_pay": "off",
+                "automatic_payment_methods": "off",
+                "link": "off",
+                "attach_defaults": "off",
+                "collect_name": "auto",
+                "collect_email": "auto",
+                "collect_phone": "auto",
+                "collect_address": "auto",
+            ]
+        )
+        app.buttons["Checkout (Complete)"].tap()
+
+        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna")
+        else {
+            XCTFail()
+            return
+        }
+        cell.tap()
+
+        XCTAssertTrue(app.textFields["Email"].exists)
+        XCTAssertFalse(app.textFields["Full name"].exists)
+        XCTAssertFalse(app.textFields["Phone"].exists)
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertFalse(app.textFields["Phone"].exists)
+        XCTAssertFalse(app.staticTexts["Billing address"].exists)
+        XCTAssertFalse(app.textFields["Country"].exists)
+        XCTAssertFalse(app.textFields["Address line 1"].exists)
+        XCTAssertFalse(app.textFields["Address line 2"].exists)
+        XCTAssertFalse(app.textFields["City"].exists)
+        XCTAssertFalse(app.textFields["State"].exists)
+        XCTAssertFalse(app.textFields["ZIP"].exists)
+
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("foo@bar.com")
+        email.typeText(XCUIKeyboardKey.return.rawValue)
+
+        // Just check the button is enabled, confirming a payment with Klarna is flaky.
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+    }
+
+    func testLpm_Klarna_AllFields_WithDefaults() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "guestmode",
+                "currency": "USD",
+                "merchant_country_code": "US",
+                "apple_pay": "off",
+                "automatic_payment_methods": "off",
+                "link": "off",
+                "default_billing_address": "on",
+                "attach_defaults": "on",
+                "collect_name": "always",
+                "collect_email": "always",
+                "collect_phone": "always",
+                "collect_address": "full",
+            ]
+        )
+        app.buttons["Checkout (Complete)"].tap()
+
+        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna")
+        else {
+            XCTFail()
+            return
+        }
+        cell.tap()
+
+        XCTAssertEqual(app.textFields["Email"].value as? String, "foo@bar.com")
+        XCTAssertEqual(app.textFields["Phone"].value as? String, "(310) 555-1234")
+        XCTAssertEqual(app.textFields["Full name"].value as? String, "Jane Doe")
+        XCTAssertTrue(app.staticTexts["Billing address"].exists)
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.textFields["Address line 1"].value as? String, "510 Townsend St.")
+        XCTAssertEqual(app.textFields["Address line 2"].value as? String, "")
+        XCTAssertEqual(app.textFields["City"].value as? String, "San Francisco")
+        XCTAssertEqual(app.textFields["State"].value as? String, "California")
+        XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
+
+        // Just check the button is enabled, confirming a payment with Klarna is flaky.
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+    }
+
+    func testLpm_Klarna_MinimalFields_WithDefaults() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "guestmode",
+                "currency": "USD",
+                "merchant_country_code": "US",
+                "apple_pay": "off",
+                "automatic_payment_methods": "off",
+                "link": "off",
+                "default_billing_address": "on",
+                "attach_defaults": "on",
+                "collect_name": "never",
+                "collect_email": "never",
+                "collect_phone": "never",
+                "collect_address": "never",
+            ]
+        )
+        app.buttons["Checkout (Complete)"].tap()
+
+        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna")
+        else {
+            XCTFail()
+            return
+        }
+        cell.tap()
+
+        XCTAssertFalse(app.textFields["Email"].exists)
+        XCTAssertFalse(app.textFields["Full name"].exists)
+        XCTAssertFalse(app.textFields["Phone"].exists)
+        XCTAssertFalse(app.staticTexts["Billing address"].exists)
+        XCTAssertTrue(app.textFields["Country or region"].exists)
+        XCTAssertFalse(app.textFields["Address line 1"].exists)
+        XCTAssertFalse(app.textFields["Address line 2"].exists)
+        XCTAssertFalse(app.textFields["City"].exists)
+        XCTAssertFalse(app.textFields["State"].exists)
+        XCTAssertFalse(app.textFields["ZIP"].exists)
+
+        // Just check the button is enabled, confirming a payment with Klarna is flaky.
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+    }
 }
