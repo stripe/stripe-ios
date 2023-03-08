@@ -597,15 +597,17 @@ extension PaymentSheet {
             fatalError("DeferredIntentContext.current unexpectedly nil")
         }
 
-        switch result {
-        case .success(let clientSecret):
-            if deferredContext.isServerSideConfirmation {
-                handleServerConfirmedIntent(deferredContext: deferredContext, clientSecret: clientSecret)
-            } else {
-                confirmClientSide(for: deferredContext, with: clientSecret)
+        DispatchQueue.main.async {
+            switch result {
+            case .success(let clientSecret):
+                if deferredContext.isServerSideConfirmation {
+                    handleServerConfirmedIntent(deferredContext: deferredContext, clientSecret: clientSecret)
+                } else {
+                    confirmClientSide(for: deferredContext, with: clientSecret)
+                }
+            case .failure(let error):
+                deferredContext.completion(.failed(error: error))
             }
-        case .failure(let error):
-            deferredContext.completion(.failed(error: error))
         }
     }
 
