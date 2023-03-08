@@ -504,6 +504,23 @@ extension PaymentSheetTestPlayground {
         serializeSettingsToNSUserDefaults()
         loadBackend()
     }
+
+    func makeRequest(with url: String, body: [String: Any], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        let session = URLSession.shared
+        let url = URL(string: url)!
+
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = json
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = session.dataTask(with: urlRequest) { data, response, error in
+            completionHandler(data, response, error)
+        }
+
+        task.resume()
+    }
+
     func loadBackend() {
         checkoutButton.isEnabled = false
         checkoutInlineButton.isEnabled = false
@@ -512,8 +529,6 @@ extension PaymentSheetTestPlayground {
         paymentSheetFlowController = nil
         addressViewController = nil
 
-        let session = URLSession.shared
-        let url = URL(string: checkoutEndpoint)!
         let customer: String = {
             switch customerMode {
             case .guest:
@@ -534,12 +549,8 @@ extension PaymentSheetTestPlayground {
             "use_link": linkSelector.selectedSegmentIndex == 0,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
-        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.httpBody = json
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, _, error in
+
+        makeRequest(with: checkoutEndpoint, body: body) { data, _, error in
             guard
                 error == nil,
                 let data = data,
@@ -602,7 +613,6 @@ extension PaymentSheetTestPlayground {
                 }
             }
         }
-        task.resume()
     }
 }
 
@@ -700,9 +710,6 @@ extension PaymentSheetTestPlayground {
             case unknown
         }
 
-        let session = URLSession.shared
-        let url = URL(string: PaymentSheetTestPlayground.confirmEndpoint)!
-
         let body = [
             "client_secret": clientSecret!,
             "payment_method_id": paymentMethodID,
@@ -711,12 +718,8 @@ extension PaymentSheetTestPlayground {
             "mode": intentConfig.mode.requestBody,
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
-        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.httpBody = json
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, _, error in
+
+        makeRequest(with: PaymentSheetTestPlayground.confirmEndpoint, body: body, completionHandler: { data, _, error in
             guard
                 error == nil,
                 let data = data,
@@ -732,9 +735,7 @@ extension PaymentSheetTestPlayground {
             }
 
             intentCreationCallback(.success(clientSecret))
-        }
-
-        task.resume()
+        })
     }
 }
 
