@@ -294,51 +294,36 @@ class PaymentSheetTestPlayground: UIViewController {
             paymentMethodTypes = self.paymentMethodTypes
         }
 
-        // Client-side configuration
-        if confirmModeSelector.selectedSegmentIndex == 0 {
-            switch intentMode {
-            case .payment:
-                return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
-                                                                       setupFutureUsage: nil),
-                                                                    captureMethod: .automatic,
-                                                        paymentMethodTypes: paymentMethodTypes,
-                                                        confirmHandler: confirmHandler(_:_:))
-            case .paymentWithSetup:
-                return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
-                                                                       setupFutureUsage: .offSession),
-                                                                    captureMethod: .automatic,
-                                                        paymentMethodTypes: paymentMethodTypes,
-                                                        confirmHandler: confirmHandler(_:_:))
-            case .setup:
-                return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
-                                                                       setupFutureUsage: .offSession),
-                                                                    captureMethod: .automatic,
-                                                        paymentMethodTypes: paymentMethodTypes,
-                                                        confirmHandler: confirmHandler(_:_:))
-            }
-        }
+        var intentConfiguration: PaymentSheet.IntentConfiguration
 
-        // Otherwise server-side configuration
         switch intentMode {
         case .payment:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: nil),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandlerForServerSideConfirmation: confirmHandler(_:_:_:))
+                                                    confirmHandler: confirmHandler(_:_:))
         case .paymentWithSetup:
-            return PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandlerForServerSideConfirmation: confirmHandler(_:_:_:))
+                                                    confirmHandler: confirmHandler(_:_:))
         case .setup:
-            return PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
+            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
                                                                 captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandlerForServerSideConfirmation: confirmHandler(_:_:_:))
+                                                    confirmHandler: confirmHandler(_:_:))
         }
+
+        // Server-side confirmation - change the confirm handler
+        if confirmModeSelector.selectedSegmentIndex == 1 {
+            intentConfiguration.confirmHandler = nil
+            intentConfiguration.confirmHandlerForServerSideConfirmation = confirmHandlerForServerSideConfirmation(_:_:_:)
+        }
+
+        return intentConfiguration
     }
 
     var addressDetails: AddressViewController.AddressDetails?
@@ -707,9 +692,14 @@ extension PaymentSheetTestPlayground {
     }
 
     // Server-side confirmation handler
-    func confirmHandler(_ paymentMethodID: String,
+    func confirmHandlerForServerSideConfirmation(_ paymentMethodID: String,
                         _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        enum ServerSideConfirmationError: Error {
+            case clientSecretNotFound
+            case unknown
+        }
+
         let session = URLSession.shared
         let url = URL(string: PaymentSheetTestPlayground.confirmEndpoint)!
 
@@ -759,11 +749,6 @@ extension PaymentSheet.IntentConfiguration.Mode {
             fatalError()
         }
     }
-}
-
-enum ServerSideConfirmationError: Error {
-    case clientSecretNotFound
-    case unknown
 }
 
 // MARK: - Helpers

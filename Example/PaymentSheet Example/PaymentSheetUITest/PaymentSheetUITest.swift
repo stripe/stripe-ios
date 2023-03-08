@@ -776,7 +776,7 @@ extension PaymentSheetUITest {
 
         let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
 
-        var cardButton = applePay.buttons.containing(predicate).firstMatch
+        let cardButton = applePay.buttons.containing(predicate).firstMatch
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
         cardButton.forceTapElement()
 
@@ -812,9 +812,9 @@ extension PaymentSheetUITest {
             applePay.buttons["Done"].tap()
         }
 
-        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
+        cardSelectionButton.forceTapElement()
 
         let payButton = applePay.buttons["Pay with Passcode"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
