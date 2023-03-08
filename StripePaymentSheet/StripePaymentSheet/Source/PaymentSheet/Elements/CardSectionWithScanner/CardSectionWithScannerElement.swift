@@ -32,14 +32,31 @@ final class CardSection: ContainerElement {
     let cardSection: SectionElement
 
     // References to the underlying TextFieldElements
+    let nameElement: TextFieldElement?
     let panElement: TextFieldElement
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsUITheme
 
-    init(theme: ElementsUITheme = .default) {
+    init(
+        collectName: Bool = false,
+        defaultName: String? = nil,
+        theme: ElementsUITheme = .default
+    ) {
         self.theme = theme
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(), theme: theme) {  field, params in
+        let nameElement = collectName
+            ? PaymentMethodElementWrapper(
+                TextFieldElement.NameConfiguration(
+                    type: .full,
+                    defaultValue: defaultName,
+                    label: STPLocalizedString("Name on card", "Label for name on card field")),
+                theme: theme
+            ) { field, params in
+                params.paymentMethodParams.nonnil_billingDetails.name = field.text
+                return params
+            }
+            : nil
+        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -67,14 +84,20 @@ final class CardSection: ContainerElement {
                 return String.Localized.card_information
             }
         }()
+
+        let allSubElements: [Element?] = [
+            nameElement,
+            panElement,
+            SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
+        ]
+        let subElements = allSubElements.compactMap { $0 }
         self.cardSection = SectionElement(
             title: sectionTitle,
-            elements: [
-                panElement,
-                SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
-            ], theme: theme
+            elements: subElements,
+            theme: theme
         )
 
+        self.nameElement = nameElement?.element
         self.panElement = panElement.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
