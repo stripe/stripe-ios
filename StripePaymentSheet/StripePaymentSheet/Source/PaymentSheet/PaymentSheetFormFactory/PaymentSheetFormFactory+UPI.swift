@@ -22,6 +22,13 @@ extension PaymentSheetFormFactory {
         let billingAddressElement = configuration.billingDetailsCollectionConfiguration.address == .full
             ? makeBillingAddressSection(countries: nil)
             : nil
+        let phoneElement = contactInformationElement?.elements.compactMap {
+            $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
+        }.first
+        connectBillingDetailsFields(
+            countryElement: nil,
+            addressElement: billingAddressElement,
+            phoneElement: phoneElement)
 
         let allElements: [Element?] = [
             makeUPIHeader(),
