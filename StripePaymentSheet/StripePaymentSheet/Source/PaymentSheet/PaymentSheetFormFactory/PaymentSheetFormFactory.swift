@@ -97,7 +97,7 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
-            return makeUPI()
+            return makeDefaultsApplierWrapper(for: makeUPI())
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             return FormElement(autoSectioningElements: [makeCashAppMandate()], theme: theme)
@@ -441,6 +441,35 @@ extension PaymentSheetFormFactory {
             title: STPLocalizedString("Contact information", "Title for the contact information section"),
             elements: elements,
             theme: theme)
+    }
+
+    func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {
+        return PaymentMethodElementWrapper(
+            element,
+            defaultsApplier: { [configuration] _, params in
+                // Only apply defaults when the flag is on.
+                guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+                    return params
+                }
+
+                if let name = configuration.defaultBillingDetails.name {
+                    params.paymentMethodParams.nonnil_billingDetails.name = name
+                }
+                if let phone = configuration.defaultBillingDetails.phone {
+                    params.paymentMethodParams.nonnil_billingDetails.phone = phone
+                }
+                if let email = configuration.defaultBillingDetails.email {
+                    params.paymentMethodParams.nonnil_billingDetails.email = email
+                }
+                if configuration.defaultBillingDetails.address != .init() {
+                    params.paymentMethodParams.nonnil_billingDetails.address =
+                        STPPaymentMethodAddress(address: configuration.defaultBillingDetails.address)
+                }
+                return params
+            },
+            paramsUpdater: { element, params in
+                return element.updateParams(params: params)
+            })
     }
 }
 
