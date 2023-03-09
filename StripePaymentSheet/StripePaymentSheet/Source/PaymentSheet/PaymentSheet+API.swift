@@ -673,8 +673,8 @@ extension PaymentSheet {
     }
 
     private static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
-                                                    paymentMethodID: String,
-                                                    shouldSavePaymentMethod: Bool) async throws -> String {
+                                                            paymentMethodID: String,
+                                                            shouldSavePaymentMethod: Bool) async throws -> String {
       try await withCheckedThrowingContinuation { continuation in
 
           if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {

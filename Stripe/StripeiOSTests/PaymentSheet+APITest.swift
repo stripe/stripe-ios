@@ -146,7 +146,7 @@ class PaymentSheetAPITest: XCTestCase {
                         PaymentSheet.confirm(
                             configuration: self.configuration,
                             authenticationContext: self,
-                            confirmableIntent: .init(from: paymentIntent),
+                            intent: paymentIntent,
                             paymentOption: self.newCardPaymentOption,
                             paymentHandler: self.paymentHandler
                         ) { result in
@@ -262,8 +262,8 @@ class PaymentSheetAPITest: XCTestCase {
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
-                                     confirmableIntent: .init(from: .deferredIntent(elementsSession: elementsSession,
-                                                             intentConfig: intentConfig)),
+                                     intent: .deferredIntent(elementsSession: elementsSession,
+                                                             intentConfig: intentConfig),
                                      paymentOption: self.newCardPaymentOption,
                                      paymentHandler: self.paymentHandler) { result in
                     switch result {
@@ -329,8 +329,8 @@ class PaymentSheetAPITest: XCTestCase {
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
-                                     confirmableIntent: .init(from: .deferredIntent(elementsSession: elementsSession,
-                                                             intentConfig: intentConfig)),
+                                     intent: .deferredIntent(elementsSession: elementsSession,
+                                                             intentConfig: intentConfig),
                                      paymentOption: self.newCardPaymentOption,
                                      paymentHandler: self.paymentHandler) { result in
                     switch result {
@@ -378,7 +378,7 @@ class PaymentSheetAPITest: XCTestCase {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
                     authenticationContext: self,
-                    confirmableIntent: .init(from: paymentIntent),
+                    intent: paymentIntent,
                     paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa")),
                     paymentHandler: self.paymentHandler
                 ) { result in
