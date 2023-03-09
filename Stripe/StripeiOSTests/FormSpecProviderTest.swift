@@ -28,22 +28,22 @@ class FormSpecProviderTest: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
             eps.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
         // ...and iDEAL has the correct dropdown spec
         guard let ideal = sut.formSpec(for: "ideal"),
               case .name = ideal.fields[0],
-              case .selector(let selector) = ideal.fields[1]
+              case .selector(let selector) = ideal.fields[3]
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(selector.apiPath?["v1"], "ideal[bank]")
-        XCTAssertEqual(selector.items.count, 13)
+        XCTAssertEqual(selector.items.count, 11)
     }
 
     func testLoadJsonCanOverwriteLoadedSpecs() throws {
@@ -56,10 +56,10 @@ class FormSpecProviderTest: XCTestCase {
         }
         waitForExpectations(timeout: 2, handler: nil)
         let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
             eps.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
         let updatedSpecJson =
             """
@@ -104,10 +104,10 @@ class FormSpecProviderTest: XCTestCase {
         }
         waitForExpectations(timeout: 20, handler: nil)
         let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
             eps.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
         let updatedSpecJson =
             """
@@ -129,10 +129,10 @@ class FormSpecProviderTest: XCTestCase {
         let result = sut.loadFrom(formSpec)
         XCTAssertFalse(result)
         let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(epsUpdated.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
-            epsUpdated.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            eps.fields.first,
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
     }
 
@@ -147,10 +147,10 @@ class FormSpecProviderTest: XCTestCase {
         waitForExpectations(timeout: 2, handler: nil)
 
         let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
             eps.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
         let updatedSpecJson =
@@ -161,10 +161,10 @@ class FormSpecProviderTest: XCTestCase {
         let result = sut.loadFrom(updatedSpecJson)
         XCTAssertFalse(result)
         let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(epsUpdated.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
-            epsUpdated.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            eps.fields.first,
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
     }
 
@@ -178,10 +178,10 @@ class FormSpecProviderTest: XCTestCase {
         }
         waitForExpectations(timeout: 2, handler: nil)
         let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
             eps.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
         guard
             case .redirect_to_url = eps.nextActionSpec?.confirmResponseStatusSpecs[
@@ -324,10 +324,10 @@ class FormSpecProviderTest: XCTestCase {
         }
         waitForExpectations(timeout: 2, handler: nil)
         let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
             eps.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
         guard
             case .redirect_to_url(let redirectToURLDetails) = eps.nextActionSpec?.confirmResponseStatusSpecs[
@@ -384,10 +384,10 @@ class FormSpecProviderTest: XCTestCase {
 
         // Validate that we were not able to override the spec read in from disk
         let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
-        XCTAssertEqual(epsUpdated.fields.count, 2)
+        XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
-            epsUpdated.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: nil, translationId: nil))
+            eps.fields.first,
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
         guard
             case .redirect_to_url = epsUpdated.nextActionSpec?.confirmResponseStatusSpecs[

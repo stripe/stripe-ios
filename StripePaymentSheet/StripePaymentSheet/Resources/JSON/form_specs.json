@@ -2,10 +2,6 @@
     {
         "type": "afterpay_clearpay",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-afterpay@3x-6776ded2b20306c85d02639aea1e7dc5.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-afterpay-abedc6b87e4e9f917e22bbe6648ba809.svg"
-        },
         "fields": [
             {
                 "type": "afterpay_header"
@@ -50,10 +46,6 @@
     {
         "type": "affirm",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-affirm@3x-d2623d995950761883fca048ce6e0550.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-affirm-cd0d27fdc6cb5ca18c77645c577c8b9b.svg"
-        },
         "fields": [
             {
                 "type": "affirm_header"
@@ -78,10 +70,6 @@
     {
         "type": "klarna",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-klarna@3x-d8624aa9a5662d719a44d16b9fcca0be.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-klarna-bb91aa8f173a3c72931696b0f752ec73.svg"
-        },
         "fields": [
             {
                 "type": "klarna_header"
@@ -130,10 +118,6 @@
     {
         "type": "ideal",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-ideal@3x-fc5387c2139f55b84777c646208df7ee.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-ideal-608d5ba5730f82c25f122960ccaa9836.svg"
-        },
         "fields": [
             {
                 "type": "name",
@@ -226,11 +210,6 @@
     {
         "type": "sofort",
         "async": true,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-klarna@3x-d8624aa9a5662d719a44d16b9fcca0be.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sofort-c12d29b37f06a2d05dfb22ea9736104b.svg",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sofort_dark-ded76aa1c92357f1b78dab85ed5b6347.svg"
-        },
         "fields": [
             {
                 "type": "placeholder",
@@ -285,10 +264,6 @@
     {
         "type": "bancontact",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-bancontact@3x-5b31be92d86c437286200810aeaa49ce.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-bancontact-c6d62da104212dacefee6ea12a070237.svg"
-        },
         "fields": [
             {
                 "type": "name",
@@ -316,10 +291,6 @@
     {
         "type": "sepa_debit",
         "async": true,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sepa@3x-2f1a402961484c52aa2880acad84afcb.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sepa-debit-e88864f53237730b8cd73f85cf8bbadf.svg"
-        },
         "fields": [
             {
                 "type": "name",
@@ -365,10 +336,6 @@
     {
         "type": "eps",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-eps@3x-a0caea1adef8d0aebc0cc61c9d5fa261.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-eps-a79e75517cae239fc4ddfa2fbdb73b46.svg"
-        },
         "fields": [
             {
                 "type": "name",
@@ -525,10 +492,6 @@
     {
         "type": "giropay",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-giropay@3x-74f14911e865c99d67afe5699021d5bd.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-giropay-ac2e93b3fbd95f735b676064e6f47996.svg"
-        },
         "fields": [
             {
                 "type": "name",
@@ -556,10 +519,6 @@
     {
         "type": "p24",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-p24@3x-2aad3ef3d17848230d8152ecca7b46d6.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-p24-680f81150a94ae5da954d8bde657486e.svg"
-        },
         "fields": [
             {
                 "type": "name",
@@ -702,12 +661,6 @@
     {
         "type": "paypal",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal@3x-5227ab4fca3d36846bd6622f495cdf4b.png",
-            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal_dark@3x-26040e151c8f87187da2f997791fcc31.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal-0383a0ae3febbf0c0d8e721737884ab0.svg",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal_dark-9bc6192b9cd4f215e9666611b097e460.svg"
-        },
         "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
@@ -728,10 +681,6 @@
     {
         "type": "au_becs_debit",
         "async": true,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-aubecsdebit@3x-dc2a1c094b5240028a54da6b030521ce.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/bank-22fd9f78b7aff5831cfc5d4f85bfd60f.svg"
-        },
         "fields": [
             {
                 "type": "name",
@@ -784,12 +733,6 @@
     {
         "type": "revolut_pay",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay@3x-71e94e0b505ece2af665eb0503be405d.png",
-            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay_dark@3x-60943829a069f1c3ac619e4da0ab1ef0.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay-1ed5b7355a6bb467e80242716c7e3c39.svg",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay_dark-db4d8eef2236e0b69b2ae9f6970e4224.svg"
-        },
         "fields": [
         ],
         "next_action_spec": {
@@ -811,11 +754,6 @@
     {
         "type": "mobilepay",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-mobilepay@3x-23fda467d59a37d21796b2e4abc45c11.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-mobilepay-eb20a37d0acb310f6188afe3dbbd7c81.svg",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-mobilepay_dark-444c9c0735bcd60fda41732be59d9481.svg"
-        },
         "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
@@ -837,10 +775,6 @@
     {
         "type": "zip",
         "async": false,
-        "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-zip@3x-968be44bcc368ffffc4298743bae3e2c.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-zip-2630ccbb067c387dbeaa61c3281004f2.svg"
-        },
         "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
