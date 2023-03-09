@@ -703,8 +703,8 @@ extension PaymentSheetTestPlayground {
 
     // Server-side confirmation handler
     func confirmHandlerForServerSideConfirmation(_ paymentMethodID: String,
-                        _ shouldSavePaymentMethod: Bool,
-                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+                                                 _ shouldSavePaymentMethod: Bool,
+                                                 _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         enum ServerSideConfirmationError: Error {
             case clientSecretNotFound
             case unknown
