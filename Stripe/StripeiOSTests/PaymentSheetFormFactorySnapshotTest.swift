@@ -185,7 +185,7 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
 
     func testUpi_AutomaticFields() {
         let configuration = PaymentSheet.Configuration()
-        let factory = factory(for: .UPI, stpPaymentMethodType: .UPI, configuration: configuration)
+        let factory = factory(for: .UPI, configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
         view.autosizeHeight(width: 375)
@@ -198,7 +198,7 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
-        let factory = factory(for: .UPI, stpPaymentMethodType: .UPI, configuration: configuration)
+        let factory = factory(for: .UPI, configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
         view.autosizeHeight(width: 375)
@@ -223,7 +223,7 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
-        let factory = factory(for: .UPI, stpPaymentMethodType: .UPI, configuration: configuration)
+        let factory = factory(for: .UPI, configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
         view.autosizeHeight(width: 375)
@@ -237,7 +237,7 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.address = .never
-        let factory = factory(for: .UPI, stpPaymentMethodType: .UPI, configuration: configuration)
+        let factory = factory(for: .UPI, configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
         view.autosizeHeight(width: 375)
