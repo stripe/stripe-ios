@@ -803,27 +803,28 @@ extension PaymentSheetUITest {
         if addBillingDetailsButton.waitForExistence(timeout: 4.0) {
             addBillingDetailsButton.tap()
 
-            let firstNameCell = applePay.tables.cells["First Name"]
+            print("Apple pay: \(applePay.debugDescription)")
+            let firstNameCell = applePay.textFields["First Name"]
             firstNameCell.tap()
             firstNameCell.typeText("Jane")
 
-            let lastNameCell = applePay.tables.cells["Last Name"]
+            let lastNameCell = applePay.textFields["Last Name"]
             lastNameCell.tap()
             lastNameCell.typeText("Doe")
 
-            let streetCell = applePay.tables.cells["Street, Search Contact or Address"]
+            let streetCell = applePay.textFields["Street, Search Contact or Address"]
             streetCell.tap()
             streetCell.typeText("One Apple Park Way")
 
-            let cityCell = applePay.tables.cells["City"]
+            let cityCell = applePay.textFields["City"]
             cityCell.tap()
             cityCell.typeText("Cupertino")
 
-            let stateCell = applePay.tables.cells["State"]
+            let stateCell = applePay.textFields["State"]
             stateCell.tap()
             stateCell.typeText("CA")
 
-            let zipCell = applePay.tables.cells["ZIP"]
+            let zipCell = applePay.textFields["ZIP"]
             zipCell.tap()
             zipCell.typeText("95014")
 

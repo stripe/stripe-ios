@@ -197,6 +197,9 @@ class PaymentSheet_AddressTests: XCTestCase {
             "link": "off",
         ])
 
+        // The present_saved_pms element is not available until scrolling.
+        app.scrollViews.firstMatch.swipeUp()
+
         // Using PaymentSheet.FlowController w/o a shipping address...
         app.buttons["present_saved_pms"].waitForExistenceAndTap()
 
