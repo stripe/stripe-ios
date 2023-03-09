@@ -329,7 +329,7 @@ class PaymentSheetAPITest: XCTestCase {
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
-                                     confirmableIntent: .init(from:.deferredIntent(elementsSession: elementsSession,
+                                     confirmableIntent: .init(from: .deferredIntent(elementsSession: elementsSession,
                                                              intentConfig: intentConfig)),
                                      paymentOption: self.newCardPaymentOption,
                                      paymentHandler: self.paymentHandler) { result in
