@@ -1093,9 +1093,9 @@ extension PaymentSheetUITest {
         }
 
         XCTAssertTrue(modal.staticTexts["Card information"].waitForExistence(timeout: 10.0))
-        // Link doesn't collect collect contact information here.
-        XCTAssertFalse(modal.staticTexts["Contact information"].exists)
-        XCTAssertFalse(modal.textFields["Email"].exists)
+        XCTAssertTrue(modal.staticTexts["Contact information"].exists)
+        XCTAssertTrue(modal.textFields["Email"].exists)
+        // Phone cannot be collected by Link.
         XCTAssertFalse(modal.textFields["Phone"].exists)
         XCTAssertTrue(modal.textFields["Name on card"].exists)
         XCTAssertTrue(modal.staticTexts["Billing address"].exists)
@@ -1106,7 +1106,9 @@ extension PaymentSheetUITest {
         XCTAssertTrue(modal.textFields["State"].exists)
         XCTAssertTrue(modal.textFields["ZIP"].exists)
 
-        modal.textFields["Name on card"].forceTapWhenHittableInTestCase(self)
+        modal.textFields["Email"].forceTapWhenHittableInTestCase(self)
+        modal.typeText("foo@bar.com")
+        modal.textFields["Name on card"].tap()
         modal.typeText("Jane Doe")
         modal.textFields["Card number"].tap()
         modal.typeText("4242424242424242")
