@@ -63,6 +63,7 @@ extension PaymentSheet {
         // MARK: - Apple Pay
         case .applePay:
             guard let intent = confirmableIntent.asIntent else {
+                // TODO(porter) Fetch intent
                 let message =
                     "Cannot present Apple Pay without an Intent"
                 assertionFailure(message)
@@ -318,6 +319,7 @@ extension PaymentSheet {
             switch confirmOption {
             case .wallet:
                 guard let intent = confirmableIntent.asIntent else {
+                    // TODO(porter) Fetch intent for Link
                     let message =
                         "Cannot present Link without an Intent"
                     assertionFailure(message)
@@ -644,7 +646,6 @@ extension PaymentSheet {
                                                          paymentMethod: STPPaymentMethod?,
                                                          paymentMethodParams: STPPaymentMethodParams?,
                                                          shouldSavePaymentMethod: Bool) {
-
         Task {
             do {
                 // Create PM if necessary
@@ -656,7 +657,56 @@ extension PaymentSheet {
                                                                                  paymentMethodID: _paymentMethod.stripeId,
                                                                                  shouldSavePaymentMethod: shouldSavePaymentMethod)
                 // Finish confirmation
-                finishDeferredConfirmation(deferredIntentContext: deferredIntentContext, clientSecret: clientSecret)
+                if deferredIntentContext.isServerSideConfirmation {
+                    // Server-side confirmation
+                    func handleStatus(status: STPPaymentHandlerActionStatus, error: Error?) {
+                        switch status {
+                        case .succeeded:
+                            deferredIntentContext.completion(.completed)
+                        case .canceled:
+                            deferredIntentContext.completion(.canceled)
+                        case .failed:
+                            let error = error ?? PaymentSheetError.unknown(debugDescription: "Unknown error occured while handling intent next action")
+                            deferredIntentContext.completion(.failed(error: error))
+                        @unknown default:
+                            deferredIntentContext.completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Unrecognized intent status")))
+                        }
+                    }
+
+                    switch deferredIntentContext.intentConfig.mode {
+                    case .payment:
+                        deferredIntentContext.paymentHandler.handleNextAction(forPayment: clientSecret,
+                                                                        with: deferredIntentContext.authenticationContext,
+                                                                        returnURL: deferredIntentContext.configuration.returnURL,
+                                                                        completion: { status, _, error in
+                            handleStatus(status: status, error: error)
+                        })
+                    case .setup:
+                        deferredIntentContext.paymentHandler.handleNextAction(forSetupIntent: clientSecret,
+                                                                        with: deferredIntentContext.authenticationContext,
+                                                                        returnURL: deferredIntentContext.configuration.returnURL,
+                                                                        completion: { status, _, error in
+                            handleStatus(status: status, error: error)
+                        })
+                    }
+                } else {
+                    // Client-side confirmation
+                    var confirmableIntent: Intent.Confirmable
+
+                    switch deferredIntentContext.intentConfig.mode {
+                    case .payment:
+                        confirmableIntent = .payment(clientSecret: clientSecret, paymentIntent: nil)
+                    case .setup:
+                        confirmableIntent = .setup(clientSecret: clientSecret, setupIntent: nil)
+                    }
+
+                    confirm(configuration: deferredIntentContext.configuration,
+                            authenticationContext: deferredIntentContext.authenticationContext,
+                            confirmableIntent: confirmableIntent,
+                            paymentOption: deferredIntentContext.paymentOption,
+                            paymentHandler: deferredIntentContext.paymentHandler,
+                            completion: deferredIntentContext.completion)
+                }
 
             } catch {
                 deferredIntentContext.completion(.failed(error: error))
@@ -664,7 +714,7 @@ extension PaymentSheet {
         }
     }
 
-    static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
+    private static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
                                                     paymentMethodID: String,
                                                     shouldSavePaymentMethod: Bool) async throws -> String {
       try await withCheckedThrowingContinuation { continuation in
@@ -679,67 +729,6 @@ extension PaymentSheet {
               })
           }
       }
-    }
-
-    static func finishDeferredConfirmation(deferredIntentContext: DeferredIntentContext,
-                                           clientSecret: String) {
-        if deferredIntentContext.isServerSideConfirmation {
-            handleServerConfirmedIntent(deferredContext: deferredIntentContext, clientSecret: clientSecret)
-        } else {
-            confirmClientSide(for: deferredIntentContext, with: clientSecret)
-        }
-    }
-
-    private static func confirmClientSide(for deferredContext: DeferredIntentContext, with clientSecret: String) {
-        var confirmableIntent: Intent.Confirmable
-
-        switch deferredContext.intentConfig.mode {
-        case .payment:
-            confirmableIntent = .payment(clientSecret: clientSecret, paymentIntent: nil)
-        case .setup:
-            confirmableIntent = .setup(clientSecret: clientSecret, setupIntent: nil)
-        }
-
-        confirm(configuration: deferredContext.configuration,
-                authenticationContext: deferredContext.authenticationContext,
-                confirmableIntent: confirmableIntent,
-                paymentOption: deferredContext.paymentOption,
-                paymentHandler: deferredContext.paymentHandler,
-                completion: deferredContext.completion)
-
-    }
-
-    private static func handleServerConfirmedIntent(deferredContext: DeferredIntentContext, clientSecret: String) {
-        func handleStatus(status: STPPaymentHandlerActionStatus, error: Error?) {
-            switch status {
-            case .succeeded:
-                deferredContext.completion(.completed)
-            case .canceled:
-                deferredContext.completion(.canceled)
-            case .failed:
-                let error = error ?? PaymentSheetError.unknown(debugDescription: "Unknown error occured while handling intent next action")
-                deferredContext.completion(.failed(error: error))
-            @unknown default:
-                deferredContext.completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Unrecognized intent status")))
-            }
-        }
-
-        switch deferredContext.intentConfig.mode {
-        case .payment:
-            deferredContext.paymentHandler.handleNextAction(forPayment: clientSecret,
-                                                            with: deferredContext.authenticationContext,
-                                                            returnURL: deferredContext.configuration.returnURL,
-                                                            completion: { status, _, error in
-                handleStatus(status: status, error: error)
-            })
-        case .setup:
-            deferredContext.paymentHandler.handleNextAction(forSetupIntent: clientSecret,
-                                                            with: deferredContext.authenticationContext,
-                                                            returnURL: deferredContext.configuration.returnURL,
-                                                            completion: { status, _, error in
-                handleStatus(status: status, error: error)
-            })
-        }
     }
 }
 
