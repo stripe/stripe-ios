@@ -812,7 +812,7 @@ extension PaymentSheetUITest {
             lastNameCell.tap()
             lastNameCell.typeText("Doe")
 
-            let streetCell = applePay.textFields["Street, Search Contact or Address"]
+            let streetCell = applePay.textFields["Street"]
             streetCell.tap()
             streetCell.typeText("One Apple Park Way")
 
