@@ -9,7 +9,6 @@
 import Foundation
 
 /// An object representing parameters used to create a CashApp Payment Method
-/// - Note: Cash App Pay is currently in beta therefore the interface of this class is subject to change.
 public class STPPaymentMethodCashAppParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 

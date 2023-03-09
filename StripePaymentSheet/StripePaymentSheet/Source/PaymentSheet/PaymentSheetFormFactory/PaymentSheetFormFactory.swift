@@ -97,7 +97,7 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
-            return makeUPI()
+            return makeDefaultsApplierWrapper(for: makeUPI())
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             return FormElement(autoSectioningElements: [makeCashAppMandate()], theme: theme)
@@ -141,6 +141,17 @@ extension PaymentSheetFormFactory {
             } else {
                 params.paymentMethodParams.nonnil_billingDetails.email = textField.text
             }
+            return params
+        }
+    }
+
+    func makePhone() -> PaymentMethodElementWrapper<PhoneNumberElement> {
+        let element = PhoneNumberElement(
+            defaultCountryCode: configuration.defaultBillingDetails.address.country,
+            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
+            theme: theme)
+        return PaymentMethodElementWrapper(element) { phoneField, params in
+            params.paymentMethodParams.nonnil_billingDetails.phone = phoneField.phoneNumber?.string(as: .e164)
             return params
         }
     }
@@ -292,9 +303,14 @@ extension PaymentSheetFormFactory {
             shouldDisplaySaveCheckbox
             ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMode == .merchantRequired
         return USBankAccountPaymentMethodElement(
+            configuration: configuration,
             titleElement: makeUSBankAccountCopyLabel(),
-            nameElement: makeName(),
-            emailElement: makeEmail(),
+            nameElement: configuration.billingDetailsCollectionConfiguration.name != .never ? makeName() : nil,
+            emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
+            phoneElement: configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil,
+            addressElement: configuration.billingDetailsCollectionConfiguration.address == .full
+                ? makeBillingAddressSection(collectionMode: .all(), countries: nil)
+                : nil,
             checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             savingAccount: isSaving,
             merchantName: merchantName,
@@ -410,16 +426,62 @@ extension PaymentSheetFormFactory {
         label.numberOfLines = 0
         return StaticElement(view: label)
     }
+
+    func makeContactInformation(includeName: Bool, includeEmail: Bool, includePhone: Bool) -> SectionElement? {
+        let nameElement = includeName ? makeName() : nil
+        let emailElement = includeEmail ? makeEmail() : nil
+        let phoneElement = includePhone ? makePhone() : nil
+
+        let allElements: [Element?] = [nameElement, emailElement, phoneElement]
+        let elements = allElements.compactMap { $0 }
+
+        guard !elements.isEmpty else { return nil }
+
+        return SectionElement(
+            title: STPLocalizedString("Contact information", "Title for the contact information section"),
+            elements: elements,
+            theme: theme)
+    }
+
+    func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {
+        return PaymentMethodElementWrapper(
+            element,
+            defaultsApplier: { [configuration] _, params in
+                // Only apply defaults when the flag is on.
+                guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+                    return params
+                }
+
+                if let name = configuration.defaultBillingDetails.name {
+                    params.paymentMethodParams.nonnil_billingDetails.name = name
+                }
+                if let phone = configuration.defaultBillingDetails.phone {
+                    params.paymentMethodParams.nonnil_billingDetails.phone = phone
+                }
+                if let email = configuration.defaultBillingDetails.email {
+                    params.paymentMethodParams.nonnil_billingDetails.email = email
+                }
+                if configuration.defaultBillingDetails.address != .init() {
+                    params.paymentMethodParams.nonnil_billingDetails.address =
+                        STPPaymentMethodAddress(address: configuration.defaultBillingDetails.address)
+                }
+                return params
+            },
+            paramsUpdater: { element, params in
+                return element.updateParams(params: params)
+            })
+    }
 }
 
 // MARK: - Extension helpers
 
 extension FormElement {
-    /// Conveniently nests single TextField and DropdownFields in a Section
+    /// Conveniently nests single TextField, PhoneNumber, and DropdownFields in a Section
     convenience init(autoSectioningElements: [Element], theme: ElementsUITheme = .default) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is PaymentMethodElementWrapper<TextFieldElement>
                 || $0 is PaymentMethodElementWrapper<DropdownFieldElement>
+                || $0 is PaymentMethodElementWrapper<PhoneNumberElement>
             {
                 return SectionElement($0, theme: theme)
             }
@@ -523,5 +585,18 @@ extension PaymentSheet.Appearance.Shadow {
         self.opacity = elementShadow.opacity
         self.offset = elementShadow.offset
         self.radius = elementShadow.radius
+    }
+}
+
+extension STPPaymentMethodAddress {
+    /// Convenience initializer to create a `STPPaymentMethodAddress` from a `PaymentSheet.Address`
+    convenience init(address: PaymentSheet.Address) {
+        self.init()
+        city = address.city
+        country = address.country
+        line1 = address.line1
+        line2 = address.line2
+        postalCode = address.postalCode
+        state = address.state
     }
 }

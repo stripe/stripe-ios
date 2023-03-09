@@ -133,6 +133,7 @@ extension STPAPIClient {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
+
         let billingParams = billingDetails.consumersAPIParams
 
         var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
@@ -467,6 +468,9 @@ extension STPPaymentMethodBillingDetails {
 
     var consumersAPIParams: [String: Any] {
         var params = STPFormEncoder.dictionary(forObject: self)
+        // Consumers API doesn't support email or phone.
+        params["email"] = nil
+        params["phone"] = nil
         if let addressParams = address?.consumersAPIParams {
             params["address"] = nil
             params.merge(addressParams) { (_, new)  in new }
@@ -478,12 +482,24 @@ extension STPPaymentMethodBillingDetails {
 
 // MARK: - /v1/consumers Support
 extension STPPaymentMethodAddress {
+    // The param naming for consumers API is different so we need to map them.
+    static let consumerKeyMap = [
+      "line1": "line_1",
+      "line2": "line_2",
+      "city": "locality",
+      "state": "administrative_area",
+      "country": "country_code",
+    ]
 
     var consumersAPIParams: [String: Any] {
-        var params = STPFormEncoder.dictionary(forObject: self)
-        params["country_code"] = params["country"]
-        params["country"] = nil
-        return params
-    }
+        let tupleArray = STPFormEncoder.dictionary(forObject: self).compactMap { key, value -> (String, Any)? in
+            guard let value = value as? String, !value.isEmpty else {
+                return nil
+            }
 
+            let newKey = Self.consumerKeyMap[key] ?? key
+            return (newKey, value)
+        }
+        return .init(uniqueKeysWithValues: tupleArray)
+    }
 }

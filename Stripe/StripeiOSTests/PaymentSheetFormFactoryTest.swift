@@ -262,6 +262,25 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
     }
 
+    func testPhoneValueWrittenToDefaultLocation() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("mock_payment_method")
+        )
+        let phoneElement = factory.makePhone()
+        let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
+
+        let updatedParams = phoneElement.updateParams(params: params)
+
+        XCTAssertEqual(
+            updatedParams?.paymentMethodParams.billingDetails?.phone,
+            "+15555555555"
+        )
+    }
+
     func testEmailValueWrittenToLocationUndefinedAPIPath() {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.email = "email@stripe.com"
@@ -993,7 +1012,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 addressSpecProvider: specProvider
             )
 
-            guard let form = factory.make() as? FormElement else {
+            var form = factory.make()
+            if let wrapper = form as? PaymentMethodElementWrapper<FormElement> {
+                form = wrapper.element
+            }
+
+            guard let form = form as? FormElement else {
                 XCTFail()
                 return
             }
@@ -1111,6 +1135,103 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(addressSection.element.line1?.text, "Billing line 1")
         // ...and doesn't show the shipping checkbox
         XCTAssertTrue(addressSection.element.sameAsCheckbox.view.isHidden)
+    }
+
+    func testApplyDefaults_Card_Applied() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
+        // An address section with defaults...
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            ),
+        ]
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .card,
+            addressSpecProvider: specProvider
+        )
+        let cardForm = factory.makeCard()
+        let params = cardForm.applyDefaults(params: IntentConfirmParams(type: .card))
+
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.name, "Jane Doe")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.email, "foo@bar.com")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.phone, "+15555555555")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.line1, "510 Townsend St.")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.line2, "Line 2")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.city, "San Francisco")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.state, "CA")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.country, "US")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode, "94102")
+    }
+
+    func testApplyDefaults_Card_NotApplied() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = defaultAddress
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
+        // An address section with defaults...
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            ),
+        ]
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .card,
+            addressSpecProvider: specProvider
+        )
+        let formElement = factory.make()
+        let params = formElement.applyDefaults(params: IntentConfirmParams(type: .card))
+
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.name)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.email)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.phone)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.line1)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.line2)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.city)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.state)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.country)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode)
     }
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {

@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -20,22 +21,52 @@ extension PaymentSheetFormFactory {
             )
         )
         let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
-        let cardFormElement = FormElement(elements: [
-            CardSection(theme: theme),
-            makeBillingAddressSection(collectionMode: .countryAndPostal(),
-                                      countries: nil),
-            shouldDisplaySaveCheckbox ? saveCheckbox : nil,
-        ], theme: theme)
+
+        // Link can't collect phone.
+        let includePhone = !configuration.linkPaymentMethodsOnly
+            && configuration.billingDetailsCollectionConfiguration.phone == .always
+
+        let contactInformationSection = makeContactInformation(
+            includeName: false, // Name is included in the card details section.
+            includeEmail: configuration.billingDetailsCollectionConfiguration.email == .always,
+            includePhone: includePhone)
+
+        let cardSection = CardSection(
+            collectName: configuration.billingDetailsCollectionConfiguration.name == .always,
+            defaultName: configuration.defaultBillingDetails.name,
+            theme: theme)
+
+        let billingAddressSection: PaymentMethodElement? = {
+            switch configuration.billingDetailsCollectionConfiguration.address {
+            case .automatic:
+                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil)
+            case .full:
+                return makeBillingAddressSection(collectionMode: .all(), countries: nil)
+            case .never:
+                return nil
+            }
+        }()
+
+        let cardFormElement = FormElement(
+            elements: [
+                contactInformationSection,
+                cardSection,
+                billingAddressSection,
+                shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            ],
+            theme: theme)
+        let cardFormElementWrapper = makeDefaultsApplierWrapper(for: cardFormElement)
+
         if isLinkEnabled {
             return LinkEnabledPaymentMethodElement(
                 type: .card,
-                paymentMethodElement: cardFormElement,
+                paymentMethodElement: cardFormElementWrapper,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: intent.countryCode
             )
         } else {
-            return cardFormElement
+            return cardFormElementWrapper
         }
     }
 }

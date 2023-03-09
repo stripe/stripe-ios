@@ -21,6 +21,7 @@ final class USBankAccountPaymentMethodElement: Element {
     }
     var mandateString: NSMutableAttributedString?
 
+    private let configuration: PaymentSheet.Configuration
     private let merchantName: String
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
@@ -51,24 +52,56 @@ final class USBankAccountPaymentMethodElement: Element {
     static let MicrodepositCopy: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
 
     var canLinkAccount: Bool {
-        return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount)) != nil
+        let params = self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))
+        // If name and email are not collected they won't be verified when updating params.
+        // Check if params are valid, and name and email are provided either through the form or through defaults.
+        return params != nil && name != nil && email != nil
     }
 
     var name: String? {
         return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.name
+            ?? defaultName
+    }
+
+    private var defaultName: String? {
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
+        return configuration.defaultBillingDetails.name
     }
 
     var email: String? {
         return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.email
+            ?? defaultEmail
     }
 
-    init(titleElement: StaticElement,
-         nameElement: PaymentMethodElement,
-         emailElement: PaymentMethodElement,
-         checkboxElement: PaymentMethodElement?,
-         savingAccount: BoolReference,
-         merchantName: String,
-         theme: ElementsUITheme = .default) {
+    private var defaultEmail: String? {
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
+        return configuration.defaultBillingDetails.email
+    }
+
+    init(
+        configuration: PaymentSheet.Configuration,
+        titleElement: StaticElement,
+        nameElement: PaymentMethodElement?,
+        emailElement: PaymentMethodElement?,
+        phoneElement: PaymentMethodElement?,
+        addressElement: PaymentMethodElement?,
+        checkboxElement: PaymentMethodElement?,
+        savingAccount: BoolReference,
+        merchantName: String,
+        theme: ElementsUITheme = .default
+    ) {
+        let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
+        let collectingEmail = configuration.billingDetailsCollectionConfiguration.email != .never
+        let hasDefaultName = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+            && configuration.defaultBillingDetails.name != nil
+        let hasDefaultEmail = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+            && configuration.defaultBillingDetails.email != nil
+        assert(
+            (collectingName || hasDefaultName) && (collectingEmail || hasDefaultEmail),
+            "If name or email are not collected, they must be provided through defaults"
+        )
+
+        self.configuration = configuration
         self.bankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
         self.bankInfoSectionElement = SectionElement(title: STPLocalizedString("Bank account",
                                                                                "Title for collected bank account information"),
@@ -80,10 +113,15 @@ final class USBankAccountPaymentMethodElement: Element {
         self.merchantName = merchantName
         self.savingAccount = savingAccount
         self.theme = theme
-        var autoSectioningElements: [Element] = [titleElement,
-                                                 nameElement,
-                                                 emailElement,
-                                                 bankInfoSectionElement, ]
+        let allElements: [Element?] = [
+            titleElement,
+            nameElement,
+            emailElement,
+            phoneElement,
+            addressElement,
+            bankInfoSectionElement,
+        ]
+        var autoSectioningElements = allElements.compactMap { $0 }
         if let checkboxElement = checkboxElement {
             checkboxElement.view.isHidden = true
             autoSectioningElements.append(checkboxElement)
@@ -196,6 +234,26 @@ extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
 }
 
 extension USBankAccountPaymentMethodElement: PaymentMethodElement {
+    func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+            return params
+        }
+        if let name = configuration.defaultBillingDetails.name {
+            params.paymentMethodParams.nonnil_billingDetails.name = name
+        }
+        if let email = configuration.defaultBillingDetails.email {
+            params.paymentMethodParams.nonnil_billingDetails.email = email
+        }
+        if let phone = configuration.defaultBillingDetails.phone {
+            params.paymentMethodParams.nonnil_billingDetails.phone = phone
+        }
+        if configuration.defaultBillingDetails.address != .init() {
+            params.paymentMethodParams.nonnil_billingDetails.address =
+                STPPaymentMethodAddress(address: configuration.defaultBillingDetails.address)
+        }
+        return params
+    }
+
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let updatedParams = self.formElement.updateParams(params: params),
            let linkedBank = linkedBank {
