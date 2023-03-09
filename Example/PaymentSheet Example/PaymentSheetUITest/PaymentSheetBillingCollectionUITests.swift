@@ -703,7 +703,7 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         }
         cell.tap()
 
-        XCTAssertFalse(app.textFields["Email"].exists)
+        XCTAssertEqual(app.textFields["Email"].value as? String, "foo@bar.com")
         XCTAssertEqual(app.textFields["Phone"].value as? String, "(310) 555-1234")
         XCTAssertEqual(app.textFields["Full name"].value as? String, "Jane Doe")
         XCTAssertTrue(app.staticTexts["Billing address"].exists)

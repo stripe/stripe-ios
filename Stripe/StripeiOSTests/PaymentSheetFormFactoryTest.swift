@@ -75,8 +75,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return
         }
 
-        XCTAssertEqual(spec.fields.count, 2)
-        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: nil, translationId: nil)))
+        XCTAssertEqual(spec.fields.count, 5)
+        XCTAssertEqual(
+            spec.fields.first,
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
+        )
         XCTAssertEqual(spec.type, "eps")
     }
 
