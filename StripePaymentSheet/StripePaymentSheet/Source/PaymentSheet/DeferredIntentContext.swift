@@ -20,8 +20,6 @@ class DeferredIntentContext {
         return intentConfig.confirmHandlerForServerSideConfirmation != nil
     }
 
-    static var current: DeferredIntentContext?
-
     init(configuration: PaymentSheet.Configuration,
          intentConfig: PaymentSheet.IntentConfiguration,
          paymentOption: PaymentOption,

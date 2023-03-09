@@ -35,17 +35,6 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
-
-        // If processing a deferred intent, store state for later processing
-        if case .deferredIntent(_, let intentConfig) = intent {
-            DeferredIntentContext.current = .init(configuration: configuration,
-                                                  intentConfig: intentConfig,
-                                                  paymentOption: paymentOption,
-                                                  authenticationContext: authenticationContext,
-                                                  paymentHandler: paymentHandler,
-                                                  completion: completion)
-        }
-
         // Translates a STPPaymentHandler result to a PaymentResult
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {
@@ -152,11 +141,16 @@ extension PaymentSheet {
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
-                confirmDeferredIntentNewPaymentMethod(configuration: configuration,
-                                                      intentConfig: intentConfig,
-                                                      paymentMethodParams: confirmParams.paymentMethodParams,
-                                                      shouldSavePaymentMethod: confirmParams.shouldSavePaymentMethod,
-                                                      completion: completion)
+                let deferredContext = DeferredIntentContext(configuration: configuration,
+                                                            intentConfig: intentConfig,
+                                                            paymentOption: paymentOption,
+                                                            authenticationContext: authenticationContext,
+                                                            paymentHandler: paymentHandler,
+                                                            completion: completion)
+                handleDeferredIntentConfirmation(deferredIntentContext: deferredContext,
+                                                 paymentMethod: nil,
+                                                 paymentMethodParams: confirmParams.paymentMethodParams,
+                                                 shouldSavePaymentMethod: confirmParams.shouldSavePaymentMethod)
             }
 
         // MARK: - Saved Payment Method
@@ -204,16 +198,17 @@ extension PaymentSheet {
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
-                if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
-                    // Pass in false for `shouldSavePaymentMethod` since this is a saved payment method
-                    serverConfirmHandler(paymentMethod.stripeId,
-                                                false,
-                                                _handleIntentCreation(_:))
-                } else if let confirmHandler = intentConfig.confirmHandler {
-                    confirmHandler(paymentMethod.stripeId, _handleIntentCreation(_:))
-                } else {
-                    fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
-                }
+                let deferredContext = DeferredIntentContext(configuration: configuration,
+                                                            intentConfig: intentConfig,
+                                                            paymentOption: paymentOption,
+                                                            authenticationContext: authenticationContext,
+                                                            paymentHandler: paymentHandler,
+                                                            completion: completion)
+                // Pass in false for `shouldSavePaymentMethod` since this is a saved payment method
+                handleDeferredIntentConfirmation(deferredIntentContext: deferredContext,
+                                                 paymentMethod: paymentMethod,
+                                                 paymentMethodParams: nil,
+                                                 shouldSavePaymentMethod: false)
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -239,12 +234,17 @@ extension PaymentSheet {
                         completion: paymentHandlerCompletion
                     )
                 case .deferredIntent(_, let intentConfig):
+                    let deferredContext = DeferredIntentContext(configuration: configuration,
+                                                                intentConfig: intentConfig,
+                                                                paymentOption: paymentOption,
+                                                                authenticationContext: authenticationContext,
+                                                                paymentHandler: paymentHandler,
+                                                                completion: completion)
                     // Pass in false for `shouldSavePaymentMethod` since we are using Link
-                    confirmDeferredIntentNewPaymentMethod(configuration: configuration,
-                                                          intentConfig: intentConfig,
-                                                          paymentMethodParams: paymentMethodParams,
-                                                          shouldSavePaymentMethod: false,
-                                                          completion: completion)
+                    handleDeferredIntentConfirmation(deferredIntentContext: deferredContext,
+                                                     paymentMethod: nil,
+                                                     paymentMethodParams: paymentMethodParams,
+                                                     shouldSavePaymentMethod: false)
                 }
             }
 
@@ -591,56 +591,67 @@ extension PaymentSheet {
         return params
     }
 
-    /// - Note: Should only be invoked by merchant code via the `IntentConfiguration.ConfirmHandler.intentCreationCallback`
-    private static func _handleIntentCreation(_ result: Result<String, Error>) {
-        guard let deferredContext = DeferredIntentContext.current else {
-            fatalError("DeferredIntentContext.current unexpectedly nil")
+    private static func createPaymentMethodIfNeeded(apiClient: STPAPIClient,
+                                                    paymentMethod: STPPaymentMethod?,
+                                                    paymentMethodParams: STPPaymentMethodParams?) async throws -> STPPaymentMethod {
+        if let paymentMethod = paymentMethod {
+            return paymentMethod
         }
 
-        DispatchQueue.main.async {
-            switch result {
-            case .success(let clientSecret):
-                if deferredContext.isServerSideConfirmation {
-                    handleServerConfirmedIntent(deferredContext: deferredContext, clientSecret: clientSecret)
-                } else {
-                    confirmClientSide(for: deferredContext, with: clientSecret)
-                }
-            case .failure(let error):
-                deferredContext.completion(.failed(error: error))
+        guard let paymentMethodParams = paymentMethodParams else {
+            throw PaymentSheetError.unknown(debugDescription: "paymentMethodParams unexpectedly nil")
+        }
+
+        return try await apiClient.createPaymentMethod(with: paymentMethodParams)
+    }
+
+    private static func handleDeferredIntentConfirmation(deferredIntentContext: DeferredIntentContext,
+                                                         paymentMethod: STPPaymentMethod?,
+                                                         paymentMethodParams: STPPaymentMethodParams?,
+                                                         shouldSavePaymentMethod: Bool) {
+
+        Task {
+            do {
+                // Create PM if necessary
+                let _paymentMethod = try await createPaymentMethodIfNeeded(apiClient: deferredIntentContext.configuration.apiClient,
+                                                                           paymentMethod: paymentMethod,
+                                                                           paymentMethodParams: paymentMethodParams)
+                // Get Intent client secret from merchant
+                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: deferredIntentContext.intentConfig,
+                                                                                 paymentMethodID: _paymentMethod.stripeId,
+                                                                                 shouldSavePaymentMethod: shouldSavePaymentMethod)
+                // Finish confirmation
+                finishDeferredConfirmation(deferredIntentContext: deferredIntentContext, clientSecret: clientSecret)
+
+            } catch {
+                deferredIntentContext.completion(.failed(error: error))
             }
         }
     }
 
-    private static func confirmDeferredIntentNewPaymentMethod(configuration: PaymentSheet.Configuration,
-                                                              intentConfig: IntentConfiguration,
-                                                              paymentMethodParams: STPPaymentMethodParams,
-                                                              shouldSavePaymentMethod: Bool,
-                                                              completion: @escaping (PaymentSheetResult) -> Void) {
-        configuration.apiClient.createPaymentMethod(with: paymentMethodParams) {
-            paymentMethod,
-            error in
-            if let error = error {
-                completion(.failed(error: error))
-                return
-            }
+    static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
+                                                    paymentMethodID: String,
+                                                    shouldSavePaymentMethod: Bool) async throws -> String {
+      try await withCheckedThrowingContinuation { continuation in
 
-            guard let paymentMethod = paymentMethod else {
-                let paymentMethodCreationError = PaymentSheetError.unknown(
-                    debugDescription: "Failed to create a new payment method."
-                )
-                completion(.failed(error: paymentMethodCreationError))
-                return
-            }
+          if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
+              confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in
+                  continuation.resume(with: result)
+              })
+          } else if let confirmHandler = intentConfig.confirmHandler {
+              confirmHandler(paymentMethodID, { result in
+                  continuation.resume(with: result)
+              })
+          }
+      }
+    }
 
-            if let serverConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
-                serverConfirmHandler(paymentMethod.stripeId,
-                                            shouldSavePaymentMethod,
-                                            _handleIntentCreation(_:))
-            } else if let confirmHandler = intentConfig.confirmHandler {
-                confirmHandler(paymentMethod.stripeId, _handleIntentCreation(_:))
-            } else {
-                fatalError("Either confirmHandler or confirmHandlerForServerSideConfirmation must be non-nil when using deferred intents")
-            }
+    static func finishDeferredConfirmation(deferredIntentContext: DeferredIntentContext,
+                                           clientSecret: String) {
+        if deferredIntentContext.isServerSideConfirmation {
+            handleServerConfirmedIntent(deferredContext: deferredIntentContext, clientSecret: clientSecret)
+        } else {
+            confirmClientSide(for: deferredIntentContext, with: clientSecret)
         }
     }
 
