@@ -1226,8 +1226,10 @@ extension PaymentSheetUITest {
         waitForExpectations(timeout: 10, handler: nil)
         payButton.tap()
 
-        let failedText = modal.staticTexts["The payment failed."]
-        XCTAssertTrue(failedText.waitForExistence(timeout: 10))
+        // Error comes from our backend and isn't pretty
+        let predicate = NSPredicate(format: "label CONTAINS 'ServerSideConfirmationError error'")
+        let declineText = app.staticTexts.containing(predicate).firstMatch
+        XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
     }
 
     func testDeferredIntentLinkCustomFlow_SeverSideConfirmation() throws {
