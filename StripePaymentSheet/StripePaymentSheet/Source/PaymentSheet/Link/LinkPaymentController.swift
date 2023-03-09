@@ -161,7 +161,7 @@ import UIKit
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default),
-                confirmableIntent: .init(from: intent),
+                intent: intent,
                 paymentOption: paymentOption,
                 paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
             ) { result in

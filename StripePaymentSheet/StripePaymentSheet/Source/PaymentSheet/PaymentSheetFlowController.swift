@@ -286,7 +286,7 @@ extension PaymentSheet {
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: authenticationContext,
-                confirmableIntent: .init(from: intent),
+                intent: intent,
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler
             ) { [intent, configuration] result in

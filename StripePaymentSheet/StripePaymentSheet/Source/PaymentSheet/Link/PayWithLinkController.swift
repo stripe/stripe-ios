@@ -77,7 +77,7 @@ extension PayWithLinkController: PayWithLinkViewControllerDelegate {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: payWithLinkViewController,
-            confirmableIntent: .init(from: intent),
+            intent: intent,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             completion: completion

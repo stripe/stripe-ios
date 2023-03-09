@@ -23,36 +23,6 @@ enum Intent {
     case setupIntent(STPSetupIntent)
     case deferredIntent(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
 
-    enum Confirmable {
-        case payment(clientSecret: String, paymentIntent: STPPaymentIntent?)
-        case setup(clientSecret: String, setupIntent: STPSetupIntent?)
-        case deferred(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
-
-        init(from: Intent) {
-            switch from {
-            case .paymentIntent(let paymentIntent):
-                self = .payment(clientSecret: paymentIntent.clientSecret, paymentIntent: paymentIntent)
-            case .setupIntent(let setupIntent):
-                self = .setup(clientSecret: setupIntent.clientSecret, setupIntent: setupIntent)
-            case .deferredIntent(let elementsSession, let intentConfig):
-                self = .deferred(elementsSession: elementsSession, intentConfig: intentConfig)
-            }
-        }
-
-        var asIntent: Intent? {
-            switch self {
-            case .payment(_, let paymentIntent):
-                guard let paymentIntent = paymentIntent else { return nil }
-                return .paymentIntent(paymentIntent)
-            case .setup(_, let setupIntent):
-                guard let setupIntent = setupIntent else { return nil }
-                return .setupIntent(setupIntent)
-            case .deferred:
-                return nil
-            }
-        }
-    }
-
     var unactivatedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):

@@ -278,7 +278,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             PaymentSheet.confirm(
                 configuration: self.configuration,
                 authenticationContext: self.bottomSheetViewController,
-                confirmableIntent: .init(from: paymentSheetViewController.intent),
+                intent: paymentSheetViewController.intent,
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler)
             { result in
@@ -364,7 +364,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
         PaymentSheet.confirm(
             configuration: self.configuration,
             authenticationContext: self.bottomSheetViewController,
-            confirmableIntent: .init(from: intent),
+            intent: intent,
             paymentOption: paymentOption,
             paymentHandler: self.paymentHandler)
         { result in

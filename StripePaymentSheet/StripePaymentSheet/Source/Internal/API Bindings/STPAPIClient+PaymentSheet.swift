@@ -91,6 +91,7 @@ extension STPAPIClient {
 extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
+    typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
     typealias STPElementsSessionCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
 
     func retrievePaymentIntentWithPreferences(
@@ -192,6 +193,41 @@ extension STPAPIClient {
             }
 
             completion(.success(setupIntentWithPreferences))
+        }
+    }
+
+    /// Retrieves either the Payment or Setup intent for the intent configuration
+    /// - Parameters:
+    ///   - intentConfig: a `PaymentSheet.IntentConfiguration`
+    ///   - secret: The client secret of the intent to be retreved
+    ///   - completion: completion callback for when the request completes
+    func retrieveIntent(
+        for intentConfig: PaymentSheet.IntentConfiguration,
+        withClientSecret secret: String
+    ) async throws -> Intent {
+        switch intentConfig.mode {
+        case .payment:
+            return try await withCheckedThrowingContinuation { continuation in
+                retrievePaymentIntent(withClientSecret: secret) { paymentIntent, error in
+                    guard let paymentIntent = paymentIntent else {
+                        continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                        return
+                    }
+
+                    continuation.resume(returning: .paymentIntent(paymentIntent))
+                }
+            }
+        case .setup:
+            return try await withCheckedThrowingContinuation { continuation in
+                retrieveSetupIntent(withClientSecret: secret) { setupIntent, error in
+                    guard let setupIntent = setupIntent else {
+                        continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                        return
+                    }
+
+                    continuation.resume(returning: .setupIntent(setupIntent))
+                }
+            }
         }
     }
 }
