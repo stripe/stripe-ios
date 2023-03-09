@@ -303,9 +303,14 @@ extension PaymentSheetFormFactory {
             shouldDisplaySaveCheckbox
             ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMode == .merchantRequired
         return USBankAccountPaymentMethodElement(
+            configuration: configuration,
             titleElement: makeUSBankAccountCopyLabel(),
-            nameElement: makeName(),
-            emailElement: makeEmail(),
+            nameElement: configuration.billingDetailsCollectionConfiguration.name != .never ? makeName() : nil,
+            emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
+            phoneElement: configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil,
+            addressElement: configuration.billingDetailsCollectionConfiguration.address == .full
+                ? makeBillingAddressSection(collectionMode: .all(), countries: nil)
+                : nil,
             checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             savingAccount: isSaving,
             merchantName: merchantName,
@@ -442,11 +447,12 @@ extension PaymentSheetFormFactory {
 // MARK: - Extension helpers
 
 extension FormElement {
-    /// Conveniently nests single TextField and DropdownFields in a Section
+    /// Conveniently nests single TextField, PhoneNumber, and DropdownFields in a Section
     convenience init(autoSectioningElements: [Element], theme: ElementsUITheme = .default) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is PaymentMethodElementWrapper<TextFieldElement>
                 || $0 is PaymentMethodElementWrapper<DropdownFieldElement>
+                || $0 is PaymentMethodElementWrapper<PhoneNumberElement>
             {
                 return SectionElement($0, theme: theme)
             }
