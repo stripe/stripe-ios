@@ -20,7 +20,7 @@ extension PaymentSheetFormFactory {
             includeEmail: configuration.billingDetailsCollectionConfiguration.email == .always,
             includePhone: configuration.billingDetailsCollectionConfiguration.phone == .always)
         let billingAddressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-            ? makeBillingAddressSection(countries: nil)  // Should we restrict to India?
+            ? makeBillingAddressSection(countries: nil)
             : nil
 
         let allElements: [Element?] = [
