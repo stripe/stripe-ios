@@ -250,7 +250,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = factory(
             for: .dynamic("afterpay_clearpay"),
-            stpPaymentMethodType: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -268,7 +267,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
             for: .dynamic("afterpay_clearpay"),
-            stpPaymentMethodType: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -298,7 +296,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
             for: .dynamic("afterpay_clearpay"),
-            stpPaymentMethodType: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -316,7 +313,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .never
         let factory = factory(
             for: .dynamic("afterpay_clearpay"),
-            stpPaymentMethodType: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -330,7 +326,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = factory(
             for: .dynamic("klarna"),
-            stpPaymentMethodType: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -348,7 +343,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
             for: .dynamic("klarna"),
-            stpPaymentMethodType: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -378,7 +372,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
             for: .dynamic("klarna"),
-            stpPaymentMethodType: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -396,7 +389,6 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .never
         let factory = factory(
             for: .dynamic("klarna"),
-            stpPaymentMethodType: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
