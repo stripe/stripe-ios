@@ -803,27 +803,28 @@ extension PaymentSheetUITest {
         if addBillingDetailsButton.waitForExistence(timeout: 4.0) {
             addBillingDetailsButton.tap()
 
-            let firstNameCell = applePay.tables.cells["First Name"]
+            print("Apple pay: \(applePay.debugDescription)")
+            let firstNameCell = applePay.textFields["First Name"]
             firstNameCell.tap()
             firstNameCell.typeText("Jane")
 
-            let lastNameCell = applePay.tables.cells["Last Name"]
+            let lastNameCell = applePay.textFields["Last Name"]
             lastNameCell.tap()
             lastNameCell.typeText("Doe")
 
-            let streetCell = applePay.tables.cells["Street, Search Contact or Address"]
+            let streetCell = applePay.textFields["Street"]
             streetCell.tap()
             streetCell.typeText("One Apple Park Way")
 
-            let cityCell = applePay.tables.cells["City"]
+            let cityCell = applePay.textFields["City"]
             cityCell.tap()
             cityCell.typeText("Cupertino")
 
-            let stateCell = applePay.tables.cells["State"]
+            let stateCell = applePay.textFields["State"]
             stateCell.tap()
             stateCell.typeText("CA")
 
-            let zipCell = applePay.tables.cells["ZIP"]
+            let zipCell = applePay.textFields["ZIP"]
             zipCell.tap()
             zipCell.typeText("95014")
 
@@ -1092,9 +1093,9 @@ extension PaymentSheetUITest {
         }
 
         XCTAssertTrue(modal.staticTexts["Card information"].waitForExistence(timeout: 10.0))
-        // Link doesn't collect collect contact information here.
-        XCTAssertFalse(modal.staticTexts["Contact information"].exists)
-        XCTAssertFalse(modal.textFields["Email"].exists)
+        XCTAssertTrue(modal.staticTexts["Contact information"].exists)
+        XCTAssertTrue(modal.textFields["Email"].exists)
+        // Phone cannot be collected by Link.
         XCTAssertFalse(modal.textFields["Phone"].exists)
         XCTAssertTrue(modal.textFields["Name on card"].exists)
         XCTAssertTrue(modal.staticTexts["Billing address"].exists)
@@ -1105,7 +1106,9 @@ extension PaymentSheetUITest {
         XCTAssertTrue(modal.textFields["State"].exists)
         XCTAssertTrue(modal.textFields["ZIP"].exists)
 
-        modal.textFields["Name on card"].forceTapWhenHittableInTestCase(self)
+        modal.textFields["Email"].forceTapWhenHittableInTestCase(self)
+        modal.typeText("foo@bar.com")
+        modal.textFields["Name on card"].tap()
         modal.typeText("Jane Doe")
         modal.textFields["Card number"].tap()
         modal.typeText("4242424242424242")
