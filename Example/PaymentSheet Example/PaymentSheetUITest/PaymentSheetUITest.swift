@@ -771,57 +771,75 @@ extension PaymentSheetUITest {
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
         applePayButton.tap()
 
-        let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
-        _ = applePay.wait(for: .runningForeground, timeout: 10)
+        payWithApplePay()
+    }
 
-        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+    func testDeferredIntent_ApplePayCustomFlow_ClientSideConfirmation() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "init_mode": "Deferred",
+            ]
+        )
 
-        let cardButton = applePay.buttons.containing(predicate).firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+        let paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+        paymentMethodButton.tap()
 
-        // Fill out billing details if required
-        let addBillingDetailsButton = applePay.buttons["Add Billing Address"]
-        if addBillingDetailsButton.waitForExistence(timeout: 4.0) {
-            addBillingDetailsButton.tap()
+        let applePay = app.buttons["Apple Pay"]
+        XCTAssertTrue(applePay.waitForExistence(timeout: 10.0))
+        applePay.tap()
 
-            let firstNameCell = applePay.tables.cells["First Name"]
-            firstNameCell.tap()
-            firstNameCell.typeText("Jane")
+        app.buttons["Checkout (Custom)"].tap()
 
-            let lastNameCell = applePay.tables.cells["Last Name"]
-            lastNameCell.tap()
-            lastNameCell.typeText("Doe")
+        payWithApplePay()
+    }
 
-            let streetCell = applePay.tables.cells["Street, Search Contact or Address"]
-            streetCell.tap()
-            streetCell.typeText("One Apple Park Way")
+    func testDeferredIntentLinkSignIn_ClientSideConfirmation() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "init_mode": "Deferred",
+            ]
+        )
 
-            let cityCell = applePay.tables.cells["City"]
-            cityCell.tap()
-            cityCell.typeText("Cupertino")
+        app.buttons["Checkout (Complete)"].tap()
 
-            let stateCell = applePay.tables.cells["State"]
-            stateCell.tap()
-            stateCell.typeText("CA")
+        let payWithLinkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+        payWithLinkButton.tap()
 
-            let zipCell = applePay.tables.cells["ZIP"]
-            zipCell.tap()
-            zipCell.typeText("95014")
+        try loginAndPay()
+    }
 
-            applePay.buttons["Done"].tap()
-        }
+    func testDeferredIntentLinkCustomFlow_ClientSideConfirmation() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "init_mode": "Deferred",
+            ]
+        )
 
-        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
-        cardSelectionButton.forceTapElement()
+        let paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+        paymentMethodButton.tap()
 
-        let payButton = applePay.buttons["Pay with Passcode"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
-        payButton.forceTapElement()
+        let addCardButton = app.buttons["Link"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+        addCardButton.tap()
 
-        let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.buttons["Checkout (Custom)"].tap()
+
+        try loginAndPay()
     }
 
     // MARK: Deferred tests (server-side)
@@ -989,57 +1007,7 @@ extension PaymentSheetUITest {
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
         applePayButton.tap()
 
-        let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
-        _ = applePay.wait(for: .runningForeground, timeout: 10)
-
-        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
-
-        var cardButton = applePay.buttons.containing(predicate).firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
-
-        // Fill out billing details if required
-        let addBillingDetailsButton = applePay.buttons["Add Billing Address"]
-        if addBillingDetailsButton.waitForExistence(timeout: 4.0) {
-            addBillingDetailsButton.tap()
-
-            let firstNameCell = applePay.tables.cells["First Name"]
-            firstNameCell.tap()
-            firstNameCell.typeText("Jane")
-
-            let lastNameCell = applePay.tables.cells["Last Name"]
-            lastNameCell.tap()
-            lastNameCell.typeText("Doe")
-
-            let streetCell = applePay.tables.cells["Street, Search Contact or Address"]
-            streetCell.tap()
-            streetCell.typeText("One Apple Park Way")
-
-            let cityCell = applePay.tables.cells["City"]
-            cityCell.tap()
-            cityCell.typeText("Cupertino")
-
-            let stateCell = applePay.tables.cells["State"]
-            stateCell.tap()
-            stateCell.typeText("CA")
-
-            let zipCell = applePay.tables.cells["ZIP"]
-            zipCell.tap()
-            zipCell.typeText("95014")
-
-            applePay.buttons["Done"].tap()
-        }
-
-        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
-
-        let payButton = applePay.buttons["Pay with Passcode"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
-        payButton.forceTapElement()
-
-        let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        payWithApplePay()
     }
 
     func testPaymentSheetCustomSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
@@ -1127,6 +1095,52 @@ extension PaymentSheetUITest {
         confirmRemoval.tap()
 
         XCTAssertTrue(app.cells.count == 1)
+    }
+
+    func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        let payWithLinkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+        payWithLinkButton.tap()
+
+        try loginAndPay()
+    }
+
+    func testDeferredIntentLinkCustomFlow_SeverSideConfirmation() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+            ]
+        )
+
+        let paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+        paymentMethodButton.tap()
+
+        let addCardButton = app.buttons["Link"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+        addCardButton.tap()
+
+        app.buttons["Checkout (Custom)"].tap()
+
+        try loginAndPay()
     }
 }
 
@@ -1459,5 +1473,66 @@ extension PaymentSheetUITest {
 
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
+    }
+}
+
+// MARK: Helpers
+extension PaymentSheetUITest {
+    private func payWithApplePay() {
+        let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
+        _ = applePay.wait(for: .runningForeground, timeout: 10)
+
+        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+
+        let cardButton = applePay.buttons.containing(predicate).firstMatch
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+        cardButton.forceTapElement()
+
+        addApplePayBillingIfNeeded(applePay)
+
+        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
+        cardSelectionButton.forceTapElement()
+
+        let payButton = applePay.buttons["Pay with Passcode"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+        payButton.forceTapElement()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {
+        // Fill out billing details if required
+        let addBillingDetailsButton = applePay.buttons["Add Billing Address"]
+        if addBillingDetailsButton.waitForExistence(timeout: 4.0) {
+            addBillingDetailsButton.tap()
+
+            let firstNameCell = applePay.tables.cells["First Name"]
+            firstNameCell.tap()
+            firstNameCell.typeText("Jane")
+
+            let lastNameCell = applePay.tables.cells["Last Name"]
+            lastNameCell.tap()
+            lastNameCell.typeText("Doe")
+
+            let streetCell = applePay.tables.cells["Street, Search Contact or Address"]
+            streetCell.tap()
+            streetCell.typeText("One Apple Park Way")
+
+            let cityCell = applePay.tables.cells["City"]
+            cityCell.tap()
+            cityCell.typeText("Cupertino")
+
+            let stateCell = applePay.tables.cells["State"]
+            stateCell.tap()
+            stateCell.typeText("CA")
+
+            let zipCell = applePay.tables.cells["ZIP"]
+            zipCell.tap()
+            zipCell.typeText("95014")
+
+            applePay.buttons["Done"].tap()
+        }
     }
 }
