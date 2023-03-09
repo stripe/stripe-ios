@@ -58,24 +58,24 @@ final class USBankAccountPaymentMethodElement: Element {
         return params != nil && name != nil && email != nil
     }
 
-    private var defaultName: String? {
-        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
-        return configuration.defaultBillingDetails.name
-    }
-
     var name: String? {
         return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.name
             ?? defaultName
     }
 
-    private var defaultEmail: String? {
+    private var defaultName: String? {
         guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
-        return configuration.defaultBillingDetails.email
+        return configuration.defaultBillingDetails.name
     }
 
     var email: String? {
         return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.email
             ?? defaultEmail
+    }
+
+    private var defaultEmail: String? {
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
+        return configuration.defaultBillingDetails.email
     }
 
     init(
@@ -90,12 +90,14 @@ final class USBankAccountPaymentMethodElement: Element {
         merchantName: String,
         theme: ElementsUITheme = .default
     ) {
+        let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
+        let collectingEmail = configuration.billingDetailsCollectionConfiguration.email != .never
+        let hasDefaultName = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+            && configuration.defaultBillingDetails.name != nil
+        let hasDefaultEmail = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+            && configuration.defaultBillingDetails.email != nil
         assert(
-            (configuration.billingDetailsCollectionConfiguration.name != .never
-                && configuration.billingDetailsCollectionConfiguration.email != .never)
-            || (configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-                && configuration.defaultBillingDetails.name != nil
-                && configuration.defaultBillingDetails.email != nil),
+            (collectingName || hasDefaultName) && (collectingEmail || hasDefaultEmail),
             "If name or email are not collected, they must be provided through defaults"
         )
 
