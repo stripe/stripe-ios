@@ -1,4 +1,4 @@
-## x.x.x yyyy-mm-dd
+## 24.0.0 yyyy-mm-dd
 ### Payments
 * [Added] API bindings support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay/accept-a-payment?platform=mobile).
 
