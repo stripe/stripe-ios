@@ -1012,7 +1012,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 addressSpecProvider: specProvider
             )
 
-            guard let form = factory.make() as? FormElement else {
+            var form = factory.make()
+            if let wrapper = form as? PaymentMethodElementWrapper<FormElement> {
+                form = wrapper.element
+            }
+
+            guard let form = form as? FormElement else {
                 XCTFail()
                 return
             }
