@@ -32,12 +32,12 @@ extension PaymentSheet {
         Task {
             do {
                 // Create PM if necessary
-                let _paymentMethod = try await createPaymentMethodIfNeeded(apiClient: deferredIntentContext.configuration.apiClient,
+                let paymentMethod = try await createPaymentMethodIfNeeded(apiClient: deferredIntentContext.configuration.apiClient,
                                                                            paymentMethod: paymentMethod,
                                                                            paymentMethodParams: paymentMethodParams)
                 // Get Intent client secret from merchant
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: deferredIntentContext.intentConfig,
-                                                                                 paymentMethodID: _paymentMethod.stripeId,
+                                                                                 paymentMethodID: paymentMethod.stripeId,
                                                                                  shouldSavePaymentMethod: shouldSavePaymentMethod)
                 // Finish confirmation
                 if deferredIntentContext.isServerSideConfirmation {
