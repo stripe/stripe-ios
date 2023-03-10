@@ -69,7 +69,9 @@ extension PayWithLinkViewController {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
 
-        private lazy var cardEditElement = LinkCardEditElement(paymentMethod: paymentMethod)
+        private lazy var cardEditElement = LinkCardEditElement(
+            paymentMethod: paymentMethod,
+            configuration: configuration)
 
         init(linkAccount: PaymentSheetLinkAccount, context: Context, paymentMethod: ConsumerPaymentDetails) {
             self.linkAccount = linkAccount
