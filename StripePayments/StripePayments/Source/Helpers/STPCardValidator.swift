@@ -437,7 +437,7 @@ public class STPCardValidator: NSObject {
     }
 
     class func possibleBrands(forNumber cardNumber: String,
-                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+                              completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
         cbcBinController.retrieveBINRanges(forPrefix: cardNumber, recordErrorsAsSuccess: false, onlyFetchForVariableLengthBINs: false) { result in
             switch result {
             case .failure(let error):
