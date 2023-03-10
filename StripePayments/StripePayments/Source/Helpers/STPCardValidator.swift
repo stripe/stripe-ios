@@ -435,14 +435,14 @@ public class STPCardValidator: NSObject {
         }
         possibleBrands(forNumber: cardNumber, completion: completion)
     }
-    
+
     class func possibleBrands(forNumber cardNumber: String,
                                      completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
         cbcBinController.retrieveBINRanges(forPrefix: cardNumber, recordErrorsAsSuccess: false, onlyFetchForVariableLengthBINs: false) { result in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
-            case .success(_):
+            case .success:
                 let binRanges = cbcBinController.binRanges(forNumber: cardNumber)
                 var brands = binRanges.map { $0.brand }
                 brands.removeAll { $0 == .unknown }

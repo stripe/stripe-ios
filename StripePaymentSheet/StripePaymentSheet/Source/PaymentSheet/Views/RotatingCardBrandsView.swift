@@ -51,7 +51,7 @@ class RotatingCardBrandsView: UIView {
                 case .unionPay:
                     return 6
                 case .cartesBancaires:
-                    return 7
+                    return nil
                 case .unknown:
                     return nil
                 @unknown default:

@@ -427,7 +427,7 @@ class STPCardValidatorTest: XCTestCase {
             }
         }
     }
-    
+
     func testCBCFetch() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let mcExp = expectation(description: "Mastercard/CBC")
@@ -449,7 +449,7 @@ class STPCardValidatorTest: XCTestCase {
             XCTAssertEqual(brands, [.visa])
             justVisaExp.fulfill()
         }
-        
+
         let params = STPPaymentMethodCardParams()
         params.number = "5131301234"
         STPCardValidator.possibleBrands(forCard: params) { result in
