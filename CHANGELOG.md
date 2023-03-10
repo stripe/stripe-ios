@@ -1,6 +1,8 @@
 ## x.x.x yyyy-mm-dd
 ### Payments
 * [Added] API bindings support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay/accept-a-payment?platform=mobile).
+* [Added] Added `STPCardValidator.possibleBrands(forCard:completion:)`, which returns the list of available networks for a card.
+
 ### PaymentSheet
 * [Added] Support for Cash App Pay in PaymentSheet.
 
