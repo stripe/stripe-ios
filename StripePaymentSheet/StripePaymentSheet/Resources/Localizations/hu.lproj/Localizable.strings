@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Fizetési adatok megadása";
 
+"Approve payment" = "Fizetés jóváhagyása";
+
 "Are you sure you want to remove this card?" = "Biztosan törli ezt a kártyát?";
 
 "Are you sure you want to remove this linked account?" = "Biztosan törli ezt a kapcsolt számlát?";
@@ -19,6 +21,8 @@
 "Bank account" = "Bankszámla";
 
 "Buy now or pay later with Klarna." = "Megvásárlás most, vagy fizetés később Klarnával.";
+
+"Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
 
+"Cancel and pay another way" = "Szakítsa meg, és fizessen más módon";
+
 "Change email" = "E-mail-cím módosítása";
 
 "Choose a payment method" = "Fizetési mód választása";
 
 "Close card scanner" = "Kártyabeolvasó bezárása";
 
-"Code field" = "Kódmező";
-
 "Code sent" = "Kód elküldve";
 
 "Default" = "Alapértelmezett";
-
-"Double tap to edit" = "A szerkesztéshez koppintson kétszer";
 
 "EPS Bank" = "EPS Bank";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Kijelentkezés a Link";
 
 "Not %@?" = "Nem a(z) %@?";
+
+"Open your UPI app to approve your payment within %@" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
 
 "Or" = "vagy";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Fizetés";
 
+"Payment failed" = "A fizetés nem sikerült";
+
 "Payment methods" = "Fizetési módok";
+
+"Please go back and select another payment method" = "Lépjen vissza, és válasszon másik fizetési módot";
 
 "Point the camera at your card." = "Tegye a kártyát a kamera elé.";
 

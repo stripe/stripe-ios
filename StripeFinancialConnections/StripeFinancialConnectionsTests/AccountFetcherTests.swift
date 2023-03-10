@@ -10,7 +10,7 @@
 @testable import StripeFinancialConnections
 import XCTest
 
-class PaginatedAPIClient: FinancialConnectionsAPIClient {
+class PaginatedAPIClient: EmptyFinancialConnectionsAPIClient {
 
     // MARK: - Init
 
@@ -23,7 +23,7 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
 
     private let count: Int
     private let limit: Int
-    private lazy var accounts: [StripeAPI.FinancialConnectionsAccount] = (0...count-1).map {
+    private lazy var accounts: [StripeAPI.FinancialConnectionsAccount] = (0...count - 1).map {
         StripeAPI.FinancialConnectionsAccount(
             balance: nil,
             balanceRefresh: nil,
@@ -45,102 +45,25 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - FinancialConnectionsAPIClient
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
-        return Promise<FinancialConnectionsSynchronize>()
-    }
-
-    func fetchFinancialConnectionsAccounts(
+    override func fetchFinancialConnectionsAccounts(
         clientSecret: String,
         startingAfterAccountId: String?
     ) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
         guard let startingAfterAccountId = startingAfterAccountId, let index = Int(startingAfterAccountId) else {
-            let list = StripeAPI.FinancialConnectionsSession.AccountList(data: subarray(start: 0),
-                                                   hasMore: true)
+            let list = StripeAPI.FinancialConnectionsSession.AccountList(
+                data: subarray(start: 0),
+                hasMore: true
+            )
             return Promise<StripeAPI.FinancialConnectionsSession.AccountList>(value: list)
 
         }
         let subArray = subarray(start: index + 1)
         let hasMore = index + limit < accounts.count - 1
-        let list = StripeAPI.FinancialConnectionsSession.AccountList(data: subArray,
-                                               hasMore: hasMore)
+        let list = StripeAPI.FinancialConnectionsSession.AccountList(
+            data: subArray,
+            hasMore: hasMore
+        )
         return Promise<StripeAPI.FinancialConnectionsSession.AccountList>(value: list)
-    }
-
-    func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
-        return Promise<StripeAPI.FinancialConnectionsSession>()
-    }
-
-    func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        return Promise<FinancialConnectionsSessionManifest>()
-    }
-
-    func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
-        return Promise<FinancialConnectionsInstitutionList>()
-    }
-
-    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
-        return Promise<FinancialConnectionsInstitutionList>()
-    }
-
-    func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
-        return Promise<FinancialConnectionsAuthSession>()
-    }
-
-    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
-        return Promise<FinancialConnectionsAuthSession>()
-    }
-
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsMixedOAuthParams> {
-        return Promise<FinancialConnectionsMixedOAuthParams>()
-    }
-
-    func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthSession> {
-        return Promise<FinancialConnectionsAuthSession>()
-    }
-
-    func fetchAuthSessionAccounts(
-        clientSecret: String,
-        authSessionId: String,
-        initialPollDelay: TimeInterval
-    ) -> Future<FinancialConnectionsAuthSessionAccounts> {
-        return Promise<FinancialConnectionsAuthSessionAccounts>()
-    }
-
-    func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthSessionAccounts> {
-        return Promise<FinancialConnectionsAuthSessionAccounts>()
-    }
-
-    func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        return Promise<FinancialConnectionsSessionManifest>()
-    }
-
-    func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
-        return Promise<StripeAPI.FinancialConnectionsSession>()
-    }
-
-    func attachBankAccountToLinkAccountSession(
-        clientSecret: String,
-        accountNumber: String,
-        routingNumber: String
-    ) -> Future<FinancialConnectionsPaymentAccountResource> {
-        return Promise<FinancialConnectionsPaymentAccountResource>()
-    }
-
-    func attachLinkedAccountIdToLinkAccountSession(
-        clientSecret: String,
-        linkedAccountId: String,
-        consumerSessionClientSecret: String?
-    ) -> Future<FinancialConnectionsPaymentAccountResource> {
-        return Promise<FinancialConnectionsPaymentAccountResource>()
-    }
-
-    func recordAuthSessionEvent(
-        clientSecret: String,
-        authSessionId: String,
-        eventNamespace: String,
-        eventName: String
-    ) -> Future<EmptyResponse> {
-        return Promise<EmptyResponse>()
     }
 
     // MARK: - Helpers
@@ -156,7 +79,10 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
 class AccountFetcherTests: XCTestCase {
 
     func testPaginationMax100() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 120, limit: 1), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 120, limit: 1),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -168,7 +94,10 @@ class AccountFetcherTests: XCTestCase {
     }
 
     func testPaginationUnderLimit() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 3, limit: 1), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 3, limit: 1),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -180,7 +109,10 @@ class AccountFetcherTests: XCTestCase {
     }
 
     func testPaginationUnderLimitLargePageSize() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 3, limit: 10), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 3, limit: 10),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -194,7 +126,10 @@ class AccountFetcherTests: XCTestCase {
     }
 
     func testPaginationUnderLimitSmallPageSize() {
-        let fetcher = FinancialConnectionsAccountAPIFetcher(api: PaginatedAPIClient(count: 80, limit: 10), clientSecret: "")
+        let fetcher = FinancialConnectionsAccountAPIFetcher(
+            api: PaginatedAPIClient(count: 80, limit: 10),
+            clientSecret: ""
+        )
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):

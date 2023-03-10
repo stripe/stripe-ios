@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Dodaj informacje o płatności";
 
+"Approve payment" = "Zatwierdź płatność";
+
 "Are you sure you want to remove this card?" = "Czy na pewno chcesz usunąć tę kartę?";
 
 "Are you sure you want to remove this linked account?" = "Czy na pewno chcesz usunąć to połączone konto?";
@@ -19,6 +21,8 @@
 "Bank account" = "Konto bankowe";
 
 "Buy now or pay later with Klarna." = "Kup teraz lub zapłać za pomocą Klarna później.";
+
+"Buy using a UPI ID" = "Kup za pomocą UPI ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Zapisując swoje konto bankowe dla %@, zgadzasz się na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
+"Cancel and pay another way" = "Anuluj i skorzystaj z innej metody zapłaty";
+
 "Change email" = "Zmień e-mail";
 
 "Choose a payment method" = "Wybierz metodę płatności";
 
 "Close card scanner" = "Zamknij skaner karty";
 
-"Code field" = "Pole kodu";
-
 "Code sent" = "Kod wysłany";
 
 "Default" = "Domyślne";
-
-"Double tap to edit" = "Dotknij dwa razy, aby edytować";
 
 "EPS Bank" = "Bank EPS";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Wyloguj się z Link";
 
 "Not %@?" = "Nie jesteś %@?";
+
+"Open your UPI app to approve your payment within %@" = "Otwórz aplikację UPI, aby zatwierdzić płatność w %@";
 
 "Or" = "Lub";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Płatność";
 
+"Payment failed" = "Płatność się nie powiodła";
+
 "Payment methods" = "Metody płatności";
+
+"Please go back and select another payment method" = "Wróć i wybierz inną metodę płatności";
 
 "Point the camera at your card." = "Skieruj aparat na kartę.";
 

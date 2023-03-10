@@ -14,7 +14,12 @@ final class FinancialConnectionsAnalyticsClient {
     private let analyticsClient: AnalyticsClientV2
     private var additionalParameters: [String: Any] = [:]
 
-    init(analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(clientId: "mobile-clients-linked-accounts", origin: "stripe-linked-accounts-ios")) {
+    init(
+        analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(
+            clientId: "mobile-clients-linked-accounts",
+            origin: "stripe-linked-accounts-ios"
+        )
+    ) {
         self.analyticsClient = analyticsClient
         additionalParameters["is_webview"] = false
         additionalParameters["navigator_language"] = Locale.current.identifier
@@ -98,8 +103,7 @@ extension FinancialConnectionsAnalyticsClient {
         var parameters: [String: Any] = [:]
         parameters["pane"] = pane?.rawValue
         parameters["error"] = errorName
-        if
-            let stripeError = error as? StripeError,
+        if let stripeError = error as? StripeError,
             case .apiError(let apiError) = stripeError
         {
             parameters["error_type"] = apiError.type.rawValue

@@ -32,10 +32,4 @@
     [NSLayoutConstraint activateConstraints:@[topConstraint, bottomConstraint, leftConstraint, rightConstraint]];
 }
 
-+ (void)_stds_linkCategory {
-  
-}
-
 @end
-
-void _stds_import_uiview_layoutsupport() {}

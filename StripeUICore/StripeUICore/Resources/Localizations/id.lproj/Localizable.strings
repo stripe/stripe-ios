@@ -18,6 +18,8 @@
 
 "City" = "Kota";
 
+"Code field" = "Bidang kode";
+
 "Company" = "Perusahaan";
 
 "Continue" = "Lanjutkan";
@@ -36,6 +38,8 @@
 
 "Done" = "Selesai";
 
+"Double tap to edit" = "Sentuh dua kali untuk mengedit";
+
 "Edit" = "Edit";
 
 "Eircode" = "Eircode";
@@ -51,6 +55,8 @@
 "Full name" = "Nama lengkap";
 
 "Incomplete phone number" = "Nomor telepon tidak lengkap";
+
+"Invalid UPI ID" = "Identifikasi UPI tidak valid";
 
 "Island" = "Pulau";
 
@@ -82,6 +88,8 @@
 
 "Remove bank account ending in %@" = "Hapus rekening bank yang berakhiran dengan %@";
 
+"Search" = "Cari";
+
 "State" = "Negara Bagian";
 
 "Suburb" = "Suburb";
@@ -95,6 +103,8 @@
 "The account number you entered is incomplete." = "Nomor rekening yang Anda masukkan tidak lengkap.";
 
 "Town or city" = "Kabupaten atau kota";
+
+"UPI ID" = "Identifikasi UPI";
 
 "Unable to parse phone number" = "Tidak dapat menguraikan nomor telepon";
 

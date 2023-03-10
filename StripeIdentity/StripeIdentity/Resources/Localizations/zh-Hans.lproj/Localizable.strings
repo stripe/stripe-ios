@@ -44,7 +44,7 @@
 
 "Hold still, scanning" = "保持不动，正在扫描";
 
-"ID Number" = "身份证号";
+"ID Number" = "证件号码";
 
 "ID Type" = "证件类型";
 
@@ -56,7 +56,7 @@
 
 "Passport photo successfully uploaded" = "护照照片已成功上传";
 
-"Personal ID number" = "个人身份证号";
+"Personal ID number" = "个人身份证件号码";
 
 "Photo Library" = "照片库";
 

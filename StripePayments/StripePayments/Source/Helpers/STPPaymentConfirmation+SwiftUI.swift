@@ -9,7 +9,6 @@
 import SafariServices
 import SwiftUI
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControllerRepresentable {
@@ -94,7 +93,6 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
     }
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension View {
@@ -135,7 +133,6 @@ extension View {
     }
 }
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 struct ConfirmPaymentPresentationModifier<ParamsType, CompletionBlockType>: ViewModifier {

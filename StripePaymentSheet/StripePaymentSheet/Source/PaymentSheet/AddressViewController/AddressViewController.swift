@@ -20,6 +20,7 @@ public protocol AddressViewControllerDelegate: AnyObject {
 
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
+/// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
 @objc(STPAddressViewController)
 public class AddressViewController: UIViewController {
     // MARK: - Public properties
@@ -178,10 +179,6 @@ public class AddressViewController: UIViewController {
         ])
 
         loadSpecsIfNeeded()
-    }
-
-    override public func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         registerForKeyboardNotifications()
     }
 
@@ -196,14 +193,12 @@ public class AddressViewController: UIViewController {
 
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
     }
 }
 
 // MARK: - Keyboard handling
 extension AddressViewController {
     private func registerForKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }

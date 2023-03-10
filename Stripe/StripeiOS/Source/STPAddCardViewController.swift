@@ -44,7 +44,13 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// The view controller's delegate. This must be set before showing the view controller in order for it to work properly. - seealso: STPAddCardViewControllerDelegate
     @objc public weak var delegate: STPAddCardViewControllerDelegate?
     /// You can set this property to pre-fill any information you've already collected from your user. - seealso: STPUserInformation.h
-    @objc public var prefilledInformation: STPUserInformation?
+    @objc public var prefilledInformation: STPUserInformation? {
+        didSet {
+            if let address = prefilledInformation?.billingAddress {
+                addressViewModel.address = address
+            }
+        }
+    }
 
     private var _customFooterView: UIView?
     /// Provide this view controller with a footer view.

@@ -8,6 +8,13 @@
         "title": "How Stripe will verify your identity",
         "scroll_to_continue_button_text": "Scroll to continue"
     },
+    "country_not_listed": {
+      "address_from_other_country_text_button_text": "Have an Address from another country?",
+      "body": "The countries not listed are not supported yet. Unfortunately, we cannot verify your identity.",
+      "cancel_button_text": "Cancel verification",
+      "id_from_other_country_text_button_text": "Have an ID from another country?",
+      "title": "We cannot verify your identity"
+    },
     "document_capture": {
         "autocapture_timeout": 10000,
         "file_purpose": "identity_private",
@@ -41,6 +48,57 @@
         "title": "Select identification type"
     },
     "fallback_url": "https://verify.stripe.com",
+    "individual": {
+      "address_countries": {
+        "AT": "Austria",
+        "AU": "Australia",
+        "BE": "Belgium",
+        "BR": "Brazil",
+        "CA": "Canada",
+        "CH": "Switzerland",
+        "CZ": "Czech Republic",
+        "DE": "Germany",
+        "DK": "Denmark",
+        "ES": "Spain",
+        "FI": "Finland",
+        "FR": "France",
+        "GB": "United Kingdom",
+        "HK": "Hong Kong",
+        "ID": "Indonesia",
+        "IE": "Ireland",
+        "IT": "Italy",
+        "LU": "Luxembourg",
+        "MT": "Malta",
+        "MX": "Mexico",
+        "MY": "Malaysia",
+        "NL": "Netherlands",
+        "NO": "Norway",
+        "PL": "Poland",
+        "PT": "Portugal",
+        "RO": "Romania",
+        "SE": "Sweden",
+        "SG": "Singapore",
+        "SK": "Slovakia",
+        "TH": "Thailand",
+        "US": "United States"
+      },
+      "address_country_not_listed_text_button_text": "My country is not listed",
+      "button_text": "Submit",
+      "id_number_countries": {
+        "BR": "Brazil",
+        "SG": "Singapore",
+        "US": "United States"
+      },
+      "id_number_country_not_listed_text_button_text": "My country is not listed",
+      "title": "Provide personal information"
+    },
+    "individual_welcome": {
+      "body": "You’ll need to share some personal information to complete the verification. <a href='https://stripe.com/privacy-center/legal#stripe-identity'>Learn more</a>",
+      "get_started_button_text": "Get started",
+      "privacy_policy": "Data will be stored and may be used according to the <a href ='https://stripe.com/privacy'>Stripe Privacy Policy</a> and Tora's catfood Privacy Policy.",
+      "time_estimate": "Takes less than 1 minute.",
+      "title": "Tora's catfood partners with Stripe for secure Identity verification"
+    },
     "id": "VS_123",
     "livemode": false,
     "object": "identity.verification_page",

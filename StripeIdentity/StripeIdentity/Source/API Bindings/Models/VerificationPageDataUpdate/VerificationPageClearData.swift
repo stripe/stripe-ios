@@ -16,6 +16,10 @@ extension StripeAPI {
         let idDocumentBack: Bool?
         let idDocumentFront: Bool?
         let idDocumentType: Bool?
+        let idNumber: Bool?
+        let dob: Bool?
+        let name: Bool?
+        let address: Bool?
     }
 }
 
@@ -28,7 +32,11 @@ extension StripeAPI.VerificationPageClearData {
             face: fields.contains(.face),
             idDocumentBack: fields.contains(.idDocumentBack),
             idDocumentFront: fields.contains(.idDocumentFront),
-            idDocumentType: fields.contains(.idDocumentType)
+            idDocumentType: fields.contains(.idDocumentType),
+            idNumber: fields.contains(.idNumber),
+            dob: fields.contains(.dob),
+            name: fields.contains(.name),
+            address: fields.contains(.address)
         )
     }
 }

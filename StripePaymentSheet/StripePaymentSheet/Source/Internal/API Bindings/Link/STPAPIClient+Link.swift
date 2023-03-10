@@ -13,7 +13,6 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 
 extension STPAPIClient {
-
     func lookupConsumerSession(
         for email: String?,
         cookieStore: LinkCookieStore,
@@ -36,22 +35,21 @@ extension STPAPIClient {
             // no request to make if we don't have an email or cookies
             DispatchQueue.main.async {
                 completion(.success(
-                    ConsumerSession.LookupResponse(.noAvailableLookupParams, allResponseFields: [:])
+                    ConsumerSession.LookupResponse(.noAvailableLookupParams)
                 ))
             }
             return
         }
 
-        APIRequest<ConsumerSession.LookupResponse>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: publishableKey),
-            parameters: parameters
-        ) { result in
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            ephemeralKeySecret: publishableKey
+        ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
             if case let .success(lookupResponse) = result {
                 switch lookupResponse.responseType {
-                case .found(let consumerSession, _):
-                    consumerSession.updateCookie(withStore: cookieStore)
+                case .found(let consumerSession):
+                    cookieStore.updateSessionCookie(with: consumerSession.authSessionClientSecret)
                 case .notFound where cookies != nil:
                     // Delete invalid cookie, if any
                     cookieStore.delete(key: .session)
@@ -72,7 +70,7 @@ extension STPAPIClient {
         countryCode: String?,
         consentAction: String?,
         cookieStore: LinkCookieStore,
-        completion: @escaping (Result<ConsumerSession.SignupResponse, Error>) -> Void
+        completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
         let endpoint: String = "consumers/accounts/sign_up"
 
@@ -99,16 +97,30 @@ extension STPAPIClient {
             parameters["consent_action"] = consentAction
         }
 
-        APIRequest<ConsumerSession.SignupResponse>.post(
-            with: self,
-            endpoint: endpoint,
+        post(
+            resource: endpoint,
             parameters: parameters
-        ) { result in
+        ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
             if case .success(let signupResponse) = result {
-                signupResponse.consumerSession.updateCookie(withStore: cookieStore)
+                cookieStore.updateSessionCookie(with: signupResponse.authSessionClientSecret)
             }
 
             completion(result)
+        }
+    }
+
+    private func makePaymentDetailsRequest(
+        endpoint: String,
+        parameters: [String: Any],
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+    ) {
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            ephemeralKeySecret: consumerAccountPublishableKey
+        ) { (result: Result<DetailsResponse, Error>) in
+            completion(result.map { $0.redactedPaymentDetails })
         }
     }
 
@@ -121,6 +133,7 @@ extension STPAPIClient {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
+
         let billingParams = billingDetails.consumersAPIParams
 
         var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
@@ -136,11 +149,10 @@ extension STPAPIClient {
             "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
         ]
 
-        APIRequest<ConsumerPaymentDetails>.post(
-            with: self,
+        makePaymentDetailsRequest(
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -163,13 +175,37 @@ extension STPAPIClient {
             "is_default": true,
         ]
 
-        APIRequest<ConsumerPaymentDetails>.post(
-            with: self,
+        makePaymentDetailsRequest(
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
+    }
+
+    private func makeConsumerSessionRequest(
+        endpoint: String,
+        parameters: [String: Any],
+        cookieStore: LinkCookieStore,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        var parameters = parameters
+        if let cookies = cookieStore.formattedSessionCookies() {
+            parameters["cookies"] = cookies
+        }
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            ephemeralKeySecret: consumerAccountPublishableKey
+        ) { (result: Result<SessionResponse, Error>) in
+            if case .success(let session) = result {
+                cookieStore.updateSessionCookie(with: session.authSessionClientSecret)
+            }
+
+            completion(result.map { $0.consumerSession })
+        }
     }
 
     func startVerification(
@@ -185,34 +221,26 @@ extension STPAPIClient {
             switch type {
             case .sms:
                 return "SMS"
-            case .unknown, .signup, .email:
+            case .unparsable, .signup, .email:
                 assertionFailure("We don't support any verification except sms")
                 return ""
             }
         }()
         let endpoint: String = "consumers/sessions/start_verification"
 
-        var parameters: [String: Any] = [
+        let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
             "locale": locale.toLanguageTag(),
         ]
-        if let cookies = cookieStore.formattedSessionCookies() {
-            parameters["cookies"] = cookies
-        }
 
-        APIRequest<ConsumerSession>.post(
-            with: self,
+        makeConsumerSessionRequest(
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { result in
-            if case .success(let consumerSession) = result {
-                consumerSession.updateCookie(withStore: cookieStore)
-            }
-
-            completion(result)
-        }
+            parameters: parameters,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
     }
 
     func confirmSMSVerification(
@@ -224,29 +252,20 @@ extension STPAPIClient {
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
 
-        var parameters: [String: Any] = [
+        let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": "SMS",
             "code": code,
             "request_surface": "ios_payment_element",
         ]
 
-        if let cookies = cookieStore.formattedSessionCookies() {
-            parameters["cookies"] = cookies
-        }
-
-        APIRequest<ConsumerSession>.post(
-            with: self,
+        makeConsumerSessionRequest(
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { result in
-            if case .success(let consumerSession) = result {
-                consumerSession.updateCookie(withStore: cookieStore)
-            }
-
-            completion(result)
-        }
+            parameters: parameters,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
     }
 
     func createLinkAccountSession(
@@ -285,13 +304,12 @@ extension STPAPIClient {
             "types": ["card", "bank_account"],
         ]
 
-        APIRequest<ConsumerPaymentDetails.ListDeserializer>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { result in
-            completion(result.map { $0.paymentDetails })
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            ephemeralKeySecret: consumerAccountPublishableKey
+        ) { (result: Result<DetailsListResponse, Error>) in
+            completion(result.map { $0.redactedPaymentDetails })
         }
     }
 
@@ -345,11 +363,10 @@ extension STPAPIClient {
             parameters["is_default"] = isDefault
         }
 
-        APIRequest<ConsumerPaymentDetails>.post(
-            with: self,
+        makePaymentDetailsRequest(
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -362,29 +379,20 @@ extension STPAPIClient {
     ) {
         let endpoint: String = "consumers/sessions/log_out"
 
-        var parameters: [String: Any] = [
+        let parameters: [String: Any] = [
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
             ],
             "request_surface": "ios_payment_element",
         ]
 
-        if let cookies = cookieStore.formattedSessionCookies() {
-            parameters["cookies"] = cookies
-        }
-
-        APIRequest<ConsumerSession>.post(
-            with: self,
+        makeConsumerSessionRequest(
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { result in
-            if case .success(let consumerSession) = result {
-                consumerSession.updateCookie(withStore: cookieStore)
-            }
-
-            completion(result)
-        }
+            parameters: parameters,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
     }
 }
 
@@ -439,11 +447,30 @@ private extension APIRequest {
 
 }
 
+// MARK: - Decodable helper wrappers
+private extension STPAPIClient {
+    struct DetailsResponse: Decodable {
+        let redactedPaymentDetails: ConsumerPaymentDetails
+    }
+
+    struct DetailsListResponse: Decodable {
+        let redactedPaymentDetails: [ConsumerPaymentDetails]
+    }
+
+    struct SessionResponse: Decodable {
+        let authSessionClientSecret: String?
+        let consumerSession: ConsumerSession
+    }
+}
+
 // MARK: - /v1/consumers Support
 extension STPPaymentMethodBillingDetails {
 
     var consumersAPIParams: [String: Any] {
         var params = STPFormEncoder.dictionary(forObject: self)
+        // Consumers API doesn't support email or phone.
+        params["email"] = nil
+        params["phone"] = nil
         if let addressParams = address?.consumersAPIParams {
             params["address"] = nil
             params.merge(addressParams) { (_, new)  in new }
@@ -455,12 +482,24 @@ extension STPPaymentMethodBillingDetails {
 
 // MARK: - /v1/consumers Support
 extension STPPaymentMethodAddress {
+    // The param naming for consumers API is different so we need to map them.
+    static let consumerKeyMap = [
+      "line1": "line_1",
+      "line2": "line_2",
+      "city": "locality",
+      "state": "administrative_area",
+      "country": "country_code",
+    ]
 
     var consumersAPIParams: [String: Any] {
-        var params = STPFormEncoder.dictionary(forObject: self)
-        params["country_code"] = params["country"]
-        params["country"] = nil
-        return params
-    }
+        let tupleArray = STPFormEncoder.dictionary(forObject: self).compactMap { key, value -> (String, Any)? in
+            guard let value = value as? String, !value.isEmpty else {
+                return nil
+            }
 
+            let newKey = Self.consumerKeyMap[key] ?? key
+            return (newKey, value)
+        }
+        return .init(uniqueKeysWithValues: tupleArray)
+    }
 }

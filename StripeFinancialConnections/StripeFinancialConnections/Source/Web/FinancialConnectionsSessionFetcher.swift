@@ -22,9 +22,11 @@ class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher 
 
     // MARK: - Init
 
-    init(api: FinancialConnectionsAPIClient,
-         clientSecret: String,
-         accountFetcher: FinancialConnectionsAccountFetcher) {
+    init(
+        api: FinancialConnectionsAPIClient,
+        clientSecret: String,
+        accountFetcher: FinancialConnectionsAccountFetcher
+    ) {
         self.api = api
         self.clientSecret = clientSecret
         self.accountFetcher = accountFetcher
@@ -44,15 +46,22 @@ class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher 
                     /**
                      Here we create a synthetic FinancialConnectionsSession object with full account list.
                      */
-                    let fullList = StripeAPI.FinancialConnectionsSession.AccountList(data: fullAccountList, hasMore: false)
-                    let sessionWithFullAccountList = StripeAPI.FinancialConnectionsSession(clientSecret: session.clientSecret,
-                                                                                           id: session.id,
-                                                                                           accounts: fullList,
-                                                                                           livemode: session.livemode,
-                                                                                           paymentAccount: session.paymentAccount,
-                                                                                           bankAccountToken: session.bankAccountToken)
+                    let fullList = StripeAPI.FinancialConnectionsSession.AccountList(
+                        data: fullAccountList,
+                        hasMore: false
+                    )
+                    let sessionWithFullAccountList = StripeAPI.FinancialConnectionsSession(
+                        clientSecret: session.clientSecret,
+                        id: session.id,
+                        accounts: fullList,
+                        livemode: session.livemode,
+                        paymentAccount: session.paymentAccount,
+                        bankAccountToken: session.bankAccountToken,
+                        status: session.status,
+                        statusDetails: session.statusDetails
+                    )
                     return Promise(value: sessionWithFullAccountList)
-            }
+                }
         }
     }
 

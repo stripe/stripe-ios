@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Lisage makseteave";
 
+"Approve payment" = "Kinnitage makse";
+
 "Are you sure you want to remove this card?" = "Kas olete kindel, et soovite selle kaardi eemaldada?";
 
 "Are you sure you want to remove this linked account?" = "Kas olete kindel, et soovite selle lingitud konto eemaldada?";
@@ -19,6 +21,8 @@
 "Bank account" = "Pangakonto";
 
 "Buy now or pay later with Klarna." = "Ostke nüüd või makske hiljem Klarnaga.";
+
+"Buy using a UPI ID" = "UPI ID abil ostmine";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvestades oma pangakonto %@, nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
+"Cancel and pay another way" = "Tühista ja maksa muul viisil";
+
 "Change email" = "Muuda e-posti aadressi";
 
 "Choose a payment method" = "Valige makseviis";
 
 "Close card scanner" = "Kaardiskanneri sulgemine";
 
-"Code field" = "Koodi väli";
-
 "Code sent" = "Kood saadetud";
 
 "Default" = "Vaikimisi";
-
-"Double tap to edit" = "Redigeerimiseks topeltklõpsake";
 
 "EPS Bank" = "EPS pank";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Logi Link välja";
 
 "Not %@?" = "Pole %@?";
+
+"Open your UPI app to approve your payment within %@" = "Makse kinnitamiseks avage oma UPI rakendus %@ jooksul";
 
 "Or" = "Või";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Makse";
 
+"Payment failed" = "Makse ebaõnnestus";
+
 "Payment methods" = "Makseviisid";
+
+"Please go back and select another payment method" = "Minge tagasi ja valige mõni muu makseviis";
 
 "Point the camera at your card." = "Suunake kaamera oma kaardile.";
 

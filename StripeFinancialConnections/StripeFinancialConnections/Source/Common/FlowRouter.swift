@@ -71,9 +71,11 @@ class FlowRouter {
         // If account holder is unknown, don't log exposure.
         guard let accountHolder = synchronizePayload.manifest.accountholderToken else { return }
 
-        analyticsClient.logExposure(experimentName: Constants.nativeExperiment,
-                                    assignmentEventId: assignmentEventId,
-                                    accountholderToken: accountHolder)
+        analyticsClient.logExposure(
+            experimentName: Constants.nativeExperiment,
+            assignmentEventId: assignmentEventId,
+            accountholderToken: accountHolder
+        )
 
     }
 }

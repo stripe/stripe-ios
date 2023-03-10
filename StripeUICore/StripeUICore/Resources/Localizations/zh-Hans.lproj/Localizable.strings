@@ -18,6 +18,8 @@
 
 "City" = "城市";
 
+"Code field" = "代码字段";
+
 "Company" = "公司";
 
 "Continue" = "继续";
@@ -36,6 +38,8 @@
 
 "Done" = "完成";
 
+"Double tap to edit" = "双击可编辑";
+
 "Edit" = "编辑";
 
 "Eircode" = "爱尔兰邮编";
@@ -51,6 +55,8 @@
 "Full name" = "全名";
 
 "Incomplete phone number" = "电话号码不完整";
+
+"Invalid UPI ID" = "UPI ID 无效";
 
 "Island" = "岛";
 
@@ -82,6 +88,8 @@
 
 "Remove bank account ending in %@" = "移除尾号为 %@ 的银行账户";
 
+"Search" = "搜索";
+
 "State" = "州";
 
 "Suburb" = "市郊";
@@ -90,11 +98,13 @@
 
 "The BSB you entered is incomplete." = "您输入的 BSB 不完整。";
 
-"The ID number you entered is incomplete." = "您输入的身份证号不完整。";
+"The ID number you entered is incomplete." = "您输入的证件号码不完整。";
 
 "The account number you entered is incomplete." = "您输入的账号不完整。";
 
 "Town or city" = "城镇或城市";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "无法粘贴手机号码";
 

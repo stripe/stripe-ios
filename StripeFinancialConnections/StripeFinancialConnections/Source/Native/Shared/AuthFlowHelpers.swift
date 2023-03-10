@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import SafariServices
 
 final class AuthFlowHelpers {
+
+    private init() {}  // only static functions used
 
     static func formatUrlString(_ urlString: String?) -> String? {
         guard var urlString = urlString else {
@@ -26,5 +29,29 @@ final class AuthFlowHelpers {
             urlString.removeLast()
         }
         return urlString
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    static func handleURLInTextFromBackend(
+        url: URL,
+        pane: FinancialConnectionsSessionManifest.NextPane,
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        handleStripeScheme: (_ urlHost: String?) -> Void
+    ) {
+        if let urlParameters = URLComponents(url: url, resolvingAgainstBaseURL: true),
+            let eventName = urlParameters.queryItems?.first(where: { $0.name == "eventName" })?.value
+        {
+            analyticsClient
+                .log(
+                    eventName: eventName,
+                    parameters: ["pane": pane.rawValue]
+                )
+        }
+
+        if url.scheme == "stripe" {
+            handleStripeScheme(url.host)
+        } else {
+            SFSafariViewController.present(url: url)
+        }
     }
 }

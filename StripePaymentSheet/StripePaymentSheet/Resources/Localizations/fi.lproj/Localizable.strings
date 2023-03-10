@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Lisää maksutiedot";
 
+"Approve payment" = "Hyväksy maksu";
+
 "Are you sure you want to remove this card?" = "Haluatko varmasti poistaa tämän kortin?";
 
 "Are you sure you want to remove this linked account?" = "Haluatko varmasti poistaa tämän linkitetyn tilin?";
@@ -19,6 +21,8 @@
 "Bank account" = "Pankkitili";
 
 "Buy now or pay later with Klarna." = "Osta nyt tai maksa myöhemmin Klarnalla.";
+
+"Buy using a UPI ID" = "Osta käyttämällä UPI-tunnusta";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
+"Cancel and pay another way" = "Peruuta ja maksa toisella tavalla";
+
 "Change email" = "Vaihda sähköposti";
 
 "Choose a payment method" = "Valitse maksutapa";
 
 "Close card scanner" = "Sulje korttiskanneri";
 
-"Code field" = "Koodikenttä";
-
 "Code sent" = "Koodi lähetetty";
 
 "Default" = "Oletus";
-
-"Double tap to edit" = "Napauta kahdesti ja muokkaa";
 
 "EPS Bank" = "EPS-pankki";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Kirjaudu ulos Link-palvelusta";
 
 "Not %@?" = "Ei %@?";
+
+"Open your UPI app to approve your payment within %@" = "Avaa UPI-sovellus ja hyväksy maksu kohteessa %@";
 
 "Or" = "Tai";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Maksu";
 
+"Payment failed" = "Maksu epäonnistui";
+
 "Payment methods" = "Maksutavat";
+
+"Please go back and select another payment method" = "Palaa takaisin ja valitse toinen maksutapa";
 
 "Point the camera at your card." = "Osoita kamera korttia kohti.";
 

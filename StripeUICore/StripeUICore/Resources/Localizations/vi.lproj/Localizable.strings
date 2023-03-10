@@ -18,6 +18,8 @@
 
 "City" = "Thành phố";
 
+"Code field" = "Trường mã";
+
 "Company" = "Công ty";
 
 "Continue" = "Tiếp tục";
@@ -36,6 +38,8 @@
 
 "Done" = "Xong";
 
+"Double tap to edit" = "Nhấp chạm đúp để hiệu đính";
+
 "Edit" = "Sửa";
 
 "Eircode" = "Mã Eircode";
@@ -51,6 +55,8 @@
 "Full name" = "Họ tên";
 
 "Incomplete phone number" = "Số điện thoại chưa đầy đủ";
+
+"Invalid UPI ID" = "Số ID UPI không hợp lệ";
 
 "Island" = "Đảo";
 
@@ -82,6 +88,8 @@
 
 "Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có các số cuối là %@";
 
+"Search" = "Tìm kiếm";
+
 "State" = "Tiểu bang";
 
 "Suburb" = "Ngoại ô";
@@ -95,6 +103,8 @@
 "The account number you entered is incomplete." = "Số tài khoản quý vị đã nhập không đầy đủ.";
 
 "Town or city" = "Thị trấn hoặc thành phố";
+
+"UPI ID" = "Số ID UPI";
 
 "Unable to parse phone number" = "Không thể phân tích cú pháp số điện thoại";
 

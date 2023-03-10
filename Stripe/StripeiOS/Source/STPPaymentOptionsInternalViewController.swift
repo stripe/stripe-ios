@@ -90,9 +90,9 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     }
 
     var addCardViewControllerCustomFooterView: UIView?
+    var prefilledInformation: STPUserInformation?
     private var configuration: STPPaymentConfiguration?
     private var apiAdapter: STPBackendAPIAdapter?
-    private var prefilledInformation: STPUserInformation?
     private var shippingAddress: STPAddress?
     private var paymentOptions: [STPPaymentOption]?
     private var apiClient: STPAPIClient = .shared

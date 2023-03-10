@@ -29,6 +29,7 @@ final class ConsentBottomSheetView: UIView {
             arrangedSubviews: [
                 CreateContentView(
                     headerTitle: model.title,
+                    headerSubtitle: model.subtitle,
                     bulletItems: model.body.bullets,
                     extraNotice: model.extraNotice,
                     learnMoreText: model.learnMore,
@@ -58,7 +59,7 @@ final class ConsentBottomSheetView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners() // needs to be in `layoutSubviews` to get the correct size for the mask
+        roundCorners()  // needs to be in `layoutSubviews` to get the correct size for the mask
     }
 
     private func roundCorners() {
@@ -81,6 +82,7 @@ final class ConsentBottomSheetView: UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateContentView(
     headerTitle: String,
+    headerSubtitle: String?,
     bulletItems: [FinancialConnectionsBulletPoint],
     extraNotice: String?,
     learnMoreText: String,
@@ -91,7 +93,8 @@ private func CreateContentView(
             var subviews: [UIView] = []
             subviews.append(
                 CreateHeaderView(
-                    text: headerTitle,
+                    title: headerTitle,
+                    subtitle: headerSubtitle,
                     didSelectURL: didSelectURL
                 )
             )
@@ -131,17 +134,34 @@ private func CreateContentView(
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateHeaderView(
-    text: String,
+    title: String,
+    subtitle: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
+    let verticalStack = UIStackView()
+    verticalStack.axis = .vertical
+    verticalStack.spacing = 4
+
     let headerLabel = ClickableLabel(
         font: .stripeFont(forTextStyle: .heading),
         boldFont: .stripeFont(forTextStyle: .heading),
         linkFont: .stripeFont(forTextStyle: .heading),
         textColor: .textPrimary
     )
-    headerLabel.setText(text, action: didSelectURL)
-    return headerLabel
+    headerLabel.setText(title, action: didSelectURL)
+    verticalStack.addArrangedSubview(headerLabel)
+
+    if let subtitle = subtitle {
+        let subtitleLabel = ClickableLabel(
+            font: .stripeFont(forTextStyle: .body),
+            boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            textColor: .textPrimary
+        )
+        subtitleLabel.setText(subtitle, action: didSelectURL)
+        verticalStack.addArrangedSubview(subtitleLabel)
+    }
+    return verticalStack
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -167,7 +187,18 @@ private func CreateBulletinView(
 
     let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
-            imageView,
+            {
+                // add padding to the icon so its better aligned with text
+                let paddingStackView = UIStackView(arrangedSubviews: [imageView])
+                paddingStackView.isLayoutMarginsRelativeArrangement = true
+                paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                    top: 2,
+                    leading: 0,
+                    bottom: 0,
+                    trailing: 0
+                )
+                return paddingStackView
+            }(),
             BulletPointLabelView(
                 title: title,
                 content: subtitle,
@@ -206,7 +237,7 @@ private func CreateFooterView(
     okButton.addTarget(actionTarget, action: #selector(ConsentBottomSheetView.didSelectOK), for: .touchUpInside)
     okButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        okButton.heightAnchor.constraint(equalToConstant: 56),
+        okButton.heightAnchor.constraint(equalToConstant: 56)
     ])
     return okButton
 }
@@ -221,19 +252,25 @@ private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentBottomSheetView {
         ConsentBottomSheetView(
             model: ConsentBottomSheetModel(
-                title: "",
+                title: "When will [Merchant] use your data?",
+                subtitle: "[Merchant] will use your account and routing number, balances and transactions when:",
                 body: ConsentBottomSheetModel.Body(
                     bullets: [
                         FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--checkCircle-green-3x.png"),
+                            title: nil,
+                            content: "Transferring money between your bank account and Merchant"
+                        ),
+                        FinancialConnectionsBulletPoint(
                             icon: FinancialConnectionsImage(default: nil),
-                            title: "...",
-                            content: "..."
+                            title: nil,
+                            content: "Transferring money between your bank account and Merchant"
                         ),
                     ]
                 ),
                 extraNotice: nil,
-                learnMore: "...",
-                cta: "..."
+                learnMore: "[Learn more](https://www.stripe.com)",
+                cta: "Got it"
             ),
             didSelectOK: {},
             didSelectURL: { _ in }
@@ -250,9 +287,9 @@ struct ConsentBottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack {
-                    ConsentBottomSheetViewUIViewRepresentable()
-                        .frame(width: 320)
-                        .frame(height: 350)
+                ConsentBottomSheetViewUIViewRepresentable()
+                    .frame(width: 320)
+                    .frame(height: 350)
 
             }
             .frame(maxWidth: .infinity)

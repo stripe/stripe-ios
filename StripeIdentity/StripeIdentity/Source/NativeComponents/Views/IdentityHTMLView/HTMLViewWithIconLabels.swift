@@ -147,6 +147,8 @@ extension HTMLViewWithIconLabels {
             ),
             separatorView.leadingAnchor.constraint(equalTo: vStack.leadingAnchor),
             separatorView.trailingAnchor.constraint(equalTo: vStack.trailingAnchor),
+            textView.leadingAnchor.constraint(equalTo: vStack.leadingAnchor),
+            textView.trailingAnchor.constraint(equalTo: vStack.trailingAnchor),
         ])
     }
 

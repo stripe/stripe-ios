@@ -28,7 +28,6 @@ extension STPAnalyticsClient {
         result: PaymentSheetResult,
         linkEnabled: Bool,
         activeLinkSession: Bool,
-        paymentOption: PaymentOption,
         currency: String?
     ) {
         var success = false
@@ -51,8 +50,7 @@ extension STPAnalyticsClient {
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
-            currency: currency,
-            params: ["payment_method": paymentOption.name.lowercased()]
+            currency: currency
         )
     }
 

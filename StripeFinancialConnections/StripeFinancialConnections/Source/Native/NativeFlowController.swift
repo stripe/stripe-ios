@@ -55,7 +55,9 @@ class NativeFlowController {
                 dataManager: dataManager
             )
         else {
-            assertionFailure("We should always get a view controller for the first pane: \(dataManager.manifest.nextPane)")
+            assertionFailure(
+                "We should always get a view controller for the first pane: \(dataManager.manifest.nextPane)"
+            )
             showTerminalError()
             return
         }
@@ -66,17 +68,17 @@ class NativeFlowController {
         dataManager.analyticsClient.log(
             eventName: "click.nav_bar.close",
             parameters: [
-                "pane": FinancialConnectionsAnalyticsClient
+                "pane":
+                    FinancialConnectionsAnalyticsClient
                     .paneFromViewController(navigationController.topViewController)
                     .rawValue,
             ]
         )
 
-        let showConfirmationAlert = (
-            navigationController.topViewController is AccountPickerViewController
-            || navigationController.topViewController is PartnerAuthViewController
-            || navigationController.topViewController is AttachLinkedPaymentAccountViewController
-        )
+        let showConfirmationAlert =
+            (navigationController.topViewController is AccountPickerViewController
+                || navigationController.topViewController is PartnerAuthViewController
+                || navigationController.topViewController is AttachLinkedPaymentAccountViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
 }
@@ -96,10 +98,26 @@ extension NativeFlowController {
                     reducedBranding: dataManager.reducedBranding,
                     merchantLogo: dataManager.merchantLogo
                 ),
-                shouldLeftAlignStripeLogo: viewControllers.first == viewController && viewController is ConsentViewController
+                shouldLeftAlignStripeLogo: viewControllers.first == viewController
+                    && viewController is ConsentViewController
             )
         }
         navigationController.setViewControllers(viewControllers, animated: animated)
+    }
+
+    private func pushPane(_ pane: FinancialConnectionsSessionManifest.NextPane, animated: Bool) {
+        if pane == .success && dataManager.manifest.skipSuccessPane == true {
+            closeAuthFlow(showConfirmationAlert: false, error: nil)
+        } else if pane == .manualEntry && dataManager.manifest.manualEntryMode == .custom {
+            closeAuthFlow(showConfirmationAlert: false, customManualEntry: true)
+        } else {
+            let manualEntryViewController = CreatePaneViewController(
+                pane: pane,
+                nativeFlowController: self,
+                dataManager: dataManager
+            )
+            pushViewController(manualEntryViewController, animated: animated)
+        }
     }
 
     private func pushViewController(_ viewController: UIViewController?, animated: Bool) {
@@ -112,7 +130,7 @@ extension NativeFlowController {
                     reducedBranding: dataManager.reducedBranding,
                     merchantLogo: dataManager.merchantLogo
                 ),
-                shouldLeftAlignStripeLogo: false // if we `push`, this is not the first VC
+                shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
             )
             navigationController.pushViewController(viewController, animated: animated)
         } else {
@@ -127,15 +145,6 @@ extension NativeFlowController {
 
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController {
-
-    private func pushManualEntry() {
-        let manualEntryViewController = CreatePaneViewController(
-            pane: .manualEntry,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(manualEntryViewController, animated: true)
-    }
 
     private func didSelectAnotherBank() {
         if dataManager.manifest.disableLinkMoreAccounts {
@@ -153,7 +162,9 @@ extension NativeFlowController {
                 dataManager: dataManager
             )
         else {
-            assertionFailure("We should always get a view controller for \(FinancialConnectionsSessionManifest.NextPane.resetFlow)")
+            assertionFailure(
+                "We should always get a view controller for \(FinancialConnectionsSessionManifest.NextPane.resetFlow)"
+            )
             showTerminalError()
             return
         }
@@ -173,10 +184,11 @@ extension NativeFlowController {
             terminalError = error
         } else {
             terminalError = FinancialConnectionsSheetError.unknown(
-                debugDescription: "Unknown terminal error. It is likely that we couldn't find a view controller for a specific pane."
+                debugDescription:
+                    "Unknown terminal error. It is likely that we couldn't find a view controller for a specific pane."
             )
         }
-        dataManager.terminalError = terminalError // needs to be set to create `terminalError` pane
+        dataManager.terminalError = terminalError  // needs to be set to create `terminalError` pane
 
         guard
             let terminalErrorViewController = CreatePaneViewController(
@@ -185,7 +197,9 @@ extension NativeFlowController {
                 dataManager: dataManager
             )
         else {
-            assertionFailure("We should always get a view controller for \(FinancialConnectionsSessionManifest.NextPane.terminalError)")
+            assertionFailure(
+                "We should always get a view controller for \(FinancialConnectionsSessionManifest.NextPane.terminalError)"
+            )
             closeAuthFlow(showConfirmationAlert: false, error: terminalError)
             return
         }
@@ -196,11 +210,12 @@ extension NativeFlowController {
     // 1. User closes, and accounts are returned (or `paymentAccount` or `bankAccountToken`). That's a success.
     // 2. User closes, no accounts are returned, and there's an error. That's a failure.
     // 3. User closes, no accounts are returned, and there's no error. That's a cancel.
-    // 4. User closes, and fetching accounts returns an error. That's a failure. 
+    // 4. User closes, and fetching accounts returns an error. That's a failure.
     @available(iOSApplicationExtension, unavailable)
     private func closeAuthFlow(
         showConfirmationAlert: Bool,
-        error closeAuthFlowError: Error? = nil // user can also close AuthFlow while looking at an error screen
+        customManualEntry: Bool = false,
+        error closeAuthFlowError: Error? = nil  // user can also close AuthFlow while looking at an error screen
     ) {
         let finishAuthSession: (FinancialConnectionsSheet.Result) -> Void = { [weak self] result in
             guard let self = self else { return }
@@ -210,40 +225,54 @@ extension NativeFlowController {
         let completeFinancialConnectionsSession = { [weak self] in
             guard let self = self else { return }
             self.dataManager
-                .completeFinancialConnectionsSession()
+                .completeFinancialConnectionsSession(
+                    terminalError: customManualEntry ? "user_initiated_with_custom_manual_entry" : nil
+                )
                 .observe(on: .main) { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let session):
                         let eventType = "object"
-                        if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
+                        if session.status == .cancelled
+                            && session.statusDetails?.cancelled?.reason == .customManualEntry
+                        {
                             self.logCompleteEvent(
                                 type: eventType,
-                                status: "completed",
-                                numberOfLinkedAccounts: session.accounts.data.count
+                                status: "custom_manual_entry"
                             )
-                            finishAuthSession(.completed(session: session))
-                        } else if let closeAuthFlowError = closeAuthFlowError {
-                            self.logCompleteEvent(
-                                type: eventType,
-                                status: "failed",
-                                error: closeAuthFlowError
-                            )
-                            finishAuthSession(.failed(error: closeAuthFlowError))
+                            finishAuthSession(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
                         } else {
-                            if let terminalError = self.dataManager.terminalError {
+                            if !session.accounts.data.isEmpty || session.paymentAccount != nil
+                                || session.bankAccountToken != nil
+                            {
+                                self.logCompleteEvent(
+                                    type: eventType,
+                                    status: "completed",
+                                    numberOfLinkedAccounts: session.accounts.data.count
+                                )
+                                finishAuthSession(.completed(session: session))
+                            } else if let closeAuthFlowError = closeAuthFlowError {
                                 self.logCompleteEvent(
                                     type: eventType,
                                     status: "failed",
-                                    error: terminalError
+                                    error: closeAuthFlowError
                                 )
-                                finishAuthSession(.failed(error: terminalError))
+                                finishAuthSession(.failed(error: closeAuthFlowError))
                             } else {
-                                self.logCompleteEvent(
-                                    type: eventType,
-                                    status: "canceled"
-                                )
-                                finishAuthSession(.canceled)
+                                if let terminalError = self.dataManager.terminalError {
+                                    self.logCompleteEvent(
+                                        type: eventType,
+                                        status: "failed",
+                                        error: terminalError
+                                    )
+                                    finishAuthSession(.failed(error: terminalError))
+                                } else {
+                                    self.logCompleteEvent(
+                                        type: eventType,
+                                        status: "canceled"
+                                    )
+                                    finishAuthSession(.canceled)
+                                }
                             }
                         }
                     case .failure(let completeFinancialConnectionsSessionError):
@@ -286,8 +315,7 @@ extension NativeFlowController {
         ]
         parameters["num_linked_accounts"] = numberOfLinkedAccounts
         if let error = error {
-            if
-                let stripeError = error as? StripeError,
+            if let stripeError = error as? StripeError,
                 case .apiError(let apiError) = stripeError
             {
                 parameters["error_type"] = apiError.type.rawValue
@@ -316,16 +344,11 @@ extension NativeFlowController: ConsentViewControllerDelegate {
     ) {
         dataManager.manifest = manifest
 
-        let viewController = CreatePaneViewController(
-            pane: manifest.nextPane,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(viewController, animated: true)
+        pushPane(manifest.nextPane, animated: true)
     }
 
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
-        pushManualEntry()
+        pushPane(.manualEntry, animated: true)
     }
 }
 
@@ -334,19 +357,19 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: InstitutionPickerViewControllerDelegate {
 
-    func institutionPickerViewController(_ viewController: InstitutionPickerViewController, didSelect institution: FinancialConnectionsInstitution) {
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didSelect institution: FinancialConnectionsInstitution
+    ) {
         dataManager.institution = institution
 
-        let partnerAuthViewController = CreatePaneViewController(
-            pane: .partnerAuth,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(partnerAuthViewController, animated: true)
+        pushPane(.partnerAuth, animated: true)
     }
 
-    func institutionPickerViewControllerDidSelectManuallyAddYourAccount(_ viewController: InstitutionPickerViewController) {
-        pushManualEntry()
+    func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
+        _ viewController: InstitutionPickerViewController
+    ) {
+        pushPane(.manualEntry, animated: true)
     }
 }
 
@@ -364,7 +387,7 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
     }
 
     func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController) {
-        pushManualEntry()
+        pushPane(.manualEntry, animated: true)
     }
 
     func partnerAuthViewController(
@@ -373,12 +396,11 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
     ) {
         dataManager.authSession = authSession
 
-        let accountPickerViewController = CreatePaneViewController(
-            pane: .accountPicker,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(accountPickerViewController, animated: true)
+        // This is a weird thing to do, but effectively we don't want to
+        // animate for OAuth since we make the authorize call in that case
+        // and already have the same loading screen.
+        let shouldAnimate = !authSession.isOauthNonOptional
+        pushPane(.accountPicker, animated: shouldAnimate)
     }
 
     func partnerAuthViewController(
@@ -402,23 +424,13 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 
         let shouldAttachLinkedPaymentAccount = (dataManager.manifest.paymentMethodType != nil)
         if shouldAttachLinkedPaymentAccount {
-            let attachLinkedPaymentMethodViewController = CreatePaneViewController(
-                pane: .attachLinkedPaymentAccount,
-                nativeFlowController: self,
-                dataManager: dataManager
-            )
             // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
             //
             // `attachLinkedPaymentAccount` looks the same as the last step of `accountPicker`
             // so navigating to a "Linking account" loading screen can look buggy to the user
-            pushViewController(attachLinkedPaymentMethodViewController, animated: false)
+            pushPane(.attachLinkedPaymentAccount, animated: false)
         } else {
-            let successViewController = CreatePaneViewController(
-                pane: .success,
-                nativeFlowController: self,
-                dataManager: dataManager
-            )
-            pushViewController(successViewController, animated: true)
+            pushPane(.success, animated: true)
         }
     }
 
@@ -427,10 +439,13 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
     }
 
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController) {
-        pushManualEntry()
+        pushPane(.manualEntry, animated: true)
     }
 
-    func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error) {
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveTerminalError error: Error
+    ) {
         showTerminalError(error)
     }
 }
@@ -456,19 +471,15 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
 
     func manualEntryViewController(
         _ viewController: ManualEntryViewController,
-        didRequestToContinueWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        didRequestToContinueWithPaymentAccountResource paymentAccountResource:
+            FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
     ) {
         dataManager.paymentAccountResource = paymentAccountResource
         dataManager.accountNumberLast4 = accountNumberLast4
 
         if dataManager.manifest.manualEntryUsesMicrodeposits {
-            let manualEntrySuccessViewController = CreatePaneViewController(
-                pane: .manualEntrySuccess,
-                nativeFlowController: self,
-                dataManager: dataManager
-            )
-            pushViewController(manualEntrySuccessViewController, animated: true)
+            pushPane(.manualEntrySuccess, animated: true)
         } else {
             closeAuthFlow(showConfirmationAlert: false, error: nil)
         }
@@ -505,12 +516,7 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
         dataManager.resetState(withNewManifest: manifest)
 
         // go to the next pane (likely `institutionPicker`)
-        let nextViewController = CreatePaneViewController(
-            pane: manifest.nextPane,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        pushViewController(nextViewController, animated: false)
+        pushPane(manifest.nextPane, animated: false)
     }
 
     func resetFlowViewController(
@@ -534,7 +540,7 @@ extension NativeFlowController: TerminalErrorViewControllerDelegate {
     }
 
     func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController) {
-        pushManualEntry()
+        pushPane(.manualEntry, animated: true)
     }
 }
 
@@ -547,21 +553,19 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
         _ viewController: AttachLinkedPaymentAccountViewController,
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
     ) {
-        let viewController = CreatePaneViewController(
-            pane: paymentAccountResource.nextPane ?? .success,
-            nativeFlowController: self,
-            dataManager: dataManager
-        )
-        // the next pane is likely `success`
-        pushViewController(viewController, animated: true)
+        pushPane(paymentAccountResource.nextPane ?? .success, animated: true)
     }
 
-    func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(_ viewController: AttachLinkedPaymentAccountViewController) {
+    func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(
+        _ viewController: AttachLinkedPaymentAccountViewController
+    ) {
         didSelectAnotherBank()
     }
 
-    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(_ viewController: AttachLinkedPaymentAccountViewController) {
-        pushManualEntry()
+    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
+        _ viewController: AttachLinkedPaymentAccountViewController
+    ) {
+        pushPane(.manualEntry, animated: true)
     }
 }
 
@@ -593,7 +597,9 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .attachLinkedPaymentAccount:
-        if let institution = dataManager.institution, let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId {
+        if let institution = dataManager.institution,
+            let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId
+        {
             let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
@@ -651,7 +657,9 @@ private func CreatePaneViewController(
         manualEntryViewController.delegate = nativeFlowController
         viewController = manualEntryViewController
     case .manualEntrySuccess:
-        if let paymentAccountResource = dataManager.paymentAccountResource, let accountNumberLast4 = dataManager.accountNumberLast4 {
+        if let paymentAccountResource = dataManager.paymentAccountResource,
+            let accountNumberLast4 = dataManager.accountNumberLast4
+        {
             let manualEntrySuccessViewController = ManualEntrySuccessViewController(
                 microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
                 accountNumberLast4: accountNumberLast4,

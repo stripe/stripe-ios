@@ -18,6 +18,8 @@
 
 "City" = "Город";
 
+"Code field" = "Поле кода";
+
 "Company" = "Компания";
 
 "Continue" = "Продолжить";
@@ -36,6 +38,8 @@
 
 "Done" = "Готово";
 
+"Double tap to edit" = "Коснитесь дважды, чтобы отредактировать";
+
 "Edit" = "Редактировать";
 
 "Eircode" = "Почтовый индекс (Eircode)";
@@ -51,6 +55,8 @@
 "Full name" = "Имя, фамилия";
 
 "Incomplete phone number" = "Номер телефона введен не полностью";
+
+"Invalid UPI ID" = "Недействительный идентификатор UPI";
 
 "Island" = "Остров";
 
@@ -82,6 +88,8 @@
 
 "Remove bank account ending in %@" = "Удалить банковский счет, оканчивающийся на %@";
 
+"Search" = "Поиск";
+
 "State" = "Штат";
 
 "Suburb" = "Пригород";
@@ -95,6 +103,8 @@
 "The account number you entered is incomplete." = "Номер счета введен не полностью.";
 
 "Town or city" = "Город";
+
+"UPI ID" = "Идентификатор UPI";
 
 "Unable to parse phone number" = "Не удается разобрать номер телефона";
 

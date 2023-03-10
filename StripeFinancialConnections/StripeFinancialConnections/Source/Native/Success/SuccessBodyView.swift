@@ -30,7 +30,7 @@ final class SuccessBodyView: HitTestView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 12
 
-        if linkedAccounts.count > 0 {
+        if !linkedAccounts.isEmpty {
             verticalStackView.addArrangedSubview(
                 CreateInformationBoxView(
                     accountsListView: SuccessAccountListView(
@@ -99,7 +99,7 @@ private func CreateDataAccessDisclosureView(
     separatorView.backgroundColor = .borderNeutral
     separatorView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.nativeScale),
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.nativeScale)
     ])
 
     let verticalStackView = HitTestStackView(
@@ -127,12 +127,21 @@ private func CreateDisconnectAccountLabel(
 ) -> UIView {
     let disconnectYourAccountLocalizedString: String = {
         if isLinkingOneAccount {
-            return STPLocalizedString("disconnect your account", "One part of larger text 'You can disconnect your account at any time.' The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. The 'disconnect your account' part is clickable and will show user a support website.")
+            return STPLocalizedString(
+                "disconnect your account",
+                "One part of larger text 'You can disconnect your account at any time.' The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. The 'disconnect your account' part is clickable and will show user a support website."
+            )
         } else {
-            return STPLocalizedString("disconnect your accounts", "One part of larger text 'You can disconnect your account at any time.' The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. The 'disconnect your account' part is clickable and will show user a support website.")
+            return STPLocalizedString(
+                "disconnect your accounts",
+                "One part of larger text 'You can disconnect your account at any time.' The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. The 'disconnect your account' part is clickable and will show user a support website."
+            )
         }
     }()
-    let fullLocalizedString = STPLocalizedString("You can %@ at any time.", "The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. '%@' will be replaced by 'disconnect your account', to form a full string: 'You can disconnect your account at any time.'.")
+    let fullLocalizedString = STPLocalizedString(
+        "You can %@ at any time.",
+        "The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. '%@' will be replaced by 'disconnect your account', to form a full string: 'You can disconnect your account at any time.'."
+    )
     let disconnectionUrlString = DisconnectionURLString(
         accountDisconnectionMethod: accountDisconnectionMethod,
         isEndUserFacing: isEndUserFacing
@@ -168,7 +177,8 @@ private func DisconnectionURLString(
     case .dashboard:
         return "https://dashboard.stripe.com/settings/linked-accounts"
     case .link:
-        return "https://support.link.co/questions/connecting-your-bank-account#how-do-i-disconnect-my-connected-bank-account"
+        return
+            "https://support.link.co/questions/connecting-your-bank-account#how-do-i-disconnect-my-connected-bank-account"
     case .unparsable:
         fallthrough
     case .email:

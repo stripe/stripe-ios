@@ -37,6 +37,12 @@
 /* Header text shown above a UPI ID text field */
 "Buy using a UPI ID" = "Buy using a UPI ID";
 
+/* Paypal mandate text */
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
+
+/* Paypal mandate text */
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
+
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
@@ -70,17 +76,14 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* Accessibility label describing a field for entering a login code */
-"Code field" = "Code field";
-
 /* Text of a notification shown to the user when a login code is successfully sent via SMS. */
 "Code sent" = "Code sent";
 
+/* Title for the contact information section */
+"Contact information" = "Contact information";
+
 /* Label for identifying the default payment method. */
 "Default" = "Default";
-
-/* Accessibility hint for a text field */
-"Double tap to edit" = "Double tap to edit";
 
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
@@ -109,6 +112,9 @@ re-entering the security code (CVV/CVC). */
 
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
+
+/* Label for name on card field */
+"Name on card" = "Name on card";
 
 /* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
 "Not %@?" = "Not %@?";

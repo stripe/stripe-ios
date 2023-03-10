@@ -70,11 +70,13 @@ final class AccountPickerSelectionListView: UIView {
                 }
             )
             allAccountsCellView.setLeadingTitle(
-                STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
+                STPLocalizedString(
+                    "All accounts",
+                    "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+                ),
                 trailingTitle: nil,
                 subtitle: nil,
-                isSelected: (enabledAccounts.count == selectedAccounts.count),
-                isLinked: false
+                isSelected: (enabledAccounts.count == selectedAccounts.count)
             )
             verticalStackView.addArrangedSubview(allAccountsCellView)
         }
@@ -92,8 +94,8 @@ final class AccountPickerSelectionListView: UIView {
                     } else {
                         if self.selectionType == .checkbox {
                             selectedAccounts.append(account)
-                        } else { // radiobutton
-                            selectedAccounts = [account] // select only one account
+                        } else {  // radiobutton
+                            selectedAccounts = [account]  // select only one account
                         }
                     }
                     self.delegate?.accountPickerSelectionListView(self, didSelectAccounts: selectedAccounts)
@@ -104,8 +106,7 @@ final class AccountPickerSelectionListView: UIView {
                 rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
                 subtitle: AccountPickerHelpers.rowSubtitle(forAccount: account),
-                isSelected: selectedAccounts.contains(where: { $0.id == account.id }),
-                isLinked: account.linkedAccountId != nil
+                isSelected: selectedAccounts.contains(where: { $0.id == account.id })
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }
@@ -123,8 +124,7 @@ final class AccountPickerSelectionListView: UIView {
                 AccountPickerHelpers.rowTitles(forAccount: disabledAccount).leadingTitle,
                 trailingTitle: "••••\(disabledAccount.displayableAccountNumbers ?? "")",
                 subtitle: disabledAccount.allowSelectionMessage,
-                isSelected: false,
-                isLinked: false
+                isSelected: false
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }

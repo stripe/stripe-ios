@@ -17,8 +17,8 @@ class CollectBankAccountTokenViewController: UIViewController {
 
     // MARK: - IBOutlets
 
-    @IBOutlet weak var collectBankAccountTokenButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var collectBankAccountTokenButton: UIButton!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Properties
 
@@ -58,7 +58,7 @@ class CollectBankAccountTokenViewController: UIViewController {
                 }
 
                 self.startFinancialConnections(responseJson: responseJson)
-             }
+            }
         }
         task.resume()
     }
@@ -68,7 +68,7 @@ class CollectBankAccountTokenViewController: UIViewController {
             assertionFailure("Did not receive a valid client secret.")
             return
         }
-        guard let publishableKey = responseJson["publishable_key"]  else {
+        guard let publishableKey = responseJson["publishable_key"] else {
             assertionFailure("Did not receive a valid publishable key.")
             return
         }
@@ -76,12 +76,15 @@ class CollectBankAccountTokenViewController: UIViewController {
         // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
         STPAPIClient.shared.publishableKey = publishableKey
 
-        financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret, returnURL: "financial-connection-example://return")
+        financialConnectionsSheet = FinancialConnectionsSheet(
+            financialConnectionsSessionClientSecret: clientSecret,
+            returnURL: "financial-connection-example://return"
+        )
         financialConnectionsSheet?.presentForToken(
             from: self,
             completion: { [weak self] result in
                 switch result {
-                case .completed(result: let result):
+                case .completed(let result):
                     guard let token = result.token else {
                         self?.displayAlert("Completed, but no token was returned")
                         return
@@ -98,7 +101,8 @@ class CollectBankAccountTokenViewController: UIViewController {
                     self?.displayAlert("Failed!")
                     print(error)
                 }
-            })
+            }
+        )
         // Re-enable button
         updateButtonState(isLoading: false)
     }

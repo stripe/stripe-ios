@@ -18,6 +18,8 @@
 
 "City" = "Mesto";
 
+"Code field" = "Polje za kodo";
+
 "Company" = "Podjetje";
 
 "Continue" = "Nadaljuj";
@@ -36,6 +38,8 @@
 
 "Done" = "Dokončano";
 
+"Double tap to edit" = "Dvotapnite, da uredite";
+
 "Edit" = "Uredi";
 
 "Eircode" = "Eircode";
@@ -51,6 +55,8 @@
 "Full name" = "Polno ime";
 
 "Incomplete phone number" = "Nepopolna telefonska številka mobilnega telefona.";
+
+"Invalid UPI ID" = "Neveljaven UPI ID";
 
 "Island" = "Otok";
 
@@ -82,6 +88,8 @@
 
 "Remove bank account ending in %@" = "Odstranite bančni račun, ki se konča s števkami %@";
 
+"Search" = "Iskanje";
+
 "State" = "Zvezna država";
 
 "Suburb" = "Predmestje";
@@ -95,6 +103,8 @@
 "The account number you entered is incomplete." = "Vnesena številka računa ni popolna.";
 
 "Town or city" = "Kraj ali mesto";
+
+"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Telefonske številke ni mogoče razčleniti";
 

@@ -65,6 +65,17 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
+        didSet {
+            PlaygroundUserDefaults.customPublicKey = customPublicKey
+        }
+    }
+    @Published var customSecretKey: String = PlaygroundUserDefaults.customSecretKey {
+        didSet {
+            PlaygroundUserDefaults.customSecretKey = customSecretKey
+        }
+    }
+
     @Published var isLoading: Bool = false
 
     init() {
@@ -86,14 +97,16 @@ final class PlaygroundMainViewModel: ObservableObject {
         SetupPlayground(
             enableAppToApp: enableAppToApp,
             enableTestMode: enableTestMode,
-            flow: flow.rawValue
+            flow: flow.rawValue,
+            customPublicKey: customPublicKey,
+            customSecretKey: customSecretKey
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
                     setupPlaygroundResponseJSON: setupPlaygroundResponse
                 ) { result in
                     switch result {
-                    case .completed(session: let session):
+                    case .completed(let session):
                         let accounts = session.accounts.data.filter { $0.last4 != nil }
                         let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
                         UIAlertController.showAlert(
@@ -125,6 +138,8 @@ private func SetupPlayground(
     enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
+    customPublicKey: String,
+    customSecretKey: String,
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
@@ -138,6 +153,8 @@ private func SetupPlayground(
         requestBody["enable_test_mode"] = enableTestMode
         requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
+        requestBody["custom_public_key"] = customPublicKey
+        requestBody["custom_secret_key"] = customSecretKey
         return try! JSONSerialization.data(
             withJSONObject: requestBody,
             options: .prettyPrinted
@@ -150,8 +167,7 @@ private func SetupPlayground(
         .dataTask(
             with: urlRequest
         ) { data, response, error in
-            if
-                error == nil,
+            if error == nil,
                 let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
@@ -176,7 +192,7 @@ private func PresentFinancialConnectionsSheet(
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
         fatalError("Did not receive a valid client secret.")
     }
-    guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"]  else {
+    guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"] else {
         fatalError("Did not receive a valid publishable key.")
     }
 
@@ -190,6 +206,7 @@ private func PresentFinancialConnectionsSheet(
         from: UIViewController.topMostViewController()!,
         completion: { result in
             completionHandler(result)
-            _ = financialConnectionsSheet // retain the sheet
-        })
+            _ = financialConnectionsSheet  // retain the sheet
+        }
+    )
 }

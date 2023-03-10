@@ -18,6 +18,8 @@
 
 "City" = "Város";
 
+"Code field" = "Kódmező";
+
 "Company" = "Vállalat";
 
 "Continue" = "Folytatás";
@@ -36,6 +38,8 @@
 
 "Done" = "Kész";
 
+"Double tap to edit" = "A szerkesztéshez koppintson kétszer";
+
 "Edit" = "Szerkesztés";
 
 "Eircode" = "Irányítószám";
@@ -51,6 +55,8 @@
 "Full name" = "Teljes név";
 
 "Incomplete phone number" = "Hiányos telefonszám";
+
+"Invalid UPI ID" = "Érvénytelen UPI-azonosító";
 
 "Island" = "Sziget";
 
@@ -82,6 +88,8 @@
 
 "Remove bank account ending in %@" = "%@ számra végződő bankszámla eltávolítása";
 
+"Search" = "Keresés";
+
 "State" = "Állam";
 
 "Suburb" = "Külváros";
@@ -95,6 +103,8 @@
 "The account number you entered is incomplete." = "A számlaszám hiányos.";
 
 "Town or city" = "Kisváros vagy város";
+
+"UPI ID" = "UPI-azonosító";
 
 "Unable to parse phone number" = "A telefonszám nem értelmezhető";
 

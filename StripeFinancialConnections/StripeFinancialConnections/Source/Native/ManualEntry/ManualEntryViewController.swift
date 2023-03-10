@@ -13,7 +13,8 @@ import UIKit
 protocol ManualEntryViewControllerDelegate: AnyObject {
     func manualEntryViewController(
         _ viewController: ManualEntryViewController,
-        didRequestToContinueWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        didRequestToContinueWithPaymentAccountResource paymentAccountResource:
+            FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
     )
 }
@@ -51,8 +52,15 @@ final class ManualEntryViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
 
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
-            title: STPLocalizedString("Enter bank account details", "The title of a screen that allows a user to manually enter their bank account information."),
-            subtitle: dataSource.manifest.manualEntryUsesMicrodeposits ? STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.") : nil,
+            title: STPLocalizedString(
+                "Enter bank account details",
+                "The title of a screen that allows a user to manually enter their bank account information."
+            ),
+            subtitle: dataSource.manifest.manualEntryUsesMicrodeposits
+                ? STPLocalizedString(
+                    "Your bank information will be verified with micro-deposits to your account",
+                    "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified."
+                ) : nil,
             contentView: manualEntryFormView,
             footerView: footerView
         )
@@ -72,7 +80,7 @@ final class ManualEntryViewController: UIViewController {
             assertionFailure("user should never be able to press continue if we have no routing/account number")
             return
         }
-        manualEntryFormView.setError(text: nil) // clear previous error
+        manualEntryFormView.setError(text: nil)  // clear previous error
 
         footerView.setIsLoading(true)
         dataSource.attachBankAccountToLinkAccountSession(

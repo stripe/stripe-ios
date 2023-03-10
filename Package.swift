@@ -144,6 +144,12 @@ let package = Package(
             resources: [
                 .process("Resources/Images"),
             ]
+        ),
+        .target(
+            name: "StripeLinkCore",
+            //dependencies: ["StripeCore"],
+            path: "StripeLinkCore/StripeLinkCore",
+            exclude: ["Info.plist"]
         )
     ]
 )

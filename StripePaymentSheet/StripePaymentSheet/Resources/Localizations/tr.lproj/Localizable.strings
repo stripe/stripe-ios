@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Ödeme bilgilerinizi ekleyin";
 
+"Approve payment" = "Ödemeyi onaylayın";
+
 "Are you sure you want to remove this card?" = "Bu kartı kaldırmak istediğinizden emin misiniz?";
 
 "Are you sure you want to remove this linked account?" = "Bu bağlı hesabı kaldırmak istediğinizden emin misiniz?";
@@ -19,6 +21,8 @@
 "Bank account" = "Banka hesabı";
 
 "Buy now or pay later with Klarna." = "Şimdi satın alın veya daha sonra Klarna ile ödeyin.";
+
+"Buy using a UPI ID" = "UPI Numarası kullanarak satın alın";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
+"Cancel and pay another way" = "İptal edip başka bir yöntemle ödeyin";
+
 "Change email" = "E-posta adresini değiştir";
 
 "Choose a payment method" = "Yeni bir ödeme yöntemi seçin";
 
 "Close card scanner" = "Kart tarayıcısını kapat";
 
-"Code field" = "Kod alanı";
-
 "Code sent" = "Kod gönderildi";
 
 "Default" = "Varsayılan";
-
-"Double tap to edit" = "Düzenlemek için iki kez dokunun";
 
 "EPS Bank" = "EPS Bank";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Link'ten çıkış yap";
 
 "Not %@?" = "%@ doğru değil mi?";
+
+"Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
 
 "Or" = "Veya";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Ödeme";
 
+"Payment failed" = "Ödeme başarısız oldu";
+
 "Payment methods" = "Ödeme yöntemleri";
+
+"Please go back and select another payment method" = "Lütfen geri gidip başka bir ödeme yöntemi seçin";
 
 "Point the camera at your card." = "Kamerayı kartınıza doğrultun.";
 

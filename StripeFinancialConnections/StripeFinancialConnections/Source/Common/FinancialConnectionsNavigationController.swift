@@ -12,6 +12,22 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class FinancialConnectionsNavigationController: UINavigationController {
 
+    // Swift 5.8 requires us to manually mark inits as unavailable as well:
+    @available(iOSApplicationExtension, unavailable)
+    override public init(navigationBarClass: AnyClass?, toolbarClass: AnyClass?) {
+        super.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    override public init(rootViewController: UIViewController) {
+        super.init(rootViewController: rootViewController)
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
     // only currently set for native flow
     weak var analyticsClient: FinancialConnectionsAnalyticsClient?
     private var lastInteractivePopGestureRecognizerEndedDate: Date?
@@ -72,8 +88,7 @@ extension FinancialConnectionsNavigationController: UINavigationControllerDelega
         didShow viewController: UIViewController,
         animated: Bool
     ) {
-        if
-            let lastInteractivePopGestureRecognizerEndedDate = lastInteractivePopGestureRecognizerEndedDate,
+        if let lastInteractivePopGestureRecognizerEndedDate = lastInteractivePopGestureRecognizerEndedDate,
             Date().timeIntervalSince(lastInteractivePopGestureRecognizerEndedDate) < 0.7,
             let lastShownViewController = lastShownViewController
         {
@@ -102,7 +117,9 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
         if let topViewController = topViewController {
             logNavigationBackEvent(fromViewController: topViewController, source: "navigation_bar_button")
         } else {
-            assertionFailure("Expected a `topViewConroller` to exist for \(FinancialConnectionsNavigationController.self)")
+            assertionFailure(
+                "Expected a `topViewConroller` to exist for \(FinancialConnectionsNavigationController.self)"
+            )
         }
         return true
     }
@@ -123,7 +140,7 @@ extension FinancialConnectionsNavigationController {
         let appearance = UINavigationBarAppearance()
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
         appearance.backgroundColor = .customBackgroundColor
-        appearance.shadowColor = .clear // remove border
+        appearance.shadowColor = .clear  // remove border
         navigationBar.standardAppearance = appearance
         navigationBar.scrollEdgeAppearance = appearance
         navigationBar.compactAppearance = appearance

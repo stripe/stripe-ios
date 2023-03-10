@@ -50,7 +50,7 @@ final class AccountPickerSelectionRowView: UIView {
     }()
 
     private lazy var labelRowView: AccountPickerLabelRowView = {
-       return AccountPickerLabelRowView()
+        return AccountPickerLabelRowView()
     }()
 
     init(
@@ -76,7 +76,7 @@ final class AccountPickerSelectionRowView: UIView {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGestureRecognizer)
 
-        isSelected = false // activate the setter to draw border
+        isSelected = false  // activate the setter to draw border
     }
 
     required init?(coder: NSCoder) {
@@ -87,14 +87,12 @@ final class AccountPickerSelectionRowView: UIView {
         _ leadingTitle: String,
         trailingTitle: String?,
         subtitle: String?,
-        isSelected: Bool,
-        isLinked: Bool
+        isSelected: Bool
     ) {
         labelRowView.setLeadingTitle(
             leadingTitle,
             trailingTitle: trailingTitle,
-            subtitle: subtitle,
-            isLinked: isLinked
+            subtitle: subtitle
         )
         self.isSelected = isSelected
     }
@@ -124,8 +122,8 @@ private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackVie
 private protocol SelectionView: UIView {
     var isSelected: Bool { get set }
 }
-extension CheckboxView: SelectionView { }
-extension RadioButtonView: SelectionView { }
+extension CheckboxView: SelectionView {}
+extension RadioButtonView: SelectionView {}
 
 #if DEBUG
 
@@ -152,8 +150,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
             leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
-            isSelected: isSelected,
-            isLinked: isLinked
+            isSelected: isSelected
         )
         return view
     }
@@ -163,8 +160,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
             leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
-            isSelected: isSelected,
-            isLinked: isLinked
+            isSelected: isSelected
         )
     }
 }

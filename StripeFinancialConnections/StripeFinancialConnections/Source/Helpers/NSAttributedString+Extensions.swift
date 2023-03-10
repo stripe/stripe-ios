@@ -18,17 +18,18 @@ extension NSMutableAttributedString {
     func addBoldFontAttributesByMarkdownRules(boldFont: UIFont) {
         guard
             // The regex will find all occurrances of tokens formatted as: `**bold string here**`
-            let regularExpression = try? NSRegularExpression(pattern: #"\*\*[^\*\n]+\*\*"#, options: NSRegularExpression.Options(rawValue: 0))
+            let regularExpression = try? NSRegularExpression(
+                pattern: #"\*\*[^\*\n]+\*\*"#,
+                options: NSRegularExpression.Options(rawValue: 0)
+            )
         else {
             return
         }
 
-        while
-            let textCheckingResult = regularExpression.firstMatch(
-                in: string,
-                range: NSRange(location: 0, length: string.count)
-            )
-        {
+        while let textCheckingResult = regularExpression.firstMatch(
+            in: string,
+            range: NSRange(location: 0, length: string.count)
+        ) {
             // range where `**bold string here**` token is
             let markdownBoldRange = textCheckingResult.range
             // the string `**bold string here**`
@@ -59,11 +60,17 @@ extension NSAttributedString {
     /// For example,  `Bold Text` out of `**Bold Text**`.
     fileprivate func extractStringInAsterisks() -> NSAttributedString? {
         guard
-            let regularExpression = try? NSRegularExpression(pattern: #"(?<=\*\*)[^\*\n]*(?=\*\*)"#, options: NSRegularExpression.Options(rawValue: 0))
+            let regularExpression = try? NSRegularExpression(
+                pattern: #"(?<=\*\*)[^\*\n]*(?=\*\*)"#,
+                options: NSRegularExpression.Options(rawValue: 0)
+            )
         else {
             return nil
         }
-        guard let range = regularExpression.firstMatch(in: string, range: NSRange(location: 0, length: string.count))?.range else {
+        guard
+            let range = regularExpression.firstMatch(in: string, range: NSRange(location: 0, length: string.count))?
+                .range
+        else {
             return nil
         }
         return attributedSubstring(from: range)

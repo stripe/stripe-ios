@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "compte %1$@ se terminant par %2$@";
+
 "%1$@ ending in %2$@" = "%1$@ se terminant par %2$@";
 
 "Address line 2 (optional)" = "Ligne d'adresse 2 (facultatif)";

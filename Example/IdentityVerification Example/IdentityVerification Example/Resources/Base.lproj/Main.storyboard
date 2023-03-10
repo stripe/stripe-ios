@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3ge-x3-7Ei">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3ge-x3-7Ei">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,39 +13,58 @@
         <!--Playground-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="PlaygroundViewController" customModule="IdentityVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="PlaygroundViewController" customModule="IdentityVerificationExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="c8j-hM-jbl">
-                                <rect key="frame" x="8" y="52" width="398" height="416.5"/>
+                                <rect key="frame" x="8" y="52" width="398" height="494.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="cuq-KA-2Ar">
                                         <rect key="frame" x="0.0" y="0.0" width="398" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Verification Check" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JYS-Ha-dw2">
-                                                <rect key="frame" x="0.0" y="0.0" width="138.5" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="IiT-OP-Kao">
-                                                <rect key="frame" x="146.5" y="0.0" width="251.5" height="32"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="398" height="32"/>
                                                 <segments>
-                                                    <segment title="Document Check"/>
-                                                    <segment title="ID Number"/>
+                                                    <segment title="Use native SDK"/>
+                                                    <segment title="Use web redirect"/>
+                                                    <segment title="Get link"/>
                                                 </segments>
                                                 <connections>
-                                                    <action selector="didChangeVerificationType:" destination="BYZ-38-t0r" eventType="valueChanged" id="D7S-6k-Tqf"/>
+                                                    <action selector="didChangeNativeOrWeb:" destination="BYZ-38-t0r" eventType="valueChanged" id="lcK-a4-4Dp"/>
                                                 </connections>
                                             </segmentedControl>
                                         </subviews>
                                         <viewLayoutGuide key="safeArea" id="EXd-ci-fc7"/>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="h9V-w1-BL7">
+                                        <rect key="frame" x="0.0" y="39" width="398" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="1000" text="Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YXR-n5-JtN">
+                                                <rect key="frame" x="0.0" y="0.0" width="37.5" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="U3Z-ei-dwD">
+                                                <rect key="frame" x="45.5" y="0.0" width="352.5" height="32"/>
+                                                <segments>
+                                                    <segment title="Document"/>
+                                                    <segment title="ID Number"/>
+                                                    <segment title="Address"/>
+                                                </segments>
+                                                <connections>
+                                                    <action selector="didChangeVerificationType:" destination="BYZ-38-t0r" eventType="valueChanged" id="gTA-c3-h2B"/>
+                                                </connections>
+                                            </segmentedControl>
+                                        </subviews>
+                                        <viewLayoutGuide key="safeArea" id="pAW-ek-AK7"/>
+                                    </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aEP-Ix-Kna" userLabel="Document Options Stack View">
-                                        <rect key="frame" x="0.0" y="39" width="398" height="290.5"/>
+                                        <rect key="frame" x="0.0" y="78" width="398" height="329.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Allowed Types:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hw8-Gp-pcC">
                                                 <rect key="frame" x="0.0" y="0.0" width="398" height="20.5"/>
@@ -166,41 +185,38 @@
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="iCj-jp-ZDM"/>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" id="lt4-4H-M9S">
+                                                <rect key="frame" x="0.0" y="153.5" width="398" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Require Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vub-FS-R9Y">
+                                                        <rect key="frame" x="0.0" y="0.0" width="341" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-uj-M4N">
+                                                        <rect key="frame" x="349" y="0.0" width="51" height="31"/>
+                                                    </switch>
+                                                </subviews>
+                                                <viewLayoutGuide key="safeArea" id="oHp-gi-HD1"/>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" id="a3P-RN-lBg">
-                                        <rect key="frame" x="0.0" y="192.5" width="398" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="Use Native Components (Invite Only)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xdx-Z9-fqY">
-                                                <rect key="frame" x="0.0" y="0.0" width="341" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="crJ-2k-7YR">
-                                                <rect key="frame" x="349" y="0.0" width="51" height="31"/>
-                                                <connections>
-                                                    <action selector="didChangeUseNativeComponentsToggle:" destination="BYZ-38-t0r" eventType="valueChanged" id="qlK-pb-OVy"/>
-                                                </connections>
-                                            </switch>
-                                        </subviews>
-                                        <viewLayoutGuide key="safeArea" id="ZMG-WB-fBP"/>
-                                    </stackView>
-                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3vx-nm-76o">
-                                        <rect key="frame" x="0.0" y="372.5" width="398" height="0.0"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3vx-nm-76o">
+                                        <rect key="frame" x="0.0" y="415.5" width="398" height="31"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="JiM-Oi-I4G">
-                                                <rect key="frame" x="0.0" y="0.0" width="398" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="398" height="31"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use custom colors and fonts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cr6-qb-BVx">
-                                                        <rect key="frame" x="0.0" y="0.0" width="341" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="5.5" width="341" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fKj-gz-kTG">
-                                                        <rect key="frame" x="349" y="0.0" width="51" height="0.0"/>
+                                                        <rect key="frame" x="349" y="0.0" width="51" height="31"/>
                                                         <connections>
                                                             <action selector="didToggleCustomColorsFonts:" destination="BYZ-38-t0r" eventType="valueChanged" id="gIg-mQ-7uK"/>
                                                             <action selector="didToggleCustomColorsFonts:" destination="rCC-W0-L1R" eventType="valueChanged" id="ze1-tX-dka"/>
@@ -211,14 +227,14 @@
                                         </subviews>
                                     </stackView>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBE-c7-ZyO" userLabel="Divider">
-                                        <rect key="frame" x="0.0" y="376.5" width="398" height="2"/>
+                                        <rect key="frame" x="0.0" y="454.5" width="398" height="2"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="2" id="Rhl-BP-c4l"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cke-0L-RF1" userLabel="Button Container">
-                                        <rect key="frame" x="0.0" y="386.5" width="398" height="30"/>
+                                        <rect key="frame" x="0.0" y="464.5" width="398" height="30"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NUM-z5-BWi" userLabel="Button Stack View">
                                                 <rect key="frame" x="137.5" y="0.0" width="123" height="30"/>
@@ -260,12 +276,13 @@
                         <outlet property="drivingLicenseSwitch" destination="KQk-6j-QM7" id="c5T-0x-am1"/>
                         <outlet property="idCardSwitch" destination="3HV-8M-Kqe" id="auy-qM-CeH"/>
                         <outlet property="nativeComponentsOptionsContainerView" destination="3vx-nm-76o" id="Nnk-Ox-Hs7"/>
+                        <outlet property="nativeOrWebSelector" destination="IiT-OP-Kao" id="4XJ-gi-K9f"/>
                         <outlet property="passportSwitch" destination="zgq-sc-Aij" id="M2T-Km-Q1n"/>
+                        <outlet property="requireAddressSwitch" destination="b4Z-uj-M4N" id="2TR-zN-Lph"/>
                         <outlet property="requireIDNumberSwitch" destination="eBN-7n-niP" id="t8v-oh-YBY"/>
                         <outlet property="requireLiveCaptureSwitch" destination="sd8-Jc-i7E" id="iTG-ka-oqO"/>
                         <outlet property="requireSelfieSwitch" destination="lmC-3a-Uxl" id="5NM-sT-NtW"/>
-                        <outlet property="useNativeComponentsSwitch" destination="crJ-2k-7YR" id="GVJ-Vh-tZA"/>
-                        <outlet property="verificationTypeSelector" destination="IiT-OP-Kao" id="A5b-cN-oTE"/>
+                        <outlet property="verificationTypeSelector" destination="U3Z-ei-dwD" id="EDa-tY-udC"/>
                         <outlet property="verifyButton" destination="hp2-OI-oTI" id="0LE-Z4-fuc"/>
                     </connections>
                 </viewController>
@@ -276,7 +293,7 @@
         <!--Main View Controller-->
         <scene sceneID="1D1-Qy-fgq">
             <objects>
-                <viewController id="rCC-W0-L1R" customClass="MainViewController" customModule="IdentityVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="rCC-W0-L1R" customClass="MainViewController" customModule="IdentityVerificationExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4iD-pM-ESv">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -308,7 +325,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="vx.x build x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yaK-1x-dGf">
-                                <rect key="frame" x="20" y="848.5" width="374" height="13.5"/>
+                                <rect key="frame" x="20" y="847.5" width="374" height="14.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                 <nil key="highlightedColor"/>
@@ -338,7 +355,7 @@
         <!--Rocket Rides-->
         <scene sceneID="Ize-Zo-cQY">
             <objects>
-                <viewController id="SJg-Lh-QlP" customClass="ExampleVerificationViewController" customModule="IdentityVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="SJg-Lh-QlP" customClass="ExampleVerificationViewController" customModule="IdentityVerificationExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Oht-e2-lhn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -347,7 +364,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="D3j-H5-YN4">
-                                <rect key="frame" x="20" y="152" width="374" height="85.5"/>
+                                <rect key="frame" x="20" y="156" width="374" height="85.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Get ready for take off" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z4P-nH-Xwe">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="41"/>
@@ -424,7 +441,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="3ge-x3-7Ei" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="c4d-hH-xyP">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -439,7 +456,7 @@
         <!--Rocket Rides-->
         <scene sceneID="rLo-6d-X8J">
             <objects>
-                <viewController id="lmO-gX-lSM" customClass="ExampleVerificationViewControllerNativeUI" customModule="IdentityVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="lmO-gX-lSM" customClass="ExampleVerificationViewControllerNativeUI" customModule="IdentityVerificationExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WGu-zH-fYa">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -448,7 +465,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="teH-ij-lWp">
-                                <rect key="frame" x="20" y="152" width="374" height="85.5"/>
+                                <rect key="frame" x="20" y="156" width="374" height="85.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Get ready for take off" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eM6-e4-6Hz">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="41"/>

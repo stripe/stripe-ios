@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Je betaalgegevens toevoegen";
 
+"Approve payment" = "Betaling goedkeuren";
+
 "Are you sure you want to remove this card?" = "Weet je zeker dat je deze betaalkaart wilt verwijderen?";
 
 "Are you sure you want to remove this linked account?" = "Weet je zeker dat je dit gekoppelde account wilt verwijderen?";
@@ -19,6 +21,8 @@
 "Bank account" = "Bankrekening";
 
 "Buy now or pay later with Klarna." = "Koop nu of betaal later met Klarna.";
+
+"Buy using a UPI ID" = "Kopen met een UPI-ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
+"Cancel and pay another way" = "Annuleren en op een andere manier betalen";
+
 "Change email" = "E-mailadres wijzigen";
 
 "Choose a payment method" = "Een betaalmethode kiezen";
 
 "Close card scanner" = "Kaartscanner afsluiten";
 
-"Code field" = "Codeveld";
-
 "Code sent" = "Code verstuurd";
 
 "Default" = "Standaard";
-
-"Double tap to edit" = "Dubbeltikken om te bewerken";
 
 "EPS Bank" = "EPS Bank";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Afmelden bij Link";
 
 "Not %@?" = "Niet %@?";
+
+"Open your UPI app to approve your payment within %@" = "Open de UPI-app om je betaling goed te keuren binnen %@";
 
 "Or" = "Of";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Betaling";
 
+"Payment failed" = "Betaling is mislukt";
+
 "Payment methods" = "Betaalmethoden";
+
+"Please go back and select another payment method" = "Ga terug en selecteer een andere betaalmethode.";
 
 "Point the camera at your card." = "Richt de camera op de kaart.";
 

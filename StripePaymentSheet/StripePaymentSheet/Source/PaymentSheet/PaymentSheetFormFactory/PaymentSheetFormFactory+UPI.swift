@@ -15,7 +15,22 @@ import UIKit
 extension PaymentSheetFormFactory {
 
     func makeUPI() -> FormElement {
-        return FormElement(autoSectioningElements: [makeUPIHeader(), makeVPAField()], theme: theme)
+        let contactInformationElement = makeContactInformation(
+            includeName: configuration.billingDetailsCollectionConfiguration.name == .always,
+            includeEmail: configuration.billingDetailsCollectionConfiguration.email == .always,
+            includePhone: configuration.billingDetailsCollectionConfiguration.phone == .always)
+        let billingAddressElement = configuration.billingDetailsCollectionConfiguration.address == .full
+            ? makeBillingAddressSection(countries: nil)
+            : nil
+
+        let allElements: [Element?] = [
+            makeUPIHeader(),
+            makeVPAField(),
+            contactInformationElement,
+            billingAddressElement,
+        ]
+        let autoSectioningElements = allElements.compactMap { $0 }
+        return FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
     }
 
     private func makeUPIHeader() -> StaticElement {

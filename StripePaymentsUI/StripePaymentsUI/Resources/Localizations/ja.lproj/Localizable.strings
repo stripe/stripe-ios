@@ -1,3 +1,5 @@
+"%1$@ account ending in %2$@" = "末尾が %2$@ の %1$@ 口座";
+
 "%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
 
 "Address line 2 (optional)" = "住所 (2 行目、省略可)";

@@ -143,7 +143,7 @@ class ConsumerSessionTests: XCTestCase {
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
-                case .found(let consumerSession, _):
+                case .found(let consumerSession):
                     XCTFail("Got unexpected found response with \(consumerSession)")
 
                 case .notFound:
@@ -166,8 +166,7 @@ class ConsumerSessionTests: XCTestCase {
         let expectation = self.expectation(description: "consumer sign up")
         let newAccountEmail = "mobile-payments-sdk-ci+\(UUID())@stripe.com"
 
-        var consumerSession: ConsumerSession?
-        var consumerPreferences: ConsumerSession.Preferences?
+        var sessionWithKey: ConsumerSession.SessionWithPublishableKey?
 
         ConsumerSession.signUp(
             email: newAccountEmail,
@@ -190,8 +189,7 @@ class ConsumerSessionTests: XCTestCase {
                     })
                 )
 
-                consumerSession = signupResponse.consumerSession
-                consumerPreferences = signupResponse.preferences
+                sessionWithKey = signupResponse
             case .failure(let error):
                 XCTFail("Received error: \(error.nonGenericDescription)")
             }
@@ -201,7 +199,7 @@ class ConsumerSessionTests: XCTestCase {
 
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
 
-        if let consumerSession = consumerSession {
+        if let consumerSession = sessionWithKey?.consumerSession {
             let cardParams = STPPaymentMethodCardParams()
             cardParams.number = "4242424242424242"
             cardParams.expMonth = 12
@@ -226,7 +224,7 @@ class ConsumerSessionTests: XCTestCase {
             consumerSession.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
                 with: apiClient,
-                consumerAccountPublishableKey: consumerPreferences?.publishableKey
+                consumerAccountPublishableKey: sessionWithKey?.publishableKey
             ) { result in
                 switch result {
                 case .success(let createdPaymentDetails):
@@ -248,13 +246,13 @@ class ConsumerSessionTests: XCTestCase {
     }
 
     func testListPaymentDetails() {
-        let (consumerSession, preferences) = createVerifiedConsumerSession()
+        let (consumerSession, publishableKey) = createVerifiedConsumerSession()
 
         let listExpectation = self.expectation(description: "list payment details")
 
         consumerSession.listPaymentDetails(
             with: apiClient,
-            consumerAccountPublishableKey: preferences.publishableKey
+            consumerAccountPublishableKey: publishableKey
         ) { result in
             switch result {
             case .success(let paymentDetails):
@@ -274,10 +272,10 @@ class ConsumerSessionTests: XCTestCase {
             description: "Create LinkAccountSession"
         )
 
-        let (consumerSession, preferences) = createVerifiedConsumerSession()
+        let (consumerSession, publishableKey) = createVerifiedConsumerSession()
         consumerSession.createLinkAccountSession(
             with: apiClient,
-            consumerAccountPublishableKey: preferences.publishableKey
+            consumerAccountPublishableKey: publishableKey
         ) { result in
             switch result {
             case .success:
@@ -294,14 +292,14 @@ class ConsumerSessionTests: XCTestCase {
     }
 
     func testUpdatePaymentDetails() {
-        let (consumerSession, preferences) = createVerifiedConsumerSession()
+        let (consumerSession, publishableKey) = createVerifiedConsumerSession()
 
         let listExpectation = self.expectation(description: "list payment details")
         var storedPaymentDetails = [ConsumerPaymentDetails]()
 
         consumerSession.listPaymentDetails(
             with: apiClient,
-            consumerAccountPublishableKey: preferences.publishableKey
+            consumerAccountPublishableKey: publishableKey
         ) { result in
             switch result {
             case .success(let paymentDetails):
@@ -351,7 +349,7 @@ class ConsumerSessionTests: XCTestCase {
             with: apiClient,
             id: paymentMethodToUpdate.stripeID,
             updateParams: updateParams,
-            consumerAccountPublishableKey: preferences.publishableKey
+            consumerAccountPublishableKey: publishableKey
         ) { result in
             switch result {
             case .success(let paymentDetails):
@@ -359,7 +357,7 @@ class ConsumerSessionTests: XCTestCase {
                 switch paymentDetails.details {
                 case .card(let card):
                     XCTAssertEqual(newExpiryDate, card.expiryDate)
-                case .bankAccount:
+                case .bankAccount, .unparsable:
                     XCTFail("Unexpected payment details type")
                 }
             case .failure(let error):
@@ -373,7 +371,7 @@ class ConsumerSessionTests: XCTestCase {
     }
 
     func testLogout() {
-        let (consumerSession, preferences) = createVerifiedConsumerSession()
+        let (consumerSession, publishableKey) = createVerifiedConsumerSession()
 
         XCTAssertNotNil(cookieStore.formattedSessionCookies())
 
@@ -382,7 +380,7 @@ class ConsumerSessionTests: XCTestCase {
         consumerSession.logout(
             with: apiClient,
             cookieStore: cookieStore,
-            consumerAccountPublishableKey: preferences.publishableKey
+            consumerAccountPublishableKey: publishableKey
         ) { result in
             switch result {
             case .success:
@@ -401,9 +399,8 @@ class ConsumerSessionTests: XCTestCase {
 
 extension ConsumerSessionTests {
 
-    fileprivate func lookupExistingConsumer() -> (ConsumerSession, ConsumerSession.Preferences) {
-        var consumerSession: ConsumerSession!
-        var consumerPreferences: ConsumerSession.Preferences!
+    fileprivate func lookupExistingConsumer() -> ConsumerSession.SessionWithPublishableKey {
+        var sessionWithKey: ConsumerSession.SessionWithPublishableKey!
 
         let lookupExpectation = self.expectation(description: "Lookup ConsumerSession")
 
@@ -417,9 +414,8 @@ extension ConsumerSessionTests {
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
-                case .found(let session, let preferences):
-                    consumerSession = session
-                    consumerPreferences = preferences
+                case .found(let session):
+                    sessionWithKey = session
                 case .notFound(let errorMessage):
                     XCTFail("Got not found response with \(errorMessage)")
                 case .noAvailableLookupParams:
@@ -434,13 +430,13 @@ extension ConsumerSessionTests {
 
         wait(for: [lookupExpectation], timeout: STPTestingNetworkRequestTimeout)
 
-        return (consumerSession, consumerPreferences)
+        return sessionWithKey
     }
 
-    fileprivate func createVerifiedConsumerSession() -> (
-        ConsumerSession, ConsumerSession.Preferences
-    ) {
-        var (consumerSession, preferences) = lookupExistingConsumer()
+    fileprivate func createVerifiedConsumerSession() -> (ConsumerSession, String) {
+        let sessionWithKey = lookupExistingConsumer()
+        var consumerSession = sessionWithKey.consumerSession
+        let publishableKey = sessionWithKey.publishableKey
 
         // Start verification
 
@@ -449,7 +445,7 @@ extension ConsumerSessionTests {
         consumerSession.startVerification(
             with: apiClient,
             cookieStore: cookieStore,
-            consumerAccountPublishableKey: preferences.publishableKey
+            consumerAccountPublishableKey: publishableKey
         ) { result in
             switch result {
             case .success:
@@ -472,7 +468,7 @@ extension ConsumerSessionTests {
             with: "000000",
             with: apiClient,
             cookieStore: cookieStore,
-            consumerAccountPublishableKey: preferences.publishableKey
+            consumerAccountPublishableKey: publishableKey
         ) { result in
             switch result {
             case .success(let verifiedSession):
@@ -486,7 +482,7 @@ extension ConsumerSessionTests {
 
         wait(for: [confirmVerificationExpectation], timeout: STPTestingNetworkRequestTimeout)
 
-        return (consumerSession, preferences)
+        return (consumerSession, publishableKey)
     }
 
 }

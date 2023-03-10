@@ -5,10 +5,12 @@
 //  Created by Krisjanis Gaidis on 9/8/22.
 //
 
-import Foundation
+import UIKit
 
 final class AccountPickerHelpers {
-    static func rowTitles(forAccount account: FinancialConnectionsPartnerAccount) -> (leadingTitle: String, trailingTitle: String?) {
+    static func rowTitles(forAccount account: FinancialConnectionsPartnerAccount) -> (
+        leadingTitle: String, trailingTitle: String?
+    ) {
         let willDisplayBalanceInfoInSubtitle = account.balanceInfo != nil
         if willDisplayBalanceInfoInSubtitle {
             return (account.name, "••••\(account.displayableAccountNumbers ?? "")")
@@ -33,7 +35,9 @@ final class AccountPickerHelpers {
         let numberFormatter = NumberFormatter()
         numberFormatter.currencyCode = currency
         numberFormatter.numberStyle = .currency
-        return numberFormatter.string(for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: balanceAmount, currency: currency))
+        return numberFormatter.string(
+            for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: balanceAmount, currency: currency)
+        )
     }
 }
 
@@ -84,4 +88,18 @@ extension NSDecimalNumber {
             "xpf",
         ]
     }
+}
+
+func buildRetrievingAccountsView() -> UIView {
+    return ReusableInformationView(
+        iconType: .loading,
+        title: STPLocalizedString(
+            "Pulling up your accounts",
+            "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."
+        ),
+        subtitle: STPLocalizedString(
+            "After this, there's just one more step.",
+            "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."
+        )
+    )
 }

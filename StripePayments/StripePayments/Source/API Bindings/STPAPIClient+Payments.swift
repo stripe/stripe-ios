@@ -712,6 +712,23 @@ extension STPAPIClient {
         }
 
     }
+
+    /// Creates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/create
+    /// - Parameters:
+    ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    /// - Returns: the returned PaymentMethod object.
+    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams) async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation({ continuation in
+            createPaymentMethod(with: paymentMethodParams) { paymentMethod, error in
+                if let paymentMethod = paymentMethod {
+                    continuation.resume(with: .success(paymentMethod))
+                } else {
+                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                }
+            }
+        })
+    }
 }
 
 // MARK: - ThreeDS2
@@ -731,7 +748,7 @@ extension STPAPIClient {
         appParams["deviceRenderOptions"] = [
             "sdkInterface": "03",
             "sdkUiType": ["01", "02", "03", "04", "05"],
-        ]
+        ] as [String: Any]
         appParams["sdkMaxTimeout"] = String(format: "%02ld", maxTimeout)
         let appData = try? JSONSerialization.data(
             withJSONObject: appParams,

@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Add your payment information";
 
+"Approve payment" = "Approve payment";
+
 "Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
 
 "Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
@@ -19,6 +21,8 @@
 "Bank account" = "Bank account";
 
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+
+"Buy using a UPI ID" = "Buy using a UPI ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+"Cancel and pay another way" = "Cancel and pay another way";
+
 "Change email" = "Change email";
 
 "Choose a payment method" = "Choose a payment method";
 
 "Close card scanner" = "Close card scanner";
 
-"Code field" = "Code field";
-
 "Code sent" = "Code sent";
 
 "Default" = "Default";
-
-"Double tap to edit" = "Double tap to edit";
 
 "EPS Bank" = "EPS Bank";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Log out of Link";
 
 "Not %@?" = "Not %@?";
+
+"Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
 "Or" = "Or";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Payment";
 
+"Payment failed" = "Payment failed";
+
 "Payment methods" = "Payment methods";
+
+"Please go back and select another payment method" = "Please go back and select another payment method";
 
 "Point the camera at your card." = "Point the camera at your card.";
 

@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) @testable import StripeUICore
+@_spi(STP)@testable import StripeUICore
 import XCTest
 
 final class DateFieldElementTest: XCTestCase {
@@ -17,11 +17,13 @@ final class DateFieldElementTest: XCTestCase {
     func testNoDefault() {
         let element = DateFieldElement(label: "")
         XCTAssertNil(element.selectedDate)
+        XCTAssertFalse(element.validationState.isValid)
     }
 
     func testWithDefault() {
         let element = DateFieldElement(label: "", defaultDate: oct1_2021)
         XCTAssertEqual(element.selectedDate, oct1_2021)
+        XCTAssertTrue(element.validationState.isValid)
     }
 
     func testDefaultExceedsMax() {
@@ -32,6 +34,20 @@ final class DateFieldElementTest: XCTestCase {
     func testDefaultExceedsMin() {
         let element = DateFieldElement(label: "", defaultDate: oct1_2021, minimumDate: oct3_2021)
         XCTAssertNil(element.selectedDate)
+    }
+
+    func testCustomDateformatter() {
+        let timeZone = TimeZone(secondsFromGMT: 0)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMddyyyy"
+
+        let element = DateFieldElement(timeZone: timeZone!, customDateFormatter: dateFormatter)
+        // Emulate a user changing the picker and hitting done button
+        element.datePickerView.date = oct3_2021
+        element.didSelectDate()
+        element.didFinish(element.pickerFieldView)
+
+        XCTAssertEqual(element.pickerFieldView.displayText, "10032021")
     }
 
     func testDidUpdate() {

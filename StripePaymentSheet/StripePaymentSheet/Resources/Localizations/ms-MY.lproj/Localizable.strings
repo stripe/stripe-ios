@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Tambah maklumat pembayaran anda";
 
+"Approve payment" = "Luluskan pembayaran";
+
 "Are you sure you want to remove this card?" = "Anda pasti ingin mengalih keluar kad ini?";
 
 "Are you sure you want to remove this linked account?" = "Anda pasti ingin mengalih keluar akaun yang dipautkan ini?";
@@ -19,6 +21,8 @@
 "Bank account" = "Akaun bank";
 
 "Buy now or pay later with Klarna." = "Beli sekarang atau bayar kemudian dengan Klarna.";
+
+"Buy using a UPI ID" = "Beli menggunakan ID UPI";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
+"Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
+
 "Change email" = "Ubah e-mel";
 
 "Choose a payment method" = "Pilih kaedah pembayaran";
 
 "Close card scanner" = "Tutup pengimbas kad";
 
-"Code field" = "Medan kod";
-
 "Code sent" = "Kod dihantar";
 
 "Default" = "Tetapan Asal";
-
-"Double tap to edit" = "Ketik dua kali untuk edit";
 
 "EPS Bank" = "Bank EPS";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Log keluar dari Link";
 
 "Not %@?" = "Bukan %@?";
+
+"Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
 
 "Or" = "Atau";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Pembayaran";
 
+"Payment failed" = "Pembayaran tidak berjaya";
+
 "Payment methods" = "Kaedah pembayaran";
+
+"Please go back and select another payment method" = "Sila undur dan pilih kaedah pembayaran yang lain";
 
 "Point the camera at your card." = "Halakan kamera pada kad anda.";
 

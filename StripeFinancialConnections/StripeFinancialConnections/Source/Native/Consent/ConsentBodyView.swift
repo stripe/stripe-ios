@@ -89,8 +89,12 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
         ConsentBodyView(
             bulletItems: [
                 FinancialConnectionsBulletPoint(
-                    icon: FinancialConnectionsImage(default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"),
-                    content: "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
+                    icon: FinancialConnectionsImage(
+                        default:
+                            "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
+                    ),
+                    content:
+                        "Stripe will allow Goldilocks to access only the [data requested](https://www.stripe.com). We never share your login details with them."
                 ),
                 FinancialConnectionsBulletPoint(
                     icon: FinancialConnectionsImage(default: nil),

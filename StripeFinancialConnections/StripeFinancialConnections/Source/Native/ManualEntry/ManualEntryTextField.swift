@@ -42,7 +42,7 @@ final class ManualEntryTextField: UIView {
     private lazy var textFieldContainerView: UIView = {
         let textFieldStackView = UIStackView(
             arrangedSubviews: [
-                textField,
+                textField
             ]
         )
         textFieldStackView.isLayoutMarginsRelativeArrangement = true
@@ -97,7 +97,7 @@ final class ManualEntryTextField: UIView {
             ]
         )
         self.footerText = footerText
-        didUpdateFooterText() // simulate `didSet`. it not get called in `init`
+        didUpdateFooterText()  // simulate `didSet`. it not get called in `init`
         updateBorder(highlighted: false)
     }
 
@@ -120,7 +120,7 @@ final class ManualEntryTextField: UIView {
             footerLabel.textColor = .textPrimary
             footerLabel.text = footerText
             footerTextLabel = footerLabel
-        } else { // no text
+        } else {  // no text
             footerTextLabel = nil
         }
         if let footerTextLabel = footerTextLabel {

@@ -74,7 +74,7 @@ let project = Project(
             ),
             testAction: .targets(
                 [
-                    "FinancialConnectionsUITests",
+                    "FinancialConnectionsUITests"
                 ],
                 expandVariableFromTarget: "FinancialConnections Example"
             ),

@@ -123,8 +123,6 @@ import Foundation
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
-    case luxeClientFilteredPaymentMethods = "luxe_client_filtered_payment_methods"
-    case luxeClientFilteredPaymentMethodsNone = "luxe_client_filtered_payment_methods_none"
 
     case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"

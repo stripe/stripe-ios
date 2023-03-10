@@ -26,6 +26,11 @@ def regenerate_project_files
   run_command('ci_scripts/delete_project_files.rb')
   puts 'Generating project files'
   run_command('tuist generate -n')
+  # Delete xcuserdatad folders.
+  puts "Deleting user data files"
+  run_command('find Stripe* -type d -name "*.xcuserdatad" -exec rm -r {} +', false)
+  run_command('find Example* -type d -name "*.xcuserdatad" -exec rm -r {} +', false)
+  run_command('find Testers* -type d -name "*.xcuserdatad" -exec rm -r {} +', false)
 end
 
 def update_version

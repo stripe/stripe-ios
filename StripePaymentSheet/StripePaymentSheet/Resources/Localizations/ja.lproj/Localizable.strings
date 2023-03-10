@@ -10,6 +10,8 @@
 
 "Add your payment information" = "支払い情報を追加";
 
+"Approve payment" = "支払いを承認する";
+
 "Are you sure you want to remove this card?" = "このカードを削除しますか？";
 
 "Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
@@ -19,6 +21,8 @@
 "Bank account" = "銀行口座";
 
 "Buy now or pay later with Klarna." = "Klarna で後払いします。";
+
+"Buy using a UPI ID" = "UPI ID を使って購入";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
 
+"Cancel and pay another way" = "キャンセルして別の方法で支払う";
+
 "Change email" = "メールアドレスを変更";
 
 "Choose a payment method" = "支払い方法を選択";
 
 "Close card scanner" = "カードスキャナを閉じる";
 
-"Code field" = "コードフィールド";
-
 "Code sent" = "コードが送信されました";
 
 "Default" = "デフォルト";
-
-"Double tap to edit" = "ダブルタップして編集します";
 
 "EPS Bank" = "EPS 銀行";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Link からログアウト";
 
 "Not %@?" = "%@ ではありませんか？";
+
+"Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
 "Or" = "または";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "決済";
 
+"Payment failed" = "支払いに失敗しました";
+
 "Payment methods" = "決済手段";
+
+"Please go back and select another payment method" = "前に戻って別の決済手段を選択してください";
 
 "Point the camera at your card." = "カメラをカードに向けてください。";
 

@@ -44,30 +44,51 @@ final class ManualEntryFormView: UIView {
     private var errorView: ManualEntryErrorView?
     private lazy var routingNumberTextField: ManualEntryTextField = {
         let routingNumberTextField = ManualEntryTextField(
-            title: STPLocalizedString("Routing number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."),
+            title: STPLocalizedString(
+                "Routing number",
+                "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."
+            ),
             placeholder: "123456789"
         )
         routingNumberTextField.delegate = self
-        routingNumberTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
+        routingNumberTextField.textField.addTarget(
+            self,
+            action: #selector(textFieldTextDidChange),
+            for: .editingChanged
+        )
         return routingNumberTextField
     }()
     private lazy var accountNumberTextField: ManualEntryTextField = {
         let accountNumberTextField = ManualEntryTextField(
             // STPLocalizedString_("Account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."),
-            title: "Account number", // TODO: replace with String.Localized.accountNumber
+            title: "Account number",  // TODO: replace with String.Localized.accountNumber
             placeholder: "000123456789",
-            footerText: STPLocalizedString("Your account can be checkings or savings.", "A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings.")
+            footerText: STPLocalizedString(
+                "Please enter a checking account.",
+                "A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings."
+            )
         )
-        accountNumberTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
+        accountNumberTextField.textField.addTarget(
+            self,
+            action: #selector(textFieldTextDidChange),
+            for: .editingChanged
+        )
         accountNumberTextField.delegate = self
         return accountNumberTextField
     }()
     private lazy var accountNumberConfirmationTextField: ManualEntryTextField = {
         let accountNumberConfirmationTextField = ManualEntryTextField(
-            title: STPLocalizedString("Confirm account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."),
+            title: STPLocalizedString(
+                "Confirm account number",
+                "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."
+            ),
             placeholder: "000123456789"
         )
-        accountNumberConfirmationTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
+        accountNumberConfirmationTextField.textField.addTarget(
+            self,
+            action: #selector(textFieldTextDidChange),
+            for: .editingChanged
+        )
         accountNumberConfirmationTextField.delegate = self
         return accountNumberConfirmationTextField
     }()
@@ -80,7 +101,10 @@ final class ManualEntryFormView: UIView {
         guard
             ManualEntryValidator.validateRoutingNumber(routingNumberTextField.text) == nil
                 && ManualEntryValidator.validateAccountNumber(accountNumberTextField.text) == nil
-                && ManualEntryValidator.validateAccountNumberConfirmation(accountNumberConfirmationTextField.text, accountNumber: accountNumberTextField.text) == nil
+                && ManualEntryValidator.validateAccountNumberConfirmation(
+                    accountNumberConfirmationTextField.text,
+                    accountNumber: accountNumberTextField.text
+                ) == nil
         else {
             return nil
         }
@@ -113,7 +137,9 @@ final class ManualEntryFormView: UIView {
         checkView.highlightState = .none
         if routingNumberTextField.textField.isFirstResponder {
             checkView.highlightState = .routingNumber
-        } else if accountNumberTextField.textField.isFirstResponder || accountNumberConfirmationTextField.textField.isFirstResponder {
+        } else if accountNumberTextField.textField.isFirstResponder
+            || accountNumberConfirmationTextField.textField.isFirstResponder
+        {
             checkView.highlightState = .accountNumber
         }
     }
@@ -167,7 +193,9 @@ extension ManualEntryFormView: ManualEntryTextFieldDelegate {
         // don't allow the user to type more characters than possible
         if manualEntryTextField === routingNumberTextField {
             return updatedText.count <= ManualEntryValidator.routingNumberLength
-        } else if manualEntryTextField === accountNumberTextField || manualEntryTextField === accountNumberConfirmationTextField {
+        } else if manualEntryTextField === accountNumberTextField
+            || manualEntryTextField === accountNumberConfirmationTextField
+        {
             return updatedText.count <= ManualEntryValidator.accountNumberMaxLength
         }
 

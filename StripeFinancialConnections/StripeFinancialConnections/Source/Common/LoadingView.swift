@@ -15,17 +15,23 @@ class LoadingView: UIView {
 
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
-        label.text = STPLocalizedString("Failed to connect", "Error message that displays when we're unable to connect to the server.")
+        label.text = STPLocalizedString(
+            "Failed to connect",
+            "Error message that displays when we're unable to connect to the server."
+        )
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = Styling.errorLabelFont
+        label.textColor = .textPrimary
         return label
     }()
 
     private(set) lazy var tryAgainButton: StripeUICore.Button = {
 
-        let button = StripeUICore.Button(configuration: .primary(),
-                                         title: String.Localized.tryAgain)
+        let button = StripeUICore.Button(
+            configuration: .primary(),
+            title: String.Localized.tryAgain
+        )
         return button
     }()
 

@@ -29,6 +29,9 @@ Section header for address fields */
 /* Caption for City field on address form */
 "City" = "City";
 
+/* Accessibility label describing a field for entering a login code */
+"Code field" = "Code field";
+
 /* Label for Company field on form */
 "Company" = "Company";
 
@@ -45,6 +48,9 @@ Section header for address fields */
 Label of an address field */
 "County" = "County";
 
+/* Error message for empty date. */
+"Date is empty." = "Date is empty.";
+
 /* Label of an address field */
 "Department" = "Department";
 
@@ -56,6 +62,9 @@ Label of an address field */
 
 /* Done button title */
 "Done" = "Done";
+
+/* Accessibility hint for a text field */
+"Double tap to edit" = "Double tap to edit";
 
 /* Button title to enter editing mode */
 "Edit" = "Edit";

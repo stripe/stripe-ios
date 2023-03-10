@@ -17,28 +17,11 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent or a SetupIntent
+/// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-
-    var livemode: Bool {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.livemode
-        case .setupIntent(let si):
-            return si.livemode
-        }
-    }
-
-    var clientSecret: String {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.clientSecret
-        case .setupIntent(let si):
-            return si.clientSecret
-        }
-    }
+    case deferredIntent(elementsSession: STPElementsSession, intentConfig: PaymentSheet.IntentConfiguration)
 
     var unactivatedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
@@ -46,6 +29,8 @@ enum Intent {
             return pi.unactivatedPaymentMethodTypes
         case .setupIntent(let si):
             return si.unactivatedPaymentMethodTypes
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.unactivatedPaymentMethodTypes
         }
     }
 
@@ -56,15 +41,25 @@ enum Intent {
             return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.orderedPaymentMethodTypes
         }
     }
 
     var isPaymentIntent: Bool {
-        if case .paymentIntent = self {
+        switch self {
+        case .paymentIntent:
             return true
+        case .setupIntent:
+            return false
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment:
+                return true
+            case .setup:
+                return false
+            }
         }
-
-        return false
     }
 
     var currency: String? {
@@ -73,19 +68,48 @@ enum Intent {
             return pi.currency
         case .setupIntent:
             return nil
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, let currency, _):
+                return currency
+            case .setup(let currency, _):
+                return currency
+            }
         }
     }
-}
 
-// MARK: - IntentClientSecret
+    var amount: Int? {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.amount
+        case .setupIntent:
+            return nil
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(let amount, _, _):
+                return amount
+            case .setup:
+                return nil
+            }
+        }
+    }
 
-/// An internal type representing a PaymentIntent or SetupIntent client secret
-enum IntentClientSecret {
-    /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
-    case paymentIntent(clientSecret: String)
-
-    /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
-    case setupIntent(clientSecret: String)
+    /// True if this ia PaymentIntent with sfu not equal to none or a SetupIntent
+    var isSettingUp: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.setupFutureUsage != .none
+        case .setupIntent:
+            return true
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage):
+                return setupFutureUsage != nil
+            case .setup:
+                return true
+            }
+        }
+    }
 }
 
 // MARK: - IntentConfirmParams
@@ -107,7 +131,8 @@ class IntentConfirmParams {
 
     var paymentSheetLabel: String {
         if let linkedBank = linkedBank,
-           let last4 = linkedBank.last4 {
+            let last4 = linkedBank.last4
+        {
             return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
@@ -116,7 +141,8 @@ class IntentConfirmParams {
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let linkedBank = linkedBank,
-           let bankName = linkedBank.bankName {
+            let bankName = linkedBank.bankName
+        {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
             return paymentMethodParams.makeIcon(updateHandler: updateImageHandler)
@@ -196,16 +222,16 @@ extension STPConfirmPaymentMethodOptions {
 
     /**
      Sets `payment_method_options[x][setup_future_usage]` where x is either "card" or "us_bank_account"
-     
+
      `setup_future_usage` controls whether or not the payment method should be saved to the Customer and is only set if:
         1. We're displaying a "Save this pm for future payments" checkbox
         2. The PM type is card or US bank
-     
+
      - Parameter paymentMethodType: This method no-ops unless the type is either `.card` or `.USBankAccount`
      - Note: PaymentSheet uses this `setup_future_usage` (SFU) value very differently from the top-level one:
         We read the top-level SFU to know the merchant’s desired save behavior
         We write payment method options SFU to set the customer’s desired save behavior
-     
+
      */
     func setSetupFutureUsageIfNecessary(
         _ shouldSave: Bool,

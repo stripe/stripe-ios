@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Legg til betalingsinformasjon";
 
+"Approve payment" = "Godkjenn betaling";
+
 "Are you sure you want to remove this card?" = "Er du sikker på at du vil fjerne dette kortet?";
 
 "Are you sure you want to remove this linked account?" = "Er du sikker på at du vil fjerne denne tilkoblede kontoen?";
@@ -19,6 +21,8 @@
 "Bank account" = "Bankkonto";
 
 "Buy now or pay later with Klarna." = "Kjøp nå eller betal senere med Klarna.";
+
+"Buy using a UPI ID" = "Kjøp med UPI-ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen for %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
+"Cancel and pay another way" = "Avbryt og betal på en annen måte";
+
 "Change email" = "Endre e-post";
 
 "Choose a payment method" = "Velg en betalingsmetode";
 
 "Close card scanner" = "Lukk kortskanner";
 
-"Code field" = "Kodefelt";
-
 "Code sent" = "Kode sendt";
 
 "Default" = "Standard";
-
-"Double tap to edit" = "Dobbelttrykk for å redigere";
 
 "EPS Bank" = "EPS Bank";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Logg ut av Link";
 
 "Not %@?" = "Er du ikke %@?";
+
+"Open your UPI app to approve your payment within %@" = "Åpne UPI-appen for å godkjenne betalingen innen %@";
 
 "Or" = "Eller";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Betaling";
 
+"Payment failed" = "Betaling mislyktes";
+
 "Payment methods" = "Betalingsmetoder";
+
+"Please go back and select another payment method" = "Gå tilbake og velg en annen betalingsmetode";
 
 "Point the camera at your card." = "Rett kameraet mot kortet.";
 

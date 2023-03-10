@@ -29,18 +29,25 @@ class HostController {
     private let analyticsClient: FinancialConnectionsAnalyticsClient
 
     private var nativeFlowController: NativeFlowController?
-    lazy var hostViewController = HostViewController(clientSecret: clientSecret, returnURL: returnURL, apiClient: api, delegate: self)
+    lazy var hostViewController = HostViewController(
+        clientSecret: clientSecret,
+        returnURL: returnURL,
+        apiClient: api,
+        delegate: self
+    )
     lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
 
     weak var delegate: HostControllerDelegate?
 
     // MARK: - Init
 
-    init(api: FinancialConnectionsAPIClient,
-         clientSecret: String,
-         returnURL: String?,
-         publishableKey: String?,
-         stripeAccount: String?) {
+    init(
+        api: FinancialConnectionsAPIClient,
+        clientSecret: String,
+        returnURL: String?,
+        publishableKey: String?,
+        stripeAccount: String?
+    ) {
         self.api = api
         self.clientSecret = clientSecret
         self.returnURL = returnURL
@@ -78,8 +85,10 @@ extension HostController: HostViewControllerDelegate {
             return
         }
 
-        let flowRouter = FlowRouter(synchronizePayload: synchronizePayload,
-                                    analyticsClient: analyticsClient)
+        let flowRouter = FlowRouter(
+            synchronizePayload: synchronizePayload,
+            analyticsClient: analyticsClient
+        )
         defer {
             // no matter how we exit this function
             // log exposure to one of the variants if appropriate.
@@ -118,12 +127,18 @@ private extension HostController {
 
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
-        let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
-        let webFlowViewController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
-                                                                          apiClient: api,
-                                                                          manifest: manifest,
-                                                                          sessionFetcher: sessionFetcher,
-                                                                          returnURL: returnURL)
+        let sessionFetcher = FinancialConnectionsSessionAPIFetcher(
+            api: api,
+            clientSecret: clientSecret,
+            accountFetcher: accountFetcher
+        )
+        let webFlowViewController = FinancialConnectionsWebFlowViewController(
+            clientSecret: clientSecret,
+            apiClient: api,
+            manifest: manifest,
+            sessionFetcher: sessionFetcher,
+            returnURL: returnURL
+        )
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
     }
@@ -133,7 +148,10 @@ private extension HostController {
 
 @available(iOSApplicationExtension, unavailable)
 extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
-    func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: FinancialConnectionsSheet.Result) {
+    func financialConnectionsWebFlow(
+        viewController: FinancialConnectionsWebFlowViewController,
+        didFinish result: FinancialConnectionsSheet.Result
+    ) {
         delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
 }

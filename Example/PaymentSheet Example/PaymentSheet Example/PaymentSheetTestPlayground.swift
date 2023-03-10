@@ -11,13 +11,21 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 import Contacts
 import PassKit
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
-    static let endpointSelectorEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/endpoints"
-    static let defaultCheckoutEndpoint = "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
+    static let baseEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
+    static var endpointSelectorEndpoint: String {
+        return "\(baseEndpoint)/endpoints"
+    }
+    static var defaultCheckoutEndpoint: String {
+        return "\(baseEndpoint)/checkout"
+    }
+    static var confirmEndpoint: String {
+        return "\(baseEndpoint)/confirm_intent"
+    }
 
     static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings?
 
@@ -35,6 +43,14 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var customCTALabelTextField: UITextField!
+    @IBOutlet weak var initModeSelector: UISegmentedControl!
+    @IBOutlet weak var confirmModeSelector: UISegmentedControl!
+
+    @IBOutlet weak var attachDefaultSelector: UISegmentedControl!
+    @IBOutlet weak var collectNameSelector: UISegmentedControl!
+    @IBOutlet weak var collectEmailSelector: UISegmentedControl!
+    @IBOutlet weak var collectPhoneSelector: UISegmentedControl!
+    @IBOutlet weak var collectAddressSelector: UISegmentedControl!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
@@ -71,6 +87,11 @@ class PaymentSheetTestPlayground: UIViewController {
         case payment
         case paymentWithSetup = "payment_with_setup"
         case setup
+    }
+
+    enum InitMode {
+        case normal
+        case deferred
     }
 
     enum ShippingMode {
@@ -186,6 +207,17 @@ class PaymentSheetTestPlayground: UIViewController {
         }
     }
 
+    var initMode: InitMode {
+        switch initModeSelector.selectedSegmentIndex {
+        case 0:
+            return .normal
+        case 1:
+            return .deferred
+        default:
+            return .normal
+        }
+    }
+
     var shippingMode: ShippingMode {
         switch shippingInfoSelector.selectedSegmentIndex {
         case 0: return .on
@@ -206,7 +238,7 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.defaultBillingDetails.phone = "+13105551234"
             configuration.defaultBillingDetails.address = .init(
                 city: "San Francisco",
-                country: "CA",
+                country: "US",
                 line1: "510 Townsend St.",
                 postalCode: "94102",
                 state: "California"
@@ -225,8 +257,15 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.primaryButtonLabel = customCTALabelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         }
 
+        configuration.billingDetailsCollectionConfiguration.name = .allCases[collectNameSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.phone = .allCases[collectPhoneSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.email = .allCases[collectEmailSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.address = .allCases[collectAddressSelector.selectedSegmentIndex]
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = attachDefaultSelector.selectedSegmentIndex == 0
+
         return configuration
     }
+
     var addressConfiguration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
         if case .onWithDefaults = shippingMode {
@@ -247,11 +286,53 @@ class PaymentSheetTestPlayground: UIViewController {
         return configuration
     }
 
+    var intentConfig: PaymentSheet.IntentConfiguration {
+        var paymentMethodTypes: [String]?
+
+        // if automatic payment methods is off use what is returned back from the intent
+        if automaticPaymentMethodsSelector.selectedSegmentIndex == 1 {
+            paymentMethodTypes = self.paymentMethodTypes
+        }
+
+        var intentConfiguration: PaymentSheet.IntentConfiguration
+
+        switch intentMode {
+        case .payment:
+            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+                                                                   setupFutureUsage: nil),
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes,
+                                                    confirmHandler: confirmHandler(_:_:))
+        case .paymentWithSetup:
+            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
+                                                                   setupFutureUsage: .offSession),
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes,
+                                                    confirmHandler: confirmHandler(_:_:))
+        case .setup:
+            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
+                                                                   setupFutureUsage: .offSession),
+                                                                captureMethod: .automatic,
+                                                    paymentMethodTypes: paymentMethodTypes,
+                                                    confirmHandler: confirmHandler(_:_:))
+        }
+
+        // Server-side confirmation - change the confirm handler
+        if confirmModeSelector.selectedSegmentIndex == 1 {
+            intentConfiguration.confirmHandler = nil
+            intentConfiguration.confirmHandlerForServerSideConfirmation = confirmHandlerForServerSideConfirmation(_:_:_:)
+        }
+
+        return intentConfiguration
+    }
+
     var addressDetails: AddressViewController.AddressDetails?
 
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
+    var paymentMethodTypes: [String]?
+    var amount: Int?
     var checkoutEndpoint: String = defaultCheckoutEndpoint
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
@@ -321,12 +402,19 @@ class PaymentSheetTestPlayground: UIViewController {
     @objc
     func didTapCheckoutButton() {
         let mc: PaymentSheet
-        switch intentMode {
-        case .payment, .paymentWithSetup:
-            mc = PaymentSheet(paymentIntentClientSecret: clientSecret!, configuration: configuration)
-        case .setup:
-            mc = PaymentSheet(setupIntentClientSecret: clientSecret!, configuration: configuration)
+
+        switch self.initMode {
+        case .normal:
+            switch self.intentMode {
+            case .payment, .paymentWithSetup:
+                mc = PaymentSheet(paymentIntentClientSecret: self.clientSecret!, configuration: configuration)
+            case .setup:
+                mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
+            }
+        case .deferred:
+            mc = PaymentSheet(intentConfig: intentConfig, configuration: configuration)
         }
+
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
@@ -416,6 +504,23 @@ extension PaymentSheetTestPlayground {
         serializeSettingsToNSUserDefaults()
         loadBackend()
     }
+
+    func makeRequest(with url: String, body: [String: Any], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        let session = URLSession.shared
+        let url = URL(string: url)!
+
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = json
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = session.dataTask(with: urlRequest) { data, response, error in
+            completionHandler(data, response, error)
+        }
+
+        task.resume()
+    }
+
     func loadBackend() {
         checkoutButton.isEnabled = false
         checkoutInlineButton.isEnabled = false
@@ -424,8 +529,6 @@ extension PaymentSheetTestPlayground {
         paymentSheetFlowController = nil
         addressViewController = nil
 
-        let session = URLSession.shared
-        let url = URL(string: checkoutEndpoint)!
         let customer: String = {
             switch customerMode {
             case .guest:
@@ -446,12 +549,8 @@ extension PaymentSheetTestPlayground {
             "use_link": linkSelector.selectedSegmentIndex == 0,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
-        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.httpBody = json
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, _, error in
+
+        makeRequest(with: checkoutEndpoint, body: body) { data, _, error in
             guard
                 error == nil,
                 let data = data,
@@ -464,6 +563,8 @@ extension PaymentSheetTestPlayground {
             self.clientSecret = json["intentClientSecret"]
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
+            self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
+            self.amount = Int(json["amount"] ?? "")
             StripeAPI.defaultPublishableKey = json["publishableKey"]
             let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
                 switch result {
@@ -485,29 +586,41 @@ extension PaymentSheetTestPlayground {
                 }
 
                 self.checkoutButton.isEnabled = true
-                switch self.intentMode {
-                case .payment, .paymentWithSetup:
+
+                switch self.initMode {
+                case .normal:
+                    switch self.intentMode {
+                    case .payment, .paymentWithSetup:
+                        PaymentSheet.FlowController.create(
+                            paymentIntentClientSecret: self.clientSecret!,
+                            configuration: self.configuration,
+                            completion: completion
+                        )
+                    case .setup:
+                        PaymentSheet.FlowController.create(
+                            setupIntentClientSecret: self.clientSecret!,
+                            configuration: self.configuration,
+                            completion: completion
+                        )
+                    }
+
+                case .deferred:
                     PaymentSheet.FlowController.create(
-                        paymentIntentClientSecret: self.clientSecret!,
-                        configuration: self.configuration,
-                        completion: completion
-                    )
-                case .setup:
-                    PaymentSheet.FlowController.create(
-                        setupIntentClientSecret: self.clientSecret!,
+                        intentConfig: self.intentConfig,
                         configuration: self.configuration,
                         completion: completion
                     )
                 }
             }
         }
-        task.resume()
     }
 }
 
 struct PaymentSheetPlaygroundSettings: Codable {
     static let nsUserDefaultsKey = "playgroundSettings"
     let modeSelectorValue: Int
+    let initModeSelectorValue: Int
+    let confirmModeSelector: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
     let merchantCountryCode: Int
@@ -521,10 +634,17 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let linkSelectorValue: Int
     let customCtaLabel: String?
     let checkoutEndpoint: String?
+    let attachDefaults: Bool
+    let collectName: Int
+    let collectEmail: Int
+    let collectPhone: Int
+    let collectAddress: Int
 
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
         return PaymentSheetPlaygroundSettings(
             modeSelectorValue: 0,
+            initModeSelectorValue: 0,
+            confirmModeSelector: 0,
             customerModeSelectorValue: 0,
             currencySelectorValue: 0,
             merchantCountryCode: 0,
@@ -536,7 +656,12 @@ struct PaymentSheetPlaygroundSettings: Codable {
             shippingInfoSelectorValue: 0,
             linkSelectorValue: 1,
             customCtaLabel: nil,
-            checkoutEndpoint: PaymentSheetTestPlayground.defaultCheckoutEndpoint
+            checkoutEndpoint: PaymentSheetTestPlayground.defaultCheckoutEndpoint,
+            attachDefaults: false,
+            collectName: 0,
+            collectEmail: 0,
+            collectPhone: 0,
+            collectAddress: 0
         )
     }
 }
@@ -564,12 +689,77 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
     }
 }
 
+// MARK: Deferred intent callbacks
+extension PaymentSheetTestPlayground {
+
+    // Client-side confirmation handler
+    func confirmHandler(_ paymentMethodID: String,
+                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        // Client-side confirmation, simulate a delay like we are doing validation on our backend
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            intentCreationCallback(.success(self.clientSecret!))
+        }
+    }
+
+    // Server-side confirmation handler
+    func confirmHandlerForServerSideConfirmation(_ paymentMethodID: String,
+                                                 _ shouldSavePaymentMethod: Bool,
+                                                 _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        enum ServerSideConfirmationError: Error {
+            case clientSecretNotFound
+            case unknown
+        }
+
+        let body = [
+            "client_secret": clientSecret!,
+            "payment_method_id": paymentMethodID,
+            "merchant_country_code": merchantCountryCode.rawValue,
+            "should_save_payment_method": shouldSavePaymentMethod,
+            "mode": intentConfig.mode.requestBody,
+            "return_url": configuration.returnURL ?? "",
+        ] as [String: Any]
+
+        makeRequest(with: PaymentSheetTestPlayground.confirmEndpoint, body: body, completionHandler: { data, _, error in
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            else {
+                intentCreationCallback(.failure(error ?? ServerSideConfirmationError.unknown))
+                return
+            }
+
+            guard let clientSecret = json["client_secret"] as? String else {
+                intentCreationCallback(.failure(ServerSideConfirmationError.clientSecretNotFound))
+                return
+            }
+
+            intentCreationCallback(.success(clientSecret))
+        })
+    }
+}
+
+extension PaymentSheet.IntentConfiguration.Mode {
+    var requestBody: String {
+        switch self {
+        case .payment:
+            return "payment"
+        case .setup:
+            return "setup"
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+
 // MARK: - Helpers
 
 extension PaymentSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() {
         let settings = PaymentSheetPlaygroundSettings(
             modeSelectorValue: modeSelector.selectedSegmentIndex,
+            initModeSelectorValue: initModeSelector.selectedSegmentIndex,
+            confirmModeSelector: confirmModeSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             currencySelectorValue: currencySelector.selectedSegmentIndex,
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
@@ -581,7 +771,12 @@ extension PaymentSheetTestPlayground {
             shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
             linkSelectorValue: linkSelector.selectedSegmentIndex,
             customCtaLabel: customCTALabelTextField.text,
-            checkoutEndpoint: checkoutEndpoint
+            checkoutEndpoint: checkoutEndpoint,
+            attachDefaults: attachDefaultSelector.selectedSegmentIndex == 0,
+            collectName: collectNameSelector.selectedSegmentIndex,
+            collectEmail: collectEmailSelector.selectedSegmentIndex,
+            collectPhone: collectPhoneSelector.selectedSegmentIndex,
+            collectAddress: collectAddressSelector.selectedSegmentIndex
         )
         let data = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
@@ -608,11 +803,18 @@ extension PaymentSheetTestPlayground {
         currencySelector.selectedSegmentIndex = settings.currencySelectorValue
         merchantCountryCodeSelector.selectedSegmentIndex = settings.merchantCountryCode
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
+        initModeSelector.selectedSegmentIndex = settings.initModeSelectorValue
+        confirmModeSelector.selectedSegmentIndex = settings.confirmModeSelector
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
         customCTALabelTextField.text = settings.customCtaLabel
         checkoutEndpoint = settings.checkoutEndpoint ?? PaymentSheetTestPlayground.defaultCheckoutEndpoint
+        attachDefaultSelector.selectedSegmentIndex = settings.attachDefaults ? 0 : 1
+        collectNameSelector.selectedSegmentIndex = settings.collectName
+        collectEmailSelector.selectedSegmentIndex = settings.collectEmail
+        collectPhoneSelector.selectedSegmentIndex = settings.collectPhone
+        collectAddressSelector.selectedSegmentIndex = settings.collectAddress
     }
 }
 

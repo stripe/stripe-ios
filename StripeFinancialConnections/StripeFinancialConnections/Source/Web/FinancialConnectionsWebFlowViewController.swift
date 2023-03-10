@@ -57,12 +57,13 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     // MARK: - UI
 
     private lazy var closeItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: Image.close.makeImage(template: false),
-                                   style: .plain,
-                                   target: self,
-                                   action: #selector(didTapClose))
-
-        item.tintColor = UIColor.dynamic(light: .systemGray2, dark: .white)
+        let item = UIBarButtonItem(
+            image: Image.close.makeImage(template: false),
+            style: .plain,
+            target: self,
+            action: #selector(didTapClose)
+        )
+        item.tintColor = .textDisabled
         return item
     }()
 
@@ -70,11 +71,13 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 
     // MARK: - Init
 
-    init(clientSecret: String,
-         apiClient: FinancialConnectionsAPIClient,
-         manifest: FinancialConnectionsSessionManifest,
-         sessionFetcher: FinancialConnectionsSessionFetcher,
-         returnURL: String?) {
+    init(
+        clientSecret: String,
+        apiClient: FinancialConnectionsAPIClient,
+        manifest: FinancialConnectionsSessionManifest,
+        sessionFetcher: FinancialConnectionsSessionFetcher,
+        returnURL: String?
+    ) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
         self.manifest = manifest
@@ -92,7 +95,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
+        view.backgroundColor = .customBackgroundColor
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         view.addSubview(loadingView)
@@ -120,11 +123,14 @@ extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegate(result: FinancialConnectionsSheet.Result) {
         delegate?.financialConnectionsWebFlow(viewController: self, didFinish: result)
-        delegate = nil // prevent the delegate from being called again
+        delegate = nil  // prevent the delegate from being called again
     }
 
     @available(iOSApplicationExtension, unavailable)
-    private func startAuthenticationSession(manifest: FinancialConnectionsSessionManifest, additionalQueryParameters: String? = nil) {
+    private func startAuthenticationSession(
+        manifest: FinancialConnectionsSessionManifest,
+        additionalQueryParameters: String? = nil
+    ) {
         guard authSessionManager == nil else { return }
         loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
@@ -137,7 +143,7 @@ extension FinancialConnectionsWebFlowViewController {
                 case .success(.success):
                     self.fetchSession()
                 case .success(.webCancelled):
-                    self.notifyDelegate(result: .canceled)
+                    self.fetchSession(webCancelled: true)
                 case .success(.nativeCancelled):
                     self.fetchSession(userDidCancelInNative: true)
                 case .failure(let error):
@@ -146,7 +152,7 @@ extension FinancialConnectionsWebFlowViewController {
                     self.redirect(to: url)
                 }
                 self.authSessionManager = nil
-        })
+            })
     }
 
     private func redirect(to url: URL) {
@@ -157,7 +163,7 @@ extension FinancialConnectionsWebFlowViewController {
         }
     }
 
-    private func fetchSession(userDidCancelInNative: Bool = false) {
+    private func fetchSession(userDidCancelInNative: Bool = false, webCancelled: Bool = false) {
         loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         loadingView.errorView.isHidden = true
         sessionFetcher
@@ -171,8 +177,16 @@ extension FinancialConnectionsWebFlowViewController {
                         // Users can cancel the web flow even if they successfully linked
                         // accounts. As a result, we check whether they linked any
                         // before returning "cancelled."
-                        if !session.accounts.data.isEmpty || session.paymentAccount != nil || session.bankAccountToken != nil {
+                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
+                            || session.bankAccountToken != nil
+                        {
                             self.notifyDelegate(result: .completed(session: session))
+                        } else {
+                            self.notifyDelegate(result: .canceled)
+                        }
+                    } else if webCancelled {
+                        if session.status == .cancelled && session.statusDetails?.cancelled?.reason == .customManualEntry {
+                            self.notifyDelegate(result: .failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
                         } else {
                             self.notifyDelegate(result: .canceled)
                         }
@@ -193,7 +207,9 @@ extension FinancialConnectionsWebFlowViewController {
 extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
     func handleURLCallback(_ url: URL) -> Bool {
         DispatchQueue.main.async {
-            self.unprocessedReturnURLParameters = FinancialConnectionsWebFlowViewController.returnURLParameters(from: url)
+            self.unprocessedReturnURLParameters = FinancialConnectionsWebFlowViewController.returnURLParameters(
+                from: url
+            )
             self.restartAuthenticationIfNeeded()
         }
         return true
@@ -255,7 +271,8 @@ private extension FinancialConnectionsWebFlowViewController {
                 self,
                 selector: #selector(handleDidBecomeActiveNotification),
                 name: UIApplication.didBecomeActiveNotification,
-                object: nil)
+                object: nil
+            )
         }
     }
 
@@ -269,7 +286,8 @@ private extension FinancialConnectionsWebFlowViewController {
             subscribedToURLNotifications = true
             STPURLCallbackHandler.shared().register(
                 self,
-                for: url)
+                for: url
+            )
         }
     }
 
@@ -285,7 +303,8 @@ private extension FinancialConnectionsWebFlowViewController {
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.didBecomeActiveNotification,
-            object: nil)
+            object: nil
+        )
         STPURLCallbackHandler.shared().unregisterListener(self)
         subscribedToURLNotifications = false
         subscribedToAppActiveNotifications = false

@@ -27,7 +27,7 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
         XCTAssertEqual(
             result?.link?.credentials as? [String: String],
             [
-                "consumer_session_client_secret": "top_secret"
+                "consumer_session_client_secret": "client_secret"
             ]
         )
         XCTAssertNil(result?.link?.additionalAPIParameters["card"])
@@ -57,8 +57,7 @@ extension PaymentSheetLinkAccountTests {
             expiryMonth: 1,
             brand: "visa",
             last4: "4242",
-            checks: nil,
-            allResponseFields: [:]
+            checks: nil
         )
 
         card.cvc = cvc
@@ -66,22 +65,14 @@ extension PaymentSheetLinkAccountTests {
         return ConsumerPaymentDetails(
             stripeID: "1",
             details: .card(card: card),
-            isDefault: true,
-            allResponseFields: [:]
+            isDefault: true
         )
     }
 
     func makeSUT() -> PaymentSheetLinkAccount {
         return PaymentSheetLinkAccount(
             email: "user@example.com",
-            session: ConsumerSession.decodedObject(fromAPIResponse: [
-                "consumer_session": [
-                    "client_secret": "top_secret",
-                    "email_address": "user@example.com",
-                    "redacted_phone_number": "+1********55",
-                    "support_payment_details_types": ["CARD"],
-                ],
-            ]),
+            session: LinkStubs.consumerSession(),
             publishableKey: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             cookieStore: LinkInMemoryCookieStore()

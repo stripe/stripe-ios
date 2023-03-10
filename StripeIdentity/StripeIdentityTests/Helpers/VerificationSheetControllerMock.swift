@@ -23,24 +23,25 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     let mlModelLoader: IdentityMLModelLoaderProtocol
     let analyticsClient: IdentityAnalyticsClient
 
-    var delegate: VerificationSheetControllerDelegate?
+    weak var delegate: VerificationSheetControllerDelegate?
 
     var needBack: Bool = true
 
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
-    private(set) var uploadedDocumentsResult:
-        Result<DocumentUploaderProtocol.CombinedFileData, Error>?
-    private(set) var frontUploadedDocumentsResult:
-        Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
-    private(set) var backUploadedDocumentsResult:
-        Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
+    private(set) var frontUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    private(set) var backUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     private(set) var uploadedSelfieResult: Result<SelfieUploader.FileData, Error>?
 
     private(set) var didCheckSubmitAndTransition = false
     private(set) var didSaveDocumentFrontAndDecideBack = false
     private(set) var didSaveDocumentBackAndTransition = false
+
+    var missingType: StripeIdentity.IndividualFormElement.MissingType?
+    var transitionedToIndividual: Bool = false
+
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol =
@@ -119,6 +120,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
             self?.uploadedSelfieResult = result
             completion()
         }
+    }
+
+    func transitionToCountryNotListed(missingType: StripeIdentity.IndividualFormElement.MissingType) {
+        self.missingType = missingType
+    }
+
+    func transitionToIndividual() {
+        self.transitionedToIndividual = true
     }
 
 }

@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Pridėkite mokėjimo informaciją";
 
+"Approve payment" = "Patvirtinti mokėjimą";
+
 "Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
 
 "Are you sure you want to remove this linked account?" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
@@ -19,6 +21,8 @@
 "Bank account" = "Banko sąskaita";
 
 "Buy now or pay later with Klarna." = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\".";
+
+"Buy using a UPI ID" = "Pirkti naudojant UPI ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
+"Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
+
 "Change email" = "Pakeiskite el. paštą";
 
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
 
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
 
-"Code field" = "Kodo laukas";
-
 "Code sent" = "Kodas išsiųstas";
 
 "Default" = "Numatytasis";
-
-"Double tap to edit" = "Norėdami redaguoti, dukart bakstelėkite";
 
 "EPS Bank" = "EPS bankas";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Atsijungti nuo „Link“";
 
 "Not %@?" = "Ne %@?";
+
+"Open your UPI app to approve your payment within %@" = "Atidarykite savo UPI programą mokėjimui patvirtinti per %@";
 
 "Or" = "Arba";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Mokėjimas";
 
+"Payment failed" = "Sumokėti nepavyko";
+
 "Payment methods" = "Mokėjimo būdai";
+
+"Please go back and select another payment method" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
 
 "Point the camera at your card." = "Nukreipkite fotoaparatą į kortelę.";
 

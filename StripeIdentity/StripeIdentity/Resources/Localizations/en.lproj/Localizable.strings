@@ -38,7 +38,10 @@
 "Could not capture image" = "Could not capture image";
 
 /* Label for Date of birth field */
-"Date of birth" = "Date of birth";
+"Date of Birth" = "Date of Birth";
+
+/* Message for invalid Date of birth field */
+"Date of birth does not look valid" = "Date of birth does not look valid";
 
 /* Title of identity document file upload screen */
 "File upload" = "File upload";
@@ -92,6 +95,9 @@
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Personal ID number";
+
+/* Back button title for returning to the individual's perssonal infomation screen */
+"Personal Information" = "Personal Information";
 
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Photo Library";
@@ -205,6 +211,9 @@
 /* Line 1 of error text displayed to the user when camera permissions have been denied
    Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
+
+/* Back button title for returning to welcome screen of Identity verification */
+"Welcome" = "Welcome";
 
 /* Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";

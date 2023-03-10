@@ -11,7 +11,6 @@
 #include <stdatomic.h>
 
 #import "STDSAlreadyInitializedException.h"
-#import "STDSCategoryLinker.h"
 #import "STDSConfigParameters.h"
 #import "STDSDebuggerChecker.h"
 #import "STDSDeviceInformationManager.h"
@@ -50,7 +49,6 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
 - (void)initializeWithConfig:(STDSConfigParameters *)config
                       locale:(nullable NSLocale *)locale
                   uiSettings:(nullable STDSUICustomization *)uiSettings {
-    [STDSCategoryLinker referenceAllCategories];
     if (config == nil) {
         @throw [STDSInvalidInputException exceptionWithMessage:[NSString stringWithFormat:@"%@ config parameter must be non-nil.", NSStringFromSelector(_cmd)]];
     }

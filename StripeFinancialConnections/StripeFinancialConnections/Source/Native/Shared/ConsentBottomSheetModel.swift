@@ -10,6 +10,7 @@ import Foundation
 
 struct ConsentBottomSheetModel {
     let title: String
+    let subtitle: String?
     let body: Body
     let extraNotice: String?
     let learnMore: String

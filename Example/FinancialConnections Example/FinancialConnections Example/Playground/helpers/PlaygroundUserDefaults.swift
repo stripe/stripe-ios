@@ -33,6 +33,18 @@ final class PlaygroundUserDefaults {
         defaultValue: false
     )
     static var enableTestMode: Bool
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_PUBLIC_KEY",
+        defaultValue: ""
+    )
+    static var customPublicKey: String
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_SECRET_KEY",
+        defaultValue: ""
+    )
+    static var customSecretKey: String
 }
 
 @propertyWrapper
@@ -46,8 +58,7 @@ struct UserDefault<Value> {
             return userDefaults.object(forKey: key) as? Value ?? defaultValue
         }
         set {
-            if
-                let optionalWrappedValue = newValue as? OptionalValue,
+            if let optionalWrappedValue = newValue as? OptionalValue,
                 optionalWrappedValue.isNil
             {
                 userDefaults.removeObject(forKey: key)

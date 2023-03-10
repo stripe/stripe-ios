@@ -18,7 +18,10 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
-    func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error)
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveTerminalError error: Error
+    )
 }
 
 enum AccountPickerType {
@@ -49,18 +52,20 @@ final class AccountPickerViewController: UIViewController {
     // we only allow to retry account polling once
     private var allowAccountPollingRetry = true
     private var didSelectTryAgain: (() -> Void)? {
-        return allowAccountPollingRetry ? { [weak self] in
-            guard let self = self else { return }
-            self.allowAccountPollingRetry = false
-            self.showErrorView(nil)
-            self.pollAuthSessionAccounts()
-        } : nil
+        return allowAccountPollingRetry
+            ? { [weak self] in
+                guard let self = self else { return }
+                self.allowAccountPollingRetry = false
+                self.showErrorView(nil)
+                self.pollAuthSessionAccounts()
+            } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry ? { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
-        } : nil
+        return dataSource.manifest.allowManualEntry
+            ? { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
+            } : nil
     }
     private var errorView: UIView?
 
@@ -96,7 +101,9 @@ final class AccountPickerViewController: UIViewController {
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
-        self.institutionHasAccountPicker = (dataSource.authSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authSession.isOauthNonOptional)
+        self.institutionHasAccountPicker =
+            (dataSource.authSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount
+                && dataSource.authSession.isOauthNonOptional)
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -115,11 +122,7 @@ final class AccountPickerViewController: UIViewController {
 
     private func pollAuthSessionAccounts() {
         // Load accounts
-        let retreivingAccountsLoadingView = ReusableInformationView(
-            iconType: .loading,
-            title: STPLocalizedString("Retrieving accounts", "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."),
-            subtitle: STPLocalizedString("Please wait while Stripe loads your accounts.", "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments.")
-        )
+        let retreivingAccountsLoadingView = buildRetrievingAccountsView()
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
 
         let pollingStartDate = Date()
@@ -130,7 +133,7 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accountsPayload):
                     let accounts = accountsPayload.data
-
+                    let shouldSkipAccountSelection = accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false
                     if !accounts.isEmpty {
                         self.dataSource
                             .analyticsClient
@@ -154,13 +157,12 @@ final class AccountPickerViewController: UIViewController {
                                 debugDescription: "API returned an empty list of accounts"
                             )
                         )
-                    } else if self.dataSource.authSession.skipAccountSelection ?? false {
+                    } else if shouldSkipAccountSelection {
                         self.delegate?.accountPickerViewController(
                             self,
                             didSelectAccounts: accounts
                         )
-                    } else if
-                        self.dataSource.manifest.singleAccount,
+                    } else if self.dataSource.manifest.singleAccount,
                         self.dataSource.authSession.institutionSkipAccountSelection ?? false,
                         accounts.count == 1
                     {
@@ -170,7 +172,8 @@ final class AccountPickerViewController: UIViewController {
                         self.dataSource.updateSelectedAccounts(accounts)
                         self.didSelectLinkAccounts()
                     } else {
-                        let (enabledAccounts, disabledAccounts) = accounts
+                        let (enabledAccounts, disabledAccounts) =
+                            accounts
                             .reduce(
                                 ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsPartnerAccount]())
                             ) { accountsTuple, account in
@@ -189,8 +192,7 @@ final class AccountPickerViewController: UIViewController {
                         self.displayAccounts(enabledAccounts, disabledAccounts)
                     }
                 case .failure(let error):
-                    if
-                        let error = error as? StripeError,
+                    if let error = error as? StripeError,
                         case .apiError(let apiError) = error,
                         let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
                         let reason = extraFields["reason"] as? String,
@@ -203,7 +205,8 @@ final class AccountPickerViewController: UIViewController {
                         let errorView = AccountPickerNoAccountEligibleErrorView(
                             institution: self.dataSource.institution,
                             bussinessName: self.businessName,
-                            institutionSkipAccountSelection: self.dataSource.authSession.institutionSkipAccountSelection ?? false,
+                            institutionSkipAccountSelection: self.dataSource.authSession.institutionSkipAccountSelection
+                                ?? false,
                             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
                             paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
                             didSelectAnotherBank: self.didSelectAnotherBank,
@@ -244,20 +247,32 @@ final class AccountPickerViewController: UIViewController {
         let paneLayoutView = PaneWithHeaderLayoutView(
             title: {
                 if self.institutionHasAccountPicker {
-                    return STPLocalizedString("Confirm your account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                    return STPLocalizedString(
+                        "Confirm your account",
+                        "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
+                    )
                 } else {
                     if dataSource.manifest.singleAccount {
-                        return STPLocalizedString("Select an account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                        return STPLocalizedString(
+                            "Select an account",
+                            "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
+                        )
                     } else {
-                        return STPLocalizedString("Select accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                        return STPLocalizedString(
+                            "Select accounts",
+                            "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
+                        )
                     }
                 }
             }(),
             subtitle: {
                 if institutionHasAccountPicker {
-                    return STPLocalizedString("Select the account you'd like to link.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
+                    return STPLocalizedString(
+                        "Select the account you'd like to link.",
+                        "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account."
+                    )
                 } else {
-                    return nil // no subtitle
+                    return nil  // no subtitle
                 }
             }(),
             contentView: accountPickerSelectionView,
@@ -273,7 +288,7 @@ final class AccountPickerViewController: UIViewController {
             if enabledAccounts.count == 1 {
                 // select the one (and only) available account
                 dataSource.updateSelectedAccounts(enabledAccounts)
-            } else { // accounts.count >= 2
+            } else {  // accounts.count >= 2
                 // don't select any accounts (...let the user decide which one)
                 dataSource.updateSelectedAccounts([])
             }

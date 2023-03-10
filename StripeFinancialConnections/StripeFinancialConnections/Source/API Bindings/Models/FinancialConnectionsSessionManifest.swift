@@ -38,10 +38,16 @@ struct FinancialConnectionsSessionManifest: Decodable {
     }
 
     enum AccountDisconnectionMethod: String, SafeEnumCodable, Equatable {
-        case dashboard = "dashboard"
-        case support = "support"
-        case email = "email"
-        case link = "link"
+        case dashboard
+        case support
+        case email
+        case link
+        case unparsable
+    }
+
+    enum ManualEntryMode: String, SafeEnumCodable, Equatable {
+        case automatic
+        case custom
         case unparsable
     }
 
@@ -57,6 +63,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let hostedAuthUrl: String?
     let successUrl: String?
     let cancelUrl: String?
+    let activeAuthSession: FinancialConnectionsAuthSession?
     let initialInstitution: FinancialConnectionsInstitution?
     let instantVerificationDisabled: Bool
     let institutionSearchDisabled: Bool
@@ -76,4 +83,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let features: [String: Bool]?
     let experimentAssignments: [String: String]?
     let assignmentEventId: String?
+    let skipSuccessPane: Bool?
+    let manualEntryMode: ManualEntryMode
 }

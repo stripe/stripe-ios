@@ -23,18 +23,6 @@ if ! command -v swiftlint &> /dev/null; then
   exit 1
 fi
 
-SF_AVAILABLE=true
-if ! command -v swift-format &> /dev/null; then
-  SF_AVAILABLE=false
-  echo "swift-format is not installed, continuing using only swiftlint."
-  echo "To install swift-format, use:"
-  tput setaf 7 # white
-  echo
-  echo '    brew install swift-format'
-  echo
-  tput sgr0 # reset
-fi
-
 IS_HOOK=false
 if [ $(dirname $0) == ".git/hooks" ]; then
   IS_HOOK=true
@@ -56,9 +44,6 @@ else
   while IFS= read -r file; do
     export SCRIPT_INPUT_FILE_$count="$file"
     count=$((count + 1))
-    if [ $SF_AVAILABLE = true ]; then
-      swift-format --configuration .swift-format -i "$file"
-    fi
   done < <(git diff --diff-filter=AM --name-only origin/master  | grep ".swift$")
 fi
 

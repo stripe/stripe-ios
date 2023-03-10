@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Magdagdag ng iyong impormasyon sa pagbabayad";
 
+"Approve payment" = "Aprubahan ang pagbabayad";
+
 "Are you sure you want to remove this card?" = "Sigurado ka bang nais mong alisin ang kard na ito?";
 
 "Are you sure you want to remove this linked account?" = "Sigurado ka bang nais mong alisin ang naka-link na account na ito?";
@@ -19,6 +21,8 @@
 "Bank account" = "Account sa bangko";
 
 "Buy now or pay later with Klarna." = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna.";
+
+"Buy using a UPI ID" = "Bumili gamit ang isang UPI ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
+"Cancel and pay another way" = "Kanselahin at magbayad sa ibang paraan";
+
 "Change email" = "Palitan ang email";
 
 "Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
 
 "Close card scanner" = "Isara ang scanner ng kard";
 
-"Code field" = "Patlang ng code";
-
 "Code sent" = "Naipadala na ang code";
 
 "Default" = "Default";
-
-"Double tap to edit" = "I-double tap para baguhin";
 
 "EPS Bank" = "EPS Bank";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Mag-log out sa Link";
 
 "Not %@?" = "Hindi %@?";
+
+"Open your UPI app to approve your payment within %@" = "Buksan ang iyong UPI app para aprubahan ang iyong pagbabayad sa loob ng  %@";
 
 "Or" = "O";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Pagbabayad";
 
+"Payment failed" = "Nabigo ang pagbabayad";
+
 "Payment methods" = "Mga pamamaraan sa pagbabayad";
+
+"Please go back and select another payment method" = "Mangyaring bumalik at pumili ng ibang paraan ng pagbabayad.";
 
 "Point the camera at your card." = "Itapat ang kamera sa iyong kard.";
 

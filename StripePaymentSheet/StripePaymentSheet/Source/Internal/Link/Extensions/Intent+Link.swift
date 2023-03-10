@@ -27,6 +27,13 @@ extension Intent {
             return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
         case .setupIntent:
             return .setup
+        case .deferredIntent(_, let intentConfig):
+            switch intentConfig.mode {
+            case .payment(let amount, let currency, _):
+                return .pay(amount: amount, currency: currency)
+            case .setup:
+                return .setup
+            }
         }
     }
 
@@ -36,6 +43,8 @@ extension Intent {
             return paymentIntent.linkSettings?.fundingSources
         case .setupIntent(let setupIntent):
             return setupIntent.linkSettings?.fundingSources
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.fundingSources
         }
     }
 
@@ -45,6 +54,8 @@ extension Intent {
             return paymentIntent.countryCode
         case .setupIntent(let setupIntent):
             return setupIntent.countryCode
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.countryCode
         }
     }
 }

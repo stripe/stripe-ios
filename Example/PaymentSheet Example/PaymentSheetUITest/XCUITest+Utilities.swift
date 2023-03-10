@@ -89,12 +89,14 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
 }
 
 extension XCTestCase {
-    func fillCardData(_ app: XCUIApplication, container: XCUIElement? = nil) throws {
+    func fillCardData(_ app: XCUIApplication,
+                      container: XCUIElement? = nil,
+                      cardNumber: String? = nil) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
         numberField.forceTapWhenHittableInTestCase(self)
-        app.typeText("4242424242424242")
+        app.typeText(cardNumber ?? "4242424242424242")
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
@@ -124,6 +126,9 @@ extension XCTestCase {
 
         // Wait for the screen to load
         XCTAssert(app.navigationBars["Test Playground"].waitForExistence(timeout: 10))
+
+        // Reset existing configuration.
+        app.buttons["(Reset)"].tap()
 
         for (setting, value) in settings {
             app.segmentedControls["\(setting)_selector"].buttons[value].tap()

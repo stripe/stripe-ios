@@ -12,81 +12,50 @@ import UIKit
 @_spi(STP) import StripePayments
 
 /// For internal SDK use only
-@objc(STP_Internal_ConsumerSession)
-class ConsumerSession: NSObject, STPAPIResponseDecodable {
-
+final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
     let redactedPhoneNumber: String
     let verificationSessions: [VerificationSession]
-    let authSessionClientSecret: String?
-
-    let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]?
-
-    let allResponseFields: [AnyHashable: Any]
+    let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
 
     init(
         clientSecret: String,
         emailAddress: String,
         redactedPhoneNumber: String,
         verificationSessions: [VerificationSession],
-        authSessionClientSecret: String?,
-        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]?,
-        allResponseFields: [AnyHashable: Any]
+        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.redactedPhoneNumber = redactedPhoneNumber
         self.verificationSessions = verificationSessions
-        self.authSessionClientSecret = authSessionClientSecret
         self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
-        self.allResponseFields = allResponseFields
-        super.init()
     }
 
-    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let response = response,
-              let dict = response["consumer_session"] as? [AnyHashable: Any],
-              let clientSecret = dict["client_secret"] as? String,
-              let emailAddress = dict["email_address"] as? String,
-              let redactedPhoneNumber = dict["redacted_phone_number"] as? String
-        else {
-            return nil
-        }
+    private enum CodingKeys: String, CodingKey {
+        case clientSecret
+        case emailAddress
+        case redactedPhoneNumber
+        case verificationSessions
+        case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
+    }
 
-        var verificationSessions = [VerificationSession]()
-        if let sessions = dict["verification_sessions"] as? [[AnyHashable: Any]] {
-            for session in sessions {
-                if let parsedSession = VerificationSession.decodedObject(fromAPIResponse: session) {
-                    verificationSessions.append(parsedSession)
-                }
-            }
-        }
-
-        let authSessionClientSecret = response["auth_session_client_secret"] as? String
-
-        let supportedPaymentDetailsTypeStrings = dict["support_payment_details_types"] as? [String]
-
-        let supportedPaymentDetailsTypes = supportedPaymentDetailsTypeStrings?.compactMap {
-            ConsumerPaymentDetails.DetailsType(rawValue: $0.lowercased())
-        }
-
-        return ConsumerSession(clientSecret: clientSecret,
-                               emailAddress: emailAddress,
-                               redactedPhoneNumber: redactedPhoneNumber,
-                               verificationSessions: verificationSessions,
-                               authSessionClientSecret: authSessionClientSecret,
-                               supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
-                               allResponseFields: dict) as? Self
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.clientSecret = try container.decode(String.self, forKey: .clientSecret)
+        self.emailAddress = try container.decode(String.self, forKey: .emailAddress)
+        self.redactedPhoneNumber = try container.decode(String.self, forKey: .redactedPhoneNumber)
+        self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
+        self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
     }
 
 }
 
-// MARK: - Cookie Management
-
-extension ConsumerSession {
-    func updateCookie(withStore store: LinkCookieStore) {
-        store.updateSessionCookie(with: authSessionClientSecret)
+extension ConsumerSession: Equatable {
+    static func ==(lhs: ConsumerSession, rhs: ConsumerSession) -> Bool {
+        // NSObject-style equality
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
 }
 
@@ -107,7 +76,6 @@ extension ConsumerSession {
 
 // MARK: - API methods
 extension ConsumerSession {
-
     class func lookupSession(
         for email: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
@@ -126,7 +94,7 @@ extension ConsumerSession {
         consentAction: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        completion: @escaping (Result<ConsumerSession.SignupResponse, Error>) -> Void
+        completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
     ) {
         apiClient.createConsumer(
             for: email,
@@ -159,7 +127,7 @@ extension ConsumerSession {
         apiClient.createPaymentDetails(
             for: clientSecret,
             cardParams: cardParams,
-            billingEmailAddress: emailAddress,
+            billingEmailAddress: billingDetails.email ?? emailAddress,
             billingDetails: billingDetails,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)

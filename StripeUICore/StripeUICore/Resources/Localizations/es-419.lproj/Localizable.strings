@@ -18,6 +18,8 @@
 
 "City" = "Ciudad";
 
+"Code field" = "Campo del código";
+
 "Company" = "Empresa";
 
 "Continue" = "Continuar";
@@ -36,6 +38,8 @@
 
 "Done" = "¡Listo!";
 
+"Double tap to edit" = "Pulsa dos veces para editar";
+
 "Edit" = "Editar";
 
 "Eircode" = "Eircode";
@@ -51,6 +55,8 @@
 "Full name" = "Nombre completo";
 
 "Incomplete phone number" = "Número de teléfono incompleto";
+
+"Invalid UPI ID" = "ID de UPI no válida";
 
 "Island" = "Isla";
 
@@ -82,6 +88,8 @@
 
 "Remove bank account ending in %@" = "Eliminar la cuenta bancaria que termina en %@";
 
+"Search" = "Buscar";
+
 "State" = "Estado";
 
 "Suburb" = "Suburbio";
@@ -95,6 +103,8 @@
 "The account number you entered is incomplete." = "El número de cuenta que ingresaste está incompleto.";
 
 "Town or city" = "Pueblo o ciudad";
+
+"UPI ID" = "ID de UPI";
 
 "Unable to parse phone number" = "No se pudo analizar el número de teléfono.";
 

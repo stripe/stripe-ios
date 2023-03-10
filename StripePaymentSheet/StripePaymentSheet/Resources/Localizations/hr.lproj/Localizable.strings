@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Dodavanje informacija o plaćanju";
 
+"Approve payment" = "Odobri plaćanje";
+
 "Are you sure you want to remove this card?" = "Jeste li sigurni da želite ukloniti ovu karticu?";
 
 "Are you sure you want to remove this linked account?" = "Jeste li sigurni da želite ukloniti ovaj povezani račun?";
@@ -19,6 +21,8 @@
 "Bank account" = "Bankovni račun";
 
 "Buy now or pay later with Klarna." = "Kupite sada ili platite kasnije pomoću Klarne";
+
+"Buy using a UPI ID" = "Kupi koristeći UPI ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Spremanjem bankovnog računa za %@ pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
+"Cancel and pay another way" = "Otkaži i plati na drugi način";
+
 "Change email" = "Izmijeni e-poštu";
 
 "Choose a payment method" = "Odaberite način plaćanja";
 
 "Close card scanner" = "Zatvori skener kartice";
 
-"Code field" = "Polje za kod";
-
 "Code sent" = "Kod je poslan";
 
 "Default" = "Zadano";
-
-"Double tap to edit" = "Dodirnite dva puta za uređivanje";
 
 "EPS Bank" = "Banka EPS";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Odjavite se s Linka";
 
 "Not %@?" = "Niste %@?";
+
+"Open your UPI app to approve your payment within %@" = "Otvorite svoju aplikaciju UPI da biste odobrili svoje plaćanje unutar %@";
 
 "Or" = "Ili";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Plaćanje";
 
+"Payment failed" = "Plaćanje nije uspjelo";
+
 "Payment methods" = "Načini plaćanja";
+
+"Please go back and select another payment method" = "Molimo vratite se i odaberite drugi način plaćanja";
 
 "Point the camera at your card." = "Usmjerite kameru na svoju karticu.";
 

@@ -16,48 +16,65 @@ struct PlaygroundMainView: View {
         ZStack {
             VStack {
                 Form {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("What do you want to use Financial Connections for?")
-                            .font(.headline)
-                        Picker("Flow?", selection: $viewModel.flow) {
-                            ForEach(PlaygroundMainViewModel.Flow.allCases) {
-                                Text($0.rawValue.capitalized)
-                                    .tag($0)
+                    Section {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("What do you want to use Financial Connections for?")
+                                .font(.headline)
+                            Picker("Flow?", selection: $viewModel.flow) {
+                                ForEach(PlaygroundMainViewModel.Flow.allCases) {
+                                    Text($0.rawValue.capitalized)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            Text("'Payments' has manual entry enabled.")
+                                .font(.caption)
+                                .italic()
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("How do you want it to look like?")
+                                .font(.headline)
+                            Picker("Enable Native?", selection: $viewModel.nativeSelection) {
+                                ForEach(PlaygroundMainViewModel.NativeSelection.allCases) {
+                                    Text($0.rawValue.capitalized)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
+                                .font(.caption)
+                                .italic()
+                        }
+
+                        if !viewModel.enableAppToApp
+                            && (viewModel.customPublicKey.isEmpty || viewModel.customSecretKey.isEmpty)
+                        {
+                            if #available(iOS 14.0, *) {
+                                Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
+                                    // test mode color
+                                    .toggleStyle(
+                                        SwitchToggleStyle(
+                                            tint: Color(red: 231 / 255.0, green: 151 / 255.0, blue: 104 / 255.0)
+                                        )
+                                    )
+                            } else {
+                                Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
                             }
                         }
-                        .pickerStyle(.segmented)
-                        Text("'Payments' has manual entry enabled.")
-                            .font(.caption)
-                            .italic()
-                    }
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("How do you want it to look like?")
-                            .font(.headline)
-                        Picker("Enable Native?", selection: $viewModel.nativeSelection) {
-                            ForEach(PlaygroundMainViewModel.NativeSelection.allCases) {
-                                Text($0.rawValue.capitalized)
-                                    .tag($0)
-                            }
+                        if viewModel.customPublicKey.isEmpty || viewModel.customSecretKey.isEmpty {
+                            Toggle("Enable App To App (livemode only)", isOn: $viewModel.enableAppToApp)
                         }
-                        .pickerStyle(.segmented)
-                        Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
-                            .font(.caption)
-                            .italic()
+
+                        Button(action: viewModel.didSelectClearCaches) {
+                            Text("Clear Caches")
+                        }
                     }
 
-                    Toggle("Enable App To App", isOn: $viewModel.enableAppToApp)
-
-                    if #available(iOS 14.0, *) {
-                        Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
-                            // test mode color
-                            .toggleStyle(SwitchToggleStyle(tint: Color(red: 231/255.0, green: 151/255.0, blue: 104/255.0)))
-                    } else {
-                        Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
-                    }
-
-                    Button(action: viewModel.didSelectClearCaches) {
-                        Text("Clear Caches")
+                    Section(header: Text("CUSTOM KEYS")) {
+                        TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
+                        TextField("Secret Key (sk_)", text: $viewModel.customSecretKey)
                     }
                 }
                 VStack {

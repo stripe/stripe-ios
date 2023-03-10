@@ -20,6 +20,8 @@ fileprivate extension ConsumerPaymentDetails {
             return details
         case .bankAccount:
             return nil
+        case .unparsable:
+            return nil
         }
     }
 }
@@ -36,7 +38,7 @@ final class LinkCardEditElement: Element {
         return formElement.view
     }
 
-    var delegate: ElementDelegate?
+    weak var delegate: ElementDelegate?
 
     var validationState: ElementValidationState {
         return formElement.validationState
@@ -84,7 +86,7 @@ final class LinkCardEditElement: Element {
     private lazy var cvcElement = TextFieldElement(
         configuration: TextFieldElement.CVCConfiguration(
             cardBrandProvider: { [weak self] in
-                self?.paymentMethod.cardDetails?.brand ?? .unknown
+                self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
             }
         ),
         theme: theme
@@ -171,7 +173,7 @@ private extension LinkCardEditElement {
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             paymentMethod.cardDetails.map { cardDetails in
-                let image = STPImageLibrary.cardBrandImage(for: cardDetails.brand)
+                let image = STPImageLibrary.cardBrandImage(for: cardDetails.stpBrand)
                 return UIImageView(image: image)
             }
         }

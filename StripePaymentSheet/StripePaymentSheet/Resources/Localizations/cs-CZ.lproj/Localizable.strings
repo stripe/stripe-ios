@@ -10,6 +10,8 @@
 
 "Add your payment information" = "Přidejte své platební údaje";
 
+"Approve payment" = "Schválit platbu";
+
 "Are you sure you want to remove this card?" = "Opravdu chcete tuto kartu odebrat?";
 
 "Are you sure you want to remove this linked account?" = "Opravdu chcete tento propojený účet odebrat?";
@@ -19,6 +21,8 @@
 "Bank account" = "Bankovní účet";
 
 "Buy now or pay later with Klarna." = "Kupte nyní nebo zaplaťte později pomocí Klarna";
+
+"Buy using a UPI ID" = "Koupit pomocí UPI ID";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
@@ -30,19 +34,17 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankovního účtu pro společnost %@ souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
+"Cancel and pay another way" = "Zrušit a zaplatit jiným způsobem";
+
 "Change email" = "Změnit e-mail";
 
 "Choose a payment method" = "Zvolte platební metodu";
 
 "Close card scanner" = "Zavřít skener karty";
 
-"Code field" = "Pole pro kód";
-
 "Code sent" = "Kód odeslán";
 
 "Default" = "Výchozí";
-
-"Double tap to edit" = "Dvakrát klepněte pro úpravu";
 
 "EPS Bank" = "Banka EPS";
 
@@ -61,6 +63,8 @@
 "Log out of Link" = "Odhlásit ze služby Link";
 
 "Not %@?" = "Ne %@?";
+
+"Open your UPI app to approve your payment within %@" = "Otevřete aplikaci UPI, abyste mohli platbu schválit do %@";
 
 "Or" = "Nebo";
 
@@ -88,7 +92,11 @@
 
 "Payment" = "Platba";
 
+"Payment failed" = "Platba se nezdařila.";
+
 "Payment methods" = "Způsoby platby";
+
+"Please go back and select another payment method" = "Vraťte se prosím zpět a vyberte jiný způsob platby";
 
 "Point the camera at your card." = "Namiřte fotoaparát na kartu.";
 

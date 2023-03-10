@@ -38,12 +38,21 @@ final class TerminalErrorViewController: UIViewController {
 
         let errorView = ReusableInformationView(
             iconType: .view(CreateGenericErrorIconView()),
-            title: STPLocalizedString("Something went wrong", "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
+            title: STPLocalizedString(
+                "Something went wrong",
+                "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."
+            ),
             subtitle: {
                 if allowManualEntry {
-                    return STPLocalizedString("Your account can't be linked at this time. Please enter your bank details manually or try again later.", "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what.")
+                    return STPLocalizedString(
+                        "Your account can't be linked at this time. Please enter your bank details manually or try again later.",
+                        "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
+                    )
                 } else {
-                    return STPLocalizedString("Your account can't be linked at this time. Please try again later.", "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what.")
+                    return STPLocalizedString(
+                        "Your account can't be linked at this time. Please try again later.",
+                        "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
+                    )
                 }
             }(),
             primaryButtonConfiguration: {
@@ -57,7 +66,7 @@ final class TerminalErrorViewController: UIViewController {
                     )
                 } else {
                     return ReusableInformationView.ButtonConfiguration(
-                        title: "Close", // TODO: once we localize use String.Localized.close
+                        title: "Close",  // TODO: once we localize use String.Localized.close
                         action: { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.terminalErrorViewController(self, didCloseWithError: self.error)

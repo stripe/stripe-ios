@@ -12,7 +12,7 @@
 #include <arpa/inet.h>
 
 // source: https://zachwaugh.com/posts/programmatically-retrieving-ip-address-of-iphone
-NSString * STDSCurrentDeviceIPAddress() {
+NSString * STDSCurrentDeviceIPAddress(void) {
     NSString *address = nil;
     struct ifaddrs *interfaces = NULL;
     struct ifaddrs *temp_addr = NULL;

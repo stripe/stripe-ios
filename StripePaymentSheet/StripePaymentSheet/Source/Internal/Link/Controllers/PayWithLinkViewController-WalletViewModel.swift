@@ -135,7 +135,7 @@ extension PayWithLinkViewController {
             switch selectedPaymentMethod?.details {
             case .card(let card):
                 return card.hasExpired
-            case .bankAccount, .none:
+            case .bankAccount, .unparsable, .none:
                 // Only cards have expiry date.
                 return false
             }
@@ -143,7 +143,7 @@ extension PayWithLinkViewController {
 
         /// CTA
         var confirmButtonCallToAction: ConfirmButton.CallToActionType {
-            return context.intent.callToAction
+            context.callToAction
         }
 
         var confirmButtonStatus: ConfirmButton.Status {
@@ -170,7 +170,7 @@ extension PayWithLinkViewController {
         var cardBrand: STPCardBrand? {
             switch selectedPaymentMethod?.details {
             case .card(let card):
-                return card.brand
+                return card.stpBrand
             default:
                 return nil
             }
@@ -287,18 +287,5 @@ private extension PayWithLinkViewController.WalletViewModel {
         }
 
         return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
-    }
-
-}
-
-/// Helper functions for ConsumerPaymentDetails
-private extension ConsumerPaymentDetails {
-    var paymentMethodType: PaymentSheet.PaymentMethodType {
-        switch details {
-        case .card:
-            return .card
-        case .bankAccount:
-            return .linkInstantDebit
-        }
     }
 }

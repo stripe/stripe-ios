@@ -27,12 +27,13 @@ final class HostViewController: UIViewController {
     // MARK: - UI
 
     private lazy var closeItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: Image.close.makeImage(template: false),
-                                   style: .plain,
-                                   target: self,
-                                   action: #selector(didTapClose))
-
-        item.tintColor = UIColor.dynamic(light: .systemGray2, dark: .white)
+        let item = UIBarButtonItem(
+            image: Image.close.makeImage(template: false),
+            style: .plain,
+            target: self,
+            action: #selector(didTapClose)
+        )
+        item.tintColor = .textDisabled
         return item
     }()
 
@@ -50,10 +51,11 @@ final class HostViewController: UIViewController {
 
     // MARK: - Init
 
-    init(clientSecret: String,
-         returnURL: String?,
-         apiClient: FinancialConnectionsAPIClient,
-         delegate: HostViewControllerDelegate?
+    init(
+        clientSecret: String,
+        returnURL: String?,
+        apiClient: FinancialConnectionsAPIClient,
+        delegate: HostViewControllerDelegate?
     ) {
         self.clientSecret = clientSecret
         self.returnURL = returnURL
@@ -72,7 +74,7 @@ final class HostViewController: UIViewController {
         super.viewDidLoad()
 
         view.addSubview(loadingView)
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .customBackgroundColor
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         getManifest()
@@ -104,7 +106,7 @@ extension HostViewController {
                     self.loadingView.errorView.isHidden = false
                     self.lastError = error
                 }
-        }
+            }
     }
 }
 

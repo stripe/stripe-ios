@@ -54,25 +54,25 @@ final class AccountPickerLabelRowView: UIView {
         return subtitleLabel
     }()
 
-    private var linkedView: UIView?
-
     init() {
         super.init(frame: .zero)
-        labelStackView.addArrangedSubview({
-            let horizontalStackView = UIStackView(
-                arrangedSubviews: [
-                    // we need a leading and a trailing
-                    // title label because we want to
-                    // prioritize the `trailingTitleLabel`
-                    // when there's a need for truncation
-                    leadingTitleLabel,
-                    trailingTitleLabel,
-                ]
-            )
-            horizontalStackView.axis = .horizontal
-            horizontalStackView.spacing = 4
-            return horizontalStackView
-        }())
+        labelStackView.addArrangedSubview(
+            {
+                let horizontalStackView = UIStackView(
+                    arrangedSubviews: [
+                        // we need a leading and a trailing
+                        // title label because we want to
+                        // prioritize the `trailingTitleLabel`
+                        // when there's a need for truncation
+                        leadingTitleLabel,
+                        trailingTitleLabel,
+                    ]
+                )
+                horizontalStackView.axis = .horizontal
+                horizontalStackView.spacing = 4
+                return horizontalStackView
+            }()
+        )
 
         topLevelHorizontalStackView.addArrangedSubview(labelStackView)
         addAndPinSubview(topLevelHorizontalStackView)
@@ -85,8 +85,7 @@ final class AccountPickerLabelRowView: UIView {
     func setLeadingTitle(
         _ leadingTitle: String,
         trailingTitle: String?,
-        subtitle: String?,
-        isLinked: Bool
+        subtitle: String?
     ) {
         leadingTitleLabel.text = leadingTitle
         trailingTitleLabel.text = trailingTitle
@@ -95,36 +94,6 @@ final class AccountPickerLabelRowView: UIView {
         if let subtitle = subtitle {
             subtitleLabel.text = subtitle
             labelStackView.addArrangedSubview(subtitleLabel)
-        }
-
-        linkedView?.removeFromSuperview()
-        linkedView = nil
-        if isLinked {
-            let linkedLabel = UILabel()
-            linkedLabel.text = STPLocalizedString("Linked", "An indicator next to a bank account that educates the user that this bank account is already connected (or linked). This indicator appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
-            linkedLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
-            linkedLabel.textColor = .textSuccess
-            linkedLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            linkedLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-
-            // stack views make re-sizing and adding padding really easy
-            // so we don't NEED a stack view for a single label but it
-            // simplifies work
-            let linkedLabelStackView = UIStackView(
-                arrangedSubviews: [linkedLabel]
-            )
-            linkedLabelStackView.isLayoutMarginsRelativeArrangement = true
-            linkedLabelStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                top: 2,
-                leading: 6,
-                bottom: 2,
-                trailing: 6
-            )
-            linkedLabelStackView.layer.cornerRadius = 4
-            linkedLabelStackView.backgroundColor = .success100
-            topLevelHorizontalStackView.addArrangedSubview(linkedLabelStackView)
-
-            self.linkedView = linkedLabelStackView
         }
     }
 }

@@ -41,12 +41,10 @@ extension LinkStubs {
                         expiryMonth: 1,
                         brand: "visa",
                         last4: "4242",
-                        checks: .init(cvcCheck: .pass, allResponseFields: [:]),
-                        allResponseFields: [:]
+                        checks: .init(cvcCheck: .pass)
                     )
                 ),
-                isDefault: true,
-                allResponseFields: [:]
+                isDefault: true
             ),
             ConsumerPaymentDetails(
                 stripeID: "2",
@@ -56,12 +54,10 @@ extension LinkStubs {
                         expiryMonth: 1,
                         brand: "mastercard",
                         last4: "4444",
-                        checks: .init(cvcCheck: .fail, allResponseFields: [:]),
-                        allResponseFields: [:]
+                        checks: .init(cvcCheck: .fail)
                     )
                 ),
-                isDefault: false,
-                allResponseFields: [:]
+                isDefault: false
             ),
             ConsumerPaymentDetails(
                 stripeID: "3",
@@ -69,12 +65,10 @@ extension LinkStubs {
                     bankAccount: .init(
                         iconCode: "capitalone",
                         name: "Capital One",
-                        last4: "4242",
-                        allResponseFields: [:]
+                        last4: "4242"
                     )
                 ),
-                isDefault: false,
-                allResponseFields: [:]
+                isDefault: false
             ),
             ConsumerPaymentDetails(
                 stripeID: "4",
@@ -84,12 +78,10 @@ extension LinkStubs {
                         expiryMonth: 1,
                         brand: "american_express",
                         last4: "0005",
-                        checks: .init(cvcCheck: .fail, allResponseFields: [:]),
-                        allResponseFields: [:]
+                        checks: .init(cvcCheck: .fail)
                     )
                 ),
-                isDefault: false,
-                allResponseFields: [:]
+                isDefault: false
             ),
         ]
     }
@@ -100,9 +92,7 @@ extension LinkStubs {
             emailAddress: "user@example.com",
             redactedPhoneNumber: "1********55",
             verificationSessions: [],
-            authSessionClientSecret: nil,
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
-            allResponseFields: [:]
+            supportedPaymentDetailsTypes: [.card, .bankAccount]
         )
     }
 

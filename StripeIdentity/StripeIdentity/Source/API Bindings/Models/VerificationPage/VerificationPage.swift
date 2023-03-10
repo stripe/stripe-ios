@@ -22,6 +22,9 @@ extension StripeAPI {
         let biometricConsent: VerificationPageStaticContentConsentPage
         let documentCapture: VerificationPageStaticContentDocumentCapturePage
         let documentSelect: VerificationPageStaticContentDocumentSelectPage
+        let individual: VerificationPageStaticContentIndividualPage
+        let countryNotListed: VerificationPageStaticContentCountryNotListedPage
+        let individualWelcome: VerificationPageStaticContentIndividualWelcomePage
         /// The short-lived URL that can be used in the case that the client cannot support the VerificationSession.
         let fallbackUrl: String
         /// Unique identifier for the object.

@@ -22,20 +22,6 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
-
-        var name: String {
-            switch self {
-
-            case .applePay:
-                return "applepay"
-            case .saved(paymentMethod: let paymentMethod):
-                return paymentMethod.type.displayName.lowercased()
-            case .new(confirmParams: let confirmParams):
-                return confirmParams.paymentMethodType.displayName.lowercased()
-            case .link:
-                return "link"
-            }
-        }
     }
 
     /// A class that presents the individual steps of a payment flow
@@ -147,7 +133,7 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(clientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            create(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
                    configuration: configuration,
                    completion: completion
             )
@@ -164,19 +150,43 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(clientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+            create(mode: .setupIntentClientSecret(setupIntentClientSecret),
                    configuration: configuration,
                    completion: completion
             )
         }
 
+        /// 🚧 Under construction
+        /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// This asynchronously loads the Customer's payment methods, their default payment method.
+        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
+        /// - Parameter intentConfig: The `IntentConfiguration` object
+        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+        /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
+        @_spi(STP) public static func create(
+            intentConfig: IntentConfiguration,
+            configuration: PaymentSheet.Configuration,
+            completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
+        ) {
+            create(mode: .deferredIntent(intentConfig),
+                   configuration: configuration,
+                   completion: completion
+            )
+        }
+
+        /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// This asynchronously loads the Customer's payment methods, their default payment method, and the Intent.
+        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
+        /// - Parameter mode: The mode used to initialize PaymentSheet
+        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+        /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
         static func create(
-            clientSecret: IntentClientSecret,
+            mode: InitializationMode,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
             PaymentSheet.load(
-                clientSecret: clientSecret,
+                mode: mode,
                 configuration: configuration
             ) { result in
                 switch result {
@@ -286,7 +296,6 @@ extension PaymentSheet {
                     result: result,
                     linkEnabled: intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    paymentOption: paymentOption,
                     currency: intent.currency
                 )
 
