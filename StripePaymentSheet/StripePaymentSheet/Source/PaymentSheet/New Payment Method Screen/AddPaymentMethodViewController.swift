@@ -193,8 +193,10 @@ class AddPaymentMethodViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let formElement = (paymentMethodFormElement as? PaymentMethodElementWrapper<FormElement>)?.element
+            ?? paymentMethodFormElement
         if configuration.defaultBillingDetails == .init(),
-            let addressSection = paymentMethodFormElement.getAllSubElements()
+            let addressSection = formElement.getAllSubElements()
                 .compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first?.element
         {
             // If we're displaying an AddressSectionElement and we don't have default billing details, update it with the latest shipping details
