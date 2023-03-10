@@ -12,8 +12,8 @@ import StripePayments
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
     static func createPaymentMethodIfNeeded(apiClient: STPAPIClient,
-                                                    paymentMethod: STPPaymentMethod?,
-                                                    paymentMethodParams: STPPaymentMethodParams?) async throws -> STPPaymentMethod {
+                                            paymentMethod: STPPaymentMethod?,
+                                            paymentMethodParams: STPPaymentMethodParams?) async throws -> STPPaymentMethod {
         if let paymentMethod = paymentMethod {
             return paymentMethod
         }
@@ -26,9 +26,9 @@ extension PaymentSheet {
     }
 
     static func handleDeferredIntentConfirmation(deferredIntentContext: DeferredIntentContext,
-                                                         paymentMethod: STPPaymentMethod?,
-                                                         paymentMethodParams: STPPaymentMethodParams?,
-                                                         shouldSavePaymentMethod: Bool) {
+                                                 paymentMethod: STPPaymentMethod?,
+                                                 paymentMethodParams: STPPaymentMethodParams?,
+                                                 shouldSavePaymentMethod: Bool) {
         Task {
             do {
                 // Create PM if necessary
