@@ -350,8 +350,7 @@ import UIKit
             }
         }
 
-        var initialElements = [Element?]()
-        initialElements.append(name)
+        var initialElements: [Element?] = [name]
         if collectionMode != .noCountry {
             initialElements.append(country)
         }

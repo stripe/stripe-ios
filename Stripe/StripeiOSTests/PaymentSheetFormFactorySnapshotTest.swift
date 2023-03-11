@@ -428,10 +428,10 @@ extension PaymentSheetFormFactorySnapshotTest {
     }
 
     private func loadSpecs() {
-        let e = expectation(description: "FormSpecs loaded")
+        let expectation = expectation(description: "FormSpecs loaded")
         FormSpecProvider.shared.load { _ in
-            e.fulfill()
+            expectation.fulfill()
         }
-        wait(for: [e], timeout: 5.0)
+        wait(for: [expectation], timeout: 5.0)
     }
 }

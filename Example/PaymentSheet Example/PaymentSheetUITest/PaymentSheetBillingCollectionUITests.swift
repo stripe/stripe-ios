@@ -628,11 +628,10 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         app.buttons["Checkout (Complete)"].tap()
 
-        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "afterpay_clearpay")
-        else {
-            XCTFail()
-            return
-        }
+        let cell = try XCTUnwrap(scroll(
+            collectionView: app.collectionViews.firstMatch,
+            toFindCellWithId: "afterpay_clearpay")
+        )
         cell.tap()
 
         XCTAssertTrue(app.textFields["Email"].exists)
@@ -696,11 +695,10 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         app.buttons["Checkout (Complete)"].tap()
 
-        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "afterpay_clearpay")
-        else {
-            XCTFail()
-            return
-        }
+        let cell = try XCTUnwrap(scroll(
+            collectionView: app.collectionViews.firstMatch,
+            toFindCellWithId: "afterpay_clearpay")
+        )
         cell.tap()
 
         XCTAssertEqual(app.textFields["Email"].value as? String, "foo@bar.com")
@@ -754,11 +752,10 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         app.buttons["Checkout (Complete)"].tap()
 
-        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "afterpay_clearpay")
-        else {
-            XCTFail()
-            return
-        }
+        let cell = try XCTUnwrap(scroll(
+            collectionView: app.collectionViews.firstMatch,
+            toFindCellWithId: "afterpay_clearpay")
+        )
         cell.tap()
 
         XCTAssertFalse(app.textFields["Email"].exists)
@@ -800,11 +797,7 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         )
         app.buttons["Checkout (Complete)"].tap()
 
-        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna")
-        else {
-            XCTFail()
-            return
-        }
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna"))
         cell.tap()
 
         XCTAssertTrue(app.textFields["Email"].exists)
@@ -849,11 +842,7 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         )
         app.buttons["Checkout (Complete)"].tap()
 
-        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna")
-        else {
-            XCTFail()
-            return
-        }
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna"))
         cell.tap()
 
         XCTAssertEqual(app.textFields["Email"].value as? String, "foo@bar.com")
@@ -891,11 +880,7 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         )
         app.buttons["Checkout (Complete)"].tap()
 
-        guard let cell = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna")
-        else {
-            XCTFail()
-            return
-        }
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna"))
         cell.tap()
 
         XCTAssertFalse(app.textFields["Email"].exists)
