@@ -37,7 +37,8 @@ final class ManualEntryErrorView: UIView {
             font: errorLabelFont,
             boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
             linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
-            textColor: .textCritical
+            textColor: .textCritical,
+            linkColor: .textCritical
         )
         errorLabel.setText(text)
         errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
