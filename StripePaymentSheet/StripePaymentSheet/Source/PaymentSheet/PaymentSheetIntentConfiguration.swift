@@ -65,22 +65,22 @@ import Foundation
         }
 
         /// Filters out payment methods based on intended use.
-        var mode: Mode
+        public var mode: Mode
         /// Filters out payment methods based on their support for manual capture.
-        var captureMethod: CaptureMethod?
+        public var captureMethod: CaptureMethod?
         /// An explicit list of payment method types displayed to the customer.
-        var paymentMethodTypes: [String]?
+        public var paymentMethodTypes: [String]?
 
         /// Called when the customer confirms payment.
         /// Your implementation should create a PaymentIntent or SetupIntent on the server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
-        var confirmHandler: ConfirmHandler?
+        public var confirmHandler: ConfirmHandler?
 
         /// For advanced users who need server-side confirmation.
         /// Called when the customer confirms payment.
         /// Your implementation should create and confirm a PaymentIntent or SetupIntent on the server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
-        var confirmHandlerForServerSideConfirmation: ConfirmHandlerForServerSideConfirmation?
+        public var confirmHandlerForServerSideConfirmation: ConfirmHandlerForServerSideConfirmation?
 
         /// Controls when the funds will be captured from the customer’s account.
         public enum CaptureMethod: String {
