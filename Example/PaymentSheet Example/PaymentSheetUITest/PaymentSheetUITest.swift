@@ -139,7 +139,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
         var successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
@@ -158,7 +158,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
         successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
@@ -628,7 +628,7 @@ extension PaymentSheetUITest {
         app.buttons["Pay $50.99"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredPaymentIntent_ClientSideConfirmation_LostCardDecline() {
@@ -663,7 +663,7 @@ extension PaymentSheetUITest {
         app.buttons["Set up"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredPaymentIntent_FlowController_ClientSideConfirmation() {
@@ -690,7 +690,7 @@ extension PaymentSheetUITest {
         app.buttons["Checkout (Custom)"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredSetupIntent_FlowController_ClientSideConfirmation() {
@@ -718,7 +718,7 @@ extension PaymentSheetUITest {
         app.buttons["Checkout (Custom)"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferferedIntentLinkSignup_ClientSideConfirmation() throws {
@@ -772,7 +772,7 @@ extension PaymentSheetUITest {
         payButton.tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
@@ -913,7 +913,7 @@ extension PaymentSheetUITest {
         app.buttons["Pay $50.99"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredPaymentIntent_SeverSideConfirmation_LostCardDecline() {
@@ -952,7 +952,7 @@ extension PaymentSheetUITest {
         app.buttons["Set up"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredPaymentIntent_FlowController_ServerSideConfirmation() {
@@ -980,7 +980,7 @@ extension PaymentSheetUITest {
         app.buttons["Checkout (Custom)"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredSetupIntent_FlowController_ServerSideConfirmation() {
@@ -1009,7 +1009,7 @@ extension PaymentSheetUITest {
         app.buttons["Checkout (Custom)"].tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferferedIntentLinkSignup_ServerSideConfirmation() throws {
@@ -1064,7 +1064,7 @@ extension PaymentSheetUITest {
         payButton.tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
@@ -1125,7 +1125,7 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
         var successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
@@ -1144,7 +1144,7 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
         successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
@@ -1301,7 +1301,7 @@ extension PaymentSheetUITest {
         app.buttons["Pay $50.99"].tap()
 
         let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
 
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
@@ -1340,7 +1340,7 @@ extension PaymentSheetUITest {
         app.typeTextWithKeyboard("000000")
 
         let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
 
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
@@ -1406,7 +1406,7 @@ extension PaymentSheetUITest {
         payButton.tap()
 
         let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
 
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
@@ -1543,7 +1543,7 @@ extension PaymentSheetUITest {
         payButton.tap()
 
         let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
 
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
@@ -1584,7 +1584,7 @@ extension PaymentSheetUITest {
         payButton.tap()
 
         let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
 
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
@@ -1614,7 +1614,7 @@ extension PaymentSheetUITest {
         payButton.forceTapElement()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {
