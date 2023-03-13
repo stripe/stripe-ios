@@ -46,37 +46,22 @@ extension PaymentSheetFormFactory {
 
         var elements: [Element] = []
         for fieldSpec in spec.fields {
-            if let element = fieldSpecToElement(fieldSpec: fieldSpec) {
-                // Check if this is a billing details field and process it.
-                switch fieldSpec {
-                case .name:
-                    billingDetailsFields.remove(.name)
-                case .email:
-                    billingDetailsFields.remove(.email)
-                case .billing_address:
-                    billingDetailsFields.remove(.billingAddress)
-                    billingAddressElement = element
-                case .country, .klarna_country:
-                    countryElement = element
-                case .placeholder(let placeholder):
-                    switch placeholder.field {
-                    case .name:
-                        billingDetailsFields.remove(.name)
-                    case .email:
-                        billingDetailsFields.remove(.email)
-                    case .phone:
-                        billingDetailsFields.remove(.phone)
-                        phoneElement = element
-                    case .billingAddress, .billingAddressWithoutCountry:
-                        billingDetailsFields.remove(.billingAddress)
-                        billingAddressElement = element
-                    default: break
-                    }
-                default: break
-                }
-
-                elements.append(element)
+            guard let element = fieldSpecToElement(fieldSpec: fieldSpec) else { continue }
+            if let fieldToRemove = fieldToRemove(from: fieldSpec) {
+                billingDetailsFields.remove(fieldToRemove)
             }
+
+            if fieldSpec.isCountrySpec {
+                countryElement = element
+            }
+            if fieldSpec.isPhoneSpec {
+                phoneElement = element
+            }
+            if fieldSpec.isAddressSpec {
+                billingAddressElement = element
+            }
+
+            elements.append(element)
         }
 
         // Add billing details fields if they are needed and not already present.
@@ -100,6 +85,30 @@ extension PaymentSheetFormFactory {
             phoneElement: phoneElement)
 
         return elements
+    }
+
+    private func fieldToRemove(from fieldSpec: FormSpec.FieldSpec) -> FormSpec.PlaceholderSpec.PlaceholderField? {
+        switch fieldSpec {
+        case .name:
+            return .name
+        case .email:
+            return .email
+        case .billing_address:
+            return .billingAddress
+        case .placeholder(let placeholder):
+            switch placeholder.field {
+            case .name:
+                return .name
+            case .email:
+                return .email
+            case .phone:
+                return .phone
+            case .billingAddress, .billingAddressWithoutCountry:
+                return .billingAddress
+            default: return nil
+            }
+        default: return nil
+        }
     }
 
     private func fieldSpecToElement(fieldSpec: FormSpec.FieldSpec) -> Element? {
@@ -236,5 +245,35 @@ extension PaymentSheetFormFactory {
                 }
             }
         }
+    }
+}
+
+extension FormSpec.FieldSpec {
+    var isCountrySpec: Bool {
+        switch self {
+        case .country, .klarna_country: return true
+        default: return false
+        }
+    }
+
+    var isPhoneSpec: Bool {
+        if case .placeholder(let placeholderSpec) = self {
+            return placeholderSpec.field == .phone
+        }
+        return false
+    }
+
+    var isAddressSpec: Bool {
+        switch self {
+        case .billing_address: return true
+        case .placeholder(let placeholderSpec):
+            switch placeholderSpec.field {
+            case .billingAddress, .billingAddressWithoutCountry: return true
+            default: break
+            }
+        default: break
+        }
+
+        return false
     }
 }
