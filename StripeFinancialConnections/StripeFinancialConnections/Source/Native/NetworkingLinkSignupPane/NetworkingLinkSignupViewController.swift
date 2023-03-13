@@ -18,6 +18,8 @@ protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
     )
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController,
+        // nil == we did not perform saveToLink
+        saveToLinkWithStripeSucceeded: Bool?,
         withError error: Error?
     )
     func networkingLinkSignupViewController(
@@ -53,7 +55,11 @@ final class NetworkingLinkSignupViewController: UIViewController {
                         eventName: "click.not_now",
                         pane: .networkingLinkSignupPane
                     )
-                self.delegate?.networkingLinkSignupViewControllerDidFinish(self, withError: nil)
+                self.delegate?.networkingLinkSignupViewControllerDidFinish(
+                    self,
+                    saveToLinkWithStripeSucceeded: nil,
+                    withError: nil
+                )
             },
             didSelectURL: { [weak self] url in
                 self?.didSelectURLInTextFromBackend(url)
@@ -135,6 +141,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             case .success:
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
+                    saveToLinkWithStripeSucceeded: true,
                     withError: nil
                 )
             case .failure(let error):
@@ -142,6 +149,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 // notice above the done button of the success pane
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
+                    saveToLinkWithStripeSucceeded: false,
                     withError: error
                 )
                 self.dataSource.analyticsClient.logUnexpectedError(
@@ -200,6 +208,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         } else {
                             self.delegate?.networkingLinkSignupViewControllerDidFinish(
                                 self,
+                                saveToLinkWithStripeSucceeded: nil,
                                 withError: FinancialConnectionsSheetError.unknown(
                                     debugDescription: "No consumer session returned from lookupConsumerSession for emailAddress: \(emailAddress)"
                                 )
