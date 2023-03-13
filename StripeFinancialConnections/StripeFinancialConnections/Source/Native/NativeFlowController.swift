@@ -84,7 +84,11 @@ class NativeFlowController {
                 || navigationController.topViewController is NetworkingLinkVerificationViewController
                 || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
                 || navigationController.topViewController is LinkAccountPickerViewController)
-        closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
+        closeAuthFlow(
+            showConfirmationAlert: showConfirmationAlert,
+            showNetworkingLanguageInConfirmationAlert: (dataManager.manifest.isNetworkingUserFlow == true && navigationController.topViewController is NetworkingLinkSignupViewController),
+            error: nil
+        )
     }
 }
 
@@ -219,6 +223,7 @@ extension NativeFlowController {
     @available(iOSApplicationExtension, unavailable)
     private func closeAuthFlow(
         showConfirmationAlert: Bool,
+        showNetworkingLanguageInConfirmationAlert: Bool = false,
         customManualEntry: Bool = false,
         error closeAuthFlowError: Error? = nil  // user can also close AuthFlow while looking at an error screen
     ) {
@@ -299,6 +304,7 @@ extension NativeFlowController {
         if showConfirmationAlert {
             CloseConfirmationAlertHandler.present(
                 businessName: dataManager.manifest.businessName,
+                showNetworkingLanguageInConfirmationAlert: showNetworkingLanguageInConfirmationAlert,
                 didSelectOK: {
                     completeFinancialConnectionsSession()
                 }
