@@ -466,7 +466,6 @@ class STPCardValidatorTest: XCTestCase {
             emptyParamsExp.fulfill()
         }
 
-        
         wait(for: [mcExp, visaExp, justVisaExp, paramsExp, emptyParamsExp], timeout: STPTestingNetworkRequestTimeout)
     }
 }
