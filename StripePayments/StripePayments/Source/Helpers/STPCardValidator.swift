@@ -444,8 +444,8 @@ public class STPCardValidator: NSObject {
                 completion(.failure(error))
             case .success:
                 let binRanges = cbcBinController.binRanges(forNumber: cardNumber)
-                var brands = binRanges.map { $0.brand }
-                brands.removeAll { $0 == .unknown }
+                let brands = binRanges.map { $0.brand }
+                                      .filter { $0 != .unknown }
                 completion(.success(Set(brands)))
             }
         }
