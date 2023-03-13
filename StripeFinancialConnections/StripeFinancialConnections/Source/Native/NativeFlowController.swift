@@ -553,9 +553,12 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
 
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController,
+        saveToLinkWithStripeSucceeded: Bool?,
         withError error: Error?
     ) {
-        // TODO(kgaidis): show small error on success pane if error != nil
+        if saveToLinkWithStripeSucceeded != nil {
+            dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
+        }
         pushPane(.success, animated: true)
     }
 
@@ -616,8 +619,12 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 
     func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
-        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
+        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        saveToLinkWithStripeSucceeded: Bool?
     ) {
+        if saveToLinkWithStripeSucceeded != nil {
+            dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
+        }
         pushPane(paymentAccountResource.nextPane ?? .success, animated: true)
     }
 
@@ -702,9 +709,12 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
+        saveToLinkWithStripeSucceeded: Bool?,
         error: Error?
     ) {
-        // TODO(kgaidis): use the error to show a notice on success pane that saving to link failed...
+        if saveToLinkWithStripeSucceeded != nil {
+            dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
+        }
         pushPane(.success, animated: true)
     }
 
@@ -964,6 +974,7 @@ private func CreatePaneViewController(
                 manifest: dataManager.manifest,
                 linkedAccounts: linkedAccounts,
                 institution: institution,
+                saveToLinkWithStripeSucceeded: dataManager.saveToLinkWithStripeSucceeded,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient

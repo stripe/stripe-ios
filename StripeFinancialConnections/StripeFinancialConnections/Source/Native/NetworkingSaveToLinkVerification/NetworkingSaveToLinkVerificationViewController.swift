@@ -14,6 +14,7 @@ import UIKit
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
+        saveToLinkWithStripeSucceeded: Bool?,
         error: Error?
     )
     func networkingSaveToLinkVerificationViewController(
@@ -77,7 +78,11 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
             footerView: NetworkingSaveToLinkFooterView(
                 didSelectNotNow: { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: nil)
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                        self,
+                        saveToLinkWithStripeSucceeded: nil,
+                        error: nil
+                    )
                 }
             )
         )
@@ -143,7 +148,11 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                             eventName: "networking.verification.success",
                             pane: .networkingSaveToLinkVerification
                         )
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: nil)
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                        self,
+                        saveToLinkWithStripeSucceeded: true,
+                        error: nil
+                    )
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -157,7 +166,11 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                             error, errorName: "SaveToLinkError",
                             pane: .networkingSaveToLinkVerification
                         )
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(self, error: error)
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                        self,
+                        saveToLinkWithStripeSucceeded: false,
+                        error: error
+                    )
                 }
             }
 

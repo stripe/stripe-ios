@@ -51,6 +51,10 @@ extension UIColor {
         return neutral50
     }
 
+    static var attention50: UIColor {
+        return UIColor(red: 254 / 255.0, green: 249 / 255.0, blue: 218 / 255.0, alpha: 1)  // #fef9da
+    }
+
     private static var neutral50: UIColor {
         return UIColor(red: 246 / 255.0, green: 248 / 255.0, blue: 250 / 255.0, alpha: 1)  // #f6f8fa
     }
