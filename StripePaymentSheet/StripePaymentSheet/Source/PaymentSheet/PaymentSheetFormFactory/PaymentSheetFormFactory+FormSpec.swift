@@ -80,9 +80,9 @@ extension PaymentSheetFormFactory {
         }
 
         connectBillingDetailsFields(
-            countryElement: countryElement,
-            addressElement: billingAddressElement,
-            phoneElement: phoneElement)
+            countryElement: countryElement as? PaymentMethodElementWrapper<DropdownFieldElement>,
+            addressElement: billingAddressElement as? PaymentMethodElementWrapper<AddressSectionElement>,
+            phoneElement: phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement>)
 
         return elements
     }
@@ -192,58 +192,6 @@ extension PaymentSheetFormFactory {
                 ? makeBillingAddressSection(collectionMode: .noCountry, countries: nil)
                 : nil
         case .unknown: return nil
-        }
-    }
-
-    private func connectBillingDetailsFields(
-        countryElement: Element?,
-        addressElement: Element?,
-        phoneElement: Element?
-    ) {
-        // Using a closure because a function would require capturing self, which will be deallocated by the time
-        // the closures below are called.
-        let defaultBillingDetails = configuration.defaultBillingDetails
-        let updatePhone = { (phoneElement: PhoneNumberElement, countryCode: String) in
-            // Only update the phone country if:
-            // 1. It's different from the selected one,
-            // 2. A default phone number was not provided.
-            // 3. The phone field hasn't been modified yet.
-            guard countryCode != phoneElement.selectedCountryCode
-                    && defaultBillingDetails.phone == nil
-                    && !phoneElement.hasBeenModified
-            else {
-                return
-            }
-
-            phoneElement.selectedCountryCode = countryCode
-        }
-
-        if let countryElement = countryElement as? PaymentMethodElementWrapper<DropdownFieldElement> {
-            countryElement.element.didUpdate = { [updatePhone] _ in
-                let countryCode = countryElement.element.selectedItem.rawData
-                if let phoneElement = phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement> {
-                    updatePhone(phoneElement.element, countryCode)
-                }
-                if let addressElement = addressElement as? PaymentMethodElementWrapper<AddressSectionElement> {
-                    addressElement.element.selectedCountryCode = countryCode
-                }
-            }
-
-            if let addressElement = addressElement as? PaymentMethodElementWrapper<AddressSectionElement>,
-               addressElement.element.selectedCountryCode != countryElement.element.selectedItem.rawData
-            {
-                addressElement.element.selectedCountryCode = countryElement.element.selectedItem.rawData
-            }
-        }
-
-        if let addressElement = addressElement as? PaymentMethodElementWrapper<AddressSectionElement> {
-            addressElement.element.didUpdate = { [updatePhone] addressDetails in
-                if let countryCode = addressDetails.address.country,
-                   let phoneElement = phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement>
-                {
-                    updatePhone(phoneElement.element, countryCode)
-                }
-            }
         }
     }
 }
