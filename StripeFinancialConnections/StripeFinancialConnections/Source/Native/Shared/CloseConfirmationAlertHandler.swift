@@ -15,6 +15,7 @@ final class CloseConfirmationAlertHandler {
     @available(iOSApplicationExtension, unavailable)
     static func present(
         businessName: String?,
+        showNetworkingLanguageInConfirmationAlert: Bool,
         didSelectOK: @escaping () -> Void
     ) {
         guard let topMostViewController = UIViewController.topMostViewController() else {
@@ -26,7 +27,22 @@ final class CloseConfirmationAlertHandler {
                 "The title of a pop-up that appears when the user attempts to exit the bank linking screen."
             ),
             message: {
-                if let businessName = businessName {
+                if showNetworkingLanguageInConfirmationAlert {
+                    if let businessName = businessName {
+                        return String(
+                            format: STPLocalizedString(
+                                "If you cancel now, your account will be linked to %@ but it will not be saved to Link.",
+                                "The subtitle/description of a pop-up that appears when the user attempts to exit the bank linking screen."
+                            ),
+                            businessName
+                        )
+                    } else {
+                        return STPLocalizedString(
+                            "If you cancel now, your account will be linked but it will not be saved to Link.",
+                            "The subtitle/description of a pop-up that appears when the user attempts to exit the bank linking screen."
+                        )
+                    }
+                } else if let businessName = businessName {
                     return String(
                         format: STPLocalizedString(
                             "You haven’t finished linking your bank account to %@.",
