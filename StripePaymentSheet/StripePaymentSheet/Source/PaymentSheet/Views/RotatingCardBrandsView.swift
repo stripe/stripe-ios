@@ -50,6 +50,7 @@ class RotatingCardBrandsView: UIView {
                     return 5
                 case .unionPay:
                     return 6
+                // CB should not appear as one of the rotating brands.
                 case .cartesBancaires:
                     return nil
                 case .unknown:

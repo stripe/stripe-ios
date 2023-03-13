@@ -430,7 +430,8 @@ public class STPCardValidator: NSObject {
     public class func possibleBrands(forCard cardParams: STPPaymentMethodCardParams,
                                      completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
         guard let cardNumber = cardParams.number else {
-            completion(.success([]))
+            // If the number is nil or empty, any brand is possible.
+            completion(.success(Set(STPCardBrand.allCases)))
             return
         }
         possibleBrands(forNumber: cardNumber, completion: completion)

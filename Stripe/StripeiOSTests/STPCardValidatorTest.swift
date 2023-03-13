@@ -434,6 +434,7 @@ class STPCardValidatorTest: XCTestCase {
         let visaExp = expectation(description: "Visa/CBC")
         let justVisaExp = expectation(description: "Visa Only")
         let paramsExp = expectation(description: "Params")
+        let emptyParamsExp = expectation(description: "Empty Params")
         STPCardValidator.possibleBrands(forNumber: "513130") { result in
             let brands = try! result.get()
             XCTAssertEqual(brands, [.cartesBancaires, .mastercard])
@@ -458,6 +459,14 @@ class STPCardValidatorTest: XCTestCase {
             paramsExp.fulfill()
         }
 
-        wait(for: [mcExp, visaExp, justVisaExp, paramsExp], timeout: STPTestingNetworkRequestTimeout)
+        let paramsEmpty = STPPaymentMethodCardParams()
+        STPCardValidator.possibleBrands(forCard: paramsEmpty) { result in
+            let brands = try! result.get()
+            XCTAssertEqual(brands, Set(STPCardBrand.allCases))
+            emptyParamsExp.fulfill()
+        }
+
+        
+        wait(for: [mcExp, visaExp, justVisaExp, paramsExp, emptyParamsExp], timeout: STPTestingNetworkRequestTimeout)
     }
 }
