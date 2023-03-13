@@ -39,6 +39,9 @@ struct FormSpec: Decodable {
 
         case iban(BaseFieldSpec)
         case sepa_mandate
+
+        case placeholder(PlaceholderSpec)
+
         case unknown(String)
 
         private enum CodingKeys: String, CodingKey {
@@ -77,6 +80,8 @@ struct FormSpec: Decodable {
                 self = .iban(try BaseFieldSpec(from: decoder))
             case "sepa_mandate":
                 self = .sepa_mandate
+            case "placeholder":
+                self = .placeholder(try PlaceholderSpec(from: decoder))
             default:
                 self = .unknown(field_type)
             }
@@ -228,6 +233,27 @@ extension FormSpec {
 
         /// The list of countries to be displayed for this component
         let allowedCountryCodes: [String]?
+    }
+
+    struct PlaceholderSpec: Decodable, Equatable {
+        let field: PlaceholderField
+
+        enum CodingKeys: String, CodingKey {
+            case field = "for"
+        }
+
+        enum PlaceholderField: String, Decodable, Equatable {
+            case name
+            case email
+            case phone
+            case billingAddress = "billing_address"
+            case billingAddressWithoutCountry = "billing_address_without_country"
+            case unknown
+
+            init(from decoder: Decoder) throws {
+                self = try .init(rawValue: decoder.singleValueContainer().decode(RawValue.self)) ?? .unknown
+            }
+        }
     }
 }
 

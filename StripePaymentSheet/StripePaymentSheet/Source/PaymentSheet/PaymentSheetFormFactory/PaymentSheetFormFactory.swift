@@ -88,6 +88,8 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
+        var additionalElements = [Element]()
+
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
@@ -100,17 +102,17 @@ class PaymentSheetFormFactory {
             return makeDefaultsApplierWrapper(for: makeUPI())
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
-            return FormElement(autoSectioningElements: [makeCashAppMandate()], theme: theme)
+            additionalElements = [makeCashAppMandate()]
         } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
             // Paypal requires mandate when setting up
-            return FormElement(autoSectioningElements: [makePaypalMandate(intent: intent)], theme: theme)
+            additionalElements = [makePaypalMandate(intent: intent)]
         }
 
         // 2. Element-based forms defined in JSON
         guard let spec = specFromJSONProvider() else {
             fatalError()
         }
-        return makeFormElementFromSpec(spec: spec)
+        return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
     }
 }
 
