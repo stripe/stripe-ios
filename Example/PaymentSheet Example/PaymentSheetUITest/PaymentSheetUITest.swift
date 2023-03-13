@@ -627,7 +627,7 @@ extension PaymentSheetUITest {
 
         app.buttons["Pay $50.99"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -662,7 +662,7 @@ extension PaymentSheetUITest {
 
         app.buttons["Set up"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -689,7 +689,7 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -717,7 +717,7 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -771,7 +771,7 @@ extension PaymentSheetUITest {
         waitForExpectations(timeout: 10, handler: nil)
         payButton.tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -912,7 +912,7 @@ extension PaymentSheetUITest {
 
         app.buttons["Pay $50.99"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -951,7 +951,7 @@ extension PaymentSheetUITest {
 
         app.buttons["Set up"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -979,7 +979,7 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -1008,7 +1008,7 @@ extension PaymentSheetUITest {
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -1063,7 +1063,7 @@ extension PaymentSheetUITest {
         waitForExpectations(timeout: 10, handler: nil)
         payButton.tap()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -1613,7 +1613,7 @@ extension PaymentSheetUITest {
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
         payButton.forceTapElement()
 
-        let successText = app.staticTexts["Success!"]
+        let successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
