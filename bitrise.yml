@@ -69,7 +69,6 @@ stages:
     - deploy-dry-run: {}
     - pod-lint-tests: {}
     - integration-all: {}
-    - deploy-example-apps: {}
 workflows:
   basic-integration-tests:
     steps:
