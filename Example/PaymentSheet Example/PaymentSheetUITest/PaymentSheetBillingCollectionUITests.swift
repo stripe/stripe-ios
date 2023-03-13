@@ -20,23 +20,23 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         app.launch()
     }
 
-    var cardInfoField: XCUIElement { app.staticTexts["Card information"] }
-    var contactInfoField: XCUIElement { app.staticTexts["Contact information"] }
-    var fullNameField: XCUIElement { app.textFields["Full name"] }
-    var nameOnCardField: XCUIElement { app.textFields["Name on card"] }
-    var emailField: XCUIElement { app.textFields["Email"] }
-    var phoneField: XCUIElement { app.textFields["Phone"] }
-    var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
-    var countryField: XCUIElement { app.textFields["Country or region"] }
-    var line1Field: XCUIElement { app.textFields["Address line 1"] }
-    var line2Field: XCUIElement { app.textFields["Address line 2"] }
-    var cityField: XCUIElement { app.textFields["City"] }
-    var stateField: XCUIElement { app.textFields["State"] }
-    var zipField: XCUIElement { app.textFields["ZIP"] }
-    var checkoutButton: XCUIElement { app.buttons["Checkout (Complete)"] }
-    var payButton: XCUIElement { app.buttons["Pay $50.99"] }
-    var successText: XCUIElement { app.alerts.staticTexts["Success!"] }
-    var okButton: XCUIElement { app.alerts.scrollViews.otherElements.buttons["OK"] }
+    private var cardInfoField: XCUIElement { app.staticTexts["Card information"] }
+    private var contactInfoField: XCUIElement { app.staticTexts["Contact information"] }
+    private var fullNameField: XCUIElement { app.textFields["Full name"] }
+    private var nameOnCardField: XCUIElement { app.textFields["Name on card"] }
+    private var emailField: XCUIElement { app.textFields["Email"] }
+    private var phoneField: XCUIElement { app.textFields["Phone"] }
+    private var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
+    private var countryField: XCUIElement { app.textFields["Country or region"] }
+    private var line1Field: XCUIElement { app.textFields["Address line 1"] }
+    private var line2Field: XCUIElement { app.textFields["Address line 2"] }
+    private var cityField: XCUIElement { app.textFields["City"] }
+    private var stateField: XCUIElement { app.textFields["State"] }
+    private var zipField: XCUIElement { app.textFields["ZIP"] }
+    private var checkoutButton: XCUIElement { app.buttons["Checkout (Complete)"] }
+    private var payButton: XCUIElement { app.buttons["Pay $50.99"] }
+    private var successText: XCUIElement { app.alerts.staticTexts["Success!"] }
+    private var okButton: XCUIElement { app.alerts.scrollViews.otherElements.buttons["OK"] }
 
     func testCard_AutomaticFields_NoDefaults() throws {
         loadPlayground(
