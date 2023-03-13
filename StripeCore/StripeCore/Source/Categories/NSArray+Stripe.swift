@@ -22,3 +22,10 @@ extension Array where Element == String {
         return self.map { $0.uppercased() }.contains(other.uppercased())
     }
 }
+
+extension Array where Element: Equatable {
+    @discardableResult public mutating func remove(_ element: Element) -> Element? {
+        guard let index = firstIndex(of: element) else { return nil }
+        return remove(at: index)
+    }
+}

@@ -7,10 +7,10 @@
 //
 
 import Foundation
+import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {
-
     func specFromJSONProvider(provider: FormSpecProvider = FormSpecProvider.shared) -> FormSpec? {
         guard let paymentMethodType = PaymentSheet.PaymentMethodType.string(from: paymentMethod) else {
             return nil
@@ -18,27 +18,109 @@ extension PaymentSheetFormFactory {
         return provider.formSpec(for: paymentMethodType)
     }
 
-    func makeFormElementFromSpec(spec: FormSpec) -> FormElement {
+    func makeFormElementFromSpec(
+        spec: FormSpec,
+        additionalElements: [Element] = []
+    ) -> PaymentMethodElementWrapper<FormElement> {
         let elements = makeFormElements(from: spec)
-        return FormElement(autoSectioningElements: elements, theme: theme)
+        let formElement = FormElement(
+            autoSectioningElements: elements + additionalElements,
+            theme: theme)
+        return makeDefaultsApplierWrapper(for: formElement)
     }
 
     private func makeFormElements(from spec: FormSpec) -> [Element] {
+        // These fields may be added according to `configuration.billingDetailsCollectionConfiguration` if they
+        // aren't already present.
+        var billingDetailsFields: [FormSpec.PlaceholderSpec.PlaceholderField] = [
+            .name,
+            .email,
+            .phone,
+            .billingAddress,
+        ]
+
+        // These fields will need to be connected.
+        var countryElement: Element?
+        var billingAddressElement: Element?
+        var phoneElement: Element?
+
         var elements: [Element] = []
         for fieldSpec in spec.fields {
-            if let element = fieldSpecToElement(fieldSpec: fieldSpec) {
-                elements.append(element)
+            guard let element = fieldSpecToElement(fieldSpec: fieldSpec) else { continue }
+            if let fieldToRemove = fieldToRemove(from: fieldSpec) {
+                billingDetailsFields.remove(fieldToRemove)
             }
+
+            if fieldSpec.isCountrySpec {
+                countryElement = element
+            }
+            if fieldSpec.isPhoneSpec {
+                phoneElement = element
+            }
+            if fieldSpec.isAddressSpec {
+                billingAddressElement = element
+            }
+
+            elements.append(element)
         }
+
+        // Add billing details fields if they are needed and not already present.
+        for field in billingDetailsFields {
+            guard let element = makeOptionalBillingDetailsField(for: field) else { continue }
+
+            switch field {
+            case .phone:
+                phoneElement = element
+            case .billingAddress:
+                billingAddressElement = element
+            default: break
+            }
+
+            elements.append(element)
+        }
+
+        connectBillingDetailsFields(
+            countryElement: countryElement,
+            addressElement: billingAddressElement,
+            phoneElement: phoneElement)
+
         return elements
+    }
+
+    private func fieldToRemove(from fieldSpec: FormSpec.FieldSpec) -> FormSpec.PlaceholderSpec.PlaceholderField? {
+        switch fieldSpec {
+        case .name:
+            return .name
+        case .email:
+            return .email
+        case .billing_address:
+            return .billingAddress
+        case .placeholder(let placeholder):
+            switch placeholder.field {
+            case .name:
+                return .name
+            case .email:
+                return .email
+            case .phone:
+                return .phone
+            case .billingAddress, .billingAddressWithoutCountry:
+                return .billingAddress
+            default: return nil
+            }
+        default: return nil
+        }
     }
 
     private func fieldSpecToElement(fieldSpec: FormSpec.FieldSpec) -> Element? {
         switch fieldSpec {
         case .name(let spec):
-            return makeName(label: spec.translationId?.localizedValue, apiPath: spec.apiPath?["v1"])
+            return configuration.billingDetailsCollectionConfiguration.name != .never
+                ? makeName(label: spec.translationId?.localizedValue, apiPath: spec.apiPath?["v1"])
+                : nil
         case .email(let spec):
-            return makeEmail(apiPath: spec.apiPath?["v1"])
+            return configuration.billingDetailsCollectionConfiguration.email != .never
+                ? makeEmail(apiPath: spec.apiPath?["v1"])
+                : nil
         case .selector(let selectorSpec):
             let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {
                 .init(pickerDisplayName: $0.displayText, labelDisplayName: $0.displayText, accessibilityValue: $0.displayText, rawData: $0.apiValue ?? $0.displayText)
@@ -57,7 +139,9 @@ extension PaymentSheetFormFactory {
                 return params
             }
         case .billing_address(let countrySpec):
-            return makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
+            return configuration.billingDetailsCollectionConfiguration.address != .never
+                ? makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
+                : nil
         case .country(let spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
@@ -78,8 +162,118 @@ extension PaymentSheetFormFactory {
             return makeIban(apiPath: spec.apiPath?["v1"])
         case .sepa_mandate:
             return makeSepaMandate()
+        case .placeholder(let spec):
+            return makePlaceholder(for: spec)
         case .unknown:
             return nil
         }
+    }
+
+    func makePlaceholder(for spec: FormSpec.PlaceholderSpec) -> Element? {
+        let field = spec.field
+        guard field != .unknown else { return nil }
+        return makeOptionalBillingDetailsField(for: field)
+    }
+
+    func makeOptionalBillingDetailsField(for field: FormSpec.PlaceholderSpec.PlaceholderField) -> Element? {
+        switch field {
+        case .name:
+            return configuration.billingDetailsCollectionConfiguration.name == .always ? makeName() : nil
+        case .email:
+            return configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
+        case .phone:
+            return configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
+        case .billingAddress:
+            return configuration.billingDetailsCollectionConfiguration.address == .full
+                ? makeBillingAddressSection(countries: nil)
+                : nil
+        case .billingAddressWithoutCountry:
+            return configuration.billingDetailsCollectionConfiguration.address == .full
+                ? makeBillingAddressSection(collectionMode: .noCountry, countries: nil)
+                : nil
+        case .unknown: return nil
+        }
+    }
+
+    private func connectBillingDetailsFields(
+        countryElement: Element?,
+        addressElement: Element?,
+        phoneElement: Element?
+    ) {
+        // Using a closure because a function would require capturing self, which will be deallocated by the time
+        // the closures below are called.
+        let defaultBillingDetails = configuration.defaultBillingDetails
+        let updatePhone = { (phoneElement: PhoneNumberElement, countryCode: String) in
+            // Only update the phone country if:
+            // 1. It's different from the selected one,
+            // 2. A default phone number was not provided.
+            // 3. The phone field hasn't been modified yet.
+            guard countryCode != phoneElement.selectedCountryCode
+                    && defaultBillingDetails.phone == nil
+                    && !phoneElement.hasBeenModified
+            else {
+                return
+            }
+
+            phoneElement.selectedCountryCode = countryCode
+        }
+
+        if let countryElement = countryElement as? PaymentMethodElementWrapper<DropdownFieldElement> {
+            countryElement.element.didUpdate = { [updatePhone] _ in
+                let countryCode = countryElement.element.selectedItem.rawData
+                if let phoneElement = phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement> {
+                    updatePhone(phoneElement.element, countryCode)
+                }
+                if let addressElement = addressElement as? PaymentMethodElementWrapper<AddressSectionElement> {
+                    addressElement.element.selectedCountryCode = countryCode
+                }
+            }
+
+            if let addressElement = addressElement as? PaymentMethodElementWrapper<AddressSectionElement>,
+               addressElement.element.selectedCountryCode != countryElement.element.selectedItem.rawData
+            {
+                addressElement.element.selectedCountryCode = countryElement.element.selectedItem.rawData
+            }
+        }
+
+        if let addressElement = addressElement as? PaymentMethodElementWrapper<AddressSectionElement> {
+            addressElement.element.didUpdate = { [updatePhone] addressDetails in
+                if let countryCode = addressDetails.address.country,
+                   let phoneElement = phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement>
+                {
+                    updatePhone(phoneElement.element, countryCode)
+                }
+            }
+        }
+    }
+}
+
+extension FormSpec.FieldSpec {
+    var isCountrySpec: Bool {
+        switch self {
+        case .country, .klarna_country: return true
+        default: return false
+        }
+    }
+
+    var isPhoneSpec: Bool {
+        if case .placeholder(let placeholderSpec) = self {
+            return placeholderSpec.field == .phone
+        }
+        return false
+    }
+
+    var isAddressSpec: Bool {
+        switch self {
+        case .billing_address: return true
+        case .placeholder(let placeholderSpec):
+            switch placeholderSpec.field {
+            case .billingAddress, .billingAddressWithoutCountry: return true
+            default: break
+            }
+        default: break
+        }
+
+        return false
     }
 }

@@ -243,6 +243,159 @@ final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
     }
+
+    func testLpm_Afterpay_AutomaticFields_NoDefaults() {
+        loadSpecs()
+
+        let configuration = PaymentSheet.Configuration()
+        let factory = factory(
+            for: .dynamic("afterpay_clearpay"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
+    func testLpm_Afterpay_AllFields_NoDefaults() {
+        loadSpecs()
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(
+            for: .dynamic("afterpay_clearpay"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
+    func testLpm_Afterpay_AllFields_WithDefaults() {
+        loadSpecs()
+
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(
+            for: .dynamic("afterpay_clearpay"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
+    func testLpm_Afterpay_MinimalFields() {
+        loadSpecs()
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        let factory = factory(
+            for: .dynamic("afterpay_clearpay"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
+    func testLpm_Klarna_AutomaticFields_NoDefaults() {
+        loadSpecs()
+
+        let configuration = PaymentSheet.Configuration()
+        let factory = factory(
+            for: .dynamic("klarna"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
+    func testLpm_Klarna_AllFields_NoDefaults() {
+        loadSpecs()
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(
+            for: .dynamic("klarna"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
+    func testLpm_Klarna_AllFields_WithDefaults() {
+        loadSpecs()
+
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(
+            for: .dynamic("klarna"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
+    func testLpm_Klarna_MinimalFields() {
+        loadSpecs()
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        let factory = factory(
+            for: .dynamic("klarna"),
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
 }
 
 extension PaymentSheetFormFactorySnapshotTest {
@@ -272,5 +425,13 @@ extension PaymentSheetFormFactorySnapshotTest {
             paymentMethod: paymentMethodType,
             addressSpecProvider: usAddressSpecProvider()
         )
+    }
+
+    private func loadSpecs() {
+        let expectation = expectation(description: "FormSpecs loaded")
+        FormSpecProvider.shared.load { _ in
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
     }
 }

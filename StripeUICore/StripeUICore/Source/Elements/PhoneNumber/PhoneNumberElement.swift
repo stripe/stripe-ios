@@ -37,6 +37,18 @@ import UIKit
         defaultPhoneNumber?.countryCode != phoneNumber?.countryCode
     }
 
+    public var selectedCountryCode: String {
+        get {
+            countryDropdownElement.selectedItem.rawData
+        }
+        set {
+            guard let index = countryDropdownElement.items.firstIndex(where: { $0.rawData == newValue }) else {
+                return
+            }
+            selectCountry(index: index)
+        }
+    }
+
     // MARK: - Private properties
     private var defaultPhoneNumber: PhoneNumber?
 
