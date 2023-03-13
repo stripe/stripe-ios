@@ -52,6 +52,8 @@ extension STPCardBrand: CustomStringConvertible {
             return "mastercard"
         case .unionPay:
             return "unionPay"
+        case .cartesBancaires:
+            return "cartesBancaires"
         case .unknown:
             return "unknown"
         case .visa:

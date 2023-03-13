@@ -24,6 +24,8 @@ import Foundation
     case dinersClub
     /// UnionPay card
     case unionPay
+    /// Cartes Bancaires
+    case cartesBancaires
     /// An unknown card brand type
     case unknown
 }
@@ -64,6 +66,8 @@ public class STPCardBrandUtilities: NSObject {
             return "UnionPay"
         case .visa:
             return "Visa"
+        case .cartesBancaires:
+            return "Cartes Bancaires"
         case .unknown:
             return "Unknown"
         }
