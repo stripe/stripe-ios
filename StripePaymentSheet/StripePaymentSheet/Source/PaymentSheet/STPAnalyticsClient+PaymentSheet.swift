@@ -330,6 +330,7 @@ extension PaymentSheet.Configuration {
         payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
         payload["appearance"] = appearance.analyticPayload
+        payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
 
         return payload
     }
@@ -362,5 +363,17 @@ extension PaymentSheet.Appearance {
         payload["usage"] = payload.values.contains(true)
 
         return payload
+    }
+}
+
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    var analyticPayload: [String: Any] {
+        return [
+            "attach_defaults": attachDefaultsToPaymentMethod,
+            "name": name.rawValue,
+            "email": email.rawValue,
+            "phone": phone.rawValue,
+            "address": address.rawValue,
+        ]
     }
 }

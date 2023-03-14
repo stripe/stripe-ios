@@ -331,7 +331,7 @@ extension PaymentSheet {
     /// Configuration for how billing details are collected during checkout.
     @_spi(STP) public struct BillingDetailsCollectionConfiguration: Equatable {
         /// Billing details fields collection options.
-        public enum CollectionMode: CaseIterable {
+        public enum CollectionMode: String, CaseIterable {
             /// The field will be collected depending on the Payment Method's requirements.
             case automatic
             /// The field will never be collected.
@@ -342,7 +342,7 @@ extension PaymentSheet {
         }
 
         /// Billing address collection options.
-        public enum AddressCollectionMode: CaseIterable {
+        public enum AddressCollectionMode: String, CaseIterable {
             /// Only the fields required by the Payment Method will be collected, this may be none.
             case automatic
             /// Address will never be collected.
