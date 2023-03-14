@@ -97,13 +97,17 @@ extension PaymentSheet {
       try await withCheckedThrowingContinuation { continuation in
 
           if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
-              confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in
-                  continuation.resume(with: result)
-              })
+              DispatchQueue.main.async {
+                  confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in
+                      continuation.resume(with: result)
+                  })
+              }
           } else if let confirmHandler = intentConfig.confirmHandler {
-              confirmHandler(paymentMethodID, { result in
-                  continuation.resume(with: result)
-              })
+              DispatchQueue.main.async {
+                  confirmHandler(paymentMethodID, { result in
+                      continuation.resume(with: result)
+                  })
+              }
           }
       }
     }
