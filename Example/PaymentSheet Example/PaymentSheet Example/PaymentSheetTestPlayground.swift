@@ -695,7 +695,9 @@ extension PaymentSheetTestPlayground {
     // Client-side confirmation handler
     func confirmHandler(_ paymentMethodID: String,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        intentCreationCallback(.success(self.clientSecret!))
+        DispatchQueue.global(qos: .background).async {
+            intentCreationCallback(.success(self.clientSecret!))
+        }
     }
 
     // Server-side confirmation handler
