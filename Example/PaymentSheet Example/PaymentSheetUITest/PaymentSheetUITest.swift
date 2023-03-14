@@ -1550,6 +1550,88 @@ extension PaymentSheetUITest {
         okButton.tap()
     }
 
+    func testLinkEditCard_CollectingBillingDetails() throws {
+        loadPlayground(
+            app,
+            settings: [
+                "customer_mode": "new",
+                "automatic_payment_methods": "off",
+                "link": "on",
+                "collect_name": "always",
+                "collect_email": "always",
+                "collect_phone": "always",
+                "collect_address": "full",
+            ]
+        )
+
+        let paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+        paymentMethodButton.tap()
+
+        let addCardButton = app.buttons["Link"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+        addCardButton.tap()
+
+        app.buttons["Checkout (Custom)"].tap()
+
+        try linkLogin()
+
+        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
+        paymentMethodPicker.waitForExistenceAndTap(timeout: 10.0)
+        paymentMethodPicker.otherElements["Stripe.Link.PaymentMethodPickerCell"].firstMatch.press(forDuration: 2.0)
+        app.buttons["Update card"].tap()
+
+        XCTAssertTrue(modal.staticTexts["Card information"].waitForExistence(timeout: 10.0))
+        XCTAssertTrue(modal.staticTexts["Contact information"].exists)
+        XCTAssertTrue(modal.textFields["Email"].exists)
+        // Phone cannot be collected by Link.
+        XCTAssertFalse(modal.textFields["Phone"].exists)
+        XCTAssertTrue(modal.textFields["Name on card"].exists)
+        XCTAssertTrue(modal.staticTexts["Billing Address"].exists)
+        XCTAssertTrue(modal.textFields["Country or region"].exists)
+        XCTAssertTrue(modal.textFields["Address line 1"].exists)
+        XCTAssertTrue(modal.textFields["Address line 2"].exists)
+        XCTAssertTrue(modal.textFields["City"].exists)
+        XCTAssertTrue(modal.textFields["State"].exists)
+        XCTAssertTrue(modal.textFields["ZIP"].exists)
+
+        modal.textFields["Email"].forceTapWhenHittableInTestCase(self)
+        modal.typeText("foo@bar.com")
+        modal.textFields["Name on card"].tap()
+        modal.typeText("Jane Doe")
+        modal.textFields["CVC"].tap()
+        modal.typeText("123") // CVC
+        modal.textFields["Address line 1"].tap()
+        modal.typeText("510 Townsend St.")
+        modal.textFields["City"].tap()
+        modal.typeText("San Francisco")
+        modal.textFields["State"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+        app.toolbars.buttons["Done"].tap()
+        modal.textFields["ZIP"].tap()
+        modal.typeText("94102")
+        app.toolbars.buttons["Done"].tap()
+
+        // Save.
+        let saveButton = modal.buttons["Update card"]
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: saveButton, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
+        saveButton.tap()
+
+        // Pay!
+        let payButton = modal.buttons["Pay $50.99"]
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
+        payButton.tap()
+
+        let successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+
+        let okButton = app.alerts.buttons["OK"]
+        okButton.tap()
+    }
+
     private func linkLogin() throws {
         let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
         XCTAssertTrue(modal.waitForExistence(timeout: 10))
