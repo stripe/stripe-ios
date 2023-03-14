@@ -1,4 +1,7 @@
 ## x.x.x yyyy-mm-dd
+### PaymentSheet
+* [Added] Added `billingDetailsCollectionConfiguration` to configure how you want to collect billing details. See the docs [here](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#billing-details-collection).
+
 ### Payments
 * [Fixed] Fixed amounts in COP being formatted incorrectly.
 * [Fixed] Fixed BLIK payment bindings not handling next actions correctly.
