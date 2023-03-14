@@ -153,6 +153,7 @@ extension PaymentSheetFormFactory {
             defaultPhoneNumber: configuration.defaultBillingDetails.phone,
             theme: theme)
         return PaymentMethodElementWrapper(element) { phoneField, params in
+            guard case .valid = phoneField.validationState else { return nil }
             params.paymentMethodParams.nonnil_billingDetails.phone = phoneField.phoneNumber?.string(as: .e164)
             return params
         }
@@ -502,7 +503,7 @@ extension PaymentSheetFormFactory {
                 return
             }
 
-            phoneElement.selectedCountryCode = countryCode
+            phoneElement.setSelectedCountryCode(countryCode, shouldUpdateDefaultNumber: true)
         }
 
         if let countryElement = countryElement {

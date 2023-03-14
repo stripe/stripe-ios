@@ -38,15 +38,7 @@ import UIKit
     }
 
     public var selectedCountryCode: String {
-        get {
-            countryDropdownElement.selectedItem.rawData
-        }
-        set {
-            guard let index = countryDropdownElement.items.firstIndex(where: { $0.rawData == newValue }) else {
-                return
-            }
-            selectCountry(index: index)
-        }
+        countryDropdownElement.selectedItem.rawData
     }
 
     // MARK: - Private properties
@@ -92,6 +84,13 @@ import UIKit
         self.defaultPhoneNumber = phoneNumber
         self.countryDropdownElement.delegate = self
         self.textFieldElement.delegate = self
+    }
+
+    public func setSelectedCountryCode(_ countryCode: String, shouldUpdateDefaultNumber: Bool = false) {
+        guard let index = countryDropdownElement.items.firstIndex(where: { $0.rawData == countryCode }) else {
+            return
+        }
+        selectCountry(index: index, shouldUpdateDefaultNumber: shouldUpdateDefaultNumber)
     }
 
     // MARK: - Element protocol
