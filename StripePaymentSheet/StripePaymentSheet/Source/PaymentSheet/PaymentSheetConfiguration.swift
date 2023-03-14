@@ -136,6 +136,8 @@ extension PaymentSheet {
         public var returnURL: String?
 
         /// PaymentSheet pre-populates fields with the values provided.
+        /// If `billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod` is `true`, these values will
+        /// be attached to the payment method if they are not collected.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
@@ -157,17 +159,11 @@ extension PaymentSheet {
         // MARK: Internal
         internal var linkPaymentMethodsOnly: Bool = false
 
-        /// The amount of billing address details to collect
-        /// Intentionally non-public.
-        /// @see BillingAddressCollection
-        var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
-
-        /// 🚧 Under construction
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
         /// If `never` is used for a required field for the Payment Method used during checkout,
         /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
-        @_spi(STP) public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
+        public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
     }
 
     /// Configuration related to the Stripe Customer
@@ -327,9 +323,8 @@ extension PaymentSheet {
         public var phone: String?
     }
 
-    /// 🚧 Under construction
     /// Configuration for how billing details are collected during checkout.
-    @_spi(STP) public struct BillingDetailsCollectionConfiguration: Equatable {
+    public struct BillingDetailsCollectionConfiguration: Equatable {
         /// Billing details fields collection options.
         public enum CollectionMode: String, CaseIterable {
             /// The field will be collected depending on the Payment Method's requirements.
