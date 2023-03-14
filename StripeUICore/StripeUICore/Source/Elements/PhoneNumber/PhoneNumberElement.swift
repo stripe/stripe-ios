@@ -38,15 +38,7 @@ import UIKit
     }
 
     public var selectedCountryCode: String {
-        get {
-            countryDropdownElement.selectedItem.rawData
-        }
-        set {
-            guard let index = countryDropdownElement.items.firstIndex(where: { $0.rawData == newValue }) else {
-                return
-            }
-            selectCountry(index: index)
-        }
+        countryDropdownElement.selectedItem.rawData
     }
 
     // MARK: - Private properties
