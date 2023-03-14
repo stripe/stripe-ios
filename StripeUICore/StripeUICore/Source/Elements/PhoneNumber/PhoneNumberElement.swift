@@ -94,6 +94,13 @@ import UIKit
         self.textFieldElement.delegate = self
     }
 
+    public func setSelectedCountryCode(_ countryCode: String, shouldUpdateDefaultNumber: Bool = false) {
+        guard let index = countryDropdownElement.items.firstIndex(where: { $0.rawData == countryCode }) else {
+            return
+        }
+        selectCountry(index: index, shouldUpdateDefaultNumber: shouldUpdateDefaultNumber)
+    }
+
     // MARK: - Element protocol
     public func beginEditing() -> Bool {
         return textFieldElement.beginEditing()

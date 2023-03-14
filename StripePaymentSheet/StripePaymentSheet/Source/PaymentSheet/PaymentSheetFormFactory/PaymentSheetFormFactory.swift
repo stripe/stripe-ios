@@ -503,7 +503,7 @@ extension PaymentSheetFormFactory {
                 return
             }
 
-            phoneElement.selectedCountryCode = countryCode
+            phoneElement.setSelectedCountryCode(countryCode, shouldUpdateDefaultNumber: true)
         }
 
         if let countryElement = countryElement {
