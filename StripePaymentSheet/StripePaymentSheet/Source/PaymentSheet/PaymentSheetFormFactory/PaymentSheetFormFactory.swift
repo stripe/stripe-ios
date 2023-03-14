@@ -88,6 +88,8 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
+        var additionalElements = [Element]()
+
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
@@ -100,17 +102,17 @@ class PaymentSheetFormFactory {
             return makeDefaultsApplierWrapper(for: makeUPI())
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
-            return FormElement(autoSectioningElements: [makeCashAppMandate()], theme: theme)
+            additionalElements = [makeCashAppMandate()]
         } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
             // Paypal requires mandate when setting up
-            return FormElement(autoSectioningElements: [makePaypalMandate(intent: intent)], theme: theme)
+            additionalElements = [makePaypalMandate(intent: intent)]
         }
 
         // 2. Element-based forms defined in JSON
         guard let spec = specFromJSONProvider() else {
             fatalError()
         }
-        return makeFormElementFromSpec(spec: spec)
+        return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
     }
 }
 
@@ -302,15 +304,23 @@ extension PaymentSheetFormFactory {
         isSaving.value =
             shouldDisplaySaveCheckbox
             ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMode == .merchantRequired
+
+        let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
+        let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
+            ? makeBillingAddressSection(collectionMode: .all(), countries: nil)
+            : nil
+        connectBillingDetailsFields(
+            countryElement: nil,
+            addressElement: addressElement,
+            phoneElement: phoneElement)
+
         return USBankAccountPaymentMethodElement(
             configuration: configuration,
             titleElement: makeUSBankAccountCopyLabel(),
             nameElement: configuration.billingDetailsCollectionConfiguration.name != .never ? makeName() : nil,
             emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
-            phoneElement: configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil,
-            addressElement: configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(collectionMode: .all(), countries: nil)
-                : nil,
+            phoneElement: phoneElement,
+            addressElement: addressElement,
             checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             savingAccount: isSaving,
             merchantName: merchantName,
@@ -470,6 +480,58 @@ extension PaymentSheetFormFactory {
             paramsUpdater: { element, params in
                 return element.updateParams(params: params)
             })
+    }
+
+    func connectBillingDetailsFields(
+        countryElement: PaymentMethodElementWrapper<DropdownFieldElement>?,
+        addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
+        phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?
+    ) {
+        // Using a closure because a function would require capturing self, which will be deallocated by the time
+        // the closures below are called.
+        let defaultBillingDetails = configuration.defaultBillingDetails
+        let updatePhone = { (phoneElement: PhoneNumberElement, countryCode: String) in
+            // Only update the phone country if:
+            // 1. It's different from the selected one,
+            // 2. A default phone number was not provided.
+            // 3. The phone field hasn't been modified yet.
+            guard countryCode != phoneElement.selectedCountryCode
+                    && defaultBillingDetails.phone == nil
+                    && !phoneElement.hasBeenModified
+            else {
+                return
+            }
+
+            phoneElement.selectedCountryCode = countryCode
+        }
+
+        if let countryElement = countryElement {
+            countryElement.element.didUpdate = { [updatePhone] _ in
+                let countryCode = countryElement.element.selectedItem.rawData
+                if let phoneElement = phoneElement {
+                    updatePhone(phoneElement.element, countryCode)
+                }
+                if let addressElement = addressElement {
+                    addressElement.element.selectedCountryCode = countryCode
+                }
+            }
+
+            if let addressElement = addressElement,
+               addressElement.element.selectedCountryCode != countryElement.element.selectedItem.rawData
+            {
+                addressElement.element.selectedCountryCode = countryElement.element.selectedItem.rawData
+            }
+        }
+
+        if let addressElement = addressElement {
+            addressElement.element.didUpdate = { [updatePhone] addressDetails in
+                if let countryCode = addressDetails.address.country,
+                   let phoneElement = phoneElement
+                {
+                    updatePhone(phoneElement.element, countryCode)
+                }
+            }
+        }
     }
 }
 

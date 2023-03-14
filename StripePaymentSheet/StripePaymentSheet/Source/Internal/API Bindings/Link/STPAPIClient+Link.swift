@@ -357,6 +357,10 @@ extension STPAPIClient {
             if let billingDetails = billingDetails {
                 parameters["billing_address"] = billingDetails.consumersAPIParams
             }
+
+            if let billingEmailAddress = billingDetails?.email {
+                parameters["billing_email_address"] = billingEmailAddress
+            }
         }
 
         if let isDefault = updateParams.isDefault {

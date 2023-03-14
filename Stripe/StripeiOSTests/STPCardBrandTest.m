@@ -25,6 +25,7 @@
                                     @(STPCardBrandMastercard),
                                     @(STPCardBrandUnionPay),
                                     @(STPCardBrandVisa),
+                                    @(STPCardBrandCartesBancaires),
                                     @(STPCardBrandUnknown),
                                     ];
 
@@ -53,6 +54,9 @@
                 break;
             case STPCardBrandVisa:
                 XCTAssertEqualObjects(string, @"Visa");
+                break;
+            case STPCardBrandCartesBancaires:
+                XCTAssertEqualObjects(string, @"Cartes Bancaires");
                 break;
             case STPCardBrandUnknown:
                 XCTAssertEqualObjects(string, @"Unknown");

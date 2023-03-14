@@ -19,6 +19,7 @@ class STPImageLibraryTestSwift: XCTestCase {
 
     static let cardBrands: [STPCardBrand] = [
         .amex,
+        .cartesBancaires,
         .dinersClub,
         .discover,
         .JCB,
@@ -110,6 +111,11 @@ class STPImageLibraryTestSwift: XCTestCase {
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_unionpay", templateIfAvailable: false)
                 )
+            case .cartesBancaires:
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_cartes_bancaires", templateIfAvailable: false)
+                )
             case .unknown:
                 STPAssertEqualImages(
                     image,
@@ -177,6 +183,14 @@ class STPImageLibraryTestSwift: XCTestCase {
                     image,
                     STPImageLibrary.safeImageNamed(
                         "stp_card_unionpay_template",
+                        templateIfAvailable: true
+                    )
+                )
+            case .cartesBancaires:
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed(
+                        "stp_card_cartes_bancaires_template",
                         templateIfAvailable: true
                     )
                 )

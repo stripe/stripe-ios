@@ -125,6 +125,7 @@ extension LinkPaymentMethodPicker {
             directionalLayoutMargins = Constants.margins
 
             setupUI()
+            addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(onCellLongPressed)))
         }
 
         required init?(coder: NSCoder) {
@@ -231,6 +232,7 @@ extension LinkPaymentMethodPicker {
                 return
             }
 
+            accessibilityIdentifier = "Stripe.Link.PaymentMethodPickerCell"
             accessibilityLabel = paymentMethod.accessibilityDescription
             accessibilityCustomActions = [
                 UIAccessibilityCustomAction(
@@ -247,6 +249,10 @@ extension LinkPaymentMethodPicker {
 
         @objc func onMenuButtonTapped(_ sender: UIButton) {
             delegate?.savedPaymentPickerCell(self, didTapMenuButton: sender)
+        }
+
+        @objc func onCellLongPressed() {
+            delegate?.savedPaymentPickerCell(self, didTapMenuButton: menuButton)
         }
 
         override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
