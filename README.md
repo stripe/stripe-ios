@@ -101,8 +101,6 @@ The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps ta
 
 For iOS 12 support, please use [v22.8.4](https://github.com/stripe/stripe-ios/tree/v22.8.4). For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
 
-Requirements for the **Stripe Identity iOS SDK** can be found [here](StripeIdentity/README.md#requirements).
-
 ## Getting started
 
 ### Integration
