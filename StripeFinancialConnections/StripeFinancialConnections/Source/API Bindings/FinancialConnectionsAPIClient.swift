@@ -115,7 +115,6 @@ protocol FinancialConnectionsAPIClient {
     ) -> Future<LookupConsumerSessionResponse>
 
     func consumerSessionStartVerification(
-        emailAddress: String,
         otpType: String,
         customEmailType: String?,
         connectionsMerchantName: String?,
@@ -551,7 +550,6 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     }
 
     func consumerSessionStartVerification(
-        emailAddress: String,
         otpType: String, // TODO(kgaidis): consider whether this should be an enum type SMS + EMAIL
         customEmailType: String?, // TODO(kgaidis): consider whether this should be an enum type
         connectionsMerchantName: String?,
