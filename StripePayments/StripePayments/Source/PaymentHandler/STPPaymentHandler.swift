@@ -1740,13 +1740,13 @@ public class STPPaymentHandler: NSObject {
                 .redirectToURL,
                 .useStripeSDK,
                 .alipayHandleRedirect,
-                .BLIKAuthorize,
                 .weChatPayRedirectToApp,
                 .cashAppRedirectToApp:
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
                 .verifyWithMicrodeposits,
+                .BLIKAuthorize,
                 .upiAwaitNotification:
                 return true
             }
