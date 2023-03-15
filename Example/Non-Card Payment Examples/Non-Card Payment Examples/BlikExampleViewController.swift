@@ -107,7 +107,7 @@ extension BlikExampleViewController {
                     }
                 }
             },
-            additionalParameters: "supported_payment_methods=blik&country=pl"
+            additionalParameters: "supported_payment_methods=blik&country=pl&currency=pln"
         )
     }
 }

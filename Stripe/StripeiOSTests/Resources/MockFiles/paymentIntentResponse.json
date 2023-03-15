@@ -28,7 +28,8 @@
     "afterpay_clearpay",
     "klarna",
     "us_bank_account",
-    "affirm"
+    "affirm",
+    "blik"
   ],
   "processing": null,
   "receipt_email": null,
