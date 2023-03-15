@@ -1,3 +1,7 @@
+## x.x.x yyyy-mm-dd
+### Payments
+* [Fixed] Fixed BLIK payment bindings.
+
 ## 23.5.0 2023-03-13
 ### Payments
 * [Added] API bindings support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay/accept-a-payment?platform=mobile).
