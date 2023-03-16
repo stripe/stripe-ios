@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from versions < 24.0.0
+* `StripePaymentSheet` now requires `StripeLinkCore`. If you are manually installing `StripePaymentSheet`, you will need to include `StripeLinkCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/24.0.0) for version 24.0.0 of the SDK. If you are using CocoaPods or Swift Package Manager, this dependency will be imported automatically.
+
 ### Migrating from versions < 23.0.0
 * The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
 * [Changed] If you use PaymentSheet, you must now `import StripePaymentSheet`. PaymentSheet users no longer need to import the `Stripe` module.

@@ -7,6 +7,7 @@ let project = Project.stripeFramework(
     dependencies: [
         .project(target: "StripeCore", path: "//StripeCore"),
         .project(target: "StripeUICore", path: "//StripeUICore"),
+        .project(target: "StripeLinkCore", path: "//StripeLinkCore"),
         .project(target: "Stripe3DS2", path: "//Stripe3DS2"),
         .project(target: "StripeApplePay", path: "//StripeApplePay"),
         .project(target: "StripePayments", path: "//StripePayments"),
