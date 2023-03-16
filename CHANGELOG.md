@@ -1,9 +1,13 @@
 ## 24.0.0 yyyy-mm-dd
-### Payments
-* [Added] API bindings support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay/accept-a-payment?platform=mobile).
-
 ### PaymentSheet
 * `StripePaymentSheet` now requires `StripeLinkCore`. See `MIGRATING.md` for more info.
+
+## 23.5.0 2023-03-13
+### Payments
+* [Added] API bindings support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay/accept-a-payment?platform=mobile).
+* [Added] Added `STPCardValidator.possibleBrands(forCard:completion:)`, which returns the list of available networks for a card.
+
+### PaymentSheet
 * [Added] Support for Cash App Pay in PaymentSheet.
 
 ## 23.4.2 2023-03-06

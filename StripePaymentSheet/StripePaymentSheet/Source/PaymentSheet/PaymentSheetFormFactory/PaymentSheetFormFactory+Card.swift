@@ -36,7 +36,7 @@ extension PaymentSheetFormFactory {
             defaultName: configuration.defaultBillingDetails.name,
             theme: theme)
 
-        let billingAddressSection: PaymentMethodElement? = {
+        let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
                 return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil)
@@ -46,6 +46,15 @@ extension PaymentSheetFormFactory {
                 return nil
             }
         }()
+
+        let phoneElement = contactInformationSection?.elements.compactMap {
+            $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
+        }.first
+
+        connectBillingDetailsFields(
+            countryElement: nil,
+            addressElement: billingAddressSection,
+            phoneElement: phoneElement)
 
         let cardFormElement = FormElement(
             elements: [

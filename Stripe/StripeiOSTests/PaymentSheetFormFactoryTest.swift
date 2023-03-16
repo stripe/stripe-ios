@@ -75,8 +75,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return
         }
 
-        XCTAssertEqual(spec.fields.count, 2)
-        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: nil, translationId: nil)))
+        XCTAssertEqual(spec.fields.count, 5)
+        XCTAssertEqual(
+            spec.fields.first,
+            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
+        )
         XCTAssertEqual(spec.type, "eps")
     }
 
@@ -466,7 +469,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
-        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
             return
         }
@@ -498,7 +501,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
-        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
             return
         }
@@ -532,7 +535,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
-        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
             return
         }
@@ -568,7 +571,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
-        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
             return
         }
@@ -748,7 +751,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
-        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
             return
         }
@@ -778,7 +781,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
-        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
             return
         }
@@ -858,7 +861,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("luxe_bucks"))
-        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
             return
         }
@@ -941,7 +944,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
-        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement)
+        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement.element)
         else {
             XCTFail("failed to get address section element")
             return
@@ -971,7 +974,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         let formElement = factory.makeFormElementFromSpec(spec: spec)
-        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement)
+        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement.element)
         else {
             XCTFail("failed to get address section element")
             return
@@ -1222,6 +1225,117 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let formElement = factory.make()
         let params = formElement.applyDefaults(params: IntentConfirmParams(type: .card))
+
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.name)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.email)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.phone)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.line1)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.line2)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.city)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.state)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.country)
+        XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode)
+    }
+
+    func testApplyDefaults_LPM_Applied() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.afterpayClearpay])
+        // An address section with defaults...
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            ),
+        ]
+
+        let expectation = expectation(description: "FormSpecs loaded")
+        FormSpecProvider.shared.load { _ in
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .dynamic("afterpay_clearpay"),
+            addressSpecProvider: specProvider
+        )
+        let form = factory.make()
+        let params = form.applyDefaults(params: IntentConfirmParams(type: .dynamic("afterpay_clearpay")))
+
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.name, "Jane Doe")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.email, "foo@bar.com")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.phone, "+15555555555")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.line1, "510 Townsend St.")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.line2, "Line 2")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.city, "San Francisco")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.state, "CA")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.country, "US")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode, "94102")
+    }
+
+    func testApplyDefaults_LPM_NotApplied() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = defaultAddress
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.afterpayClearpay])
+        // An address section with defaults...
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(
+                format: "NOACSZ",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .zip
+            ),
+        ]
+
+        let expectation = expectation(description: "FormSpecs loaded")
+        FormSpecProvider.shared.load { _ in
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .dynamic("afterpay_clearpay"),
+            addressSpecProvider: specProvider
+        )
+        let form = factory.make()
+        let params = form.applyDefaults(params: IntentConfirmParams(type: .dynamic("afterpay_clearpay")))
 
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.name)
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.email)

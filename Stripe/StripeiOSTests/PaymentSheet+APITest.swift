@@ -69,16 +69,24 @@ class PaymentSheetAPITest: XCTestCase {
 
     func fetchPaymentIntent(
         types: [String],
+        currency: String = "eur",
+        paymentMethodID: String? = nil,
+        confirm: Bool = false,
         completion: @escaping (Result<(String), Error>) -> Void
     ) {
+        var params = [String: Any]()
+        params["amount"] = 1050
+        params["currency"] = currency
+        params["payment_method_types"] = types
+        params["confirm"] = confirm
+        if let paymentMethodID = paymentMethodID {
+            params["payment_method"] = paymentMethodID
+        }
+
         STPTestingAPIClient
             .shared()
             .createPaymentIntent(
-                withParams: [
-                    "amount": 1050,
-                    "currency": "eur",
-                    "payment_method_types": types,
-                ]
+                withParams: params
             ) { clientSecret, error in
                 guard let clientSecret = clientSecret,
                     error == nil
@@ -220,9 +228,16 @@ class PaymentSheetAPITest: XCTestCase {
 
         let types = ["card", "cashapp"]
         let expected: [STPPaymentMethodType] = [.card, .cashApp]
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
-            // TODO(porter) Invoke result callback to finish flow
-            callbackExpectation.fulfill()
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, intentCreationCallback in
+            self.fetchPaymentIntent(types: types, currency: "USD") { result in
+                switch result {
+                case .success(let clientSecret):
+                    intentCreationCallback(.success(clientSecret))
+                    callbackExpectation.fulfill()
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
                                                                            currency: "USD",
@@ -232,7 +247,6 @@ class PaymentSheetAPITest: XCTestCase {
                                                             confirmHandler: confirmHandler)
         let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-
         PaymentSheet.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration
@@ -277,9 +291,19 @@ class PaymentSheetAPITest: XCTestCase {
 
         let types = ["card", "cashapp"]
         let expected: [STPPaymentMethodType] = [.card, .cashApp]
-        let serverSideConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandlerForServerSideConfirmation = {_, _, _ in
-            // TODO(porter) Invoke result callback to finish flow
-            callbackExpectation.fulfill()
+        let serverSideConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandlerForServerSideConfirmation = {paymentMethodID, _, intentCreationCallback in
+            self.fetchPaymentIntent(types: types,
+                                    currency: "USD",
+                                    paymentMethodID: paymentMethodID,
+                                    confirm: true) { result in
+                switch result {
+                case .success(let clientSecret):
+                    intentCreationCallback(.success(clientSecret))
+                    callbackExpectation.fulfill()
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
                                                                            currency: "USD",

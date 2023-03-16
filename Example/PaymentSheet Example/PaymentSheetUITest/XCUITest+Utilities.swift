@@ -32,8 +32,8 @@ extension XCUIElement {
     }
 
     @discardableResult
-    func waitForExistenceAndTap() -> Bool {
-        guard waitForExistence(timeout: 4) else {
+    func waitForExistenceAndTap(timeout: TimeInterval = 4.0) -> Bool {
+        guard waitForExistence(timeout: timeout) else {
             return false
         }
         forceTapElement()
@@ -89,12 +89,14 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
 }
 
 extension XCTestCase {
-    func fillCardData(_ app: XCUIApplication, container: XCUIElement? = nil) throws {
+    func fillCardData(_ app: XCUIApplication,
+                      container: XCUIElement? = nil,
+                      cardNumber: String? = nil) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
         numberField.forceTapWhenHittableInTestCase(self)
-        app.typeText("4242424242424242")
+        app.typeText(cardNumber ?? "4242424242424242")
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button

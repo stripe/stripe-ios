@@ -69,7 +69,7 @@ extension LinkCardEditElementSnapshotTests {
             isDefault: isDefault
         )
 
-        return LinkCardEditElement(paymentMethod: paymentMethod)
+        return LinkCardEditElement(paymentMethod: paymentMethod, configuration: .init())
     }
 
 }
