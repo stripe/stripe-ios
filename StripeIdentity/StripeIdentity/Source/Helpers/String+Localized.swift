@@ -45,21 +45,21 @@ extension String.Localized {
             "Label for the personal id number field in the hosted verification details collection form for countries without an exception"
         )
     }
-    
+
     static var last_4_of_ssn: String {
         STPLocalizedString(
             "Last 4 of Social Security number",
             "Label for the ID field to collect last 4 of social security number for US ID"
         )
     }
-    
+
     static var individual_cpf: String {
         STPLocalizedString(
             "Individual CPF",
             "Label for the ID field to collect individual CPF for Brazilian ID"
         )
     }
-    
+
     static var nric_or_fin: String {
         STPLocalizedString(
             "NRIC or FIN",
