@@ -1,6 +1,7 @@
 ## x.x.x yyyy-mm-dd
-## Payments
+### Payments
 * [Fixed] Fixed amounts in COP being formatted incorrectly.
+* [Fixed] Fixed BLIK payment bindings not handling next actions correctly.
 
 ## 23.5.0 2023-03-13
 ### Payments
