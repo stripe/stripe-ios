@@ -84,8 +84,17 @@
 /* Description of passport image */
 "Image of passport" = "Image of passport";
 
+/* Label for the ID field to collect individual CPF for Brazilian ID */
+"Individual CPF" = "Individual CPF";
+
+/* Label for the ID field to collect last 4 of social security number for US ID */
+"Last 4 of Social Security number" = "Last 4 of Social Security number";
+
 /* Status while screen is loading */
 "Loading" = "Loading";
+
+/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+"NRIC or FIN" = "NRIC or FIN";
 
 /* Title of ID document scanning screen when scanning a passport */
 "Passport" = "Passport";
