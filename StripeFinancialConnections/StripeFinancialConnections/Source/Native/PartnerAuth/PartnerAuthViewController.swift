@@ -410,6 +410,17 @@ final class PartnerAuthViewController: UIViewController {
     private func openInstitutionAuthenticationWebView(authSession: FinancialConnectionsAuthSession) {
         guard let urlString = authSession.url, let url = URL(string: urlString) else {
             assertionFailure("Expected to get a URL back from authorization session.")
+            dataSource
+                .analyticsClient
+                .logUnexpectedError(
+                    FinancialConnectionsSheetError.unknown(
+                        debugDescription: "Invalid or NULL URL returned from auth session"
+                    ),
+                    errorName: "InvalidAuthSessionURL",
+                    pane: .partnerAuth
+                )
+            // navigate back to institution picker so user can try again
+            navigateBack()
             return
         }
 
