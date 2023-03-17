@@ -124,15 +124,13 @@ class ChoosePaymentOptionViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
-        isLinkEnabled: Bool,
-        delegate: ChoosePaymentOptionViewControllerDelegate
+        isLinkEnabled: Bool
     ) {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
 
         self.configuration = configuration
-        self.delegate = delegate
 
         // Default to payment selection, as long as we have saved PMs or Apple Pay or Link is enabled.
         self.mode = savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled
