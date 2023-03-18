@@ -342,8 +342,7 @@ extension PaymentSheet {
                     case .success(let paymentMethods):
                         // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                         // TODO: We're fetching the customer's saved card and us_bank_account PMs, and then filtering - this is backwards!
-                        let savedPaymentMethods =
-                            paymentMethods
+                        let savedPaymentMethods = paymentMethods
                             .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                             .filter {
                                 $0.paymentSheetPaymentMethodType().supportsSavedPaymentMethod(
@@ -351,7 +350,15 @@ extension PaymentSheet {
                                     intent: intent
                                 )
                             }
+                        
+                        // Warn the merchant if we see unactivated payment method types in the Intent
                         warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: intent.unactivatedPaymentMethodTypes)
+                        // Ensure that there's at least 1 payment method type available for the intent and configuration.
+                        let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+                        guard !paymentMethodTypes.isEmpty else {
+                            completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
+                            return
+                        }
 
                         let linkAccountPromise = PaymentSheet.lookupLinkAccount(
                             intent: intent,
