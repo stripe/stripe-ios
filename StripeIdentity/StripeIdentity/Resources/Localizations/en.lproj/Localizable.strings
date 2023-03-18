@@ -132,6 +132,9 @@
 /* Instructional text for scanning a passport */
 "Position your passport in the center of the frame" = "Position your passport in the center of the frame";
 
+/* Button text displayed to the user to retake photo */
+"Retake Photos" = "Retake Photos";
+
 /* Back button title for returning to the document scan screen */
 "Scan" = "Scan";
 
