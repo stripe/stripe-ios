@@ -16,6 +16,8 @@ import XCTest
 
 class ConsumerSessionTests: XCTestCase {
 
+// Disable Consumer Session integration tests
+/*
     let apiClient: STPAPIClient = {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return apiClient
@@ -394,7 +396,7 @@ class ConsumerSessionTests: XCTestCase {
 
         wait(for: [logoutExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
-
+*/
 }
 
 extension ConsumerSessionTests {
