@@ -300,11 +300,8 @@ extension PaymentSheet {
                 switch loadResult {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+                    // TODO(Update:) Preserve the customer's previous inputs.
                     self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: paymentMethods, isLinkEnabled: isLinkEnabled, configuration: self.configuration)
-                    // 3. Preserve the customer's previous inputs if it's still valid
-                    if let paymentOption = self._paymentOption, Self.isPaymentOptionValid(paymentOption, intent: intent, isLinkEnabled: isLinkEnabled) {
-                        // TODO(Update:) Preserve the customer's previous inputs.
-                    }
                     
                     // ❓
                     // TODO for PR: What is this? I copied it from the other load call, but I can't figure out what it does.
@@ -319,7 +316,6 @@ extension PaymentSheet {
                     completion(error)
                 }
             }
-            // 4. Call the completion block
         }
 
         // MARK: Internal helper methods
@@ -369,23 +365,6 @@ extension PaymentSheet {
             }
 #endif
             return vc
-        }
-        
-        /// paymentOption is invalid if :
-        /// - the `intent` doesn't contain the type anymore
-        /// - we went from not showing a mandate to showing a mandate - the customer is required to see the mandate.
-        static func isPaymentOptionValid(_ paymentOption: PaymentOption, intent: Intent, isLinkEnabled: Bool) -> Bool {
-            switch paymentOption {
-            case .link:
-                return isLinkEnabled
-            case .applePay:
-                return true // Apple Pay is enabled/disabled via PaymentSheet.Configuration
-            case .new(confirmParams: let params):
-                // Horribly, we have to convert between the two different enums we use to represent the same "Payment Method Type"
-                return intent.recommendedPaymentMethodTypes.map { PaymentMethodType(from: STPPaymentMethod.string(from: $0) ?? "unknown") }.contains(params.paymentMethodType)
-            case .saved(paymentMethod: let paymentMethod):
-                return intent.recommendedPaymentMethodTypes.contains(paymentMethod.type)
-            }
         }
     }
     
