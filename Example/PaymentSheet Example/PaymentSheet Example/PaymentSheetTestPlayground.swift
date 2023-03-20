@@ -704,9 +704,21 @@ extension PaymentSheetTestPlayground {
     func confirmHandlerForServerSideConfirmation(_ paymentMethodID: String,
                                                  _ shouldSavePaymentMethod: Bool,
                                                  _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        enum ServerSideConfirmationError: Error {
+        enum ServerSideConfirmationError: Error, LocalizedError {
             case clientSecretNotFound
+            case confirmError(String)
             case unknown
+
+            public var errorDescription: String? {
+                switch self {
+                case .clientSecretNotFound:
+                    return "Client secret not found in response from server."
+                case .confirmError(let errorMesssage):
+                    return errorMesssage
+                case .unknown:
+                    return "An unknown error occured."
+                }
+            }
         }
 
         let body = [
@@ -718,13 +730,20 @@ extension PaymentSheetTestPlayground {
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
 
-        makeRequest(with: PaymentSheetTestPlayground.confirmEndpoint, body: body, completionHandler: { data, _, error in
+        makeRequest(with: PaymentSheetTestPlayground.confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
-                intentCreationCallback(.failure(error ?? ServerSideConfirmationError.unknown))
+                if let data = data,
+                   (response as? HTTPURLResponse)?.statusCode == 400,
+                   let errorMessage = String(data: data, encoding: .utf8){
+                    // read the error message
+                    intentCreationCallback(.failure(ServerSideConfirmationError.confirmError(errorMessage)))
+                } else {
+                    intentCreationCallback(.failure(error ?? ServerSideConfirmationError.unknown))
+                }
                 return
             }
 

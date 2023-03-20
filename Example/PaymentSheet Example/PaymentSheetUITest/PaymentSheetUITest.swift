@@ -721,59 +721,60 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferferedIntentLinkSignup_ClientSideConfirmation() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        XCTAssertTrue(modal.waitForExistence(timeout: 10))
-
-        let emailField = modal.textFields["Email"]
-        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-
-        let phoneField = modal.textFields["Phone"]
-        XCTAssert(phoneField.waitForExistence(timeout: 10))
-        phoneField.tap()
-        phoneField.typeText("3105551234")
-
-        // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = modal.textFields["Name"]
-        if nameField.exists {
-            nameField.tap()
-            nameField.typeText("Jane Done")
-        }
-
-        modal.buttons["Join Link"].tap()
-
-        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
-        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
-        // method operate on the correct card form.
-        try fillCardData(app, container: modal)
-
-        // Pay!
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferferedIntentLinkSignup_ClientSideConfirmation() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        XCTAssertTrue(modal.waitForExistence(timeout: 10))
+//
+//        let emailField = modal.textFields["Email"]
+//        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+//        emailField.tap()
+//        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+//
+//        let phoneField = modal.textFields["Phone"]
+//        XCTAssert(phoneField.waitForExistence(timeout: 10))
+//        phoneField.tap()
+//        phoneField.typeText("3105551234")
+//
+//        // The name field is only required for non-US countries. Only fill it out if it exists.
+//        let nameField = modal.textFields["Name"]
+//        if nameField.exists {
+//            nameField.tap()
+//            nameField.typeText("Jane Done")
+//        }
+//
+//        modal.buttons["Join Link"].tap()
+//
+//        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
+//        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
+//        // method operate on the correct card form.
+//        try fillCardData(app, container: modal)
+//
+//        // Pay!
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let successText = app.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+//    }
 
     func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
         loadPlayground(
@@ -815,86 +816,89 @@ extension PaymentSheetUITest {
         payWithApplePay()
     }
 
-    func testDeferredIntentLinkSignIn_ClientSideConfirmation() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-            ]
-        )
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferredIntentLinkSignIn_ClientSideConfirmation() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        try loginAndPay()
+//    }
 
-        app.buttons["Checkout (Complete)"].tap()
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferredIntentLinkSignIn_ClientSideConfirmation_LostCardDecline() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        try linkLogin()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
+//        if paymentMethodPicker.waitForExistence(timeout: 10) {
+//            paymentMethodPicker.tap()
+//            paymentMethodPicker.buttons["Add a payment method"].tap()
+//        }
+//
+//        try fillCardData(app, container: modal, cardNumber: "4000000000009987")
+//
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let failedText = modal.staticTexts["The payment failed."]
+//        XCTAssertTrue(failedText.waitForExistence(timeout: 10))
+//    }
 
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        try loginAndPay()
-    }
-
-    func testDeferredIntentLinkSignIn_ClientSideConfirmation_LostCardDecline() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        try linkLogin()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
-        if paymentMethodPicker.waitForExistence(timeout: 10) {
-            paymentMethodPicker.tap()
-            paymentMethodPicker.buttons["Add a payment method"].tap()
-        }
-
-        try fillCardData(app, container: modal, cardNumber: "4000000000009987")
-
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        let failedText = modal.staticTexts["The payment failed."]
-        XCTAssertTrue(failedText.waitForExistence(timeout: 10))
-    }
-
-    func testDeferredIntentLinkCustomFlow_ClientSideConfirmation() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-            ]
-        )
-
-        let paymentMethodButton = app.buttons["Select Payment Method"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
-        paymentMethodButton.tap()
-
-        let addCardButton = app.buttons["Link"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
-        addCardButton.tap()
-
-        app.buttons["Checkout (Custom)"].tap()
-
-        try loginAndPay()
-    }
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferredIntentLinkCustomFlow_ClientSideConfirmation() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//            ]
+//        )
+//
+//        let paymentMethodButton = app.buttons["Select Payment Method"]
+//        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+//        paymentMethodButton.tap()
+//
+//        let addCardButton = app.buttons["Link"]
+//        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+//        addCardButton.tap()
+//
+//        app.buttons["Checkout (Custom)"].tap()
+//
+//        try loginAndPay()
+//    }
 
     // MARK: Deferred tests (server-side)
 
@@ -930,9 +934,7 @@ extension PaymentSheetUITest {
 
         app.buttons["Pay $50.99"].tap()
 
-        // Error comes from our backend and isn't pretty
-        let predicate = NSPredicate(format: "label CONTAINS 'ServerSideConfirmationError error'")
-        let declineText = app.staticTexts.containing(predicate).firstMatch
+        let declineText = app.staticTexts["Your card was declined."]
         XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
     }
 
@@ -1012,60 +1014,61 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferferedIntentLinkSignup_ServerSideConfirmation() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        XCTAssertTrue(modal.waitForExistence(timeout: 10))
-
-        let emailField = modal.textFields["Email"]
-        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-
-        let phoneField = modal.textFields["Phone"]
-        XCTAssert(phoneField.waitForExistence(timeout: 10))
-        phoneField.tap()
-        phoneField.typeText("3105551234")
-
-        // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = modal.textFields["Name"]
-        if nameField.exists {
-            nameField.tap()
-            nameField.typeText("Jane Done")
-        }
-
-        modal.buttons["Join Link"].tap()
-
-        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
-        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
-        // method operate on the correct card form.
-        try fillCardData(app, container: modal)
-
-        // Pay!
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferferedIntentLinkSignup_ServerSideConfirmation() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//                "confirm_mode": "Server",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        XCTAssertTrue(modal.waitForExistence(timeout: 10))
+//
+//        let emailField = modal.textFields["Email"]
+//        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+//        emailField.tap()
+//        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+//
+//        let phoneField = modal.textFields["Phone"]
+//        XCTAssert(phoneField.waitForExistence(timeout: 10))
+//        phoneField.tap()
+//        phoneField.typeText("3105551234")
+//
+//        // The name field is only required for non-US countries. Only fill it out if it exists.
+//        let nameField = modal.textFields["Name"]
+//        if nameField.exists {
+//            nameField.tap()
+//            nameField.typeText("Jane Done")
+//        }
+//
+//        modal.buttons["Join Link"].tap()
+//
+//        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
+//        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
+//        // method operate on the correct card form.
+//        try fillCardData(app, container: modal)
+//
+//        // Pay!
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let successText = app.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+//    }
 
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
         loadPlayground(
@@ -1170,508 +1173,510 @@ extension PaymentSheetUITest {
         XCTAssertTrue(app.cells.count == 1)
     }
 
-    func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
-            ]
-        )
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//                "confirm_mode": "Server",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        try loginAndPay()
+//    }
 
-        app.buttons["Checkout (Complete)"].tap()
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferredIntentLinkSignIn_ServerSideConfirmation_LostCardDecline() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//                "confirm_mode": "Server",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        try linkLogin()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
+//        if paymentMethodPicker.waitForExistence(timeout: 10) {
+//            paymentMethodPicker.tap()
+//            paymentMethodPicker.buttons["Add a payment method"].tap()
+//        }
+//
+//        try fillCardData(app, container: modal, cardNumber: "4000000000009987")
+//
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let declineText = app.staticTexts["Your card was declined."]
+//        XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
+//    }
 
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        try loginAndPay()
-    }
-
-    func testDeferredIntentLinkSignIn_ServerSideConfirmation_LostCardDecline() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        try linkLogin()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
-        if paymentMethodPicker.waitForExistence(timeout: 10) {
-            paymentMethodPicker.tap()
-            paymentMethodPicker.buttons["Add a payment method"].tap()
-        }
-
-        try fillCardData(app, container: modal, cardNumber: "4000000000009987")
-
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        // Error comes from our backend and isn't pretty
-        let predicate = NSPredicate(format: "label CONTAINS 'ServerSideConfirmationError error'")
-        let declineText = app.staticTexts.containing(predicate).firstMatch
-        XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
-    }
-
-    func testDeferredIntentLinkCustomFlow_SeverSideConfirmation() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
-            ]
-        )
-
-        let paymentMethodButton = app.buttons["Select Payment Method"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
-        paymentMethodButton.tap()
-
-        let addCardButton = app.buttons["Link"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
-        addCardButton.tap()
-
-        app.buttons["Checkout (Custom)"].tap()
-
-        try loginAndPay()
-    }
+    // TODO(porter) Re-enable when Link is available
+//    func testDeferredIntentLinkCustomFlow_SeverSideConfirmation() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "init_mode": "Deferred",
+//                "confirm_mode": "Server",
+//            ]
+//        )
+//
+//        let paymentMethodButton = app.buttons["Select Payment Method"]
+//        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+//        paymentMethodButton.tap()
+//
+//        let addCardButton = app.buttons["Link"]
+//        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+//        addCardButton.tap()
+//
+//        app.buttons["Checkout (Custom)"].tap()
+//
+//        try loginAndPay()
+//    }
 }
 
 // MARK: - Link
 
-extension PaymentSheetUITest {
-
-    // MARK: Inline signup
-
-    /// Tests the Link inline signup flow.
-    func testLinkInlineSignup() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        try fillCardData(app)
-
-        app.switches["Save my info for secure 1-click checkout"].tap()
-
-        let emailField = app.textFields["Email"]
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-
-        let phoneField = app.textFields["Phone"]
-        // Phone field appears after the network call finishes. We want to wait for it to appear.
-        XCTAssert(phoneField.waitForExistence(timeout: 10))
-        phoneField.tap()
-        phoneField.typeText("3105551234")
-
-        // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = app.textFields["Name"]
-        if nameField.exists {
-            nameField.tap()
-            nameField.typeText("Jane Done")
-        }
-
-        // Pay!
-        app.buttons["Pay $50.99"].tap()
-
-        let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10))
-
-        let okButton = app.alerts.buttons["OK"]
-        okButton.tap()
-    }
-
-    func testLinkInlineSignIn() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        try fillCardData(app)
-
-        app.switches["Save my info for secure 1-click checkout"].tap()
-
-        let emailField = app.textFields["Email"]
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+a-consumer@stripe.com")
-
-        // Pay!
-        let payButton = app.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        app.buttons["Pay $50.99"].tap()
-
-        // Wait for OTP prompt and enter the code
-        let codeField = app.descendants(matching: .any)["Code field"]
-        XCTAssert(codeField.waitForExistence(timeout: 10))
-        codeField.tap()
-        app.typeTextWithKeyboard("000000")
-
-        let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10))
-
-        let okButton = app.alerts.buttons["OK"]
-        okButton.tap()
-    }
-
-    // MARK: Modal
-
-    func testLinkSignup() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        XCTAssertTrue(modal.waitForExistence(timeout: 10))
-
-        let emailField = modal.textFields["Email"]
-        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-
-        let phoneField = modal.textFields["Phone"]
-        XCTAssert(phoneField.waitForExistence(timeout: 10))
-        phoneField.tap()
-        phoneField.typeText("3105551234")
-
-        // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = modal.textFields["Name"]
-        if nameField.exists {
-            nameField.tap()
-            nameField.typeText("Jane Done")
-        }
-
-        // Terms and privacy policy
-        for linkText in ["Terms", "Privacy Policy"] {
-            modal.links[linkText].tap()
-            let closeTermsButton = app.otherElements["TopBrowserBar"].buttons["Close"]
-            XCTAssert(closeTermsButton.waitForExistence(timeout: 10))
-            closeTermsButton.tap()
-        }
-
-        modal.buttons["Join Link"].tap()
-
-        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
-        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
-        // method operate on the correct card form.
-        try fillCardData(app, container: modal)
-
-        // Pay!
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10))
-
-        let okButton = app.alerts.buttons["OK"]
-        okButton.tap()
-
-        // Reload to verify that the last signup email is remembered.
-        reload(app)
-        app.buttons["Checkout (Complete)"].tap()
-
-        // Confirm that that verification prompt appears
-        // and that we are able to verify the session.
-        let codeField = app.descendants(matching: .any)["Code field"]
-        XCTAssert(codeField.waitForExistence(timeout: 10))
-        codeField.tap()
-        app.typeTextWithKeyboard("000000")
-
-        let modal2 = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        XCTAssertTrue(modal2.waitForExistence(timeout: 10))
-    }
-
-    func testLinkSignIn() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-            ]
-        )
-
-        app.buttons["Checkout (Complete)"].tap()
-
-        let payWithLinkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
-        payWithLinkButton.tap()
-
-        try loginAndPay()
-    }
-
-    // MARK: Custom Flow
-
-    func testLinkCustomFlow() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-            ]
-        )
-
-        let paymentMethodButton = app.buttons["Select Payment Method"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
-        paymentMethodButton.tap()
-
-        let addCardButton = app.buttons["Link"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
-        addCardButton.tap()
-
-        app.buttons["Checkout (Custom)"].tap()
-
-        try loginAndPay()
-    }
-
-    func testLinkAddCard_CollectingBillingDetails() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
-        )
-
-        let paymentMethodButton = app.buttons["Select Payment Method"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
-        paymentMethodButton.tap()
-
-        let addCardButton = app.buttons["Link"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
-        addCardButton.tap()
-
-        app.buttons["Checkout (Custom)"].tap()
-
-        try linkLogin()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
-        if paymentMethodPicker.waitForExistence(timeout: 10) {
-            paymentMethodPicker.tap()
-            paymentMethodPicker.buttons["Add a payment method"].tap()
-        }
-
-        XCTAssertTrue(modal.staticTexts["Card information"].waitForExistence(timeout: 10.0))
-        XCTAssertTrue(modal.staticTexts["Contact information"].exists)
-        XCTAssertTrue(modal.textFields["Email"].exists)
-        // Phone cannot be collected by Link.
-        XCTAssertFalse(modal.textFields["Phone"].exists)
-        XCTAssertTrue(modal.textFields["Name on card"].exists)
-        XCTAssertTrue(modal.staticTexts["Billing address"].exists)
-        XCTAssertTrue(modal.textFields["Country or region"].exists)
-        XCTAssertTrue(modal.textFields["Address line 1"].exists)
-        XCTAssertTrue(modal.textFields["Address line 2"].exists)
-        XCTAssertTrue(modal.textFields["City"].exists)
-        XCTAssertTrue(modal.textFields["State"].exists)
-        XCTAssertTrue(modal.textFields["ZIP"].exists)
-
-        modal.textFields["Email"].forceTapWhenHittableInTestCase(self)
-        modal.typeText("foo@bar.com")
-        modal.textFields["Name on card"].tap()
-        modal.typeText("Jane Doe")
-        modal.textFields["Card number"].tap()
-        modal.typeText("4242424242424242")
-        modal.typeText("1228") // Expiry
-        modal.typeText("123") // CVC
-        modal.textFields["Address line 1"].tap()
-        modal.typeText("510 Townsend St.")
-        modal.textFields["City"].tap()
-        modal.typeText("San Francisco")
-        modal.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.toolbars.buttons["Done"].tap()
-        modal.textFields["ZIP"].tap()
-        modal.typeText("94102")
-        app.toolbars.buttons["Done"].tap()
-
-        // Pay!
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10))
-
-        let okButton = app.alerts.buttons["OK"]
-        okButton.tap()
-    }
-
-    func testLinkEditCard_CollectingBillingDetails() throws {
-        loadPlayground(
-            app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "link": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
-        )
-
-        let paymentMethodButton = app.buttons["Select Payment Method"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
-        paymentMethodButton.tap()
-
-        let addCardButton = app.buttons["Link"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
-        addCardButton.tap()
-
-        app.buttons["Checkout (Custom)"].tap()
-
-        try linkLogin()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
-        paymentMethodPicker.waitForExistenceAndTap(timeout: 10.0)
-        paymentMethodPicker.otherElements["Stripe.Link.PaymentMethodPickerCell"].firstMatch.press(forDuration: 2.0)
-        app.buttons["Update card"].tap()
-
-        XCTAssertTrue(modal.staticTexts["Card information"].waitForExistence(timeout: 10.0))
-        XCTAssertTrue(modal.staticTexts["Contact information"].exists)
-        XCTAssertTrue(modal.textFields["Email"].exists)
-        // Phone cannot be collected by Link.
-        XCTAssertFalse(modal.textFields["Phone"].exists)
-        XCTAssertTrue(modal.textFields["Name on card"].exists)
-        XCTAssertTrue(modal.staticTexts["Billing Address"].exists)
-        XCTAssertTrue(modal.textFields["Country or region"].exists)
-        XCTAssertTrue(modal.textFields["Address line 1"].exists)
-        XCTAssertTrue(modal.textFields["Address line 2"].exists)
-        XCTAssertTrue(modal.textFields["City"].exists)
-        XCTAssertTrue(modal.textFields["State"].exists)
-        XCTAssertTrue(modal.textFields["ZIP"].exists)
-
-        modal.textFields["Email"].forceTapWhenHittableInTestCase(self)
-        modal.typeText("foo@bar.com")
-        modal.textFields["Name on card"].tap()
-        modal.typeText("Jane Doe")
-        modal.textFields["CVC"].tap()
-        modal.typeText("123") // CVC
-        modal.textFields["Address line 1"].tap()
-        modal.typeText("510 Townsend St.")
-        modal.textFields["City"].tap()
-        modal.typeText("San Francisco")
-        modal.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.toolbars.buttons["Done"].tap()
-        modal.textFields["ZIP"].tap()
-        modal.typeText("94102")
-        app.toolbars.buttons["Done"].tap()
-
-        // Save.
-        let saveButton = modal.buttons["Update card"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: saveButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        saveButton.tap()
-
-        // Pay!
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10))
-
-        let okButton = app.alerts.buttons["OK"]
-        okButton.tap()
-    }
-
-    private func linkLogin() throws {
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        XCTAssertTrue(modal.waitForExistence(timeout: 10))
-
-        let emailField = modal.textFields["Email"]
-        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+a-consumer@stripe.com")
-
-        // Wait for OTP screen and enter the code
-        let codeField = app.descendants(matching: .any)["Code field"]
-        XCTAssert(codeField.waitForExistence(timeout: 10))
-        codeField.tap()
-        app.typeTextWithKeyboard("000000")
-    }
-
-    private func loginAndPay() throws {
-        try linkLogin()
-
-        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
-        if paymentMethodPicker.waitForExistence(timeout: 10) {
-            paymentMethodPicker.tap()
-            paymentMethodPicker.buttons["Add a payment method"].tap()
-        }
-
-        try fillCardData(app, container: modal)
-
-        // Pay!
-        let payButton = modal.buttons["Pay $50.99"]
-        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-        payButton.tap()
-
-        let successText = app.alerts.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10))
-
-        let okButton = app.alerts.buttons["OK"]
-        okButton.tap()
-    }
-}
+// TODO(porter) Re-enable when Link is available
+// extension PaymentSheetUITest {
+//
+//    // MARK: Inline signup
+//
+//    /// Tests the Link inline signup flow.
+//    func testLinkInlineSignup() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        try fillCardData(app)
+//
+//        app.switches["Save my info for secure 1-click checkout"].tap()
+//
+//        let emailField = app.textFields["Email"]
+//        emailField.tap()
+//        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+//
+//        let phoneField = app.textFields["Phone"]
+//        // Phone field appears after the network call finishes. We want to wait for it to appear.
+//        XCTAssert(phoneField.waitForExistence(timeout: 10))
+//        phoneField.tap()
+//        phoneField.typeText("3105551234")
+//
+//        // The name field is only required for non-US countries. Only fill it out if it exists.
+//        let nameField = app.textFields["Name"]
+//        if nameField.exists {
+//            nameField.tap()
+//            nameField.typeText("Jane Done")
+//        }
+//
+//        // Pay!
+//        app.buttons["Pay $50.99"].tap()
+//
+//        let successText = app.alerts.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+//
+//        let okButton = app.alerts.buttons["OK"]
+//        okButton.tap()
+//    }
+//
+//    func testLinkInlineSignIn() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        try fillCardData(app)
+//
+//        app.switches["Save my info for secure 1-click checkout"].tap()
+//
+//        let emailField = app.textFields["Email"]
+//        emailField.tap()
+//        emailField.typeText("mobile-payments-sdk-ci+a-consumer@stripe.com")
+//
+//        // Pay!
+//        let payButton = app.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        app.buttons["Pay $50.99"].tap()
+//
+//        // Wait for OTP prompt and enter the code
+//        let codeField = app.descendants(matching: .any)["Code field"]
+//        XCTAssert(codeField.waitForExistence(timeout: 10))
+//        codeField.tap()
+//        app.typeTextWithKeyboard("000000")
+//
+//        let successText = app.alerts.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+//
+//        let okButton = app.alerts.buttons["OK"]
+//        okButton.tap()
+//    }
+//
+//    // MARK: Modal
+//
+//    func testLinkSignup() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        XCTAssertTrue(modal.waitForExistence(timeout: 10))
+//
+//        let emailField = modal.textFields["Email"]
+//        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+//        emailField.tap()
+//        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+//
+//        let phoneField = modal.textFields["Phone"]
+//        XCTAssert(phoneField.waitForExistence(timeout: 10))
+//        phoneField.tap()
+//        phoneField.typeText("3105551234")
+//
+//        // The name field is only required for non-US countries. Only fill it out if it exists.
+//        let nameField = modal.textFields["Name"]
+//        if nameField.exists {
+//            nameField.tap()
+//            nameField.typeText("Jane Done")
+//        }
+//
+//        // Terms and privacy policy
+//        for linkText in ["Terms", "Privacy Policy"] {
+//            modal.links[linkText].tap()
+//            let closeTermsButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+//            XCTAssert(closeTermsButton.waitForExistence(timeout: 10))
+//            closeTermsButton.tap()
+//        }
+//
+//        modal.buttons["Join Link"].tap()
+//
+//        // Because we are presenting view controllers with `modalPresentationStyle = .overFullScreen`,
+//        // there are currently 2 card forms on screen. Specifying a container helps the `fillCardData()`
+//        // method operate on the correct card form.
+//        try fillCardData(app, container: modal)
+//
+//        // Pay!
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let successText = app.alerts.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+//
+//        let okButton = app.alerts.buttons["OK"]
+//        okButton.tap()
+//
+//        // Reload to verify that the last signup email is remembered.
+//        reload(app)
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        // Confirm that that verification prompt appears
+//        // and that we are able to verify the session.
+//        let codeField = app.descendants(matching: .any)["Code field"]
+//        XCTAssert(codeField.waitForExistence(timeout: 10))
+//        codeField.tap()
+//        app.typeTextWithKeyboard("000000")
+//
+//        let modal2 = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        XCTAssertTrue(modal2.waitForExistence(timeout: 10))
+//    }
+//
+//    func testLinkSignIn() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//            ]
+//        )
+//
+//        app.buttons["Checkout (Complete)"].tap()
+//
+//        let payWithLinkButton = app.buttons["Pay with Link"]
+//        XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
+//        payWithLinkButton.tap()
+//
+//        try loginAndPay()
+//    }
+//
+//    // MARK: Custom Flow
+//
+//    func testLinkCustomFlow() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//            ]
+//        )
+//
+//        let paymentMethodButton = app.buttons["Select Payment Method"]
+//        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+//        paymentMethodButton.tap()
+//
+//        let addCardButton = app.buttons["Link"]
+//        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+//        addCardButton.tap()
+//
+//        app.buttons["Checkout (Custom)"].tap()
+//
+//        try loginAndPay()
+//    }
+//
+//    func testLinkAddCard_CollectingBillingDetails() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "collect_name": "always",
+//                "collect_email": "always",
+//                "collect_phone": "always",
+//                "collect_address": "full",
+//            ]
+//        )
+//
+//        let paymentMethodButton = app.buttons["Select Payment Method"]
+//        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+//        paymentMethodButton.tap()
+//
+//        let addCardButton = app.buttons["Link"]
+//        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+//        addCardButton.tap()
+//
+//        app.buttons["Checkout (Custom)"].tap()
+//
+//        try linkLogin()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
+//        if paymentMethodPicker.waitForExistence(timeout: 10) {
+//            paymentMethodPicker.tap()
+//            paymentMethodPicker.buttons["Add a payment method"].tap()
+//        }
+//
+//        XCTAssertTrue(modal.staticTexts["Card information"].waitForExistence(timeout: 10.0))
+//        XCTAssertTrue(modal.staticTexts["Contact information"].exists)
+//        XCTAssertTrue(modal.textFields["Email"].exists)
+//        // Phone cannot be collected by Link.
+//        XCTAssertFalse(modal.textFields["Phone"].exists)
+//        XCTAssertTrue(modal.textFields["Name on card"].exists)
+//        XCTAssertTrue(modal.staticTexts["Billing address"].exists)
+//        XCTAssertTrue(modal.textFields["Country or region"].exists)
+//        XCTAssertTrue(modal.textFields["Address line 1"].exists)
+//        XCTAssertTrue(modal.textFields["Address line 2"].exists)
+//        XCTAssertTrue(modal.textFields["City"].exists)
+//        XCTAssertTrue(modal.textFields["State"].exists)
+//        XCTAssertTrue(modal.textFields["ZIP"].exists)
+//
+//        modal.textFields["Email"].forceTapWhenHittableInTestCase(self)
+//        modal.typeText("foo@bar.com")
+//        modal.textFields["Name on card"].tap()
+//        modal.typeText("Jane Doe")
+//        modal.textFields["Card number"].tap()
+//        modal.typeText("4242424242424242")
+//        modal.typeText("1228") // Expiry
+//        modal.typeText("123") // CVC
+//        modal.textFields["Address line 1"].tap()
+//        modal.typeText("510 Townsend St.")
+//        modal.textFields["City"].tap()
+//        modal.typeText("San Francisco")
+//        modal.textFields["State"].tap()
+//        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+//        app.toolbars.buttons["Done"].tap()
+//        modal.textFields["ZIP"].tap()
+//        modal.typeText("94102")
+//        app.toolbars.buttons["Done"].tap()
+//
+//        // Pay!
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let successText = app.alerts.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+//
+//        let okButton = app.alerts.buttons["OK"]
+//        okButton.tap()
+//    }
+//
+//    func testLinkEditCard_CollectingBillingDetails() throws {
+//        loadPlayground(
+//            app,
+//            settings: [
+//                "customer_mode": "new",
+//                "automatic_payment_methods": "off",
+//                "link": "on",
+//                "collect_name": "always",
+//                "collect_email": "always",
+//                "collect_phone": "always",
+//                "collect_address": "full",
+//            ]
+//        )
+//
+//        let paymentMethodButton = app.buttons["Select Payment Method"]
+//        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+//        paymentMethodButton.tap()
+//
+//        let addCardButton = app.buttons["Link"]
+//        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+//        addCardButton.tap()
+//
+//        app.buttons["Checkout (Custom)"].tap()
+//
+//        try linkLogin()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
+//        paymentMethodPicker.waitForExistenceAndTap(timeout: 10.0)
+//        paymentMethodPicker.otherElements["Stripe.Link.PaymentMethodPickerCell"].firstMatch.press(forDuration: 2.0)
+//        app.buttons["Update card"].tap()
+//
+//        XCTAssertTrue(modal.staticTexts["Card information"].waitForExistence(timeout: 10.0))
+//        XCTAssertTrue(modal.staticTexts["Contact information"].exists)
+//        XCTAssertTrue(modal.textFields["Email"].exists)
+//        // Phone cannot be collected by Link.
+//        XCTAssertFalse(modal.textFields["Phone"].exists)
+//        XCTAssertTrue(modal.textFields["Name on card"].exists)
+//        XCTAssertTrue(modal.staticTexts["Billing Address"].exists)
+//        XCTAssertTrue(modal.textFields["Country or region"].exists)
+//        XCTAssertTrue(modal.textFields["Address line 1"].exists)
+//        XCTAssertTrue(modal.textFields["Address line 2"].exists)
+//        XCTAssertTrue(modal.textFields["City"].exists)
+//        XCTAssertTrue(modal.textFields["State"].exists)
+//        XCTAssertTrue(modal.textFields["ZIP"].exists)
+//
+//        modal.textFields["Email"].forceTapWhenHittableInTestCase(self)
+//        modal.typeText("foo@bar.com")
+//        modal.textFields["Name on card"].tap()
+//        modal.typeText("Jane Doe")
+//        modal.textFields["CVC"].tap()
+//        modal.typeText("123") // CVC
+//        modal.textFields["Address line 1"].tap()
+//        modal.typeText("510 Townsend St.")
+//        modal.textFields["City"].tap()
+//        modal.typeText("San Francisco")
+//        modal.textFields["State"].tap()
+//        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+//        app.toolbars.buttons["Done"].tap()
+//        modal.textFields["ZIP"].tap()
+//        modal.typeText("94102")
+//        app.toolbars.buttons["Done"].tap()
+//
+//        // Save.
+//        let saveButton = modal.buttons["Update card"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: saveButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        saveButton.tap()
+//
+//        // Pay!
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let successText = app.alerts.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+//
+//        let okButton = app.alerts.buttons["OK"]
+//        okButton.tap()
+//    }
+//
+//    private func linkLogin() throws {
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        XCTAssertTrue(modal.waitForExistence(timeout: 10))
+//
+//        let emailField = modal.textFields["Email"]
+//        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+//        emailField.tap()
+//        emailField.typeText("mobile-payments-sdk-ci+a-consumer@stripe.com")
+//
+//        // Wait for OTP screen and enter the code
+//        let codeField = app.descendants(matching: .any)["Code field"]
+//        XCTAssert(codeField.waitForExistence(timeout: 10))
+//        codeField.tap()
+//        app.typeTextWithKeyboard("000000")
+//    }
+//
+//    private func loginAndPay() throws {
+//        try linkLogin()
+//
+//        let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+//        let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
+//        if paymentMethodPicker.waitForExistence(timeout: 10) {
+//            paymentMethodPicker.tap()
+//            paymentMethodPicker.buttons["Add a payment method"].tap()
+//        }
+//
+//        try fillCardData(app, container: modal)
+//
+//        // Pay!
+//        let payButton = modal.buttons["Pay $50.99"]
+//        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
+//        waitForExpectations(timeout: 10, handler: nil)
+//        payButton.tap()
+//
+//        let successText = app.alerts.staticTexts["Success!"]
+//        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+//
+//        let okButton = app.alerts.buttons["OK"]
+//        okButton.tap()
+//    }
+// }
 
 // MARK: Helpers
 extension PaymentSheetUITest {
