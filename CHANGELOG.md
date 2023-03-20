@@ -2,6 +2,7 @@
 ### Payments
 * [Fixed] Fixed amounts in COP being formatted incorrectly.
 * [Fixed] Fixed BLIK payment bindings not handling next actions correctly.
+* [Changed] Removed usage of `UIDevice.currentDevice.name`.
 
 ### Identity
 * [Added] Added a retake photo button on selfie scanning screen.
