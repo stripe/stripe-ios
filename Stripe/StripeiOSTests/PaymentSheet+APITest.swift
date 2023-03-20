@@ -195,8 +195,6 @@ class PaymentSheetAPITest: XCTestCase {
                                                             captureMethod: .automatic,
                                                             paymentMethodTypes: types,
                                                             confirmHandler: confirmHandler)
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         PaymentSheet.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration
@@ -209,6 +207,10 @@ class PaymentSheetAPITest: XCTestCase {
                 )
                 XCTAssertEqual(paymentMethods, [])
                 loadExpectation.fulfill()
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                    XCTFail()
+                    return
+                }
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
@@ -261,9 +263,6 @@ class PaymentSheetAPITest: XCTestCase {
                                                             captureMethod: .automatic,
                                                             paymentMethodTypes: types,
                                                             confirmHandlerForServerSideConfirmation: serverSideConfirmHandler)
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-
         PaymentSheet.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration
@@ -276,6 +275,10 @@ class PaymentSheetAPITest: XCTestCase {
                 )
                 XCTAssertEqual(paymentMethods, [])
                 loadExpectation.fulfill()
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                    XCTFail()
+                    return
+                }
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
