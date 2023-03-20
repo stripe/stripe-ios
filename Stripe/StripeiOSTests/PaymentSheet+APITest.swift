@@ -399,7 +399,55 @@ class PaymentSheetAPITest: XCTestCase {
     // MARK: - update tests
     
     func testUpdate() {
-        
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+            // These tests don't confirm, so this is unused
+        }
+        let expectation = expectation(description: "Updates")
+        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+            switch result {
+            case .success(let sut):
+                // ...updating the intent config should succeed...
+                intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
+                sut.update(intentConfiguration: intentConfig) { error in
+                    XCTAssertNil(error)
+                    // TODO(Update:) Change this to validate it preserves the paymentOption
+                    XCTAssertNil(sut.paymentOption)
+                    expectation.fulfill()
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        waitForExpectations(timeout: 10)
+    }
+    
+    func testUpdateFails() {
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+            // These tests don't confirm, so this is unused
+        }
+
+        let expectation = expectation(description: "Updates")
+        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+            switch result {
+            case .success(let sut):
+                // ...updating w/ an invalid intent config should fail...
+                intentConfig.mode = .setup(currency: "Invalid currency", setupFutureUsage: .offSession)
+                sut.update(intentConfiguration: intentConfig) { updateError in
+                    XCTAssertNotNil(updateError)
+                    // ...the paymentOption should be nil...
+                    XCTAssertNil(sut.paymentOption)
+                    let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
+                    window.rootViewController = UIViewController()
+                    window.makeKeyAndVisible()
+                    // TODO(Update:) Assert that `present` w/ the window.rootViewController no-ops
+                    // Note: `confirm` has an assertionFailure if paymentOption is nil, so we don't check it here.
+                    expectation.fulfill()
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        waitForExpectations(timeout: 10)
     }
     
     // MARK: - other tests
