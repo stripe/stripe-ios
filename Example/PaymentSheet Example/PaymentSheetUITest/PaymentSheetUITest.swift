@@ -720,7 +720,7 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    
+
     // TODO(porter) Re-enable when Link is available
     /*
     func testDeferferedIntentLinkSignup_ClientSideConfirmation() throws {
@@ -1017,7 +1017,7 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    
+
     // TODO(porter) Re-enable when Link is available
     /*
     func testDeferferedIntentLinkSignup_ServerSideConfirmation() throws {
@@ -1266,10 +1266,12 @@ extension PaymentSheetUITest {
 
         try loginAndPay()
     }
+    */
 }
 
 // MARK: - Link
-
+// TODO(porter) Re-enable when Link is availble
+/*
 extension PaymentSheetUITest {
 
     // MARK: Inline signup
