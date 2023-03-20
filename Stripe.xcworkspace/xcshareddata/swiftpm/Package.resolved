@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "iOSSnapshotTestCase",
+        "repositoryURL": "https://github.com/uber/ios-snapshot-test-case",
+        "state": {
+          "branch": null,
+          "revision": "7b10770333a961be6e5a41c9ce04b8c6d3990126",
+          "version": "8.0.0"
+        }
+      },
+      {
+        "package": "OCMock",
+        "repositoryURL": "https://github.com/erikdoe/ocmock",
+        "state": {
+          "branch": "master",
+          "revision": "05cbc9d934e84ad32530fa53fd7d29c7966d5828",
+          "version": null
+        }
+      },
+      {
+        "package": "OHHTTPStubs",
+        "repositoryURL": "https://github.com/eurias-stripe/OHHTTPStubs",
+        "state": {
+          "branch": "master",
+          "revision": "94cf8e1d9e38b0edd580ddc699dda23a7bf66515",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
