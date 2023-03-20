@@ -716,7 +716,7 @@ extension PaymentSheetTestPlayground {
                 case .confirmError(let errorMesssage):
                     return errorMesssage
                 case .unknown:
-                    return "An unknown error occured."
+                    return "An unknown error occurred."
                 }
             }
         }
