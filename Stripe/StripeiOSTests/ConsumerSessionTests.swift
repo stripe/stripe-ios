@@ -400,7 +400,7 @@ class ConsumerSessionTests: XCTestCase {
 }
 
 extension ConsumerSessionTests {
-
+/*
     fileprivate func lookupExistingConsumer() -> ConsumerSession.SessionWithPublishableKey {
         var sessionWithKey: ConsumerSession.SessionWithPublishableKey!
 
@@ -486,5 +486,5 @@ extension ConsumerSessionTests {
 
         return (consumerSession, publishableKey)
     }
-
+*/
 }
