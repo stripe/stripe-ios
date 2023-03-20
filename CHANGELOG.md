@@ -3,6 +3,9 @@
 * [Fixed] Fixed amounts in COP being formatted incorrectly.
 * [Fixed] Fixed BLIK payment bindings not handling next actions correctly.
 
+### Identity
+* [Added] Added a retake photo button on selfie scanning screen.
+
 ## 23.5.0 2023-03-13
 ### Payments
 * [Added] API bindings support for Cash App Pay. See the docs [here](https://stripe.com/docs/payments/cash-app-pay/accept-a-payment?platform=mobile).

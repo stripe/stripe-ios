@@ -145,6 +145,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         },
                         openURLHandler: { [weak self] url in
                             self?.openInSafariViewController(url: url)
+                        },
+                        retakeSelfieHandler: { [weak self] in
+                            self?.imageScanningSession.startScanning()
                         }
                     ),
                     instructionalText: SelfieCaptureViewController.scannedInstructionText

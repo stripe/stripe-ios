@@ -57,7 +57,8 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
                     Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
                     consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
                     consentHandler: { _ in },
-                    openURLHandler: { _ in }
+                    openURLHandler: { _ in },
+                    retakeSelfieHandler: {}
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
@@ -71,7 +72,8 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
                     [SelfieScanningViewSnapshotTest.mockImage],
                     consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
                     consentHandler: { _ in },
-                    openURLHandler: { _ in }
+                    openURLHandler: { _ in },
+                    retakeSelfieHandler: {}
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
@@ -89,7 +91,8 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
                     Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
                     consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
                     consentHandler: { _ in },
-                    openURLHandler: { _ in }
+                    openURLHandler: { _ in },
+                    retakeSelfieHandler: {}
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
