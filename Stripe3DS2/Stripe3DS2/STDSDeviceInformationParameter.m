@@ -111,7 +111,6 @@ static const NSString * const kParameterNilCode = @"RE04";
                           [STDSDeviceInformationParameter timeZone],
                           [STDSDeviceInformationParameter advertisingID],
                           [STDSDeviceInformationParameter screenResolution],
-                          [STDSDeviceInformationParameter deviceName],
                           [STDSDeviceInformationParameter IPAddress],
                           [STDSDeviceInformationParameter latitude],
                           [STDSDeviceInformationParameter longitude],
@@ -216,15 +215,6 @@ static const NSString * const kParameterNilCode = @"RE04";
                                                                CGRect boundsInPixels = [UIScreen mainScreen].nativeBounds;
                                                                return [NSString stringWithFormat:@"%ldx%ld", (long)boundsInPixels.size.width, (long)boundsInPixels.size.height];
 
-                                                           }];
-}
-
-+ (instancetype)deviceName
-{
-    return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C009"
-                                                      permissionCheck:nil
-                                                           valueCheck:^id _Nullable{
-                                                               return [UIDevice currentDevice].name;
                                                            }];
 }
 

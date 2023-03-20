@@ -89,7 +89,7 @@
 
 - (void)testAllParameters {
     NSArray<STDSDeviceInformationParameter *> *allParams = [STDSDeviceInformationParameter allParameters];
-    XCTAssertEqual(allParams.count, 29, @"iOS should collect 29 separate parameters.");
+    XCTAssertEqual(allParams.count, 28, @"iOS should collect 28 separate parameters.");
     NSMutableSet<NSString *> *allParamIdentifiers = [[NSMutableSet alloc] init];
     for (STDSDeviceInformationParameter *param in allParams) {
         [param collectIgnoringRestrictions:YES withHandler:^(BOOL collected, NSString * _Nonnull identifier, id _Nonnull value) {
@@ -106,7 +106,6 @@
                                                  @"C006",
                                                  @"C007",
                                                  @"C008",
-                                                 @"C009",
                                                  @"C010",
                                                  @"C011",
                                                  @"C012",
@@ -171,7 +170,6 @@
                                                                                         @"C006": [STDSDeviceInformationParameter timeZone],
                                                                                         @"C007": [STDSDeviceInformationParameter advertisingID],
                                                                                         @"C008": [STDSDeviceInformationParameter screenResolution],
-                                                                                        @"C009": [STDSDeviceInformationParameter deviceName],
                                                                                         @"C010": [STDSDeviceInformationParameter IPAddress],
                                                                                         @"C011": [STDSDeviceInformationParameter latitude],
                                                                                         @"C012": [STDSDeviceInformationParameter longitude],

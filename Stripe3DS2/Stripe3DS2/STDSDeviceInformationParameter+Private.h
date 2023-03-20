@@ -32,8 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)advertisingID;
 /// Screen Resolution: Pixel width and pixel height
 + (instancetype)screenResolution;
-/// Device Name: User-assigned device name
-+ (instancetype)deviceName;
 /// IP Address: IP address of device
 + (instancetype)IPAddress;
 /// Latitude: Device physical location latitude
