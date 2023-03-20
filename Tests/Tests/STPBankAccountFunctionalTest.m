@@ -7,22 +7,16 @@
 //
 
 @import XCTest;
+@import StripeCoreTestUtils;
 
-#import "STPAPIClient.h"
-#import "Stripe.h"
-#import "STPBankAccount.h"
-#import "STPToken.h"
-#import "STPNetworkStubbingTestCase.h"
 
-@interface STPBankAccountFunctionalTest : STPNetworkStubbingTestCase
+#import "STPTestingAPIClient.h"
+
+
+@interface STPBankAccountFunctionalTest : XCTestCase
 @end
 
 @implementation STPBankAccountFunctionalTest
-
-- (void)setUp {
-//    self.recordingMode = YES;
-    [super setUp];
-}
 
 - (void)testCreateAndRetreiveBankAccountToken {
     STPBankAccountParams *bankAccount = [[STPBankAccountParams alloc] init];
@@ -32,7 +26,7 @@
     bankAccount.accountHolderName = @"Jimmy bob";
     bankAccount.accountHolderType = STPBankAccountHolderTypeCompany;
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
     [client createTokenWithBankAccount:bankAccount
@@ -50,7 +44,7 @@
                                 XCTAssertEqual(token.bankAccount.accountHolderType, STPBankAccountHolderTypeCompany);
                             }];
 
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidKey {
@@ -68,9 +62,8 @@
                                 [expectation fulfill];
                                 XCTAssertNil(token, @"token should be nil");
                                 XCTAssertNotNil(error, @"error should not be nil");
-                                XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
                             }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

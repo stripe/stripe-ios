@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "アプリにデバッガが添付されています。";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "アプリの実行にエミュレータが使用されています。";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "キャンセル";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "読み込み中";
+
+/* The no answer to a yes or no question. */
+"No" = "いいえ";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "セキュアなチェックアウト";
+
+/* Indicates that a button is selected. */
+"Selected" = "選択済み";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "このデバイスは脱獄状態です。";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "SDK の完全性が改ざんされています。";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "OS または OS のバージョンがサポートされていません。";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "タイムアウト";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "選択解除済み";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "はい";
+

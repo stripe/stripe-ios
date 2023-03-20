@@ -7,10 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <Stripe/Stripe.h>
-#import "NSError+Stripe.h"
-#import "STPEphemeralKey.h"
-#import "STPEphemeralKeyManager.h"
+@import Stripe;
+
+
 #import "STPFixtures.h"
 
 @interface STPEphemeralKeyManager (Testing)
@@ -37,8 +36,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        [invocation retainArguments]; // avoids https://github.com/erikdoe/ocmock/issues/147
-        STPJSONResponseCompletionBlock completion;
+        __unsafe_unretained STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         completion(keyResponse, nil);
         [exp fulfill];
@@ -58,6 +56,7 @@
         [exp fulfill];
     }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
+    [mockKeyProvider stopMocking];
 }
 
 - (void)testgetOrCreateKeyUsesStoredKeyIfNotExpiring {
@@ -73,6 +72,7 @@
         [exp fulfill];
     }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
+    [mockKeyProvider stopMocking];
 }
 
 - (void)testgetOrCreateKeyCreatesNewKeyIfExpiring {
@@ -88,6 +88,7 @@
         [exp fulfill];
     }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
+    [mockKeyProvider stopMocking];
 }
 
 - (void)testgetOrCreateKeyCoalescesRepeatCalls {
@@ -99,8 +100,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        [invocation retainArguments]; // avoids https://github.com/erikdoe/ocmock/issues/147
-        STPJSONResponseCompletionBlock completion;
+        __unsafe_unretained STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         [createExp fulfill];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1*NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -122,8 +122,11 @@
     }];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
+    [mockKeyProvider stopMocking];
 }
 
+// This test doesn't work becuase assertions in Swift are always fatal
+/*
 - (void)testgetOrCreateKeyThrowsExceptionWhenDecodingFails {
     XCTestExpectation *exp1 = [self expectationWithDescription:@"createCustomerKey"];
     NSDictionary *invalidKeyResponse = @{@"foo": @"bar"};
@@ -131,8 +134,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        [invocation retainArguments]; // avoids https://github.com/erikdoe/ocmock/issues/147
-        STPJSONResponseCompletionBlock completion;
+        __unsafe_unretained STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         XCTAssertThrows(completion(invalidKeyResponse, nil));
         [exp1 fulfill];
@@ -145,7 +147,9 @@
         [exp2 fulfill];
     }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
+    [mockKeyProvider stopMocking];
 }
+ */
 
 - (void)testEnterForegroundRefreshesResourceKeyIfExpiring {
     STPEphemeralKey *key = [STPFixtures expiringEphemeralKey];
@@ -156,6 +160,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
+    [mockKeyProvider stopMocking];
 }
 
 - (void)testEnterForegroundDoesNotRefreshResourceKeyIfNotExpiring {
@@ -164,6 +169,7 @@
     STPEphemeralKeyManager *sut = [[STPEphemeralKeyManager alloc] initWithKeyProvider:mockKeyProvider apiVersion:self.apiVersion performsEagerFetching:YES];
     sut.ephemeralKey = [STPFixtures ephemeralKey];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+    [mockKeyProvider stopMocking];
 }
 
 - (void)testThrottlingEnterForegroundRefreshes {
@@ -173,6 +179,7 @@
     sut.ephemeralKey = [STPFixtures expiringEphemeralKey];
     sut.lastEagerKeyRefresh = [NSDate dateWithTimeIntervalSinceNow:-60];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+    [mockKeyProvider stopMocking];
 }
 
 @end

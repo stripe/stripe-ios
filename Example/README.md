@@ -1,7 +1,8 @@
-# Example
+# Example apps
 
-There are 3 example apps included in the repository:
+## [**PaymentSheet**](/Example/PaymentSheet%20Example)
 
-- [**UI Examples** Example/UI Examples/README.md ](/Example/UI%20Examples/README.md)
-- [**Standard Integration (Swift)** Example/Standard Integration (Swift)/README.md](/Example/Standard%20Integration%20%28Swift%29/README.md)
-- [**Custom Integration (ObjC)** Example/Custom Integration (Swift)/README.md](/Example/Custom%20Integration%20%28ObjC%29/README.md)
+This example app demonstrates the different ways to integrate our prebuilt payment UI.
+
+## [**Identity verification**](/Example/IdentityVerification%20Example)
+This example demonstrates how to use the [Stripe Identity iOS SDK](../StripeIdentity/README.md) to capture your users' ID documents on iOS and securely send them to Stripe Identity for identity verification.

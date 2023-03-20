@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPAPIClient+Private.h"
+@import StripeCore;
 
 @interface STPApplePayTest : XCTestCase
 
@@ -16,13 +16,19 @@
 @implementation STPApplePayTest
 
 - (void)testPaymentRequestWithMerchantIdentifierCountryCurrency {
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:@"foo" country:@"GB" currency:@"GBP"];
+    PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:@"foo" country:@"GB" currency:@"GBP"];
     XCTAssertEqualObjects(paymentRequest.merchantIdentifier, @"foo");
-    NSSet *expectedNetworks = [NSSet setWithArray:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]];
-    XCTAssertEqualObjects([NSSet setWithArray:paymentRequest.supportedNetworks], expectedNetworks);
+    if (@available(iOS 12, *)) {
+      NSSet *expectedNetworks = [NSSet setWithArray:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover, PKPaymentNetworkMaestro]];
+      XCTAssertEqualObjects([NSSet setWithArray:paymentRequest.supportedNetworks], expectedNetworks);
+    } else {
+      NSSet *expectedNetworks = [NSSet setWithArray:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]];
+      XCTAssertEqualObjects([NSSet setWithArray:paymentRequest.supportedNetworks], expectedNetworks);
+    }
     XCTAssertEqual(paymentRequest.merchantCapabilities, PKMerchantCapability3DS);
     XCTAssertEqualObjects(paymentRequest.countryCode, @"GB");
     XCTAssertEqualObjects(paymentRequest.currencyCode, @"GBP");
+    XCTAssertEqualObjects(paymentRequest.requiredBillingContactFields, [NSSet setWithArray:@[PKContactFieldPostalAddress]]);
 }
 
 - (void)testCanSubmitPaymentRequestReturnsYES {
@@ -30,33 +36,27 @@
     request.merchantIdentifier = @"foo";
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
 
-    XCTAssertTrue([Stripe canSubmitPaymentRequest:request]);
+    XCTAssertTrue([StripeAPI canSubmitPaymentRequest:request]);
 }
 
-- (void)testCanSubmitPaymentRequestReturnsNOIfTotalIsZero {
+- (void)testCanSubmitPaymentRequestIfTotalIsZero {
     PKPaymentRequest *request = [[PKPaymentRequest alloc] init];
     request.merchantIdentifier = @"foo";
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"0.00"]]];
 
-    XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+    // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
+    if (@available(iOS 12, *)) {
+        XCTAssertTrue([StripeAPI canSubmitPaymentRequest:request]);
+    } else {
+        XCTAssertFalse([StripeAPI canSubmitPaymentRequest:request]);
+    }
 }
 
 - (void)testCanSubmitPaymentRequestReturnsNOIfMerchantIdentifierIsNil {
     PKPaymentRequest *request = [[PKPaymentRequest alloc] init];
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
 
-    XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
-}
-
-- (void)testJCBPaymentNetwork {
-    if (&PKPaymentNetworkJCB == NULL) {
-        XCTAssertTrue([Stripe supportedPKPaymentNetworks].count > 0); // Sanity check this doesn't crash
-        return;
-    }
-    XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    [Stripe setJCBPaymentNetworkSupported:YES];
-    XCTAssertTrue([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    [Stripe setJCBPaymentNetworkSupported:NO];
+    XCTAssertFalse([StripeAPI canSubmitPaymentRequest:request]);
 }
 
 @end

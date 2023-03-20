@@ -9,18 +9,18 @@
 #import <SafariServices/SafariServices.h>
 #import <XCTest/XCTest.h>
 
-#import "NSError+Stripe.h"
-#import "NSURLComponents+Stripe.h"
+
+
 #import "STPFixtures.h"
-#import "STPRedirectContext.h"
-#import "STPRedirectContext+Private.h"
+
 #import "STPTestUtils.h"
-#import "STPURLCallbackHandler.h"
-#import "STPWeakStrongMacros.h"
+@import StripeCore;
 
 @interface STPRedirectContext (Testing)
 - (void)unsubscribeFromNotifications;
 - (void)dismissPresentedViewController;
+- (void)handleRedirectCompletionWithError:(nullable NSError *)error
+              shouldDismissViewController:(BOOL)shouldDismissViewController;
 @end
 
 @interface STPRedirectContextTest : XCTestCase
@@ -56,7 +56,7 @@
  */
 - (void)unsubscribeContext:(STPRedirectContext *)context {
     [[NSNotificationCenter defaultCenter] removeObserver:context
-                                                    name:UIApplicationWillEnterForegroundNotification
+                                                    name:UIApplicationDidBecomeActiveNotification
                                                   object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:(id<STPURLCallbackListener>)context];
 }
@@ -82,7 +82,7 @@
 - (void)testInitWithSource {
     STPSource *source = [STPFixtures iDEALSource];
     __block BOOL completionCalled = NO;
-    NSError *fakeError = [NSError new];
+    NSError *fakeError = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(source.stripeID, sourceID);
@@ -105,7 +105,7 @@
     STPSource *source = [STPFixtures alipaySourceWithNativeURL];
     __block BOOL completionCalled = NO;
     NSURL *nativeURL = [NSURL URLWithString:source.details[@"native_url"]];
-    NSError *fakeError = [NSError new];
+    NSError *fakeError = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(source.stripeID, sourceID);
@@ -127,7 +127,7 @@
 - (void)testInitWithPaymentIntent {
     STPPaymentIntent *paymentIntent = [STPFixtures paymentIntent];
     __block BOOL completionCalled = NO;
-    NSError *fakeError = [NSError new];
+    NSError *fakeError = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(paymentIntent.clientSecret, clientSecret);
@@ -172,7 +172,7 @@
 
     json[@"status"] = @"processing";
     XCTAssertNil(create(), @"not created with wrong status");
-    json[@"status"] = @"requires_source_action";
+    json[@"status"] = @"requires_action";
 
     json[@"next_action"][@"type"] = @"not_redirect_to_url";
     XCTAssertNil(create(), @"not created with wrong next_action.type");
@@ -193,10 +193,10 @@
 
 /**
  After starting a SafariViewController redirect flow,
- when a WillEnterForeground notification is posted, RedirectContext's completion
+ when a DidBecomeActive notification is posted, RedirectContext's completion
  block and dismiss method should _NOT_ be called.
  */
-- (void)testSafariViewControllerRedirectFlow_foregroundNotification {
+- (void)testSafariViewControllerRedirectFlow_activeNotification {
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
 
@@ -209,7 +209,7 @@
     OCMReject([sut dismissPresentedViewController]);
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
 
     BOOL(^checker)(id) = ^BOOL(id vc) {
         if ([vc isKindOfClass:[SFSafariViewController class]]) {
@@ -243,8 +243,11 @@
     XCTAssertEqualObjects(source.redirect.returnURL, context.returnURL);
     id sut = OCMPartialMock(context);
 
-    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
+    OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
+    });
 
+    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
     BOOL(^checker)(id) = ^BOOL(id vc) {
         if ([vc isKindOfClass:[SFSafariViewController class]]) {
             NSURL *url = source.redirect.returnURL;
@@ -256,6 +259,7 @@
         }
         return NO;
     };
+ 
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
@@ -308,17 +312,24 @@
 - (void)testSafariViewControllerRedirectFlow_didFinish {
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
+
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
-        XCTAssertNil(error);
+        // because we are manually invoking the dismissal, we report this as a cancelation
+        XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
+        XCTAssertEqual(error.code, STPCancellationError);
         [exp fulfill];
     }];
     id sut = OCMPartialMock(context);
 
     // dismiss should not be called – SafariVC dismisses itself when Done is tapped
     OCMReject([sut dismissPresentedViewController]);
+
+    OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:NO]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
+    });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
@@ -334,47 +345,7 @@
                                    animated:YES
                                  completion:[OCMArg any]]);
     OCMVerify([sut unsubscribeFromNotifications]);
-
     [self waitForExpectationsWithTimeout:2 handler:nil];
-}
-
-/**
- After starting a SafariViewController redirect flow,
- when SafariViewController fails to load the initial page (on iOS < 11.0),
- RedirectContext's completion block should not be called (SFVC keeps loading)
- */
-- (void)testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11 {
-    if (@available(iOS 11, *)) {
-        // See testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus
-        // and testSafariViewControllerRedirectFlow_failedInitialLoadAfterRedirect_iOS11Plus
-        return; // Skipping
-    }
-
-    id mockVC = OCMClassMock([UIViewController class]);
-    STPSource *source = [STPFixtures iDEALSource];
-    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
-        XCTFail(@"completion called");
-    }];
-    id sut = OCMPartialMock(context);
-
-    OCMReject([sut unsubscribeFromNotifications]);
-    OCMReject([sut dismissPresentedViewController]);
-
-    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
-
-    BOOL(^checker)(id) = ^BOOL(id vc) {
-        if ([vc isKindOfClass:[SFSafariViewController class]]) {
-            SFSafariViewController *sfvc = (SFSafariViewController *)vc;
-            // Tell the delegate that the initial load failed. on iOS 10, this is a no-op
-            [sfvc.delegate safariViewController:sfvc didCompleteInitialLoad:NO];
-            return YES;
-        }
-        return NO;
-    };
-    OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
-                                   animated:YES
-                                 completion:[OCMArg any]]);
-    [self unsubscribeContext:context];
 }
 
 /**
@@ -382,12 +353,7 @@
  when SafariViewController fails to load the initial page (on iOS 11+ & without redirects),
  RedirectContext's completion block and dismiss method should be called.
  */
-- (void)testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus API_AVAILABLE(ios(11)) {
-    if (@available(iOS 11, *)) {}
-    else {
-        // see testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11
-        return; // Skipping
-    }
+- (void)testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus {
 
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
@@ -401,6 +367,10 @@
     }];
     id sut = OCMPartialMock(context);
 
+    OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
+    });
+
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
     BOOL(^checker)(id) = ^BOOL(id vc) {
@@ -414,6 +384,7 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
+
     OCMVerify([sut unsubscribeFromNotifications]);
     OCMVerify([sut dismissPresentedViewController]);
 
@@ -426,13 +397,7 @@
  RedirectContext's completion block should not be called (SFVC keeps loading)
  */
 
-- (void)testSafariViewControllerRedirectFlow_failedInitialLoadAfterRedirect_iOS11Plus API_AVAILABLE(ios(11)) {
-    if (@available(iOS 11, *)) {}
-    else {
-        // see testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11
-        return; // Skipping
-    }
-
+- (void)testSafariViewControllerRedirectFlow_failedInitialLoadAfterRedirect_iOS11Plus {
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
@@ -513,11 +478,11 @@
 
 /**
  After starting a Safari app redirect flow,
- when a WillEnterForeground notification is posted, RedirectContext's completion 
+ when a DidBecomeActive notification is posted, RedirectContext's completion
  block and dismiss method should be called.
  */
-- (void)testSafariAppRedirectFlow_foregroundNotification {
-    id sut;
+- (void)testSafariAppRedirectFlow_activeNotification {
+    __block id sut;
 
     STPSource *source = [STPFixtures iDEALSource];
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
@@ -525,16 +490,15 @@
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
         XCTAssertNil(error);
-
+        
         OCMVerify([sut unsubscribeFromNotifications]);
-        OCMVerify([sut dismissPresentedViewController]);
 
         [exp fulfill];
     }];
     sut = OCMPartialMock(context);
 
     [sut startSafariAppRedirectFlow];
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
@@ -578,14 +542,9 @@
 
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-    if (@available(iOS 10, *)) {
-        OCMStub([applicationMock openURL:[OCMArg any]
-                                 options:[OCMArg any]
-                       completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
-    }
-    else {
-        OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(YES);
-    }
+    OCMStub([applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
 
     OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
     OCMReject([sut startSafariAppRedirectFlow]);
@@ -593,14 +552,9 @@
     id mockVC = OCMClassMock([UIViewController class]);
     [sut startRedirectFlowFromViewController:mockVC];
 
-    if (@available(iOS 10, *)) {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
-                                   options:[OCMArg isEqual:@{}]
-                         completionHandler:[OCMArg isNotNil]]);
-    }
-    else {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
-    }
+    OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                               options:[OCMArg isEqual:@{}]
+                     completionHandler:[OCMArg isNotNil]]);
 
     [sut unsubscribeFromNotifications];
 }
@@ -622,15 +576,9 @@
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
 
-    if (@available(iOS 10, *)) {
-        OCMReject([applicationMock openURL:[OCMArg any]
-                                   options:[OCMArg any]
-                         completionHandler:[OCMArg any]]);
-    }
-    else {
-        OCMReject([applicationMock openURL:[OCMArg any]]);
-    }
-
+    OCMReject([applicationMock openURL:[OCMArg any]
+                               options:[OCMArg any]
+                     completionHandler:[OCMArg any]]);
 
     id mockVC = OCMClassMock([UIViewController class]);
     [sut startRedirectFlowFromViewController:mockVC];
@@ -643,5 +591,89 @@
 
     [sut unsubscribeFromNotifications];
 }
+
+#pragma mark - WeChat Pay
+
+/**
+ If a WeChat source type is used, we should attempt an app redirect.
+ */
+- (void)testWeChatPaySource_appRedirectSucceeds {
+    STPSource *source = [STPFixtures weChatPaySource];
+    NSURL *sourceURL = [NSURL URLWithString:source.weChatPayDetails.weChatAppURL];
+    
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                  completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+                                                                      XCTFail(@"completion called");
+                                                                  }];
+    
+    XCTAssertNotNil(context.nativeRedirectURL);
+    XCTAssertEqualObjects(context.nativeRedirectURL, sourceURL);
+    XCTAssertNil(context.redirectURL);
+    XCTAssertNotNil(context.returnURL);
+    
+    id sut = OCMPartialMock(context);
+    
+    id applicationMock = OCMClassMock([UIApplication class]);
+    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
+    OCMStub([applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
+    
+    OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
+    OCMReject([sut startSafariAppRedirectFlow]);
+    
+    id mockVC = OCMClassMock([UIViewController class]);
+    [sut startRedirectFlowFromViewController:mockVC];
+    
+    OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                               options:[OCMArg isEqual:@{}]
+                     completionHandler:[OCMArg isNotNil]]);
+    
+    [sut unsubscribeFromNotifications];
+}
+
+/**
+ If a WeChat source type is used, we should attempt an app redirect.
+ If app redirect fails, expect an error.
+ */
+- (void)testWeChatPaySource_appRedirectFails {
+    STPSource *source = [STPFixtures weChatPaySource];
+    NSURL *sourceURL = [NSURL URLWithString:source.weChatPayDetails.weChatAppURL];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Completion block called"];
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                  completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+                                                                      XCTAssertNotNil(error);
+                                                                      XCTAssertEqualObjects(error.domain, STPRedirectContext.STPRedirectContextErrorDomain);
+                                                                      XCTAssertEqual(error.code, STPRedirectContextAppRedirectError);
+                                                                      [expectation fulfill];
+                                                                  }];
+    
+    XCTAssertNotNil(context.nativeRedirectURL);
+    XCTAssertEqualObjects(context.nativeRedirectURL, sourceURL);
+    XCTAssertNil(context.redirectURL);
+    XCTAssertNotNil(context.returnURL);
+    
+    id sut = OCMPartialMock(context);
+    
+    id applicationMock = OCMClassMock([UIApplication class]);
+    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
+    OCMStub([applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
+    
+    OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
+    OCMReject([sut startSafariAppRedirectFlow]);
+    
+    id mockVC = OCMClassMock([UIViewController class]);
+    [sut startRedirectFlowFromViewController:mockVC];
+    
+    OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                               options:[OCMArg isEqual:@{}]
+                     completionHandler:[OCMArg isNotNil]]);
+    
+    [self waitForExpectationsWithTimeout:10 handler:nil];
+}
+
 
 @end

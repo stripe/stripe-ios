@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodCardWalletVisaCheckout.h"
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
 
@@ -19,7 +18,7 @@
 @implementation STPPaymentMethodCardWalletVisaCheckoutTest
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"][@"wallet"][@"visa_checkout"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"card"][@"wallet"][@"visa_checkout"];
     STPPaymentMethodCardWalletVisaCheckout *visaCheckout = [STPPaymentMethodCardWalletVisaCheckout decodedObjectFromAPIResponse:response];
     XCTAssertNotNil(visaCheckout);
     XCTAssertEqualObjects(visaCheckout.name, @"Jenny");

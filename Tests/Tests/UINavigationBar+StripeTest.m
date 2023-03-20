@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import <Stripe/Stripe.h>
+@import Stripe;
 #import "STPFixtures.h"
 #import "STPMocks.h"
 
@@ -21,7 +21,6 @@
 - (STPPaymentOptionsViewController *)buildPaymentOptionsViewController {
     id customerContext = [STPMocks staticCustomerContext];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.publishableKey = @"pk_test";
     STPTheme *theme = [STPTheme defaultTheme];
     id delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *paymentOptionsVC = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config

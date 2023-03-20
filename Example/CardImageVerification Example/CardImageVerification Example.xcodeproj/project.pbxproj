@@ -1,0 +1,560 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F329D8DF27473CD700811E79 /* URLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F329D8DE27473CD700811E79 /* URLHelper.swift */; };
+		F32D9ACF2745BFD000C5FDBF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9ACE2745BFD000C5FDBF /* AppDelegate.swift */; };
+		F32D9AD32745BFD000C5FDBF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9AD22745BFD000C5FDBF /* ViewController.swift */; };
+		F32D9AD62745BFD000C5FDBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F32D9AD42745BFD000C5FDBF /* Main.storyboard */; };
+		F32D9AD82745BFD100C5FDBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F32D9AD72745BFD100C5FDBF /* Assets.xcassets */; };
+		F32D9ADB2745BFD100C5FDBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F32D9AD92745BFD100C5FDBF /* LaunchScreen.storyboard */; };
+		F32D9AF12745BFD200C5FDBF /* CardImageVerification_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9AF02745BFD200C5FDBF /* CardImageVerification_ExampleUITests.swift */; };
+		F32D9B002745C06D00C5FDBF /* card_scanning_instruction.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D9AFF2745C06D00C5FDBF /* card_scanning_instruction.png */; };
+		F32D9B032745C24700C5FDBF /* StripeCardScan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D9B022745C24700C5FDBF /* StripeCardScan.framework */; };
+		F32D9B042745C24700C5FDBF /* StripeCardScan.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F32D9B022745C24700C5FDBF /* StripeCardScan.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F32D9B072745C27600C5FDBF /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D9B062745C27600C5FDBF /* StripeCore.framework */; };
+		F32D9B082745C27600C5FDBF /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F32D9B062745C27600C5FDBF /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F32D9B0A2745C8C700C5FDBF /* VerificationExplanationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B092745C8C700C5FDBF /* VerificationExplanationViewController.swift */; };
+		F3B038AB274E457700718B35 /* VerificationCardInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038AA274E457700718B35 /* VerificationCardInputViewController.swift */; };
+		F3B038B02754628F00718B35 /* CTAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038AF2754628F00718B35 /* CTAButton.swift */; };
+		F3B038B227547A8000718B35 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038B127547A8000718B35 /* APIClient.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F32D9AED2745BFD200C5FDBF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F32D9AC32745BFD000C5FDBF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F32D9ACA2745BFD000C5FDBF;
+			remoteInfo = "CardImageVerification Example";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F32D9B052745C24700C5FDBF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F32D9B082745C27600C5FDBF /* StripeCore.framework in Embed Frameworks */,
+				F32D9B042745C24700C5FDBF /* StripeCardScan.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3BA98B0727739C120086C74C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		3BA98B0827739C130086C74C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		F329D8DE27473CD700811E79 /* URLHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHelper.swift; sourceTree = "<group>"; };
+		F32D9ACB2745BFD000C5FDBF /* CardImageVerification Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CardImageVerification Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F32D9ACE2745BFD000C5FDBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F32D9AD22745BFD000C5FDBF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F32D9AD52745BFD000C5FDBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F32D9AD72745BFD100C5FDBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F32D9ADA2745BFD100C5FDBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F32D9ADC2745BFD100C5FDBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F32D9AEC2745BFD200C5FDBF /* CardImageVerification ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CardImageVerification ExampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F32D9AF02745BFD200C5FDBF /* CardImageVerification_ExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageVerification_ExampleUITests.swift; sourceTree = "<group>"; };
+		F32D9AF22745BFD200C5FDBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F32D9AFF2745C06D00C5FDBF /* card_scanning_instruction.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_scanning_instruction.png; sourceTree = "<group>"; };
+		F32D9B022745C24700C5FDBF /* StripeCardScan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCardScan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F32D9B062745C27600C5FDBF /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F32D9B092745C8C700C5FDBF /* VerificationExplanationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationExplanationViewController.swift; sourceTree = "<group>"; };
+		F3B038AA274E457700718B35 /* VerificationCardInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCardInputViewController.swift; sourceTree = "<group>"; };
+		F3B038AF2754628F00718B35 /* CTAButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTAButton.swift; sourceTree = "<group>"; };
+		F3B038B127547A8000718B35 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F32D9AC82745BFD000C5FDBF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F32D9B072745C27600C5FDBF /* StripeCore.framework in Frameworks */,
+				F32D9B032745C24700C5FDBF /* StripeCardScan.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F32D9AE92745BFD200C5FDBF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F32D9AC22745BFD000C5FDBF = {
+			isa = PBXGroup;
+			children = (
+				F32D9ACD2745BFD000C5FDBF /* CardImageVerification Example */,
+				F32D9AEF2745BFD200C5FDBF /* CardImageVerification ExampleUITests */,
+				F32D9ACC2745BFD000C5FDBF /* Products */,
+				F32D9B012745C24700C5FDBF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F32D9ACC2745BFD000C5FDBF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F32D9ACB2745BFD000C5FDBF /* CardImageVerification Example.app */,
+				F32D9AEC2745BFD200C5FDBF /* CardImageVerification ExampleUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F32D9ACD2745BFD000C5FDBF /* CardImageVerification Example */ = {
+			isa = PBXGroup;
+			children = (
+				F32D9ACE2745BFD000C5FDBF /* AppDelegate.swift */,
+				F32D9AD72745BFD100C5FDBF /* Assets.xcassets */,
+				F32D9ADC2745BFD100C5FDBF /* Info.plist */,
+				F32D9AD92745BFD100C5FDBF /* LaunchScreen.storyboard */,
+				F32D9AD42745BFD000C5FDBF /* Main.storyboard */,
+				F32D9AFE2745C02300C5FDBF /* Resources */,
+				F329D8DE27473CD700811E79 /* URLHelper.swift */,
+				F3B038B127547A8000718B35 /* APIClient.swift */,
+				F32D9B0B2745C98200C5FDBF /* View Controllers */,
+				F3B038AE2754627500718B35 /* Views */,
+			);
+			path = "CardImageVerification Example";
+			sourceTree = "<group>";
+		};
+		F32D9AEF2745BFD200C5FDBF /* CardImageVerification ExampleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F32D9AF02745BFD200C5FDBF /* CardImageVerification_ExampleUITests.swift */,
+				F32D9AF22745BFD200C5FDBF /* Info.plist */,
+			);
+			path = "CardImageVerification ExampleUITests";
+			sourceTree = "<group>";
+		};
+		F32D9AFE2745C02300C5FDBF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F32D9AFF2745C06D00C5FDBF /* card_scanning_instruction.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F32D9B012745C24700C5FDBF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F32D9B062745C27600C5FDBF /* StripeCore.framework */,
+				F32D9B022745C24700C5FDBF /* StripeCardScan.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F32D9B0B2745C98200C5FDBF /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F3B038AA274E457700718B35 /* VerificationCardInputViewController.swift */,
+				F32D9B092745C8C700C5FDBF /* VerificationExplanationViewController.swift */,
+				F32D9AD22745BFD000C5FDBF /* ViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		F3B038AE2754627500718B35 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F3B038AF2754628F00718B35 /* CTAButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F32D9ACA2745BFD000C5FDBF /* CardImageVerification Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F32D9AF52745BFD200C5FDBF /* Build configuration list for PBXNativeTarget "CardImageVerification Example" */;
+			buildPhases = (
+				F32D9AC72745BFD000C5FDBF /* Sources */,
+				F32D9AC82745BFD000C5FDBF /* Frameworks */,
+				F32D9AC92745BFD000C5FDBF /* Resources */,
+				F32D9B052745C24700C5FDBF /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CardImageVerification Example";
+			productName = "CardImageVerification Example";
+			productReference = F32D9ACB2745BFD000C5FDBF /* CardImageVerification Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F32D9AEB2745BFD200C5FDBF /* CardImageVerification ExampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F32D9AFB2745BFD200C5FDBF /* Build configuration list for PBXNativeTarget "CardImageVerification ExampleUITests" */;
+			buildPhases = (
+				F32D9AE82745BFD200C5FDBF /* Sources */,
+				F32D9AE92745BFD200C5FDBF /* Frameworks */,
+				F32D9AEA2745BFD200C5FDBF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F32D9AEE2745BFD200C5FDBF /* PBXTargetDependency */,
+			);
+			name = "CardImageVerification ExampleUITests";
+			productName = "CardImageVerification ExampleUITests";
+			productReference = F32D9AEC2745BFD200C5FDBF /* CardImageVerification ExampleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F32D9AC32745BFD000C5FDBF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					F32D9ACA2745BFD000C5FDBF = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					F32D9AEB2745BFD200C5FDBF = {
+						CreatedOnToolsVersion = 12.5;
+						TestTargetID = F32D9ACA2745BFD000C5FDBF;
+					};
+				};
+			};
+			buildConfigurationList = F32D9AC62745BFD000C5FDBF /* Build configuration list for PBXProject "CardImageVerification Example" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				es,
+			);
+			mainGroup = F32D9AC22745BFD000C5FDBF;
+			productRefGroup = F32D9ACC2745BFD000C5FDBF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F32D9ACA2745BFD000C5FDBF /* CardImageVerification Example */,
+				F32D9AEB2745BFD200C5FDBF /* CardImageVerification ExampleUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F32D9AC92745BFD000C5FDBF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F32D9ADB2745BFD100C5FDBF /* LaunchScreen.storyboard in Resources */,
+				F32D9AD82745BFD100C5FDBF /* Assets.xcassets in Resources */,
+				F32D9AD62745BFD000C5FDBF /* Main.storyboard in Resources */,
+				F32D9B002745C06D00C5FDBF /* card_scanning_instruction.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F32D9AEA2745BFD200C5FDBF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F32D9AC72745BFD000C5FDBF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F32D9AD32745BFD000C5FDBF /* ViewController.swift in Sources */,
+				F3B038B227547A8000718B35 /* APIClient.swift in Sources */,
+				F329D8DF27473CD700811E79 /* URLHelper.swift in Sources */,
+				F3B038B02754628F00718B35 /* CTAButton.swift in Sources */,
+				F32D9ACF2745BFD000C5FDBF /* AppDelegate.swift in Sources */,
+				F32D9B0A2745C8C700C5FDBF /* VerificationExplanationViewController.swift in Sources */,
+				F3B038AB274E457700718B35 /* VerificationCardInputViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F32D9AE82745BFD200C5FDBF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F32D9AF12745BFD200C5FDBF /* CardImageVerification_ExampleUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F32D9AEE2745BFD200C5FDBF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F32D9ACA2745BFD000C5FDBF /* CardImageVerification Example */;
+			targetProxy = F32D9AED2745BFD200C5FDBF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F32D9AD42745BFD000C5FDBF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F32D9AD52745BFD000C5FDBF /* Base */,
+				3BA98B0827739C130086C74C /* es */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F32D9AD92745BFD100C5FDBF /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F32D9ADA2745BFD100C5FDBF /* Base */,
+				3BA98B0727739C120086C74C /* es */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F32D9AF32745BFD200C5FDBF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F32D9AF42745BFD200C5FDBF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F32D9AF62745BFD200C5FDBF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "CardImageVerification Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F32D9AF72745BFD200C5FDBF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "CardImageVerification Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F32D9AFC2745BFD200C5FDBF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "CardImageVerification ExampleUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-ExampleUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "CardImageVerification Example";
+			};
+			name = Debug;
+		};
+		F32D9AFD2745BFD200C5FDBF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "CardImageVerification ExampleUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CardImageVerification-ExampleUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "CardImageVerification Example";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F32D9AC62745BFD000C5FDBF /* Build configuration list for PBXProject "CardImageVerification Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F32D9AF32745BFD200C5FDBF /* Debug */,
+				F32D9AF42745BFD200C5FDBF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F32D9AF52745BFD200C5FDBF /* Build configuration list for PBXNativeTarget "CardImageVerification Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F32D9AF62745BFD200C5FDBF /* Debug */,
+				F32D9AF72745BFD200C5FDBF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F32D9AFB2745BFD200C5FDBF /* Build configuration list for PBXNativeTarget "CardImageVerification ExampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F32D9AFC2745BFD200C5FDBF /* Debug */,
+				F32D9AFD2745BFD200C5FDBF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F32D9AC32745BFD000C5FDBF /* Project object */;
+}

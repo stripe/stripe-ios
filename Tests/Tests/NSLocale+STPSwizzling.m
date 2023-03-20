@@ -20,7 +20,22 @@
 
 + (void)stp_swizzleClassMethod:(SEL)original withReplacement:(SEL)replacement
 {
-    method_exchangeImplementations(class_getClassMethod(self, original), class_getClassMethod(self, replacement));
+    Class class = object_getClass((id)self);
+    Method originalMethod = class_getClassMethod(self, original);
+    Method replacementMethod = class_getClassMethod(self, replacement);
+    
+    BOOL addedMethod = class_addMethod(class,
+                                       original,
+                                       method_getImplementation(replacementMethod),
+                                       method_getTypeEncoding(replacementMethod));
+    if (addedMethod) {
+        class_replaceMethod(class,
+                            replacement,
+                            method_getImplementation(originalMethod),
+                            method_getTypeEncoding(originalMethod));
+    } else {
+        method_exchangeImplementations(originalMethod, replacementMethod);
+    }
 }
 
 @end
@@ -29,13 +44,26 @@
 
 static NSLocale *_stpLocaleOverride = nil;
 
-+ (void)stp_setCurrentLocale:(NSLocale *)locale
-{
-    if (_stpLocaleOverride == nil & locale != nil) {
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         [self stp_swizzleClassMethod:@selector(currentLocale) withReplacement:@selector(stp_currentLocale)];
         [self stp_swizzleClassMethod:@selector(autoupdatingCurrentLocale) withReplacement:@selector(stp_autoUpdatingCurrentLocale)];
         [self stp_swizzleClassMethod:@selector(systemLocale) withReplacement:@selector(stp_systemLocale)];
-    }
+    });
+    
+}
+
++ (void)stp_withLocaleAs:(NSLocale *)locale perform:(void (^)(void))block {
+    NSLocale *currentLocale = NSLocale.currentLocale;
+    [self stp_setCurrentLocale:locale];
+    block();
+    [self stp_resetCurrentLocale];
+    NSAssert([currentLocale isEqual:NSLocale.currentLocale], @"Failed to reset locale.");
+}
+
++ (void)stp_setCurrentLocale:(NSLocale *)locale
+{
     _stpLocaleOverride = locale;
 }
 

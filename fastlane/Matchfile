@@ -1,0 +1,6 @@
+# The passphrase for the encrypted contents of this repo can be found using
+# fetch-password mobile/ios-fastlane-match-credentials-passphrase
+git_url("git@git.corp.stripe.com:stripe-internal/ios-fastlane-match-credentials.git")
+
+# The default type, can be: appstore, adhoc, enterprise or development
+type("appstore")

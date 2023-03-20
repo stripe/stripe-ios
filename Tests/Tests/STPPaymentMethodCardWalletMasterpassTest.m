@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodCardWalletMasterpass.h"
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
 
@@ -20,7 +19,7 @@
 
 - (void)testDecodedObjectFromAPIResponseMapping {
     // We reuse the visa checkout JSON because it's identical to the masterpass version
-    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"][@"wallet"][@"visa_checkout"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"card"][@"wallet"][@"visa_checkout"];
     STPPaymentMethodCardWalletMasterpass *masterpass = [STPPaymentMethodCardWalletMasterpass decodedObjectFromAPIResponse:response];
     XCTAssertNotNil(masterpass);
     XCTAssertEqualObjects(masterpass.name, @"Jenny");

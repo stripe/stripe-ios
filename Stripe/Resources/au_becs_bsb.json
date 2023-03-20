@@ -1,0 +1,373 @@
+{
+    "10": {
+        "icon": "banksa",
+        "name": "BankSA (division of Westpac Bank)"
+    },
+    "11": {
+        "icon": "stgeorges",
+        "name": "St George Bank (division of Westpac Bank)"
+    },
+    "12": {
+        "icon": "boq",
+        "name": "Bank of Queensland"
+    },
+    "14": {
+        "name": "Rabobank"
+    },
+    "15": {
+        "name": "Town & Country Bank"
+    },
+    "18": {
+        "name": "Macquarie Bank"
+    },
+    "19": {
+        "icon": "bankofmelbourne",
+        "name": "Bank of Melbourne (division of Westpac Bank)"
+    },
+    "21": {
+        "name": "JP Morgan Chase Bank"
+    },
+    "22": {
+        "name": "BNP Paribas"
+    },
+    "23": {
+        "name": "Bank of America"
+    },
+    "24": {
+        "name": "Citibank"
+    },
+    "25": {
+        "name": "BNP Paribas Securities"
+    },
+    "26": {
+        "name": "Bankers Trust Australia (division of Westpac Bank)"
+    },
+    "29": {
+        "name": "Bank of Tokyo-Mitsubishi"
+    },
+    "30": {
+        "icon": "bankwest",
+        "name": "Bankwest (division of Commonwealth Bank)"
+    },
+    "31": {
+        "name": "Bankmecu"
+    },
+    "33": {
+        "icon": "stgeorges",
+        "name": "St George Bank (division of Westpac Bank)"
+    },
+    "34": {
+        "name": "HSBC Bank Australia"
+    },
+    "35": {
+        "name": "Bank of China"
+    },
+    "40": {
+        "icon": "cba",
+        "name": "Commonwealth Bank of Australia"
+    },
+    "41": {
+        "name": "Deutsche Bank"
+    },
+    "42": {
+        "icon": "cba",
+        "name": "Commonwealth Bank of Australia"
+    },
+    "45": {
+        "name": "OCBC Bank"
+    },
+    "46": {
+        "name": "Advance Bank (division of Westpac Bank)"
+    },
+    "47": {
+        "name": "Challenge Bank (division of Westpac Bank)"
+    },
+    "48": {
+        "icon": "suncorpmetway",
+        "name": "Suncorp-Metway"
+    },
+    "52": {
+        "icon": "cba",
+        "name": "Commonwealth Bank of Australia"
+    },
+    "55": {
+        "icon": "bankofmelbourne",
+        "name": "Bank of Melbourne (division of Westpac Bank)"
+    },
+    "57": {
+        "name": "Australian Settlements"
+    },
+    "61": {
+        "name": "Adelaide Bank (division of Bendigo and Adelaide Bank)"
+    },
+    "70": {
+        "name": "Indue"
+    },
+    "73": {
+        "icon": "westpac",
+        "name": "Westpac Banking Corporation"
+    },
+    "76": {
+        "icon": "cba",
+        "name": "Commonwealth Bank of Australia"
+    },
+    "78": {
+        "icon": "nab",
+        "name": "National Australia Bank"
+    },
+    "80": {
+        "name": "Cuscal"
+    },
+    "90": {
+        "name": "Australia Post"
+    },
+    "325": {
+        "name": "Beyond Bank Australia"
+    },
+    "432": {
+        "name": "Standard Chartered Bank"
+    },
+    "510": {
+        "name": "Citibank N.A."
+    },
+    "512": {
+        "name": "Community First Credit Union"
+    },
+    "514": {
+        "name": "QT Mutual Bank"
+    },
+    "517": {
+        "name": "Australian Settlements Limited"
+    },
+    "533": {
+        "name": "Bananacoast Community Credit Union"
+    },
+    "611": {
+        "name": "Select Credit Union"
+    },
+    "630": {
+        "name": "ABS Building Society"
+    },
+    "632": {
+        "name": "B&E"
+    },
+    "633": {
+        "name": "Bendigo Bank"
+    },
+    "634": {
+        "name": "Uniting Financial Services"
+    },
+    "636": {
+        "name": "Cuscal Limited"
+    },
+    "637": {
+        "name": "Greater Building Society"
+    },
+    "638": {
+        "name": "Heritage Bank"
+    },
+    "639": {
+        "name": "Home Building Society (division of Bank of Queensland)"
+    },
+    "640": {
+        "name": "Hume Bank"
+    },
+    "641": {
+        "name": "IMB"
+    },
+    "642": {
+        "name": "Australian Defence Credit Union"
+    },
+    "645": {
+        "name": "Wide Bay Australia"
+    },
+    "646": {
+        "name": "Maitland Mutual Building Society"
+    },
+    "647": {
+        "name": "IMB"
+    },
+    "650": {
+        "name": "Newcastle Permanent Building Society"
+    },
+    "653": {
+        "name": "Pioneer Permanent Building Society (division of Bank of Queensland)"
+    },
+    "654": {
+        "name": "ECU Australia"
+    },
+    "655": {
+        "name": "The Rock Building Society"
+    },
+    "656": {
+        "name": "Wide Bay Australia"
+    },
+    "657": {
+        "name": "Greater Building Society"
+    },
+    "659": {
+        "name": "SGE Credit Union"
+    },
+    "664": {
+        "icon": "suncorpmetway",
+        "name": "Suncorp-Metway"
+    },
+    "670": {
+        "name": "Cuscal Limited"
+    },
+    "676": {
+        "name": "Gateway Credit Union"
+    },
+    "721": {
+        "name": "Holiday Coast Credit Union"
+    },
+    "722": {
+        "name": "Southern Cross Credit"
+    },
+    "723": {
+        "name": "Heritage Isle Credit Union"
+    },
+    "724": {
+        "name": "Railways Credit Union"
+    },
+    "725": {
+        "name": "Judo Bank Pty Ltd"
+    },
+    "728": {
+        "name": "Summerland Credit Union"
+    },
+    "775": {
+        "name": "Australian Settlements Limited"
+    },
+    "777": {
+        "name": "Police & Nurse"
+    },
+    "812": {
+        "name": "Teachers Mutual Bank"
+    },
+    "813": {
+        "name": "Capricornian"
+    },
+    "814": {
+        "name": "Credit Union Australia"
+    },
+    "815": {
+        "name": "Police Bank"
+    },
+    "817": {
+        "name": "Warwick Credit Union"
+    },
+    "818": {
+        "name": "Bank of Communications"
+    },
+    "819": {
+        "name": "Industrial & Commercial Bank of China"
+    },
+    "823": {
+        "name": "Encompass Credit Union"
+    },
+    "824": {
+        "name": "Sutherland Credit Union"
+    },
+    "825": {
+        "name": "Big Sky Building Society"
+    },
+    "833": {
+        "name": "Defence Bank Limited"
+    },
+    "880": {
+        "name": "Heritage Bank"
+    },
+    "882": {
+        "name": "Maritime Mining & Power Credit Union"
+    },
+    "888": {
+        "name": "China Construction Bank Corporation"
+    },
+    "889": {
+        "name": "DBS Bank Ltd."
+    },
+    "911": {
+        "name": "Sumitomo Mitsui Banking Corporation"
+    },
+    "913": {
+        "name": "State Street Bank & Trust Company"
+    },
+    "917": {
+        "name": "Arab Bank Australia"
+    },
+    "918": {
+        "name": "Mizuho Bank"
+    },
+    "922": {
+        "name": "United Overseas Bank"
+    },
+    "923": {
+        "name": "ING Bank"
+    },
+    "931": {
+        "name": "Mega International Commercial Bank"
+    },
+    "932": {
+        "name": "Community Mutual"
+    },
+    "936": {
+        "name": "ING Bank"
+    },
+    "939": {
+        "name": "AMP Bank"
+    },
+    "941": {
+        "name": "Delphi Bank (division of Bendigo and Adelaide Bank)"
+    },
+    "942": {
+        "name": "Bank of Sydney"
+    },
+    "943": {
+        "name": "Taiwan Business Bank"
+    },
+    "944": {
+        "name": "Members Equity Bank"
+    },
+    "946": {
+        "name": "UBS AG"
+    },
+    "951": {
+        "name": "BOQ Specialist Bank"
+    },
+    "952": {
+        "name": "Royal Bank of Scotland"
+    },
+    "969": {
+        "name": "Tyro Payments"
+    },
+    "980": {
+        "name": "Bank of China"
+    },
+    "985": {
+        "name": "HSBC Bank Australia"
+    },
+    "01": {
+        "icon": "anz",
+        "name": "Australia and New Zealand Banking Group"
+    },
+    "03": {
+        "icon": "westpac",
+        "name": "Westpac Banking Corporation"
+    },
+    "04": {
+        "icon": "westpac",
+        "name": "Westpac Banking Corporation"
+    },
+    "06": {
+        "icon": "cba",
+        "name": "Commonwealth Bank of Australia"
+    },
+    "08": {
+        "icon": "nab",
+        "name": "National Australia Bank"
+    },
+    "09": {
+        "name": "Reserve Bank of Australia"
+    }
+}

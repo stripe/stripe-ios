@@ -23,9 +23,11 @@
     "usage": "reusable",
     "sepa_debit": {
         "bank_code": "37040044",
+        "branch_code": "a_branch",
         "country": "DE",
         "fingerprint": "NxdSyRegc9PsMkWy",
         "last4": "3001",
+        "mandate": "NXDSYREGC9PSMKWY",
         "mandate_reference": "NXDSYREGC9PSMKWY",
         "mandate_url": "https://hooks.stripe.com/adapter/sepa_debit/file/src_18HgGjHNCLa1Vra6Y9TIP6tU/src_client_secret_XcBmS94nTg5o0xc9MSliSlDW"
     },

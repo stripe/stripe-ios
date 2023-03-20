@@ -7,7 +7,7 @@
 //
 
 #import "FBSnapshotTestCase+STPViewControllerLoading.h"
-#import "STPCoreScrollViewController+Private.h"
+
 
 @implementation FBSnapshotTestCase (STPViewControllerLoading)
 

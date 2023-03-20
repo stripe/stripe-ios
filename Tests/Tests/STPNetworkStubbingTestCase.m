@@ -7,12 +7,11 @@
 //
 
 #import "STPNetworkStubbingTestCase.h"
-#import "STPAPIClient+Private.h"
 #import <SWHttpTrafficRecorder/SWHttpTrafficRecorder.h>
-#import <OHHTTPStubs/OHHTTPStubs.h>
-#import <OHHTTPStubs/OHHTTPStubs+Mocktail.h>
+#import <OHHTTPStubs/HTTPStubs.h>
+#import <OHHTTPStubs/HTTPStubs+Mocktail.h>
 
-@implementation STPNetworkStubbingTestCase
+@implementation STPNetworkStubbingTestCaseObjc
 
 - (void)setUp {
     [super setUp];
@@ -35,7 +34,7 @@
         // Must be in the simulator, so that we can write recorded traffic into the repo.
         NSCAssert(NO, @"Tests executed in recording mode must be run in the simulator.");
 #endif
-        NSURLSessionConfiguration *config = [STPAPIClient sharedUrlSessionConfiguration];
+        NSURLSessionConfiguration *config = [self urlSessionConfig];
         SWHttpTrafficRecorder *recorder = [SWHttpTrafficRecorder sharedRecorder];
         
         // Creates filenames like `post_v1_tokens_0.tail`.
@@ -66,16 +65,16 @@
         NSCAssert(success, @"Error recording requests: %@", recordingError);
         
         // Make sure to fail, to remind ourselves to turn this off
-        __weak typeof(self) weakself = self;
+        __weak typeof(self) weakSelf = self;
         [self addTeardownBlock:^{
             // Like XCTFail, but avoiding a retain cycle
-            _XCTPrimitiveFail(weakself, @"Network traffic for %@ has been recorded - re-run with self.recordingMode = NO for this test to succeed", [weakself name]);
+            _XCTPrimitiveFail(weakSelf, @"Network traffic for %@ has been recorded - re-run with self.recordingMode = NO for this test to succeed", [weakSelf name]);
         }];
     } else {
         // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
-        [OHHTTPStubs stubRequestsPassingTest:^BOOL(__unused NSURLRequest * _Nonnull request) {
+        [HTTPStubs stubRequestsPassingTest:^BOOL(__unused NSURLRequest * _Nonnull request) {
             return YES;
-        } withStubResponse:^OHHTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
             NSCAssert(NO, @"Attempted to hit the live network at %@", request.URL.path);
             return nil;
         }];
@@ -85,7 +84,7 @@
         NSURL *url = [bundle URLForResource:relativePath withExtension:nil];
         if (url) {
             NSError *stubError;
-            [OHHTTPStubs stubRequestsUsingMocktailsAtPath:relativePath inBundle:bundle error:&stubError];
+            [HTTPStubs stubRequestsUsingMocktailsAtPath:relativePath inBundle:bundle error:&stubError];
             NSCAssert(!stubError, @"Error stubbing requests: %@", stubError);
         } else {
             NSLog(@"No stubs found - all network access will raise an exception.");
@@ -99,7 +98,7 @@
     [[SWHttpTrafficRecorder sharedRecorder] stopRecording];
     
     // Don't accidentally keep any stubs around during the next test run
-    [OHHTTPStubs removeAllStubs];
+    [HTTPStubs removeAllStubs];
 }
 
 @end

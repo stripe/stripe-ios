@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "Uygulamaya hata ayıklayıcı eklendi.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "Uygulamayı çalıştırmak için bir emülatör kullanılıyor.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "İptal";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "Yüklüyor";
+
+/* The no answer to a yes or no question. */
+"No" = "Hayır";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "Güvenli ödeme";
+
+/* Indicates that a button is selected. */
+"Selected" = "Seçildi";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "Cihazın üretici yazılım kilidi kaldırılmış.";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "SDK bütünlüğü ihlal edilmiş.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "İS veya İS Sürümü desteklenmiyor.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "Zaman aşımı";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "Seçimi kaldırıldı";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "Evet";
+

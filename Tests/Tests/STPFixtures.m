@@ -8,14 +8,17 @@
 
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
-#import "STPEphemeralKey.h"
 
 NSString *const STPTestJSONCustomer = @"Customer";
 
 NSString *const STPTestJSONCard = @"Card";
 
 NSString *const STPTestJSONPaymentIntent = @"PaymentIntent";
-NSString *const STPTestJSONPaymentMethod = @"PaymentMethod";
+NSString *const STPTestJSONSetupIntent = @"SetupIntent";
+
+NSString *const STPTestJSONPaymentMethodCard = @"CardPaymentMethod";
+NSString *const STPTestJSONPaymentMethodApplePay = @"ApplePayPaymentMethod";
+NSString *const STPTestJSONPaymentMethodBacsDebit = @"BacsDebitPaymentMethod";
 
 NSString *const STPTestJSONSource3DS = @"3DSSource";
 NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
@@ -27,14 +30,17 @@ NSString *const STPTestJSONSourceiDEAL = @"iDEALSource";
 NSString *const STPTestJSONSourceMultibanco = @"MultibancoSource";
 NSString *const STPTestJSONSourceP24 = @"P24Source";
 NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
-NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
+NSString *const STPTestJSONSourceSofort = @"SofortSource";
+NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 
+@import StripeCore;
 
 @implementation STPFixtures
 
 + (STPConnectAccountParams *)accountParams {
+    STPConnectAccountIndividualParams *params = [STPConnectAccountIndividualParams new];
     return [[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES
-                                                            legalEntity:[self legalEntityParams]];
+                                                             individual:params];
 }
 
 + (STPAddress *)address {
@@ -71,6 +77,15 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     return cardParams;
 }
 
++ (STPPaymentMethodCardParams *)paymentMethodCardParams {
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    cardParams.number = @"4242424242424242";
+    cardParams.expMonth = @(10);
+    cardParams.expYear = @(99);
+    cardParams.cvc = @"123";
+    return cardParams;
+}
+
 + (STPCard *)card {
     return [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONCard]];
 }
@@ -98,6 +113,10 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
 }
 
 + (STPCustomer *)customerWithSingleCardTokenSource {
+    return [STPCustomer decodedObjectFromAPIResponse:[self customerWithSingleCardTokenSourceJSON]];
+}
+
++ (NSDictionary *)customerWithSingleCardTokenSourceJSON {
     NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:STPTestJSONCard] mutableCopy];
     card1[@"id"] = @"card_123";
 
@@ -107,7 +126,7 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     customer[@"default_source"] = card1[@"id"];
     customer[@"sources"] = sources;
 
-    return [STPCustomer decodedObjectFromAPIResponse:customer];
+    return customer;
 }
 
 + (STPCustomer *)customerWithSingleCardSourceSource {
@@ -141,6 +160,10 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
 }
 
 + (STPCustomer *)customerWithCardAndApplePaySources {
+    return [STPCustomer decodedObjectFromAPIResponse:[self customerWithCardAndApplePaySourcesJSON]];
+}
+
++ (NSDictionary *)customerWithCardAndApplePaySourcesJSON {
     NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:STPTestJSONSourceCard] mutableCopy];
     card1[@"id"] = @"src_apple_pay_123";
     NSMutableDictionary *cardDict = [card1[@"card"] mutableCopy];
@@ -156,7 +179,7 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     customer[@"default_source"] = card1[@"id"];
     customer[@"sources"] = sources;
 
-    return [STPCustomer decodedObjectFromAPIResponse:customer];
+    return customer;
 }
 
 + (STPCustomer *)customerWithSourcesFromJSONKeys:(NSArray<NSString *> *)jsonSourceKeys
@@ -199,13 +222,20 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     return [STPSource decodedObjectFromAPIResponse:dictionary];
 }
 
++ (STPSource *)weChatPaySource {
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSourceWeChatPay]];
+}
+
 + (STPPaymentIntent *)paymentIntent {
     return [STPPaymentIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"PaymentIntent"]];
 }
 
++ (STPSetupIntent *)setupIntent {
+    return [STPSetupIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SetupIntent"]];
+}
+
 + (STPPaymentConfiguration *)paymentConfiguration {
     STPPaymentConfiguration *config = [STPPaymentConfiguration new];
-    config.publishableKey = @"pk_fake_publishable_key";
     return config;
 }
 
@@ -221,6 +251,37 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     NSTimeInterval interval = 10;
     response[@"expires"] = @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970]);
     return [STPEphemeralKey decodedObjectFromAPIResponse:response];
+}
+
++ (PKPaymentRequest *)applePayRequest {
+    PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:@"foo" country:@"US" currency:@"USD"];
+    paymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]]];
+    return paymentRequest;
+}
+
++ (PKPayment *)simulatorApplePayPayment {
+    PKPayment *payment = [PKPayment new];
+    PKPaymentToken *paymentToken = [PKPaymentToken new];
+    PKPaymentMethod *paymentMethod = [PKPaymentMethod new];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    [paymentMethod performSelector:@selector(setDisplayName:) withObject:@"Simulated Instrument"];
+    [paymentMethod performSelector:@selector(setNetwork:) withObject:@"AmEx"];
+    [paymentToken performSelector:@selector(setTransactionIdentifier:) withObject:@"Simulated Identifier"];
+    
+    [paymentToken performSelector:@selector(setPaymentMethod:) withObject:paymentMethod];
+
+    [payment performSelector:@selector(setToken:) withObject:paymentToken];
+    
+    // Add shipping
+    PKContact *shipping = [PKContact new];
+    shipping.name = [[NSPersonNameComponentsFormatter new] personNameComponentsFromString:@"Jane Doe"];
+    CNMutablePostalAddress *address = [CNMutablePostalAddress new];
+    address.street = @"510 Townsend St";
+    shipping.postalAddress = address;
+    [payment performSelector:@selector(setShippingContact:) withObject:shipping];
+#pragma clang diagnostic pop
+    return payment;
 }
 
 + (PKPayment *)applePayPayment {
@@ -267,60 +328,21 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     return payment;
 }
 
-+ (STPLegalEntityParams *)legalEntityParams {
-    STPLegalEntityParams *legalEntity = [STPLegalEntityParams new];
+#pragma mark - Payment Method
 
-    legalEntity.firstName = @"Jessica";
-    legalEntity.lastName = @"Jones";
-    legalEntity.maidenName = @"Smith";
-    legalEntity.address = [self address];
-
-    legalEntity.dateOfBirth = [NSDateComponents new];
-    legalEntity.dateOfBirth.year = 1980;
-    legalEntity.dateOfBirth.month = 7;
-    legalEntity.dateOfBirth.day = 4;
-
-    legalEntity.verification = [STPVerificationParams new];
-    legalEntity.verification.document = @"file_abc";
-    legalEntity.verification.documentBack = @"file_def";
-
-    STPPersonParams *jenny = [self personParams], *jacob = [self personParams];
-    jenny.firstName = @"Jenny";
-    jacob.firstName = @"Jacob";
-    legalEntity.additionalOwners = @[jenny, jacob];
-
-    legalEntity.businessName = @"Internet Business";
-    legalEntity.businessTaxId = @"123";
-    legalEntity.businessVATId = @"456";
-    legalEntity.genderString = @"female";
-    legalEntity.personalAddress = [self address];
-    legalEntity.personalAddress.state = @"CA";
-    legalEntity.personalIdNumber = @"000000000";
-    legalEntity.phoneNumber = @"555-1234";
-    legalEntity.ssnLast4 = @"0000";
-    legalEntity.taxIdRegistrar = @"321";
-    legalEntity.entityTypeString = @"individual";
-
-    return legalEntity;
++ (STPPaymentMethod *)paymentMethod {
+    return [STPPaymentMethod decodedObjectFromAPIResponse:[self paymentMethodJSON]];
 }
 
-+ (STPPersonParams *)personParams {
-    STPPersonParams *person = [STPPersonParams new];
-
-    person.firstName = @"James";
-    person.lastName = @"Smith";
-    person.maidenName = @"Jones";
-    person.address = [self address];
-
-    person.dateOfBirth = [NSDateComponents new];
-    person.dateOfBirth.year = 1980;
-    person.dateOfBirth.month = 7;
-    person.dateOfBirth.day = 4;
-
-    person.verification = [STPVerificationParams new];
-    person.verification.document = @"file_abc";
-
-    return person;
++ (NSDictionary *)paymentMethodJSON {
+    return [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard];
 }
 
++ (STPPaymentMethod *)applePayPaymentMethod {
+    return [STPPaymentMethod decodedObjectFromAPIResponse:[self applePayPaymentMethodJSON]];
+}
+
++ (NSDictionary *)applePayPaymentMethodJSON {
+    return [STPTestUtils jsonNamed:STPTestJSONPaymentMethodApplePay];
+}
 @end

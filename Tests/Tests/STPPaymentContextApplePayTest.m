@@ -8,11 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "NSDecimalNumber+Stripe_Currency.h"
-#import "STPAPIClient.h"
+
 #import "STPFixtures.h"
 #import "STPMocks.h"
-#import "STPPaymentContext.h"
+
 
 @interface STPPaymentContext (Testing)
 @property (nonatomic) PKShippingMethod *selectedShippingMethod;

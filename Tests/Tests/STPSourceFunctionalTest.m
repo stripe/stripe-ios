@@ -7,13 +7,11 @@
 //
 
 @import XCTest;
+@import StripeCoreTestUtils;
 
-#import "Stripe.h"
-#import "STPNetworkStubbingTestCase.h"
+#import "STPTestingAPIClient.h"
 
-static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
-
-@interface STPSourceFunctionalTest : STPNetworkStubbingTestCase
+@interface STPSourceFunctionalTest : XCTestCase
 @end
 
 @interface STPAPIClient (WritableURL)
@@ -22,10 +20,6 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 
 @implementation STPSourceFunctionalTest
 
-- (void)setUp {
-    [super setUp];
-}
-
 - (void)testCreateSource_bancontact {
     STPSourceParams *params = [STPSourceParams bancontactParamsWithAmount:1099
                                                                      name:@"Jenny Rosen"
@@ -33,7 +27,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                       statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -43,13 +37,16 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_card {
@@ -68,7 +65,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     STPSourceParams *params = [STPSourceParams cardParamsWithCard:card];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -85,11 +82,14 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(address.state, card.address.state);
         XCTAssertEqualObjects(address.country, card.address.country);
         XCTAssertEqualObjects(address.postalCode, card.address.postalCode);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_giropay {
@@ -99,7 +99,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                    statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -109,13 +109,16 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_ideal {
@@ -126,25 +129,28 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                                 bank:@"ing"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqual(source.type, STPSourceTypeIDEAL);
+        XCTAssertEqual(source.type, STPSourceTypeiDEAL);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.details[@"bank"], @"ing");
         XCTAssertEqualObjects(source.details[@"statement_descriptor"], @"ORDER AT123");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_ideal_missingOptionalFields {
@@ -154,25 +160,28 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                  statementDescriptor:nil
                                                                 bank:nil];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqual(source.type, STPSourceTypeIDEAL);
+        XCTAssertEqual(source.type, STPSourceTypeiDEAL);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertNil(source.owner.name);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertNil(source.details[@"bank"]);
         XCTAssertNil(source.details[@"statement_descriptor"]);
-        XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_ideal_emptyOptionalFields {
@@ -182,25 +191,28 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                  statementDescriptor:@""
                                                                 bank:@""];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqual(source.type, STPSourceTypeIDEAL);
+        XCTAssertEqual(source.type, STPSourceTypeiDEAL);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertNil(source.owner.name);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertNil(source.details[@"bank"]);
         XCTAssertNil(source.details[@"statement_descriptor"]);
-        XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_sepaDebit {
@@ -212,7 +224,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                                country:@"DE"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -226,11 +238,14 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.owner.address.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_sepaDebit_NoAddress {
@@ -242,7 +257,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                                country:nil];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -256,11 +271,14 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertNil(source.owner.address.country);
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE"); // German IBAN so sepa tells us country here even though we didnt pass it up as owner info
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_sofort {
@@ -270,7 +288,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                   statementDescriptor:@"ORDER AT11990"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -279,14 +297,17 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         XCTAssertEqualObjects(source.details[@"country"], @"DE");
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_threeDSecure {
@@ -303,7 +324,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     card.address.postalCode = @"10002";
     STPSourceParams *cardParams = [STPSourceParams cardParamsWithCard:card];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *cardExp = [self expectationWithDescription:@"Card Source creation"];
     XCTestExpectation *threeDSExp = [self expectationWithDescription:@"3DS Source creation"];
     [client createSourceWithParams:cardParams completion:^(STPSource *source1, NSError *error1) {
@@ -330,14 +351,17 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
             XCTAssertEqualObjects(source2.amount, params.amount);
             XCTAssertEqualObjects(source2.currency, params.currency);
             XCTAssertEqual(source2.redirect.status, STPSourceRedirectStatusPending);
-            XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+            XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
             XCTAssertNotNil(source2.redirect.url);
-            XCTAssertEqualObjects(source2.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+            XCTAssertNil(source2.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
             [threeDSExp fulfill];
         }];
     }];
 
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)skip_testCreateSourceVisaCheckout {
@@ -363,7 +387,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         NSLog(@"Created a VCO source %@", source.stripeID);
     }];
 
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)skip_testCreateSourceMasterpass {
@@ -389,7 +413,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         NSLog(@"Created a Masterpass source %@", source.stripeID);
     }];
 
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_alipay {
@@ -397,7 +421,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                              currency:@"usd"
                                                             returnURL:@"https://shop.example.com/crtABC"];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Alipay Source creation"];
 
     params.metadata = @{ @"foo": @"bar" };
@@ -408,13 +432,16 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_p24 {
@@ -424,7 +451,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                               name:@"Jenny Rosen"
                                                          returnURL:@"https://shop.example.com/crtABC"];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"P24 Source creation"];
 
     params.metadata = @{ @"foo": @"bar" };
@@ -437,13 +464,16 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.owner.email, params.owner[@"email"]);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testRetrieveSource_sofort {
@@ -470,7 +500,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                               [retrieveExp fulfill];
                           }];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_eps {
@@ -480,7 +510,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -490,14 +520,17 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         XCTAssertEqualObjects(source.allResponseFields[@"statement_descriptor"], @"ORDER AT123");
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_eps_no_statement_descriptor {
@@ -507,7 +540,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                statementDescriptor:nil];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -517,14 +550,17 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         XCTAssertNil(source.allResponseFields[@"statement_descriptor"]);
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_multibanco {
@@ -533,7 +569,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                                     email:@"user@example.com"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -541,13 +577,75 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqual(source.type, STPSourceTypeMultibanco);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testCreateSource_klarna {
+    NSArray *lineItems = @[[[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeSKU itemDescription:@"Test Item" quantity:@(2) totalAmount:@(500)],
+        [[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeTax itemDescription:@"Tax" quantity:@(1) totalAmount:@(100)]];
+    STPAddress *address = [[STPAddress alloc] init];
+    address.line1 = @"29 Arlington Avenue";
+    address.email = @"test@example.com";
+    address.city = @"London";
+    address.postalCode = @"N1 7BE";
+    address.country = @"UK";
+    address.phone = @"02012267709";
+    STPDateOfBirth *dob = [[STPDateOfBirth alloc] init];
+    dob.day = 11;
+    dob.month = 3;
+    dob.year = 1952;
+    STPSourceParams *params = [STPSourceParams klarnaParamsWithReturnURL:@"https://shop.example.com/return" currency:@"GBP" purchaseCountry:@"UK" items:lineItems customPaymentMethods:@[@(STPKlarnaPaymentMethodsNone)] billingAddress:address billingFirstName:@"Arthur" billingLastName:@"Dent" billingDOB:dob];
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeKlarna);
+        XCTAssertEqualObjects(source.amount, @(600));
+        XCTAssertEqualObjects(source.owner.address.line1, address.line1);
+        XCTAssertEqualObjects(source.klarnaDetails.purchaseCountry, @"UK");
+        XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/return?redirect_merchant_name=xctest"]);
+        XCTAssertNotNil(source.redirect.url);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testCreateSource_wechatPay {
+    STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
+                                                                currency:@"usd"
+                                                                   appId:@"wxa0df51ec63e578ce"
+                                                     statementDescriptor:nil];
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeWeChatPay);
+        XCTAssertEqual(source.status, STPSourceStatusPending);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertNil(source.redirect);
+
+        STPSourceWeChatPayDetails *wechat = source.weChatPayDetails;
+        XCTAssertNotNil(wechat);
+        XCTAssertNotNil(wechat.weChatAppURL);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

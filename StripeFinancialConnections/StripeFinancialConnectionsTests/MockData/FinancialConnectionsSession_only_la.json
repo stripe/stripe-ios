@@ -1,0 +1,129 @@
+{
+  "id": "fcsess_testststststm",
+  "object": "link_account_session",
+  "client_secret": "las_client_secrettest_tests",
+  "linked_accounts": {
+    "object": "list",
+    "data": [
+      {
+        "id": "fca_1KtwJsdsdfdsf",
+        "object": "linked_account",
+        "balance": null,
+        "balance_refresh": null,
+        "category": "cash",
+        "created": 1651248322,
+        "display_name": "Bank Savings",
+        "institution_name": "Bank of Testing",
+        "last4": "7777",
+        "livemode": true,
+        "ownership": null,
+        "ownership_refresh": null,
+        "permissions": [
+          "payment_method"
+        ],
+        "status": "active",
+        "subcategory": "savings",
+        "supported_payment_method_types": [
+          "us_bank_account"
+        ]
+      },
+      {
+        "id": "fca_1KtwJsdfadfsdf",
+        "object": "linked_account",
+        "balance": null,
+        "balance_refresh": null,
+        "category": "cash",
+        "created": 1651248322,
+        "display_name": "Test Bank",
+        "institution_name": "Bank of Testing",
+        "last4": "3333",
+        "livemode": true,
+        "ownership": null,
+        "ownership_refresh": null,
+        "permissions": [
+          "payment_method"
+        ],
+        "status": "active",
+        "subcategory": "checking",
+        "supported_payment_method_types": [
+          "us_bank_account",
+          "link"
+        ]
+      },
+      {
+        "id": "fca_1asdfe23dsdfs",
+        "object": "linked_account",
+        "balance": null,
+        "balance_refresh": null,
+        "category": "credit",
+        "created": 1651248322,
+        "display_name": "Test Credit Card",
+        "institution_name": "Bank of Testing",
+        "last4": "6666",
+        "livemode": true,
+        "ownership": null,
+        "ownership_refresh": null,
+        "permissions": [
+          "payment_method"
+        ],
+        "status": "active",
+        "subcategory": "credit_card",
+        "supported_payment_method_types": [
+
+        ]
+      },
+      {
+        "id": "fca_asdfasdfe",
+        "object": "linked_account",
+        "balance": null,
+        "balance_refresh": null,
+        "category": "cash",
+        "created": 1651248322,
+        "display_name": "Test Tests",
+        "institution_name": "Bank of Testing",
+        "last4": "5766",
+        "livemode": true,
+        "ownership": null,
+        "ownership_refresh": null,
+        "permissions": [
+          "payment_method"
+        ],
+        "status": "active",
+        "subcategory": "savings",
+        "supported_payment_method_types": [
+          "us_bank_account"
+        ]
+      },
+      {
+        "id": "fca_1sdfwedfsdf",
+        "object": "linked_account",
+        "balance": null,
+        "balance_refresh": null,
+        "category": "cash",
+        "created": 1651248322,
+        "display_name": "Checking Test",
+        "institution_name": "Bank of Testing",
+        "last4": "4242",
+        "livemode": true,
+        "ownership": null,
+        "ownership_refresh": null,
+        "permissions": [
+          "payment_method"
+        ],
+        "status": "active",
+        "subcategory": "checking",
+        "supported_payment_method_types": [
+          "us_bank_account",
+          "link"
+        ]
+      }
+    ],
+    "has_more": false,
+    "total_count": 5,
+    "url": "/v1/linked_accounts"
+  },
+  "livemode": true,
+  "permissions": [
+    "payment_method"
+  ]
+}

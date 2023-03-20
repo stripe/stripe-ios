@@ -8,9 +8,8 @@
 
 @import XCTest;
 
-#import "STPBankAccount.h"
 
-#import "STPFormEncoder.h"
+
 #import "STPTestUtils.h"
 
 @interface STPBankAccount ()
@@ -139,7 +138,6 @@
     XCTAssertEqualObjects(bankAccount.currency, @"usd");
     XCTAssertEqualObjects(bankAccount.fingerprint, @"1JWtPxqbdX5Gamtc");
     XCTAssertEqualObjects(bankAccount.last4, @"6789");
-    XCTAssertEqualObjects(bankAccount.metadata, @{@"order_id": @"6735"});
     XCTAssertEqualObjects(bankAccount.routingNumber, @"110000000");
     XCTAssertEqual(bankAccount.status, STPBankAccountStatusNew);
 

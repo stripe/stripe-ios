@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>STDSConfigParameters Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">Stripe3DS2 </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Stripe</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/addParameterNamed:withValue:">- addParameterNamed:withValue:</option>
+		
+		<option value="//api/name/addParameterNamed:withValue:toGroup:">- addParameterNamed:withValue:toGroup:</option>
+		
+		<option value="//api/name/initWithStandardParameters">- initWithStandardParameters</option>
+		
+		<option value="//api/name/parameterValue:">- parameterValue:</option>
+		
+		<option value="//api/name/parameterValue:inGroup:">- parameterValue:inGroup:</option>
+		
+		<option value="//api/name/removeParameterNamed:">- removeParameterNamed:</option>
+		
+		<option value="//api/name/removeParameterNamed:fromGroup:">- removeParameterNamed:fromGroup:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">STDSConfigParameters Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>STDSConfigParameters.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p><code>STDSConfigParameters</code> represents additional configuration parameters
+that can be passed to the Stripe3DS2 SDK during initialization.</p>
+
+<p>There are currently no supported additional parameters and apps can
+just pass <code>[STDSConfigParameters alloc] </code>initWithStandardParameters<code></code>
+to the <a href="../Classes/STDSThreeDS2Service.html"><code>STDSThreeDS2Service</code></a> instance.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initWithStandardParameters" title="initWithStandardParameters"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithStandardParameters">&ndash;&nbsp;initWithStandardParameters</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Convenience initializer to get an <code>STDSConfigParameters</code> instance
+with the default expected configuration parameters.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithStandardParameters</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Convenience initializer to get an <code>STDSConfigParameters</code> instance
+with the default expected configuration parameters.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSConfigParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addParameterNamed:withValue:toGroup:" title="addParameterNamed:withValue:toGroup:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addParameterNamed:withValue:toGroup:">&ndash;&nbsp;addParameterNamed:withValue:toGroup:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Adds the parameter to this instance.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addParameterNamed:(NSString *)<em>paramName</em> withValue:(NSString *)<em>paramValue</em> toGroup:(nullable NSString *)<em>paramGroup</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramName</code></th>
+						<td><p>The name of the parameter to add</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramValue</code></th>
+						<td><p>The value of the parameter to add</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramGroup</code></th>
+						<td><p>The group to which this parameter will be added. If <code>nil</code> the parameter will be added to <code>kSTDSConfigDefaultGroupName</code></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Adds the parameter to this instance.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>paramName</code> or <code>paramValue</code> are <code>nil</code>. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSConfigParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addParameterNamed:withValue:" title="addParameterNamed:withValue:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addParameterNamed:withValue:">&ndash;&nbsp;addParameterNamed:withValue:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Adds the parameter to the default group in this instance.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addParameterNamed:(NSString *)<em>paramName</em> withValue:(NSString *)<em>paramValue</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramName</code></th>
+						<td><p>The name of the parameter to add</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramValue</code></th>
+						<td><p>The value of the parameter to add</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Adds the parameter to the default group in this instance.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>paramName</code> or <code>paramValue</code> are <code>nil</code>. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSConfigParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/parameterValue:inGroup:" title="parameterValue:inGroup:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/parameterValue:inGroup:">&ndash;&nbsp;parameterValue:inGroup:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the value for <code>paramName</code> in <code>paramGroup</code> or <code>nil</code> if the parameter value is not set.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSString *)parameterValue:(NSString *)<em>paramName</em> inGroup:(nullable NSString *)<em>paramGroup</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramName</code></th>
+						<td><p>The name of the parameter to return</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramGroup</code></th>
+						<td><p>The group from which to fetch the parameter value. If <code>nil</code> will default to <code>kSTDSConfigDefaultGroupName</code></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Returns the value for <code>paramName</code> in <code>paramGroup</code> or <code>nil</code> if the parameter value is not set.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>paramName</code> is <code>nil</code>. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSConfigParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/parameterValue:" title="parameterValue:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/parameterValue:">&ndash;&nbsp;parameterValue:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the value for <code>paramName</code> in the default group or <code>nil</code> if the parameter value is not set.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSString *)parameterValue:(NSString *)<em>paramName</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramName</code></th>
+						<td><p>The name of the parameter to return</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Returns the value for <code>paramName</code> in the default group or <code>nil</code> if the parameter value is not set.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>paramName</code> is <code>nil</code>. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSConfigParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removeParameterNamed:fromGroup:" title="removeParameterNamed:fromGroup:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removeParameterNamed:fromGroup:">&ndash;&nbsp;removeParameterNamed:fromGroup:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Removes the specified parameter from the group and returns the value or <code>nil</code> if the parameter was not found.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSString *)removeParameterNamed:(NSString *)<em>paramName</em> fromGroup:(nullable NSString *)<em>paramGroup</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramName</code></th>
+						<td><p>The name of the parameter to remove</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramGroup</code></th>
+						<td><p>The group from which to remove this parameter. If <code>nil</code> will default to <code>kSTDSConfigDefaultGroupName</code></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Removes the specified parameter from the group and returns the value or <code>nil</code> if the parameter was not found.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>paramName</code> is <code>nil</code>. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSConfigParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removeParameterNamed:" title="removeParameterNamed:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removeParameterNamed:">&ndash;&nbsp;removeParameterNamed:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Removes the specified parameter from the default group and returns the value or <code>nil</code> if the parameter was not found.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSString *)removeParameterNamed:(NSString *)<em>paramName</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>paramName</code></th>
+						<td><p>The name of the parameter to remove</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Removes the specified parameter from the default group and returns the value or <code>nil</code> if the parameter was not found.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>paramName</code> is <code>nil</code>. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSConfigParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 Stripe. All rights reserved. Updated: 2019-05-21</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

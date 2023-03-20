@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import <Stripe/Stripe.h>
+@import Stripe;
 
 @interface ViewController ()
 
@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [Stripe setDefaultPublishableKey:@"test"];
+    [StripeAPI setDefaultPublishableKey:@"test"];
     // Do any additional setup after loading the view, typically from a nib.
 }
 

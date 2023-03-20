@@ -1,0 +1,11 @@
+platform :ios, '10.0'
+
+inhibit_all_warnings!
+use_frameworks!
+
+project 'Stripe3DS2/Stripe3DS2.xcodeproj'
+workspace 'Stripe3DS2/Stripe3DS2.xcworkspace'
+
+target 'Stripe3DS2DemoUITests' do
+  pod 'iOSSnapshotTestCase/Core', '~> 2.2'
+end

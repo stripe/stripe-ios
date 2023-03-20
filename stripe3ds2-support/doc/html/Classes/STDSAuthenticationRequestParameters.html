@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>STDSAuthenticationRequestParameters Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">Stripe3DS2 </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Stripe</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/deviceData">deviceData</option>
+		
+		<option value="//api/name/messageVersion">messageVersion</option>
+		
+		<option value="//api/name/sdkAppIdentifier">sdkAppIdentifier</option>
+		
+		<option value="//api/name/sdkEphemeralPublicKey">sdkEphemeralPublicKey</option>
+		
+		<option value="//api/name/sdkReferenceNumber">sdkReferenceNumber</option>
+		
+		<option value="//api/name/sdkTransactionIdentifier">sdkTransactionIdentifier</option>
+		
+	</optgroup>
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/initWithSDKTransactionIdentifier:deviceData:sdkEphemeralPublicKey:sdkAppIdentifier:sdkReferenceNumber:messageVersion:">- initWithSDKTransactionIdentifier:deviceData:sdkEphemeralPublicKey:sdkAppIdentifier:sdkReferenceNumber:messageVersion:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">STDSAuthenticationRequestParameters Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Conforms to</th>
+	<td><a href="../Protocols/STDSJSONEncodable.html">STDSJSONEncodable</a></td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>STDSAuthenticationRequestParameters.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initWithSDKTransactionIdentifier:deviceData:sdkEphemeralPublicKey:sdkAppIdentifier:sdkReferenceNumber:messageVersion:" title="initWithSDKTransactionIdentifier:deviceData:sdkEphemeralPublicKey:sdkAppIdentifier:sdkReferenceNumber:messageVersion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithSDKTransactionIdentifier:deviceData:sdkEphemeralPublicKey:sdkAppIdentifier:sdkReferenceNumber:messageVersion:">&ndash;&nbsp;initWithSDKTransactionIdentifier:deviceData:sdkEphemeralPublicKey:sdkAppIdentifier:sdkReferenceNumber:messageVersion:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Designated initializer for <code>STDSAuthenticationRequestParameters</code>.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithSDKTransactionIdentifier:(NSString *)<em>sdkTransactionIdentifier</em> deviceData:(nullable NSString *)<em>deviceData</em> sdkEphemeralPublicKey:(NSString *)<em>sdkEphemeralPublicKey</em> sdkAppIdentifier:(NSString *)<em>sdkAppIdentifier</em> sdkReferenceNumber:(NSString *)<em>sdkReferenceNumber</em> messageVersion:(NSString *)<em>messageVersion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sdkTransactionIdentifier</code></th>
+						<td><p>The SDK Transaction Identifier, as created by <code>[STDSTransaction createTransaction]</code></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>deviceData</code></th>
+						<td><p>Optional device data collected by the SDK.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sdkEphemeralPublicKey</code></th>
+						<td><p>The SDK ephemeral public key.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sdkAppIdentifier</code></th>
+						<td><p>The SDK app identifier.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sdkReferenceNumber</code></th>
+						<td><p>The SDK reference number.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>messageVersion</code></th>
+						<td><p>The protocol version that is supported by the SDK and used for the transaction.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Designated initializer for <code>STDSAuthenticationRequestParameters</code>.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>InvalidInputException</code></th>
+						<td><p>Thrown if an input parameter is invalid. @see InvalidInputException</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSAuthenticationRequestParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/deviceData" title="deviceData"></a>
+	<h3 class="method-title"><code><a href="#//api/name/deviceData">&nbsp;&nbsp;deviceData</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The encrypted device data as a JWE string.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly, nullable) NSString *deviceData</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The encrypted device data as a JWE string.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSAuthenticationRequestParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sdkTransactionIdentifier" title="sdkTransactionIdentifier"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sdkTransactionIdentifier">&nbsp;&nbsp;sdkTransactionIdentifier</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The SDK Transaction Identifier.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSString *sdkTransactionIdentifier</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The SDK Transaction Identifier.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSAuthenticationRequestParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sdkAppIdentifier" title="sdkAppIdentifier"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sdkAppIdentifier">&nbsp;&nbsp;sdkAppIdentifier</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The SDK App Identifier.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSString *sdkAppIdentifier</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The SDK App Identifier.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSAuthenticationRequestParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sdkReferenceNumber" title="sdkReferenceNumber"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sdkReferenceNumber">&nbsp;&nbsp;sdkReferenceNumber</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The SDK reference number.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSString *sdkReferenceNumber</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The SDK reference number.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSAuthenticationRequestParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sdkEphemeralPublicKey" title="sdkEphemeralPublicKey"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sdkEphemeralPublicKey">&nbsp;&nbsp;sdkEphemeralPublicKey</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The SDK ephemeral public key.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSString *sdkEphemeralPublicKey</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The SDK ephemeral public key.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSAuthenticationRequestParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/messageVersion" title="messageVersion"></a>
+	<h3 class="method-title"><code><a href="#//api/name/messageVersion">&nbsp;&nbsp;messageVersion</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The protocol version that is used for the transaction.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSString *messageVersion</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The protocol version that is used for the transaction.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSAuthenticationRequestParameters.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 Stripe. All rights reserved. Updated: 2019-05-21</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

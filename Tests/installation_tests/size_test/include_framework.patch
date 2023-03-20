@@ -1,0 +1,133 @@
+diff --git a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
+index 00e8033d4..d6129aba8 100644
+--- a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
++++ b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
+@@ -3,11 +3,12 @@
+ 	archiveVersion = 1;
+ 	classes = {
+ 	};
+-	objectVersion = 48;
++	objectVersion = 52;
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
+ 		3117ED9D26C2E9DF00C8E897 /* SPMTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3117ED9C26C2E9DF00C8E897 /* SPMTestUITests.swift */; };
++		31DC3DB12537D02000623028 /* {{SDK}} in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* {{SDK}} */; };
+ 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
+ 		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
+ 		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
+@@ -64,6 +65,7 @@
+ 			isa = PBXFrameworksBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
++				31DC3DB12537D02000623028 /* {{SDK}} in Frameworks */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 		};
+@@ -155,6 +157,7 @@
+ 			);
+ 			name = SPMTest;
+ 			packageProductDependencies = (
++				31DC3DB02537D02000623028 /* {{SDK}} */,
+ 			);
+ 			productName = CocoapodsTest;
+ 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
+@@ -172,7 +175,6 @@
+ 				TargetAttributes = {
+ 					3117ED9926C2E9DF00C8E897 = {
+ 						CreatedOnToolsVersion = 12.5;
+-						ProvisioningStyle = Automatic;
+ 						TestTargetID = C176898220616C7E003DE895;
+ 					};
+ 					C176898220616C7E003DE895 = {
+@@ -280,7 +282,11 @@
+ 				DEVELOPMENT_TEAM = Y28TH9SHX7;
+ 				INFOPLIST_FILE = SPMTestUITests/Info.plist;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
++				LD_RUNPATH_SEARCH_PATHS = (
++					"$(inherited)",
++					"@executable_path/Frameworks",
++					"@loader_path/Frameworks",
++				);
+ 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+ 				MTL_FAST_MATH = YES;
+ 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTestUITests;
+@@ -304,11 +310,16 @@
+ 				DEVELOPMENT_TEAM = Y28TH9SHX7;
+ 				INFOPLIST_FILE = SPMTestUITests/Info.plist;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
++				LD_RUNPATH_SEARCH_PATHS = (
++					"$(inherited)",
++					"@executable_path/Frameworks",
++					"@loader_path/Frameworks",
++				);
+ 				MTL_FAST_MATH = YES;
+ 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTestUITests;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
++				SWIFT_COMPILATION_MODE = wholemodule;
++				SWIFT_OPTIMIZATION_LEVEL = "-O";
+ 				SWIFT_VERSION = 5.0;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 				TEST_TARGET_NAME = SPMTest;
+@@ -433,7 +444,10 @@
+ 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+ 				INFOPLIST_FILE = SPMTest/Info.plist;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
++				LD_RUNPATH_SEARCH_PATHS = (
++					"$(inherited)",
++					"@executable_path/Frameworks",
++				);
+ 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+@@ -452,7 +466,10 @@
+ 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+ 				INFOPLIST_FILE = SPMTest/Info.plist;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
++				LD_RUNPATH_SEARCH_PATHS = (
++					"$(inherited)",
++					"@executable_path/Frameworks",
++				);
+ 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_VERSION = 5.0;
+@@ -491,6 +508,13 @@
+ 			defaultConfigurationName = Release;
+ 		};
+ /* End XCConfigurationList section */
++
++/* Begin XCSwiftPackageProductDependency section */
++		31DC3DB02537D02000623028 /* {{SDK}} */ = {
++			isa = XCSwiftPackageProductDependency;
++			productName = {{SDK}};
++		};
++/* End XCSwiftPackageProductDependency section */
+ 	};
+ 	rootObject = C176897B20616C7E003DE895 /* Project object */;
+ }
+diff --git a/Tests/installation_tests/size_test/SPMTest/ViewController.swift b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
+index 8e3a96dce..c20ba6536 100644
+--- a/Tests/installation_tests/size_test/SPMTest/ViewController.swift
++++ b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
+@@ -7,8 +7,15 @@
+ //
+ 
+ import UIKit
++import {{SDK}}
++
++class ViewController: UIViewController {
++
++    override func viewDidLoad() {
++        super.viewDidLoad()
++        StripeAPI.defaultPublishableKey = "foo"
++    }
+ 
+-class ViewController: UIViewController {    
+ 
+     /*
+     // MARK: - Navigation

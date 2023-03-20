@@ -10,7 +10,6 @@
 
 @interface NSLocale (STPSwizzling)
 
-+ (void)stp_setCurrentLocale:(NSLocale *)locale;
-+ (void)stp_resetCurrentLocale;
++ (void)stp_withLocaleAs:(NSLocale *)locale perform:(void (^)(void))block;
 
 @end

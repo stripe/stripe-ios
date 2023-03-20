@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="CardImageVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sm0-QJ-Y2F">
+                                <rect key="frame" x="41.5" y="412" width="331" height="82"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4z6-D1-7ln">
+                                        <rect key="frame" x="47.5" y="0.0" width="236" height="35"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                        <state key="normal" title="CardImageVerificationSheet"/>
+                                        <connections>
+                                            <segue destination="Rlo-fl-tZj" kind="show" id="Eqk-BE-Ja7"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rmF-NZ-t1G">
+                                        <rect key="frame" x="99.5" y="47" width="132" height="35"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                        <state key="normal" title="CardScanSheet"/>
+                                        <connections>
+                                            <action selector="cardScanSheetExample" destination="BYZ-38-t0r" eventType="touchUpInside" id="DMp-hg-2Jt"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Nd8-fP-cEk"/>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Rcc-4p-NM1"/>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.1" id="hgC-Nl-47A"/>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.8" id="i8c-l1-etr"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="132" y="86"/>
+        </scene>
+        <!--Verification Explanation View Controller-->
+        <scene sceneID="PpG-Io-DJc">
+            <objects>
+                <viewController id="xMI-iW-mMU" customClass="VerificationExplanationViewController" customModule="CardImageVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oCD-fe-GwD">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AjC-jo-muy">
+                                <rect key="frame" x="16" y="72" width="382" height="770"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify your card information with a quick scan" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvJ-TE-xAi">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="60"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan your credit card with your camera ensure you are the cardholder." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zrE-CG-Cr7">
+                                        <rect key="frame" x="0.0" y="76" width="382" height="41"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EGC-ea-rFO">
+                                        <rect key="frame" x="0.0" y="133" width="382" height="1"/>
+                                        <color key="backgroundColor" systemColor="separatorColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="QLU-7k-fj1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_scanning_instruction.png" translatesAutoresizingMaskIntoConstraints="NO" id="CXs-of-IEy">
+                                        <rect key="frame" x="0.0" y="150" width="382" height="275"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="275" id="6iC-IR-vRh"/>
+                                        </constraints>
+                                    </imageView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAk-En-QZ4">
+                                        <rect key="frame" x="0.0" y="441" width="382" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhh-9W-zY5">
+                                                <rect key="frame" x="0.0" y="0.0" width="382" height="50"/>
+                                                <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                <state key="normal" title="Continue">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="didTapContinueButton:" destination="xMI-iW-mMU" eventType="touchUpInside" id="XUR-Gs-QTv"/>
+                                                </connections>
+                                            </button>
+                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="gG2-2x-ILh">
+                                                <rect key="frame" x="181" y="15" width="20" height="20"/>
+                                            </activityIndicatorView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstItem="gG2-2x-ILh" firstAttribute="centerX" secondItem="nhh-9W-zY5" secondAttribute="centerX" id="3GS-gr-XZF"/>
+                                            <constraint firstItem="nhh-9W-zY5" firstAttribute="centerY" secondItem="fAk-En-QZ4" secondAttribute="centerY" id="7m4-rJ-M6N"/>
+                                            <constraint firstItem="nhh-9W-zY5" firstAttribute="centerX" secondItem="fAk-En-QZ4" secondAttribute="centerX" id="BJP-1P-BNO"/>
+                                            <constraint firstItem="nhh-9W-zY5" firstAttribute="leading" secondItem="fAk-En-QZ4" secondAttribute="leading" id="Hvk-4W-f08"/>
+                                            <constraint firstItem="gG2-2x-ILh" firstAttribute="centerY" secondItem="nhh-9W-zY5" secondAttribute="centerY" id="OMF-aD-kWP"/>
+                                            <constraint firstItem="nhh-9W-zY5" firstAttribute="top" secondItem="fAk-En-QZ4" secondAttribute="top" id="SJo-Ll-rpK"/>
+                                            <constraint firstAttribute="height" constant="50" id="Y11-ee-Awj"/>
+                                            <constraint firstAttribute="trailing" secondItem="nhh-9W-zY5" secondAttribute="trailing" id="oW3-o7-9G9"/>
+                                            <constraint firstAttribute="bottom" secondItem="nhh-9W-zY5" secondAttribute="bottom" id="rWQ-Ii-iHk"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" verticalHuggingPriority="240" translatesAutoresizingMaskIntoConstraints="NO" id="ZGe-U4-kdc">
+                                        <rect key="frame" x="0.0" y="507" width="382" height="263"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="zrE-CG-Cr7" secondAttribute="trailing" id="1aa-Cl-v6z"/>
+                                    <constraint firstItem="ZGe-U4-kdc" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="8zq-pY-4tK"/>
+                                    <constraint firstAttribute="trailing" secondItem="hvJ-TE-xAi" secondAttribute="trailing" id="EoL-fD-ipO"/>
+                                    <constraint firstAttribute="trailing" secondItem="fAk-En-QZ4" secondAttribute="trailing" id="Kln-Q1-ub2"/>
+                                    <constraint firstItem="fAk-En-QZ4" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="SAC-R2-jvt"/>
+                                    <constraint firstItem="zrE-CG-Cr7" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="SDc-34-Ycw"/>
+                                    <constraint firstItem="hvJ-TE-xAi" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="epV-al-wf9"/>
+                                    <constraint firstAttribute="trailing" secondItem="ZGe-U4-kdc" secondAttribute="trailing" id="q2l-2h-OLf"/>
+                                    <constraint firstItem="CXs-of-IEy" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="rUk-Ie-eNA"/>
+                                    <constraint firstAttribute="trailing" secondItem="CXs-of-IEy" secondAttribute="trailing" id="wb8-Nv-whV"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="QNn-ZT-TNl"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="trailing" secondItem="QNn-ZT-TNl" secondAttribute="trailing" constant="-16" id="B2c-EO-wbg"/>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="leading" secondItem="QNn-ZT-TNl" secondAttribute="leading" constant="16" id="LIh-x0-7tU"/>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="bottom" secondItem="QNn-ZT-TNl" secondAttribute="bottom" id="Rvn-uF-r3H"/>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="top" secondItem="QNn-ZT-TNl" secondAttribute="top" constant="16" id="wc6-PW-rgq"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Ktb-HX-yeV"/>
+                    <connections>
+                        <outlet property="continueButton" destination="nhh-9W-zY5" id="lbg-fK-1m2"/>
+                        <outlet property="continueButtonActivityIndicator" destination="gG2-2x-ILh" id="OvU-J8-qHu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k9j-qE-qXt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2722" y="86"/>
+        </scene>
+        <!--Verification Card Input View Controller-->
+        <scene sceneID="npN-ok-QA4">
+            <objects>
+                <viewController id="d2S-hE-dcC" customClass="VerificationCardInputViewController" customModule="CardImageVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Z7L-3j-aee">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="K7D-hk-2hS">
+                                <rect key="frame" x="16" y="72" width="382" height="770"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CardImageVerification Sheet Example" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ual-Yp-Ouu">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="60"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JIc-Yo-kfN">
+                                        <rect key="frame" x="0.0" y="74" width="382" height="61"/>
+                                        <string key="text">Please enter the IIN (first six) and the last four digits of the credit card you're going to use for this verification demonstration.</string>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UHB-Wk-omj">
+                                        <rect key="frame" x="0.0" y="149" width="382" height="1"/>
+                                        <color key="backgroundColor" systemColor="separatorColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="oUA-Gv-8Y2"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expected Card IIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ugz-E0-ofl">
+                                        <rect key="frame" x="0.0" y="164" width="382" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="424242" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5rC-52-qJc">
+                                        <rect key="frame" x="0.0" y="196" width="382" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="8o2-BS-wOX"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="cc-number"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="d2S-hE-dcC" id="i5n-ha-3dn"/>
+                                        </connections>
+                                    </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expected Card Last4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i2g-nx-SPh">
+                                        <rect key="frame" x="0.0" y="255" width="382" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="4242" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ddl-jl-v0s">
+                                        <rect key="frame" x="0.0" y="287" width="382" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="4CL-v1-E8K"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="cc-number"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="d2S-hE-dcC" id="Wgr-E6-Vyl"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kbj-pi-D0Z">
+                                        <rect key="frame" x="0.0" y="346" width="382" height="50"/>
+                                        <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="IFt-ow-oqv"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                        <state key="normal" title="Continue">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="xMI-iW-mMU" kind="show" id="Ryo-No-YpC"/>
+                                        </connections>
+                                    </button>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5I-wm-D86">
+                                        <rect key="frame" x="0.0" y="403" width="382" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" verticalHuggingPriority="240" translatesAutoresizingMaskIntoConstraints="NO" id="ySf-eL-to6">
+                                        <rect key="frame" x="0.0" y="410" width="382" height="360"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Rre-v9-IbA"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Rre-v9-IbA" firstAttribute="trailing" secondItem="K7D-hk-2hS" secondAttribute="trailing" constant="16" id="Huy-d5-jRd"/>
+                            <constraint firstItem="K7D-hk-2hS" firstAttribute="top" secondItem="Rre-v9-IbA" secondAttribute="top" constant="16" id="Qj1-Ed-4rx"/>
+                            <constraint firstItem="K7D-hk-2hS" firstAttribute="leading" secondItem="Rre-v9-IbA" secondAttribute="leading" constant="16" id="j2F-Tb-Yhi"/>
+                            <constraint firstItem="Rre-v9-IbA" firstAttribute="bottom" secondItem="K7D-hk-2hS" secondAttribute="bottom" id="mZQ-kb-y5g"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Bra-Oh-1mY"/>
+                    <connections>
+                        <outlet property="continueButton" destination="Kbj-pi-D0Z" id="eUC-fR-JF8"/>
+                        <outlet property="iinTextField" destination="5rC-52-qJc" id="DqH-by-ya5"/>
+                        <outlet property="lastFourTextField" destination="Ddl-jl-v0s" id="PcJ-eo-VFz"/>
+                        <outlet property="verifyResultLabel" destination="b5I-wm-D86" id="Ozd-XS-NRo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AX4-Fm-SbA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1762" y="86"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Qj3-WK-veD">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Rlo-fl-tZj" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="wLs-nW-xJC"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VTo-oJ-iGN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="d2S-hE-dcC" kind="relationship" relationship="rootViewController" id="Yo5-ts-hXY"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rMS-ey-7HD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="950.72463768115949" y="85.714285714285708"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="card_scanning_instruction.png" width="1000" height="714"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="separatorColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemIndigoColor">
+            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

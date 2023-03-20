@@ -7,16 +7,16 @@
 //
 
 #import <XCTest/XCTest.h>
-
-#import "STPAPIClient.h"
-#import "STPConnectAccountParams.h"
+@import StripeCoreTestUtils;
 #import "STPFixtures.h"
-#import "STPNetworkStubbingTestCase.h"
+#import "STPTestingAPIClient.h"
 
-@interface STPConnectAccountFunctionalTest : STPNetworkStubbingTestCase
+@interface STPConnectAccountFunctionalTest : XCTestCase
 
 /// Client with test publishable key
 @property (nonatomic, strong, nonnull) STPAPIClient *client;
+@property (nonatomic, strong, nonnull) STPConnectAccountIndividualParams *individual;
+@property (nonatomic, strong, nonnull) STPConnectAccountCompanyParams *company;
 
 @end
 
@@ -25,32 +25,35 @@
 - (void)setUp {
     [super setUp];
 
-    self.client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    self.client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    self.individual = [STPConnectAccountIndividualParams new];
+    self.individual.firstName = @"Test";
+    NSDateComponents *dob = [NSDateComponents new];
+    dob.day = 31;
+    dob.month = 8;
+    dob.year = 2006;
+    self.individual.dateOfBirth = dob;
+    self.company = [STPConnectAccountCompanyParams new];
+    self.company.name = @"Test";
 }
 
-- (void)testTokenCreation_terms_throws {
-    XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
-                                                                     legalEntity:[STPFixtures legalEntityParams]],
-                    @"NSParameterAssert to prevent trying to call this with `NO`");
+- (void)testTokenCreation_terms_nil {
+    XCTAssertNil([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
+                                                                   individual:self.individual],
+                 @"Guard to prevent trying to call this with `NO`");
+    XCTAssertNil([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
+                                                                      company:self.company],
+                 @"Guard to prevent trying to call this with `NO`");
 }
 
-- (void)testTokenCreation_fullySpecified {
-    [self createToken:[STPFixtures accountParams]
+- (void)testTokenCreation_customer {
+    [self createToken:[[STPConnectAccountParams alloc] initWithCompany:self.company]
         shouldSucceed:YES];
 }
 
-- (void)testTokenCreation_legalEntityOnly {
-    STPLegalEntityParams *entity = [[STPLegalEntityParams alloc] init];
-    entity.firstName = @"Legal";
-    entity.lastName = @"Eagle";
-
-    [self createToken:[[STPConnectAccountParams alloc] initWithLegalEntity:entity]
+- (void)testTokenCreation_company {
+    [self createToken:[[STPConnectAccountParams alloc] initWithIndividual:self.individual]
         shouldSucceed:YES];
-}
-
-- (void)testTokenCreation_legalEntity_emptyFails {
-    [self createToken:[[STPConnectAccountParams alloc] initWithLegalEntity:[STPLegalEntityParams new]]
-        shouldSucceed:NO];
 }
 
 #pragma mark -
@@ -66,14 +69,13 @@
             XCTAssertNotNil(token);
             XCTAssertNotNil(token.tokenId);
             XCTAssertEqual(token.type, STPTokenTypeAccount);
-        }
-        else {
+        } else {
             XCTAssertNil(token);
             XCTAssertNotNil(error);
         }
     }];
 
-    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

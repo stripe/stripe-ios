@@ -8,8 +8,7 @@
 
 @import XCTest;
 
-#import "STPToken.h"
-#import "STPCard.h"
+
 
 @interface STPTokenTest : XCTestCase
 @end

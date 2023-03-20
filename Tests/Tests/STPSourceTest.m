@@ -8,13 +8,11 @@
 
 @import XCTest;
 
-#import "STPSource.h"
-#import "STPSource+Private.h"
 
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
 
-#import "NSDictionary+Stripe.h"
+
 
 @interface STPSource ()
 
@@ -45,14 +43,14 @@
     XCTAssertEqual([STPSource typeFromString:@"giropay"], STPSourceTypeGiropay);
     XCTAssertEqual([STPSource typeFromString:@"GIROPAY"], STPSourceTypeGiropay);
 
-    XCTAssertEqual([STPSource typeFromString:@"ideal"], STPSourceTypeIDEAL);
-    XCTAssertEqual([STPSource typeFromString:@"IDEAL"], STPSourceTypeIDEAL);
+    XCTAssertEqual([STPSource typeFromString:@"ideal"], STPSourceTypeiDEAL);
+    XCTAssertEqual([STPSource typeFromString:@"IDEAL"], STPSourceTypeiDEAL);
 
     XCTAssertEqual([STPSource typeFromString:@"sepa_debit"], STPSourceTypeSEPADebit);
     XCTAssertEqual([STPSource typeFromString:@"SEPA_DEBIT"], STPSourceTypeSEPADebit);
 
     XCTAssertEqual([STPSource typeFromString:@"sofort"], STPSourceTypeSofort);
-    XCTAssertEqual([STPSource typeFromString:@"SOFORT"], STPSourceTypeSofort);
+    XCTAssertEqual([STPSource typeFromString:@"Sofort"], STPSourceTypeSofort);
 
     XCTAssertEqual([STPSource typeFromString:@"three_d_secure"], STPSourceTypeThreeDSecure);
     XCTAssertEqual([STPSource typeFromString:@"THREE_D_SECURE"], STPSourceTypeThreeDSecure);
@@ -81,7 +79,7 @@
                                     @(STPSourceTypeBancontact),
                                     @(STPSourceTypeCard),
                                     @(STPSourceTypeGiropay),
-                                    @(STPSourceTypeIDEAL),
+                                    @(STPSourceTypeiDEAL),
                                     @(STPSourceTypeSEPADebit),
                                     @(STPSourceTypeSofort),
                                     @(STPSourceTypeThreeDSecure),
@@ -106,7 +104,7 @@
             case STPSourceTypeGiropay:
                 XCTAssertEqualObjects(string, @"giropay");
                 break;
-            case STPSourceTypeIDEAL:
+            case STPSourceTypeiDEAL:
                 XCTAssertEqualObjects(string, @"ideal");
                 break;
             case STPSourceTypeSEPADebit:
@@ -129,6 +127,12 @@
                 break;
             case STPSourceTypeMultibanco:
                 XCTAssertEqualObjects(string, @"multibanco");
+                break;
+            case STPSourceTypeWeChatPay:
+                XCTAssertEqualObjects(string, @"wechat");
+                break;
+            case STPSourceTypeKlarna:
+                XCTAssertEqualObjects(string, @"klarna");
                 break;
             case STPSourceTypeUnknown:
                 XCTAssertNil(string);
@@ -338,7 +342,10 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
     XCTAssertEqual(source.livemode, NO);
-    XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssert(source.receiver);  // STPSourceReceiverTest
     XCTAssert(source.redirect);  // STPSourceRedirectTest
@@ -363,7 +370,10 @@
     XCTAssertEqualObjects(source.currency, @"usd");
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
     XCTAssertEqual(source.livemode, YES);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
     XCTAssert(source.redirect);  // STPSourceRedirectTest
@@ -388,7 +398,10 @@
     XCTAssertNil(source.currency);
     XCTAssertEqual(source.flow, STPSourceFlowNone);
     XCTAssertEqual(source.livemode, NO);
-    XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
     XCTAssertNil(source.redirect);  // STPSourceRedirectTest
@@ -413,12 +426,15 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
     XCTAssertEqual(source.livemode, YES);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
     XCTAssert(source.redirect);  // STPSourceRedirectTest
     XCTAssertEqual(source.status, STPSourceStatusPending);
-    XCTAssertEqual(source.type, STPSourceTypeIDEAL);
+    XCTAssertEqual(source.type, STPSourceTypeiDEAL);
     XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
     XCTAssertNil(source.verification);
     XCTAssertEqualObjects(source.details, response[@"ideal"]);
@@ -438,7 +454,10 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowNone);
     XCTAssertEqual(source.livemode, NO);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssertEqualObjects(source.owner.name, @"Jenny Rosen");
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
@@ -468,7 +487,7 @@
              [STPTestUtils jsonNamed:STPTestJSONSourceMultibanco],
              [STPTestUtils jsonNamed:STPTestJSONSourceP24],
              [STPTestUtils jsonNamed:STPTestJSONSourceSEPADebit],
-             [STPTestUtils jsonNamed:STPTestJSONSourceSOFORT]];
+             [STPTestUtils jsonNamed:STPTestJSONSourceSofort]];
 }
 
 - (void)testPaymentOptionImage {
@@ -477,10 +496,10 @@
 
         switch (source.type) {
             case STPSourceTypeCard:
-                AssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:source.cardDetails.brand]);
+                STPAssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:source.cardDetails.brand]);
                 break;
             default:
-                AssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown]);
+                STPAssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown]);
                 break;
         }
     }
@@ -492,10 +511,10 @@
 
         switch (source.type) {
             case STPSourceTypeCard:
-                AssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:source.cardDetails.brand]);
+                STPAssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:source.cardDetails.brand]);
                 break;
             default:
-                AssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown]);
+                STPAssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown]);
                 break;
         }
     }
@@ -515,14 +534,14 @@
             case STPSourceTypeGiropay:
                 XCTAssertEqualObjects(source.label, @"Giropay");
                 break;
-            case STPSourceTypeIDEAL:
+            case STPSourceTypeiDEAL:
                 XCTAssertEqualObjects(source.label, @"iDEAL");
                 break;
             case STPSourceTypeSEPADebit:
                 XCTAssertEqualObjects(source.label, @"SEPA Direct Debit");
                 break;
             case STPSourceTypeSofort:
-                XCTAssertEqualObjects(source.label, @"SOFORT");
+                XCTAssertEqualObjects(source.label, @"Sofort");
                 break;
             case STPSourceTypeThreeDSecure:
                 XCTAssertEqualObjects(source.label, @"3D Secure");
@@ -539,6 +558,10 @@
             case STPSourceTypeMultibanco:
                 XCTAssertEqualObjects(source.label, @"Multibanco");
                 break;
+            case STPSourceTypeWeChatPay:
+                XCTAssertEqualObjects(source.label, @"WeChat Pay");
+            case STPSourceTypeKlarna:
+                XCTAssertEqualObjects(source.label, @"Klarna");
             case STPSourceTypeUnknown:
                 XCTAssertEqualObjects(source.label, [STPCard stringFromBrand:STPCardBrandUnknown]);
                 break;

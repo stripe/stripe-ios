@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPGenericStripeObject.h"
+
 
 @interface STPGenericStripeObjectTest : XCTestCase
 

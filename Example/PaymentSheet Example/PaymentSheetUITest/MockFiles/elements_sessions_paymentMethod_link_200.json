@@ -1,0 +1,102 @@
+{
+  "apple_pay_preference": "disabled",
+  "business_name": "Mobile Example Account",
+  "experiments": {
+    "miui_payment_element_aa_experiment": "control"
+  },
+  "flags": {
+    "elements_include_payment_intent_id_in_analytics_events": true,
+    "elements_enable_mx_card_installments": false,
+    "elements_enable_br_card_installments": false
+  },
+  "google_pay_preference": "enabled",
+  "link_consumer_info": null,
+  "link_settings": {
+    "instant_debits_inline_institution": true,
+    "link_bank_onboarding_enabled": false,
+    "link_financial_incentives_experiment_enabled": false,
+    "link_local_storage_login_enabled": true
+  },
+  "merchant_country": "US",
+  "merchant_currency": "usd",
+  "merchant_id": "acct_111111L111111111",
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+    "card",
+    "google_pay",
+    "link",
+    "afterpay_clearpay",
+    "klarna",
+    "affirm",
+    "us_bank_account"
+  ],
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+      "card",
+      "link",
+      "afterpay_clearpay",
+      "klarna",
+      "affirm",
+      "us_bank_account"
+    ],
+    "payment_intent": {
+      "id": "pi_3Ku2mYLu5o3P18Zp0csFgI0Q",
+      "object": "payment_intent",
+      "amount": 5099,
+      "automatic_payment_methods": null,
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "client_secret": "pi_3Ku2mY11111P18Zp0cs11111_secret_HX9211111tvchjFXZuoo1111",
+      "confirmation_method": "automatic",
+      "created": 1651273166,
+      "currency": "usd",
+      "description": null,
+      "last_payment_error": null,
+      "livemode": false,
+      "next_action": null,
+      "payment_method": null,
+      "payment_method_options": {
+        "us_bank_account": {
+          "verification_method": "automatic"
+        }
+      },
+      "payment_method_types": [
+        "card",
+        "afterpay_clearpay",
+        "klarna",
+        "affirm",
+        "us_bank_account",
+        "link"
+      ],
+      "processing": null,
+      "receipt_email": null,
+      "setup_future_usage": null,
+      "shipping": {
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "line1": "510 Townsend St",
+          "line2": null,
+          "postal_code": "94102",
+          "state": "California"
+        },
+        "carrier": null,
+        "name": "John Doe",
+        "phone": null,
+        "tracking_number": null
+      },
+      "source": null,
+      "status": "requires_payment_method"
+    },
+    "type": "payment_intent"
+  },
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": [
+
+  ]
+}

@@ -9,14 +9,18 @@
 #import <Foundation/Foundation.h>
 #import <OCMock/OCMock.h>
 #import <PassKit/PassKit.h>
-#import <Stripe/Stripe.h>
+@import Stripe;
 
+NS_ASSUME_NONNULL_BEGIN
 extern NSString *const STPTestJSONCustomer;
 
 extern NSString *const STPTestJSONCard;
 
 extern NSString *const STPTestJSONPaymentIntent;
-extern NSString *const STPTestJSONPaymentMethod;
+extern NSString *const STPTestJSONSetupIntent;
+extern NSString *const STPTestJSONPaymentMethodCard;
+extern NSString *const STPTestJSONPaymentMethodApplePay;
+extern NSString *const STPTestJSONPaymentMethodBacsDebit;
 
 extern NSString *const STPTestJSONSource3DS;
 extern NSString *const STPTestJSONSourceAlipay;
@@ -28,7 +32,7 @@ extern NSString *const STPTestJSONSourceiDEAL;
 extern NSString *const STPTestJSONSourceMultibanco;
 extern NSString *const STPTestJSONSourceP24;
 extern NSString *const STPTestJSONSourceSEPADebit;
-extern NSString *const STPTestJSONSourceSOFORT;
+extern NSString *const STPTestJSONSourceSofort;
 
 @interface STPFixtures : NSObject
 
@@ -47,6 +51,16 @@ extern NSString *const STPTestJSONSourceSOFORT;
  A PKPaymentObject with test payment data.
  */
 + (PKPayment *)applePayPayment;
+
+/**
+ A PKPayment from the simulator that can be tokenized in testmode.
+ */
++ (PKPayment *)simulatorApplePayPayment;
+
+/**
+ A valid PKPaymentRequest with dummy data.
+ */
++ (PKPaymentRequest *)applePayRequest;
 
 /**
  A BankAccountParams object with all fields filled.
@@ -85,6 +99,12 @@ extern NSString *const STPTestJSONSourceSOFORT;
 + (STPCustomer *)customerWithSingleCardTokenSource;
 
 /**
+ The JSON data for a Customer with a single card token in its sources array, and
+ default_source set to that card token.
+ */
++ (NSDictionary *)customerWithSingleCardTokenSourceJSON;
+
+/**
  A Customer object with a single card source in its sources array, and
  default_source set to that card source.
  */
@@ -102,6 +122,12 @@ extern NSString *const STPTestJSONSourceSOFORT;
  default_source set to the apple pay source.
  */
 + (STPCustomer *)customerWithCardAndApplePaySources;
+
+/**
+ A Customer JSON blob with a card source, and apple pay card source, and
+ default_source set to the apple pay source.
+ */
++ (NSDictionary *)customerWithCardAndApplePaySourcesJSON;
 
 /**
  A customer object with a sources array that includes the listed json sources
@@ -126,6 +152,11 @@ extern NSString *const STPTestJSONSourceSOFORT;
 + (STPSource *)alipaySource;
 
 /**
+ A Source object with type WeChat Pay
+ */
++ (STPSource *)weChatPaySource;
+    
+/**
  A Source object with type Alipay and a native redirect url
  */
 + (STPSource *)alipaySourceWithNativeURL;
@@ -134,6 +165,11 @@ extern NSString *const STPTestJSONSourceSOFORT;
  A PaymentIntent object
  */
 + (STPPaymentIntent *)paymentIntent;
+
+/**
+ A SetupIntent object
+ */
++ (STPSetupIntent *)setupIntent;
 
 /**
  A PaymentConfiguration object with a fake publishable key. Use this to avoid
@@ -153,9 +189,29 @@ extern NSString *const STPTestJSONSourceSOFORT;
 + (STPEphemeralKey *)expiringEphemeralKey;
 
 /**
- A fully specified STPLegalEntityParams
+ A PaymentMethod object
  */
-+ (STPLegalEntityParams *)legalEntityParams;
++ (STPPaymentMethod *)paymentMethod;
+
+/**
+ A PaymentMethod JSON dictionary
+ */
++ (NSDictionary *)paymentMethodJSON;
+
+/**
+ A STPPaymentMethodCardParams object with a valid number, expMonth, expYear, and cvc.
+ */
++ (STPPaymentMethodCardParams *)paymentMethodCardParams;
+
+/**
+ An Apple Pay Payment Method object.
+ */
++ (STPPaymentMethod *)applePayPaymentMethod;
+
+/**
+ An Apple Pay Payment Method JSON dictionary.
+ */
++ (NSDictionary *)applePayPaymentMethodJSON;
 
 @end
 
@@ -163,3 +219,4 @@ extern NSString *const STPTestJSONSourceSOFORT;
 
 @end
 
+NS_ASSUME_NONNULL_END

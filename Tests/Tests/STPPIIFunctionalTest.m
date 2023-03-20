@@ -8,21 +8,16 @@
 
 @import XCTest;
 
-#import "STPAPIClient.h"
-#import "STPToken.h"
-#import "STPNetworkStubbingTestCase.h"
+@import StripeCoreTestUtils;
+#import "STPTestingAPIClient.h"
 
-@interface STPPIIFunctionalTest : STPNetworkStubbingTestCase
+@interface STPPIIFunctionalTest : XCTestCase
 @end
 
 @implementation STPPIIFunctionalTest
 
-- (void)setUp {
-    [super setUp];
-}
-
 - (void)testCreatePersonallyIdentifiableInformationToken {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
     
@@ -34,7 +29,23 @@
         XCTAssertEqual(token.type, STPTokenTypePII);
     }];
     
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testSSNLast4Token {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
+    
+    [client createTokenWithSSNLast4:@"1234" completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
+        [expectation fulfill];
+        XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
+        XCTAssertNotNil(token, @"token should not be nil");
+        XCTAssertNotNil(token.tokenId);
+        XCTAssertEqual(token.type, STPTokenTypePII);
+    }];
+    
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

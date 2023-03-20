@@ -1,4 +1,145 @@
 ## Migration Guides
+### Migrating from versions < 22.2.0
+* `StripeConnections` SDK has been renamed to `StripeFinancialConnections`. If you included `StripeConnections` to support ACH Direct Debit payments, you will need to rename the dependency to `StripeFinancialConnections`. If you are manually installing `StripeConnections`, you will need to remove the old `StripeConnections.xcframework` and include the new `StripeFinancialConnections.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/22.2.0) for version 22.2.0 of the SDK.
+
+### Migrating from versions < 22.0.0
+* The minimum iOS version is now 12.0. If you'd like to deploy for iOS 11.0, please use Stripe SDK 21.12.0.
+* `IdentityVerificationSheet` now has an availability requirement of iOS 14.3 on its initializer instead of the `present` method. If your app supports iOS versions < 14.3, you will need to add an availability check for iOS 14.3 before initializing the sheet.
+
+### Migrating from versions < 21.12.0
+* `Stripe` now requires `StripeApplePay`. If you are manually installing `Stripe`, you will need to include `StripeApplePay.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.12.0) for version 21.12.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+
+### Migrating from versions < 21.10.0
+* `StripeIdentity` now requires `StripeCameraCore`. If you are manually installing `StripeIdentity`, you will need to include `StripeCameraCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.10.0) for version 21.10.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+
+### Migrating from versions < 21.9.0
+* `Stripe` and `StripeIdentity` now require `StripeUICore`. If you are manually installing `Stripe` or `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+
+### Migrating from versions < 21.8.1
+* The `Stripe` module now requires `StripeCore`. If you are manually installing the Stripe SDK, you will need to include `StripeCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.8.1) for version 21.8.1 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+
+### Migrating from versions < 21.4.0
+* STPPaymentHandler now presents its SFSafariViewController using the `.overFullScreen` presentation style by default. To select a different style, implement the `STPAuthenticationContext.configureSafariViewController(_:)` function in your `STPAuthenticationContext`.
+
+### Migrating from versions < 21.2.0
+* Stripe3DS2 is now a separate component for Carthage users. You must embed both Stripe.xcframework and Stripe3DS2.xcframework in your app.
+
+### Migrating from versions < 21.0.0
+* The SDK is now written in Swift, and some manual changes are required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-21-migration](https://stripe.com/docs/mobile/ios/sdk-21-migration).
+
+### Migrating from versions < 20.1.0
+* Swift Package Manager users may need to remove and re-add Stripe from the `Frameworks, Libraries, and Embedded Content` section of your target's settings after updating.
+* Swift Package Manager users with Xcode 12.0 may need to use a [workaround](https://github.com/stripe/stripe-ios/issues/1673) for a code signing issue. This is fixed in Xcode 12.2.
+
+### Migrating from versions < 20.0.0
+* The minimum iOS version is now 11.0. If you'd like to deploy for iOS 10.0, please use Stripe SDK 19.4.0.
+* Card.io is no longer supported. To enable our built-in [card scanning](https://github.com/stripe/stripe-ios#card-scanning) beta, set the `cardScanningEnabled` flag on STPPaymentConfiguration.
+* Catalyst support is out of beta, and now requires Swift Package Manager with Xcode 12 or Cocoapods 1.10.
+
+### Migrating from versions < 19.4.0
+* `metadata` fields are no longer populated on retrieved Stripe API objects and must be fetched on your server using your secret key. If this is causing issues with your deployed app versions please reach out to [Stripe Support](https://support.stripe.com/?contact=true). These fields have been marked as deprecated and will be removed in a future SDK version.
+
+### Migrating from versions < 19.3.0
+* `STPAUBECSFormView` now inherits from `UIView` instead of `UIControl`
+
+### Migrating from versions < 19.2.0
+* The `STPApplePayContext` 'applePayContext:didCreatePaymentMethod:completion:` delegate method now includes paymentInformation: 'applePayContext:didCreatePaymentMethod:paymentInformation:completion:`.
+
+
+### Migrating from versions < 19.0.0
+#### `publishableKey` and `stripeAccount` changes
+* Deprecates `publishableKey` and `stripeAccount` properties of `STPPaymentConfiguration`.
+  * If you used `STPPaymentConfiguration.sharedConfiguration` to set `publishableKey` and/or `stripeAccount`, use `STPAPIClient.sharedClient` instead.
+  * If you passed a STPPaymentConfiguration instance to an SDK component, you should instead create an STPAPIClient, set publishableKey on it, and set the SDK component's APIClient property.
+* The SDK now uses `STPAPIClient.sharedClient` to make API requests by default.
+
+This changes the behavior of the following classes, which previously used API client instances configured from `STPPaymentConfiguration.shared`: `STPCustomerContext`, `STPPaymentOptionsViewController`, `STPAddCardViewController`, `STPPaymentContext`, `STPPinManagementService`, `STPPushProvisioningContext`.
+
+You are affected by this change if:
+
+1. You use `stripeAccount` to work with your Connected accounts
+2. You use one of the above affected classes
+3. You set different `stripeAccount` values on `STPPaymentConfiguration` and `STPAPIClient`, i.e. `STPPaymentConfiguration.shared.stripeAccount != STPAPIClient.shared.stripeAccount`
+
+If all three of the above conditions are true, you must update your integration! The SDK used to send `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.  
+
+For example, if you are a Connect user who stores Payment Methods on your platform, but clones PaymentMethods to a connected account and creates direct charges on that connected account i.e. if:
+
+1. You never set `STPPaymentConfiguration.shared.stripeAccount`
+2. You set `STPAPIClient.shared.stripeAccount`
+
+We recommend you do the following:
+
+```
+    // By default, you don't want the SDK to pass stripeAccount
+    STPAPIClient.shared().publishableKey = "pk_platform"
+    STPAPIClient.shared().stripeAccount = nil
+
+    // You do want the SDK to pass stripeAccount when it makes payments directly on your connected account, so
+    // you create a separate APIClient instance...
+    let connectedAccountAPIClient = STPAPIClient(publishableKey: "pk_platform")
+
+    // ...set stripeAccount on it...
+    connectedAccountAPIClient.stripeAccount = "your connected account's id"
+
+    // ...and either set the relevant SDK components' apiClient property to your custom APIClient instance:
+    STPPaymentHandler.shared().apiClient = connectedAccountAPIClient // e.g. if you are using PaymentIntents
+
+    // ...or use it directly to make API requests with `stripeAccount` set:
+    connectedAccountAPIClient.createToken(withCard:...) // e.g. if you are using Tokens + Charges
+```
+#### Postal code changes
+* The user's postal code is now collected by default in countries that support postal codes. We always recommend collecting a postal code to increase card acceptance rates and reduce fraud. To disable this behavior:
+  * For STPPaymentContext and other full-screen UI, set your `STPPaymentConfiguration`'s `.requiredBillingAddressFields` to `STPBillingAddressFieldsNone`.
+  * For a PKPaymentRequest, set `.requiredBillingContactFields` to an empty set. If your app supports iOS 10, also set `.requiredBillingAddressFields` to `PKAddressFieldNone`.
+  * For STPPaymentCardView, set `.postalCodeEntryEnabled` to `NO`.
+* Users may now enter spaces, dashes, and uppercase letters into the postal code field in situations where the user has not explicitly selected a country. This allows users with non-US addreses to enter their postal code.
+* `STPBillingAddressFieldsZip` has been renamed to `STPBillingAddressFieldsPostalCode`.
+#### Localization changes
+* All [Stripe Error messages](https://stripe.com/docs/api/errors#errors-message) are now localized
+  based on the device locale.
+
+  For example, when retrieving a SetupIntent with a nonexistent `id`
+  when the device locale is set to `Locale.JAPAN`, the error message will now be localized.
+  ```
+  // before - English
+  "No such setupintent: seti_invalid123"
+
+  // after - Japanese
+  "そのような setupintent はありません : seti_invalid123"
+  ```
+
+### Migrating from versions < 18.0.0
+* Some error messages from the Payment Intents API are now localized to the user's display language. If your application's logic depends on specific `message` strings from the Stripe API, please use the error [`code`](https://stripe.com/docs/error-codes) instead.
+* `STPPaymentResult` may contain a `paymentMethodParams` instead of a `paymentMethod` when using single-use payment methods such as FPX. Because of this, `STPPaymentResult.paymentMethod` is now nullable. Instead of setting the `paymentMethodId` manually on your `paymentIntentParams`, you may now call `paymentIntentParams.configure(with result: STPPaymentResult)`:
+```
+// 17.0.0
+paymentIntentParams.paymentMethodId = paymentResult.paymentMethod.stripeId
+
+// 18.0.0
+paymentIntentParams.configure(with: paymentResult)
+```
+* `STPPaymentOptionTypeAll` has been renamed to `STPPaymentOptionTypeDefault`. This option will not include FPX or future optional payment methods.
+* The minimum iOS version is now 10.0. If you'd like to deploy for iOS 9.0, please use Stripe SDK 17.0.2.
+
+### Migrating from versions < 17.0.0
+* The API version has been updated from 2015-10-12 to 2019-05-16. CHANGELOG.md has details on the changes made, which includes breaking changes for `STPConnectAccountParams` users. Your backend Stripe API version should be sufficiently decoupled from the SDK's so that keeping their versions in sync is not required, and no further action is required to migrate to this version of the SDK.
+* For STPPaymentContext users: the completion block type in `paymentContext:didCreatePaymentResult:completion:` has changed to `STPPaymentStatusBlock`, to let you inform the context that the user has cancelled.
+
+### Migrating from versions < 16.0.0
+* The following have been migrated from Source/Token to PaymentMethod. If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-intents/migration.  See CHANGELOG.md for more details.
+  * UI components
+    * STPPaymentCardTextField
+    * STPAddCardViewController
+    * STPPaymentOptionsViewController
+  * PaymentContext
+    * STPPaymentContext
+    * STPCustomerContext
+    * STPBackendAPIAdapter
+    * STPPaymentResult
+  * Standard Integration example project
+* `STPPaymentIntentAction*` types have been renamed to `STPIntentAction*`. Xcode should offer a deprecation warning & fix-it to help you migrate.
+* `STPPaymentHandler` supports 3DS2 authentication, and is recommended instead of `STPRedirectContext`. See https://stripe.com/docs/mobile/ios/authentication
 
 ### Migrating from versions < 15.0.0
 * "PaymentMethod" has a new meaning: https://stripe.com/docs/api/payment_methods/object.  All things referring to "PaymentMethod" have been renamed to "PaymentOption" (see CHANGELOG.md for the full list).  `STPPaymentMethod` and `STPPaymentMethodType` have been rewritten to match this new API object.
@@ -132,7 +273,7 @@ STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableK
 
 ### Handling errors
 
-See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/PublicHeaders/StripeError.h) for a list of error codes that may be returned from the Stripe API.
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/PublicHeaders/Stripe/StripeError.h) for a list of error codes that may be returned from the Stripe API.
 
 ### Validating STPCards
 

@@ -7,22 +7,14 @@
 //
 
 @import XCTest;
+@import StripeCoreTestUtils;
+#import "STPTestingAPIClient.h"
 
-#import "STPAPIClient.h"
-#import "STPFile.h"
-#import "STPImageLibrary+Private.h"
-#import "STPNetworkStubbingTestCase.h"
-
-static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
-
-@interface STPFileFunctionalTest : STPNetworkStubbingTestCase
+@interface STPFileFunctionalTest : XCTestCase
 @end
 
 @implementation STPFileFunctionalTest
 
-- (void)setUp {
-    [super setUp];
-}
 
 - (UIImage *)testImage {
 return [UIImage imageNamed:@"stp_test_upload_image.jpeg"
@@ -31,7 +23,7 @@ compatibleWithTraitCollection:nil];
 }
 
 - (void)testCreateFileForIdentityDocument {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for identity document"];
     
@@ -50,11 +42,11 @@ compatibleWithTraitCollection:nil];
                  XCTAssertEqualObjects(@"jpg", file.type);
     }];
     
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateFileForDisputeEvidence {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for dispute evidence"];
     
@@ -73,7 +65,7 @@ compatibleWithTraitCollection:nil];
                  XCTAssertEqualObjects(@"jpg", file.type);
              }];
     
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidKey {
@@ -89,10 +81,9 @@ compatibleWithTraitCollection:nil];
                   [expectation fulfill];
                   XCTAssertNil(file, @"file should be nil");
                   XCTAssertNotNil(error, @"error should not be nil");
-                  XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
               }];
     
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

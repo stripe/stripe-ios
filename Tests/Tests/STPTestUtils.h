@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <XCTest/XCTest.h>
 
 @interface STPTestUtils : NSObject
 
@@ -24,7 +25,7 @@
 
 
 /**
- Custom assertion macro to compare to UIImage instances.
+ Custom assertion function to compare to UIImage instances.
 
  On iOS 9, `XCTAssertEqualObjects` incorrectly fails when provided with identical images.
 
@@ -34,7 +35,15 @@
  @param image1 First UIImage to compare
  @param image2 Second UIImage to compare
  */
-#define AssertEqualImages(image1, image2) \
-    do { \
-        XCTAssertEqualObjects(UIImagePNGRepresentation(image1), UIImagePNGRepresentation(image2)); \
-    } while (0)
+NS_INLINE void STPAssertEqualImages(UIImage *image1, UIImage *image2) {
+    XCTAssertEqualObjects(UIImagePNGRepresentation(image1), UIImagePNGRepresentation(image2));
+};
+
+/**
+ Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
+ @param view The view to snapshot.
+ @param identifier An optional identifier, used if there are multiple snapshot tests in a given -test method.
+ */
+#define STPSnapshotVerifyView(view__, identifier__) \
+FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0.02, 0)
+

@@ -9,11 +9,11 @@
 #import "ViewController.h"
 
 #import "MockCustomerContext.h"
-#import "STPAddCardViewController+Private.h"
-#import "STPPaymentCardTextField.h"
-#import "STPPaymentConfiguration.h"
-#import "STPPaymentOptionsViewController.h"
-#import "STPShippingAddressViewController.h"
+
+@import PassKit;
+
+
+
 
 typedef NS_ENUM(NSInteger, LocalizedScreen) {
     LocalizedScreenPaymentCardTextField = 0,
@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, LocalizedScreen) {
     LocalizedScreenPaymentOptionsVCLoading,
     LocalizedScreenShippingAddressVC,
     LocalizedScreenShippingAddressVCBadAddress,
+    LocalizedScreenShippingAddressVCCountryOutsideAvailable,
     LocalizedScreenShippingAddressVCDelivery,
     LocalizedScreenShippingAddressVCContact,
 };
@@ -46,6 +47,8 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             return @"Shipping Address VC";
         case LocalizedScreenShippingAddressVCBadAddress:
             return @"Shipping Address VC Bad Address";
+        case LocalizedScreenShippingAddressVCCountryOutsideAvailable:
+            return @"Shipping Address VC Country Outside Available";
         case LocalizedScreenShippingAddressVCDelivery:
             return @"Shipping Address VC for Delivery";
         case LocalizedScreenShippingAddressVCContact:
@@ -74,6 +77,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
                          @(LocalizedScreenPaymentOptionsVCLoading),
                          @(LocalizedScreenShippingAddressVC),
                          @(LocalizedScreenShippingAddressVCBadAddress),
+                         @(LocalizedScreenShippingAddressVCCountryOutsideAvailable),
                          @(LocalizedScreenShippingAddressVCDelivery),
                          @(LocalizedScreenShippingAddressVCContact),
                          ];
@@ -152,7 +156,6 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 STPAddCardViewController *addCardVC = [[STPAddCardViewController alloc] initWithConfiguration:configuration theme:[STPTheme defaultTheme]];
-                addCardVC.alwaysShowScanCardButton = YES;
                 addCardVC.alwaysEnableDoneButton = YES;
                 addCardVC.delegate = self;
                 vc = addCardVC;
@@ -188,12 +191,11 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             case LocalizedScreenPaymentOptionsVC:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.additionalPaymentOptions = STPPaymentOptionTypeAll;
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 configuration.appleMerchantIdentifier = @"dummy-merchant-id";
                 vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:configuration
                                                                               theme:[STPTheme defaultTheme]
-                                                                    customerContext:[[MockCustomerContext alloc] init]
+                                                                         apiAdapter:[[MockCustomerContext alloc] init]
                                                                            delegate:self];
             }
                 break;
@@ -201,14 +203,13 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             case LocalizedScreenPaymentOptionsVCLoading:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.additionalPaymentOptions = STPPaymentOptionTypeAll;
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 configuration.appleMerchantIdentifier = @"dummy-merchant-id";
                 MockCustomerContext *customerContext = [[MockCustomerContext alloc] init];
                 customerContext.neverRetrieveCustomer = YES;
                 vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:configuration
                                                                               theme:[STPTheme defaultTheme]
-                                                                    customerContext:customerContext
+                                                                         apiAdapter:customerContext
                                                                            delegate:self];
             }
                 break;
@@ -216,7 +217,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             case LocalizedScreenShippingAddressVC:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactFieldPostalAddress, STPContactFieldEmailAddress, STPContactFieldPhoneNumber, STPContactFieldName, nil];
+                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactField.postalAddress, STPContactField.emailAddress, STPContactField.phoneNumber, STPContactField.name, nil];
                 STPUserInformation *prefilledInfo = [[STPUserInformation alloc] init];
                 STPAddress *billingAddress = [[STPAddress alloc] init];
                 billingAddress.name = @"Test";
@@ -244,7 +245,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             case LocalizedScreenShippingAddressVCBadAddress:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactFieldPostalAddress, STPContactFieldEmailAddress, STPContactFieldPhoneNumber, STPContactFieldName, nil];
+                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactField.postalAddress, STPContactField.emailAddress, STPContactField.phoneNumber, STPContactField.name, nil];
                 STPUserInformation *prefilledInfo = [[STPUserInformation alloc] init];
                 STPAddress *billingAddress = [[STPAddress alloc] init];
                 billingAddress.name = @"Test";
@@ -269,11 +270,33 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             }
                 break;
 
+            case LocalizedScreenShippingAddressVCCountryOutsideAvailable:
+            {
+                STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
+                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactField.postalAddress, STPContactField.emailAddress, STPContactField.phoneNumber, STPContactField.name, nil];
+                configuration.availableCountries = [NSSet setWithArray:@[@"BT"]];
+                STPUserInformation *prefilledInfo = [[STPUserInformation alloc] init];
+                STPAddress *billingAddress = [[STPAddress alloc] init];
+                billingAddress.name = @"Test";
+                billingAddress.country = @"GB";
+                prefilledInfo.billingAddress = billingAddress;
+                
+                STPShippingAddressViewController *shippingAddressVC = [[STPShippingAddressViewController alloc] initWithConfiguration:configuration
+                                                                                                                                theme:[STPTheme defaultTheme]
+                                                                                                                             currency:@"usd"
+                                                                                                                      shippingAddress:nil
+                                                                                                               selectedShippingMethod:nil
+                                                                                                                 prefilledInformation:prefilledInfo];
+                shippingAddressVC.delegate = self;
+                vc = shippingAddressVC;
+            }
+                break;
+
             case LocalizedScreenShippingAddressVCDelivery:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
                 configuration.shippingType = STPShippingTypeDelivery;
-                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactFieldPostalAddress, STPContactFieldEmailAddress, STPContactFieldPhoneNumber, STPContactFieldName, nil];
+                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactField.postalAddress, STPContactField.emailAddress, STPContactField.phoneNumber, STPContactField.name, nil];
 
                 STPShippingAddressViewController *shippingAddressVC = [[STPShippingAddressViewController alloc] initWithConfiguration:configuration
                                                                                                                                 theme:[STPTheme defaultTheme]
@@ -289,7 +312,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             case LocalizedScreenShippingAddressVCContact:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactFieldEmailAddress, STPContactFieldPhoneNumber, STPContactFieldName, nil];
+                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactField.emailAddress, STPContactField.phoneNumber, STPContactField.name, nil];
 
                 STPShippingAddressViewController *shippingAddressVC = [[STPShippingAddressViewController alloc] initWithConfiguration:configuration
                                                                                                                                 theme:[STPTheme defaultTheme]
@@ -318,9 +341,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
-               didCreateToken:(__unused STPToken *)token
-                   completion:(__unused STPErrorBlock)completion {
+- (void)addCardViewController:(STPAddCardViewController * _Nonnull)addCardViewController didCreatePaymentMethod:(STPPaymentMethod * _Nonnull)paymentMethod completion:(void (^ _Nonnull)(NSError * _Nullable))completion {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
@@ -346,10 +367,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-
-- (void)shippingAddressViewController:(__unused STPShippingAddressViewController *)addressViewController
-                      didEnterAddress:(STPAddress *)address
-                           completion:(STPShippingMethodsCompletionBlock)completion {
+- (void)shippingAddressViewController:(STPShippingAddressViewController * _Nonnull)addressViewController didEnterAddress:(STPAddress * _Nonnull)address completion:(void (^ _Nonnull)(enum STPShippingStatus, NSError * _Nullable, NSArray<PKShippingMethod *> * _Nullable, PKShippingMethod * _Nullable))completion {
     PKShippingMethod *upsGround = [[PKShippingMethod alloc] init];
     upsGround.amount = [NSDecimalNumber decimalNumberWithString:@"0"];
     upsGround.label = @"UPS Ground";

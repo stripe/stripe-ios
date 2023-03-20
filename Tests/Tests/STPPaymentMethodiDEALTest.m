@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodIdeal.h"
 
 @interface STPPaymentMethodiDEALTest : XCTestCase
 

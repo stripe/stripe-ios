@@ -1,0 +1,16 @@
+{
+   "id": "VS_123",
+   "status": "requires_input",
+   "submitted": false,
+   "requirements": {
+       "errors": [
+           {
+               "requirement": "biometric_consent",
+               "title": "Consent declined",
+               "body": "We require that you give consent before this verification can be completed",
+               "button_text": "Allow verification to proceed by granting consent?"
+           }
+       ]
+   },
+
+}

@@ -8,8 +8,7 @@
 
 @import XCTest;
 
-#import "STPBankAccountParams.h"
-#import "STPBankAccountParams+Private.h"
+
 
 @interface STPBankAccountParams ()
 

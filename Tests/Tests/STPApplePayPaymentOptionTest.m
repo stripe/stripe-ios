@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPApplePayPaymentOption.h"
+
 
 @interface STPApplePayPaymentOptionTest : XCTestCase
 

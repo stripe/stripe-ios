@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>STDSTransaction Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">Stripe3DS2 </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Stripe</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/close">- close</option>
+		
+		<option value="//api/name/createAuthenticationRequestParameters">- createAuthenticationRequestParameters</option>
+		
+		<option value="//api/name/createProgressViewControllerWithDidCancel:">- createProgressViewControllerWithDidCancel:</option>
+		
+		<option value="//api/name/doChallengeWithViewController:challengeParameters:challengeStatusReceiver:timeout:">- doChallengeWithViewController:challengeParameters:challengeStatusReceiver:timeout:</option>
+		
+		<option value="//api/name/sdkVersion">- sdkVersion</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">STDSTransaction Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>STDSTransaction.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p><code>STDSTransaction</code> holds parameters that the 3DS Server requires to create AReq messages and to perform the Challenge Flow.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/createAuthenticationRequestParameters" title="createAuthenticationRequestParameters"></a>
+	<h3 class="method-title"><code><a href="#//api/name/createAuthenticationRequestParameters">&ndash;&nbsp;createAuthenticationRequestParameters</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Encrypts device information collected during initialization and returns it along with SDK details.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (STDSAuthenticationRequestParameters *)createAuthenticationRequestParameters</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>Encrypted device information and details about this SDK.  @see <a href="../Classes/STDSAuthenticationRequestParameters.html">STDSAuthenticationRequestParameters</a></p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Encrypts device information collected during initialization and returns it along with SDK details.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>SDKRuntimeException</code></th>
+						<td><p>Thrown if an internal error is encountered.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/createProgressViewControllerWithDidCancel:" title="createProgressViewControllerWithDidCancel:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/createProgressViewControllerWithDidCancel:">&ndash;&nbsp;createProgressViewControllerWithDidCancel:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns a UIViewController instance displaying the Directory Server logo and a spinner.  Present this during the Authentication Request/Response.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (UIViewController *)createProgressViewControllerWithDidCancel:(void ( ^ ) ( void ))<em>didCancel</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Returns a UIViewController instance displaying the Directory Server logo and a spinner.  Present this during the Authentication Request/Response.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/doChallengeWithViewController:challengeParameters:challengeStatusReceiver:timeout:" title="doChallengeWithViewController:challengeParameters:challengeStatusReceiver:timeout:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/doChallengeWithViewController:challengeParameters:challengeStatusReceiver:timeout:">&ndash;&nbsp;doChallengeWithViewController:challengeParameters:challengeStatusReceiver:timeout:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Initiates the challenge process, displaying challenge UI as needed.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)doChallengeWithViewController:(UIViewController *)<em>presentingViewController</em> challengeParameters:(STDSChallengeParameters *)<em>challengeParameters</em> challengeStatusReceiver:(id&lt;STDSChallengeStatusReceiver&gt;)<em>challengeStatusReceiver</em> timeout:(NSTimeInterval)<em>timeout</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>presentingViewController</code></th>
+						<td><p>The UIViewController used to present the challenge response UIViewController</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>challengeParameters</code></th>
+						<td><p>Details required to conduct the challenge process.  @see <a href="../Classes/STDSChallengeParameters.html">STDSChallengeParameters</a></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>challengeStatusReceiver</code></th>
+						<td><p>A callback object to receive the status of the challenge.  See @<a href="../Protocols/STDSChallengeStatusReceiver.html">STDSChallengeStatusReceiver</a></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>timeout</code></th>
+						<td><p>An interval in seconds within which the challenge process will finish.  Must be at least 5 minutes.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Initiates the challenge process, displaying challenge UI as needed.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Thrown if an argument is invalid (e.g. timeout less than 5 minutes).  @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSSDKRuntimeException</code></th>
+						<td><p>Thrown if an internal error is encountered, and if you call this method after calling <a href="#//api/name/close"><code>close</code></a>.  @see SDKRuntimeException</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sdkVersion" title="sdkVersion"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sdkVersion">&ndash;&nbsp;sdkVersion</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the version of the Stripe3DS2 SDK, e.g. @&ldquo;1.0&rdquo;</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSString *)sdkVersion</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Returns the version of the Stripe3DS2 SDK, e.g. @&ldquo;1.0&rdquo;</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/close" title="close"></a>
+	<h3 class="method-title"><code><a href="#//api/name/close">&ndash;&nbsp;close</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Cleans up resources held by <code>STDSTransaction</code>.  Call this when the transaction is completed, if <code>doChallengeWithChallengeParameters:challengeStatusReceiver:timeout</code> is not called.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)close</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Cleans up resources held by <code>STDSTransaction</code>.  Call this when the transaction is completed, if <code>doChallengeWithChallengeParameters:challengeStatusReceiver:timeout</code> is not called.</p><div class="note"><p><strong>Note:</strong> Don&rsquo;t use this object after calling this method.  Calling <code>doChallengeWithViewController:challengeParameters:challengeStatusReceiver:timeout</code> after calling this method will throw an <code>STDSSDKRuntimeException</code></p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 Stripe. All rights reserved. Updated: 2019-05-21</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

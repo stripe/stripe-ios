@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "К приложению подключен отладчик.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "Приложение запускается и работает в симуляторе.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "Отмена";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "Идет загрузка";
+
+/* The no answer to a yes or no question. */
+"No" = "Нет";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "Безопасное оформление и оплата заказа";
+
+/* Indicates that a button is selected. */
+"Selected" = "Выбранные";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "Устройство разблокировано.";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "Целостность пакета средств разработки программного обеспечения нарушена.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "Данная операционная система или данная версия операционной системы не поддерживается.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "Истечение лимита времени";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "Не выбранные";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "Да";
+

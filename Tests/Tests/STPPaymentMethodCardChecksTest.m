@@ -8,7 +8,6 @@
 
 @import XCTest;
 
-#import "STPPaymentMethodCardChecks+Private.h"
 
 @interface STPPaymentMethodCardChecksTest : XCTestCase
 
@@ -29,9 +28,12 @@
     }
     STPPaymentMethodCardChecks *checks = [STPPaymentMethodCardChecks decodedObjectFromAPIResponse:response];
     XCTAssertNotNil(checks);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqual(checks.addressLine1Check, STPPaymentMethodCardCheckResultUnknown);
     XCTAssertEqual(checks.addressPostalCodeCheck, STPPaymentMethodCardCheckResultUnknown);
     XCTAssertEqual(checks.cvcCheck, STPPaymentMethodCardCheckResultUnknown);
+#pragma clang diagnostic pop
 }
 
 - (void)testCheckResultFromString {
