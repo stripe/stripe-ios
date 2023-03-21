@@ -721,8 +721,6 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    // TODO(porter) Re-enable when Link is available
-    /*
     func testDeferferedIntentLinkSignup_ClientSideConfirmation() throws {
         loadPlayground(
             app,
@@ -776,7 +774,6 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    */
 
     func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
         loadPlayground(
@@ -818,8 +815,6 @@ extension PaymentSheetUITest {
         payWithApplePay()
     }
 
-    // TODO(porter) Re-enable when Link is available
-    /*
     func testDeferredIntentLinkSignIn_ClientSideConfirmation() throws {
         loadPlayground(
             app,
@@ -900,7 +895,6 @@ extension PaymentSheetUITest {
 
         try loginAndPay()
     }
-    */
 
     // MARK: Deferred tests (server-side)
 
@@ -1016,8 +1010,6 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    // TODO(porter) Re-enable when Link is available
-    /*
     func testDeferferedIntentLinkSignup_ServerSideConfirmation() throws {
         loadPlayground(
             app,
@@ -1072,7 +1064,6 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    */
 
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
         loadPlayground(
@@ -1177,8 +1168,6 @@ extension PaymentSheetUITest {
         XCTAssertTrue(app.cells.count == 1)
     }
 
-    // TODO(porter) Re-enable when Link is available
-    /*
     func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {
         loadPlayground(
             app,
@@ -1262,12 +1251,10 @@ extension PaymentSheetUITest {
 
         try loginAndPay()
     }
-    */
 }
 
 // MARK: - Link
-// TODO(porter) Re-enable when Link is availble
-/*
+
 extension PaymentSheetUITest {
 
     // MARK: Inline signup
@@ -1681,7 +1668,6 @@ extension PaymentSheetUITest {
         okButton.tap()
     }
 }
- */
 
 // MARK: Helpers
 extension PaymentSheetUITest {
