@@ -350,7 +350,7 @@ extension PaymentSheet {
                                     intent: intent
                                 )
                             }
-                        
+
                         // Warn the merchant if we see unactivated payment method types in the Intent
                         warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: intent.unactivatedPaymentMethodTypes)
                         // Ensure that there's at least 1 payment method type available for the intent and configuration.

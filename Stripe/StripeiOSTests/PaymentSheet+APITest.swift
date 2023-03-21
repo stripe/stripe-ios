@@ -66,9 +66,9 @@ class PaymentSheetAPITest: XCTestCase {
         // Override the default cookie store since Keychain is not available in this test case.
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()
     }
-    
+
     // MARK: - load and confirm tests
-    
+
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
         let types = ["ideal", "card", "bancontact", "sofort"]
@@ -374,7 +374,7 @@ class PaymentSheetAPITest: XCTestCase {
             description: "Load SetupIntent with an attached payment method"
         )
         STPTestingAPIClient.shared().createSetupIntent(withParams: [
-            "payment_method": "pm_card_visa"
+            "payment_method": "pm_card_visa",
         ]) { clientSecret, error in
             guard let clientSecret = clientSecret, error == nil else {
                 XCTFail()
@@ -395,9 +395,9 @@ class PaymentSheetAPITest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     // MARK: - update tests
-    
+
     func testUpdate() {
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
             // These tests don't confirm, so this is unused
@@ -420,7 +420,7 @@ class PaymentSheetAPITest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
-    
+
     func testUpdateFails() {
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
             // These tests don't confirm, so this is unused
@@ -449,9 +449,9 @@ class PaymentSheetAPITest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
-    
+
     // MARK: - other tests
-    
+
     func testMakeShippingParamsReturnsNilIfPaymentIntentHasDifferentShipping() {
         // Given a PI with shipping...
         let pi = STPFixtures.paymentIntent()
@@ -556,7 +556,7 @@ class PaymentSheetAPITest: XCTestCase {
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
         XCTAssertEqual((params["payment_method_options"] as! [String: Any]).count, 0)
     }
-    
+
     // MARK: - helper methods
 
     func fetchPaymentIntent(
@@ -597,7 +597,7 @@ class PaymentSheetAPITest: XCTestCase {
             .shared()
             .createSetupIntent(
                 withParams: [
-                    "payment_method_types": types
+                    "payment_method_types": types,
                 ]
             ) { clientSecret, error in
                 guard let clientSecret = clientSecret,

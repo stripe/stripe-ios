@@ -200,8 +200,7 @@ extension PaymentSheet {
                 completion?()
                 return
             }
-            
-            
+
             if let completion = completion {
                 presentPaymentOptionsCompletion = completion
             }
@@ -280,14 +279,14 @@ extension PaymentSheet {
                 completion(result)
             }
         }
-        
+
         /// 🚧 Under construction
         /// Call this method when the IntentConfiguration values you used to initialize PaymentSheet.FlowController (amount, currency, etc.) change.
         /// This ensures the appropriate payment methods are displayed, etc.
         /// - Parameter intentConfiguration: An updated IntentConfiguration
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry. TODO(Update): Tell the merchant they need to disable the buy button.
         /// Don’t call this method while PaymentSheet is being presented.
-        func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> ()) {
+        func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
                 mode: .deferredIntent(intentConfiguration),
@@ -302,7 +301,7 @@ extension PaymentSheet {
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
                     // TODO(Update:) Preserve the customer's previous inputs.
                     self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: paymentMethods, isLinkEnabled: isLinkEnabled, configuration: self.configuration)
-                    
+
                     // ❓
                     // TODO for PR: What is this? I copied it from the other load call, but I can't figure out what it does.
                     // Synchronously pre-load image into cache
@@ -310,7 +309,7 @@ extension PaymentSheet {
                         _ = paymentOption.image
                     }
                     // ❓
-                    
+
                     completion(nil)
                 case .failure(let error):
                     completion(error)
@@ -341,7 +340,7 @@ extension PaymentSheet {
             #endif
             return sheet
         }
-        
+
         static func makeViewController(
             intent: Intent,
             savedPaymentMethods: [STPPaymentMethod],
@@ -367,7 +366,7 @@ extension PaymentSheet {
             return vc
         }
     }
-    
+
 }
 
 // MARK: - PaymentSheetFlowControllerViewControllerDelegate
