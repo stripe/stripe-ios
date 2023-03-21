@@ -209,8 +209,7 @@ final class AccountPickerViewController: UIViewController {
                                 ?? false,
                             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
                             paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
-                            didSelectAnotherBank: self.didSelectAnotherBank,
-                            didSelectEnterBankDetailsManually: self.didSelectManualEntry
+                            didSelectAnotherBank: self.didSelectAnotherBank
                         )
                         // the user will never enter this instance of `AccountPickerViewController`
                         // again...they can only choose manual entry or go through "ResetFlow"

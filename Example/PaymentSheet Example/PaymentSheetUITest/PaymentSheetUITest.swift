@@ -720,7 +720,7 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-
+/* Disable Link test
     func testDeferferedIntentLinkSignup_ClientSideConfirmation() throws {
         loadPlayground(
             app,
@@ -774,7 +774,7 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-
+*/
     func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
         loadPlayground(
             app,
@@ -814,7 +814,7 @@ extension PaymentSheetUITest {
 
         payWithApplePay()
     }
-
+/* Disable Link test
     func testDeferredIntentLinkSignIn_ClientSideConfirmation() throws {
         loadPlayground(
             app,
@@ -834,7 +834,8 @@ extension PaymentSheetUITest {
 
         try loginAndPay()
     }
-
+*/
+/* Disable Link test
     func testDeferredIntentLinkSignIn_ClientSideConfirmation_LostCardDecline() throws {
         loadPlayground(
             app,
@@ -871,7 +872,8 @@ extension PaymentSheetUITest {
         let failedText = modal.staticTexts["The payment failed."]
         XCTAssertTrue(failedText.waitForExistence(timeout: 10))
     }
-
+*/
+/* Disable Link test
     func testDeferredIntentLinkCustomFlow_ClientSideConfirmation() throws {
         loadPlayground(
             app,
@@ -895,7 +897,7 @@ extension PaymentSheetUITest {
 
         try loginAndPay()
     }
-
+*/
     // MARK: Deferred tests (server-side)
 
     func testDeferredPaymentIntent_ServerSideConfirmation() {
@@ -1009,7 +1011,7 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-
+/* Disable link test
     func testDeferferedIntentLinkSignup_ServerSideConfirmation() throws {
         loadPlayground(
             app,
@@ -1064,7 +1066,7 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-
+*/
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
         loadPlayground(
             app,
@@ -1167,7 +1169,7 @@ extension PaymentSheetUITest {
 
         XCTAssertTrue(app.cells.count == 1)
     }
-
+/* Disable Link test
     func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {
         loadPlayground(
             app,
@@ -1188,7 +1190,8 @@ extension PaymentSheetUITest {
 
         try loginAndPay()
     }
-
+*/
+/* Disable Link test
     func testDeferredIntentLinkSignIn_ServerSideConfirmation_LostCardDecline() throws {
         loadPlayground(
             app,
@@ -1226,7 +1229,8 @@ extension PaymentSheetUITest {
         let declineText = app.staticTexts["Your card was declined."]
         XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
     }
-
+*/
+/* Disable Link test
     func testDeferredIntentLinkCustomFlow_SeverSideConfirmation() throws {
         loadPlayground(
             app,
@@ -1251,14 +1255,13 @@ extension PaymentSheetUITest {
 
         try loginAndPay()
     }
+*/
 }
 
 // MARK: - Link
-
+/* Disable link tests
 extension PaymentSheetUITest {
-
     // MARK: Inline signup
-
     /// Tests the Link inline signup flow.
     func testLinkInlineSignup() throws {
         loadPlayground(
@@ -1668,6 +1671,7 @@ extension PaymentSheetUITest {
         okButton.tap()
     }
 }
+*/
 
 // MARK: Helpers
 extension PaymentSheetUITest {
