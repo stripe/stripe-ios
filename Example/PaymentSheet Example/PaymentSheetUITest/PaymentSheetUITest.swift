@@ -932,9 +932,7 @@ extension PaymentSheetUITest {
 
         app.buttons["Pay $50.99"].tap()
 
-        // Error comes from our backend and isn't pretty
-        let predicate = NSPredicate(format: "label CONTAINS 'ServerSideConfirmationError error'")
-        let declineText = app.staticTexts.containing(predicate).firstMatch
+        let declineText = app.staticTexts["Your card was declined."]
         XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
     }
 
@@ -1228,9 +1226,7 @@ extension PaymentSheetUITest {
         waitForExpectations(timeout: 10, handler: nil)
         payButton.tap()
 
-        // Error comes from our backend and isn't pretty
-        let predicate = NSPredicate(format: "label CONTAINS 'ServerSideConfirmationError error'")
-        let declineText = app.staticTexts.containing(predicate).firstMatch
+        let declineText = app.staticTexts["Your card was declined."]
         XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
     }
 */
