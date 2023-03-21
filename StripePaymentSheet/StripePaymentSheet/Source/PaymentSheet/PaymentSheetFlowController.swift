@@ -175,10 +175,9 @@ extension PaymentSheet {
                         isLinkEnabled: isLinkEnabled,
                         configuration: configuration)
 
-                    // Synchronously pre-load image into cache
-                    if let paymentOption = flowController.paymentOption {
-                        _ = paymentOption.image
-                    }
+                    // Synchronously pre-load image into cache.
+                    // Accessing flowController.paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
+                    let _ = flowController.paymentOption
                     completion(.success(flowController))
                 case .failure(let error):
                     completion(.failure(error))
@@ -302,13 +301,9 @@ extension PaymentSheet {
                     // TODO(Update:) Preserve the customer's previous inputs.
                     self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: paymentMethods, isLinkEnabled: isLinkEnabled, configuration: self.configuration)
 
-                    // ❓
-                    // TODO for PR: What is this? I copied it from the other load call, but I can't figure out what it does.
                     // Synchronously pre-load image into cache
-                    if let paymentOption = self.paymentOption {
-                        _ = paymentOption.image
-                    }
-                    // ❓
+                    // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
+                    let _ = self.paymentOption
 
                     completion(nil)
                 case .failure(let error):
