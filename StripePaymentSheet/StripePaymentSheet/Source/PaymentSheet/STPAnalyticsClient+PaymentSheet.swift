@@ -265,7 +265,7 @@ extension PaymentSheetViewController.Mode {
     }
 }
 
-extension ChoosePaymentOptionViewController.Mode {
+extension PaymentSheetFlowControllerViewController.Mode {
     var analyticsValue: STPAnalyticsClient.AnalyticsPaymentMethodType {
         switch self {
         case .addingNew:

@@ -1,5 +1,5 @@
 //
-//  ChoosePaymentOptionViewController.swift
+//  PaymentSheetFlowControllerViewController.swift
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 11/4/20.
@@ -13,16 +13,16 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
-    func choosePaymentOptionViewControllerShouldClose(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
-    func choosePaymentOptionViewControllerDidUpdateSelection(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
+protocol PaymentSheetFlowControllerViewControllerDelegate: AnyObject {
+    func PaymentSheetFlowControllerViewControllerShouldClose(
+        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
+    func PaymentSheetFlowControllerViewControllerDidUpdateSelection(
+        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_ChoosePaymentOptionViewController)
-class ChoosePaymentOptionViewController: UIViewController {
+@objc(STP_Internal_PaymentSheetFlowControllerViewController)
+class PaymentSheetFlowControllerViewController: UIViewController {
     // MARK: - Internal Properties
     let intent: Intent
     let configuration: PaymentSheet.Configuration
@@ -59,7 +59,7 @@ class ChoosePaymentOptionViewController: UIViewController {
             return addPaymentMethodViewController.selectedPaymentMethodType
         }
     }
-    weak var delegate: ChoosePaymentOptionViewControllerDelegate?
+    weak var delegate: PaymentSheetFlowControllerViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
@@ -124,15 +124,13 @@ class ChoosePaymentOptionViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
-        isLinkEnabled: Bool,
-        delegate: ChoosePaymentOptionViewControllerDelegate
+        isLinkEnabled: Bool
     ) {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
 
         self.configuration = configuration
-        self.delegate = delegate
 
         // Default to payment selection, as long as we have saved PMs or Apple Pay or Link is enabled.
         self.mode = savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled
@@ -381,12 +379,12 @@ class ChoosePaymentOptionViewController: UIViewController {
     private func didTapAddButton() {
         switch mode {
         case .selectingSaved:
-            self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
+            self.delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
-                self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
+                self.delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
             }
         }
 
@@ -394,7 +392,7 @@ class ChoosePaymentOptionViewController: UIViewController {
 
     func didDismiss() {
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
-        delegate?.choosePaymentOptionViewControllerShouldClose(self)
+        delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             configureEditSavedPaymentMethodsButton()
@@ -405,7 +403,7 @@ class ChoosePaymentOptionViewController: UIViewController {
 
 // MARK: - BottomSheetContentViewController
 /// :nodoc:
-extension ChoosePaymentOptionViewController: BottomSheetContentViewController {
+extension PaymentSheetFlowControllerViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
         return isDismissable
     }
@@ -423,7 +421,7 @@ extension ChoosePaymentOptionViewController: BottomSheetContentViewController {
 
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
-extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDelegate {
+extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
@@ -439,10 +437,10 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
             error = nil // Clear any errors
             updateUI()
         case .applePay, .link, .saved:
-            delegate?.choosePaymentOptionViewControllerDidUpdateSelection(self)
+            delegate?.PaymentSheetFlowControllerViewControllerDidUpdateSelection(self)
             updateUI()
             if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
-                delegate?.choosePaymentOptionViewControllerShouldClose(self)
+                delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
             }
         }
     }
@@ -497,7 +495,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
 
 // MARK: - AddPaymentMethodViewControllerDelegate
 /// :nodoc:
-extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDelegate {
+extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
 
@@ -534,7 +532,7 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
 }
 // MARK: - SheetNavigationBarDelegate
 /// :nodoc:
-extension ChoosePaymentOptionViewController: SheetNavigationBarDelegate {
+extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         didDismiss()
     }
