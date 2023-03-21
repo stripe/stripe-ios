@@ -177,7 +177,7 @@ extension PaymentSheet {
 
                     // Synchronously pre-load image into cache.
                     // Accessing flowController.paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
-                    let _ = flowController.paymentOption
+                    _ = flowController.paymentOption
                     completion(.success(flowController))
                 case .failure(let error):
                     completion(.failure(error))
@@ -303,7 +303,7 @@ extension PaymentSheet {
 
                     // Synchronously pre-load image into cache
                     // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
-                    let _ = self.paymentOption
+                    _ = self.paymentOption
 
                     completion(nil)
                 case .failure(let error):
