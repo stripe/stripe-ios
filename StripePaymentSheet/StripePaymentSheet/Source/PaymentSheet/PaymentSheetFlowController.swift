@@ -81,6 +81,9 @@ extension PaymentSheet {
             return viewController.selectedPaymentOption
         }
 
+        /// The UUID of the latest update API call
+        private var latestUpdateID: UUID?
+
         // MARK: - Initializer (Internal)
 
         required init(
@@ -286,6 +289,9 @@ extension PaymentSheet {
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry. TODO(Update): Tell the merchant they need to disable the buy button.
         /// Don’t call this method while PaymentSheet is being presented.
         func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
+            let updateID = UUID()
+            latestUpdateID = updateID
+
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
                 mode: .deferredIntent(intentConfiguration),
@@ -295,6 +301,12 @@ extension PaymentSheet {
                     assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update(intentConfiguration:completion:)`")
                     return
                 }
+
+                // A "newer" update has been called, ignore the result of this update and don't invoke the callback
+                guard updateID == self.latestUpdateID else {
+                    return
+                }
+
                 switch loadResult {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
