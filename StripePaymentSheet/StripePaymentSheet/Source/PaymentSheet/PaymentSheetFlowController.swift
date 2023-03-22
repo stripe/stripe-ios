@@ -81,8 +81,14 @@ extension PaymentSheet {
             return viewController.selectedPaymentOption
         }
 
-        /// The UUID of the latest update API call
-        private var latestUpdateID: UUID?
+        /// The status or result of the last update API call
+        private var latestUpdateStatus: UpdateStatus?
+
+        enum UpdateStatus {
+            case completed
+            case inProgress(UUID)
+            case failed(Error)
+        }
 
         // MARK: - Initializer (Internal)
 
@@ -196,7 +202,14 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: (() -> Void)? = nil
         ) {
-            // TODO(Update): If update is in-flight or the last update failed, assert and call the completion
+            switch latestUpdateStatus {
+            case .inProgress, .failed:
+                assertionFailure("Cannot call presentPaymentOptions when the last update call has not yet finished or failed.")
+                completion?()
+            default:
+                break
+            }
+            
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
                 completion?()
@@ -289,8 +302,10 @@ extension PaymentSheet {
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry. TODO(Update): Tell the merchant they need to disable the buy button.
         /// Don’t call this method while PaymentSheet is being presented.
         func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
+            assert(Thread.isMainThread, "PaymentSheet.FlowController must be called from the main thread.")
+
             let updateID = UUID()
-            latestUpdateID = updateID
+            latestUpdateStatus = .inProgress(updateID)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
@@ -302,9 +317,11 @@ extension PaymentSheet {
                     return
                 }
 
-                // A "newer" update has been called, ignore the result of this update and don't invoke the callback
-                guard updateID == self.latestUpdateID else {
-                    return
+                // Check if a "newer" update has been called, ignore the result of this update and don't invoke the callback if so
+                if case let .inProgress(latestUpdateID) = self.latestUpdateStatus {
+                    guard updateID == latestUpdateID else {
+                        return
+                    }
                 }
 
                 switch loadResult {
@@ -317,8 +334,10 @@ extension PaymentSheet {
                     // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
                     _ = self.paymentOption
 
+                    self.latestUpdateStatus = .completed
                     completion(nil)
                 case .failure(let error):
+                    self.latestUpdateStatus = .failed(error)
                     completion(error)
                 }
             }
