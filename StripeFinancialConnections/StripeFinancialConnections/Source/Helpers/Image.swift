@@ -13,6 +13,7 @@ import Foundation
 enum Image: String, ImageMaker {
     typealias BundleLocator = StripeFinancialConnectionsBundleLocator
 
+    case add
     case back_arrow
     case bank
     case bank_check

@@ -197,11 +197,11 @@ extension InstitutionPickerViewController {
                         return
                     }
                     switch result {
-                    case .success(let institutions):
-                        self.institutionSearchTableView.loadInstitutions(institutions)
-                        if institutions.isEmpty {
-                            self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
-                        }
+                    case .success(let institutionList):
+                        self.institutionSearchTableView.loadInstitutions(
+                            institutionList.data,
+                            showManualEntry: institutionList.showManualEntry
+                        )
                         self.dataSource
                             .analyticsClient
                             .log(
@@ -210,7 +210,7 @@ extension InstitutionPickerViewController {
                                     "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                                     "query": searchQuery,
                                     "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate).milliseconds,
-                                    "result_count": institutions.count,
+                                    "result_count": institutionList.data.count,
                                 ]
                             )
                     case .failure(let error):

@@ -13,7 +13,7 @@ protocol InstitutionDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
-    func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]>
+    func fetchInstitutions(searchQuery: String) -> Future<FinancialConnectionsInstitutionSearchResultResource>
     func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]>
 }
 
@@ -42,14 +42,11 @@ class InstitutionAPIDataSource: InstitutionDataSource {
 
     // MARK: - InstitutionDataSource
 
-    func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]> {
+    func fetchInstitutions(searchQuery: String) -> Future<FinancialConnectionsInstitutionSearchResultResource> {
         return apiClient.fetchInstitutions(
             clientSecret: clientSecret,
             query: searchQuery
         )
-        .chained { list in
-            return Promise(value: list.data)
-        }
     }
 
     func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]> {
