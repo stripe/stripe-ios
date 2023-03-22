@@ -19,6 +19,7 @@ protocol PartnerAuthDataSource: AnyObject {
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
     func cancelPendingAuthSessionIfNeeded()
     func recordAuthSessionEvent(eventName: String, authSessionId: String)
+    func clearReturnURL(authSession: FinancialConnectionsAuthSession, urlString: String) -> Future<FinancialConnectionsAuthSession>
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
@@ -61,6 +62,34 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             self?.pendingAuthSession = authSession
             return Promise(value: authSession)
         }
+    }
+
+    func clearReturnURL(authSession: FinancialConnectionsAuthSession, urlString: String) -> Future<FinancialConnectionsAuthSession> {
+        let promise = Promise<FinancialConnectionsAuthSession>()
+
+        apiClient
+            .generateSessionManifest(clientSecret: clientSecret, returnURL: nil)
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success:
+                    let copiedSession = FinancialConnectionsAuthSession(id: authSession.id,
+                                                                        flow: authSession.flow,
+                                                                        institutionSkipAccountSelection: authSession.institutionSkipAccountSelection,
+                                                                        nextPane: authSession.nextPane,
+                                                                        showPartnerDisclosure: authSession.showPartnerDisclosure,
+                                                                        skipAccountSelection: authSession.skipAccountSelection,
+                                                                        url: urlString,
+                                                                        isOauth: authSession.isOauth,
+                                                                        display: authSession.display)
+                    self.pendingAuthSession = copiedSession
+                    promise.fullfill(with: .success(copiedSession))
+                case .failure(let error):
+                    promise.reject(with: error)
+                }
+            }
+
+        return promise
     }
 
     func cancelPendingAuthSessionIfNeeded() {

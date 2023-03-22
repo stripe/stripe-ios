@@ -403,7 +403,26 @@ final class PartnerAuthViewController: UIViewController {
         self.view.addAndPinSubview(self.continueStateView!)
 
         self.subscribeToURLAndAppActiveNotifications()
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        UIApplication.shared.open(url, options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]) { (success) in
+            if !success {
+                self.clearStateAndUnsubscribeFromNotifications()
+
+                self.showEstablishingConnectionLoadingView(true)
+                self.dataSource
+                    .clearReturnURL(authSession: authSession, urlString: urlString)
+                    .observe(on: .main) { [weak self] result in
+                        guard let self = self else { return }
+                        // order is important so be careful of moving
+                        self.showEstablishingConnectionLoadingView(false)
+                        switch result {
+                        case .success(let authSession):
+                            self.openInstitutionAuthenticationWebView(authSession: authSession)
+                        case .failure(let error):
+                            self.showErrorView(error)
+                        }
+                    }
+            }
+        }
     }
 
     private func openInstitutionAuthenticationWebView(authSession: FinancialConnectionsAuthSession) {
@@ -670,6 +689,13 @@ private extension PartnerAuthViewController {
         }
     }
 
+    private func clearStateAndUnsubscribeFromNotifications() {
+        unprocessedReturnURL = nil
+        continueStateView?.removeFromSuperview()
+        continueStateView = nil
+        unsubscribeFromNotifications()
+    }
+
     private func handleAuthSessionCompletionFromNativeRedirectIfNeeded() {
         assertMainQueue()
 
@@ -683,10 +709,7 @@ private extension PartnerAuthViewController {
             return
         }
         handleAuthSessionCompletionFromNativeRedirect(url)
-        unprocessedReturnURL = nil
-        continueStateView?.removeFromSuperview()
-        continueStateView = nil
-        unsubscribeFromNotifications()
+        clearStateAndUnsubscribeFromNotifications()
     }
 }
 
