@@ -397,8 +397,7 @@ final class PartnerAuthViewController: UIViewController {
                 guard let self = self else { return }
                 self.continueStateView?.removeFromSuperview()
                 self.continueStateView = nil
-                // recreate the auth session since the old link cannot be reused.
-                self.createAuthSession()
+                self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
             }
         )
         self.view.addAndPinSubview(self.continueStateView!)
