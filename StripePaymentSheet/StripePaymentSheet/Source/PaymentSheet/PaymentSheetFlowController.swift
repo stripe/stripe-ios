@@ -80,10 +80,10 @@ extension PaymentSheet {
 
             return viewController.selectedPaymentOption
         }
-
+        
         /// The status or result of the last update API call
         private var latestUpdateStatus: UpdateStatus?
-
+        
         enum UpdateStatus {
             case completed(IntentConfiguration)
             case inProgress(IntentConfiguration, UUID)
@@ -206,6 +206,7 @@ extension PaymentSheet {
             case .inProgress, .failed:
                 assertionFailure("Cannot call presentPaymentOptions when the last update call has not yet finished or failed.")
                 completion?()
+                return
             default:
                 break
             }
@@ -265,10 +266,13 @@ extension PaymentSheet {
                 assertionFailure("`confirmPayment` should only be called when the last update has completed.")
                 let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with an update API call in progress.")
                 completion(.failed(error: error))
+                return
             case .failed:
                 assertionFailure("`confirmPayment` should only be called when the last update has completed without error.")
                 let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called when the last update API call failed.")
                 completion(.failed(error: error))
+                return
+
             default:
                 break
             }
