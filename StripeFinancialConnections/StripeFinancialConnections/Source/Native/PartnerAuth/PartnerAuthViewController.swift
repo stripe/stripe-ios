@@ -404,24 +404,24 @@ final class PartnerAuthViewController: UIViewController {
 
         self.subscribeToURLAndAppActiveNotifications()
         UIApplication.shared.open(url, options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]) { (success) in
-            if !success {
-                self.clearStateAndUnsubscribeFromNotifications()
+            if success { return }
+            // This means banking app is not installed
+            self.clearStateAndUnsubscribeFromNotifications()
 
-                self.showEstablishingConnectionLoadingView(true)
-                self.dataSource
-                    .clearReturnURL(authSession: authSession, urlString: urlString)
-                    .observe(on: .main) { [weak self] result in
-                        guard let self = self else { return }
-                        // order is important so be careful of moving
-                        self.showEstablishingConnectionLoadingView(false)
-                        switch result {
-                        case .success(let authSession):
-                            self.openInstitutionAuthenticationWebView(authSession: authSession)
-                        case .failure(let error):
-                            self.showErrorView(error)
-                        }
+            self.showEstablishingConnectionLoadingView(true)
+            self.dataSource
+                .clearReturnURL(authSession: authSession, authURL: urlString)
+                .observe(on: .main) { [weak self] result in
+                    guard let self = self else { return }
+                    // order is important so be careful of moving
+                    self.showEstablishingConnectionLoadingView(false)
+                    switch result {
+                    case .success(let authSession):
+                        self.openInstitutionAuthenticationWebView(authSession: authSession)
+                    case .failure(let error):
+                        self.showErrorView(error)
                     }
-            }
+                }
         }
     }
 

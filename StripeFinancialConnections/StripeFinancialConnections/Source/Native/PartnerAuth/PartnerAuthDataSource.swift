@@ -19,7 +19,7 @@ protocol PartnerAuthDataSource: AnyObject {
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
     func cancelPendingAuthSessionIfNeeded()
     func recordAuthSessionEvent(eventName: String, authSessionId: String)
-    func clearReturnURL(authSession: FinancialConnectionsAuthSession, urlString: String) -> Future<FinancialConnectionsAuthSession>
+    func clearReturnURL(authSession: FinancialConnectionsAuthSession, authURL: String) -> Future<FinancialConnectionsAuthSession>
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
@@ -64,7 +64,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         }
     }
 
-    func clearReturnURL(authSession: FinancialConnectionsAuthSession, urlString: String) -> Future<FinancialConnectionsAuthSession> {
+    func clearReturnURL(authSession: FinancialConnectionsAuthSession, authURL: String) -> Future<FinancialConnectionsAuthSession> {
         let promise = Promise<FinancialConnectionsAuthSession>()
 
         apiClient
@@ -79,7 +79,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
                                                                         nextPane: authSession.nextPane,
                                                                         showPartnerDisclosure: authSession.showPartnerDisclosure,
                                                                         skipAccountSelection: authSession.skipAccountSelection,
-                                                                        url: urlString,
+                                                                        url: authURL,
                                                                         isOauth: authSession.isOauth,
                                                                         display: authSession.display)
                     self.pendingAuthSession = copiedSession
