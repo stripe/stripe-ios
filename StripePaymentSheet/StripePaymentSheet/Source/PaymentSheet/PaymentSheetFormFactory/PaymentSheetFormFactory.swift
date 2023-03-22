@@ -33,6 +33,17 @@ class PaymentSheetFormFactory {
     let addressSpecProvider: AddressSpecProvider
     let offerSaveToLinkWhenSupported: Bool
     let linkAccount: PaymentSheetLinkAccount?
+    let previousCustomerInput: IntentConfirmParams?
+    var defaultBillingDetails: PaymentSheet.BillingDetails {
+        let previousBillingDetails = previousCustomerInput?.paymentMethodParams.billingDetails
+        var details = PaymentSheet.BillingDetails()
+        details.name = previousBillingDetails?.name ?? configuration.defaultBillingDetails.name
+        details.phone = previousBillingDetails?.phone ?? configuration.defaultBillingDetails.phone
+        details.email = previousBillingDetails?.email ?? configuration.defaultBillingDetails.email
+        details.address.line1 = previousBillingDetails?.address?.line1 ?? configuration.defaultBillingDetails.address.line1
+        // TODO finish
+        return details
+    }
 
     var canSaveToLink: Bool {
         return (intent.supportsLinkCard && paymentMethod == .card && saveMode != .merchantRequired)
@@ -46,6 +57,7 @@ class PaymentSheetFormFactory {
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         paymentMethod: PaymentSheet.PaymentMethodType,
+        previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
@@ -85,6 +97,7 @@ class PaymentSheetFormFactory {
         self.addressSpecProvider = addressSpecProvider
         self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
         self.linkAccount = linkAccount
+        self.previousCustomerInput = previousCustomerInput
     }
 
     func make() -> PaymentMethodElement {
