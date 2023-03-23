@@ -272,7 +272,6 @@ extension PaymentSheet {
                 let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called when the last update API call failed.")
                 completion(.failed(error: error))
                 return
-
             default:
                 break
             }
