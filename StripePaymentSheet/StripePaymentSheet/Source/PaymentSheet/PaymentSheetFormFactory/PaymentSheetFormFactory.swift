@@ -106,7 +106,7 @@ class PaymentSheetFormFactory {
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
-            return makeCard(theme: theme)
+            return makeCard()
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
