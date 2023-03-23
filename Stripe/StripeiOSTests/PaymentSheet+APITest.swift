@@ -510,6 +510,38 @@ class PaymentSheetAPITest: XCTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    func testUpdateAfterFailedUpdate() {
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+            // These tests don't confirm, so this is unused
+        }
+
+        let failedUpdateExpectation = expectation(description: "First update fails")
+        let secondUpdateExpectation = expectation(description: "Second update callback is invoked")
+        var flowController: PaymentSheet.FlowController!
+        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+            switch result {
+            case .success(let sut):
+                flowController = sut
+                // ...updating w/ an invalid intent config should fail...
+                intentConfig.mode = .setup(currency: "Invalid currency", setupFutureUsage: .offSession)
+                flowController.update(intentConfiguration: intentConfig) { updateError in
+                    XCTAssertNotNil(updateError)
+                    failedUpdateExpectation.fulfill()
+
+                    // Subsequent updates should succeed
+                    intentConfig.mode = .setup(currency: "USD", setupFutureUsage: .offSession)
+                    flowController.update(intentConfiguration: intentConfig) { error in
+                        XCTAssertNil(error)
+                        secondUpdateExpectation.fulfill()
+                    }
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     // MARK: - other tests
 
     func testMakeShippingParamsReturnsNilIfPaymentIntentHasDifferentShipping() {
