@@ -449,7 +449,7 @@ class PaymentSheetAPITest: XCTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    /// Tests that when an update is called while another update operation is in progress we ignore the in-flight update
+    /// Tests that when update is called while another update operation is in progress we ignore the in-flight update
     func testUpdate_FirstUpdateIsIgnored() {
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
             // These tests don't confirm, so this is unused
@@ -469,40 +469,6 @@ class PaymentSheetAPITest: XCTestCase {
                     XCTAssertNil(error)
                     // TODO(Update:) Change this to validate it preserves the paymentOption
                     XCTAssertNil(sut.paymentOption)
-                    expectation.fulfill()
-                }
-
-            case .failure(let error):
-                XCTFail(error.localizedDescription)
-            }
-        }
-        waitForExpectations(timeout: 10)
-    }
-
-    /// Tests that when an update is called while another update operation is in progress we ignore the in-flight update
-    func testConfirmRightAfterUpdate() {
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
-            // These tests don't confirm, so this is unused
-        }
-        let expectation = expectation(description: "Updates")
-        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
-            switch result {
-            case .success(let sut):
-                // ...updating the intent config should succeed...
-                intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
-                sut.update(intentConfiguration: intentConfig) { error in
-                    XCTAssertNil(error)
-                    // TODO(Update:) Change this to validate it preserves the paymentOption
-                    XCTAssertNil(sut.paymentOption)
-                    print("Update finishes")
-                }
-
-                let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
-                window.rootViewController = UIViewController()
-                window.makeKeyAndVisible()
-                sut.confirm(from: window.rootViewController!) { _ in
-                    print(result)
-
                     expectation.fulfill()
                 }
 

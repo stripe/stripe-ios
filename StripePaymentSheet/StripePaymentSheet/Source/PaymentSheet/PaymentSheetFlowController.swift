@@ -80,14 +80,14 @@ extension PaymentSheet {
 
             return viewController.selectedPaymentOption
         }
-        
+
         /// The status or result of the last update API call
         private var latestUpdateStatus: UpdateStatus?
-        
+
         enum UpdateStatus {
-            case completed(IntentConfiguration)
-            case inProgress(IntentConfiguration, UUID)
-            case failed(IntentConfiguration, Error)
+            case completed
+            case inProgress(UUID)
+            case failed
         }
 
         // MARK: - Initializer (Internal)
@@ -321,7 +321,7 @@ extension PaymentSheet {
             assert(Thread.isMainThread, "PaymentSheet.FlowController must be called from the main thread.")
 
             let updateID = UUID()
-            latestUpdateStatus = .inProgress(intentConfiguration, updateID)
+            latestUpdateStatus = .inProgress(updateID)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
@@ -333,11 +333,9 @@ extension PaymentSheet {
                     return
                 }
 
-                // Check if a "newer" update has been called, ignore the result of this update and don't invoke the callback if so
-                if case let .inProgress(_, latestUpdateID) = self.latestUpdateStatus {
-                    guard updateID == latestUpdateID else {
-                        return
-                    }
+                // If we have an update in progress and this update call's ID does not match the latest update ID call, ignore this update
+                if case let .inProgress(latestUpdateID) = self.latestUpdateStatus, updateID != latestUpdateID {
+                    return
                 }
 
                 switch loadResult {
@@ -350,10 +348,10 @@ extension PaymentSheet {
                     // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
                     _ = self.paymentOption
 
-                    self.latestUpdateStatus = .completed(intentConfiguration)
+                    self.latestUpdateStatus = .completed
                     completion(nil)
                 case .failure(let error):
-                    self.latestUpdateStatus = .failed(intentConfiguration, error)
+                    self.latestUpdateStatus = .failed
                     completion(error)
                 }
             }
