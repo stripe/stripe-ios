@@ -81,7 +81,7 @@ extension PaymentSheet {
             return viewController.selectedPaymentOption
         }
 
-        /// The status or result of the last update API call
+        /// The status of the last update API call
         private var latestUpdateStatus: UpdateStatus?
 
         enum UpdateStatus {
