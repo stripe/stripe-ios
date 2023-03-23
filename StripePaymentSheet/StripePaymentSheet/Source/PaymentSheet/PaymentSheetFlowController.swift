@@ -69,7 +69,7 @@ extension PaymentSheet {
             return viewController.intent
         }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
-        private var viewController: PaymentSheetFlowControllerViewController
+        var viewController: PaymentSheetFlowControllerViewController
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
