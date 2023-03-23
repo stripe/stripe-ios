@@ -20,6 +20,11 @@ extension TextFieldElement {
         var binController = STPBINController.shared
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let rotatingCardBrandsView = RotatingCardBrandsView()
+        let defaultValue: String?
+        
+        init(defaultValue: String? = nil) {
+            self.defaultValue = defaultValue
+        }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             let cardBrand = STPCardValidator.brand(forNumber: text)
@@ -153,6 +158,12 @@ extension TextFieldElement {
 // MARK: - CVC Configuration
 extension TextFieldElement {
     struct CVCConfiguration: TextFieldElementConfiguration {
+        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand)) {
+            self.defaultValue = defaultValue
+            self.cardBrandProvider = cardBrandProvider
+        }
+        
+        let defaultValue: String?
         let cardBrandProvider: () -> (STPCardBrand)
         var label: String {
             if cardBrandProvider() == .amex {
@@ -162,6 +173,7 @@ extension TextFieldElement {
             }
         }
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+        
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -201,9 +213,14 @@ extension TextFieldElement {
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
+        init(defaultValue: String? = nil) {
+            self.defaultValue = defaultValue
+        }
+        
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+        let defaultValue: String?
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
