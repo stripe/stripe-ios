@@ -27,10 +27,8 @@ extension STPFixtures {
         billingDetails.address?.postalCode = "94102"
         return billingDetails
     }
-}
 
-extension STPPaymentIntent {
-    static func _testValue(
+    static func paymentIntent(
         paymentMethodTypes: [String],
         orderedPaymentMethodTypes: [String]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
@@ -55,15 +53,9 @@ extension STPPaymentIntent {
     }
 }
 
-extension Intent {
-    static func _testValue(paymentMethodTypes: [String]) -> Self {
-        return .paymentIntent(STPFixtures.paymentIntent())
-    }
-}
-
 extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
-    static func _testMostPermissiveValue() -> Self {
+    static func _testValue_MostPermissive() -> Self {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true

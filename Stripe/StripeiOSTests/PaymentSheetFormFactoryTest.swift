@@ -1403,7 +1403,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         
         // ...the card form...
         let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(._testValue(paymentMethodTypes: ["card"])),
+            intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["card"])),
             configuration: configuration,
             paymentMethod: .card,
             previousCustomerInput: previousCustomerInput

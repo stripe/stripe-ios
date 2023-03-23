@@ -298,10 +298,13 @@ extension PaymentSheet {
                 switch loadResult {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
-                    // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
-                    // TODO(Link): Consider how we want to restore the customer's previous inputs, if at all.
-                    
-                    self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: paymentMethods, previousPaymentOption: self._paymentOption, isLinkEnabled: isLinkEnabled, configuration: self.configuration)
+                    self.viewController = Self.makeViewController(
+                        intent: intent,
+                        savedPaymentMethods: paymentMethods,
+                        previousPaymentOption: self._paymentOption,
+                        isLinkEnabled: isLinkEnabled,
+                        configuration: self.configuration
+                    )
 
                     // Synchronously pre-load image into cache
                     // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.

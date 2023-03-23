@@ -21,35 +21,24 @@ final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
             }
         }
         waitForExpectations(timeout: 1)
-        recordMode = true
+//        recordMode = true
     }
 
-    func test_with_previous_customer_input() throws {
+    func test_with_previous_customer_card_details_and_checkbox() {
         // Given the customer previously entered card details...
         let previousCustomerInput = IntentConfirmParams.init(
             params: .paramsWith(card: STPFixtures.paymentMethodCardParams(), billingDetails: STPFixtures.paymentMethodBillingDetails(), metadata: nil),
-            type: .card)
+            type: .card
+        )
+        previousCustomerInput.shouldSavePaymentMethod = true
         // ...and the card doesn't show up *first* in the list (so we can exercise the code that switches to the previously entered pm form)...
-        let intent = Intent.paymentIntent(._testValue(paymentMethodTypes: ["paypal", "card", "cashApp"]))
+        let intent = Intent.paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal", "card", "cashApp"]))
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        // ...and a "Save this card" checkbox...
+        config.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
-        let sut = AddPaymentMethodViewController(intent: intent, configuration: ._testMostPermissiveValue(), previousCustomerInput: previousCustomerInput)
+        let sut = AddPaymentMethodViewController(intent: intent, configuration: config, previousCustomerInput: previousCustomerInput)
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
-}
-
-// MARK: - Test helper for Intent
-
-extension IntentConfirmParams {
-//    static func _testMakeForNewCard() -> IntentConfirmParams {
-//
-//    }
 }
