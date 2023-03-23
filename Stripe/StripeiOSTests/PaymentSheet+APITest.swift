@@ -458,7 +458,7 @@ class PaymentSheetAPITest: XCTestCase {
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
-                // ...updating the intent config should succeed...
+                // This update should be ingored in favor of the second update
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 sut.update(intentConfiguration: intentConfig) { _ in
                    XCTFail("This update call should be ignored in favor of the second update call")
@@ -467,8 +467,6 @@ class PaymentSheetAPITest: XCTestCase {
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .onSession)
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
-                    // TODO(Update:) Change this to validate it preserves the paymentOption
-                    XCTAssertNil(sut.paymentOption)
                     expectation.fulfill()
                 }
 
@@ -476,6 +474,39 @@ class PaymentSheetAPITest: XCTestCase {
                 XCTFail(error.localizedDescription)
             }
         }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testUpdateMultiple() {
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+            // These tests don't confirm, so this is unused
+        }
+        let firstUpdateExpectation = expectation(description: "First update callback is invoked")
+        let secondUpdateExpectation = expectation(description: "Second update callback is invoked")
+        var flowController: PaymentSheet.FlowController!
+        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+            switch result {
+            case .success(let sut):
+                // This update should be ingored in favor of the second update
+                flowController = sut
+                intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
+                flowController.update(intentConfiguration: intentConfig) { error in
+                    XCTAssertNil(error)
+                    firstUpdateExpectation.fulfill()
+
+                    // Subsequent updates should succeed
+                    intentConfig.mode = .setup(currency: nil, setupFutureUsage: .onSession)
+                    flowController.update(intentConfiguration: intentConfig) { error in
+                        XCTAssertNil(error)
+                        secondUpdateExpectation.fulfill()
+                    }
+                }
+
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+
         waitForExpectations(timeout: 10)
     }
 

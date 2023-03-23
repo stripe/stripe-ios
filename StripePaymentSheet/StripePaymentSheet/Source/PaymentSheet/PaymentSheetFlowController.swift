@@ -261,6 +261,8 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: @escaping (PaymentSheetResult) -> Void
         ) {
+            assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
+
             switch latestUpdateStatus {
             case .inProgress:
                 assertionFailure("`confirmPayment` should only be called when the last update has completed.")
