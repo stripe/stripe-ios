@@ -1348,7 +1348,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode)
     }
     
-    func testAppliesPreviousCustomerBillingDetailsInput() {
+    // MARK: - Previous Customer Input tests
+    
+    // Covers:
+    // - Email
+    // - Name
+    // - Phone
+    // - Billing address
+    // - Card form
+    // - Save checkbox
+    func testAppliesPreviousCustomerInput_billing_details_and_card() {
         // Given default billing details...
         let defaultAddress = PaymentSheet.Address(
             city: "should not be used",
@@ -1429,6 +1438,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
     }
+    
+    // MARK: - Helpers
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
         let addressSpecProvider = AddressSpecProvider()
