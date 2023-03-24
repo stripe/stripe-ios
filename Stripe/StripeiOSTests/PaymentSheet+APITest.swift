@@ -487,14 +487,14 @@ class PaymentSheetAPITest: XCTestCase {
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
-                // This update should be ingored in favor of the second update
+                // This update should succeed
                 flowController = sut
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 flowController.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
                     firstUpdateExpectation.fulfill()
 
-                    // Subsequent updates should succeed
+                    // Subsequent updates should also succeed
                     intentConfig.mode = .setup(currency: nil, setupFutureUsage: .onSession)
                     flowController.update(intentConfiguration: intentConfig) { error in
                         XCTAssertNil(error)
