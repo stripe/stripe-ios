@@ -21,7 +21,7 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
-        
+
         init(defaultValue: String? = nil) {
             self.defaultValue = defaultValue
         }
@@ -162,7 +162,7 @@ extension TextFieldElement {
             self.defaultValue = defaultValue
             self.cardBrandProvider = cardBrandProvider
         }
-        
+
         let defaultValue: String?
         let cardBrandProvider: () -> (STPCardBrand)
         var label: String {
@@ -173,7 +173,7 @@ extension TextFieldElement {
             }
         }
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
-        
+
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -216,7 +216,7 @@ extension TextFieldElement {
         init(defaultValue: String? = nil) {
             self.defaultValue = defaultValue
         }
-        
+
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit

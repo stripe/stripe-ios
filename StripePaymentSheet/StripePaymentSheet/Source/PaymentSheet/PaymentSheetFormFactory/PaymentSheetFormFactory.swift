@@ -34,7 +34,7 @@ class PaymentSheetFormFactory {
     let offerSaveToLinkWhenSupported: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let previousCustomerInput: IntentConfirmParams?
-    
+
     var defaultBillingDetails: PaymentSheet.BillingDetails {
         /// Looks at `previousCustomerInput` and `configuration`, prefers the former
         let previous = previousCustomerInput?.paymentMethodParams.billingDetails

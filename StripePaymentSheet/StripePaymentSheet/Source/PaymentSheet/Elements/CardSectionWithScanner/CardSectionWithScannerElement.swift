@@ -30,7 +30,7 @@ final class CardSection: ContainerElement {
         }
     }()
     let cardSection: SectionElement
-    
+
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
             self.name = name
@@ -38,7 +38,7 @@ final class CardSection: ContainerElement {
             self.cvc = cvc
             self.expiry = expiry
         }
-        
+
         let name: String?
         let pan: String?
         let cvc: String?

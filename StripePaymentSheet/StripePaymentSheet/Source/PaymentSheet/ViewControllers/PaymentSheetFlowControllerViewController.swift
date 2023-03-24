@@ -127,7 +127,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         self.isLinkEnabled = isLinkEnabled
 
         self.configuration = configuration
-        
+
         // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
         // Caveats:
         // - Only card details (including checkbox state) and billing details are restored

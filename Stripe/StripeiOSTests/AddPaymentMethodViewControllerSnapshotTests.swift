@@ -16,7 +16,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
         super.setUp()
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load() { _ in
+            FormSpecProvider.shared.load { _ in
                 expectation.fulfill()
             }
         }

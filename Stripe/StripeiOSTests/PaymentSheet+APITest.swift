@@ -415,7 +415,7 @@ class PaymentSheetAPITest: XCTestCase {
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
                     XCTAssertNil(sut.paymentOption)
-                    
+
                     // ...and the updated vc's intent has the updated config's values
                     XCTAssertTrue(sut.viewController.intent.isSettingUp)
                     XCTAssertFalse(sut.viewController.intent.isPaymentIntent)
@@ -446,7 +446,7 @@ class PaymentSheetAPITest: XCTestCase {
                     let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
                     window.rootViewController = UIViewController()
                     window.makeKeyAndVisible()
-                    
+
                     // TODO(Update:) Assert that `present` w/ the window.rootViewController no-ops
                     // Note: `confirm` has an assertionFailure if paymentOption is nil, so we don't check it here.
                     expectation.fulfill()

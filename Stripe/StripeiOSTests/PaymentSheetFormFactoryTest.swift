@@ -564,7 +564,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [
-                .au_becs_account_number(.init(apiPath: ["v1": "au_becs_debit[account_number]"]))
+                .au_becs_account_number(.init(apiPath: ["v1": "au_becs_debit[account_number]"])),
             ],
             selectorIcon: nil,
             nextActionSpec: nil
@@ -1347,9 +1347,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.country)
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode)
     }
-    
+
     // MARK: - Previous Customer Input tests
-    
+
     // Covers:
     // - Email
     // - Name
@@ -1378,15 +1378,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "should not be usedm"
         configuration.defaultBillingDetails.phone = "should not be used"
         configuration.defaultBillingDetails.address = defaultAddress
-        
+
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load() { _ in
+            FormSpecProvider.shared.load { _ in
                 expectation.fulfill()
             }
         }
         waitForExpectations(timeout: 1)
-        
+
         // ...and previous customer input billing details...
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Jane Doe"
@@ -1399,7 +1399,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         billingDetails.address?.state = "CA"
         billingDetails.address?.country = "US"
         billingDetails.address?.postalCode = "94102"
-        
+
         // ...and full card details...
         let cardValues = STPFixtures.paymentMethodCardParams()
         let previousCustomerInput = IntentConfirmParams.init(
@@ -1409,7 +1409,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 metadata: nil),
             type: .card
         )
-        
+
         // ...the card form...
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["card"])),
@@ -1418,7 +1418,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             previousCustomerInput: previousCustomerInput
         )
         let cardForm = factory.make()
-        
+
         // ...should be valid...
         XCTAssert(cardForm.validationState == .valid)
         // ...and its params should match the defaults above
@@ -1432,13 +1432,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.state, "CA")
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.country, "US")
         XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode, "94102")
-        
+
         XCTAssertEqual(params.paymentMethodParams.card?.number, cardValues.number)
         XCTAssertEqual(params.paymentMethodParams.card?.expMonth, cardValues.expMonth)
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
     }
-    
+
     // MARK: - Helpers
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {

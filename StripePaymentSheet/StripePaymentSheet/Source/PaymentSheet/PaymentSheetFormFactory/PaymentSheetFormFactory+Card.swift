@@ -30,7 +30,7 @@ extension PaymentSheetFormFactory {
             includeName: false, // Name is included in the card details section.
             includeEmail: configuration.billingDetailsCollectionConfiguration.email == .always,
             includePhone: includePhone)
-        
+
         let previousCardInput = previousCustomerInput?.paymentMethodParams.card
         let cardDefaultValues = CardSection.DefaultValues(
             name: defaultBillingDetails.name,
