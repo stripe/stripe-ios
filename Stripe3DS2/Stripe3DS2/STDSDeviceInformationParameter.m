@@ -224,7 +224,7 @@ static const NSString * const kParameterNilCode = @"RE04";
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C009"
                                                       permissionCheck:nil
                                                            valueCheck:^id _Nullable{
-                                                               return [UIDevice currentDevice].name;
+                                                               return [UIDevice currentDevice].localizedModel;
                                                            }];
 }
 

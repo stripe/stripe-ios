@@ -25,9 +25,9 @@ struct IdentityElementsFactory {
     let dateFormatter: DateFormatter
 
     static let supportedCountryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
-        "US": .init(type: .US_SSN_LAST4, label: "Last 4 of Social Security number"),
-        "BR": .init(type: .BR_CPF, label: "Individual CPF"),
-        "SG": .init(type: .SG_NRIC_OR_FIN, label: "NRIC or FIN"),
+        "US": .init(type: .US_SSN_LAST4, label: String.Localized.last_4_of_ssn),
+        "BR": .init(type: .BR_CPF, label: String.Localized.individual_cpf),
+        "SG": .init(type: .SG_NRIC_OR_FIN, label: String.Localized.nric_or_fin),
     ]
 
     init(

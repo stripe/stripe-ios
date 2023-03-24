@@ -46,6 +46,27 @@ extension String.Localized {
         )
     }
 
+    static var last_4_of_ssn: String {
+        STPLocalizedString(
+            "Last 4 of Social Security number",
+            "Label for the ID field to collect last 4 of social security number for US ID"
+        )
+    }
+
+    static var individual_cpf: String {
+        STPLocalizedString(
+            "Individual CPF",
+            "Label for the ID field to collect individual CPF for Brazilian ID"
+        )
+    }
+
+    static var nric_or_fin: String {
+        STPLocalizedString(
+            "NRIC or FIN",
+            "Label for the ID field to collect NRIC or FIN for Singaporean ID"
+        )
+    }
+
     // MARK: - Document Upload
 
     static var app_settings: String {

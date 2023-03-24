@@ -65,41 +65,20 @@ extension PaymentSheet {
 
         // MARK: - Private properties
 
-        private var intent: Intent
-        private let savedPaymentMethods: [STPPaymentMethod]
+        private var intent: Intent {
+            return viewController.intent
+        }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
-
-        private let isLinkEnabled: Bool
-
-        private lazy var paymentOptionsViewController: ChoosePaymentOptionViewController = {
-            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && configuration.applePay != nil
-            let vc = ChoosePaymentOptionViewController(
-                intent: intent,
-                savedPaymentMethods: savedPaymentMethods,
-                configuration: configuration,
-                isApplePayEnabled: isApplePayEnabled,
-                isLinkEnabled: isLinkEnabled,
-                delegate: self
-            )
-            // Workaround to silence a warning in the Catalyst target
-            #if targetEnvironment(macCatalyst)
-            configuration.style.configure(vc)
-            #else
-            if #available(iOS 13.0, *) {
-                configuration.style.configure(vc)
-            }
-            #endif
-            return vc
-        }()
+        private var viewController: PaymentSheetFlowControllerViewController
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         private var _paymentOption: PaymentOption? {
-            guard paymentOptionsViewController.error == nil else {
+            guard viewController.error == nil else {
                 return nil
             }
 
-            return paymentOptionsViewController.selectedPaymentOption
+            return viewController.selectedPaymentOption
         }
 
         // MARK: - Initializer (Internal)
@@ -113,10 +92,9 @@ extension PaymentSheet {
             AnalyticsHelper.shared.generateSessionID()
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
             STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true, configuration: configuration)
-            self.intent = intent
-            self.savedPaymentMethods = savedPaymentMethods
-            self.isLinkEnabled = isLinkEnabled
             self.configuration = configuration
+            self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: savedPaymentMethods, isLinkEnabled: isLinkEnabled, configuration: configuration)
+            self.viewController.delegate = self
         }
 
         // MARK: - Public methods
@@ -191,26 +169,16 @@ extension PaymentSheet {
             ) { result in
                 switch result {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
-                    // Verify that there are payment method types available for the intent and configuration.
-                    let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(
-                        from: intent,
-                        configuration: configuration)
-                    guard !paymentMethodTypes.isEmpty else {
-                        completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
-                        return
-                    }
-
-                    let manualFlow = FlowController(
+                    let flowController = FlowController(
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
                         isLinkEnabled: isLinkEnabled,
                         configuration: configuration)
 
-                    // Synchronously pre-load image into cache
-                    if let paymentOption = manualFlow.paymentOption {
-                        _ = paymentOption.image
-                    }
-                    completion(.success(manualFlow))
+                    // Synchronously pre-load image into cache.
+                    // Accessing flowController.paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
+                    _ = flowController.paymentOption
+                    completion(.success(flowController))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -225,11 +193,13 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: (() -> Void)? = nil
         ) {
+            // TODO(Update): If update is in-flight or the last update failed, assert and call the completion
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
                 completion?()
                 return
             }
+
             if let completion = completion {
                 presentPaymentOptionsCompletion = completion
             }
@@ -239,7 +209,7 @@ extension PaymentSheet {
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let bottomSheetVC = Self.makeBottomSheetViewController(
-                    self.paymentOptionsViewController,
+                    self.viewController,
                     configuration: self.configuration,
                     didCancelNative3DS2: { [weak self] in
                         self?.paymentHandler.cancel3DS2ChallengeFlow()
@@ -256,7 +226,7 @@ extension PaymentSheet {
                 verificationController.present(from: presentingViewController) { [weak self] result in
                     switch result {
                     case .completed:
-                        self?.paymentOptionsViewController.selectLink()
+                        self?.viewController.selectLink()
                         completion?()
                     case .canceled, .failed:
                         showPaymentOptions()
@@ -274,6 +244,7 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: @escaping (PaymentSheetResult) -> Void
         ) {
+            // TODO(Update): If update is in-flight or the last update failed, assert and return .completion(.failed)
             guard let paymentOption = _paymentOption else {
                 assertionFailure("`confirmPayment` should only be called when `paymentOption` is not nil")
                 let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with a nil paymentOption")
@@ -308,6 +279,39 @@ extension PaymentSheet {
             }
         }
 
+        /// 🚧 Under construction
+        /// Call this method when the IntentConfiguration values you used to initialize PaymentSheet.FlowController (amount, currency, etc.) change.
+        /// This ensures the appropriate payment methods are displayed, etc.
+        /// - Parameter intentConfiguration: An updated IntentConfiguration
+        /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry. TODO(Update): Tell the merchant they need to disable the buy button.
+        /// Don’t call this method while PaymentSheet is being presented.
+        func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
+            // 1. Load the intent, payment methods, and link data from the Stripe API
+            PaymentSheet.load(
+                mode: .deferredIntent(intentConfiguration),
+                configuration: configuration
+            ) { [weak self] loadResult in
+                guard let self = self else {
+                    assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update(intentConfiguration:completion:)`")
+                    return
+                }
+                switch loadResult {
+                case .success(let intent, let paymentMethods, let isLinkEnabled):
+                    // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+                    // TODO(Update:) Preserve the customer's previous inputs.
+                    self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: paymentMethods, isLinkEnabled: isLinkEnabled, configuration: self.configuration)
+
+                    // Synchronously pre-load image into cache
+                    // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
+                    _ = self.paymentOption
+
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
+                }
+            }
+        }
+
         // MARK: Internal helper methods
         static func makeBottomSheetViewController(
             _ contentViewController: BottomSheetContentViewController,
@@ -331,23 +335,49 @@ extension PaymentSheet {
             #endif
             return sheet
         }
+
+        static func makeViewController(
+            intent: Intent,
+            savedPaymentMethods: [STPPaymentMethod],
+            isLinkEnabled: Bool,
+            configuration: Configuration
+        ) -> PaymentSheetFlowControllerViewController {
+            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && configuration.applePay != nil
+            let vc = PaymentSheetFlowControllerViewController(
+                intent: intent,
+                savedPaymentMethods: savedPaymentMethods,
+                configuration: configuration,
+                isApplePayEnabled: isApplePayEnabled,
+                isLinkEnabled: isLinkEnabled
+            )
+            // Workaround to silence a warning in the Catalyst target
+#if targetEnvironment(macCatalyst)
+            configuration.style.configure(vc)
+#else
+            if #available(iOS 13.0, *) {
+                configuration.style.configure(vc)
+            }
+#endif
+            return vc
+        }
     }
+
 }
 
-// MARK: - ChoosePaymentOptionViewControllerDelegate
+// MARK: - PaymentSheetFlowControllerViewControllerDelegate
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate {
-    func choosePaymentOptionViewControllerShouldClose(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController
+extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
+    func PaymentSheetFlowControllerViewControllerShouldClose(
+        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
     ) {
-        choosePaymentOptionViewController.dismiss(animated: true) {
+        PaymentSheetFlowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
         }
     }
 
-    func choosePaymentOptionViewControllerDidUpdateSelection(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController
+    func PaymentSheetFlowControllerViewControllerDidUpdateSelection(
+        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
     ) {
         // no-op
     }

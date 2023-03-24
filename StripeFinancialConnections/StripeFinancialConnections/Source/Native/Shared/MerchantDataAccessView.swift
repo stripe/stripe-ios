@@ -103,10 +103,20 @@ final class MerchantDataAccessView: HitTestView {
 private func FormPermissionListString(
     _ permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
 ) -> String {
-    let permissionListString =
-        permissions
-        .map { LocalizedStringFromPermission($0) }
-        .joined(separator: ", ")
+    var permissionListString = ""
+    for i in 0..<permissions.count {
+        permissionListString += LocalizedStringFromPermission(permissions[i])
+
+        let isLastPermission = (i == permissions.count - 1)
+        if !isLastPermission {
+            let isSecondToLastPermission = (i == permissions.count - 2)
+            if isSecondToLastPermission {
+                permissionListString += " and "
+            } else {
+                permissionListString += ", "
+            }
+        }
+    }
 
     let capitalizedFirstLetter = permissionListString.prefix(1).uppercased()
     let restOfString = String(permissionListString.dropFirst())
@@ -216,6 +226,20 @@ struct MerchantDataAccessView_Previews: PreviewProvider {
             MerchantDataAccessViewUIViewRepresentable(
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
+                permissions: [.transactions, .ownership]
+            )
+            .frame(height: 50)
+
+            MerchantDataAccessViewUIViewRepresentable(
+                isStripeDirect: false,
+                businessName: "Rocket Rides",
+                permissions: [.transactions, .ownership, .balances]
+            )
+            .frame(height: 50)
+
+            MerchantDataAccessViewUIViewRepresentable(
+                isStripeDirect: false,
+                businessName: "Rocket Rides",
                 permissions: [.accountNumbers, .paymentMethod, .transactions, .ownership, .balances]
             )
             .frame(height: 50)
@@ -233,8 +257,6 @@ struct MerchantDataAccessView_Previews: PreviewProvider {
                 permissions: []
             )
             .frame(height: 30)
-
-            Spacer()
         }
         .padding()
         .padding()

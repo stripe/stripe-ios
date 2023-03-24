@@ -19,8 +19,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         institutionSkipAccountSelection: Bool,
         numberOfIneligibleAccounts: Int,
         paymentMethodType: FinancialConnectionsPaymentMethodType,
-        didSelectAnotherBank: @escaping () -> Void,
-        didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
+        didSelectAnotherBank: @escaping () -> Void
     ) {
         super.init(frame: .zero)
         assert(
@@ -86,18 +85,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             }
         }()
         let subtitleSecondSentence: String = {
-            let allowManualEntry = didSelectEnterBankDetailsManually != nil
-            if allowManualEntry && institutionSkipAccountSelection {
-                return STPLocalizedString(
-                    "Please enter your bank details manually or try selecting another bank account.",
-                    "The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to enter their bank details (account number, routing number) manually or to try selecting another bank account at the same bank."
-                )
-            } else if allowManualEntry {
-                return STPLocalizedString(
-                    "Please enter your bank details manually or try selecting another bank.",
-                    "The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to enter their bank details (account number, routing number) manually or to try selecting another bank."
-                )
-            } else if institutionSkipAccountSelection {
+            if institutionSkipAccountSelection {
                 return STPLocalizedString(
                     "Please try selecting another bank account.",
                     "The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at the same bank."
@@ -162,14 +150,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                 action: didSelectAnotherBank
             ),
             secondaryButtonConfiguration: {
-                if let didSelectEnterBankDetailsManually = didSelectEnterBankDetailsManually {
-                    return ReusableInformationView.ButtonConfiguration(
-                        title: String.Localized.enter_bank_details_manually,
-                        action: didSelectEnterBankDetailsManually
-                    )
-                } else {
-                    return nil
-                }
+                return nil
             }()
         )
         addAndPinSubview(reusableInformationView)
@@ -192,7 +173,6 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
     let institutionSkipAccountSelection: Bool
     let numberOfIneligibleAccounts: Int
     let paymentMethodType: FinancialConnectionsPaymentMethodType
-    let didSelectEnterBankDetailsManually: (() -> Void)?
 
     func makeUIView(context: Context) -> AccountPickerNoAccountEligibleErrorView {
         AccountPickerNoAccountEligibleErrorView(
@@ -201,8 +181,7 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
             institutionSkipAccountSelection: institutionSkipAccountSelection,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
             paymentMethodType: paymentMethodType,
-            didSelectAnotherBank: {},
-            didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
+            didSelectAnotherBank: {}
         )
     }
 
@@ -217,8 +196,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: "The Coca-Cola Company",
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 1,
-            paymentMethodType: .link,
-            didSelectEnterBankDetailsManually: {}
+            paymentMethodType: .link
         )
 
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
@@ -226,8 +204,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: "The Coca-Cola Company",
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 3,
-            paymentMethodType: .usBankAccount,
-            didSelectEnterBankDetailsManually: nil
+            paymentMethodType: .usBankAccount
         )
 
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
@@ -235,8 +212,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: nil,
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 1,
-            paymentMethodType: .link,
-            didSelectEnterBankDetailsManually: {}
+            paymentMethodType: .link
         )
 
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(
@@ -244,8 +220,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: nil,
             institutionSkipAccountSelection: true,
             numberOfIneligibleAccounts: 3,
-            paymentMethodType: .unparsable,
-            didSelectEnterBankDetailsManually: {}
+            paymentMethodType: .unparsable
         )
     }
 }

@@ -34,7 +34,11 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private lazy var continueStateView: UIView = {
         let view = ContinueStateView(institutionImageUrl: nil) { [weak self] in
             guard let self = self else { return }
-            self.startAuthenticationSession(manifest: self.manifest)
+            if let url = self.lastOpenedNativeURL {
+                self.redirect(to: url)
+            } else {
+                self.startAuthenticationSession(manifest: self.manifest)
+            }
         }
         return view
     }()
@@ -47,6 +51,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private var unprocessedReturnURLParameters: String?
     private var subscribedToURLNotifications = false
     private var subscribedToAppActiveNotifications = false
+    private var lastOpenedNativeURL: URL?
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
@@ -159,6 +164,7 @@ extension FinancialConnectionsWebFlowViewController {
         DispatchQueue.main.async {
             self.continueStateView.isHidden = false
             self.subscribeToURLAndAppActiveNotifications()
+            self.lastOpenedNativeURL = url
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
@@ -257,6 +263,7 @@ private extension FinancialConnectionsWebFlowViewController {
         }
         startAuthenticationSession(manifest: manifest, additionalQueryParameters: parameters)
         unprocessedReturnURLParameters = nil
+        lastOpenedNativeURL = nil
         continueStateView.isHidden = true
         unsubscribeFromNotifications()
     }

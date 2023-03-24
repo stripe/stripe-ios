@@ -397,14 +397,32 @@ final class PartnerAuthViewController: UIViewController {
                 guard let self = self else { return }
                 self.continueStateView?.removeFromSuperview()
                 self.continueStateView = nil
-                // recreate the auth session since the old link cannot be reused.
-                self.createAuthSession()
+                self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
             }
         )
         self.view.addAndPinSubview(self.continueStateView!)
 
         self.subscribeToURLAndAppActiveNotifications()
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        UIApplication.shared.open(url, options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]) { (success) in
+            if success { return }
+            // This means banking app is not installed
+            self.clearStateAndUnsubscribeFromNotifications()
+
+            self.showEstablishingConnectionLoadingView(true)
+            self.dataSource
+                .clearReturnURL(authSession: authSession, authURL: urlString)
+                .observe(on: .main) { [weak self] result in
+                    guard let self = self else { return }
+                    // order is important so be careful of moving
+                    self.showEstablishingConnectionLoadingView(false)
+                    switch result {
+                    case .success(let authSession):
+                        self.openInstitutionAuthenticationWebView(authSession: authSession)
+                    case .failure(let error):
+                        self.showErrorView(error)
+                    }
+                }
+        }
     }
 
     private func openInstitutionAuthenticationWebView(authSession: FinancialConnectionsAuthSession) {
@@ -671,6 +689,13 @@ private extension PartnerAuthViewController {
         }
     }
 
+    private func clearStateAndUnsubscribeFromNotifications() {
+        unprocessedReturnURL = nil
+        continueStateView?.removeFromSuperview()
+        continueStateView = nil
+        unsubscribeFromNotifications()
+    }
+
     private func handleAuthSessionCompletionFromNativeRedirectIfNeeded() {
         assertMainQueue()
 
@@ -684,10 +709,7 @@ private extension PartnerAuthViewController {
             return
         }
         handleAuthSessionCompletionFromNativeRedirect(url)
-        unprocessedReturnURL = nil
-        continueStateView?.removeFromSuperview()
-        continueStateView = nil
-        unsubscribeFromNotifications()
+        clearStateAndUnsubscribeFromNotifications()
     }
 }
 

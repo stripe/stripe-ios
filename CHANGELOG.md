@@ -2,9 +2,14 @@
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to configure how you want to collect billing details. See the docs [here](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#billing-details-collection).
 
+## 23.5.1 2023-03-20
 ### Payments
 * [Fixed] Fixed amounts in COP being formatted incorrectly.
 * [Fixed] Fixed BLIK payment bindings not handling next actions correctly.
+* [Changed] Removed usage of `UIDevice.currentDevice.name`.
+
+### Identity
+* [Added] Added a retake photo button on selfie scanning screen.
 
 ## 23.5.0 2023-03-13
 ### Payments
@@ -63,7 +68,7 @@
 * [Fixed] Fixed erroneously displaying the card scan button when card scanning is not available.
 
 ### Financial Connections
-* [Changed] FinancialConnectionsSheet methods now require to be called from non-extensions. 
+* [Changed] FinancialConnectionsSheet methods now require to be called from non-extensions.
 * [Changed] BankAccountToken.bankAccount was changed to an optional.
 
 ## 23.2.0 2022-11-14

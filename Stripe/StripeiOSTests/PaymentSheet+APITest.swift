@@ -67,57 +67,7 @@ class PaymentSheetAPITest: XCTestCase {
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()
     }
 
-    func fetchPaymentIntent(
-        types: [String],
-        currency: String = "eur",
-        paymentMethodID: String? = nil,
-        confirm: Bool = false,
-        completion: @escaping (Result<(String), Error>) -> Void
-    ) {
-        var params = [String: Any]()
-        params["amount"] = 1050
-        params["currency"] = currency
-        params["payment_method_types"] = types
-        params["confirm"] = confirm
-        if let paymentMethodID = paymentMethodID {
-            params["payment_method"] = paymentMethodID
-        }
-
-        STPTestingAPIClient
-            .shared()
-            .createPaymentIntent(
-                withParams: params
-            ) { clientSecret, error in
-                guard let clientSecret = clientSecret,
-                    error == nil
-                else {
-                    completion(.failure(error!))
-                    return
-                }
-
-                completion(.success(clientSecret))
-            }
-    }
-
-    func fetchSetupIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void)
-    {
-        STPTestingAPIClient
-            .shared()
-            .createSetupIntent(
-                withParams: [
-                    "payment_method_types": types
-                ]
-            ) { clientSecret, error in
-                guard let clientSecret = clientSecret,
-                    error == nil
-                else {
-                    completion(.failure(error!))
-                    return
-                }
-
-                completion(.success(clientSecret))
-            }
-    }
+    // MARK: - load and confirm tests
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
@@ -245,8 +195,6 @@ class PaymentSheetAPITest: XCTestCase {
                                                             captureMethod: .automatic,
                                                             paymentMethodTypes: types,
                                                             confirmHandler: confirmHandler)
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         PaymentSheet.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration
@@ -259,6 +207,10 @@ class PaymentSheetAPITest: XCTestCase {
                 )
                 XCTAssertEqual(paymentMethods, [])
                 loadExpectation.fulfill()
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                    XCTFail()
+                    return
+                }
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
@@ -311,9 +263,6 @@ class PaymentSheetAPITest: XCTestCase {
                                                             captureMethod: .automatic,
                                                             paymentMethodTypes: types,
                                                             confirmHandlerForServerSideConfirmation: serverSideConfirmHandler)
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-
         PaymentSheet.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration
@@ -326,6 +275,10 @@ class PaymentSheetAPITest: XCTestCase {
                 )
                 XCTAssertEqual(paymentMethods, [])
                 loadExpectation.fulfill()
+                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = intent else {
+                    XCTFail()
+                    return
+                }
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
@@ -421,7 +374,7 @@ class PaymentSheetAPITest: XCTestCase {
             description: "Load SetupIntent with an attached payment method"
         )
         STPTestingAPIClient.shared().createSetupIntent(withParams: [
-            "payment_method": "pm_card_visa"
+            "payment_method": "pm_card_visa",
         ]) { clientSecret, error in
             guard let clientSecret = clientSecret, error == nil else {
                 XCTFail()
@@ -442,6 +395,62 @@ class PaymentSheetAPITest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
+
+    // MARK: - update tests
+
+    func testUpdate() {
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+            // These tests don't confirm, so this is unused
+        }
+        let expectation = expectation(description: "Updates")
+        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+            switch result {
+            case .success(let sut):
+                // ...updating the intent config should succeed...
+                intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
+                sut.update(intentConfiguration: intentConfig) { error in
+                    XCTAssertNil(error)
+                    // TODO(Update:) Change this to validate it preserves the paymentOption
+                    XCTAssertNil(sut.paymentOption)
+                    expectation.fulfill()
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testUpdateFails() {
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+            // These tests don't confirm, so this is unused
+        }
+
+        let expectation = expectation(description: "Updates")
+        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+            switch result {
+            case .success(let sut):
+                // ...updating w/ an invalid intent config should fail...
+                intentConfig.mode = .setup(currency: "Invalid currency", setupFutureUsage: .offSession)
+                sut.update(intentConfiguration: intentConfig) { updateError in
+                    XCTAssertNotNil(updateError)
+                    // ...the paymentOption should be nil...
+                    XCTAssertNil(sut.paymentOption)
+                    let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
+                    window.rootViewController = UIViewController()
+                    window.makeKeyAndVisible()
+                    // TODO(Update:) Assert that `present` w/ the window.rootViewController no-ops
+                    // Note: `confirm` has an assertionFailure if paymentOption is nil, so we don't check it here.
+                    expectation.fulfill()
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    // MARK: - other tests
 
     func testMakeShippingParamsReturnsNilIfPaymentIntentHasDifferentShipping() {
         // Given a PI with shipping...
@@ -547,6 +556,61 @@ class PaymentSheetAPITest: XCTestCase {
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
         XCTAssertEqual((params["payment_method_options"] as! [String: Any]).count, 0)
     }
+
+    // MARK: - helper methods
+
+    func fetchPaymentIntent(
+        types: [String],
+        currency: String = "eur",
+        paymentMethodID: String? = nil,
+        confirm: Bool = false,
+        completion: @escaping (Result<(String), Error>) -> Void
+    ) {
+        var params = [String: Any]()
+        params["amount"] = 1050
+        params["currency"] = currency
+        params["payment_method_types"] = types
+        params["confirm"] = confirm
+        if let paymentMethodID = paymentMethodID {
+            params["payment_method"] = paymentMethodID
+        }
+
+        STPTestingAPIClient
+            .shared()
+            .createPaymentIntent(
+                withParams: params
+            ) { clientSecret, error in
+                guard let clientSecret = clientSecret,
+                    error == nil
+                else {
+                    completion(.failure(error!))
+                    return
+                }
+
+                completion(.success(clientSecret))
+            }
+    }
+
+    func fetchSetupIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void)
+    {
+        STPTestingAPIClient
+            .shared()
+            .createSetupIntent(
+                withParams: [
+                    "payment_method_types": types,
+                ]
+            ) { clientSecret, error in
+                guard let clientSecret = clientSecret,
+                    error == nil
+                else {
+                    completion(.failure(error!))
+                    return
+                }
+
+                completion(.success(clientSecret))
+            }
+    }
+
 }
 
 extension PaymentSheetAPITest: STPAuthenticationContext {
