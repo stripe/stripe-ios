@@ -81,16 +81,8 @@ extension PaymentSheet {
             return viewController.selectedPaymentOption
         }
 
-        /// The status of the last update API call
-        private var latestUpdateStatus: UpdateStatus?
-        /// The ID of the last update API call
-        private var latestUpdateID: UUID?
-
-        enum UpdateStatus {
-            case completed
-            case inProgress
-            case failed
-        }
+        // Stores contextual state releated to the update API
+        private var updateContext = UpdateContext()
 
         // MARK: - Initializer (Internal)
 
@@ -204,7 +196,7 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: (() -> Void)? = nil
         ) {
-            switch latestUpdateStatus {
+            switch updateContext.latestStatus {
             case .inProgress, .failed:
                 assertionFailure("Cannot call presentPaymentOptions when the last update call has not yet finished or failed.")
                 completion?()
@@ -265,7 +257,7 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
 
-            switch latestUpdateStatus {
+            switch updateContext.latestStatus {
             case .inProgress:
                 assertionFailure("`confirmPayment` should only be called when the last update has completed.")
                 let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with an update API call in progress.")
@@ -324,8 +316,8 @@ extension PaymentSheet {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
 
             let updateID = UUID()
-            latestUpdateID = updateID
-            latestUpdateStatus = .inProgress
+            updateContext.latestID = updateID
+            updateContext.latestStatus = .inProgress
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
@@ -338,7 +330,7 @@ extension PaymentSheet {
                 }
 
                 // If this update is not the latest, ignore the result and don't invoke completion block and exit early
-                guard updateID == self.latestUpdateID else {
+                guard updateID == self.updateContext.latestID else {
                     return
                 }
 
@@ -352,10 +344,10 @@ extension PaymentSheet {
                     // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
                     _ = self.paymentOption
 
-                    self.latestUpdateStatus = .completed
+                    self.updateContext.latestStatus = .completed
                     completion(nil)
                 case .failure(let error):
-                    self.latestUpdateStatus = .failed
+                    self.updateContext.latestStatus = .failed
                     completion(error)
                 }
             }
