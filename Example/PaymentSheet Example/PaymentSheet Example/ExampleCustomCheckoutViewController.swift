@@ -14,6 +14,18 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     @IBOutlet weak var paymentMethodButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
+    
+    @IBOutlet weak var hotDogQuantityLabel: UILabel!
+    @IBOutlet weak var saladQuantityLabel: UILabel!
+    @IBOutlet weak var hotDogStepper: UIStepper!
+    @IBOutlet weak var saladStepper: UIStepper!
+    @IBOutlet weak var subtotalLabel: UILabel!
+    @IBOutlet weak var salesTaxLabel: UILabel!
+    @IBOutlet weak var totalLabel: UILabel!
+    
+    private let hotDogPrice = 0.99
+    private let saladPrice = 8.00
+    
     var paymentSheetFlowController: PaymentSheet.FlowController!
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
 
@@ -100,7 +112,15 @@ class ExampleCustomCheckoutViewController: UIViewController {
             }
         }
     }
-
+    
+    @IBAction func hotDogStepperDidChange() {
+        updateLabels()
+    }
+    
+    @IBAction func saladStepperDidChange() {
+        updateLabels()
+    }
+    
     // MARK: - Helper methods
 
     func updateButtons() {
@@ -116,6 +136,11 @@ class ExampleCustomCheckoutViewController: UIViewController {
             paymentMethodImage.image = nil
             buyButton.isEnabled = false
         }
+    }
+    
+    func updateLabels() {
+        hotDogQuantityLabel.text = "\(hotDogStepper.value)"
+        saladQuantityLabel.text = "\(saladStepper.value)"
     }
 
     func displayAlert(_ message: String) {
