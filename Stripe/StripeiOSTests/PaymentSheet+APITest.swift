@@ -460,7 +460,7 @@ class PaymentSheetAPITest: XCTestCase {
             switch result {
             case .success(let sut):
                 flowController = sut
-                // This update should be ingored in favor of the second update
+                // This update should be ignored in favor of the second update
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 flowController.update(intentConfiguration: intentConfig) { _ in
                    XCTFail("This update call should be ignored in favor of the second update call")
