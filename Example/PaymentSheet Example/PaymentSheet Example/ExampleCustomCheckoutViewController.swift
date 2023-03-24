@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import StripePaymentSheet
+@_spi (STP) import StripePaymentSheet
 import UIKit
 
 class ExampleCustomCheckoutViewController: UIViewController {
@@ -22,13 +22,23 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var subtotalLabel: UILabel!
     @IBOutlet weak var salesTaxLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
-    
-    private let hotDogPrice = 0.99
-    private let saladPrice = 8.00
+    @IBOutlet weak var subscribeSwitch: UISwitch!
     
     var paymentSheetFlowController: PaymentSheet.FlowController!
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    let backendCheckoutUrl = URL(string: "https://stp-mobile-ci-test-backend-v7.stripedemos.com/checkout")!  // An example backend endpoint
 
+    private var subtotal: Double {
+        let hotDogPrice = 0.99
+        let saladPrice = 8.00
+        let discountMultiplier = subscribeSwitch.isOn ? 0.95 : 1
+        let subtotal = (saladStepper.value * saladPrice + hotDogStepper.value * hotDogPrice) * discountMultiplier
+        return subtotal
+    }
+    
+    private var intentConfig: PaymentSheet.IntentConfiguration {
+        return .init(mode: .payment(amount: Int(subtotal) * 100, currency: "EUR"), confirmHandler: confirmHandler(_:_:))
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -114,14 +124,23 @@ class ExampleCustomCheckoutViewController: UIViewController {
     }
     
     @IBAction func hotDogStepperDidChange() {
-        updateLabels()
+        updateUI()
     }
     
     @IBAction func saladStepperDidChange() {
-        updateLabels()
+        updateUI()
+    }
+    
+    @IBAction func subscribeSwitchDidChange() {
+        updateUI()
     }
     
     // MARK: - Helper methods
+    
+    private func updateUI() {
+        updateLabels()
+        paymentSheetFlowController.update
+    }
 
     func updateButtons() {
         // MARK: Update the payment method and buy buttons
@@ -139,8 +158,19 @@ class ExampleCustomCheckoutViewController: UIViewController {
     }
     
     func updateLabels() {
-        hotDogQuantityLabel.text = "\(hotDogStepper.value)"
-        saladQuantityLabel.text = "\(saladStepper.value)"
+        hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
+        saladQuantityLabel.text = "\(Int(saladStepper.value))"
+        
+        let hotDogPrice = 0.99
+        let saladPrice = 8.00
+        let discountMultiplier = subscribeSwitch.isOn ? 0.95 : 1
+        let subtotal = (saladStepper.value * saladPrice + hotDogStepper.value * hotDogPrice) * discountMultiplier
+        let tax = subtotal * 0.0825
+        
+        subtotalLabel.text = String(format:"€%.2f", subtotal)
+        salesTaxLabel.text = String(format:"€%.2f", tax)
+        totalLabel.text = String(format:"€%.2f", (subtotal + tax))
+        
     }
 
     func displayAlert(_ message: String) {
@@ -152,5 +182,12 @@ class ExampleCustomCheckoutViewController: UIViewController {
         }
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: Confirm handler
+    // Client-side confirmation handler
+    func confirmHandler(_ paymentMethodID: String,
+                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        
     }
 }
