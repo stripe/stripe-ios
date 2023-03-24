@@ -25,8 +25,13 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var subscribeSwitch: UISwitch!
     
     var paymentSheetFlowController: PaymentSheet.FlowController!
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
-    var clientSecret: String?
+    let baseUrl = "https://deserted-verbena-circle.glitch.me"
+    var backendCheckoutUrl: URL {
+        return URL(string: baseUrl + "/checkout")!
+    }
+    var createIntentUrl: URL {
+        return URL(string: baseUrl + "/create_intent")!
+    }
     
     private var subtotal: Double {
         let hotDogPrice = 0.99
@@ -37,7 +42,11 @@ class ExampleCustomCheckoutViewController: UIViewController {
     }
     
     private var intentConfig: PaymentSheet.IntentConfiguration {
-        return .init(mode: .payment(amount: Int(subtotal) * 100, currency: "EUR"), confirmHandler: confirmHandler(_:_:))
+        if subscribeSwitch.isOn {
+            return .init(mode: .payment(amount: Int(subtotal) * 100, currency: "USD", setupFutureUsage: .offSession), confirmHandler: confirmHandler(_:_:))
+        }
+        
+        return .init(mode: .payment(amount: Int(subtotal) * 100, currency: "USD"), confirmHandler: confirmHandler(_:_:))
     }
     
     override func viewDidLoad() {
@@ -61,7 +70,6 @@ class ExampleCustomCheckoutViewController: UIViewController {
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],
-                    let paymentIntentClientSecret = json["paymentIntent"] as? String,
                     let customerId = json["customer"] as? String,
                     let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
                     let publishableKey = json["publishableKey"] as? String,
@@ -70,8 +78,6 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     // Handle error
                     return
                 }
-                
-                self.clientSecret = paymentIntentClientSecret
                 
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
@@ -211,6 +217,51 @@ class ExampleCustomCheckoutViewController: UIViewController {
     // Client-side confirmation handler
     func confirmHandler(_ paymentMethodID: String,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        intentCreationCallback(.success(self.clientSecret!))
+        // Create an intent on your server and invoke `intentCreationCallback` with the client secret
+        createIntent(paymentMethodID: paymentMethodID) { result in
+            switch result {
+            case .success(let clientSecret):
+                intentCreationCallback(.success(clientSecret))
+            case .failure(let error):
+                intentCreationCallback(.failure(error))
+            }
+        }
+    }
+    
+    // MARK: Helpers
+    
+    func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> ()) {
+        var request = URLRequest(url: createIntentUrl)
+        request.httpMethod = "POST"
+        request.httpBody = createIntentRequestBody(paymentMethodID: paymentMethodID)
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = URLSession.shared.dataTask(
+            with: request,
+            completionHandler: { (data, _, error) in
+                guard
+                    error == nil,
+                    let data = data,
+                    let json = try? JSONDecoder().decode([String: String].self, from: data),
+                    let clientSecret = json["intentClientSecret"]
+                else {
+                    completion(.failure(error!))
+                    return
+                }
+                
+                completion(.success(clientSecret))
+        })
+        
+        task.resume()
+    }
+    
+    func createIntentRequestBody(paymentMethodID: String) -> Data {
+        let body: [String: Any?] = [
+            "payment_method_id": paymentMethodID,
+            "currency": "USD",
+            "amount": subtotal * 100,
+            "setup_future_usage": subscribeSwitch.isOn ? "off_session" : nil
+        ]
+        
+        return try! JSONSerialization.data(withJSONObject: body, options: [])
     }
 }
