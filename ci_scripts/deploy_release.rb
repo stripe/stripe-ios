@@ -15,12 +15,6 @@ def export_builds
   run_command('ci_scripts/export_builds.rb')
 end
 
-def changedoc_approve
-  rputs 'Open the CHANGEDOC ticket for this version: https://go/CHANGEDOC and click the "Approve" button.'
-  rputs '(You may need to assign it to yourself first.)'
-  notify_user
-end
-
 def approve_pr
   rputs 'Open the PR, approve it, and merge it.'
   rputs '(Use "Create merge commit" and not "Squash and merge")'
@@ -137,7 +131,6 @@ end
 
 steps = [
   method(:export_builds),
-  method(:changedoc_approve),
   method(:approve_pr),
   method(:create_docs_pr),
   method(:push_tag),
