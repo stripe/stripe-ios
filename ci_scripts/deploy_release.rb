@@ -92,11 +92,6 @@ def sync_owner_list
   end
 end
 
-def changelog_done
-  rputs "Click 'Done' for the release issue at https://go/changedoc"
-  notify_user
-end
-
 def reply_email
   rputs 'Reply to the mobile-sdk-updates@ email sent by the proposer for this version:'
   rputs 'https://go/mobile-sdk-updates-list'
@@ -139,7 +134,6 @@ steps = [
   method(:push_cocoapods),
   method(:push_spm_mirror),
   method(:sync_owner_list),
-  method(:changelog_done),
   method(:cleanup_project_files),
   method(:create_cleanup_pr)
 ]
