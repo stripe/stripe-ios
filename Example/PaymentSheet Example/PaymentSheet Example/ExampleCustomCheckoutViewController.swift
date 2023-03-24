@@ -25,8 +25,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var subscribeSwitch: UISwitch!
     
     var paymentSheetFlowController: PaymentSheet.FlowController!
-    let backendCheckoutUrl = URL(string: "https://stp-mobile-ci-test-backend-v7.stripedemos.com/checkout")!  // An example backend endpoint
-
+    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    var clientSecret: String?
+    
     private var subtotal: Double {
         let hotDogPrice = 0.99
         let saladPrice = 8.00
@@ -47,7 +48,10 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
         paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
-
+        loadCheckout()
+    }
+    
+    func loadCheckout() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
@@ -66,6 +70,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     // Handle error
                     return
                 }
+                
+                self.clientSecret = paymentIntentClientSecret
+                
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
 
@@ -79,17 +86,19 @@ class ExampleCustomCheckoutViewController: UIViewController {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                 configuration.allowsDelayedPaymentMethods = true
-                PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
-                    configuration: configuration
-                ) { [weak self] result in
-                    switch result {
-                    case .failure(let error):
-                        print(error)
-                    case .success(let paymentSheetFlowController):
-                        self?.paymentSheetFlowController = paymentSheetFlowController
-                        self?.paymentMethodButton.isEnabled = true
-                        self?.updateButtons()
+                DispatchQueue.main.async {
+                    PaymentSheet.FlowController.create(
+                        intentConfig: self.intentConfig,
+                        configuration: configuration
+                    ) { [weak self] result in
+                        switch result {
+                        case .failure(let error):
+                            print(error)
+                        case .success(let paymentSheetFlowController):
+                            self?.paymentSheetFlowController = paymentSheetFlowController
+                            self?.paymentMethodButton.isEnabled = true
+                            self?.updateButtons()
+                        }
                     }
                 }
             })
@@ -138,8 +147,22 @@ class ExampleCustomCheckoutViewController: UIViewController {
     // MARK: - Helper methods
     
     private func updateUI() {
+        // Disable buy and payment method buttons
+        buyButton.isEnabled = false
+        paymentMethodButton.isEnabled = false
+        
         updateLabels()
-        paymentSheetFlowController.update
+        paymentSheetFlowController.update(intentConfiguration: intentConfig) { error  in
+            if error != nil {
+                // Retry
+                self.updateUI()
+              } else {
+                  // Re-enable your "Buy" and "Payment method" buttons
+                  self.buyButton.isEnabled = true
+                  self.paymentMethodButton.isEnabled = true
+                  self.updateButtons()
+              }
+        }
     }
 
     func updateButtons() {
@@ -188,6 +211,6 @@ class ExampleCustomCheckoutViewController: UIViewController {
     // Client-side confirmation handler
     func confirmHandler(_ paymentMethodID: String,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        
+        intentCreationCallback(.success(self.clientSecret!))
     }
 }

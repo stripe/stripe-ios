@@ -285,7 +285,7 @@ extension PaymentSheet {
         /// - Parameter intentConfiguration: An updated IntentConfiguration
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry. TODO(Update): Tell the merchant they need to disable the buy button.
         /// Don’t call this method while PaymentSheet is being presented.
-        func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
+        @_spi(STP) public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
                 mode: .deferredIntent(intentConfiguration),
