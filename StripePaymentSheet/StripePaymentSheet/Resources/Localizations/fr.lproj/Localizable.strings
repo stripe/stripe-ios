@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Acheter à l'aide d'un ID d'UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement via PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En poursuivant sur PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuant, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "En continuant, vous autorisez les paiements, conformément à ces <terms>conditions</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuant, vous autorisez %1$@ à débiter votre compte Cash App pour ce paiement et les paiements futurs, conformément aux conditions de %2$@, jusqu'à la révocation de cette autorisation. Vous pouvez modifier cela à tout moment dans les paramètres de Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En rejoignant Link, vous acceptez les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Fermer le numériseur de carte bancaire";
 
 "Code sent" = "Code envoyé";
+
+"Contact information" = "Coordonnées";
 
 "Default" = "Par défaut";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Rejoindre Link";
 
 "Log out of Link" = "Se déconnecter de Link";
+
+"Name on card" = "Nom du titulaire de la carte";
 
 "Not %@?" = "Vous n'êtes pas %@ ?";
 

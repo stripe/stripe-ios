@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Köp med ett UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med PayPal tillåter du att %@ debiterar ditt PayPal-konto för framtida betalningar i enlighet med deras villkor.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Genom att fortsätta till PayPal tillåter du att %@ debiterar ditt PayPal-konto för framtida betalningar i enlighet med deras villkor.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Genom att fortsätta godkänner du att %1$@ debiterar ditt Cash App-konto för den här betalningen och framtida betalningar i enlighet med %2$@s villkor, tills detta godkännande återkallas. Du kan när som helst ändra detta i dina Cash App-inställningar.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Stäng kortskanner";
 
 "Code sent" = "Koden har skickats";
+
+"Contact information" = "Kontaktinformation";
 
 "Default" = "Standard";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Börja använda Link";
 
 "Log out of Link" = "Logga ut från Link";
+
+"Name on card" = "Namn på kortet";
 
 "Not %@?" = "Inte %@?";
 

@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Nem sikerült felvételt készíteni";
 
-"Date of birth" = "Születési idő";
+"Date of Birth" = "Születési idő";
+
+"Date of birth does not look valid" = "A születési idő megadása kötelező";
 
 "File Upload" = "Fájlfeltöltés";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Útlevél képe";
 
+"Individual CPF" = "Személyes CPF";
+
+"Last 4 of Social Security number" = "A társadalombiztosítási szám utolsó 4 számjegye";
+
 "Loading" = "Betöltés folyamatban";
+
+"NRIC or FIN" = "NRIC vagy FIN";
 
 "Passport" = "Útlevél";
 
 "Passport photo successfully uploaded" = "Útlevélfotó sikeresen feltöltve";
 
 "Personal ID number" = "Személyazonosító szám";
+
+"Personal Information" = "Személyes adatok";
 
 "Photo Library" = "Képek";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Igazítsa személyazonosító igazolványát a kép közepére";
 
 "Position your passport in the center of the frame" = "Igazítsa útlevelét a kép közepére";
+
+"Retake Photos" = "Fényképek megismétlése";
 
 "Scan" = "Beolvasás";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Nem tudtunk jó minőségű képet készíteni.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Engedélyre van szükségünk, hogy hozzáférjünk a kamerához. Engedélyezze a kamerához való hozzáférést az alkalmazásbeállításokban.";
+
+"Welcome" = "Üdvözöljük!";
 
 "You can either try again or upload an image from your device." = "Próbálkozhat újra vagy feltölthet egy képet eszközéről is.";
 

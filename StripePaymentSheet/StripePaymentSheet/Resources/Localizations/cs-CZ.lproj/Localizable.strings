@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Koupit pomocí UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrzením platby prostřednictvím služby PayPal povolujete, aby společnost %@ účtovala z vašeho účtu PayPal budoucí platby v souladu s jejich podmínkami.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pokračováním na PayPal povolujete společnosti %@, aby v souladu se svými podmínkami strhávala z vašeho účtu PayPal budoucí platby.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Pokračováním souhlasíte s autorizací plateb v souladu s těmito <terms>podmínkami</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračováním povolujete, %1$@ aby odepisovala z vašeho účtu Cash App tuto platbu a budoucí platby v souladu s podmínkami společnosti %2$@, dokud toto oprávnění neodvoláte. Toto oprávnění můžete kdykoli změnit v nastavení aplikace Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se ke službám Link vyjadřujete zároveň svůj souhlas s <terms>Podmínkami</terms> a <privacy>Zásadami ochrany osobních údajů</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Zavřít skener karty";
 
 "Code sent" = "Kód odeslán";
+
+"Contact information" = "Kontaktní údaje";
 
 "Default" = "Výchozí";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Připojit se k Link";
 
 "Log out of Link" = "Odhlásit ze služby Link";
+
+"Name on card" = "Jméno na kartě";
 
 "Not %@?" = "Ne %@?";
 

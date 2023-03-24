@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Comprar com uma ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar o seu pagamento com o PayPal, autoriza %@ a cobrar pagamentos futuros à sua conta PayPal de acordo com as respetivas condições.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao continuar para o PayPal, autoriza %@ a cobrar pagamentos futuros à sua conta PayPal de acordo com as respetivas condições.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com estes <terms>termos</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, autoriza %1$@ a debitar a sua conta Cash App para este pagamento e pagamentos futuros de acordo com as condições de %2$@, até que esta autorização seja revogada. Pode alterar isto a qualquer altura nas definições da sua Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao juntar-se ao Link, concorda com as <terms>Condições</terms> e com a <privacy>Política de Privacidade</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Fechar leitor de cartões";
 
 "Code sent" = "Código enviado";
+
+"Contact information" = "Informações de contacto";
 
 "Default" = "Predefinido";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Aderir ao Link";
 
 "Log out of Link" = "Terminar sessão no Link";
+
+"Name on card" = "Nome no cartão";
 
 "Not %@?" = "Não é %@?";
 

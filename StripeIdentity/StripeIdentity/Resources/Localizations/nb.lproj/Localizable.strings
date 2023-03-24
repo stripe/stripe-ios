@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Kunne ikke ta bilde";
 
-"Date of birth" = "Fødselsdato";
+"Date of Birth" = "Fødselsdato";
+
+"Date of birth does not look valid" = "Fødselsdato ser ikke gyldig ut";
 
 "File Upload" = "Filopplasting";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Bilde av pass";
 
+"Individual CPF" = "Individuell CPF";
+
+"Last 4 of Social Security number" = "Siste 4 sifre i personnummer";
+
 "Loading" = "Laster inn";
+
+"NRIC or FIN" = "NRIC eller FIN";
 
 "Passport" = "Pass";
 
 "Passport photo successfully uploaded" = "Passbildet ble lastet opp";
 
 "Personal ID number" = "Personlig ID-nummer";
+
+"Personal Information" = "Personopplysninger";
 
 "Photo Library" = "Bildebibliotek";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Plasser identitetskortet midt i bildet";
 
 "Position your passport in the center of the frame" = "Plasser passet midt i bildet";
+
+"Retake Photos" = "Ta bilder på nytt";
 
 "Scan" = "Skann";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Vi kunne ikke ta et bilde av høy kvalitet.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Vi trenger tillatelse for å bruke kameraet ditt. Gi tilgang til kameraet i appinnstillingene.";
+
+"Welcome" = "Velkommen";
 
 "You can either try again or upload an image from your device." = "Du kan enten prøve på nytt eller laste opp et bilde fra enheten din.";
 

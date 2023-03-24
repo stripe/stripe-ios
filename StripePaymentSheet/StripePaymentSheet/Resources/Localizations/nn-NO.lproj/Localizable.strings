@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Kjøp ved å bruke ein UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Når du stadfestar betalinga di med PayPal, gir du %@ tillating til å trekkje framtidige betalingar frå PayPal-kontoen din i samsvar med vilkåra deira.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å gå vidare til PayPal gir du %@ tillating til å trekkje framtidige betalingar frå PayPal-kontoen din i samsvar med vilkåra deira.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved å gå vidare gir du %1$@ tillating til å debitere Cash App-kontoen din for denne betalinga og framtidige betalingar i samsvar med %2$@ sine vilkår, fram til denne autoriseringa blir trekt tilbake. Du kan endre dette når som helst i Cash App-innstillingane.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link godtek du <terms>Vilkåra</terms> og <privacy>Personvernerklæringa</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Lukk kortskannar";
 
 "Code sent" = "Kode send";
+
+"Contact information" = "Kontaktopplysningar";
 
 "Default" = "Standard";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Kople på lenka";
 
 "Log out of Link" = "Logg ut av Link";
+
+"Name on card" = "Namn på kort";
 
 "Not %@?" = "Ikkje %@?";
 
