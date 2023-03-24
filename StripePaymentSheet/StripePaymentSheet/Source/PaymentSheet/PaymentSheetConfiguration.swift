@@ -137,7 +137,7 @@ extension PaymentSheet {
 
         /// PaymentSheet pre-populates fields with the values provided.
         /// If `billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod` is `true`, these values will
-        /// be attached to the payment method if they are not collected.
+        /// be attached to the payment method even if they are not collected by the PaymentSheet UI.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
