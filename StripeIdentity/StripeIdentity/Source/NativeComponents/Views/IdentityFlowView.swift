@@ -115,7 +115,7 @@ class IdentityFlowView: UIView {
     private var contentViewModel: ContentViewModel?
     private var buttons: [Button] = []
     private var buttonTapActions: [() -> Void] = []
-    private var initialScrollViewBottomInsect: CGFloat?
+    private var initialScrollViewBottomInsect: CGFloat = 0
 
     // MARK: - Init
 
@@ -154,7 +154,7 @@ class IdentityFlowView: UIView {
 
         // Adjust bottom inset to make space for keyboard
         let bottomInset =
-            isKeyboardHidden ? initialScrollViewBottomInsect! : (endFrame.height - frame.height + scrollView.frame.maxY)
+            isKeyboardHidden ? initialScrollViewBottomInsect : (endFrame.height - frame.height + scrollView.frame.maxY)
         scrollView.contentInset.bottom = bottomInset
         scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.horizontalScrollIndicatorInsets.bottom = bottomInset
