@@ -83,10 +83,12 @@ extension PaymentSheet {
 
         /// The status of the last update API call
         private var latestUpdateStatus: UpdateStatus?
+        /// The ID of the last update API call
+        private var latestUpdateID: UUID?
 
         enum UpdateStatus {
             case completed
-            case inProgress(UUID)
+            case inProgress
             case failed
         }
 
@@ -322,7 +324,8 @@ extension PaymentSheet {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
 
             let updateID = UUID()
-            latestUpdateStatus = .inProgress(updateID)
+            latestUpdateID = updateID
+            latestUpdateStatus = .inProgress
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
@@ -334,8 +337,8 @@ extension PaymentSheet {
                     return
                 }
 
-                // If we have an update in progress and this update call's ID does not match the latest update ID call, ignore this update
-                if case let .inProgress(latestUpdateID) = self.latestUpdateStatus, updateID != latestUpdateID {
+                // If this update is not the latest, ignore the result and don't invoke completion block and exit early
+                guard updateID == self.latestUpdateID else {
                     return
                 }
 
