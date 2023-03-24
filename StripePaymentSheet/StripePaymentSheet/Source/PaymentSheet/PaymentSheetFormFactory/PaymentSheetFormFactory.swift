@@ -104,7 +104,12 @@ class PaymentSheetFormFactory {
         self.addressSpecProvider = addressSpecProvider
         self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
         self.linkAccount = linkAccount
-        self.previousCustomerInput = previousCustomerInput
+        // Restore the previous customer input if its the same type
+        if previousCustomerInput?.paymentMethodType == paymentMethod {
+            self.previousCustomerInput = previousCustomerInput
+        } else {
+            self.previousCustomerInput = nil
+        }
     }
 
     func make() -> PaymentMethodElement {
@@ -239,7 +244,7 @@ extension PaymentSheetFormFactory {
         label: String = String.Localized.save_for_future_payments,
         didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
-        let isSelectedByDefault = {
+        let isSelectedByDefault: Bool = {
             if let previousCustomerInput = previousCustomerInput {
                 return previousCustomerInput.shouldSavePaymentMethod
             } else {

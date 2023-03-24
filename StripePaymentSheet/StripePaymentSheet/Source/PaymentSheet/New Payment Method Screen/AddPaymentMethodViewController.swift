@@ -117,7 +117,10 @@ class AddPaymentMethodViewController: UIViewController {
         {
             return usBankAccountFormElement
         }
-        return makeElement(for: selectedPaymentMethodType)
+        let element = makeElement(for: selectedPaymentMethodType)
+        // Only use the previous customer input in the very first load, to avoid overwriting customer input
+        previousCustomerInput = nil
+        return element
     }()
 
     // MARK: - Views
