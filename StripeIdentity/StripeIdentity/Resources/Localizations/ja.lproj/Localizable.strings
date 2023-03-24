@@ -22,7 +22,9 @@
 
 "Could not capture image" = "画像をキャプチャーできませんでした";
 
-"Date of birth" = "生年月日";
+"Date of Birth" = "生年月日";
+
+"Date of birth does not look valid" = "生年月日が無効のようです";
 
 "File Upload" = "ファイルをアップロード";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "パスポートの画像";
 
+"Individual CPF" = "個人 CPF";
+
+"Last 4 of Social Security number" = "社会保障番号の末尾 4 桁";
+
 "Loading" = "読み込み中";
+
+"NRIC or FIN" = "NRIC または FIN";
 
 "Passport" = "パスポート";
 
 "Passport photo successfully uploaded" = "パスポートの写真のアップロードが完了しました";
 
 "Personal ID number" = "身分証明書番号";
+
+"Personal Information" = "個人情報";
 
 "Photo Library" = "フォトライブラリー";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "身分証明書をフレームの中央に置いてください";
 
 "Position your passport in the center of the frame" = "パスポートをフレームの中央に置いてください";
+
+"Retake Photos" = "写真を撮り直す";
 
 "Scan" = "スキャン";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "高画質の画像をキャプチャーできませんでした。";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "カメラへのアクセス許可が必要です。アプリの設定でカメラへのアクセスを許可してください。";
+
+"Welcome" = "初期画面";
 
 "You can either try again or upload an image from your device." = "もう一度お試しいただくか、デバイスから画像をアプロードしてください。";
 

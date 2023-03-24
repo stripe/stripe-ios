@@ -10,7 +10,7 @@
 
 "Add your payment information" = "Ajoutez vos informations de paiement";
 
-"Approve payment" = "Approuver le paiement";
+"Approve payment" = "Autoriser le paiement";
 
 "Are you sure you want to remove this card?" = "Voulez-vous vraiment retirer cette carte?";
 
@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Acheter à l'aide d'un ID d'UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement avec PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En continuant sur PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuant, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "En continuant, vous autorisez les paiements conformément à ces <terms>conditions</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuant, vous autorisez %1$@ à débiter votre compte Cash App pour ce paiement et les prochains paiements, conformément aux conditions de %2$@, jusqu'à la révocation de cette autorisation. Vous pouvez modifier ceci à tout moment dans les paramètres de Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En rejoignant Link, vous acceptez les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Fermer le scanneur de carte";
 
 "Code sent" = "Code envoyé";
+
+"Contact information" = "Coordonnées";
 
 "Default" = "Par défaut";
 
@@ -62,9 +70,11 @@
 
 "Log out of Link" = "Déconnexion de Link with Stripe";
 
+"Name on card" = "Nom du titulaire de la carte";
+
 "Not %@?" = "Vous n'êtes pas %@?";
 
-"Open your UPI app to approve your payment within %@" = "Lancez votre application UPI pour autoriser votre paiement dans %@";
+"Open your UPI app to approve your payment within %@" = "Ouvrez votre application d'UPI pour autoriser votre paiement dans %@";
 
 "Or" = "Ou";
 
@@ -92,11 +102,11 @@
 
 "Payment" = "Paiement";
 
-"Payment failed" = "Échec du paiement";
+"Payment failed" = "Le paiement a échoué";
 
 "Payment methods" = "Moyens de paiement";
 
-"Please go back and select another payment method" = "Veuillez sélectionner un autre moyen de paiement en revenant à l'étape précédente";
+"Please go back and select another payment method" = "Veuillez revenir à l'étape précédente afin de sélectionner un autre moyen de paiement";
 
 "Point the camera at your card." = "Pointez le capteur de l'appareil photo sur votre carte.";
 

@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Купуване с помощта на UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Продължавайки към PayPal, разрешавате на %@ да таксува Вашия акаунт в PayPal при бъдещи плащания съгласно условията му.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно тези <terms>условия</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продължавайки, Вие упълномощавате %1$@ да дебитира Вашата сметка в Cash App за това плащане и за бъдещи плащания в съответствие с условията на %2$@, докато това упълномощаване не бъде оттеглено. Можете да промените това по всяко време в настройките на Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Затваряне на скенера за карти";
 
 "Code sent" = "Изпратен е код";
+
+"Contact information" = "Информация за контакт";
 
 "Default" = "По подразбиране";
 
@@ -62,9 +70,11 @@
 
 "Log out of Link" = "Излизане от Link";
 
+"Name on card" = "Име върху картата";
+
 "Not %@?" = "Не сте %@?";
 
-"Open your UPI app to approve your payment within %@" = "Отворете Вашето UPI приложението, за да одобрите плащане си в рамките  на %@";
+"Open your UPI app to approve your payment within %@" = "Отворете Вашето UPI приложение, за да одобрите плащане си в рамките на %@";
 
 "Or" = "Или";
 

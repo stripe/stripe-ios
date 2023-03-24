@@ -30,6 +30,8 @@
 
 "County" = "Comtat";
 
+"Date is empty." = "La data és buida.";
+
 "Department" = "Departament";
 
 "District" = "Districte";
@@ -56,7 +58,7 @@
 
 "Incomplete phone number" = "Número de telèfon incomplet";
 
-"Invalid UPI ID" = "ID UPI no vàlida";
+"Invalid UPI ID" = "ID d'UPI no vàlid";
 
 "Island" = "Illa";
 
@@ -104,7 +106,7 @@
 
 "Town or city" = "Municipi o ciutat";
 
-"UPI ID" = "ID UPI";
+"UPI ID" = "ID d'UPI";
 
 "Unable to parse phone number" = "No s'ha pogut analitzar el número de telèfon";
 

@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Kopen met een UPI-ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je je betaling met PayPal bevestigt, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je PayPal-account in overeenstemming met hun voorwaarden.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je doorgaat naar PayPal, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je PayPal-account in overeenstemming met hun voorwaarden.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Als je doorgaat, stem je in dat betalingen worden geautoriseerd in overeenstemming met deze <terms>voorwaarden</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Als je doorgaat, geef je %1$@ toestemming om deze betaling en toekomstige betalingen in rekening te brengen op je Cash App-account, in overeenstemming met de voorwaarden van %2$@, totdat je deze toestemming intrekt. Je kunt dit op elk moment wijzigen via je Cash App-instellingen.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Kaartscanner afsluiten";
 
 "Code sent" = "Code verstuurd";
+
+"Contact information" = "Contactgegevens";
 
 "Default" = "Standaard";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Aanmelden bij Link";
 
 "Log out of Link" = "Afmelden bij Link";
+
+"Name on card" = "Naam op betaalkaart";
 
 "Not %@?" = "Niet %@?";
 

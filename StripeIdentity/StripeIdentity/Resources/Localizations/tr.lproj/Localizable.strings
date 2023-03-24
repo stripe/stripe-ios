@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Fotoğraf alınamadı";
 
-"Date of birth" = "Doğum tarihi";
+"Date of Birth" = "Doğum Tarihi";
+
+"Date of birth does not look valid" = "Doğum tarihi geçerli görünmüyor";
 
 "File Upload" = "Dosya Yükle";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Pasaport fotoğrafı";
 
+"Individual CPF" = "Bireysel CPF";
+
+"Last 4 of Social Security number" = "Sosyal Güvenlik numarasının son 4 hanesi";
+
 "Loading" = "Yükleniyor";
+
+"NRIC or FIN" = "NRIC veya FIN";
 
 "Passport" = "Pasaport";
 
 "Passport photo successfully uploaded" = "Pasaport fotoğrafı başarıyla yüklendi";
 
 "Personal ID number" = "Kişisel kimlik numarası";
+
+"Personal Information" = "Kişisel Bilgiler";
 
 "Photo Library" = "Fotoğraf Kitaplığı";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Kimliğinizi çerçevenin ortasına yerleştirin";
 
 "Position your passport in the center of the frame" = "Pasaportunuzu çerçevenin ortasına yerleştirin";
+
+"Retake Photos" = "Fotoğrafları Tekrar Çek";
 
 "Scan" = "Tara";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Yüksek kaliteli bir fotoğraf yakalayamadık.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Kameranızı kullanmamız için izniniz gerekiyor. Lütfen uygulama ayarlarından kamera erişimine izin verin.";
+
+"Welcome" = "Hoş Geldiniz";
 
 "You can either try again or upload an image from your device." = "Tekrar deneyebilir veya cihazınızdan bir fotoğraf yükleyebilirsiniz.";
 

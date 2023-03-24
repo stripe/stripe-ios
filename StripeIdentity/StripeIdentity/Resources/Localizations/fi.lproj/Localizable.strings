@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Kuvaa ei voitu ottaa";
 
-"Date of birth" = "Syntymäaika";
+"Date of Birth" = "Syntymäaika";
+
+"Date of birth does not look valid" = "Syntymäaika ei näytä kelvolliselta";
 
 "File Upload" = "Tiedoston lataus";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Passin kuva";
 
+"Individual CPF" = "Yksityishenkilön CPF";
+
+"Last 4 of Social Security number" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
+
 "Loading" = "Ladataan";
+
+"NRIC or FIN" = "NRIC tai FIN";
 
 "Passport" = "Passi";
 
 "Passport photo successfully uploaded" = "Passikuva ladattu onnistuneesti";
 
 "Personal ID number" = "Henkilötunnus";
+
+"Personal Information" = "Henkilötiedot";
 
 "Photo Library" = "Kuvakirjasto";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Aseta henkilökortti kehyksen keskelle";
 
 "Position your passport in the center of the frame" = "Aseta passi kehyksen keskelle";
+
+"Retake Photos" = "Ota kuvat uudelleen";
 
 "Scan" = "Skannaa";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Emme kyenneet ottamaan korkealaatuista kuvaa.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Tarvitsemme kameran käyttöoikeuden. Salli käyttöoikeus sovelluksen asetuksissa.";
+
+"Welcome" = "Tervetuloa";
 
 "You can either try again or upload an image from your device." = "Voit joko yrittää uudelleen tai ladata kuvan laitteestasi.";
 
