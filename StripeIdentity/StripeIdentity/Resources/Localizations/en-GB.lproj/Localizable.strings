@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Could not capture image";
 
-"Date of birth" = "Date of birth";
+"Date of Birth" = "Date of Birth";
+
+"Date of birth does not look valid" = "Date of birth does not look valid";
 
 "File Upload" = "File Upload";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Image of passport";
 
+"Individual CPF" = "Individual CPF";
+
+"Last 4 of Social Security number" = "Last 4 of Social Security number";
+
 "Loading" = "Loading";
+
+"NRIC or FIN" = "NRIC or FIN";
 
 "Passport" = "Passport";
 
 "Passport photo successfully uploaded" = "Passport photo successfully uploaded";
 
 "Personal ID number" = "Personal ID number";
+
+"Personal Information" = "Personal Information";
 
 "Photo Library" = "Photo Library";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Position your identity card in the centre of the frame";
 
 "Position your passport in the center of the frame" = "Position your passport in the centre of the frame";
+
+"Retake Photos" = "Retake Photos";
 
 "Scan" = "Scan";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "We could not capture a high-quality image.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
+
+"Welcome" = "Welcome";
 
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
 

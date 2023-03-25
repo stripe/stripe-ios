@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Pilti ei saanud teha";
 
-"Date of birth" = "Sünnikuupäev";
+"Date of Birth" = "Sünnikuupäev";
+
+"Date of birth does not look valid" = "Sünnikuupäev ei näi olevat õige";
 
 "File Upload" = "Faili üleslaadimine";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Passi pilt";
 
+"Individual CPF" = "Eraisiku CPF";
+
+"Last 4 of Social Security number" = "Sotsiaalkindlustuse numbri viimased 4 numbrit";
+
 "Loading" = "Laadimine";
+
+"NRIC or FIN" = "NRIC või FIN";
 
 "Passport" = "Pass";
 
 "Passport photo successfully uploaded" = "Passi foto üleslaadimine õnnestus";
 
 "Personal ID number" = "Isikukood";
+
+"Personal Information" = "Isikuteave";
 
 "Photo Library" = "Fototeek";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Jälgige, et ID-kaart oleks raami keskel";
 
 "Position your passport in the center of the frame" = "Jälgige, et pass oleks raami keskel";
+
+"Retake Photos" = "Tee fotod uuesti";
 
 "Scan" = "Skannimine";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Meil ei õnnestunud teha kõrge kvaliteediga pilti.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Vajame teie kaamera kasutamiseks luba. Andke rakenduse sätete kaudu juurdepääs kaamerale.";
+
+"Welcome" = "Tere tulemast";
 
 "You can either try again or upload an image from your device." = "Võite kas uuesti proovida või pildi oma seadmest üles laadida.";
 

@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Kupi koristeći UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrđivanjem vašeg plaćanja putem usluge PayPal, dopuštate poduzeću %@ da tereti vaš račun PayPal za buduća plaćanja u skladu s njegovim uvjetima.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Nastavljanjem na PayPal, dopuštate poduzeću %@ da tereti vaš PayPal račun za buduća plaćanja u skladu s njihovim uvjetima.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s ovim <terms>uvjetima</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ako nastavite, autorizirate %1$@ da tereti vaš račun Cash App za ovo plaćanje i buduća plaćanja u skladu s uvjetima poduzeća %2$@, dok se ova autorizacija ne opozove. Ovo možete promijeniti bilo kada u postavkama aplikacije Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Zatvori skener kartice";
 
 "Code sent" = "Kod je poslan";
+
+"Contact information" = "Podaci za kontakt";
 
 "Default" = "Zadano";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Pridružite se na Link";
 
 "Log out of Link" = "Odjavite se s Linka";
+
+"Name on card" = "Ime na kartici";
 
 "Not %@?" = "Niste %@?";
 

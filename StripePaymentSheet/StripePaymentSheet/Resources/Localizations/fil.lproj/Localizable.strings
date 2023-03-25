@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Bumili gamit ang isang UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagkumpirma sa iyong pagbabayad sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagpapatuloy sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntunin</terms> na ito.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Sa pagpapatuloy, binibigyan mo ng awtorisasyon ang %1$@ na i-debit ang iyong Cash App account para sa pagbabayad na ito at sa mga pagbabayad sa hinaharap alinsunod sa mga tuntunin ng  %2$@, hanggang bawiin mo ang awtorisasyong ito. Maaari mong palitan ito sa anumang oras sa iyong Cash App Settings.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Isara ang scanner ng kard";
 
 "Code sent" = "Naipadala na ang code";
+
+"Contact information" = "Impormasyon sa pakikipag-ugnayan";
 
 "Default" = "Default";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Sumali sa Link";
 
 "Log out of Link" = "Mag-log out sa Link";
+
+"Name on card" = "Pangalan sa kard";
 
 "Not %@?" = "Hindi %@?";
 

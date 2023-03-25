@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "UPI ID を使って購入";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal を継続すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "続行すると、これらの<terms>規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "カードスキャナを閉じる";
 
 "Code sent" = "コードが送信されました";
+
+"Contact information" = "連絡先情報";
 
 "Default" = "デフォルト";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Link に申し込む";
 
 "Log out of Link" = "Link からログアウト";
+
+"Name on card" = "カード名義人";
 
 "Not %@?" = "%@ ではありませんか？";
 

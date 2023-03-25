@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Niet gelukt om afbeelding vast te leggen";
 
-"Date of birth" = "Geboortedatum";
+"Date of Birth" = "Geboortedatum";
+
+"Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
 
 "File Upload" = "Bestand uploaden";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Afbeelding van paspoort";
 
+"Individual CPF" = "CPF natuurlijk persoon";
+
+"Last 4 of Social Security number" = "Laatste vier cijfers van socialezekerheidsnummer";
+
 "Loading" = "Bezig met laden";
+
+"NRIC or FIN" = "NRIC of FIN";
 
 "Passport" = "Paspoort";
 
 "Passport photo successfully uploaded" = "Foto van paspoort is geüpload";
 
 "Personal ID number" = "Persoonlijk identificatienummer";
+
+"Personal Information" = "Persoonlijke gegevens";
 
 "Photo Library" = "Fotobibliotheek";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Plaats je identiteitskaart midden in het frame";
 
 "Position your passport in the center of the frame" = "Plaats je paspoort midden in het frame";
+
+"Retake Photos" = "Nieuwe foto's maken";
 
 "Scan" = "Scannen";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "We kunnen geen afbeelding in hoge kwaliteit vastleggen.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "We hebben toestemming nodig om je camera te gebruiken. Sta dit toe via de app-instellingen.";
+
+"Welcome" = "Welkom";
 
 "You can either try again or upload an image from your device." = "Probeer het nogmaals of upload een afbeelding van je apparaat.";
 

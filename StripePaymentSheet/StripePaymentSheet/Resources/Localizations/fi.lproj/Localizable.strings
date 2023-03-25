@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Osta käyttämällä UPI-tunnusta";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Vahvistamalla maksusi PayPalin kanssa valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Jatkamalla PayPaliin valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Jatkamalla hyväksyt maksut näiden <terms>ehtojen</terms> mukaisesti.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jatkamalla valtuutat kauppiaan %1$@ veloittamaan Cash App -tiliäsi tälle ja tuleville maksuille kauppiaan %2$@ ehtojen mukaisesti, kunnes tämä todennus peruutetaan. Voit muuttaa tätä milloin tahansa Cash App -asetuksista.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Liittymällä Linkiin hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Sulje korttiskanneri";
 
 "Code sent" = "Koodi lähetetty";
+
+"Contact information" = "Yhteystiedot";
 
 "Default" = "Oletus";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Liity Link-palveluun";
 
 "Log out of Link" = "Kirjaudu ulos Link-palvelusta";
+
+"Name on card" = "Kortissa oleva nimi";
 
 "Not %@?" = "Ei %@?";
 

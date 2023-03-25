@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Ixtri billi tuża ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tikkonferma l-pagament b'PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tkompli għal PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Meta tkompli, inti taqbel li tawtorizza l-pagamenti skont dawn <terms>it-termini</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mat-<terms>Termini</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Agħlaq l-iskenner tal-kard";
 
 "Code sent" = "Il-kodiċi ntbagħat";
+
+"Contact information" = "Id-dettalji tal-kuntatt";
 
 "Default" = "Standard";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Ingħaqad ma' Link";
 
 "Log out of Link" = "Oħroġ minn Link";
+
+"Name on card" = "L-isem fuq il-karta";
 
 "Not %@?" = "M'intix %@?";
 
@@ -96,7 +106,7 @@
 
 "Payment methods" = "Metodi tal-pagament";
 
-"Please go back and select another payment method" = "Jekk jogħġbok mur lura u agħżel metodu tal-pagament differenti";
+"Please go back and select another payment method" = "Jekk jogħġbok mur lura u agħżel metodu tal-pagament ieħor";
 
 "Point the camera at your card." = "Dawwar il-kamera lejn il-kard tiegħek.";
 

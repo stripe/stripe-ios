@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Não foi possível capturar a imagem";
 
-"Date of birth" = "Data de nascimento";
+"Date of Birth" = "Data de nascimento";
+
+"Date of birth does not look valid" = "A data de nascimento não é válida";
 
 "File Upload" = "Carregamento de arquivo";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Imagem do passaporte";
 
+"Individual CPF" = "CPF";
+
+"Last 4 of Social Security number" = "Últimos 4 dígitos do Social Security Number";
+
 "Loading" = "Carregando";
+
+"NRIC or FIN" = "NRIC ou FIN";
 
 "Passport" = "Passaporte";
 
 "Passport photo successfully uploaded" = "Foto do passaporte carregada";
 
 "Personal ID number" = "Número de identificação pessoal";
+
+"Personal Information" = "Dados pessoais";
 
 "Photo Library" = "Fotos";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Posicione a carteira de identidade no centro do quadro";
 
 "Position your passport in the center of the frame" = "Posicione o passaporte no centro do quadro";
+
+"Retake Photos" = "Tirar fotos novamente";
 
 "Scan" = "Digitalizar";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Não foi possível capturar uma imagem com qualidade.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Autorize o acesso à câmera nas configurações do aplicativo.";
+
+"Welcome" = "Olá";
 
 "You can either try again or upload an image from your device." = "Você pode tentar novamente ou carregar uma imagem do dispositivo.";
 

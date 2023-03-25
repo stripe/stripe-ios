@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Comprar usando um ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos pela empresa.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao continuar para o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos com a empresa.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, você aceita autorizar pagamentos de acordo com <terms>estes termos</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ao continuar, você concorda em autorizar pagamentos conforme estes <terms>termos</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, você autoriza %1$@ a debitar sua conta do Cash App para este pagamento e futuros pagamentos, em conformidade com os temos da empresa %2$@, até que a autorização seja revogada. É possível alterar isso a qualquer momento nas Configurações do Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao entrar no Link, você concorda com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Fechar máquina de cartão";
 
 "Code sent" = "Código enviado";
+
+"Contact information" = "Dados de contato";
 
 "Default" = "Padrão";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Cadastre-se no Link";
 
 "Log out of Link" = "Sair do Link";
+
+"Name on card" = "Nome no cartão";
 
 "Not %@?" = "Não é %@?";
 
