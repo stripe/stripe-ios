@@ -536,7 +536,7 @@ class PaymentSheetAPITest: XCTestCase {
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
-                self.flowController = sut
+                flowController = sut
                 createFlowControllerExpectation.fulfill()
             case .failure(let error):
                 XCTFail(error.localizedDescription)
