@@ -526,11 +526,11 @@ class PaymentSheetAPITest: XCTestCase {
         self.wait(for: [secondUpdateExpectation], timeout: 10)
     }
     
-    var flowController: PaymentSheet.FlowController!
-    func testUpdateAfterFailedUpdate() {
+    func testUpdateFollowingFailedUpdate() {
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
             // These tests don't confirm, so this is unused
         }
+        var flowController: PaymentSheet.FlowController!
         let createFlowControllerExpectation = expectation(description: "Create flow controller expectation")
 
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
