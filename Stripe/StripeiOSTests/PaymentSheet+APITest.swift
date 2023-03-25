@@ -434,36 +434,28 @@ class PaymentSheetAPITest: XCTestCase {
             // These tests don't confirm, so this is unused
         }
 
-        let createFlowControllerExpectation = expectation(description: "Create flow controller expectation")
-        var flowController: PaymentSheet.FlowController!
-
+        let expectation = expectation(description: "Updates")
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
-                flowController = sut
-                createFlowControllerExpectation.fulfill()
+                // ...updating w/ an invalid intent config should fail...
+                intentConfig.mode = .setup(currency: "Invalid currency", setupFutureUsage: .offSession)
+                sut.update(intentConfiguration: intentConfig) { updateError in
+                    XCTAssertNotNil(updateError)
+                    // ...the paymentOption should be nil...
+                    XCTAssertNil(sut.paymentOption)
+                    let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
+                    window.rootViewController = UIViewController()
+                    window.makeKeyAndVisible()
+                    // TODO(Update:) Assert that `present` w/ the window.rootViewController no-ops
+                    // Note: `confirm` has an assertionFailure if paymentOption is nil, so we don't check it here.
+                    expectation.fulfill()
+                }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }
         }
-
-        wait(for: [createFlowControllerExpectation], timeout: 10)
-
-        let updateExpectation = expectation(description: "Update")
-        // ...updating w/ an invalid intent config should fail...
-        intentConfig.mode = .setup(currency: "Invalid currency", setupFutureUsage: .offSession)
-        flowController.update(intentConfiguration: intentConfig) { updateError in
-            XCTAssertNotNil(updateError)
-            // ...the paymentOption should be nil...
-            XCTAssertNil(flowController.paymentOption)
-            let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
-            window.rootViewController = UIViewController()
-            window.makeKeyAndVisible()
-            // Note: `confirm` has an assertionFailure if paymentOption is nil, so we don't check it here.
-            updateExpectation.fulfill()
-        }
-
-        wait(for: [updateExpectation], timeout: 10)
+        waitForExpectations(timeout: 10)
     }
 
     /// Tests that when update is called while another update operation is in progress we ignore the in-flight update
