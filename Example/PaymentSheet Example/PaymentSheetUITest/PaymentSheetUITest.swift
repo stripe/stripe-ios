@@ -74,6 +74,35 @@ class PaymentSheetUITest: XCTestCase {
     func testPaymentSheetCustom() throws {
         app.staticTexts["PaymentSheet (Custom)"].tap()
 
+        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
+
+        let paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        paymentMethodButton.tap()
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try! fillCardData(app)
+        app.buttons["Continue"].tap()
+
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
+        buyButton.tap()
+
+        let successText = app.alerts.staticTexts["Your order is confirmed!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
+        okButton.tap()
+    }
+
+    func testPaymentSheetCustomDeferred() throws {
+        app.staticTexts["PaymentSheet (Custom, Deferred)"].tap()
+
         // Update product quantities and enable subscription
         let subscribeSwitch = app.switches["subscribe_switch"]
 

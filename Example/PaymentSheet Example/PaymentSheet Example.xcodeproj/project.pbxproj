@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,6 +22,7 @@
 		540F279CE5B41C122AD1DEF6 /* PaymentSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */; };
 		551DB033DB4C8257ABAADA8F /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; };
 		5AF35F9FA7106ACD4E4F360F /* PaymentSheetBillingCollectionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083DF3A89B26704DA21858DB /* PaymentSheetBillingCollectionUITests.swift */; };
+		615739F129D218C700111D23 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615739F029D218C700111D23 /* ExampleCustomDeferredCheckoutViewController.swift */; };
 		65D034E37B345C1B64785451 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		75D1997DA514F6DB82FF1CFC /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7CD54A47BC36A065ADA952BF /* StripeCoreTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -158,6 +159,7 @@
 		5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetUITest.swift; sourceTree = "<group>"; };
 		5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearancePlaygroundView.swift; sourceTree = "<group>"; };
 		5E4DD63AD5E9B8153E04EF7C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		615739F029D218C700111D23 /* ExampleCustomDeferredCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCustomDeferredCheckoutViewController.swift; sourceTree = "<group>"; };
 		63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6891CC1208EA3F4DE934760E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Release.xcconfig"; sourceTree = "<group>"; };
@@ -180,7 +182,7 @@
 		8F10C2342DB4C0F20CEFE054 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		92136ABC8F4154790E9757D9 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Main.strings; sourceTree = "<group>"; };
 		923D9CE10871FEA23359122F /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		9496755DA1916325D38ECB2F /* MockFiles */ = {isa = PBXFileReference; path = MockFiles; sourceTree = "<group>"; };
+		9496755DA1916325D38ECB2F /* MockFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MockFiles; sourceTree = "<group>"; };
 		971B2DDB4EB6E0D2B47B41B0 /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Main.strings"; sourceTree = "<group>"; };
 		986B03576192BCEE27ECA6FC /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		9B26EE02630FA57C9321F8C9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 				8738B92B2B3B97A7A53E6FE9 /* EndpointSelectorViewController.swift */,
 				899A5E37ECAEFAD0178E0A4E /* ExampleCheckoutViewController.swift */,
 				ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */,
+				615739F029D218C700111D23 /* ExampleCustomDeferredCheckoutViewController.swift */,
 				447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */,
 				B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */,
 				D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */,
@@ -593,6 +596,7 @@
 				84CFB1ACA4915EE5B2E25341 /* EndpointSelectorViewController.swift in Sources */,
 				EB3C76C2A5704F94F0414BEF /* ExampleCheckoutViewController.swift in Sources */,
 				D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */,
+				615739F129D218C700111D23 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */,
 				A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
 				432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */,
 				A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */,
