@@ -73,7 +73,6 @@ class PaymentSheetUITest: XCTestCase {
 
     func testPaymentSheetCustom() throws {
         app.staticTexts["PaymentSheet (Custom)"].tap()
-
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
 
         let paymentMethodButtonEnabledExpectation = expectation(
