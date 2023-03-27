@@ -27,7 +27,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var subscribeSwitch: UISwitch!
 
     private var paymentSheetFlowController: PaymentSheet.FlowController!
-    private let baseUrl = "https://stripe-mobile-payment-sheet-custom.glitch.me"
+    private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
     private var backendCheckoutUrl: URL {
         return URL(string: baseUrl + "/checkout")!
     }
