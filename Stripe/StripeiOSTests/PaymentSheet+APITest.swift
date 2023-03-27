@@ -404,29 +404,34 @@ class PaymentSheetAPITest: XCTestCase {
         }
         let firstUpdateExpectation = expectation(description: "First update completes")
         let secondUpdateExpectation = expectation(description: "Second update completes")
-
+        // Given a PaymentSheet.FlowController instance...
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
-                // ...updating the intent config should succeed...
+                // ...the vc's intent should match the initial intent config...
+                XCTAssertFalse(sut.viewController.intent.isSettingUp)
+                XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+                // ...and updating the intent config should succeed...
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
-                    // TODO(Update:) Change this to validate it preserves the paymentOption
                     XCTAssertNil(sut.paymentOption)
+                    XCTAssertTrue(sut.viewController.intent.isSettingUp)
+                    XCTAssertFalse(sut.viewController.intent.isPaymentIntent)
                     firstUpdateExpectation.fulfill()
 
                     // ...updating the intent config multiple times should succeed...
-                    intentConfig.mode = .setup(currency: "USD", setupFutureUsage: .offSession)
+                    intentConfig.mode = .payment(amount: 100, currency: "USD", setupFutureUsage: nil)
                     sut.update(intentConfiguration: intentConfig) { error in
                         XCTAssertNil(error)
-                        // TODO(Update:) Change this to validate it preserves the paymentOption
                         XCTAssertNil(sut.paymentOption)
+                        XCTAssertFalse(sut.viewController.intent.isSettingUp)
+                        XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
                         secondUpdateExpectation.fulfill()
                     }
                 }
             case .failure(let error):
-                XCTFail(error.localizedDescription)
+                XCTFail(error.nonGenericDescription)
             }
         }
         waitForExpectations(timeout: 10)

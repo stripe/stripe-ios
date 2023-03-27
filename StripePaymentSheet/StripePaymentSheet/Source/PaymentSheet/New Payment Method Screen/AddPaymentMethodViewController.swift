@@ -99,7 +99,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
-
+    var previousCustomerInput: IntentConfirmParams?
     private lazy var usBankAccountFormElement: USBankAccountPaymentMethodElement? = {
         // We are keeping usBankAccountInfo in memory to preserve state
         // if the user switches payment method types
@@ -117,7 +117,10 @@ class AddPaymentMethodViewController: UIViewController {
         {
             return usBankAccountFormElement
         }
-        return makeElement(for: selectedPaymentMethodType)
+        let element = makeElement(for: selectedPaymentMethodType)
+        // Only use the previous customer input in the very first load, to avoid overwriting customer input
+        previousCustomerInput = nil
+        return element
     }()
 
     // MARK: - Views
@@ -127,6 +130,7 @@ class AddPaymentMethodViewController: UIViewController {
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
             paymentMethodTypes: paymentMethodTypes,
+            initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
             delegate: self
         )
@@ -149,10 +153,12 @@ class AddPaymentMethodViewController: UIViewController {
     required init(
         intent: Intent,
         configuration: PaymentSheet.Configuration,
-        delegate: AddPaymentMethodViewControllerDelegate
+        previousCustomerInput: IntentConfirmParams? = nil,
+        delegate: AddPaymentMethodViewControllerDelegate? = nil
     ) {
         self.configuration = configuration
         self.intent = intent
+        self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
@@ -265,6 +271,7 @@ class AddPaymentMethodViewController: UIViewController {
             intent: intent,
             configuration: configuration,
             paymentMethod: type,
+            previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
             linkAccount: linkAccount
         ).make()

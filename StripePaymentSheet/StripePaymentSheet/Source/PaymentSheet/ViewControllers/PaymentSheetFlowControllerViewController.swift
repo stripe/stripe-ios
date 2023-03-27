@@ -82,12 +82,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private let isLinkEnabled: Bool
 
     // MARK: - Views
-    private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
-        return AddPaymentMethodViewController(
-            intent: intent,
-            configuration: configuration,
-            delegate: self)
-    }()
+    private let addPaymentMethodViewController: AddPaymentMethodViewController
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
@@ -123,6 +118,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         intent: Intent,
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
+        previousPaymentOption: PaymentOption? = nil,
         isApplePayEnabled: Bool,
         isLinkEnabled: Bool
     ) {
@@ -132,8 +128,26 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
         self.configuration = configuration
 
-        // Default to payment selection, as long as we have saved PMs or Apple Pay or Link is enabled.
-        self.mode = savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled
+        // Restore the customer's previous payment method. For saved PMs, this happens naturally already, so we just need to handle new payment methods.
+        // Caveats:
+        // - Only card details (including checkbox state) and billing details are restored
+        // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
+        // TODO(Link): Consider how we want to restore the customer's previous inputs, if at all.
+        let previousNewPaymentMethodParams: IntentConfirmParams? = {
+            guard let previousPaymentOption = previousPaymentOption else {
+                return nil
+            }
+            switch previousPaymentOption {
+            case .applePay, .saved, .link:
+                // TODO(Link): Handle link when we re-enable it
+                return nil
+            case .new(confirmParams: let params):
+                return params
+            }
+        }()
+        // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
+        // and they have saved PMs or Apple Pay or Link is enabled
+        self.mode = (previousNewPaymentMethodParams == nil) && (savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
                 ? .selectingSaved
                 : .addingNew
 
@@ -145,12 +159,16 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 showLink: isLinkEnabled,
                 autoSelectDefaultBehavior: intent.supportsLink ? .onlyIfMatched : .defaultFirst
             ),
-            appearance: configuration.appearance,
-            delegate: nil
+            appearance: configuration.appearance
         )
-
+        self.addPaymentMethodViewController = AddPaymentMethodViewController(
+            intent: intent,
+            configuration: configuration,
+            previousCustomerInput: previousNewPaymentMethodParams // Restore the customer's previous new payment method input
+        )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
+        self.addPaymentMethodViewController.delegate = self
     }
 
     func selectLink() {

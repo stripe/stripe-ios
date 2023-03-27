@@ -1,4 +1,4 @@
-## x.x.x yyyy-mm-dd
+## 23.6.0 2023-03-27
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to configure how you want to collect billing details. See the docs [here](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#billing-details-collection).
 
