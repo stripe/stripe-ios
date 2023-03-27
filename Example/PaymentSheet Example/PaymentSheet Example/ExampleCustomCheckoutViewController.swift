@@ -53,7 +53,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
                      confirmHandler: confirmHandler(_:_:))
     }
-    
+
     private var currencyFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -238,7 +238,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
-        
+
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { [weak self] (data, _, error) in
@@ -258,7 +258,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
                 }
 
                 self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
-                
+
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
 
