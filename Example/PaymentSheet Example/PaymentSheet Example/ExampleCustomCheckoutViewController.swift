@@ -35,26 +35,20 @@ class ExampleCustomCheckoutViewController: UIViewController {
     private var createIntentUrl: URL {
         return URL(string: baseUrl + "/create_intent")!
     }
-
-    /// 8.25% tax rate
-    private let taxMultiplier = 0.0825
-
-    /// The price of all the items before tax
-    private var subtotal: Double {
-        let hotDogPrice = 0.99
-        let saladPrice = 8.00
-        let discountMultiplier = subscribeSwitch.isOn ? 0.95 : 1
-        let subtotal = (saladStepper.value * saladPrice + hotDogStepper.value * hotDogPrice) * discountMultiplier
-        return subtotal
+    private var computeTotalsUrl: URL {
+        return URL(string: baseUrl + "/compute_totals")!
     }
 
-    /// The price of all the items after tax
-    private var total: Double {
-        subtotal + (subtotal * taxMultiplier)
+    private struct ComputedTotals: Decodable {
+        let subtotal: Double
+        let tax: Double
+        let total: Double
     }
+
+    private var computedTotals: ComputedTotals!
 
     private var intentConfig: PaymentSheet.IntentConfiguration {
-        return .init(mode: .payment(amount: Int(total * 100),
+        return .init(mode: .payment(amount: Int(computedTotals.total * 100),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
                      confirmHandler: confirmHandler(_:_:))
@@ -73,10 +67,161 @@ class ExampleCustomCheckoutViewController: UIViewController {
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
 
-        loadCheckout()
+        fetchTotals { [weak self] in
+            self?.loadCheckout()
+        }
     }
 
-    func loadCheckout() {
+    // MARK: - Button handlers
+
+    @objc
+    func didTapPaymentMethodButton() {
+        // MARK: Present payment options to the customer
+        paymentSheetFlowController.presentPaymentOptions(from: self) {
+            self.updateButtons()
+        }
+    }
+
+    @objc
+    func didTapCheckoutButton() {
+        // MARK: Confirm payment
+        paymentSheetFlowController.confirm(from: self) { paymentResult in
+            // MARK: Handle the payment result
+            switch paymentResult {
+            case .completed:
+                self.displayAlert("Your order is confirmed!")
+            case .canceled:
+                print("Canceled!")
+            case .failed(let error):
+                print(error)
+                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
+            }
+        }
+    }
+
+    @IBAction func hotDogStepperDidChange() {
+        updateUI()
+    }
+
+    @IBAction func saladStepperDidChange() {
+        updateUI()
+    }
+
+    @IBAction func subscribeSwitchDidChange() {
+        updateUI()
+    }
+
+    // MARK: - Helper methods
+
+    private func updateUI() {
+        // Disable buy and payment method buttons
+        buyButton.isEnabled = false
+        paymentMethodButton.isEnabled = false
+
+        fetchTotals { [weak self] in
+            guard let self = self else { return }
+            self.updateLabels()
+
+            // Update PaymentSheet with the latest `intentConfig`
+            self.paymentSheetFlowController.update(intentConfiguration: self.intentConfig) { error  in
+                if error != nil {
+                    // Retry
+                    self.updateUI()
+                } else {
+                    // Re-enable your "Buy" and "Payment method" buttons
+                    self.updateButtons()
+                  }
+            }
+        }
+    }
+
+    func updateButtons() {
+        paymentMethodButton.isEnabled = true
+
+        // MARK: Update the payment method and buy buttons
+        if let paymentOption = paymentSheetFlowController.paymentOption {
+            paymentMethodButton.setTitle(paymentOption.label, for: .normal)
+            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodImage.image = paymentOption.image
+            buyButton.isEnabled = true
+        } else {
+            paymentMethodButton.setTitle("Select", for: .normal)
+            paymentMethodButton.setTitleColor(.systemBlue, for: .normal)
+            paymentMethodImage.image = nil
+            buyButton.isEnabled = false
+        }
+    }
+
+    func updateLabels() {
+        hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
+        saladQuantityLabel.text = "\(Int(saladStepper.value))"
+
+        subtotalLabel.text = "$\(computedTotals.subtotal.truncate(places: 2))"
+        salesTaxLabel.text = "$\(computedTotals.tax.truncate(places: 2))"
+        totalLabel.text = "$\((computedTotals.total).truncate(places: 2))"
+    }
+
+    func displayAlert(_ message: String) {
+        let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
+            alertController.dismiss(animated: true) {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+        alertController.addAction(OKAction)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    // MARK: Confirm handler
+
+    func confirmHandler(_ paymentMethodID: String,
+                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        // Create an intent on your server and invoke `intentCreationCallback` with the client secret
+        createIntent(paymentMethodID: paymentMethodID) { result in
+            switch result {
+            case .success(let clientSecret):
+                intentCreationCallback(.success(clientSecret))
+            case .failure(let error):
+                intentCreationCallback(.failure(error))
+            }
+        }
+    }
+
+    // MARK: Networking helpers
+
+    private func fetchTotals(completion: @escaping () -> Void) {
+        // MARK: Fetch the current amounts from the server
+        var request = URLRequest(url: computeTotalsUrl)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+
+        let body: [String: Any?] = [
+            "hot_dog_count": hotDogStepper.value,
+            "salad_count": saladStepper.value,
+            "is_subscribing": subscribeSwitch.isOn,
+        ]
+
+        let bodyData = try! JSONSerialization.data(withJSONObject: body, options: [])
+        request.httpBody = bodyData
+
+        let task = URLSession.shared.dataTask(
+            with: request,
+            completionHandler: { [weak self] (data, _, _) in
+                guard let data = data,
+                      let totals = try? JSONDecoder().decode(ComputedTotals.self, from: data) else {
+                          fatalError("Failed to decode compute_totals response")
+                        }
+
+                self?.computedTotals = totals
+                DispatchQueue.main.async {
+                    completion()
+                }
+            })
+
+        task.resume()
+    }
+
+    private func loadCheckout() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
@@ -132,122 +277,6 @@ class ExampleCustomCheckoutViewController: UIViewController {
         task.resume()
     }
 
-    // MARK: - Button handlers
-
-    @objc
-    func didTapPaymentMethodButton() {
-        // MARK: Present payment options to the customer
-        paymentSheetFlowController.presentPaymentOptions(from: self) {
-            self.updateButtons()
-        }
-    }
-
-    @objc
-    func didTapCheckoutButton() {
-        // MARK: Confirm payment
-        paymentSheetFlowController.confirm(from: self) { paymentResult in
-            // MARK: Handle the payment result
-            switch paymentResult {
-            case .completed:
-                self.displayAlert("Your order is confirmed!")
-            case .canceled:
-                print("Canceled!")
-            case .failed(let error):
-                print(error)
-                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
-            }
-        }
-    }
-
-    @IBAction func hotDogStepperDidChange() {
-        updateUI()
-    }
-
-    @IBAction func saladStepperDidChange() {
-        updateUI()
-    }
-
-    @IBAction func subscribeSwitchDidChange() {
-        updateUI()
-    }
-
-    // MARK: - Helper methods
-
-    private func updateUI() {
-        // Disable buy and payment method buttons
-        buyButton.isEnabled = false
-        paymentMethodButton.isEnabled = false
-
-        updateLabels()
-
-        // Update PaymentSheet with the latest `intentConfig`
-        paymentSheetFlowController.update(intentConfiguration: intentConfig) { error  in
-            if error != nil {
-                // Retry
-                self.updateUI()
-            } else {
-                // Re-enable your "Buy" and "Payment method" buttons
-                self.updateButtons()
-              }
-        }
-    }
-
-    func updateButtons() {
-        paymentMethodButton.isEnabled = true
-
-        // MARK: Update the payment method and buy buttons
-        if let paymentOption = paymentSheetFlowController.paymentOption {
-            paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
-            paymentMethodImage.image = paymentOption.image
-            buyButton.isEnabled = true
-        } else {
-            paymentMethodButton.setTitle("Select", for: .normal)
-            paymentMethodButton.setTitleColor(.systemBlue, for: .normal)
-            paymentMethodImage.image = nil
-            buyButton.isEnabled = false
-        }
-    }
-
-    func updateLabels() {
-        hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
-        saladQuantityLabel.text = "\(Int(saladStepper.value))"
-
-        let tax = subtotal * taxMultiplier
-
-        subtotalLabel.text = "$\(subtotal.truncate(places: 2))"
-        salesTaxLabel.text = "$\(tax.truncate(places: 2))"
-        totalLabel.text = "$\((subtotal + tax).truncate(places: 2))"
-    }
-
-    func displayAlert(_ message: String) {
-        let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
-            alertController.dismiss(animated: true) {
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
-        alertController.addAction(OKAction)
-        present(alertController, animated: true, completion: nil)
-    }
-
-    // MARK: Confirm handler
-
-    func confirmHandler(_ paymentMethodID: String,
-                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        // Create an intent on your server and invoke `intentCreationCallback` with the client secret
-        createIntent(paymentMethodID: paymentMethodID) { result in
-            switch result {
-            case .success(let clientSecret):
-                intentCreationCallback(.success(clientSecret))
-            case .failure(let error):
-                intentCreationCallback(.failure(error))
-            }
-        }
-    }
-
-    // MARK: Helpers
-
     func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> Void) {
         var request = URLRequest(url: createIntentUrl)
         request.httpMethod = "POST"
@@ -277,7 +306,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
         var body: [String: Any?] = [
             "payment_method_id": paymentMethodID,
             "currency": "USD",
-            "amount": Int(total * 100),
+            "amount": Int(computedTotals.total * 100),
         ]
 
         if subscribeSwitch.isOn {
