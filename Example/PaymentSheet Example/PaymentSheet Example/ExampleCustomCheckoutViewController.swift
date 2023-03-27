@@ -36,8 +36,10 @@ class ExampleCustomCheckoutViewController: UIViewController {
         return URL(string: baseUrl + "/create_intent")!
     }
 
+    /// 8.25% tax rate
     private let taxMultiplier = 0.0825
 
+    /// The price of all the items without adding tax
     private var subtotal: Double {
         let hotDogPrice = 0.99
         let saladPrice = 8.00
@@ -46,6 +48,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
         return subtotal
     }
 
+    /// The price of all the items with adding tax
     private var total: Double {
         subtotal + (subtotal * taxMultiplier)
     }
