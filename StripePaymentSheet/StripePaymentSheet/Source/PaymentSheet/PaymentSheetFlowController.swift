@@ -81,7 +81,7 @@ extension PaymentSheet {
             return viewController.selectedPaymentOption
         }
 
-        // Stores contextual state releated to the update API
+        // Stores the state of the most recent call to the update API
         private var latestUpdateContext: UpdateContext?
 
         struct UpdateContext {
