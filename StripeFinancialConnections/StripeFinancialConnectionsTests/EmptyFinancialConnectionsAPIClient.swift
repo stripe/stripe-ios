@@ -33,8 +33,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsInstitutionList>()
     }
 
-    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
-        return Promise<FinancialConnectionsInstitutionList>()
+    func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource> {
+        return Promise<FinancialConnectionsInstitutionSearchResultResource>()
     }
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
