@@ -54,14 +54,10 @@ class ExampleCustomCheckoutViewController: UIViewController {
     }
 
     private var intentConfig: PaymentSheet.IntentConfiguration {
-        if subscribeSwitch.isOn {
-            return .init(mode: .payment(amount: Int(total * 100),
-                                        currency: "USD",
-                                        setupFutureUsage: .offSession),
-                         confirmHandler: confirmHandler(_:_:))
-        }
-
-        return .init(mode: .payment(amount: Int(total * 100), currency: "USD"), confirmHandler: confirmHandler(_:_:))
+        return .init(mode: .payment(amount: Int(total * 100),
+                                    currency: "USD",
+                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
+                     confirmHandler: confirmHandler(_:_:))
     }
 
     override func viewDidLoad() {
