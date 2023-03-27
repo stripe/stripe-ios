@@ -24,12 +24,12 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var subscribeSwitch: UISwitch!
     
-    var paymentSheetFlowController: PaymentSheet.FlowController!
-    let baseUrl = "https://stripe-mobile-payment-sheet-custom.glitch.me"
-    var backendCheckoutUrl: URL {
+    private var paymentSheetFlowController: PaymentSheet.FlowController!
+    private let baseUrl = "https://stripe-mobile-payment-sheet-custom.glitch.me"
+    private var backendCheckoutUrl: URL {
         return URL(string: baseUrl + "/checkout")!
     }
-    var createIntentUrl: URL {
+    private var createIntentUrl: URL {
         return URL(string: baseUrl + "/create_intent")!
     }
     
@@ -183,15 +183,15 @@ class ExampleCustomCheckoutViewController: UIViewController {
             if error != nil {
                 // Retry
                 self.updateUI()
-              } else {
-                  // Re-enable your "Buy" and "Payment method" buttons
-                  self.updateButtons()
+            } else {
+                // Re-enable your "Buy" and "Payment method" buttons
+                self.updateButtons()
               }
         }
     }
 
     func updateButtons() {
-        self.paymentMethodButton.isEnabled = true
+        paymentMethodButton.isEnabled = true
         
         // MARK: Update the payment method and buy buttons
         if let paymentOption = paymentSheetFlowController.paymentOption {
