@@ -273,12 +273,15 @@ class ExampleCustomCheckoutViewController: UIViewController {
     }
     
     func createIntentRequestBody(paymentMethodID: String) -> Data {
-        let body: [String: Any?] = [
+        var body: [String: Any?] = [
             "payment_method_id": paymentMethodID,
             "currency": "USD",
-            "amount": total * 100,
-            "setup_future_usage": subscribeSwitch.isOn ? "off_session" : nil
+            "amount": Int(total * 100)
         ]
+        
+        if subscribeSwitch.isOn {
+            body["setup_future_usage"] = "off_session"
+        }
         
         return try! JSONSerialization.data(withJSONObject: body, options: [])
     }

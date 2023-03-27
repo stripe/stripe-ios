@@ -73,6 +73,21 @@ class PaymentSheetUITest: XCTestCase {
 
     func testPaymentSheetCustom() throws {
         app.staticTexts["PaymentSheet (Custom)"].tap()
+        
+        // Update product quantities and enable subscription
+        let subscribeSwitch = app.switches["subscribe_switch"]
+        
+        let subscribeSwitchnEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: subscribeSwitch
+        )
+        wait(for: [subscribeSwitchnEnabledExpectation], timeout: 60, enforceOrder: true)
+        
+        app.switches["subscribe_switch"].tap()
+        app.steppers["hotdog_stepper"].tap()
+        app.steppers["hotdog_stepper"].tap()
+        app.steppers["salad_stepper"].tap()
+        
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
 
         let paymentMethodButtonEnabledExpectation = expectation(
@@ -80,6 +95,7 @@ class PaymentSheetUITest: XCTestCase {
             evaluatedWith: paymentMethodButton
         )
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        
         paymentMethodButton.tap()
 
         let addCardButton = app.buttons["+ Add"]
