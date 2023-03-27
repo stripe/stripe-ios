@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Купить с помощью идентификатора UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продолжая использование, вы тем самым соглашаетесь авторизовать платежи согласно данным <terms>условиям</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Закрыть сканер карт";
 
 "Code sent" = "Код отправлен";
+
+"Contact information" = "Контактные данные";
 
 "Default" = "По умолчанию";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Подключиться к Link";
 
 "Log out of Link" = "Выйти из Link";
+
+"Name on card" = "Имя и фамилия, указанные на карте";
 
 "Not %@?" = "Не %@?";
 
@@ -96,7 +106,7 @@
 
 "Payment methods" = "Способы оплаты";
 
-"Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты.";
+"Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты";
 
 "Point the camera at your card." = "Направьте камеру телефона на карту.";
 

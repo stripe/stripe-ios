@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Pirkti naudojant UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą „PayPal“ leidžiate „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į „PayPal“ leisite „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate „%1$@“ nurašyti mokestį nuo jūsų „Cash App“ sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal „%2$@“ sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti „Cash App“ nuostatose.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
 
 "Code sent" = "Kodas išsiųstas";
+
+"Contact information" = "Kontaktinė informacija";
 
 "Default" = "Numatytasis";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Prisijungti prie „Link“";
 
 "Log out of Link" = "Atsijungti nuo „Link“";
+
+"Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
 
 "Not %@?" = "Ne %@?";
 

@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Buy using a UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorise payments pursuant to these <terms>terms</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Close card scanner";
 
 "Code sent" = "Code sent";
+
+"Contact information" = "Contact information";
 
 "Default" = "Default";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Join Link";
 
 "Log out of Link" = "Log out of Link";
+
+"Name on card" = "Name on card";
 
 "Not %@?" = "Not %@?";
 

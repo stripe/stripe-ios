@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Cumpărați folosind un ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin confirmarea plății cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin continuarea cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu acești <terms>termeni</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuând, autorizați %1$@ să debiteze contul dvs. Cash App pentru această plată și pentru plățile viitoare în conformitate cu termenii %2$@, până când această autorizație este revocată. Puteți schimba acest lucru oricând în setările Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prin accesarea link-ului de asociere, sunteți de acord cu <terms>Termenii</terms> și <privacy>Politica de confidențialitate</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Închidere scaner card";
 
 "Code sent" = "Codul a fost trimis";
+
+"Contact information" = "Informații de contact";
 
 "Default" = "Implicit";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Înscrieți-vă în Link";
 
 "Log out of Link" = "Deconectare de la Link";
+
+"Name on card" = "Numele titularului";
 
 "Not %@?" = "Nu este %@?";
 

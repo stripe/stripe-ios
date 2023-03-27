@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Beli menggunakan identifikasi UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran menggunakan PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan melanjutkan ke PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan melanjutkan, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Dengan melanjutkan, berarti Anda setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan</terms> ini.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan melanjutkan, berarti Anda memberi %1$@ otorisasi untuk mendebit akun Cash App Anda bagi pembayaran ini dan pembayaran mendatang sesuai dengan ketentuan %2$@, hingga otorisasi ini dicabut. Anda dapat mengubahnya kapan saja di Pengaturan Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Tutup pemindai kartu";
 
 "Code sent" = "Kode dikirim";
+
+"Contact information" = "Informasi kontak";
 
 "Default" = "Default";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Bergabunglah dengan Link";
 
 "Log out of Link" = "Keluar dari Link";
+
+"Name on card" = "Nama pada kartu";
 
 "Not %@?" = "Bukan %@?";
 

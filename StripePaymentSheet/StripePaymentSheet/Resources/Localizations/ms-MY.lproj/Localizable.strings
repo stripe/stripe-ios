@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Beli menggunakan ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengesahkan pembayaran anda dengan PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma</terms> ini.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Tutup pengimbas kad";
 
 "Code sent" = "Kod dihantar";
+
+"Contact information" = "Maklumat hubungan";
 
 "Default" = "Tetapan Asal";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Sertai Link";
 
 "Log out of Link" = "Log keluar dari Link";
+
+"Name on card" = "Nama pada kad";
 
 "Not %@?" = "Bukan %@?";
 

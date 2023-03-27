@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Køb ved hjælp af et UPI ID";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at bekræfte din betaling med PayPal, tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at fortsætte til PayPal tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til disse <terms>vilkår</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved at fortsætte giver du %1$@ tilladelse til at debitere din Cash App-konto for denne betaling og fremtidige betalinger i overensstemmelse med %2$@s vilkår, indtil denne tilladelse tilbagekaldes. Du kan til enhver tid ændre dette i dine Cash App-indstillinger.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at tilmelde dig Link accepterer du <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Luk kortscanner";
 
 "Code sent" = "Kode sendt";
+
+"Contact information" = "Kontaktoplysninger";
 
 "Default" = "Standard";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Tilmeld Link";
 
 "Log out of Link" = "Log ud af Link";
+
+"Name on card" = "Kortholderens navn";
 
 "Not %@?" = "Ikke %@?";
 

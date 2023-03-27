@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "UPI Numarası kullanarak satın alın";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'la ödemeyi onayladığınızda, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Devam ettiğinizde, bu <terms>koşullar</terms>a uygun olarak ödemelere izin vermeyi kabul etmiş olursunuz.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Kart tarayıcısını kapat";
 
 "Code sent" = "Kod gönderildi";
+
+"Contact information" = "İletişim bilgileri";
 
 "Default" = "Varsayılan";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Link'e katıl";
 
 "Log out of Link" = "Link'ten çıkış yap";
+
+"Name on card" = "Karttaki isim";
 
 "Not %@?" = "%@ doğru değil mi?";
 

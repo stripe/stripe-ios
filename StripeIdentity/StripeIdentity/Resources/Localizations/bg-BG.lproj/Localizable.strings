@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Заснемането беше неуспешно";
 
-"Date of birth" = "Дата на раждане";
+"Date of Birth" = "Дата на раждане";
+
+"Date of birth does not look valid" = "Датата на раждане не изглежда валидна";
 
 "File Upload" = "Качване на файл";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Изображение на паспорт";
 
+"Individual CPF" = "CPF на физическо лице";
+
+"Last 4 of Social Security number" = "Последните 4 цифри от социалноосигурителния номер";
+
 "Loading" = "Зареждане";
+
+"NRIC or FIN" = "NRIC или FIN";
 
 "Passport" = "Паспорт";
 
 "Passport photo successfully uploaded" = "Успешно качена снимка на паспорт";
 
 "Personal ID number" = "Личен идентификационен номер";
+
+"Personal Information" = "Лична информация";
 
 "Photo Library" = "Библиотека със снимки";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Позиционирайте личната си карта в центъра на рамката";
 
 "Position your passport in the center of the frame" = "Позиционирайте паспорта си в центъра на рамката";
+
+"Retake Photos" = "Повторно заснемане на снимки";
 
 "Scan" = "Сканирай";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Не успяхме да заснемем изображение с високо качество.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Нуждаем се от разрешение за използване на Вашата камера. Моля, разрешете достъп до камерата в настройките на приложението.";
+
+"Welcome" = "Добре дошли";
 
 "You can either try again or upload an image from your device." = "Можете да опитате отново или да качите изображение от устройството си.";
 

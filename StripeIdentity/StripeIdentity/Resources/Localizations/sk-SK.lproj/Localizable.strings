@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Nepodarilo sa nasnímať fotografiu";
 
-"Date of birth" = "Dátum narodenia";
+"Date of Birth" = "Dátum narodenia";
+
+"Date of birth does not look valid" = "Zdá sa, že dátum narodenia je neplatný";
 
 "File Upload" = "Nahratie súboru";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Fotografia pasu";
 
+"Individual CPF" = "Individuálne CPF";
+
+"Last 4 of Social Security number" = "Posledné 4 číslice čísla sociálneho poistenia";
+
 "Loading" = "Nahrávanie";
+
+"NRIC or FIN" = "NRIC alebo FIN";
 
 "Passport" = "Pas";
 
 "Passport photo successfully uploaded" = "Fotografia pasu bola úspešne nahraná";
 
 "Personal ID number" = "Osobné identifikačné číslo";
+
+"Personal Information" = "Osobné informácie";
 
 "Photo Library" = "Knižnica fotografií";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Umiestnite svoj preukaz totožnosti do stredu rámika";
 
 "Position your passport in the center of the frame" = "Umiestnite svoj pas do stredu rámika";
+
+"Retake Photos" = "Znova odfotiť";
 
 "Scan" = "Skenovať";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Nepodarilo sa nasnímať obrázok vo vysokej kvalite.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebujeme povolenie na použitie vášho fotoaparátu. Povoľte prístup k fotoaparátu v nastaveniach aplikácie.";
+
+"Welcome" = "Vitajte";
 
 "You can either try again or upload an image from your device." = "Môžete to skúsiť znova alebo nahrať obrázok zo svojho zariadenia.";
 

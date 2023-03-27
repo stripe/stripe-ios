@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Per UPI-ID kaufen";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung bei PayPal bestätigen, erklären Sie sich damit einverstanden, dass %@ Ihr PayPal-Konto zur Durchführung zukünftiger Zahlungen gemäß der Nutzungsbedingungen belastet.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Indem Sie zur PayPal-Website wechseln, erklären Sie sich damit einverstanden, dass %@ Ihr PayPal-Konto zur Durchführung zukünftiger Zahlungen gemäß der Nutzungsbedingungen belastet.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie fortfahren, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Indem Sie fortfahren, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Indem Sie fortfahren, erteilen Sie %1$@ die Genehmigung, Ihr Cash-App-Konto in Höhe dieser und künftiger Zahlungen zu belasten im Einklang mit den AGB von %2$@, bis diese Genehmigung widerrufen wird. Sie können dies jederzeit in Ihren Cash-App-Einstellungen ändern.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Indem Sie Link beitreten, stimmen Sie den <terms>Nutzungsbedingungen</terms> und der <privacy>Datenschutzerklärung</privacy> zu.";
 
@@ -34,7 +40,7 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie Ihr Bankkonto für %@ speichern, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
 
-"Cancel and pay another way" = "Abbrechen und anders zahlen";
+"Cancel and pay another way" = "Abbrechen und anders bezahlen";
 
 "Change email" = "E-Mail ändern";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Kartenscanner schließen";
 
 "Code sent" = "Code wurde gesendet";
+
+"Contact information" = "Kontaktinformationen";
 
 "Default" = "Standard";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Bei Link registrieren";
 
 "Log out of Link" = "Von Link abmelden";
+
+"Name on card" = "Name auf Karte";
 
 "Not %@?" = "Nicht %@?";
 

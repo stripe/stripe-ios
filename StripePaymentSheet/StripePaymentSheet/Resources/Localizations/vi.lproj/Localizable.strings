@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Mua bằng cách sử dụng ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách tiếp tục với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Bằng việc tiếp tục, quý vị đồng ý xác thực thanh toán tuân theo các <terms>điều khoản</terms> sau.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Đóng máy quét thẻ";
 
 "Code sent" = "Mã đã được gửi";
+
+"Contact information" = "Thông tin liên lạc";
 
 "Default" = "Mặc định";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Tham gia Link";
 
 "Log out of Link" = "Đăng xuất khỏi Link";
+
+"Name on card" = "Tên trên thẻ";
 
 "Not %@?" = "Không phải %@?";
 

@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Nepavyko užfiksuoti vaizdo";
 
-"Date of birth" = "Gimimo data";
+"Date of Birth" = "Gimimo data";
+
+"Date of birth does not look valid" = "Gimimo data neatrodo tinkama";
 
 "File Upload" = "Failo įkėlimas";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Paso vaizdas";
 
+"Individual CPF" = "Asmens CPF";
+
+"Last 4 of Social Security number" = "Paskutiniai 4 socialinio draudimo numerio skaitmenys";
+
 "Loading" = "Įkeliama";
+
+"NRIC or FIN" = "NRIC arba FIN";
 
 "Passport" = "Pasas";
 
 "Passport photo successfully uploaded" = "Sėkmingai įkelta paso nuotrauka";
 
 "Personal ID number" = "Asmens kodas";
+
+"Personal Information" = "Asmeninė informacija";
 
 "Photo Library" = "Nuotraukų biblioteka";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Asmens tapatybės kortelė turi būti rėmelio centre";
 
 "Position your passport in the center of the frame" = "Pasas turi būti rėmelio centre";
+
+"Retake Photos" = "Perfotografuoti";
 
 "Scan" = "Nuskaityti";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Nepavyko užfiksuoti aukštos kokybės vaizdo.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Mums reikia leidimo naudoti jūsų fotoaparatą. Suteikite priegą prie fotoaparato programos nustatymuose.";
+
+"Welcome" = "Pasveikinimas";
 
 "You can either try again or upload an image from your device." = "Galite bandyti dar kartą arba įkelti vaizdą iš savo įrenginio.";
 
