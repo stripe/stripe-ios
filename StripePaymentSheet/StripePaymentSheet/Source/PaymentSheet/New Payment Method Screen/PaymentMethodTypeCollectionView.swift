@@ -38,6 +38,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
@@ -45,7 +46,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
-        self.selected = paymentMethodTypes[0]
+        self.selected = initialPaymentMethodType ?? paymentMethodTypes[0]
         self.appearance = appearance
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -56,7 +57,8 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
-        selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
+        let selectedItemIndex = paymentMethodTypes.firstIndex(of: selected) ?? 0
+        selectItem(at: IndexPath(item: selectedItemIndex, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
         backgroundColor = appearance.colors.background

@@ -69,7 +69,7 @@ extension PaymentSheet {
             return viewController.intent
         }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
-        private var viewController: PaymentSheetFlowControllerViewController
+        var viewController: PaymentSheetFlowControllerViewController
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
@@ -298,8 +298,14 @@ extension PaymentSheet {
                 switch loadResult {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
-                    // TODO(Update:) Preserve the customer's previous inputs.
-                    self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: paymentMethods, isLinkEnabled: isLinkEnabled, configuration: self.configuration)
+                    self.viewController = Self.makeViewController(
+                        intent: intent,
+                        savedPaymentMethods: paymentMethods,
+                        previousPaymentOption: self._paymentOption,
+                        isLinkEnabled: isLinkEnabled,
+                        configuration: self.configuration
+                    )
+
                     self.viewController.delegate = self
 
                     // Synchronously pre-load image into cache
@@ -340,6 +346,7 @@ extension PaymentSheet {
         static func makeViewController(
             intent: Intent,
             savedPaymentMethods: [STPPaymentMethod],
+            previousPaymentOption: PaymentOption? = nil,
             isLinkEnabled: Bool,
             configuration: Configuration
         ) -> PaymentSheetFlowControllerViewController {
@@ -348,6 +355,7 @@ extension PaymentSheet {
                 intent: intent,
                 savedPaymentMethods: savedPaymentMethods,
                 configuration: configuration,
+                previousPaymentOption: previousPaymentOption,
                 isApplePayEnabled: isApplePayEnabled,
                 isLinkEnabled: isLinkEnabled
             )
