@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Slike ni bilo mogoče posneti";
 
-"Date of birth" = "Datum rojstva";
+"Date of Birth" = "Datum rojstva";
+
+"Date of birth does not look valid" = "Videti je, da datum rojstva ni veljaven";
 
 "File Upload" = "Naloži datoteko";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Slika potnega lista";
 
+"Individual CPF" = "CPF posameznika";
+
+"Last 4 of Social Security number" = "Zadnje 4 števke številke socialnega zavarovanja";
+
 "Loading" = "Nalaganje";
+
+"NRIC or FIN" = "NRIC ali FIN";
 
 "Passport" = "Potni list";
 
 "Passport photo successfully uploaded" = "Fotografija potnega lista je bila uspešno naložena";
 
 "Personal ID number" = "Številka osebne izkaznice";
+
+"Personal Information" = "Osebni podatki";
 
 "Photo Library" = "Knjižnica fotografij";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Zagotovite, da je osebna izkaznica na sredini okvirja";
 
 "Position your passport in the center of the frame" = "Zagotovite, da je potni list na sredini okvirja";
+
+"Retake Photos" = "Znova posnemi fotografije";
 
 "Scan" = "Optično preberi";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Ni bilo mogoče zajeti visokokakovostne slike.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebujemo dovoljenje za uporabo vaše kamere. Dovolite dostop do kamere v nastavitvah aplikacije.";
+
+"Welcome" = "Dobrodošli";
 
 "You can either try again or upload an image from your device." = "Poskusite znova ali pa naložite sliko iz svoje naprave.";
 

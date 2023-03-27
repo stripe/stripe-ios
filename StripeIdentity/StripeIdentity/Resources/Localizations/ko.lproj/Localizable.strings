@@ -22,7 +22,9 @@
 
 "Could not capture image" = "이미지를 캡처할 수 없음";
 
-"Date of birth" = "생년월일";
+"Date of Birth" = "생년월일";
+
+"Date of birth does not look valid" = "생년월일이 유효하지 않습니다.";
 
 "File Upload" = "파일 업로드";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "여권 이미지";
 
+"Individual CPF" = "개별 CPF";
+
+"Last 4 of Social Security number" = "사회 보장 번호의 마지막 4자리 숫자";
+
 "Loading" = "로드 중";
+
+"NRIC or FIN" = "NRIC 또는 FIN";
 
 "Passport" = "여권";
 
 "Passport photo successfully uploaded" = "여권 사진 업로드 성공";
 
 "Personal ID number" = "개인 ID 번호";
+
+"Personal Information" = "개인 정보";
 
 "Photo Library" = "사진 라이브러리";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "프레임 중앙에 신분증을 놓으십시오.";
 
 "Position your passport in the center of the frame" = "프레임 중앙에 여권을 놓으십시오.";
+
+"Retake Photos" = "사진 다시 찍기";
 
 "Scan" = "스캔";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "고품질 이미지를 캡처할 수 없습니다.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "카메라 사용 권한이 필요합니다. 앱 설정에서 카메라 액세스를 허용해 주십시오.";
+
+"Welcome" = "환영합니다.";
 
 "You can either try again or upload an image from your device." = "다시 시도하거나 디바이스에 있는 이미지를 업로드하실 수 있습니다.";
 

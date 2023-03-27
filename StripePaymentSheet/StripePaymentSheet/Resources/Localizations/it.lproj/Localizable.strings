@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Acquista utilizzando un ID UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Confermando il tuo pagamento con PayPal, consenti a %@ di addebitare i pagamenti futuri sul tuo account PayPal in base a quanto previsto dai relativi termini e condizioni.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Continuando su PayPal, consenti a %@ di addebitare i pagamenti futuri sul tuo conto PayPal in base a quanto previsto dai relativi termini e condizioni.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Se continui, accetti di autorizzare i pagamenti conformemente ai <terms>questi termini</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Se continui, accetti di autorizzare i pagamenti conformemente a questi <terms>termini</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuando, autorizzi %1$@ ad addebitare questo pagamento e i pagamenti futuri sul tuo conto Cash App conformemente ai termini di %2$@, fino alla revoca di tale autorizzazione. Puoi modificarla in qualsiasi momento nelle impostazioni di Cash app.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Creando un account Link, accetti i <terms>Termini</terms> e l'<privacy>Informativa sulla privacy</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Chiudi strumento di scansione carta";
 
 "Code sent" = "Codice inviato";
+
+"Contact information" = "Informazioni di contatto";
 
 "Default" = "Valore predefinito";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Registrati su Link";
 
 "Log out of Link" = "Esci da Link";
+
+"Name on card" = "Nome sulla carta";
 
 "Not %@?" = "Non %@?";
 

@@ -22,7 +22,9 @@
 
 "Could not capture image" = "无法拍摄图片";
 
-"Date of birth" = "出生日期";
+"Date of Birth" = "出生日期";
+
+"Date of birth does not look valid" = "出生日期看似无效";
 
 "File Upload" = "文件上传";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "护照照片";
 
+"Individual CPF" = "个人 CPF";
+
+"Last 4 of Social Security number" = "社会保障号码后 4 位";
+
 "Loading" = "正在加载";
+
+"NRIC or FIN" = "NRIC 或 FIN";
 
 "Passport" = "护照";
 
 "Passport photo successfully uploaded" = "护照照片已成功上传";
 
 "Personal ID number" = "个人身份证件号码";
+
+"Personal Information" = "个人信息";
 
 "Photo Library" = "照片库";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "将身份证放在画面正中间";
 
 "Position your passport in the center of the frame" = "将护照放在画面正中间";
+
+"Retake Photos" = "重新拍照";
 
 "Scan" = "扫描";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "我们未能捕捉到高质量图片。";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "我们需要使用您的相机的许可。请在应用设置中允许使用相机。";
+
+"Welcome" = "欢迎";
 
 "You can either try again or upload an image from your device." = "您可以重试或从设备上传一张照片。";
 

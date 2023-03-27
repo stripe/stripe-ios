@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Не удалось получить изображение";
 
-"Date of birth" = "Дата рождения";
+"Date of Birth" = "Дата рождения";
+
+"Date of birth does not look valid" = "Похоже, дата рождения недействительна";
 
 "File Upload" = "Отправка файла";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Изображение паспорта";
 
+"Individual CPF" = "Личный номер CPF";
+
+"Last 4 of Social Security number" = "Последние 4 цифры номера социального страхования";
+
 "Loading" = "Идет загрузка";
+
+"NRIC or FIN" = "Номер NRIC или FIN";
 
 "Passport" = "Паспорт";
 
 "Passport photo successfully uploaded" = "Фотография паспорта успешно отправлена";
 
 "Personal ID number" = "Номер документа, удостоверяющего личность";
+
+"Personal Information" = "Персональная информация";
 
 "Photo Library" = "Библиотека фотографий";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Поместите удостоверение личности в центр рамки";
 
 "Position your passport in the center of the frame" = "Поместите паспорт в центр рамки";
+
+"Retake Photos" = "Повторные фото";
 
 "Scan" = "Сканировать";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Не удалось получить качественное изображение.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Нам требуется разрешение на доступ к камере. Разрешите доступ к камере в настройках приложения.";
+
+"Welcome" = "Добро пожаловать";
 
 "You can either try again or upload an image from your device." = "Попробуйте еще раз или загрузите изображение со своего устройства.";
 

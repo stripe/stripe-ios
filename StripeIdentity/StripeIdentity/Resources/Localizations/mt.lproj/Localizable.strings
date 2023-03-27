@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Ma stajniex nieħdu r-ritratt";
 
-"Date of birth" = "Id-data tat-twelid";
+"Date of Birth" = "Data tat-twelid";
+
+"Date of birth does not look valid" = "Id-data tat-twelid ma tidhirx li hija tajba";
 
 "File Upload" = "Tlugħ tal-Fajl";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Ritratt tal-passaport";
 
+"Individual CPF" = "CPF personali";
+
+"Last 4 of Social Security number" = "L-aħħar 4 ċifri tan-numru tas-Sigurtà Soċjali";
+
 "Loading" = "Tielgħa";
+
+"NRIC or FIN" = "NRIC jew FIN";
 
 "Passport" = "Passaport";
 
 "Passport photo successfully uploaded" = "Ir-ritratt tal-passaport ittella'";
 
 "Personal ID number" = "In-numru tal-ID personali";
+
+"Personal Information" = "Dettalji personali";
 
 "Photo Library" = "Ġabra tar-Ritratti";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Qiegħed il-karta tal-identità tiegħek f'nofs il-gwarniċ";
 
 "Position your passport in the center of the frame" = "Qiegħed il-passaport tiegħek f'nofs il-gwarniċ";
+
+"Retake Photos" = "Erġa' ħu r-ritratti";
 
 "Scan" = "Skennja";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Ma stajniex nieħdu ritratt ta' kwalità tajba.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Neħtieġu l-permess biex bużaw il-kamera tiegħek. Jekk jogħġbok agħti aċċess għall-kamera mis-settings tal-apps.";
+
+"Welcome" = "Merħba";
 
 "You can either try again or upload an image from your device." = "Tista' terġa' tipprova jew tagħżel li ttella' ritratt mit-tagħmir tiegħek.";
 

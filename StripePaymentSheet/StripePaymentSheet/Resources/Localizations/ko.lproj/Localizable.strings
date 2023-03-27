@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "UPI ID를 사용하여 구매";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal 결제를 확인하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal을 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "계속하면 해당 <terms>약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "카드 스캐너 닫기";
 
 "Code sent" = "코드 전송 완료";
+
+"Contact information" = "연락처 정보";
 
 "Default" = "기본값";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Link 가입";
 
 "Log out of Link" = "Link 로그아웃";
+
+"Name on card" = "카드 명의자";
 
 "Not %@?" = "%@ 님이 아니십니까?";
 

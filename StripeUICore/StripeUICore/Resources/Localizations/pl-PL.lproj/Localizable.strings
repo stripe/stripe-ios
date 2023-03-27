@@ -30,6 +30,8 @@
 
 "County" = "Hrabstwo";
 
+"Date is empty." = "Data jest pusta.";
+
 "Department" = "Departament";
 
 "District" = "Dystrykt";
@@ -88,7 +90,7 @@
 
 "Remove bank account ending in %@" = "Usuń konto bankowe kończące się na %@";
 
-"Search" = "Wyszukiwanie";
+"Search" = "Wyszukaj";
 
 "State" = "Stan";
 
