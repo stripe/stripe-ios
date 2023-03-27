@@ -14,6 +14,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
+@testable@_spi(STP) import StripeUICore
 
 class MockElement: Element {
     var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
@@ -564,7 +565,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             type: "au_becs_debit",
             async: false,
             fields: [
-                .au_becs_account_number(.init(apiPath: ["v1": "au_becs_debit[account_number]"]))
+                .au_becs_account_number(.init(apiPath: ["v1": "au_becs_debit[account_number]"])),
             ],
             selectorIcon: nil,
             nextActionSpec: nil
@@ -1347,6 +1348,166 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.country)
         XCTAssertNil(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode)
     }
+
+    // MARK: - Previous Customer Input tests
+
+    // Covers:
+    // - Email
+    // - Name
+    // - Phone
+    // - Billing address
+    // - Card form
+    // - Save checkbox
+    func testAppliesPreviousCustomerInput_billing_details_and_card() {
+        // Given default billing details...
+        let defaultAddress = PaymentSheet.Address(
+            city: "should not be used",
+            country: "should not be used",
+            line1: "should not be used",
+            line2: "should not be used",
+            postalCode: "should not be used",
+            state: "should not be used"
+        )
+        var configuration = PaymentSheet.Configuration()
+        // ...and a configuration that requires collection of all billing details...
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.defaultBillingDetails.name = "should not be used"
+        configuration.defaultBillingDetails.email = "should not be usedm"
+        configuration.defaultBillingDetails.phone = "should not be used"
+        configuration.defaultBillingDetails.address = defaultAddress
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        // ...and previous customer input billing details...
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.name = "Jane Doe"
+        billingDetails.email = "foo@bar.com"
+        billingDetails.phone = "5555555555"
+        billingDetails.address = STPPaymentMethodAddress()
+        billingDetails.address?.line1 = "510 Townsend St."
+        billingDetails.address?.line2 = "Line 2"
+        billingDetails.address?.city = "San Francisco"
+        billingDetails.address?.state = "CA"
+        billingDetails.address?.country = "US"
+        billingDetails.address?.postalCode = "94102"
+
+        // ...and full card details...
+        let cardValues = STPFixtures.paymentMethodCardParams()
+        let previousCustomerInput = IntentConfirmParams.init(
+            params: .paramsWith(
+                card: cardValues,
+                billingDetails: billingDetails,
+                metadata: nil),
+            type: .card
+        )
+
+        // ...the card form...
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["card"])),
+            configuration: configuration,
+            paymentMethod: .card,
+            previousCustomerInput: previousCustomerInput
+        )
+        let cardForm = factory.make()
+
+        // ...should be valid...
+        XCTAssert(cardForm.validationState == .valid)
+        // ...and its params should match the defaults above
+        let params = cardForm.updateParams(params: IntentConfirmParams(type: .card))!
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.name, "Jane Doe")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.email, "foo@bar.com")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.phone, "+15555555555")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.line1, "510 Townsend St.")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.line2, "Line 2")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.city, "San Francisco")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.state, "CA")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.country, "US")
+        XCTAssertEqual(params.paymentMethodParams.nonnil_billingDetails.address?.postalCode, "94102")
+
+        XCTAssertEqual(params.paymentMethodParams.card?.number, cardValues.number)
+        XCTAssertEqual(params.paymentMethodParams.card?.expMonth, cardValues.expMonth)
+        XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
+        XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
+    }
+
+    func testAppliesPreviousCustomerInput_for_different_payment_method_type() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        // ...Given previous customer input billing details...
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.name = "Jane Doe"
+        billingDetails.email = "foo@bar.com"
+        billingDetails.phone = "5555555555"
+        billingDetails.address = STPPaymentMethodAddress()
+        billingDetails.address?.line1 = "510 Townsend St."
+        billingDetails.address?.line2 = "Line 2"
+        billingDetails.address?.city = "San Francisco"
+        billingDetails.address?.state = "CA"
+        billingDetails.address?.country = "US"
+        billingDetails.address?.postalCode = "94102"
+
+        // ...for Afterpay...
+        let previousAfterpayCustomerInput = IntentConfirmParams.init(
+            params: .paramsWith(afterpayClearpay: .init(), billingDetails: billingDetails, metadata: nil),
+            type: .dynamic("afterpay_clearpay")
+        )
+
+        // ...the Afterpay form should be valid
+        let afterpayFactory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["afterpay_clearpay"])),
+            configuration: ._testValue_MostPermissive(),
+            paymentMethod: .dynamic("afterpay_clearpay"),
+            previousCustomerInput: previousAfterpayCustomerInput
+        )
+        let afterpayForm = afterpayFactory.make()
+        XCTAssert(afterpayForm.validationState == .valid)
+
+        // ...but if the customer previous input was for a card...
+        let previousCardCustomerInput = IntentConfirmParams.init(
+            params: .paramsWith(
+                card: STPFixtures.paymentMethodCardParams(),
+                billingDetails: billingDetails,
+                metadata: nil),
+            type: .card
+        )
+        // ...the Afterpay form should be blank and invalid, even though the previous input had full billing details
+        let afterpayFormWithPreviousCardInput = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["afterpay_clearpay"])),
+            configuration: ._testValue_MostPermissive(),
+            paymentMethod: .dynamic("afterpay_clearpay"),
+            previousCustomerInput: previousCardCustomerInput
+        ).make()
+        XCTAssert(afterpayFormWithPreviousCardInput.validationState != .valid)
+        // ...and the address section shouldn't be populated with any defaults
+        guard
+            let afterpayForm = afterpayFormWithPreviousCardInput as? PaymentMethodElementWrapper<FormElement>,
+            let addressSectionElement = afterpayForm.element.getAllSubElements().compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first
+        else {
+            XCTFail("expected address section")
+            return
+        }
+        let emptyAddressSectionElement = AddressSectionElement()
+        XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
+
+    }
+
+    // MARK: - Helpers
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
         let addressSpecProvider = AddressSpecProvider()

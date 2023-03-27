@@ -33,6 +33,24 @@ class PaymentSheetFormFactory {
     let addressSpecProvider: AddressSpecProvider
     let offerSaveToLinkWhenSupported: Bool
     let linkAccount: PaymentSheetLinkAccount?
+    let previousCustomerInput: IntentConfirmParams?
+
+    var defaultBillingDetails: PaymentSheet.BillingDetails {
+        /// Looks at `previousCustomerInput` and `configuration`, prefers the former
+        let previous = previousCustomerInput?.paymentMethodParams.billingDetails
+        let configuration = configuration.defaultBillingDetails
+        var details = PaymentSheet.BillingDetails()
+        details.name = previous?.name ?? configuration.name
+        details.phone = previous?.phone ?? configuration.phone
+        details.email = previous?.email ?? configuration.email
+        details.address.line1 = previous?.address?.line1 ?? configuration.address.line1
+        details.address.line2 = previous?.address?.line2 ?? configuration.address.line2
+        details.address.city = previous?.address?.city ?? configuration.address.city
+        details.address.state = previous?.address?.state ?? configuration.address.state
+        details.address.postalCode = previous?.address?.postalCode ?? configuration.address.postalCode
+        details.address.country = previous?.address?.country ?? configuration.address.country
+        return details
+    }
 
     var canSaveToLink: Bool {
         return (intent.supportsLinkCard && paymentMethod == .card && saveMode != .merchantRequired)
@@ -46,6 +64,7 @@ class PaymentSheetFormFactory {
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         paymentMethod: PaymentSheet.PaymentMethodType,
+        previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
@@ -85,6 +104,12 @@ class PaymentSheetFormFactory {
         self.addressSpecProvider = addressSpecProvider
         self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
         self.linkAccount = linkAccount
+        // Restore the previous customer input if its the same type
+        if previousCustomerInput?.paymentMethodType == paymentMethod {
+            self.previousCustomerInput = previousCustomerInput
+        } else {
+            self.previousCustomerInput = nil
+        }
     }
 
     func make() -> PaymentMethodElement {
@@ -93,7 +118,7 @@ class PaymentSheetFormFactory {
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
-            return makeCard(theme: theme)
+            return makeCard()
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
@@ -122,7 +147,7 @@ extension PaymentSheetFormFactory {
     func makeName(label: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.makeName(
             label: label,
-            defaultValue: configuration.defaultBillingDetails.name,
+            defaultValue: defaultBillingDetails.name,
             theme: theme
         )
         return PaymentMethodElementWrapper(element) { textField, params in
@@ -136,7 +161,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeEmail(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
+        let element = TextFieldElement.makeEmail(defaultValue: defaultBillingDetails.email, theme: theme)
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -149,8 +174,8 @@ extension PaymentSheetFormFactory {
 
     func makePhone() -> PaymentMethodElementWrapper<PhoneNumberElement> {
         let element = PhoneNumberElement(
-            defaultCountryCode: configuration.defaultBillingDetails.address.country,
-            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
+            defaultCountryCode: defaultBillingDetails.address.country,
+            defaultPhoneNumber: defaultBillingDetails.phone,
             theme: theme)
         return PaymentMethodElementWrapper(element) { phoneField, params in
             guard case .valid = phoneField.validationState else { return nil }
@@ -219,10 +244,17 @@ extension PaymentSheetFormFactory {
         label: String = String.Localized.save_for_future_payments,
         didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
+        let isSelectedByDefault: Bool = {
+            if let previousCustomerInput = previousCustomerInput {
+                return previousCustomerInput.shouldSavePaymentMethod
+            } else {
+                return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
+            }
+        }()
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: label,
-            isSelectedByDefault: configuration.savePaymentMethodOptInBehavior.isSelectedByDefault,
+            isSelectedByDefault: isSelectedByDefault,
             didToggle: didToggle
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
@@ -241,13 +273,13 @@ extension PaymentSheetFormFactory {
         let defaultAddress: AddressSectionElement.AddressDetails
         if let shippingDetails = configuration.shippingDetails() {
             // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
-            displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init()
+            displayBillingSameAsShippingCheckbox = defaultBillingDetails == .init()
             defaultAddress =
                 displayBillingSameAsShippingCheckbox
-                ? .init(shippingDetails) : configuration.defaultBillingDetails.address.addressSectionDefaults
+                ? .init(shippingDetails) : defaultBillingDetails.address.addressSectionDefaults
         } else {
             displayBillingSameAsShippingCheckbox = false
-            defaultAddress = configuration.defaultBillingDetails.address.addressSectionDefaults
+            defaultAddress = defaultBillingDetails.address.addressSectionDefaults
         }
         let section = AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
@@ -337,7 +369,7 @@ extension PaymentSheetFormFactory {
                 label: String.Localized.country,
                 countryCodes: resolvedCountryCodes,
                 theme: theme,
-                defaultCountry: configuration.defaultBillingDetails.address.country,
+                defaultCountry: defaultBillingDetails.address.country,
                 locale: locale
             )
         ) { dropdown, params in
@@ -395,7 +427,7 @@ extension PaymentSheetFormFactory {
                 label: String.Localized.country,
                 countryCodes: countryCodes,
                 theme: theme,
-                defaultCountry: configuration.defaultBillingDetails.address.country,
+                defaultCountry: defaultBillingDetails.address.country,
                 locale: Locale.current
             )
         ) { dropdown, params in
@@ -457,24 +489,24 @@ extension PaymentSheetFormFactory {
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {
         return PaymentMethodElementWrapper(
             element,
-            defaultsApplier: { [configuration] _, params in
+            defaultsApplier: { [configuration, defaultBillingDetails] _, params in
                 // Only apply defaults when the flag is on.
                 guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
                     return params
                 }
 
-                if let name = configuration.defaultBillingDetails.name {
+                if let name = defaultBillingDetails.name {
                     params.paymentMethodParams.nonnil_billingDetails.name = name
                 }
-                if let phone = configuration.defaultBillingDetails.phone {
+                if let phone = defaultBillingDetails.phone {
                     params.paymentMethodParams.nonnil_billingDetails.phone = phone
                 }
-                if let email = configuration.defaultBillingDetails.email {
+                if let email = defaultBillingDetails.email {
                     params.paymentMethodParams.nonnil_billingDetails.email = email
                 }
-                if configuration.defaultBillingDetails.address != .init() {
+                if defaultBillingDetails.address != .init() {
                     params.paymentMethodParams.nonnil_billingDetails.address =
-                        STPPaymentMethodAddress(address: configuration.defaultBillingDetails.address)
+                        STPPaymentMethodAddress(address: defaultBillingDetails.address)
                 }
                 return params
             },
@@ -490,7 +522,7 @@ extension PaymentSheetFormFactory {
     ) {
         // Using a closure because a function would require capturing self, which will be deallocated by the time
         // the closures below are called.
-        let defaultBillingDetails = configuration.defaultBillingDetails
+        let defaultBillingDetails = defaultBillingDetails
         let updatePhone = { (phoneElement: PhoneNumberElement, countryCode: String) in
             // Only update the phone country if:
             // 1. It's different from the selected one,

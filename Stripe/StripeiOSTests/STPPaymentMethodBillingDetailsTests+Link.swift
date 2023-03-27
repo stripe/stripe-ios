@@ -14,7 +14,7 @@ final class STPPaymentMethodBillingDetailsTests: XCTestCase {
         var billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Name"
         billingDetails.email = "Email"
-        billingDetails.email = "Phone"
+        billingDetails.phone = "Phone"
         billingDetails.address = STPPaymentMethodAddress()
         billingDetails.address?.line1 = "Line 1"
         billingDetails.address?.line2 = ""

@@ -13,7 +13,7 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard(theme: ElementsUITheme = .default) -> PaymentMethodElement {
+    func makeCard() -> PaymentMethodElement {
         let isLinkEnabled = offerSaveToLinkWhenSupported && canSaveToLink
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_this_card_for_future_$merchant_payments(
@@ -31,10 +31,19 @@ extension PaymentSheetFormFactory {
             includeEmail: configuration.billingDetailsCollectionConfiguration.email == .always,
             includePhone: includePhone)
 
+        let previousCardInput = previousCustomerInput?.paymentMethodParams.card
+        let cardDefaultValues = CardSection.DefaultValues(
+            name: defaultBillingDetails.name,
+            pan: previousCardInput?.number,
+            cvc: previousCardInput?.cvc,
+            expiry: "\(previousCardInput?.expMonth?.stringValue ?? "")\(previousCardInput?.expYear?.stringValue ?? "")"
+        )
+
         let cardSection = CardSection(
             collectName: configuration.billingDetailsCollectionConfiguration.name == .always,
-            defaultName: configuration.defaultBillingDetails.name,
-            theme: theme)
+            defaultValues: cardDefaultValues,
+            theme: theme
+        )
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
             switch configuration.billingDetailsCollectionConfiguration.address {

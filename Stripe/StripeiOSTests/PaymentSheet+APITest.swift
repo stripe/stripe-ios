@@ -403,19 +403,26 @@ class PaymentSheetAPITest: XCTestCase {
             // These tests don't confirm, so this is unused
         }
         let expectation = expectation(description: "Updates")
+        // Given a PaymentSheet.FlowController instance...
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
-                // ...updating the intent config should succeed...
+                // ...the vc's intent should match the initial intent config...
+                XCTAssertFalse(sut.viewController.intent.isSettingUp)
+                XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+                // ...and updating the intent config should succeed...
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
-                    // TODO(Update:) Change this to validate it preserves the paymentOption
                     XCTAssertNil(sut.paymentOption)
+
+                    // ...and the updated vc's intent has the updated config's values
+                    XCTAssertTrue(sut.viewController.intent.isSettingUp)
+                    XCTAssertFalse(sut.viewController.intent.isPaymentIntent)
                     expectation.fulfill()
                 }
             case .failure(let error):
-                XCTFail(error.localizedDescription)
+                XCTFail(error.nonGenericDescription)
             }
         }
         waitForExpectations(timeout: 10)
@@ -439,6 +446,7 @@ class PaymentSheetAPITest: XCTestCase {
                     let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
                     window.rootViewController = UIViewController()
                     window.makeKeyAndVisible()
+
                     // TODO(Update:) Assert that `present` w/ the window.rootViewController no-ops
                     // Note: `confirm` has an assertionFailure if paymentOption is nil, so we don't check it here.
                     expectation.fulfill()

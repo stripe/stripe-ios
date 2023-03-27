@@ -31,6 +31,20 @@ final class CardSection: ContainerElement {
     }()
     let cardSection: SectionElement
 
+    struct DefaultValues {
+        internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
+            self.name = name
+            self.pan = pan
+            self.cvc = cvc
+            self.expiry = expiry
+        }
+
+        let name: String?
+        let pan: String?
+        let cvc: String?
+        let expiry: String?
+    }
+
     // References to the underlying TextFieldElements
     let nameElement: TextFieldElement?
     let panElement: TextFieldElement
@@ -40,7 +54,7 @@ final class CardSection: ContainerElement {
 
     init(
         collectName: Bool = false,
-        defaultName: String? = nil,
+        defaultValues: DefaultValues = .init(),
         theme: ElementsUITheme = .default
     ) {
         self.theme = theme
@@ -48,7 +62,7 @@ final class CardSection: ContainerElement {
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
                     type: .full,
-                    defaultValue: defaultName,
+                    defaultValue: defaultValues.name,
                     label: STPLocalizedString("Name on card", "Label for name on card field")),
                 theme: theme
             ) { field, params in
@@ -56,18 +70,18 @@ final class CardSection: ContainerElement {
                 return params
             }
             : nil
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(), theme: theme) { field, params in
+        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
-        let cvcElementConfiguration = TextFieldElement.CVCConfiguration {
+        let cvcElementConfiguration = TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) {
             return STPCardValidator.brand(forNumber: panElement.element.text)
         }
         let cvcElement = PaymentMethodElementWrapper(cvcElementConfiguration, theme: theme) { field, params in
             cardParams(for: params).cvc = field.text
             return params
         }
-        let expiryElement = PaymentMethodElementWrapper(TextFieldElement.ExpiryDateConfiguration(), theme: theme) { field, params in
+        let expiryElement = PaymentMethodElementWrapper(TextFieldElement.ExpiryDateConfiguration(defaultValue: defaultValues.expiry), theme: theme) { field, params in
             if let month = Int(field.text.prefix(2)) {
                 cardParams(for: params).expMonth = NSNumber(value: month)
             }
