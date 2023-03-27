@@ -472,21 +472,23 @@ class PaymentSheetAPITest: XCTestCase {
             // These tests don't confirm, so this is unused
         }
 
-        let firstUpdatExpectation = expectation(description: "First update should not invoke callback")
-        firstUpdatExpectation.isInverted = true
+        let firstUpdateExpectation = expectation(description: "First update should not invoke callback")
+        firstUpdateExpectation.isInverted = true
         let secondUpdateExpectation = expectation(description: "Second update succeeds")
+        var flowController: PaymentSheet.FlowController!
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
-                sut.update(intentConfiguration: intentConfig) { _ in
-                    firstUpdatExpectation.fulfill()
+                flowController = sut
+                flowController.update(intentConfiguration: intentConfig) { _ in
+                    firstUpdateExpectation.fulfill()
                 }
 
                 intentConfig.mode = .setup(currency: "USD", setupFutureUsage: .offSession)
-                sut.update(intentConfiguration: intentConfig) { error in
+                flowController.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
                     // TODO(Update:) Change this to validate it preserves the paymentOption
-                    XCTAssertNil(sut.paymentOption)
+                    XCTAssertNil(flowController.paymentOption)
                     secondUpdateExpectation.fulfill()
                 }
             case .failure(let error):
