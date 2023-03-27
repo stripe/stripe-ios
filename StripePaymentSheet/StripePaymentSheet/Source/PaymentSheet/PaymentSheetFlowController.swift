@@ -305,7 +305,6 @@ extension PaymentSheet {
                         isLinkEnabled: isLinkEnabled,
                         configuration: self.configuration
                     )
-
                     self.viewController.delegate = self
 
                     // Synchronously pre-load image into cache
