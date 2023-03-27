@@ -201,8 +201,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
         ]
 
-        let bodyData = try! JSONSerialization.data(withJSONObject: body, options: [])
-        request.httpBody = bodyData
+        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
 
         let task = URLSession.shared.dataTask(
             with: request,
@@ -280,7 +279,18 @@ class ExampleCustomCheckoutViewController: UIViewController {
     func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> Void) {
         var request = URLRequest(url: createIntentUrl)
         request.httpMethod = "POST"
-        request.httpBody = createIntentRequestBody(paymentMethodID: paymentMethodID)
+        
+        var body: [String: Any?] = [
+            "payment_method_id": paymentMethodID,
+            "currency": "USD",
+            "amount": Int(computedTotals.total * 100),
+        ]
+
+        if subscribeSwitch.isOn {
+            body["setup_future_usage"] = "off_session"
+        }
+        
+        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
 
         let task = URLSession.shared.dataTask(
@@ -300,20 +310,6 @@ class ExampleCustomCheckoutViewController: UIViewController {
         })
 
         task.resume()
-    }
-
-    func createIntentRequestBody(paymentMethodID: String) -> Data {
-        var body: [String: Any?] = [
-            "payment_method_id": paymentMethodID,
-            "currency": "USD",
-            "amount": Int(computedTotals.total * 100),
-        ]
-
-        if subscribeSwitch.isOn {
-            body["setup_future_usage"] = "off_session"
-        }
-
-        return try! JSONSerialization.data(withJSONObject: body, options: [])
     }
 }
 
