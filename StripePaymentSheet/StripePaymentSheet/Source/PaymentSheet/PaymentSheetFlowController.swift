@@ -81,6 +81,28 @@ extension PaymentSheet {
             return viewController.selectedPaymentOption
         }
 
+        // Stores the state of the most recent call to the update API
+        private var latestUpdateContext: UpdateContext?
+
+        struct UpdateContext {
+            /// The ID of the update API call
+            let id: UUID
+
+            /// The status of the last update API call
+            var status: Status = .inProgress
+
+            init(id: UUID, status: Status = .inProgress) {
+                self.id = id
+                self.status = status
+            }
+
+            enum Status {
+                case completed
+                case inProgress
+                case failed
+            }
+        }
+
         // MARK: - Initializer (Internal)
 
         required init(
@@ -193,7 +215,15 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: (() -> Void)? = nil
         ) {
-            // TODO(Update): If update is in-flight or the last update failed, assert and call the completion
+            switch latestUpdateContext?.status {
+            case .inProgress, .failed:
+                assertionFailure("Cannot call presentPaymentOptions when the last update call has not yet finished or failed.")
+                completion?()
+                return
+            default:
+                break
+            }
+
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
                 completion?()
@@ -244,7 +274,23 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: @escaping (PaymentSheetResult) -> Void
         ) {
-            // TODO(Update): If update is in-flight or the last update failed, assert and return .completion(.failed)
+            assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
+
+            switch latestUpdateContext?.status {
+            case .inProgress:
+                assertionFailure("`confirmPayment` should only be called when the last update has completed.")
+                let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with an update API call in progress.")
+                completion(.failed(error: error))
+                return
+            case .failed:
+                assertionFailure("`confirmPayment` should only be called when the last update has completed without error.")
+                let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called when the last update API call failed.")
+                completion(.failed(error: error))
+                return
+            default:
+                break
+            }
+
             guard let paymentOption = _paymentOption else {
                 assertionFailure("`confirmPayment` should only be called when `paymentOption` is not nil")
                 let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with a nil paymentOption")
@@ -286,15 +332,27 @@ extension PaymentSheet {
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry. TODO(Update): Tell the merchant they need to disable the buy button.
         /// Don’t call this method while PaymentSheet is being presented.
         func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
+            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
+
+            let updateID = UUID()
+            latestUpdateContext = UpdateContext(id: updateID)
+
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheet.load(
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration
             ) { [weak self] loadResult in
+                assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
                     assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update(intentConfiguration:completion:)`")
                     return
                 }
+
+                // If this update is not the latest, ignore the result and don't invoke completion block and exit early
+                guard updateID == self.latestUpdateContext?.id else {
+                    return
+                }
+
                 switch loadResult {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
@@ -311,8 +369,10 @@ extension PaymentSheet {
                     // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
                     _ = self.paymentOption
 
+                    self.latestUpdateContext?.status = .completed
                     completion(nil)
                 case .failure(let error):
+                    self.latestUpdateContext?.status = .failed
                     completion(error)
                 }
             }

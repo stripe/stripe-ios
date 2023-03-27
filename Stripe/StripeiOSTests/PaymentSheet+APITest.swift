@@ -402,7 +402,8 @@ class PaymentSheetAPITest: XCTestCase {
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
             // These tests don't confirm, so this is unused
         }
-        let expectation = expectation(description: "Updates")
+        let firstUpdateExpectation = expectation(description: "First update completes")
+        let secondUpdateExpectation = expectation(description: "Second update completes")
         // Given a PaymentSheet.FlowController instance...
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
@@ -415,11 +416,19 @@ class PaymentSheetAPITest: XCTestCase {
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
                     XCTAssertNil(sut.paymentOption)
-
-                    // ...and the updated vc's intent has the updated config's values
                     XCTAssertTrue(sut.viewController.intent.isSettingUp)
                     XCTAssertFalse(sut.viewController.intent.isPaymentIntent)
-                    expectation.fulfill()
+                    firstUpdateExpectation.fulfill()
+
+                    // ...updating the intent config multiple times should succeed...
+                    intentConfig.mode = .payment(amount: 100, currency: "USD", setupFutureUsage: nil)
+                    sut.update(intentConfiguration: intentConfig) { error in
+                        XCTAssertNil(error)
+                        XCTAssertNil(sut.paymentOption)
+                        XCTAssertFalse(sut.viewController.intent.isSettingUp)
+                        XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+                        secondUpdateExpectation.fulfill()
+                    }
                 }
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
@@ -433,7 +442,8 @@ class PaymentSheetAPITest: XCTestCase {
             // These tests don't confirm, so this is unused
         }
 
-        let expectation = expectation(description: "Updates")
+        let failedUpdateExpectation = expectation(description: "First update fails")
+        let secondUpdateExpectation = expectation(description: "Second update succeeds")
         PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
@@ -443,13 +453,48 @@ class PaymentSheetAPITest: XCTestCase {
                     XCTAssertNotNil(updateError)
                     // ...the paymentOption should be nil...
                     XCTAssertNil(sut.paymentOption)
-                    let window = UIWindow(frame: .init(x: 0, y: 0, width: 100, height: 100))
-                    window.rootViewController = UIViewController()
-                    window.makeKeyAndVisible()
-
-                    // TODO(Update:) Assert that `present` w/ the window.rootViewController no-ops
+                    failedUpdateExpectation.fulfill()
                     // Note: `confirm` has an assertionFailure if paymentOption is nil, so we don't check it here.
-                    expectation.fulfill()
+
+                    // ...updating should succeed after failing to update
+                    intentConfig.mode = .setup(currency: "USD", setupFutureUsage: .offSession)
+                    sut.update(intentConfiguration: intentConfig) { error in
+                        XCTAssertNil(error)
+                        // TODO(Update:) Change this to validate it preserves the paymentOption
+                        XCTAssertNil(sut.paymentOption)
+                        secondUpdateExpectation.fulfill()
+                    }
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testUpdateIgnoresInFlightUpdate() {
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in
+            // These tests don't confirm, so this is unused
+        }
+
+        let firstUpdateExpectation = expectation(description: "First update should not invoke callback")
+        firstUpdateExpectation.isInverted = true
+        let secondUpdateExpectation = expectation(description: "Second update succeeds")
+        var flowController: PaymentSheet.FlowController!
+        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+            switch result {
+            case .success(let sut):
+                flowController = sut
+                flowController.update(intentConfiguration: intentConfig) { _ in
+                    firstUpdateExpectation.fulfill()
+                }
+
+                intentConfig.mode = .setup(currency: "USD", setupFutureUsage: .offSession)
+                flowController.update(intentConfiguration: intentConfig) { error in
+                    XCTAssertNil(error)
+                    // TODO(Update:) Change this to validate it preserves the paymentOption
+                    XCTAssertNil(flowController.paymentOption)
+                    secondUpdateExpectation.fulfill()
                 }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
