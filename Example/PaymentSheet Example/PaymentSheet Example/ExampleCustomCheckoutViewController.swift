@@ -14,7 +14,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     @IBOutlet weak var paymentMethodButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
-    
+
     @IBOutlet weak var hotDogQuantityLabel: UILabel!
     @IBOutlet weak var saladQuantityLabel: UILabel!
     @IBOutlet weak var hotDogStepper: UIStepper!
@@ -23,7 +23,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var salesTaxLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var subscribeSwitch: UISwitch!
-    
+
     private var paymentSheetFlowController: PaymentSheet.FlowController!
     private let baseUrl = "https://stripe-mobile-payment-sheet-custom.glitch.me"
     private var backendCheckoutUrl: URL {
@@ -32,9 +32,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
     private var createIntentUrl: URL {
         return URL(string: baseUrl + "/create_intent")!
     }
-    
+
     private let taxMultiplier = 0.0825
-    
+
     private var subtotal: Double {
         let hotDogPrice = 0.99
         let saladPrice = 8.00
@@ -42,11 +42,11 @@ class ExampleCustomCheckoutViewController: UIViewController {
         let subtotal = (saladStepper.value * saladPrice + hotDogStepper.value * hotDogPrice) * discountMultiplier
         return subtotal
     }
-    
+
     private var total: Double {
         subtotal + (subtotal * taxMultiplier)
     }
-    
+
     private var intentConfig: PaymentSheet.IntentConfiguration {
         if subscribeSwitch.isOn {
             return .init(mode: .payment(amount: Int(total * 100),
@@ -54,10 +54,10 @@ class ExampleCustomCheckoutViewController: UIViewController {
                                         setupFutureUsage: .offSession),
                          confirmHandler: confirmHandler(_:_:))
         }
-        
+
         return .init(mode: .payment(amount: Int(total * 100), currency: "USD"), confirmHandler: confirmHandler(_:_:))
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -66,19 +66,19 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
         paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
-        
+
         hotDogStepper.isEnabled = false
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
-        
+
         loadCheckout()
     }
-    
+
     func loadCheckout() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
-        
+
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { [weak self] (data, _, error) in
@@ -93,7 +93,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     // Handle error
                     return
                 }
-                
+
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
 
@@ -126,7 +126,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     }
                 }
             })
-        
+
         task.resume()
     }
 
@@ -156,28 +156,28 @@ class ExampleCustomCheckoutViewController: UIViewController {
             }
         }
     }
-    
+
     @IBAction func hotDogStepperDidChange() {
         updateUI()
     }
-    
+
     @IBAction func saladStepperDidChange() {
         updateUI()
     }
-    
+
     @IBAction func subscribeSwitchDidChange() {
         updateUI()
     }
-    
+
     // MARK: - Helper methods
-    
+
     private func updateUI() {
         // Disable buy and payment method buttons
         buyButton.isEnabled = false
         paymentMethodButton.isEnabled = false
-        
+
         updateLabels()
-        
+
         // Update PaymentSheet with the latest `intentConfig`
         paymentSheetFlowController.update(intentConfiguration: intentConfig) { error  in
             if error != nil {
@@ -192,7 +192,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
     func updateButtons() {
         paymentMethodButton.isEnabled = true
-        
+
         // MARK: Update the payment method and buy buttons
         if let paymentOption = paymentSheetFlowController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
@@ -206,13 +206,13 @@ class ExampleCustomCheckoutViewController: UIViewController {
             buyButton.isEnabled = false
         }
     }
-    
+
     func updateLabels() {
         hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
         saladQuantityLabel.text = "\(Int(saladStepper.value))"
-        
+
         let tax = subtotal * taxMultiplier
-        
+
         subtotalLabel.text = "\(subtotal.truncate(places: 2))"
         salesTaxLabel.text = "\(tax.truncate(places: 2))"
         totalLabel.text = "\((subtotal + tax).truncate(places: 2))"
@@ -228,9 +228,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
     }
-    
+
     // MARK: Confirm handler
-    
+
     func confirmHandler(_ paymentMethodID: String,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         // Create an intent on your server and invoke `intentCreationCallback` with the client secret
@@ -243,15 +243,15 @@ class ExampleCustomCheckoutViewController: UIViewController {
             }
         }
     }
-    
+
     // MARK: Helpers
-    
-    func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> ()) {
+
+    func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> Void) {
         var request = URLRequest(url: createIntentUrl)
         request.httpMethod = "POST"
         request.httpBody = createIntentRequestBody(paymentMethodID: paymentMethodID)
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        
+
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { (data, _, error) in
@@ -264,30 +264,30 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     completion(.failure(error!))
                     return
                 }
-                
+
                 completion(.success(clientSecret))
         })
-        
+
         task.resume()
     }
-    
+
     func createIntentRequestBody(paymentMethodID: String) -> Data {
         var body: [String: Any?] = [
             "payment_method_id": paymentMethodID,
             "currency": "USD",
-            "amount": Int(total * 100)
+            "amount": Int(total * 100),
         ]
-        
+
         if subscribeSwitch.isOn {
             body["setup_future_usage"] = "off_session"
         }
-        
+
         return try! JSONSerialization.data(withJSONObject: body, options: [])
     }
 }
 
 extension Double {
-    func truncate(places : Int)-> Double {
+    func truncate(places: Int) -> Double {
         return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }
 }
