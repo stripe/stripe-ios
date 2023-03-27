@@ -10,10 +10,10 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeUICore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 @testable@_spi(STP) import StripeUICore
 
 class MockElement: Element {
@@ -1439,7 +1439,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
     }
-    
+
     func testAppliesPreviousCustomerInput_for_different_payment_method_type() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -1461,13 +1461,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         billingDetails.address?.state = "CA"
         billingDetails.address?.country = "US"
         billingDetails.address?.postalCode = "94102"
-        
+
         // ...for Afterpay...
         let previousAfterpayCustomerInput = IntentConfirmParams.init(
             params: .paramsWith(afterpayClearpay: .init(), billingDetails: billingDetails, metadata: nil),
             type: .dynamic("afterpay_clearpay")
         )
-        
+
         // ...the Afterpay form should be valid
         let afterpayFactory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["afterpay_clearpay"])),
@@ -1506,7 +1506,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
 
     }
-    
+
     // MARK: - Helpers
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
