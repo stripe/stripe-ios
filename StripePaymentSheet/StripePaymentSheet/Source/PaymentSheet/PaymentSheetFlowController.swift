@@ -85,7 +85,7 @@ extension PaymentSheet {
         private var latestUpdateContext: UpdateContext?
 
         struct UpdateContext {
-            /// The ID of the last update API call
+            /// The ID of the update API call
             let id: UUID
 
             /// The status of the last update API call
