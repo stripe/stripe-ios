@@ -10,6 +10,9 @@ import UIKit
 
 class SimpleMandateElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+        if mandateTextView.viewDidAppear {
+            params.didDisplayMandate = true
+        }
         if customerAlreadySawMandate || mandateTextView.viewDidAppear {
             // the customer must have seen the mandate for this to be valid
             return params

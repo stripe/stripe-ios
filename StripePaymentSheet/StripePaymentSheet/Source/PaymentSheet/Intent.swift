@@ -124,6 +124,8 @@ class IntentConfirmParams {
     /// True if the customer opts to save their payment method for future payments.
     /// - Note: PaymentIntent-only
     var shouldSavePaymentMethod: Bool = false
+    /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
+    var didDisplayMandate: Bool = false
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 

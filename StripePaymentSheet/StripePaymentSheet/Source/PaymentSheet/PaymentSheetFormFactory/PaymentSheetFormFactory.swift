@@ -183,6 +183,12 @@ extension PaymentSheetFormFactory {
             return params
         }
     }
+    
+    func makeMandate(mandateText: String) -> PaymentMethodElement {
+        // If there was previous customer input, check if it displayed the mandate for this payment method
+        let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
+        return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
+    }
 
     func makeBSB(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.Account.makeBSB(defaultValue: nil, theme: theme)
@@ -215,12 +221,12 @@ extension PaymentSheetFormFactory {
 
     func makeSepaMandate() -> PaymentMethodElement {
         let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
-        return SimpleMandateElement(mandateText: mandateText, theme: theme)
+        return makeMandate(mandateText: mandateText)
     }
 
     func makeCashAppMandate() -> PaymentMethodElement {
         let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName)
-        return SimpleMandateElement(mandateText: mandateText, theme: theme)
+        return makeMandate(mandateText: mandateText)
 
     }
     
@@ -232,7 +238,7 @@ extension PaymentSheetFormFactory {
                 return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
             }
         }()
-        return SimpleMandateElement(mandateText: mandateText, theme: theme)
+        return makeMandate(mandateText: mandateText)
     }
 
     func makeSaveCheckbox(
