@@ -63,6 +63,11 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
         paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
+        
+        hotDogStepper.isEnabled = false
+        saladStepper.isEnabled = false
+        subscribeSwitch.isEnabled = false
+        
         loadCheckout()
     }
     
@@ -110,6 +115,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
                         case .success(let paymentSheetFlowController):
                             self?.paymentSheetFlowController = paymentSheetFlowController
                             self?.paymentMethodButton.isEnabled = true
+                            self?.hotDogStepper.isEnabled = true
+                            self?.saladStepper.isEnabled = true
+                            self?.subscribeSwitch.isEnabled = true
                             self?.updateButtons()
                         }
                     }
