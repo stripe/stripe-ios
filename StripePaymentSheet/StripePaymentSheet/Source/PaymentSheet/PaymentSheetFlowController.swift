@@ -342,6 +342,7 @@ extension PaymentSheet {
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration
             ) { [weak self] loadResult in
+                assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
                     assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update(intentConfiguration:completion:)`")
                     return
