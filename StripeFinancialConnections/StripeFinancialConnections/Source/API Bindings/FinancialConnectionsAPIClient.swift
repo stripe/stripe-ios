@@ -23,7 +23,7 @@ protocol FinancialConnectionsAPIClient {
 
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList>
 
-    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList>
+    func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource>
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession>
 
@@ -142,7 +142,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
     }
 
-    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
+    func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource> {
         let parameters = [
             "client_secret": clientSecret,
             "query": query,

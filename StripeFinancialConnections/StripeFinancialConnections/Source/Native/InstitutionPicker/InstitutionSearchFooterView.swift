@@ -12,132 +12,141 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchFooterView: UIView {
 
-    init(didSelectManuallyAddYourAccount: (() -> Void)?) {
-        super.init(frame: .zero)
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                CreateTitleLabel()
-                // ...more views are added later...
-            ]
-        )
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 20
-        verticalStackView.isLayoutMarginsRelativeArrangement = true
-        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 20,
-            leading: 24,
-            bottom: 20,
-            trailing: 24
-        )
-        verticalStackView.backgroundColor = .backgroundContainer
-        verticalStackView.addArrangedSubview(
-            CreateRowView(
-                image: .check,
-                title: STPLocalizedString(
-                    "Double check your spelling and search terms",
-                    "A message that appears at the bottom of search results. It tells users to check what they typed to find their bank is correct."
-                )
-            )
-        )
-        if let didSelectManuallyAddYourAccount = didSelectManuallyAddYourAccount {
-            verticalStackView.addArrangedSubview(
-                CreateRowView(
-                    image: .edit,
-                    title:
-                        "[\(STPLocalizedString("Manually add your account", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be able to manually enter their bank account details (a routing number and an account number)."))](https://www.use-custom-action-instead.com)",
-                    customAction: didSelectManuallyAddYourAccount
-                )
+    private static let constantTopPadding: CGFloat = 10.0
+
+    private let didSelect: (() -> Void)?
+    private let topSeparatorView: UIView
+    private let paddingStackView: UIStackView
+    var showTopSeparator: Bool {
+        get {
+            return !topSeparatorView.isHidden
+        }
+        set {
+            topSeparatorView.isHidden = !newValue
+            paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                top: (showTopSeparator ? 20 : 0) + Self.constantTopPadding,
+                leading: 24,
+                bottom: 20,
+                trailing: 24
             )
         }
-        addAndPinSubview(verticalStackView)
+    }
 
-        // Add top/bottom separators
+    init(
+        title: String,
+        subtitle: String,
+        showIcon: Bool,
+        didSelect: (() -> Void)?
+    ) {
+        self.didSelect = didSelect
         let topSeparatorView = UIView()
         topSeparatorView.backgroundColor = .borderNeutral
-        addSubview(topSeparatorView)
-        let bottomSeparatorView = UIView()
-        bottomSeparatorView.backgroundColor = .borderNeutral
-        addSubview(bottomSeparatorView)
-        topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
-        bottomSeparatorView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            topSeparatorView.topAnchor.constraint(equalTo: topAnchor),
-            topSeparatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            topSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            topSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+        self.topSeparatorView = topSeparatorView
+        let paddingStackView = UIStackView(
+            arrangedSubviews: [
+                CreateRowView(
+                    image: showIcon ? .add : nil,
+                    title: title,
+                    subtitle: subtitle
+                ),
+            ]
+        )
+        self.paddingStackView = paddingStackView
+        super.init(frame: .zero)
+        paddingStackView.isLayoutMarginsRelativeArrangement = true
+        addAndPinSubview(paddingStackView)
 
-            bottomSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            bottomSeparatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            bottomSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+        addSubview(topSeparatorView)
+        topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            topSeparatorView.topAnchor.constraint(equalTo: topAnchor, constant: Self.constantTopPadding),
+            topSeparatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            topSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 24),
+            topSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
         ])
+
+        if didSelect != nil {
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+            tapGestureRecognizer.delegate = self
+            addGestureRecognizer(tapGestureRecognizer)
+        }
+
+        self.showTopSeparator = true
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func didTapView() {
+        self.didSelect?()
+    }
+}
+
+// MARK: - UITapGestureRecognizer
+
+@available(iOSApplicationExtension, unavailable)
+extension InstitutionSearchFooterView: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        // if user taps on the footer, we always want it to be recognized
+        //
+        // if the keyboard is on screen, then NOT having this method
+        // implemented will block the first tap in order to
+        // dismiss the keyboard
+        return true
     }
 }
 
 // MARK: - Helpers
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateTitleLabel() -> UIView {
-    let titleLabel = UILabel()
-    titleLabel.text = STPLocalizedString(
-        "CAN'T FIND YOUR BANK?",
-        "The title of a section that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the section is to give users other options in case they can't find their bank."
-    )
-    titleLabel.font = .stripeFont(forTextStyle: .kicker)
-    titleLabel.textColor = .textSecondary
-    return titleLabel
-}
-
-@available(iOSApplicationExtension, unavailable)
 private func CreateRowView(
-    image: Image,
+    image: Image?,
     title: String,
-    customAction: (() -> Void)? = nil
+    subtitle: String
 ) -> UIView {
-    let shouldHighlightIcon = !title.extractLinks().links.isEmpty
-    let horizontalStackView = UIStackView(
-        arrangedSubviews: [
-            CreateRowIconView(
-                image: image,
-                isHighlighted: shouldHighlightIcon
-            ),
-            CreateRowLabelView(
-                title: title,
-                customAction: customAction
-            ),
-        ]
-    )
+    let horizontalStackView = UIStackView()
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 12
     horizontalStackView.alignment = .center
+    if let image = image {
+        horizontalStackView.addArrangedSubview(
+            CreateRowIconView(image: image)
+        )
+    }
+    horizontalStackView.addArrangedSubview(
+        CreateRowLabelView(
+            title: title,
+            subtitle: subtitle
+        )
+    )
     return horizontalStackView
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateRowIconView(image: Image, isHighlighted: Bool) -> UIView {
+private func CreateRowIconView(image: Image) -> UIView {
     let iconImageView = UIImageView()
     iconImageView.contentMode = .scaleAspectFit
     iconImageView.image = image.makeImage()
-        .withTintColor(
-            isHighlighted ? .textBrand : .textSecondary
-        )
+        .withTintColor(.textBrand)
 
     let iconContainerView = UIView()
-    iconContainerView.backgroundColor = isHighlighted ? .info100 : .borderNeutral
+    iconContainerView.backgroundColor = .brand100
     iconContainerView.layer.cornerRadius = 4
     iconContainerView.addSubview(iconImageView)
 
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        iconContainerView.widthAnchor.constraint(equalToConstant: 32),
-        iconContainerView.heightAnchor.constraint(equalToConstant: 32),
+        iconContainerView.widthAnchor.constraint(equalToConstant: 36),
+        iconContainerView.heightAnchor.constraint(equalToConstant: 36),
 
-        iconImageView.heightAnchor.constraint(equalToConstant: 16),
+        iconImageView.heightAnchor.constraint(equalToConstant: 20),
+        iconImageView.widthAnchor.constraint(equalToConstant: 20),
         iconImageView.centerXAnchor.constraint(equalTo: iconContainerView.centerXAnchor),
         iconImageView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor),
     ])
@@ -147,25 +156,32 @@ private func CreateRowIconView(image: Image, isHighlighted: Bool) -> UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateRowLabelView(
     title: String,
-    customAction: (() -> Void)? = nil
+    subtitle: String
 ) -> UIView {
     let titleLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTightEmphasized),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        font: .stripeFont(forTextStyle: .bodyEmphasized),
+        boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
+        linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
         textColor: .textPrimary
     )
-    if let customAction = customAction {
-        titleLabel.setText(
-            title,
-            action: { _ in
-                customAction()
-            }
-        )
-    } else {
-        titleLabel.setText(title)
-    }
-    return titleLabel
+    titleLabel.setText(title)
+
+    let subtitleLabel = ClickableLabel(
+        font: .stripeFont(forTextStyle: .captionTight),
+        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+        textColor: .textSecondary
+    )
+    subtitleLabel.setText(subtitle)
+
+    let verticalStackView = UIStackView(
+        arrangedSubviews: [
+            titleLabel,
+            subtitleLabel,
+        ]
+    )
+    verticalStackView.axis = .vertical
+    return verticalStackView
 }
 
 #if DEBUG
@@ -175,8 +191,17 @@ import SwiftUI
 @available(iOSApplicationExtension, unavailable)
 private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentable {
 
+    let title: String
+    let subtitle: String
+    let showIcon: Bool
+
     func makeUIView(context: Context) -> InstitutionSearchFooterView {
-        InstitutionSearchFooterView(didSelectManuallyAddYourAccount: {})
+        InstitutionSearchFooterView(
+            title: title,
+            subtitle: subtitle,
+            showIcon: showIcon,
+            didSelect: {}
+        )
     }
 
     func updateUIView(_ uiView: InstitutionSearchFooterView, context: Context) {
@@ -187,12 +212,21 @@ private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentab
 @available(iOSApplicationExtension, unavailable)
 struct InstitutionSearchFooterView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            InstitutionSearchFooterViewUIViewRepresentable()
-                .frame(maxHeight: 220)
+        VStack(spacing: 20) {
+            InstitutionSearchFooterViewUIViewRepresentable(
+                title: "Don't see your bank?",
+                subtitle: "Enter your bank account and routing numbers",
+                showIcon: true
+            )
+            .frame(maxHeight: 100)
+            InstitutionSearchFooterViewUIViewRepresentable(
+                title: "No results",
+                subtitle: "Double check your spelling and search terms",
+                showIcon: false
+            )
+                .frame(maxHeight: 100)
             Spacer()
         }
-        .padding()
     }
 }
 

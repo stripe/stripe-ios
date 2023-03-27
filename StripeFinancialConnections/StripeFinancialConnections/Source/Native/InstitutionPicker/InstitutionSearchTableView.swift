@@ -38,21 +38,41 @@ final class InstitutionSearchTableView: UIView {
     }()
     weak var delegate: InstitutionSearchTableViewDelegate?
 
-    private lazy var tableFooterView: UIView = {
-        let footerView = InstitutionSearchFooterView(didSelectManuallyAddYourAccount: didSelectManualEntry)
-        let footerContainerView = UIView()
-        footerContainerView.backgroundColor = .clear
-        footerContainerView.addAndPinSubview(
-            // we wrap `footerView` in a container to add extra padding
-            footerView,
-            insets: NSDirectionalEdgeInsets(
-                top: 10,  // extra padding between table and footer
-                leading: 0,
-                bottom: 0,
-                trailing: 0
+    private lazy var tableFooterView: InstitutionSearchFooterView = {
+        let title: String
+        let subtitle: String
+        let showIcon: Bool
+        let didSelect: (() -> Void)?
+        if allowManualEntry {
+            title = STPLocalizedString(
+                "Don't see your bank?",
+                "The title of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
             )
+            subtitle = STPLocalizedString(
+                "Enter your account and routing numbers",
+                "The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
+            )
+            showIcon = true
+            didSelect = didSelectManualEntry
+        } else {
+            title = STPLocalizedString(
+                "No results",
+                "The title of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned."
+            )
+            subtitle = STPLocalizedString(
+                "Double check your spelling and search terms",
+                "The subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned."
+            )
+            showIcon = false
+            didSelect = nil
+        }
+        let footerView = InstitutionSearchFooterView(
+            title: title,
+            subtitle: subtitle,
+            showIcon: showIcon,
+            didSelect: didSelect
         )
-        return footerContainerView
+        return footerView
     }()
     private lazy var loadingContainerView: UIView = {
         let loadingContainerView = UIView()
@@ -112,7 +132,7 @@ final class InstitutionSearchTableView: UIView {
             loadingView.trailingAnchor.constraint(equalTo: loadingContainerView.trailingAnchor),
         ])
 
-        showTableFooterView(true)
+        showTableFooterView(false)
     }
 
     required init?(coder: NSCoder) {
@@ -152,7 +172,10 @@ final class InstitutionSearchTableView: UIView {
         }
     }
 
-    func loadInstitutions(_ institutions: [FinancialConnectionsInstitution]) {
+    func loadInstitutions(
+        _ institutions: [FinancialConnectionsInstitution],
+        showManualEntry: Bool? = nil
+    ) {
         assertMainQueue()
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
@@ -161,8 +184,16 @@ final class InstitutionSearchTableView: UIView {
         dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
 
         // clear state (some of this is defensive programming)
-        showNoResultsNotice(query: nil)
         showError(false)
+
+        if allowManualEntry {
+            showTableFooterView(
+                institutions.isEmpty || (showManualEntry == true),
+                showTopSeparator: !institutions.isEmpty
+            )
+        } else {
+            showTableFooterView(institutions.isEmpty, showTopSeparator: false)
+        }
     }
 
     func showLoadingView(_ show: Bool) {
@@ -179,50 +210,13 @@ final class InstitutionSearchTableView: UIView {
         bringSubviewToFront(loadingContainerView)  // defensive programming to avoid loadingView being hiddden
     }
 
-    func showNoResultsNotice(query: String?) {
-        if let query = query {
-            let noResultsLabel = UILabel()
-            noResultsLabel.text = String(
-                format: STPLocalizedString(
-                    "No results for \"%@\".",
-                    "A message that tells the user that we found no search results for the bank name they typed. '%@' will be replaced by the text they typed - for example, 'Bank of America'."
-                ),
-                query
-            )
-            noResultsLabel.font = .stripeFont(forTextStyle: .caption)
-            noResultsLabel.textColor = .textSecondary
-            noResultsLabel.textAlignment = .center
-            // we use `UIStackView` even if its just a single view
-            // because it allows for automatic resizing + easy margins
-            let stackView = UIStackView(arrangedSubviews: [noResultsLabel])
-            stackView.isLayoutMarginsRelativeArrangement = true
-            stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                top: 0,
-                leading: 24,
-                bottom: 16,
-                trailing: 24
-            )
-            tableView.setTableHeaderViewWithCompressedFrameSize(stackView)
-        } else {
-            tableView.tableHeaderView = nil
-        }
-    }
-
     func showError(_ show: Bool) {
-        if show {
-            tableView.setTableHeaderViewWithCompressedFrameSize(
-                InstitutionSearchErrorView(
-                    didSelectEnterYourBankDetailsManually: didSelectManualEntry
-                )
-            )
-        } else {
-            tableView.tableHeaderView = nil
-        }
-        showTableFooterView(!show)
+        showTableFooterView(show, showTopSeparator: false)
     }
 
     // the footer is always shown, except for when there is an error searching
-    private func showTableFooterView(_ show: Bool) {
+    private func showTableFooterView(_ show: Bool, showTopSeparator: Bool = true) {
+        tableFooterView.showTopSeparator = showTopSeparator
         if show {
             tableView.setTableFooterViewWithCompressedFrameSize(tableFooterView)
         } else {
