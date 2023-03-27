@@ -77,11 +77,11 @@ class PaymentSheetUITest: XCTestCase {
         // Update product quantities and enable subscription
         let subscribeSwitch = app.switches["subscribe_switch"]
 
-        let subscribeSwitchnEnabledExpectation = expectation(
+        let subscribeSwitchEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: subscribeSwitch
         )
-        wait(for: [subscribeSwitchnEnabledExpectation], timeout: 60, enforceOrder: true)
+        wait(for: [subscribeSwitchEnabledExpectation], timeout: 60, enforceOrder: true)
 
         app.switches["subscribe_switch"].tap()
         app.steppers["hotdog_stepper"].tap()
