@@ -95,7 +95,6 @@ class PaymentSheetUITest: XCTestCase {
             evaluatedWith: paymentMethodButton
         )
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
-        
         paymentMethodButton.tap()
 
         let addCardButton = app.buttons["+ Add"]

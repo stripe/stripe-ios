@@ -49,7 +49,10 @@ class ExampleCustomCheckoutViewController: UIViewController {
     
     private var intentConfig: PaymentSheet.IntentConfiguration {
         if subscribeSwitch.isOn {
-            return .init(mode: .payment(amount: Int(total * 100), currency: "USD", setupFutureUsage: .offSession), confirmHandler: confirmHandler(_:_:))
+            return .init(mode: .payment(amount: Int(total * 100),
+                                        currency: "USD",
+                                        setupFutureUsage: .offSession),
+                         confirmHandler: confirmHandler(_:_:))
         }
         
         return .init(mode: .payment(amount: Int(total * 100), currency: "USD"), confirmHandler: confirmHandler(_:_:))
@@ -208,15 +211,11 @@ class ExampleCustomCheckoutViewController: UIViewController {
         hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
         saladQuantityLabel.text = "\(Int(saladStepper.value))"
         
-        let hotDogPrice = 0.99
-        let saladPrice = 8.00
-        let discountMultiplier = subscribeSwitch.isOn ? 0.95 : 1
-        let subtotal = (saladStepper.value * saladPrice + hotDogStepper.value * hotDogPrice) * discountMultiplier
         let tax = subtotal * taxMultiplier
         
-        subtotalLabel.text = String(format:"$%.2f", subtotal)
-        salesTaxLabel.text = String(format:"$%.2f", tax)
-        totalLabel.text = String(format:"$%.2f", (subtotal + tax))
+        subtotalLabel.text = "\(subtotal.truncate(places: 2))"
+        salesTaxLabel.text = "\(tax.truncate(places: 2))"
+        totalLabel.text = "\((subtotal + tax).truncate(places: 2))"
     }
 
     func displayAlert(_ message: String) {
@@ -284,5 +283,11 @@ class ExampleCustomCheckoutViewController: UIViewController {
         }
         
         return try! JSONSerialization.data(withJSONObject: body, options: [])
+    }
+}
+
+extension Double {
+    func truncate(places : Int)-> Double {
+        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }
 }
