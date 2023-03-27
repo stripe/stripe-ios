@@ -53,6 +53,13 @@ class ExampleCustomCheckoutViewController: UIViewController {
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
                      confirmHandler: confirmHandler(_:_:))
     }
+    
+    private var currencyFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,9 +74,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
 
-        fetchTotals { [weak self] in
-            self?.loadCheckout()
-        }
+        self.loadCheckout()
     }
 
     // MARK: - Button handlers
@@ -156,9 +161,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
         hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
         saladQuantityLabel.text = "\(Int(saladStepper.value))"
 
-        subtotalLabel.text = "$\(computedTotals.subtotal.truncate(places: 2))"
-        salesTaxLabel.text = "$\(computedTotals.tax.truncate(places: 2))"
-        totalLabel.text = "$\((computedTotals.total).truncate(places: 2))"
+        subtotalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.subtotal)) ?? "")"
+        salesTaxLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.tax)) ?? "")"
+        totalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.total)) ?? "")"
     }
 
     func displayAlert(_ message: String) {
@@ -224,7 +229,16 @@ class ExampleCustomCheckoutViewController: UIViewController {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
 
+        let body: [String: Any?] = [
+            "hot_dog_count": hotDogStepper.value,
+            "salad_count": saladStepper.value,
+            "is_subscribing": subscribeSwitch.isOn,
+        ]
+
+        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
+        
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { [weak self] (data, _, error) in
@@ -234,12 +248,17 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     let customerId = json["customer"] as? String,
                     let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
                     let publishableKey = json["publishableKey"] as? String,
+                    let subtotal = json["subtotal"] as? Double,
+                    let tax = json["tax"] as? Double,
+                    let total = json["total"] as? Double,
                     let self = self
                 else {
                     // Handle error
                     return
                 }
 
+                self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
+                
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
 
@@ -283,7 +302,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
         var body: [String: Any?] = [
             "payment_method_id": paymentMethodID,
             "currency": "USD",
-            "amount": Int(computedTotals.total * 100),
+            "hot_dog_count": hotDogStepper.value,
+            "salad_count": saladStepper.value,
+            "is_subscribing": subscribeSwitch.isOn,
         ]
 
         if subscribeSwitch.isOn {
@@ -310,11 +331,5 @@ class ExampleCustomCheckoutViewController: UIViewController {
         })
 
         task.resume()
-    }
-}
-
-extension Double {
-    func truncate(places: Int) -> Double {
-        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }
 }
