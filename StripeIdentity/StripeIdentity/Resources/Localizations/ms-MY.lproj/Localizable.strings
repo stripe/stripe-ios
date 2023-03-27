@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Imej tidak dapat ditangkap";
 
-"Date of birth" = "Tarikh lahir";
+"Date of Birth" = "Tarikh Lahir";
+
+"Date of birth does not look valid" = "Tarikh lahir tampaknya tidak sah";
 
 "File Upload" = "Muat Naik Fail";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Imej pasport";
 
+"Individual CPF" = "CPF Individu";
+
+"Last 4 of Social Security number" = "Empat digit terakhir nombor Keselamatan Sosial";
+
 "Loading" = "Sedang dimuatkan";
+
+"NRIC or FIN" = "NRIC atau FIN";
 
 "Passport" = "Pasport";
 
 "Passport photo successfully uploaded" = "Foto pasport berjaya dimuat naik";
 
 "Personal ID number" = "Nombor ID peribadi";
+
+"Personal Information" = "Maklumat Peribadi";
 
 "Photo Library" = "Pustaka Foto";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Letakkan kad pengenalan anda di tengah bingkai";
 
 "Position your passport in the center of the frame" = "Letakkan pasport anda di tengah bingkai";
+
+"Retake Photos" = "Ambil Semula Foto";
 
 "Scan" = "Imbas";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Kami tidak dapat menangkap imej berkualiti tinggi.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Kami perlukan keizinan untuk menggunakan kamera anda. Sila benarkan akses kamera dalam tetapan aplikasi.";
+
+"Welcome" = "Selamat datang";
 
 "You can either try again or upload an image from your device." = "Anda boleh cuba lagi atau muat naik imej daripada peranti anda.";
 

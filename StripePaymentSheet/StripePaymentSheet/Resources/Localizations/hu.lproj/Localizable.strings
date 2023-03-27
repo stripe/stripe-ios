@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A PayPalra történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ha folytatja, azzal engedélyezi, hogy a(z) %1$@ megterhelje a Cash App számláját ezzel a fizetéssel, és jövőbeli fizetésekkel a(z) %2$@ feltételeinek megfelelően, ameddig az engedélyt vissza nem vonja. Ezt bármikor megváltoztathatja a Cash App beállításaiban.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A Linkhez történő csatlakozással Őn elfogadja a <terms>feltételeket</terms> és az </privacy>adatvédelmi szabályzatot<privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Kártyabeolvasó bezárása";
 
 "Code sent" = "Kód elküldve";
+
+"Contact information" = "Kapcsolattartási adatok";
 
 "Default" = "Alapértelmezett";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Csatlakozás a Linkhez";
 
 "Log out of Link" = "Kijelentkezés a Link";
+
+"Name on card" = "A kártyán szereplő név";
 
 "Not %@?" = "Nem a(z) %@?";
 

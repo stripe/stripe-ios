@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Δεν ήταν δυνατή η καταγραφή εικόνας";
 
-"Date of birth" = "Ημερομηνία γέννησης";
+"Date of Birth" = "Ημερομηνία γέννησης";
+
+"Date of birth does not look valid" = "Η ημερομηνία γέννησης δεν φαίνεται έγκυρη";
 
 "File Upload" = "Αποστολή αρχείου";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Εικόνα διαβατηρίου";
 
+"Individual CPF" = "Ατομικό CPF";
+
+"Last 4 of Social Security number" = "Τελευταία 4 ψηφία του Αριθμού κοινωνικής ασφάλισης";
+
 "Loading" = "Φόρτωση";
+
+"NRIC or FIN" = "NRIC ή FIN";
 
 "Passport" = "Διαβατήριο";
 
 "Passport photo successfully uploaded" = "Η φωτογραφία του διαβατηρίου στάλθηκε με επιτυχία";
 
 "Personal ID number" = "Αριθμός ταυτότητας";
+
+"Personal Information" = "Προσωπικές πληροφορίες";
 
 "Photo Library" = "Βιβλιοθήκη φωτογραφιών";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Τοποθετήστε την ταυτότητά σας στο κέντρο του πλαισίου";
 
 "Position your passport in the center of the frame" = "Τοποθετήστε το διαβατήριό σας στο κέντρο του πλαισίου";
+
+"Retake Photos" = "Λήψη φωτογραφιών εκ νέου";
 
 "Scan" = "Σάρωση";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Δεν ήταν δυνατή η καταγραφή εικόνας υψηλής ποιότητας.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Χρειαζόμαστε άδεια για να χρησιμοποιήσουμε την κάμερά σας. Επιτρέψτε την πρόσβαση της κάμερας από τις ρυθμίσεις εφαρμογής.";
+
+"Welcome" = "Καλωσήρθατε";
 
 "You can either try again or upload an image from your device." = "Μπορείτε να δοκιμάσετε ξανά ή να αποστείλετε μια εικόνα από τη συσκευή σας.";
 

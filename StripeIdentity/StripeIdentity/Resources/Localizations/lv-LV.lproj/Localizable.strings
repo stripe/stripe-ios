@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Neizdevās uzņemt attēlu";
 
-"Date of birth" = "Dzimšanas datums";
+"Date of Birth" = "Dzimšanas datums";
+
+"Date of birth does not look valid" = "Dzimšanas datums neizskatās derīgs";
 
 "File Upload" = "Faila augšupielāde";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Pases attēls";
 
+"Individual CPF" = "Fiziskas personas CPF";
+
+"Last 4 of Social Security number" = "Pēdējie 4 cipari no sociālās apdrošināšanas numura";
+
 "Loading" = "Ielādē";
+
+"NRIC or FIN" = "NRIC vai FIN";
 
 "Passport" = "Pase";
 
 "Passport photo successfully uploaded" = "Pases fotoattēls ir veiksmīgi augšupielādēts";
 
 "Personal ID number" = "Personas ID numurs";
+
+"Personal Information" = "Personas dati";
 
 "Photo Library" = "Attēlu bibliotēka";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Gādājiet, lai identifikācijas karte būtu kadra centrā";
 
 "Position your passport in the center of the frame" = "Gādājiet, lai pase būtu kadra centrā";
+
+"Retake Photos" = "Uzņemt vēlreiz fotogrāfijas";
 
 "Scan" = "Skenēt";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Neizdevās uzņemt augstas kvalitātes attēlu.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Lai izmantotu jūsu kameru, mums ir nepieciešama jūsu atļauja. Lūdzu, savos lietotnes iestatījumos iespējojiet kameras piekļuvi.";
+
+"Welcome" = "Laipni lūdzam";
 
 "You can either try again or upload an image from your device." = "Varat mēģināt vēlreiz vai augšupielādēt attēlu no jūsu ierīces.";
 

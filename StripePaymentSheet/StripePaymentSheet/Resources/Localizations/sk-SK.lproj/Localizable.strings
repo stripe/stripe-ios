@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "Zakúpiť prostredníctvom identifikačného čísla UPI";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pokračovaním na službu PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa týchto <terms>podmienok</terms>.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračovaním oprávňujete spoločnosť %1$@, aby zaúčtovala túto platbu a budúce platby na debet vášho účtu Cash App v súlade s podmienkami spoločnosti %2$@, až do odvolania tohto oprávnenia. Toto oprávnenie môžete kedykoľvek zmeniť v nastaveniach aplikácie Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "Zatvoriť snímačku kariet";
 
 "Code sent" = "Kód odoslaný";
+
+"Contact information" = "Kontaktné informácie";
 
 "Default" = "Predvolené";
 
@@ -61,6 +69,8 @@
 "Join Link" = "Pripojiť sa do služby Link";
 
 "Log out of Link" = "Odhlásiť sa zo služby Link";
+
+"Name on card" = "Meno na karte";
 
 "Not %@?" = "E-mailová adresa %@ nie je vaša?";
 

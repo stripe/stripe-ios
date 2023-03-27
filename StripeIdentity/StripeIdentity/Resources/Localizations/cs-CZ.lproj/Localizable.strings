@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Nebylo možné pořídit obrázek";
 
-"Date of birth" = "Datum narození";
+"Date of Birth" = "Datum narození";
+
+"Date of birth does not look valid" = "Datum narození nevypadá jako platný údaj";
 
 "File Upload" = "Nahrávání souboru";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Obrázek cestovního pasu";
 
+"Individual CPF" = "Individuální CPF";
+
+"Last 4 of Social Security number" = "Poslední 4 pozice čísla sociálního pojištění";
+
 "Loading" = "Načítání";
+
+"NRIC or FIN" = "NRIC nebo FIN";
 
 "Passport" = "Pas";
 
 "Passport photo successfully uploaded" = "Pasová fotografie byla úspěšně nahrána";
 
 "Personal ID number" = "Osobní identifikační číslo";
+
+"Personal Information" = "Osobní informace";
 
 "Photo Library" = "Knihovna fotek";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Umístěte průkaz totožnosti do středu rámečku";
 
 "Position your passport in the center of the frame" = "Umístěte pas do středu rámečku";
+
+"Retake Photos" = "Znovu pořídit fotografie";
 
 "Scan" = "Skenovat";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Nepodařilo se nám pořídit vysoce kvalitní snímek.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Potřebujeme povolení k použití vašeho fotoaparátu. V nastavení aplikace povolte přístup k fotoaparátu.";
+
+"Welcome" = "Vítejte";
 
 "You can either try again or upload an image from your device." = "Můžete to zkusit znovu nebo nahrát obrázek ze svého zařízení.";
 

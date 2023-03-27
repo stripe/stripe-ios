@@ -24,9 +24,15 @@
 
 "Buy using a UPI ID" = "用 UPI ID 购买";
 
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "确认您的 PayPal 付款即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "继续前往 PayPal 即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "继续操作即表示您同意按照<terms>这些条款</terms>授权付款。";
 
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "点击“继续”，即表示您同意按照这些<terms>条款</terms>授权付款。";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "继续操作，即表示您授权 %1$@ 按照 %2$@ 的条款从您的 Cash App 账户中扣取该款项及未来的款项，直至撤销授权。您可以随时在 Cash App 设置中进行修改。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";
 
@@ -43,6 +49,8 @@
 "Close card scanner" = "关闭银行卡扫描器";
 
 "Code sent" = "验证码已发送";
+
+"Contact information" = "联系信息";
 
 "Default" = "默认";
 
@@ -61,6 +69,8 @@
 "Join Link" = "加入 Link";
 
 "Log out of Link" = "退出 Link";
+
+"Name on card" = "卡上的姓名";
 
 "Not %@?" = "不是 %@？";
 

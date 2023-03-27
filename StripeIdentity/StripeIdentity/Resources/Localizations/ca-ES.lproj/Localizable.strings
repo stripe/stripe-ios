@@ -22,7 +22,9 @@
 
 "Could not capture image" = "No s'ha pogut capturar la imatge";
 
-"Date of birth" = "Data de naixement";
+"Date of Birth" = "Data de naixement";
+
+"Date of birth does not look valid" = "La data de naixement no és vàlida";
 
 "File Upload" = "Carrega fitxers";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Imatge del passaport";
 
+"Individual CPF" = "CPF particular";
+
+"Last 4 of Social Security number" = "Últims 4 números de la Seguretat Social";
+
 "Loading" = "S'està carregant";
+
+"NRIC or FIN" = "NRIC o FIN";
 
 "Passport" = "Passaport";
 
 "Passport photo successfully uploaded" = "La foto del passaport s'ha carregat correctament";
 
 "Personal ID number" = "Número d'identificació personal";
+
+"Personal Information" = "Dades personals";
 
 "Photo Library" = "Biblioteca de fotos";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Col·loqueu el document d'identitat al centre del marc";
 
 "Position your passport in the center of the frame" = "Col·loqueu el passaport al centre del marc";
+
+"Retake Photos" = "Torna a fer les fotos";
 
 "Scan" = "Escaneig";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "No hem pogut capturar una imatge d'alta qualitat.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Necessitem permís per utilitzar la càmera. Permeteu l'accés a la càmera a la configuració de l'aplicació.";
+
+"Welcome" = "Hola";
 
 "You can either try again or upload an image from your device." = "Podeu tornar-ho a provar o carregar una imatge des del vostre dispositiu.";
 

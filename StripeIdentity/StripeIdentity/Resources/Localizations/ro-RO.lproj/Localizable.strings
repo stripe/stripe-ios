@@ -22,7 +22,9 @@
 
 "Could not capture image" = "Nu s-a putut capta imaginea";
 
-"Date of birth" = "Data nașterii";
+"Date of Birth" = "Data nașterii";
+
+"Date of birth does not look valid" = "Data nașterii pare a nu fi validă";
 
 "File Upload" = "Încărcare fișier";
 
@@ -50,13 +52,21 @@
 
 "Image of passport" = "Imaginea pașaportului";
 
+"Individual CPF" = "CPF persoană fizică";
+
+"Last 4 of Social Security number" = "Ultimele 4 cifre ale numărului de securitate socială";
+
 "Loading" = "Se încarcă";
+
+"NRIC or FIN" = "NRIC sau FIN";
 
 "Passport" = "Pașaport";
 
 "Passport photo successfully uploaded" = "Fotografia pașaportului a fost încărcată cu succes";
 
 "Personal ID number" = "Număr de identificare personal";
+
+"Personal Information" = "Informații cu caracter personal";
 
 "Photo Library" = "Galerie foto";
 
@@ -73,6 +83,8 @@
 "Position your identity card in the center of the frame" = "Poziționați-vă cartea de identitate în centrul cadrului";
 
 "Position your passport in the center of the frame" = "Poziționați-vă pașaportul în centrul cadrului";
+
+"Retake Photos" = "Faceți din nou fotografii";
 
 "Scan" = "Scanare";
 
@@ -131,6 +143,8 @@
 "We could not capture a high-quality image." = "Nu am putut captura o imagine de înaltă calitate.";
 
 "We need permission to use your camera. Please allow camera access in app settings." = "Avem nevoie de permisiunea de a utiliza camera dvs. Vă rugăm să permiteți accesul la cameră în setările aplicației.";
+
+"Welcome" = "Bine ați venit";
 
 "You can either try again or upload an image from your device." = "Puteți să încercați din nou sau să încărcați o imagine de pe dispozitivul dvs.";
 
