@@ -31,8 +31,8 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     private var backendCheckoutUrl: URL {
         return URL(string: baseUrl + "/checkout")!
     }
-    private var createIntentUrl: URL {
-        return URL(string: baseUrl + "/create_intent")!
+    private var confirmIntentUrl: URL {
+        return URL(string: baseUrl + "/confirm_intent")!
     }
     private var computeTotalsUrl: URL {
         return URL(string: baseUrl + "/compute_totals")!
@@ -50,7 +50,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total * 100),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
-                     confirmHandler: confirmHandler(_:_:))
+                     confirmHandlerForServerSideConfirmation: serverSideConfirmHandler(_:_:_:))
     }
 
     private var currencyFormatter: NumberFormatter {
@@ -176,10 +176,11 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: Confirm handler
+    // MARK: Server-side confirm handler
 
-    func confirmHandler(_ paymentMethodID: String,
-                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+    func serverSideConfirmHandler(_ paymentMethodID: String,
+                                  _ shouldSavePaymentMethod: Bool,
+                                  _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         // Create an intent on your server and invoke `intentCreationCallback` with the client secret
         createIntent(paymentMethodID: paymentMethodID) { result in
             switch result {
@@ -295,7 +296,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     }
 
     func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> Void) {
-        var request = URLRequest(url: createIntentUrl)
+        var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
 
         var body: [String: Any?] = [
