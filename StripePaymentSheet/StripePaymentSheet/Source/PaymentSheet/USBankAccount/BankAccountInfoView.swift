@@ -153,6 +153,8 @@ extension BankAccountInfoView: EventHandler {
             self.isUserInteractionEnabled = true
         case .shouldDisableUserInteraction:
             self.isUserInteractionEnabled = false
+        default:
+            break
         }
     }
 }

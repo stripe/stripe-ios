@@ -182,6 +182,8 @@ extension FloatingPlaceholderTextFieldView: EventHandler {
             isUserInteractionEnabled = true
         case .shouldDisableUserInteraction:
             isUserInteractionEnabled = false
+        default:
+            break
         }
     }
 }

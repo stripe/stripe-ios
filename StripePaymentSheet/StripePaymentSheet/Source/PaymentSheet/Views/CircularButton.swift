@@ -105,6 +105,8 @@ class CircularButton: UIControl {
             backgroundColor = .systemGray2
         case .shouldDisableUserInteraction:
             backgroundColor = .systemIndigo
+        default:
+            break
         }
     }
 

@@ -216,6 +216,11 @@ class AddPaymentMethodViewController: UIViewController {
             addressSection.delegate = delegate
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        sendEventToSubviews(.viewDidAppear, from: view)
+    }
 
     // MARK: - Internal
 
