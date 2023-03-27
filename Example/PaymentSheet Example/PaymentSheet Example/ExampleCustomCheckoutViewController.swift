@@ -279,7 +279,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
     func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> Void) {
         var request = URLRequest(url: createIntentUrl)
         request.httpMethod = "POST"
-        
+
         var body: [String: Any?] = [
             "payment_method_id": paymentMethodID,
             "currency": "USD",
@@ -289,7 +289,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
         if subscribeSwitch.isOn {
             body["setup_future_usage"] = "off_session"
         }
-        
+
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
 
