@@ -10,6 +10,7 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeUICore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
@@ -1438,7 +1439,74 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
     }
+    
+    func testAppliesPreviousCustomerInput_for_different_payment_method_type() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
 
+        // ...Given previous customer input billing details...
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.name = "Jane Doe"
+        billingDetails.email = "foo@bar.com"
+        billingDetails.phone = "5555555555"
+        billingDetails.address = STPPaymentMethodAddress()
+        billingDetails.address?.line1 = "510 Townsend St."
+        billingDetails.address?.line2 = "Line 2"
+        billingDetails.address?.city = "San Francisco"
+        billingDetails.address?.state = "CA"
+        billingDetails.address?.country = "US"
+        billingDetails.address?.postalCode = "94102"
+        
+        // ...for Afterpay...
+        let previousAfterpayCustomerInput = IntentConfirmParams.init(
+            params: .paramsWith(afterpayClearpay: .init(), billingDetails: billingDetails, metadata: nil),
+            type: .dynamic("afterpay_clearpay")
+        )
+        
+        // ...the Afterpay form should be valid
+        let afterpayFactory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["afterpay_clearpay"])),
+            configuration: ._testValue_MostPermissive(),
+            paymentMethod: .dynamic("afterpay_clearpay"),
+            previousCustomerInput: previousAfterpayCustomerInput
+        )
+        let afterpayForm = afterpayFactory.make()
+        XCTAssert(afterpayForm.validationState == .valid)
+
+        // ...but if the customer previous input was for a card...
+        let previousCardCustomerInput = IntentConfirmParams.init(
+            params: .paramsWith(
+                card: STPFixtures.paymentMethodCardParams(),
+                billingDetails: billingDetails,
+                metadata: nil),
+            type: .card
+        )
+        // ...the Afterpay form should be blank and invalid, even though the previous input had full billing details
+        let afterpayFormWithPreviousCardInput = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["afterpay_clearpay"])),
+            configuration: ._testValue_MostPermissive(),
+            paymentMethod: .dynamic("afterpay_clearpay"),
+            previousCustomerInput: previousCardCustomerInput
+        ).make()
+        XCTAssert(afterpayFormWithPreviousCardInput.validationState != .valid)
+        // ...and the address section shouldn't be populated with any defaults
+        guard
+            let afterpayForm = afterpayFormWithPreviousCardInput as? PaymentMethodElementWrapper<FormElement>,
+            let addressSectionElement = afterpayForm.element.getAllSubElements().compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first
+        else {
+            XCTFail("expected address section")
+            return
+        }
+        let emptyAddressSectionElement = AddressSectionElement()
+        XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
+
+    }
+    
     // MARK: - Helpers
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
