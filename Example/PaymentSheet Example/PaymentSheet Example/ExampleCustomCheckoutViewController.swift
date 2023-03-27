@@ -219,9 +219,9 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
         let tax = subtotal * taxMultiplier
 
-        subtotalLabel.text = "\(subtotal.truncate(places: 2))"
-        salesTaxLabel.text = "\(tax.truncate(places: 2))"
-        totalLabel.text = "\((subtotal + tax).truncate(places: 2))"
+        subtotalLabel.text = "$\(subtotal.truncate(places: 2))"
+        salesTaxLabel.text = "$\(tax.truncate(places: 2))"
+        totalLabel.text = "$\((subtotal + tax).truncate(places: 2))"
     }
 
     func displayAlert(_ message: String) {
