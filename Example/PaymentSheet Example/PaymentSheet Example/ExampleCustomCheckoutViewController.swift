@@ -7,6 +7,9 @@
 //
 
 import Foundation
+//  Note: Do not import Stripe using `@_spi(STP)` in production.
+//  This exposes internal functionality which may cause unexpected behavior if used directly.
+// TODO(porter) Remove STP usage before GA
 @_spi (STP) import StripePaymentSheet
 import UIKit
 
