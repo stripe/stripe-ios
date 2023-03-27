@@ -25,7 +25,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var subscribeSwitch: UISwitch!
     
     var paymentSheetFlowController: PaymentSheet.FlowController!
-    let baseUrl = "https://deserted-verbena-circle.glitch.me"
+    let baseUrl = "https://stripe-mobile-payment-sheet-custom.glitch.me"
     var backendCheckoutUrl: URL {
         return URL(string: baseUrl + "/checkout")!
     }
