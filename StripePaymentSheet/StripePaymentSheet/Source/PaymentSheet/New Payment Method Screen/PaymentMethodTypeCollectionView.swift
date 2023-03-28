@@ -43,10 +43,17 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
-
+        
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
-        self.selected = initialPaymentMethodType ?? paymentMethodTypes[0]
+        let selectedItemIndex: Int = {
+            if let initialPaymentMethodType = initialPaymentMethodType {
+                return paymentMethodTypes.firstIndex(of: initialPaymentMethodType) ?? 0
+            } else {
+                return 0
+            }
+        }()
+        self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -57,7 +64,6 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
-        let selectedItemIndex = paymentMethodTypes.firstIndex(of: selected) ?? 0
         selectItem(at: IndexPath(item: selectedItemIndex, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
