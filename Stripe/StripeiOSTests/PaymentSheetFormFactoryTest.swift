@@ -910,19 +910,23 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testMakeFormElement_Iban_UndefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
-        let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
-            paymentMethod: .dynamic("sepa_debit")
-        )
-        let spec = FormSpec(
-            type: "sepa_debit",
-            async: false,
-            fields: [.iban(.init(apiPath: nil))],
-            selectorIcon: nil,
-            nextActionSpec: nil
-        )
-        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        func makeForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<FormElement> {
+            let factory = PaymentSheetFormFactory(
+                intent: .paymentIntent(STPFixtures.paymentIntent()),
+                configuration: configuration,
+                paymentMethod: .dynamic("sepa_debit"),
+                previousCustomerInput: previousCustomerInput
+            )
+            let spec = FormSpec(
+                type: "sepa_debit",
+                async: false,
+                fields: [.iban(.init(apiPath: nil))],
+                selectorIcon: nil,
+                nextActionSpec: nil
+            )
+            return factory.makeFormElementFromSpec(spec: spec)
+        }
+        let formElement = makeForm(previousCustomerInput: nil)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
@@ -936,23 +940,34 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
+        
+        // Using the params as previous customer input...
+        let form_with_previous_input = makeForm(previousCustomerInput: updatedParams)
+        // ...should result in a valid, filled out element
+        let updatedParams_with_previous_input = form_with_previous_input.updateParams(params: .init(type: .dynamic("sepa_debit")))
+        XCTAssertEqual(updatedParams_with_previous_input?.paymentMethodParams.sepaDebit?.iban, "GB33BUKB20201555555555")
     }
 
     func testMakeFormElement_Iban_DefinedAPIPath() {
         let configuration = PaymentSheet.Configuration()
-        let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
-            paymentMethod: .dynamic("sepa_debit")
-        )
-        let spec = FormSpec(
-            type: "sepa_debit",
-            async: false,
-            fields: [.iban(.init(apiPath: ["v1": "sepa_debit[iban]"]))],
-            selectorIcon: nil,
-            nextActionSpec: nil
-        )
-        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        func makeForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<FormElement> {
+            let factory = PaymentSheetFormFactory(
+                intent: .paymentIntent(STPFixtures.paymentIntent()),
+                configuration: configuration,
+                paymentMethod: .dynamic("sepa_debit"),
+                previousCustomerInput: previousCustomerInput
+            )
+            let spec = FormSpec(
+                type: "sepa_debit",
+                async: false,
+                fields: [.iban(.init(apiPath: ["v1": "sepa_debit[iban]"]))],
+                selectorIcon: nil,
+                nextActionSpec: nil
+            )
+            return factory.makeFormElementFromSpec(spec: spec)
+        }
+
+        let formElement = makeForm(previousCustomerInput: nil)
         let params = IntentConfirmParams(type: .dynamic("sepa_debit"))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
             XCTFail("Unable to get firstElement")
@@ -970,6 +985,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
+        
+        // Using the params as previous customer input...
+        let form_with_previous_input = makeForm(previousCustomerInput: updatedParams)
+        // ...should result in a valid, filled out element
+        let updatedParams_with_previous_input = form_with_previous_input.updateParams(params: .init(type: .dynamic("sepa_debit")))
+        XCTAssertEqual(
+            updatedParams_with_previous_input?.paymentMethodParams.additionalAPIParameters["sepa_debit[iban]"]
+                as! String,
+            "GB33BUKB20201555555555"
+        )
     }
 
     func testMakeFormElement_Iban() {
