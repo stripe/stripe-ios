@@ -666,6 +666,18 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
+        
+        // Using the params as previous customer input...
+        let form_with_previous_input = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("au_becs_debit"),
+            previousCustomerInput: updatedParams
+        ).makeFormElementFromSpec(spec: spec)
+        // ...should result in a valid, filled out element
+        XCTAssert(form_with_previous_input.validationState == .valid)
+        let updatedParams_with_previous_input = form_with_previous_input.updateParams(params: .init(type: .dynamic("au_becs_debit")))
+        XCTAssertEqual(updatedParams_with_previous_input?.paymentMethodParams.auBECSDebit?.accountNumber, "000123456")
     }
 
     func testMakeFormElement_AUBECSAccountNumber_DefinedAPIPath() {
@@ -703,6 +715,23 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
+        
+        // Using the params as previous customer input...
+        let form_with_previous_input = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("au_becs_debit"),
+            previousCustomerInput: updatedParams
+        ).makeFormElementFromSpec(spec: spec)
+        // ...should result in a valid, filled out element
+        XCTAssert(form_with_previous_input.validationState == .valid)
+        let updatedParams_with_previous_input = form_with_previous_input.updateParams(params: .init(type: .dynamic("au_becs_debit")))
+        XCTAssertEqual(
+            updatedParams_with_previous_input?.paymentMethodParams.additionalAPIParameters[
+                "au_becs_debit[account_number]"
+            ] as! String,
+            "000123456"
+        )
     }
 
     func testMakeFormElement_AUBECSAccountNumber() {
