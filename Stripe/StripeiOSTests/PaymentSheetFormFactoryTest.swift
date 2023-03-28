@@ -105,7 +105,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
-        
+
         // Using the params as previous customer input...
         let name_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -137,7 +137,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
-        
+
         // Using the params as previous customer input...
         let name_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -234,7 +234,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.email)
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
-        
+
         // Using the params as previous customer input...
         let email_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -266,7 +266,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "mock_payment_method")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .unknown)
-        
+
         // Using the params as previous customer input...
         let email_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -327,7 +327,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             updatedParams?.paymentMethodParams.billingDetails?.phone,
             "+15555555555"
         )
-        
+
         // Using the params as previous customer input...
         let phone_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -404,7 +404,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
-        
+
         // Given a dropdown...
         let dropdown = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -421,7 +421,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("sepa_debit"),
             previousCustomerInput: previousCustomerInput
         ).makeDropdown(for: selectorSpec)
-        
+
         // ...should result in a valid element filled out with the previous customer input
         XCTAssertEqual(dropdown_with_previous_customer_input.element.selectedIndex, 1)
         XCTAssertEqual(dropdown_with_previous_customer_input.validationState, .valid)
@@ -586,7 +586,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
-        
+
         // Using the params as previous customer input...
         let bsb_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -666,7 +666,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
-        
+
         // Using the params as previous customer input...
         let form_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -715,7 +715,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
-        
+
         // Using the params as previous customer input...
         let form_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -856,7 +856,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
-        
+
         // Using the params as previous customer input...
         let country_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
@@ -896,7 +896,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
-        
+
         // Using the params as previous customer input...
         let country_with_previous_input = makeCountry(previousCustomerInput: updatedParams)
         // ...should result in a valid, filled out element
@@ -940,7 +940,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
-        
+
         // Using the params as previous customer input...
         let form_with_previous_input = makeForm(previousCustomerInput: updatedParams)
         // ...should result in a valid, filled out element
@@ -985,7 +985,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
-        
+
         // Using the params as previous customer input...
         let form_with_previous_input = makeForm(previousCustomerInput: updatedParams)
         // ...should result in a valid, filled out element
@@ -1702,7 +1702,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let emptyAddressSectionElement = AddressSectionElement()
         XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
     }
-    
+
     func testAppliesPreviousCustomerInput_klarna_country() {
         func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<DropdownFieldElement> {
             let factory = PaymentSheetFormFactory(

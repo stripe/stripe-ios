@@ -179,7 +179,7 @@ extension PaymentSheetFormFactory {
         case .unknown: return nil
         }
     }
-    
+
     func makeDropdown(for selectorSpec: FormSpec.SelectorSpec) -> PaymentMethodElementWrapper<DropdownFieldElement> {
         assert(selectorSpec.apiPath?["v1"] != nil) // If there's no api path, the dropdown selection is unused!
         let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {

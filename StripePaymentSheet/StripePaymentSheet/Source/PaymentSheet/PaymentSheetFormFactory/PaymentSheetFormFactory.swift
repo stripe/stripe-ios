@@ -126,7 +126,7 @@ class PaymentSheetFormFactory {
 
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
-    
+
     /// For each field in PaymentSheet.BillingDetails, determines the default value by looking at (in order of preference):
     /// 1. the given API Path (only for name, email, and country fields),
     /// 2. `previousCustomerInput`
@@ -146,7 +146,7 @@ extension PaymentSheetFormFactory {
         details.address.country = getPreviousCustomerInput(for: countryAPIPath ?? "") ?? previous?.address?.country ?? configuration.address.country
         return details
     }
-    
+
     /// Fields generated from form specs i.e. LUXE can write their values to arbitrary keys (`apiPath`)  in `additionalAPIParameters`.
     func getPreviousCustomerInput(for apiPath: String?) -> String? {
         guard let apiPath = apiPath else {
