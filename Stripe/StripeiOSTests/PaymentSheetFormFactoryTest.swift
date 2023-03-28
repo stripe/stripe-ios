@@ -1506,7 +1506,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
     }
 
-    func testAppliesPreviousCustomerInput_for_mandate_pms() {
+    func testAppliesPreviousCustomerInput_for_mandate() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in
@@ -1515,6 +1515,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
         waitForExpectations(timeout: 1)
 
+        // Use PayPal as an example PM, since it is an empty form w/ a mandate iff PI+SFU or SI
         func makePaypalForm(isSettingUp: Bool, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal"], setupFutureUsage: isSettingUp ? .offSession : .none)),
@@ -1555,8 +1556,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             XCTFail("payment option should be non-nil")
             return
         }
-        // ...even though the form didn't display the mandate
-        XCTAssertFalse(paypalForm_setup_paymentOption.didDisplayMandate)
+        XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
     }
 
     // MARK: - Helpers
