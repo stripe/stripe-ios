@@ -160,9 +160,9 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
         saladQuantityLabel.text = "\(Int(saladStepper.value))"
 
-        subtotalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.subtotal)) ?? "")"
-        salesTaxLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.tax)) ?? "")"
-        totalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.total)) ?? "")"
+        subtotalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.subtotal / 100)) ?? "")"
+        salesTaxLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.tax / 100)) ?? "")"
+        totalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.total / 100)) ?? "")"
     }
 
     func displayAlert(_ message: String) {
@@ -258,7 +258,6 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 }
 
                 self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
-
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
 
@@ -287,6 +286,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                             self?.saladStepper.isEnabled = true
                             self?.subscribeSwitch.isEnabled = true
                             self?.updateButtons()
+                            self?.updateLabels()
                         }
                     }
                 }
