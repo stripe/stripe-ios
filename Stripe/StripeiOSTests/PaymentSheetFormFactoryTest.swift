@@ -1504,7 +1504,59 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
         let emptyAddressSectionElement = AddressSectionElement()
         XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
+    }
 
+    func testAppliesPreviousCustomerInput_for_mandate() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        // Use PayPal as an example PM, since it is an empty form w/ a mandate iff PI+SFU or SI
+        func makePaypalForm(isSettingUp: Bool, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
+            return PaymentSheetFormFactory(
+                intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal"], setupFutureUsage: isSettingUp ? .offSession : .none)),
+                configuration: ._testValue_MostPermissive(),
+                paymentMethod: .dynamic("paypal"),
+                previousCustomerInput: previousCustomerInput
+            ).make()
+        }
+
+        // 1. nil -> valid Payment form
+        // A paypal form for *payment* without previous customer input...
+        let paypalForm_payment = makePaypalForm(isSettingUp: false, previousCustomerInput: nil)
+        // ...should be valid - it requires no customer input.
+        guard let paypalForm_payment_paymentOption = paypalForm_payment.updateParams(params: IntentConfirmParams(type: .dynamic("paypal"))) else {
+            XCTFail("payment option should be non-nil")
+            return
+        }
+        XCTAssertFalse(paypalForm_payment_paymentOption.didDisplayMandate)
+
+        // 2. valid Payment form -> invalid Setup form
+        // Creating a paypal form for *setup* using the old form as previous customer input...
+        var paypalForm_setup = makePaypalForm(isSettingUp: true, previousCustomerInput: paypalForm_payment_paymentOption)
+        // ...should not be valid...
+        XCTAssertNil(paypalForm_setup.updateParams(params: IntentConfirmParams(type: .dynamic("paypal"))))
+        // ...until the customer has seen the mandate...
+        sendEventToSubviews(.viewDidAppear, from: paypalForm_setup.view)
+        guard let paypalForm_setup_paymentOption = paypalForm_setup.updateParams(params: IntentConfirmParams(type: .dynamic("paypal"))) else {
+            XCTFail("payment option should be non-nil")
+            return
+        }
+        XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
+
+        // 3. valid Setup form -> valid Setup form
+        // Using the form's previous customer input to create another *setup* paypal form...
+        paypalForm_setup = makePaypalForm(isSettingUp: true, previousCustomerInput: paypalForm_setup_paymentOption)
+        // ...should be valid...
+        guard let paypalForm_setup_paymentOption = paypalForm_setup.updateParams(params: IntentConfirmParams(type: .dynamic("paypal"))) else {
+            XCTFail("payment option should be non-nil")
+            return
+        }
+        XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
     }
 
     // MARK: - Helpers
