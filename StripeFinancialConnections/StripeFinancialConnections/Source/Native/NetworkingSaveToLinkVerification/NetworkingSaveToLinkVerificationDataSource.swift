@@ -67,7 +67,6 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
                 if let consumerSession = lookupConsumerSessionResponse.consumerSession {
                     self.consumerSession = consumerSession
                     return self.apiClient.consumerSessionStartVerification(
-                        emailAddress: consumerSession.emailAddress,
                         otpType: "SMS",
                         customEmailType: nil,
                         connectionsMerchantName: nil,

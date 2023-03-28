@@ -70,14 +70,17 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                 "Sign in to Link",
                 "The title of a screen where users are informed that they can sign-in-to Link."
             ),
-            subtitle: STPLocalizedString(
-                "Enter the code sent to \(redactedPhoneNumber)",
+            subtitle: String(format: STPLocalizedString(
+                "Enter the code sent to %@.",
                 "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
-            ),
+            ), redactedPhoneNumber),
             contentView: bodyView,
             footerView: NetworkingSaveToLinkFooterView(
                 didSelectNotNow: { [weak self] in
                     guard let self = self else { return }
+                    self.dataSource
+                        .analyticsClient
+                        .log(eventName: "click.not_now", pane: .networkingSaveToLinkVerification)
                     self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
                         self,
                         saveToLinkWithStripeSucceeded: nil,
