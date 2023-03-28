@@ -99,7 +99,7 @@ class PaymentSheetUITest: XCTestCase {
         okButton.tap()
     }
 
-    func testPaymentSheetCustomDeferred() throws {
+    func testPaymentSheetCustomDeferred_update() throws {
         app.staticTexts["PaymentSheet (Custom, Deferred)"].tap()
 
         // Update product quantities and enable subscription
@@ -118,7 +118,7 @@ class PaymentSheetUITest: XCTestCase {
 
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
 
-        let paymentMethodButtonEnabledExpectation = expectation(
+        var paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton
         )
@@ -130,6 +130,35 @@ class PaymentSheetUITest: XCTestCase {
         addCardButton.tap()
 
         try! fillCardData(app)
+        
+        /*
+        TODO(yuki) Re-enable when preservation fix is pushed
+         
+        // Test input preservation, close PaymentSheet, re-open and card data should still be valid
+        app.buttons["UIButton.Back"].tap()
+        
+        // Closing PaymentSheet with valid card form data should preserve that data
+        let closeButton = app.buttons["UIButton.Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 4.0))
+        closeButton.tap()
+        
+        // Update quantity of an item to force an update
+        let saladStepper = app.steppers["salad_stepper"]
+        XCTAssertTrue(saladStepper.waitForExistence(timeout: 4.0))
+        saladStepper.tap()
+        
+        paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        paymentMethodButton.tap()
+        
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+        */
+        
+        // Continue should be enabled since card details were preserved when closing payment sheet
         app.buttons["Continue"].tap()
 
         let buyButton = app.staticTexts["Buy"]

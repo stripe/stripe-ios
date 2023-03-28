@@ -299,7 +299,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
 
-        var body: [String: Any?] = [
+        let body: [String: Any?] = [
             "payment_method_id": paymentMethodID,
             "currency": "USD",
             "hot_dog_count": hotDogStepper.value,
@@ -307,10 +307,6 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "return_url": "payments-example://stripe-redirect"
         ]
-
-        if subscribeSwitch.isOn {
-            body["setup_future_usage"] = "off_session"
-        }
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
