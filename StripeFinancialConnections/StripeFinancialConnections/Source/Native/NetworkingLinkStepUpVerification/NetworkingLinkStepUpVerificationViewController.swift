@@ -90,7 +90,7 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
         )
     }
 
-    private func showContent(redactedPhoneNumber: String) {
+    private func showContent() {
         didShowContent = true
 
         let pane = PaneWithHeaderLayoutView(
@@ -180,7 +180,7 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
             bodyView.isResendingCode(false)
         }
 
-        showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
+        showContent()
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
