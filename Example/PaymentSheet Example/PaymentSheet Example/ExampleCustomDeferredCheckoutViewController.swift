@@ -47,7 +47,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     private var computedTotals: ComputedTotals!
 
     private var intentConfig: PaymentSheet.IntentConfiguration {
-        return .init(mode: .payment(amount: Int(computedTotals.total * 100),
+        return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
                      confirmHandlerForServerSideConfirmation: serverSideConfirmHandler(_:_:_:))
