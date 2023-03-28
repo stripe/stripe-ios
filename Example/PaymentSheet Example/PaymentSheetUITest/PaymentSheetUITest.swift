@@ -99,6 +99,65 @@ class PaymentSheetUITest: XCTestCase {
         okButton.tap()
     }
 
+    func testPaymentSheetCustomDeferred_update() throws {
+        app.staticTexts["PaymentSheet (Custom, Deferred)"].tap()
+
+        // Update product quantities and enable subscription
+        let subscribeSwitch = app.switches["subscribe_switch"]
+
+        let subscribeSwitchEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: subscribeSwitch
+        )
+        wait(for: [subscribeSwitchEnabledExpectation], timeout: 60, enforceOrder: true)
+
+        app.switches["subscribe_switch"].tap()
+        app.steppers["hotdog_stepper"].tap()
+        app.steppers["hotdog_stepper"].tap()
+        app.steppers["salad_stepper"].tap()
+
+        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
+
+        var paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        paymentMethodButton.tap()
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try! fillCardData(app)
+
+        app.buttons["Continue"].tap()
+
+        // Update quantity of an item to force an update
+        let saladStepper = app.steppers["salad_stepper"]
+        XCTAssertTrue(saladStepper.waitForExistence(timeout: 4.0))
+        saladStepper.tap()
+
+        paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        paymentMethodButton.tap()
+
+        // Continue should be enabled since card details were preserved when closing payment sheet
+        app.buttons["Continue"].tap()
+
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
+        buyButton.tap()
+
+        let successText = app.alerts.staticTexts["Your order is confirmed!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
+        okButton.tap()
+    }
+
     func testPaymentSheetCustomSaveAndRemoveCard() throws {
         loadPlayground(
             app,
