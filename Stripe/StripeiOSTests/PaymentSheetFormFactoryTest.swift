@@ -429,6 +429,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
+        // Using the params as previous customer input...
+        let bsb_with_previous_input = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("au_becs_debit"),
+            previousCustomerInput: updatedParams
+        ).makeBSB()
+        // ...should result in a valid, filled out element
+        XCTAssert(bsb_with_previous_input.validationState == .valid)
+        let updatedParams_with_previous_input = bsb_with_previous_input.updateParams(params: .init(type: .dynamic("au_becs_debit")))
+        XCTAssertEqual(updatedParams_with_previous_input?.paymentMethodParams.auBECSDebit?.bsbNumber, "000000")
     }
 
     func testMakeFormElement_BSBNumber_withAPIPath() {
@@ -452,6 +463,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
+        // Using the params as previous customer input...
+        let bsb_with_previous_input = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("au_becs_debit"),
+            previousCustomerInput: updatedParams
+        ).makeBSB(apiPath: "custom_path[bsb_number]")
+        // ...should result in a valid, filled out element
+        XCTAssert(bsb_with_previous_input.validationState == .valid)
+        let updatedParams_with_previous_input = bsb_with_previous_input.updateParams(params: .init(type: .dynamic("au_becs_debit")))
+        XCTAssertEqual(
+            updatedParams_with_previous_input?.paymentMethodParams.additionalAPIParameters["custom_path[bsb_number]"]
+                as! String,
+            "000000"
+        )
     }
 
     func testMakeFormElement_BSBNumber_UndefinedAPIPath() {
@@ -484,6 +510,18 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
+        
+        // Using the params as previous customer input...
+        let bsb_with_previous_input = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("au_becs_debit"),
+            previousCustomerInput: updatedParams
+        ).makeBSB()
+        // ...should result in a valid, filled out element
+        XCTAssert(bsb_with_previous_input.validationState == .valid)
+        let updatedParams_with_previous_input = bsb_with_previous_input.updateParams(params: .init(type: .dynamic("au_becs_debit")))
+        XCTAssertEqual(updatedParams_with_previous_input?.paymentMethodParams.auBECSDebit?.bsbNumber, "000000")
     }
 
     func testMakeFormElement_BSBNumber_DefinedAPIPath() {

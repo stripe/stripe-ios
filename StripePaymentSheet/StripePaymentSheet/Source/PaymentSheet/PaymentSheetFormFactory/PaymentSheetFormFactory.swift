@@ -143,6 +143,14 @@ class PaymentSheetFormFactory {
 
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
+    
+    /// Fields generated from form specs i.e. LUXE can write their values to arbitrary keys (`apiPath`)  in `additionalAPIParameters`.
+    func getPreviousCustomerInput(for apiPath: String?) -> String? {
+        guard let apiPath = apiPath else {
+            return nil
+        }
+        return previousCustomerInput?.paymentMethodParams.additionalAPIParameters[apiPath] as? String
+    }
 
     func makeName(label: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.makeName(
@@ -185,7 +193,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBSB(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.Account.makeBSB(defaultValue: nil, theme: theme)
+        let defaultValue = getPreviousCustomerInput(for: apiPath) ?? previousCustomerInput?.paymentMethodParams.auBECSDebit?.bsbNumber
+        let element = TextFieldElement.Account.makeBSB(defaultValue: defaultValue, theme: theme)
         return PaymentMethodElementWrapper(element) { textField, params in
             let bsbNumberText = BSBNumber(number: textField.text).bsbNumberText()
             if let apiPath = apiPath {
