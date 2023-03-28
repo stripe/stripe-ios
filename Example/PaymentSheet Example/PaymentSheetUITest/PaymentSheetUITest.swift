@@ -131,17 +131,8 @@ class PaymentSheetUITest: XCTestCase {
 
         try! fillCardData(app)
 
-        /*
-        TODO(yuki) Re-enable when preservation fix is pushed
-         
-        // Test input preservation, close PaymentSheet, re-open and card data should still be valid
-        app.buttons["UIButton.Back"].tap()
-        
-        // Closing PaymentSheet with valid card form data should preserve that data
-        let closeButton = app.buttons["UIButton.Close"]
-        XCTAssertTrue(closeButton.waitForExistence(timeout: 4.0))
-        closeButton.tap()
-        
+        app.buttons["Continue"].tap()
+    
         // Update quantity of an item to force an update
         let saladStepper = app.steppers["salad_stepper"]
         XCTAssertTrue(saladStepper.waitForExistence(timeout: 4.0))
@@ -153,10 +144,6 @@ class PaymentSheetUITest: XCTestCase {
         )
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
-        
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
-        */
 
         // Continue should be enabled since card details were preserved when closing payment sheet
         app.buttons["Continue"].tap()
