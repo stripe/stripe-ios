@@ -504,24 +504,24 @@ extension PaymentSheetFormFactory {
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {
         return PaymentMethodElementWrapper(
             element,
-            defaultsApplier: { [configuration, defaultBillingDetails] _, params in
+            defaultsApplier: { [configuration] _, params in
                 // Only apply defaults when the flag is on.
                 guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
                     return params
                 }
 
-                if let name = defaultBillingDetails.name {
+                if let name = configuration.defaultBillingDetails.name {
                     params.paymentMethodParams.nonnil_billingDetails.name = name
                 }
-                if let phone = defaultBillingDetails.phone {
+                if let phone = configuration.defaultBillingDetails.phone {
                     params.paymentMethodParams.nonnil_billingDetails.phone = phone
                 }
-                if let email = defaultBillingDetails.email {
+                if let email = configuration.defaultBillingDetails.email {
                     params.paymentMethodParams.nonnil_billingDetails.email = email
                 }
-                if defaultBillingDetails.address != .init() {
+                if configuration.defaultBillingDetails.address != .init() {
                     params.paymentMethodParams.nonnil_billingDetails.address =
-                        STPPaymentMethodAddress(address: defaultBillingDetails.address)
+                    STPPaymentMethodAddress(address: configuration.defaultBillingDetails.address)
                 }
                 return params
             },
