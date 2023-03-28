@@ -14,12 +14,21 @@ import UIKit
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
 /// - Note: Assumes you're confirming with a new payment method
 class IntentConfirmParams {
+    /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
+    enum SaveForFutureUseCheckboxState {
+        /// The checkbox wasn't displayed
+        case hidden
+        /// The checkbox was displayed and selected
+        case selected
+        /// The checkbox was displayed and deselected
+        case deselected
+    }
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
 
     /// True if the customer opts to save their payment method for future payments.
-    var shouldSavePaymentMethod: Bool = false
+    var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
     /// - Note: PaymentIntent-only
@@ -71,7 +80,7 @@ class IntentConfirmParams {
         params.paymentMethodParams = paymentMethodParams
         let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
-            shouldSavePaymentMethod,
+            saveForFutureUseCheckboxState == .selected,
             paymentMethodType: paymentMethodType,
             customer: configuration.customer
         )
@@ -99,7 +108,7 @@ class IntentConfirmParams {
 
         let options = STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
-            shouldSavePaymentMethod,
+            saveForFutureUseCheckboxState == .selected,
             paymentMethodType: paymentMethodType,
             customer: configuration.customer
         )

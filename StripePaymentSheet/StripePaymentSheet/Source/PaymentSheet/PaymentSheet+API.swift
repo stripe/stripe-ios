@@ -150,7 +150,7 @@ extension PaymentSheet {
                 handleDeferredIntentConfirmation(deferredIntentContext: deferredContext,
                                                  paymentMethod: nil,
                                                  paymentMethodParams: confirmParams.paymentMethodParams,
-                                                 shouldSavePaymentMethod: confirmParams.shouldSavePaymentMethod)
+                                                 shouldSavePaymentMethod: confirmParams.saveForFutureUseCheckboxState == .selected)
             }
 
         // MARK: - Saved Payment Method
