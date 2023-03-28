@@ -35,26 +35,6 @@ class PaymentSheetFormFactory {
     let linkAccount: PaymentSheetLinkAccount?
     let previousCustomerInput: IntentConfirmParams?
 
-    /// For each field in PaymentSheet.BillingDetails, determines the default value by looking at (in order of preference):
-    /// 1. the given API Path (only for name, email, and country fields),
-    /// 2. `previousCustomerInput`
-    /// 3. the merchant provided`configuration`
-    func defaultBillingDetails(nameAPIPath: String? = nil, emailAPIPath: String? = nil, countryAPIPath: String? = nil) -> PaymentSheet.BillingDetails {
-        let previous = previousCustomerInput?.paymentMethodParams.billingDetails
-        let configuration = configuration.defaultBillingDetails
-        var details = PaymentSheet.BillingDetails()
-        details.name = getPreviousCustomerInput(for: nameAPIPath ?? "") ?? previous?.name ?? configuration.name
-        details.phone = previous?.phone ?? configuration.phone
-        details.email = getPreviousCustomerInput(for: emailAPIPath ?? "") ?? previous?.email ?? configuration.email
-        details.address.line1 = previous?.address?.line1 ?? configuration.address.line1
-        details.address.line2 = previous?.address?.line2 ?? configuration.address.line2
-        details.address.city = previous?.address?.city ?? configuration.address.city
-        details.address.state = previous?.address?.state ?? configuration.address.state
-        details.address.postalCode = previous?.address?.postalCode ?? configuration.address.postalCode
-        details.address.country = getPreviousCustomerInput(for: nameAPIPath ?? "") ?? previous?.address?.country ?? configuration.address.country
-        return details
-    }
-
     var canSaveToLink: Bool {
         return (intent.supportsLinkCard && paymentMethod == .card && saveMode != .merchantRequired)
     }
@@ -146,6 +126,26 @@ class PaymentSheetFormFactory {
 
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
+    
+    /// For each field in PaymentSheet.BillingDetails, determines the default value by looking at (in order of preference):
+    /// 1. the given API Path (only for name, email, and country fields),
+    /// 2. `previousCustomerInput`
+    /// 3. the merchant provided`configuration`
+    func defaultBillingDetails(nameAPIPath: String? = nil, emailAPIPath: String? = nil, countryAPIPath: String? = nil) -> PaymentSheet.BillingDetails {
+        let previous = previousCustomerInput?.paymentMethodParams.billingDetails
+        let configuration = configuration.defaultBillingDetails
+        var details = PaymentSheet.BillingDetails()
+        details.name = getPreviousCustomerInput(for: nameAPIPath ?? "") ?? previous?.name ?? configuration.name
+        details.phone = previous?.phone ?? configuration.phone
+        details.email = getPreviousCustomerInput(for: emailAPIPath ?? "") ?? previous?.email ?? configuration.email
+        details.address.line1 = previous?.address?.line1 ?? configuration.address.line1
+        details.address.line2 = previous?.address?.line2 ?? configuration.address.line2
+        details.address.city = previous?.address?.city ?? configuration.address.city
+        details.address.state = previous?.address?.state ?? configuration.address.state
+        details.address.postalCode = previous?.address?.postalCode ?? configuration.address.postalCode
+        details.address.country = getPreviousCustomerInput(for: nameAPIPath ?? "") ?? previous?.address?.country ?? configuration.address.country
+        return details
+    }
     
     /// Fields generated from form specs i.e. LUXE can write their values to arbitrary keys (`apiPath`)  in `additionalAPIParameters`.
     func getPreviousCustomerInput(for apiPath: String?) -> String? {

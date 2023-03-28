@@ -404,6 +404,27 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sepa_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
+        
+        // Given a dropdown...
+        let dropdown = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("sepa_debit")
+        ).makeDropdown(for: selectorSpec)
+        // ...with a selection *different* from the default of 0
+        dropdown.element.select(index: 1)
+        // ...using the params as previous customer input to create a new dropdown...
+        let previousCustomerInput = dropdown.updateParams(params: IntentConfirmParams(type: .dynamic("sepa_debit")))
+        let dropdown_with_previous_customer_input = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("sepa_debit"),
+            previousCustomerInput: previousCustomerInput
+        ).makeDropdown(for: selectorSpec)
+        
+        // ...should result in a valid element filled out with the previous customer input
+        XCTAssertEqual(dropdown_with_previous_customer_input.element.selectedIndex, 1)
+        XCTAssertEqual(dropdown_with_previous_customer_input.validationState, .valid)
     }
 
     func testMakeFormElement_KlarnaCountry_UndefinedAPIPath() {
