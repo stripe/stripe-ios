@@ -27,16 +27,12 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var subscribeSwitch: UISwitch!
 
     private var paymentSheetFlowController: PaymentSheet.FlowController!
-    private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
-    private var backendCheckoutUrl: URL {
-        return URL(string: baseUrl + "/checkout")!
-    }
-    private var confirmIntentUrl: URL {
-        return URL(string: baseUrl + "/confirm_intent")!
-    }
-    private var computeTotalsUrl: URL {
-        return URL(string: baseUrl + "/compute_totals")!
-    }
+    // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
+    private static let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
+    
+    private let backendCheckoutUrl = URL(string: ExampleCustomDeferredCheckoutViewController.baseUrl + "/checkout")!
+    private let confirmIntentUrl = URL(string: ExampleCustomDeferredCheckoutViewController.baseUrl + "/confirm_intent")!
+    private let computeTotalsUrl = URL(string: ExampleCustomDeferredCheckoutViewController.baseUrl + "/compute_totals")!
 
     private struct ComputedTotals: Decodable {
         let subtotal: Double
@@ -181,8 +177,8 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     func serverSideConfirmHandler(_ paymentMethodID: String,
                                   _ shouldSavePaymentMethod: Bool,
                                   _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        // Create an intent on your server and invoke `intentCreationCallback` with the client secret
-        createIntent(paymentMethodID: paymentMethodID) { result in
+        // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret
+        confirmIntent(paymentMethodID: paymentMethodID, shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
             switch result {
             case .success(let clientSecret):
                 intentCreationCallback(.success(clientSecret))
@@ -295,7 +291,9 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         task.resume()
     }
 
-    func createIntent(paymentMethodID: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func confirmIntent(paymentMethodID: String,
+                       shouldSavePaymentMethod: Bool,
+                       completion: @escaping (Result<String, Error>) -> Void) {
         var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
 
@@ -305,6 +303,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "hot_dog_count": hotDogStepper.value,
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
+            "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
         ]
 
