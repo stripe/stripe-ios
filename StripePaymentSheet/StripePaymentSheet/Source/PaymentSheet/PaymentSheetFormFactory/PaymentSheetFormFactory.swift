@@ -35,20 +35,23 @@ class PaymentSheetFormFactory {
     let linkAccount: PaymentSheetLinkAccount?
     let previousCustomerInput: IntentConfirmParams?
 
-    var defaultBillingDetails: PaymentSheet.BillingDetails {
-        /// Looks at `previousCustomerInput` and `configuration`, prefers the former
+    /// For each field in PaymentSheet.BillingDetails, determines the default value by looking at (in order of preference):
+    /// 1. the given API Path (only for name, email, and country fields),
+    /// 2. `previousCustomerInput`
+    /// 3. the merchant provided`configuration`
+    func defaultBillingDetails(nameAPIPath: String? = nil, emailAPIPath: String? = nil, countryAPIPath: String? = nil) -> PaymentSheet.BillingDetails {
         let previous = previousCustomerInput?.paymentMethodParams.billingDetails
         let configuration = configuration.defaultBillingDetails
         var details = PaymentSheet.BillingDetails()
-        details.name = previous?.name ?? configuration.name
+        details.name = getPreviousCustomerInput(for: nameAPIPath ?? "") ?? previous?.name ?? configuration.name
         details.phone = previous?.phone ?? configuration.phone
-        details.email = previous?.email ?? configuration.email
+        details.email = getPreviousCustomerInput(for: emailAPIPath ?? "") ?? previous?.email ?? configuration.email
         details.address.line1 = previous?.address?.line1 ?? configuration.address.line1
         details.address.line2 = previous?.address?.line2 ?? configuration.address.line2
         details.address.city = previous?.address?.city ?? configuration.address.city
         details.address.state = previous?.address?.state ?? configuration.address.state
         details.address.postalCode = previous?.address?.postalCode ?? configuration.address.postalCode
-        details.address.country = previous?.address?.country ?? configuration.address.country
+        details.address.country = getPreviousCustomerInput(for: nameAPIPath ?? "") ?? previous?.address?.country ?? configuration.address.country
         return details
     }
 
@@ -153,9 +156,10 @@ extension PaymentSheetFormFactory {
     }
 
     func makeName(label: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
+        let defaultValue = defaultBillingDetails(nameAPIPath: apiPath).name
         let element = TextFieldElement.makeName(
             label: label,
-            defaultValue: defaultBillingDetails.name,
+            defaultValue: defaultValue,
             theme: theme
         )
         return PaymentMethodElementWrapper(element) { textField, params in
@@ -169,7 +173,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeEmail(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.makeEmail(defaultValue: defaultBillingDetails.email, theme: theme)
+        let defaultValue = defaultBillingDetails(emailAPIPath: apiPath).email
+        let element = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -182,8 +187,8 @@ extension PaymentSheetFormFactory {
 
     func makePhone() -> PaymentMethodElementWrapper<PhoneNumberElement> {
         let element = PhoneNumberElement(
-            defaultCountryCode: defaultBillingDetails.address.country,
-            defaultPhoneNumber: defaultBillingDetails.phone,
+            defaultCountryCode: defaultBillingDetails().address.country,
+            defaultPhoneNumber: defaultBillingDetails().phone,
             theme: theme)
         return PaymentMethodElementWrapper(element) { phoneField, params in
             guard case .valid = phoneField.validationState else { return nil }
@@ -282,13 +287,13 @@ extension PaymentSheetFormFactory {
         let defaultAddress: AddressSectionElement.AddressDetails
         if let shippingDetails = configuration.shippingDetails() {
             // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
-            displayBillingSameAsShippingCheckbox = defaultBillingDetails == .init()
+            displayBillingSameAsShippingCheckbox = defaultBillingDetails() == .init()
             defaultAddress =
                 displayBillingSameAsShippingCheckbox
-                ? .init(shippingDetails) : defaultBillingDetails.address.addressSectionDefaults
+                ? .init(shippingDetails) : defaultBillingDetails().address.addressSectionDefaults
         } else {
             displayBillingSameAsShippingCheckbox = false
-            defaultAddress = defaultBillingDetails.address.addressSectionDefaults
+            defaultAddress = defaultBillingDetails().address.addressSectionDefaults
         }
         let section = AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
@@ -378,7 +383,7 @@ extension PaymentSheetFormFactory {
                 label: String.Localized.country,
                 countryCodes: resolvedCountryCodes,
                 theme: theme,
-                defaultCountry: defaultBillingDetails.address.country,
+                defaultCountry: defaultBillingDetails(countryAPIPath: apiPath).address.country,
                 locale: locale
             )
         ) { dropdown, params in
@@ -431,12 +436,13 @@ extension PaymentSheetFormFactory {
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(
             KlarnaHelper.availableCountries(currency: currency)
         )
+        let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(
                 label: String.Localized.country,
                 countryCodes: countryCodes,
                 theme: theme,
-                defaultCountry: defaultBillingDetails.address.country,
+                defaultCountry: defaultValue,
                 locale: Locale.current
             )
         ) { dropdown, params in
@@ -531,7 +537,7 @@ extension PaymentSheetFormFactory {
     ) {
         // Using a closure because a function would require capturing self, which will be deallocated by the time
         // the closures below are called.
-        let defaultBillingDetails = defaultBillingDetails
+        let defaultBillingDetails = defaultBillingDetails()
         let updatePhone = { (phoneElement: PhoneNumberElement, countryCode: String) in
             // Only update the phone country if:
             // 1. It's different from the selected one,
