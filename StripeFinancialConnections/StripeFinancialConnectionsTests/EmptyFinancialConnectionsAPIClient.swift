@@ -154,7 +154,6 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     }
 
     func consumerSessionStartVerification(
-        emailAddress: String,
         otpType: String,
         customEmailType: String?,
         connectionsMerchantName: String?,
