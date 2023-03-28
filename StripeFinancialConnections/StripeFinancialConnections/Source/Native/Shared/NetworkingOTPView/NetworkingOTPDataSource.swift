@@ -79,7 +79,6 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid startVerificationSession call: no consumerSession.clientSecret"))
         }
         return apiClient.consumerSessionStartVerification(
-            emailAddress: emailAddress,
             otpType: otpType,
             customEmailType: customEmailType,
             connectionsMerchantName: connectionsMerchantName,
