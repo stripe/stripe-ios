@@ -143,7 +143,7 @@ extension PaymentSheetFormFactory {
         details.address.city = previous?.address?.city ?? configuration.address.city
         details.address.state = previous?.address?.state ?? configuration.address.state
         details.address.postalCode = previous?.address?.postalCode ?? configuration.address.postalCode
-        details.address.country = getPreviousCustomerInput(for: nameAPIPath ?? "") ?? previous?.address?.country ?? configuration.address.country
+        details.address.country = getPreviousCustomerInput(for: countryAPIPath ?? "") ?? previous?.address?.country ?? configuration.address.country
         return details
     }
     

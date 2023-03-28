@@ -872,12 +872,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testMakeFormElement_Country_withAPIPath() {
         let configuration = PaymentSheet.Configuration()
-        let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
-            paymentMethod: .dynamic("sofort")
-        )
-        let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: "sofort[country]")
+        func makeCountry(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
+            let factory = PaymentSheetFormFactory(
+                intent: .paymentIntent(STPFixtures.paymentIntent()),
+                configuration: configuration,
+                paymentMethod: .dynamic("sofort"),
+                previousCustomerInput: previousCustomerInput
+            )
+            let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: "sofort[country]")
+            return country
+        }
+        let country = makeCountry(previousCustomerInput: nil)
         (country as! PaymentMethodElementWrapper<DropdownFieldElement>).element.select(index: 1) // select a different index than the default of 0
 
         let params = IntentConfirmParams(type: .dynamic("sofort"))
@@ -893,12 +898,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
         
         // Using the params as previous customer input...
-        let country_with_previous_input = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
-            paymentMethod: .dynamic("sofort"),
-            previousCustomerInput: updatedParams
-        ).makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
+        let country_with_previous_input = makeCountry(previousCustomerInput: updatedParams)
         // ...should result in a valid, filled out element
         XCTAssert(country_with_previous_input.validationState == .valid)
         let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .dynamic("sofort")))
