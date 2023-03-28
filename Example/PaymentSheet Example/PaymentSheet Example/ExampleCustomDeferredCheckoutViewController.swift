@@ -305,7 +305,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "hot_dog_count": hotDogStepper.value,
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
-            "return_url": "payments-example://stripe-redirect"
+            "return_url": "payments-example://stripe-redirect",
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

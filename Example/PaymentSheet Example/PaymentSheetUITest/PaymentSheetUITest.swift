@@ -130,7 +130,7 @@ class PaymentSheetUITest: XCTestCase {
         addCardButton.tap()
 
         try! fillCardData(app)
-        
+
         /*
         TODO(yuki) Re-enable when preservation fix is pushed
          
@@ -157,7 +157,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
         */
-        
+
         // Continue should be enabled since card details were preserved when closing payment sheet
         app.buttons["Continue"].tap()
 
