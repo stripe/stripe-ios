@@ -183,7 +183,7 @@ extension PaymentSheetFormFactory {
             return params
         }
     }
-    
+
     func makeMandate(mandateText: String) -> PaymentMethodElement {
         // If there was previous customer input, check if it displayed the mandate for this payment method
         let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
@@ -229,7 +229,7 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
 
     }
-    
+
     func makePaypalMandate(intent: Intent) -> PaymentMethodElement {
         let mandateText: String = {
             if intent.isPaymentIntent {

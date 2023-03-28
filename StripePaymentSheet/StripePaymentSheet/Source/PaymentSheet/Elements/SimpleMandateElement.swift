@@ -20,14 +20,14 @@ class SimpleMandateElement: PaymentMethodElement {
             return nil
         }
     }
-    
+
     var delegate: StripeUICore.ElementDelegate?
     var view: UIView {
         return mandateTextView
     }
     let mandateTextView: SimpleMandateTextView
     let customerAlreadySawMandate: Bool
-    
+
     init(mandateText: String, customerAlreadySawMandate: Bool = false, theme: ElementsUITheme = .default) {
         mandateTextView = SimpleMandateTextView(mandateText: mandateText, theme: theme)
         self.customerAlreadySawMandate = customerAlreadySawMandate

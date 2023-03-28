@@ -1505,7 +1505,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let emptyAddressSectionElement = AddressSectionElement()
         XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
     }
-    
+
     func testAppliesPreviousCustomerInput_for_mandate_pms() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -1514,7 +1514,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
         }
         waitForExpectations(timeout: 1)
-        
+
         func makePaypalForm(isSettingUp: Bool, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal"], setupFutureUsage: isSettingUp ? .offSession : .none)),
@@ -1523,7 +1523,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 previousCustomerInput: previousCustomerInput
             ).make()
         }
-        
+
         // 1. nil -> valid Payment form
         // A paypal form for *payment* without previous customer input...
         let paypalForm_payment = makePaypalForm(isSettingUp: false, previousCustomerInput: nil)
@@ -1533,7 +1533,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return
         }
         XCTAssertFalse(paypalForm_payment_paymentOption.didDisplayMandate)
-        
+
         // 2. valid Payment form -> invalid Setup form
         // Creating a paypal form for *setup* using the old form as previous customer input...
         var paypalForm_setup = makePaypalForm(isSettingUp: true, previousCustomerInput: paypalForm_payment_paymentOption)
@@ -1546,7 +1546,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return
         }
         XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
-        
+
         // 3. valid Setup form -> valid Setup form
         // Using the form's previous customer input to create another *setup* paypal form...
         paypalForm_setup = makePaypalForm(isSettingUp: true, previousCustomerInput: paypalForm_setup_paymentOption)
