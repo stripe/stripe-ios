@@ -132,12 +132,12 @@ class PaymentSheetUITest: XCTestCase {
         try! fillCardData(app)
 
         app.buttons["Continue"].tap()
-    
+
         // Update quantity of an item to force an update
         let saladStepper = app.steppers["salad_stepper"]
         XCTAssertTrue(saladStepper.waitForExistence(timeout: 4.0))
         saladStepper.tap()
-        
+
         paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton
