@@ -1701,7 +1701,31 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
         let emptyAddressSectionElement = AddressSectionElement()
         XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
-
+    }
+    
+    func testAppliesPreviousCustomerInput_klarna_country() {
+        func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<DropdownFieldElement> {
+            let factory = PaymentSheetFormFactory(
+                intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["klarna"], currency: "eur")),
+                configuration: ._testValue_MostPermissive(),
+                paymentMethod: .dynamic("klarna"),
+                previousCustomerInput: previousCustomerInput
+            )
+            return factory.makeKlarnaCountry(apiPath: apiPath) as! PaymentMethodElementWrapper<DropdownFieldElement>
+        }
+        let apiPathValues: [String?] = [nil, "billing_details[address][country]"] // Test the same thing with and without an api path
+        apiPathValues.forEach { apiPath in
+            // Given a klarna country...
+            let klarnaCountry = makeKlarnaCountry(apiPath: apiPath, previousCustomerInput: nil)
+            // ...with a selection *different* from the default of 0
+            klarnaCountry.element.select(index: 1)
+            // ...using its params as previous customer input to create a new klarna country...
+            let previousCustomerInput = klarnaCountry.updateParams(params: IntentConfirmParams(type: .dynamic("klarna")))
+            let klarnaCountry_with_previous_customer_input = makeKlarnaCountry(apiPath: apiPath, previousCustomerInput: previousCustomerInput)
+            // ...should result in a valid element filled out with the previous customer input
+            XCTAssertEqual(klarnaCountry_with_previous_customer_input.element.selectedIndex, 1)
+            XCTAssertEqual(klarnaCountry_with_previous_customer_input.validationState, .valid)
+        }
     }
 
     // MARK: - Helpers
