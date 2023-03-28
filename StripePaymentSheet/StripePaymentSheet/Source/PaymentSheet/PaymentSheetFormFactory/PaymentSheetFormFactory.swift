@@ -225,9 +225,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeCashAppMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName)
+        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
-
     }
 
     func makePaypalMandate(intent: Intent) -> PaymentMethodElement {
