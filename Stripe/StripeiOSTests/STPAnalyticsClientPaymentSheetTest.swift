@@ -189,6 +189,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual(STPTestingDefaultPublishableKey, payload["publishable_key"] as? String)
         XCTAssertEqual("analytics.stripeios-1.0", payload["analytics_ua"] as? String)
         XCTAssertEqual("xctest", payload["app_name"] as? String)
+        XCTAssertNotNil(payload["os_name"] as? String)
         XCTAssertNotNil(payload["os_version"] as? String)
         XCTAssertNil(payload["ui_usage_level"])
         XCTAssertTrue(payload["apple_pay_enabled"] as? Bool ?? false)

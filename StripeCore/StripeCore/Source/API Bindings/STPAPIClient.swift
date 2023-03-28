@@ -170,6 +170,7 @@ import UIKit
             // 'objective-c' to enable iOS SDK-specific behavior in the API.
             "lang": "objective-c",
             "bindings_version": STPSDKVersion,
+            "os_name": "ios",
         ]
         let version = UIDevice.current.systemVersion
         if version != "" {

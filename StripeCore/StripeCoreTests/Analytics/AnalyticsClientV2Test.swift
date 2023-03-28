@@ -51,6 +51,7 @@ final class AnalyticsClientV2Test: XCTestCase {
         XCTAssertEqual(commonPayload["client_id"] as? String, "test_client_id")
         XCTAssertNotNil(commonPayload["event_id"] as? String)
         XCTAssertNotNil(commonPayload["created"] as? Double)
+        XCTAssertNotNil(commonPayload["os_name"] as? String)
         XCTAssertNotNil(commonPayload["os_version"] as? String)
         XCTAssertEqual(commonPayload["sdk_platform"] as? String, "ios")
         XCTAssertNotNil(commonPayload["sdk_version"] as? String)
