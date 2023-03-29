@@ -879,6 +879,7 @@ private func CreatePaneViewController(
             let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
                 manifest: dataManager.manifest,
                 selectedAccountIds: linkedAccountIds,
+                returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient
