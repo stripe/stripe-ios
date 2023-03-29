@@ -13,6 +13,7 @@ import UIKit
 @objc(STP_Internal_SimpleMandateTextView)
 class SimpleMandateTextView: UIView {
     private let theme: ElementsUITheme
+    var viewDidAppear: Bool = false
     lazy var label: UILabel = {
         let label = UILabel()
         label.font = theme.fonts.caption
@@ -34,5 +35,13 @@ class SimpleMandateTextView: UIView {
 
     fileprivate func installConstraints() {
         addAndPinSubview(label)
+    }
+}
+
+extension SimpleMandateTextView: EventHandler {
+    func handleEvent(_ event: StripeUICore.STPEvent) {
+        if case .viewDidAppear = event {
+           viewDidAppear = true
+        }
     }
 }

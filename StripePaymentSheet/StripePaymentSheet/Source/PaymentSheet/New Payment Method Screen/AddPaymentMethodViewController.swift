@@ -217,6 +217,11 @@ class AddPaymentMethodViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        sendEventToSubviews(.viewDidAppear, from: view)
+    }
+
     // MARK: - Internal
 
     /// Returns true iff we could map the error to one of the displayed fields
