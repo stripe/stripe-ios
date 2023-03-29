@@ -94,7 +94,7 @@ class SheetNavigationBar: UIView {
 
             closeButtonRight.trailingAnchor.constraint(
                 equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
-            closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor)
+            closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
         if isTestMode {
