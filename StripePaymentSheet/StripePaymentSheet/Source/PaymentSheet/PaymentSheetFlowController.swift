@@ -331,7 +331,7 @@ extension PaymentSheet {
         /// - Parameter intentConfiguration: An updated IntentConfiguration
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, you may retry.
         /// Don’t call this method while PaymentSheet is being presented. 
-        @_spi(STP) publicfunc update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
+        @_spi(STP) public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
 
             let updateID = UUID()

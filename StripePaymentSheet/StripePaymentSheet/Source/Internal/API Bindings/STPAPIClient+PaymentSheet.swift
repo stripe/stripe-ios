@@ -141,6 +141,7 @@ extension STPAPIClient {
         case .payment(_, _, _, let captureMethod):
             deferredIntent["capture_method"] = captureMethod.rawValue
         case .setup:
+            // Capture mode is not relevant for SetupIntents
             break
         }
 
