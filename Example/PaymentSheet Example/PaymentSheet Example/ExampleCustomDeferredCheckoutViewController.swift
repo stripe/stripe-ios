@@ -45,8 +45,10 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     private var intentConfig: PaymentSheet.IntentConfiguration {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
-                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
-                     confirmHandlerForServerSideConfirmation: serverSideConfirmHandler(_:_:_:))
+                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
+        ) { [weak self] paymentMethodID, shouldSavePaymentMethod, intentCreationCallback in
+            self?.serverSideConfirmHandler(paymentMethodID, shouldSavePaymentMethod, intentCreationCallback)
+        }
     }
 
     private var currencyFormatter: NumberFormatter {
