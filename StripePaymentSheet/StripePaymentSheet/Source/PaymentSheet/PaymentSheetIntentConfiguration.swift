@@ -94,7 +94,7 @@ import Foundation
         }
 
         /// Indicates that you intend to make future payments with this PaymentIntent’s payment method.
-            /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-setup_future_usage
+        /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-setup_future_usage
         public enum SetupFutureUsage: String {
             /// Use off_session if your customer may or may not be present in your checkout flow.
             case offSession = "off_session"
@@ -108,7 +108,7 @@ import Foundation
             /// Use this if your integration creates a PaymentIntent
             case payment(
                 /// Amount intended to be collected in the smallest currency unit (e.g. 100 cents to charge $1.00). Shown in Apple Pay, Buy now pay later UIs, the Pay button, and influences available payment methods.
-                      /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-amount
+                /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-amount
                 amount: Int,
                 /// Three-letter ISO currency code. Filters out payment methods based on supported currency.
                 /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-currency
