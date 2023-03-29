@@ -129,7 +129,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 if let error = error {
                     print(error)
                     self?.displayAlert("\(error)")
-                    // Retry - product code should use an exponential backoff
+                    // Retry - production code should use an exponential backoff
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
                         self?.updateUI()
                     }
