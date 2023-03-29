@@ -125,13 +125,17 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             self.updateLabels()
 
             // Update PaymentSheet with the latest `intentConfig`
-            self.paymentSheetFlowController.update(intentConfiguration: self.intentConfig) { error  in
-                if error != nil {
-                    // Retry
-                    self.updateUI()
+            self.paymentSheetFlowController.update(intentConfiguration: self.intentConfig) { [weak self] error in
+                if let error = error {
+                    print(error)
+                    self?.displayAlert("\(error)")
+                    // Retry - product code should use an exponential backoff
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                        self?.updateUI()
+                    }
                 } else {
                     // Re-enable your "Buy" and "Payment method" buttons
-                    self.updateButtons()
+                    self?.updateButtons()
                   }
             }
         }
