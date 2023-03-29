@@ -10,7 +10,7 @@ import Foundation
 
 protocol FinancialConnectionsAPIClient {
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize>
+    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize>
 
     func fetchFinancialConnectionsAccounts(
         clientSecret: String,
@@ -155,7 +155,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
     }
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
         let parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,

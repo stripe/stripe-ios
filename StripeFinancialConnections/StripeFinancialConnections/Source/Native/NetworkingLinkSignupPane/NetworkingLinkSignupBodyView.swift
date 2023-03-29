@@ -82,7 +82,19 @@ private func CreateBulletPointView(
 
     let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
-            imageView,
+            {
+                // add extra padding to `imageView` to align
+                // the text + image better
+                let extraPaddingView = UIStackView(arrangedSubviews: [imageView])
+                extraPaddingView.isLayoutMarginsRelativeArrangement = true
+                extraPaddingView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                    top: 3,
+                    leading: 0,
+                    bottom: 0,
+                    trailing: 0
+                )
+                return extraPaddingView
+            }(),
             labelView,
         ]
     )

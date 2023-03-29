@@ -12,6 +12,7 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
+    func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup>
     func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse>
     func saveToLink(emailAddress: String, phoneNumber: String, countryCode: String) -> Future<Void>
 }
@@ -20,6 +21,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
 
     let manifest: FinancialConnectionsSessionManifest
     private let selectedAccountIds: [String]
+    private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -27,15 +29,31 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     init(
         manifest: FinancialConnectionsSessionManifest,
         selectedAccountIds: [String],
+        returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
         self.selectedAccountIds = selectedAccountIds
+        self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+    }
+    
+    func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup> {
+        return apiClient.synchronize(
+            clientSecret: clientSecret,
+            returnURL: returnURL
+        )
+        .chained { synchronize in
+            if let networkingLinkSignup = synchronize.text?.networkingLinkSignupPane {
+                return Promise(value: networkingLinkSignup)
+            } else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "no networkingLinkSignup data attached"))
+            }
+        }
     }
 
     func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse> {

@@ -34,6 +34,12 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private let dataSource: NetworkingLinkSignupDataSource
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
+    private lazy var loadingView: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator(size: .large)
+        activityIndicator.color = .textDisabled
+        activityIndicator.backgroundColor = .customBackgroundColor
+        return activityIndicator
+    }()
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
         let formView = NetworkingLinkSignupBodyFormView(
             accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber
@@ -41,8 +47,52 @@ final class NetworkingLinkSignupViewController: UIViewController {
         formView.delegate = self
         return formView
     }()
-    private lazy var footerView: NetworkingLinkSignupFooterView = {
-        return NetworkingLinkSignupFooterView(
+    private var footerView: NetworkingLinkSignupFooterView?
+
+    init(dataSource: NetworkingLinkSignupDataSource) {
+        self.dataSource = dataSource
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.hidesBackButton = true
+        view.backgroundColor = .customBackgroundColor
+        
+        showLoadingView(true)
+        dataSource.synchronize()
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let networkingLinkSignup):
+                    self.showContent(networkingLinkSignup: networkingLinkSignup)
+                case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "NetworkingLinkSignupSynchronizeError",
+                            pane: .networkingLinkSignupPane
+                        )
+                    self.delegate?.networkingLinkSignupViewControllerDidFinish(
+                        self,
+                        saveToLinkWithStripeSucceeded: nil,
+                        withError: error
+                    )
+                }
+                self.showLoadingView(false)
+            }
+    }
+    
+    private func showContent(networkingLinkSignup: FinancialConnectionsNetworkingLinkSignup) {
+        let footerView = NetworkingLinkSignupFooterView(
+            aboveCtaText: networkingLinkSignup.aboveCta,
+            saveToLinkButtonText: networkingLinkSignup.cta,
+            notNowButtonText: networkingLinkSignup.skipCta,
             didSelectSaveToLink: { [weak self] in
                 self?.didSelectSaveToLink()
             },
@@ -65,42 +115,11 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 self?.didSelectURLInTextFromBackend(url)
             }
         )
-    }()
-
-    init(dataSource: NetworkingLinkSignupDataSource) {
-        self.dataSource = dataSource
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.hidesBackButton = true
-        view.backgroundColor = .customBackgroundColor
-
+        self.footerView = footerView
         let pane = PaneWithHeaderLayoutView(
-            title: "Save your account to Link",
+            title: networkingLinkSignup.title,
             contentView: NetworkingLinkSignupBodyView(
-                bulletPoints: [
-                    FinancialConnectionsBulletPoint(
-                        icon: FinancialConnectionsImage(
-                            default:
-                                "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
-                        ),
-                        content:
-                            "Connect your account faster on [Merchant] and everywhere Link is accepted."
-                    ),
-                    FinancialConnectionsBulletPoint(
-                        icon: FinancialConnectionsImage(
-                            default:
-                                "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--reserve-primary-3x.png"
-                        ),
-                        content: "Link encrypts your data and never shares your login details."
-                    ),
-                ],
+                bulletPoints: networkingLinkSignup.body.bullets,
                 formView: formView,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
@@ -119,10 +138,27 @@ final class NetworkingLinkSignupViewController: UIViewController {
         } else {
             formView.beginEditingEmailAddressField()
         }
+        
+        assert(self.footerView != nil, "footer view should be initialized as part of displaying content")
+    }
+    
+    private func showLoadingView(_ show: Bool) {
+        if show && loadingView.superview == nil {
+            // first-time we are showing this, so add the view to hierarchy
+            view.addAndPinSubview(loadingView)
+        }
+
+        loadingView.isHidden = !show
+        if show {
+            loadingView.startAnimating()
+        } else {
+            loadingView.stopAnimating()
+        }
+        view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 
     private func didSelectSaveToLink() {
-        footerView.setIsLoading(true)
+        footerView?.setIsLoading(true)
         dataSource
             .analyticsClient
             .log(
@@ -158,7 +194,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                     pane: .networkingLinkSignupPane
                 )
             }
-            self.footerView.setIsLoading(false)
+            self.footerView?.setIsLoading(false)
         }
     }
 
@@ -176,7 +212,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private func adjustSaveToLinkButtonDisabledState() {
         let isEmailValid = formView.emailElement.validationState.isValid
         let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
-        footerView.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
+        footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
 }
 
@@ -235,7 +271,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                                 self.formView.endEditingEmailAddressField()
                             }
                         }
-                        self.footerView.showSaveToLinkButtonIfNeeded()
+                        self.footerView?.showSaveToLinkButtonIfNeeded()
                     }
                 case .failure(let error):
                     self.dataSource.analyticsClient.logUnexpectedError(

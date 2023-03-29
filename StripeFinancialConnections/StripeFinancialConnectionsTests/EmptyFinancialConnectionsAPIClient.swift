@@ -22,7 +22,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 
-    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
         return Promise<FinancialConnectionsSynchronize>()
     }
 

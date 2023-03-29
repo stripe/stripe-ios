@@ -75,9 +75,9 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }()
 
     init(
-        aboveCtaText: String = "By saving your account to Link, you agree to Link’s [Terms](https://link.co/terms) and [Privacy Policy](https://link.co/privacy)",
-        saveToLinkButtonText: String = "Save to Link",
-        notNowButtonText: String = "Not now",
+        aboveCtaText: String,
+        saveToLinkButtonText: String,
+        notNowButtonText: String,
         didSelectSaveToLink: @escaping () -> Void,
         didSelectNotNow: @escaping () -> Void,
         didSelectURL: @escaping (URL) -> Void
@@ -132,6 +132,9 @@ private struct NetworkingLinkSignupFooterViewUIViewRepresentable: UIViewRepresen
 
     func makeUIView(context: Context) -> NetworkingLinkSignupFooterView {
         NetworkingLinkSignupFooterView(
+            aboveCtaText: "By saving your account to Link, you agree to Link’s [Terms](https://link.co/terms) and [Privacy Policy](https://link.co/privacy)",
+            saveToLinkButtonText: "Save to Link",
+            notNowButtonText: "Not now",
             didSelectSaveToLink: {},
             didSelectNotNow: {},
             didSelectURL: { _ in }
