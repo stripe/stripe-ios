@@ -10,7 +10,7 @@ import Foundation
 @_spi(ExperimentPaymentSheetDecouplingAPI) public extension PaymentSheet {
     /// 🚧 Under construction
     /// Contains information needed to render PaymentSheet
-    /// The values are used to calculate the payment methods displayed (if paymentMethodTypes is nil) and influence the UI.
+    /// The values are used to calculate the payment methods displayed and influence the UI.
     /// - Note: The PaymentIntent or SetupIntent you create on your server must have the same values or the payment/setup will fail.
     struct IntentConfiguration {
 
@@ -84,7 +84,8 @@ import Foundation
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
         public var confirmHandlerForServerSideConfirmation: ConfirmHandlerForServerSideConfirmation?
 
-        /// Controls when the funds will be captured. See https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
+        /// Controls when the funds will be captured. 
+        /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
         public enum CaptureMethod: String {
             /// (Default) Stripe automatically captures funds when the customer authorizes the payment.
             case automatic
