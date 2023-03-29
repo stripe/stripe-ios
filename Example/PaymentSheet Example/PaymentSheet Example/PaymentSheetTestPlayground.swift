@@ -11,7 +11,7 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 import Contacts
 import PassKit
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentPaymentSheetDecouplingAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
