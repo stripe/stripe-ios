@@ -254,7 +254,6 @@ extension PaymentSheet {
                 return .notSupported
             }
 
-
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
                 // as a dynamic payment method

@@ -1182,7 +1182,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(addressSectionElement.countryCodes.contains("FR"))
     }
 
-    func testNonCardsDontHaveCheckbox() {
+    func testNonCardsAndUSBankAccountsDontHaveSaveForFutureUseCheckbox() {
         let configuration = PaymentSheet.Configuration()
         let intent = Intent.paymentIntent(STPFixtures.paymentIntent())
         let specProvider = AddressSpecProvider()
@@ -1201,6 +1201,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             loadFormSpecs.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
+        // No payment method should have a checkbox except for cards and US Bank Accounts
         for type in PaymentSheet.supportedPaymentMethods.filter({
             $0 != .card && $0 != .USBankAccount
         }) {
@@ -1222,11 +1223,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 XCTFail()
                 return
             }
-            XCTAssertFalse(
-                form.getAllSubElements().contains {
-                    $0 is PaymentMethodElementWrapper<CheckboxElement> || $0 is CheckboxElement
-                }
-            )
+            if form.getAllUnwrappedSubElements()
+                .compactMap({ $0 as? CheckboxElement })
+                .contains(where: { $0.label.hasPrefix("Save") }) { // Hacky way to differentiate the save checkbox from other checkboxes
+                XCTFail("\(type) contains a checkbox")
+            }
         }
     }
 
@@ -1639,7 +1640,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...and the checkbox state should be enabled (the default)
         XCTAssertEqual(params.saveForFutureUseCheckboxState, .selected)
     }
-    
+
     func testAppliesPreviousCustomerInput_checkbox() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -1671,15 +1672,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...should have the checkbox hidden
         let cardForm_setup_params = cardForm_setup.updateParams(params: .init(type: .card))
         XCTAssertEqual(cardForm_setup_params?.saveForFutureUseCheckboxState, .hidden)
-        
+
         // Making another card form for payment using the previous card form's input...
         let cardForm_payment = makeCardForm(isSettingUp: false, previousCustomerInput: cardForm_setup_params)
         // ...should have the checkbox selected (the default)
         let cardForm_payment_params = cardForm_payment.updateParams(params: .init(type: .card))
         XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .selected)
-        
+
         // Deselecting the checkbox...
-        let saveCheckbox = cardForm_payment.getAllSubElements().compactMap({ $0 as? CheckboxElement }).first(where: { $0.label.hasPrefix("Save") })
+        let saveCheckbox = cardForm_payment.getAllUnwrappedSubElements().compactMap({ $0 as? CheckboxElement }).first(where: { $0.label.hasPrefix("Save") })
         saveCheckbox?.isSelected = false
         let cardForm_payment_params_checkbox_deselected = cardForm_payment.updateParams(params: .init(type: .card))
         XCTAssertEqual(cardForm_payment_params_checkbox_deselected?.saveForFutureUseCheckboxState, .deselected)
@@ -1748,13 +1749,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...and the address section shouldn't be populated with any defaults
         guard
             let afterpayForm = afterpayFormWithPreviousCardInput as? PaymentMethodElementWrapper<FormElement>,
-            let addressSectionElement = afterpayForm.element.getAllSubElements().compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first
+            let addressSectionElement = afterpayForm.element.getAllUnwrappedSubElements().compactMap({ $0 as? AddressSectionElement }).first
         else {
             XCTFail("expected address section")
             return
         }
         let emptyAddressSectionElement = AddressSectionElement()
-        XCTAssertEqual(addressSectionElement.element.addressDetails, emptyAddressSectionElement.addressDetails)
+        XCTAssertEqual(addressSectionElement.addressDetails, emptyAddressSectionElement.addressDetails)
     }
 
     func testAppliesPreviousCustomerInput_klarna_country() {
@@ -1887,18 +1888,18 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 extension Element {
     /// A convenience method that overwrites the one defined in Element.swift that unwraps any Elements wrapped in `PaymentMethodElementWrapper`
     /// and returns all Elements underneath this Element, including this Element.
-    public func getAllSubElements() -> [Element] {
+    public func getAllUnwrappedSubElements() -> [Element] {
         switch self {
         case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllSubElements() }
+            return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
         case let wrappedElement as PaymentMethodElementWrapper<FormElement>:
-            return wrappedElement.element.getAllSubElements()
+            return wrappedElement.element.getAllUnwrappedSubElements()
         case let wrappedElement as PaymentMethodElementWrapper<CheckboxElement>:
-            return wrappedElement.element.getAllSubElements()
+            return wrappedElement.element.getAllUnwrappedSubElements()
         case let wrappedElement as PaymentMethodElementWrapper<TextFieldElement>:
-            return wrappedElement.element.getAllSubElements()
+            return wrappedElement.element.getAllUnwrappedSubElements()
         case let wrappedElement as PaymentMethodElementWrapper<AddressSectionElement>:
-            return wrappedElement.element.getAllSubElements()
+            return wrappedElement.element.getAllUnwrappedSubElements()
         default:
             return [self]
         }

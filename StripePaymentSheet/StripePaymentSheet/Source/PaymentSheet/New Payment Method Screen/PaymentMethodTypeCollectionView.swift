@@ -43,7 +43,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
-        
+
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
         let selectedItemIndex: Int = {
