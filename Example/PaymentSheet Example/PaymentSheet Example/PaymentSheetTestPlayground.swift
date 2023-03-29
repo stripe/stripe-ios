@@ -300,19 +300,16 @@ class PaymentSheetTestPlayground: UIViewController {
         case .payment:
             intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: nil),
-                                                                captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
                                                     confirmHandler: confirmHandler(_:_:))
         case .paymentWithSetup:
             intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
-                                                                captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
                                                     confirmHandler: confirmHandler(_:_:))
         case .setup:
             intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
-                                                                captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
                                                     confirmHandler: confirmHandler(_:_:))
         }

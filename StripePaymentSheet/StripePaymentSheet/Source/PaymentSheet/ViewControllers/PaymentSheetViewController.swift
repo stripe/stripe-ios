@@ -146,7 +146,7 @@ class PaymentSheetViewController: UIViewController {
                 return .setup
             case .deferredIntent(_, let intentConfig):
                 switch intentConfig.mode {
-                case .payment(let amount, let currency, _):
+                case .payment(let amount, let currency, _, _):
                     return .pay(amount: amount, currency: currency)
                 case .setup:
                     return .setup

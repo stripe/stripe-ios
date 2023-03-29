@@ -194,7 +194,7 @@ extension STPApplePayContext {
             return setupPaymentRequest()
         case .deferredIntent(_, let intentConfig):
             switch intentConfig.mode {
-            case .payment(let amount, let currency, _):
+            case .payment(let amount, let currency, _, _):
                 return paymentRequest(with: currency, amount: amount)
             case .setup:
                 return setupPaymentRequest()

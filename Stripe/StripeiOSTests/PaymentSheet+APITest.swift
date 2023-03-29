@@ -192,7 +192,6 @@ class PaymentSheetAPITest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
                                                             paymentMethodTypes: types,
                                                             confirmHandler: confirmHandler)
         PaymentSheet.load(
@@ -260,7 +259,6 @@ class PaymentSheetAPITest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
                                                             paymentMethodTypes: types,
                                                             confirmHandlerForServerSideConfirmation: serverSideConfirmHandler)
         PaymentSheet.load(

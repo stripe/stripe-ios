@@ -91,7 +91,7 @@ class PaymentSheetFormFactory {
             saveMode = .merchantRequired
         case .deferredIntent(_, let intentConfig):
             switch intentConfig.mode {
-            case .payment(_, _, let setupFutureUsage):
+            case .payment(_, _, let setupFutureUsage, _):
                 saveMode = saveModeFor(merchantRequiresSave: setupFutureUsage != .none)
             case .setup:
                 saveMode = .merchantRequired

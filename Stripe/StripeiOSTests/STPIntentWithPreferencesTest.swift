@@ -100,7 +100,6 @@ class STPIntentWithPreferencesTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             confirmHandler: { _, _ in })
 
@@ -130,7 +129,6 @@ class STPIntentWithPreferencesTest: XCTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
-                                                            captureMethod: .manual,
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             confirmHandler: { _, _ in })
 
