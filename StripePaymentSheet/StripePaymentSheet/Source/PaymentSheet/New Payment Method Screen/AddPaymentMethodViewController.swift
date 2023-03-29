@@ -55,7 +55,11 @@ class AddPaymentMethodViewController: UIViewController {
 
     var linkAccount: PaymentSheetLinkAccount? = LinkAccountContext.shared.account {
         didSet {
-            updateFormElement()
+            if oldValue?.sessionState != linkAccount?.sessionState {
+                // TODO(link): This code ends up reloading the payment method form when `FlowController.update` is called, losing previous customer input.
+                // I added this check to avoid reloading unless necessary but I'm not sure it works. When Link is re-enabled, we should make sure this works!
+                updateFormElement()
+            }
         }
     }
 

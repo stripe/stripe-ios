@@ -240,9 +240,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeCashAppMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName)
+        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
-
     }
 
     func makePaypalMandate(intent: Intent) -> PaymentMethodElement {
@@ -261,9 +260,11 @@ extension PaymentSheetFormFactory {
         didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
         let isSelectedByDefault: Bool = {
-            if let previousCustomerInput = previousCustomerInput {
-                return previousCustomerInput.shouldSavePaymentMethod
+            if let previousCustomerInput = previousCustomerInput, previousCustomerInput.saveForFutureUseCheckboxState != .hidden {
+                // Use the previous customer input checkbox state if it was shown
+                return previousCustomerInput.saveForFutureUseCheckboxState == .selected
             } else {
+                // Otherwise, use the default selected state
                 return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
             }
         }()
@@ -274,8 +275,10 @@ extension PaymentSheetFormFactory {
             didToggle: didToggle
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
-            if !checkbox.checkboxButton.isHidden {
-                params.shouldSavePaymentMethod = checkbox.checkboxButton.isSelected
+            if checkbox.checkboxButton.isHidden {
+                params.saveForFutureUseCheckboxState = .hidden
+            } else {
+                params.saveForFutureUseCheckboxState = checkbox.checkboxButton.isSelected ? .selected : .deselected
             }
             return params
         }

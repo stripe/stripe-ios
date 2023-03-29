@@ -32,11 +32,17 @@ extension PaymentSheetFormFactory {
             includePhone: includePhone)
 
         let previousCardInput = previousCustomerInput?.paymentMethodParams.card
+        let formattedExpiry: String? = {
+            guard let expiryMonth = previousCardInput?.expMonth?.intValue, let expiryYear = previousCardInput?.expYear?.intValue else {
+                return nil
+            }
+            return String(format: "%02d%02d", expiryMonth, expiryYear)
+        }()
         let cardDefaultValues = CardSection.DefaultValues(
             name: defaultBillingDetails().name,
             pan: previousCardInput?.number,
             cvc: previousCardInput?.cvc,
-            expiry: "\(previousCardInput?.expMonth?.stringValue ?? "")\(previousCardInput?.expYear?.stringValue ?? "")"
+            expiry: formattedExpiry
         )
 
         let cardSection = CardSection(
