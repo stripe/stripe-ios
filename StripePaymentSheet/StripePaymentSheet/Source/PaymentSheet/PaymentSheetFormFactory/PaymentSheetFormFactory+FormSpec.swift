@@ -122,22 +122,7 @@ extension PaymentSheetFormFactory {
                 ? makeEmail(apiPath: spec.apiPath?["v1"])
                 : nil
         case .selector(let selectorSpec):
-            let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {
-                .init(pickerDisplayName: $0.displayText, labelDisplayName: $0.displayText, accessibilityValue: $0.displayText, rawData: $0.apiValue ?? $0.displayText)
-            }
-            let dropdownField = DropdownFieldElement(
-                items: dropdownItems,
-                label: selectorSpec.translationId.localizedValue,
-                theme: theme
-            )
-            return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
-                let selectedValue = dropdown.selectedItem.rawData
-                // TODO: Determine how to handle multiple versions
-                if let apiPathKey = selectorSpec.apiPath?["v1"] {
-                    params.paymentMethodParams.additionalAPIParameters[apiPathKey] = selectedValue
-                }
-                return params
-            }
+            return makeDropdown(for: selectorSpec)
         case .billing_address(let countrySpec):
             return configuration.billingDetailsCollectionConfiguration.address != .never
                 ? makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
@@ -192,6 +177,30 @@ extension PaymentSheetFormFactory {
                 ? makeBillingAddressSection(collectionMode: .noCountry, countries: nil)
                 : nil
         case .unknown: return nil
+        }
+    }
+
+    func makeDropdown(for selectorSpec: FormSpec.SelectorSpec) -> PaymentMethodElementWrapper<DropdownFieldElement> {
+        assert(selectorSpec.apiPath?["v1"] != nil) // If there's no api path, the dropdown selection is unused!
+        let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {
+            .init(pickerDisplayName: $0.displayText, labelDisplayName: $0.displayText, accessibilityValue: $0.displayText, rawData: $0.apiValue ?? $0.displayText)
+        }
+        let previousCustomerInputIndex = dropdownItems.firstIndex { item in
+            item.rawData == getPreviousCustomerInput(for: selectorSpec.apiPath?["v1"])
+        }
+        let dropdownField = DropdownFieldElement(
+            items: dropdownItems,
+            defaultIndex: previousCustomerInputIndex ?? 0,
+            label: selectorSpec.translationId.localizedValue,
+            theme: theme
+        )
+        return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
+            let selectedValue = dropdown.selectedItem.rawData
+            // TODO: Determine how to handle multiple versions
+            if let apiPathKey = selectorSpec.apiPath?["v1"] {
+                params.paymentMethodParams.additionalAPIParameters[apiPathKey] = selectedValue
+            }
+            return params
         }
     }
 }

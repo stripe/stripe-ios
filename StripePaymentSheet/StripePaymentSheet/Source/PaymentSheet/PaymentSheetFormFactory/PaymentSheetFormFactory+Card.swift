@@ -39,7 +39,7 @@ extension PaymentSheetFormFactory {
             return String(format: "%02d%02d", expiryMonth, expiryYear)
         }()
         let cardDefaultValues = CardSection.DefaultValues(
-            name: defaultBillingDetails.name,
+            name: defaultBillingDetails().name,
             pan: previousCardInput?.number,
             cvc: previousCardInput?.cvc,
             expiry: formattedExpiry
