@@ -47,7 +47,7 @@ class TextFieldElementIBANTest: XCTestCase {
             "AT861904300235473202": .valid,
         ]
 
-        let config = TextFieldElement.IBANConfiguration()
+        let config = TextFieldElement.IBANConfiguration(defaultValue: nil)
         for (text, expected) in testcases {
             let actual = config.validate(text: text, isOptional: false)
             XCTAssertTrue(
