@@ -1403,6 +1403,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         // ...and full card details...
         let cardValues = STPFixtures.paymentMethodCardParams()
+        cardValues.expMonth = 3 // Choose a single digit month to exercise the code for padding with leading zeros
         let previousCustomerInput = IntentConfirmParams.init(
             params: .paramsWith(
                 card: cardValues,
@@ -1438,6 +1439,59 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.card?.expMonth, cardValues.expMonth)
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
+        // ...and the checkbox state should be enabled (the default)
+        XCTAssertEqual(params.saveForFutureUseCheckboxState, .selected)
+    }
+    
+    func testAppliesPreviousCustomerInput_checkbox() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        func makeCardForm(isSettingUp: Bool, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
+            var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+            configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+            return PaymentSheetFormFactory(
+                intent: isSettingUp ? .setupIntent(STPFixtures.setupIntent()) : .paymentIntent(STPFixtures.paymentIntent()),
+                configuration: configuration,
+                paymentMethod: .card,
+                previousCustomerInput: previousCustomerInput
+            ).make()
+        }
+        // A filled out card form in setup mode...
+        let previousCustomerInput = IntentConfirmParams.init(
+            params: .paramsWith(
+                card: STPFixtures.paymentMethodCardParams(),
+                billingDetails: STPFixtures.paymentMethodBillingDetails(),
+                metadata: nil),
+            type: .card
+        )
+        let cardForm_setup = makeCardForm(isSettingUp: true, previousCustomerInput: previousCustomerInput)
+        // ...should have the checkbox hidden
+        let cardForm_setup_params = cardForm_setup.updateParams(params: .init(type: .card))
+        XCTAssertEqual(cardForm_setup_params?.saveForFutureUseCheckboxState, .hidden)
+        
+        // Making another card form for payment using the previous card form's input...
+        let cardForm_payment = makeCardForm(isSettingUp: false, previousCustomerInput: cardForm_setup_params)
+        // ...should have the checkbox selected (the default)
+        let cardForm_payment_params = cardForm_payment.updateParams(params: .init(type: .card))
+        XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .selected)
+        
+        // Deselecting the checkbox...
+        let saveCheckbox = cardForm_payment.getAllSubElements().compactMap({ $0 as? CheckboxElement }).first(where: { $0.label.hasPrefix("Save") })
+        saveCheckbox?.isSelected = false
+        let cardForm_payment_params_checkbox_deselected = cardForm_payment.updateParams(params: .init(type: .card))
+        XCTAssertEqual(cardForm_payment_params_checkbox_deselected?.saveForFutureUseCheckboxState, .deselected)
+        // ...and making another card form...
+        let cardForm_payment_2 = makeCardForm(isSettingUp: false, previousCustomerInput: cardForm_payment_params_checkbox_deselected)
+        // ...should have the checkbox deselected, preserving the previous customer input
+        let cardForm_payment_2_params = cardForm_payment_2.updateParams(params: .init(type: .card))
+        XCTAssertEqual(cardForm_payment_2_params?.saveForFutureUseCheckboxState, .deselected)
+
     }
 
     func testAppliesPreviousCustomerInput_for_different_payment_method_type() {
@@ -1605,5 +1659,26 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return nil
         }
         return wrapper.element
+    }
+}
+
+extension Element {
+    /// A convenience method that overwrites the one defined in Element.swift that unwraps any Elements wrapped in `PaymentMethodElementWrapper`
+    /// and returns all Elements underneath this Element, including this Element.
+    public func getAllSubElements() -> [Element] {
+        switch self {
+        case let container as ContainerElement:
+            return [container] + container.elements.flatMap { $0.getAllSubElements() }
+        case let wrappedElement as PaymentMethodElementWrapper<FormElement>:
+            return wrappedElement.element.getAllSubElements()
+        case let wrappedElement as PaymentMethodElementWrapper<CheckboxElement>:
+            return wrappedElement.element.getAllSubElements()
+        case let wrappedElement as PaymentMethodElementWrapper<TextFieldElement>:
+            return wrappedElement.element.getAllSubElements()
+        case let wrappedElement as PaymentMethodElementWrapper<AddressSectionElement>:
+            return wrappedElement.element.getAllSubElements()
+        default:
+            return [self]
+        }
     }
 }

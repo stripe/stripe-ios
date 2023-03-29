@@ -30,7 +30,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
             params: .paramsWith(card: STPFixtures.paymentMethodCardParams(), billingDetails: STPFixtures.paymentMethodBillingDetails(), metadata: nil),
             type: .card
         )
-        previousCustomerInput.shouldSavePaymentMethod = true
+        previousCustomerInput.saveForFutureUseCheckboxState = .selected
         // ...and the card doesn't show up *first* in the list (so we can exercise the code that switches to the previously entered pm form)...
         let intent = Intent.paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal", "card", "cashApp"]))
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
