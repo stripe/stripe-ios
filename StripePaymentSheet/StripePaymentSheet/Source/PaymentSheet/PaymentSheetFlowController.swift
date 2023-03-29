@@ -102,6 +102,8 @@ extension PaymentSheet {
                 case failed
             }
         }
+        
+        private var isPresented = false
 
         // MARK: - Initializer (Internal)
 
@@ -247,6 +249,7 @@ extension PaymentSheet {
                 )
 
                 presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
+                self.isPresented = true
             }
 
             if let linkAccount = LinkAccountContext.shared.account,
@@ -275,7 +278,7 @@ extension PaymentSheet {
             completion: @escaping (PaymentSheetResult) -> Void
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
-
+            
             switch latestUpdateContext?.status {
             case .inProgress:
                 assertionFailure("`confirmPayment` should only be called when the last update has completed.")
@@ -333,7 +336,8 @@ extension PaymentSheet {
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don’t call this method while PaymentSheet is being presented. 
         @_spi(ExperimentPaymentSheetDecouplingAPI) public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
-
+            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
+            
             let updateID = UUID()
             latestUpdateContext = UpdateContext(id: updateID)
 
@@ -441,6 +445,7 @@ extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerD
     ) {
         PaymentSheetFlowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
+            self.isPresented = false
         }
     }
 
