@@ -12,8 +12,8 @@ import Foundation
 import UIKit
 
 extension TextFieldElement {
-    static func makeIBAN(theme: ElementsUITheme = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: IBANConfiguration(), theme: theme)
+    static func makeIBAN(defaultValue: String? = nil, theme: ElementsUITheme = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: IBANConfiguration(defaultValue: defaultValue), theme: theme)
     }
 
     // MARK: - IBANError
@@ -57,6 +57,7 @@ extension TextFieldElement {
      */
     struct IBANConfiguration: TextFieldElementConfiguration {
         let label: String = STPLocalizedString("IBAN", "Label for an IBAN field")
+        let defaultValue: String?
         func maxLength(for text: String) -> Int {
             return 34
         }
