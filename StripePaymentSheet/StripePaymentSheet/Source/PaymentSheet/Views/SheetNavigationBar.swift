@@ -59,6 +59,7 @@ class SheetNavigationBar: UIView {
 
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
+    var testModeConstraint: NSLayoutConstraint?
 
     override var isUserInteractionEnabled: Bool {
         didSet {
@@ -101,13 +102,15 @@ class SheetNavigationBar: UIView {
             testModeView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(testModeView)
 
+            let constraint = testModeView.leadingAnchor.constraint(
+                equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding)
             NSLayoutConstraint.activate([
-                testModeView.leadingAnchor.constraint(
-                    equalTo: closeButtonLeft.trailingAnchor, constant: PaymentSheetUI.defaultPadding),
+                constraint,
                 testModeView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 testModeView.widthAnchor.constraint(equalToConstant: 82),
                 testModeView.heightAnchor.constraint(equalToConstant: 23),
             ])
+            self.testModeConstraint = constraint
         }
 
         closeButtonLeft.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
@@ -150,6 +153,11 @@ class SheetNavigationBar: UIView {
             additionalButton.isHidden = true
             backButton.isHidden = false
             bringSubviewToFront(backButton)
+            if let constraint = self.testModeConstraint {
+                let updatedConstraint = testModeView.leadingAnchor.constraint(
+                    equalTo: backButton.trailingAnchor, constant: PaymentSheetUI.defaultPadding)
+                swapConstraintForTestModeView(oldConstraint: constraint, newConstraint: updatedConstraint)
+            }
         case .close(let showAdditionalButton):
             closeButtonLeft.isHidden = !showAdditionalButton
             closeButtonRight.isHidden = showAdditionalButton
@@ -158,6 +166,12 @@ class SheetNavigationBar: UIView {
                 bringSubviewToFront(additionalButton)
             }
             backButton.isHidden = true
+            if let constraint = self.testModeConstraint {
+                let updatedXAnchor = !closeButtonLeft.isHidden ? closeButtonLeft.trailingAnchor : leadingAnchor
+                let updatedConstraint = testModeView.leadingAnchor.constraint(
+                    equalTo: updatedXAnchor, constant: PaymentSheetUI.defaultPadding)
+                swapConstraintForTestModeView(oldConstraint: constraint, newConstraint: updatedConstraint)
+            }
         case .none:
             closeButtonLeft.isHidden = true
             closeButtonRight.isHidden = true
@@ -171,5 +185,11 @@ class SheetNavigationBar: UIView {
         layer.shadowOpacity = isHidden ? 0 : 0.1
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
+    }
+
+    private func swapConstraintForTestModeView(oldConstraint: NSLayoutConstraint, newConstraint: NSLayoutConstraint) {
+        NSLayoutConstraint.deactivate([oldConstraint])
+        NSLayoutConstraint.activate([newConstraint])
+        self.testModeConstraint = newConstraint
     }
 }
