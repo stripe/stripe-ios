@@ -41,7 +41,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
-    
+
     func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup> {
         return apiClient.synchronize(
             clientSecret: clientSecret,
