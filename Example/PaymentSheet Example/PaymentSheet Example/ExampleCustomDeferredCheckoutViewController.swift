@@ -228,7 +228,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     }
 
     private func loadCheckout() {
-        // MARK: Fetch the PaymentIntent and Customer information from the backend
+        // MARK: Fetch the publishable key, order information, and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
