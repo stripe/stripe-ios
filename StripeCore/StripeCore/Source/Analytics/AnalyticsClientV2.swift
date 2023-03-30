@@ -47,7 +47,7 @@ import UIKit
         #if targetEnvironment(simulator)
             return false
         #else
-            return NSClassFromString("XCTest") == nil
+            return NSClassFromString("XCTest") == nil && ProcessInfo.processInfo.environment["UITesting"] == nil
         #endif
     }()
 

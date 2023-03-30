@@ -27,6 +27,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
     func testDataTestModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
         app.launch()
 
         let playgroundCell = app.tables.staticTexts["Playground"]
@@ -83,6 +84,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
     func testPaymentTestModeLegacyNativeAuthFlow() throws {
         let app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
         app.launch()
 
         let playgroundCell = app.tables.staticTexts["Playground"]
@@ -141,6 +143,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
         app.launch()
 
         let playgroundCell = app.tables.staticTexts["Playground"]
@@ -233,6 +236,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // whether live mode is ~working
     func testDataLiveModeOAuthWebAuthFlow() throws {
         let app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
         app.launch()
 
         let playgroundCell = app.tables.staticTexts["Playground"]
