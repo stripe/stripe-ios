@@ -103,6 +103,8 @@ extension PaymentSheet {
             }
         }
 
+        private var isPresented = false
+
         // MARK: - Initializer (Internal)
 
         required init(
@@ -160,10 +162,10 @@ extension PaymentSheet {
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
-        /// - Parameter intentConfig: The `IntentConfiguration` object
+        /// - Parameter intentConfig: Information about the payment or setup used to render the UI
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(STP) public static func create(
+        @_spi(ExperimentPaymentSheetDecouplingAPI) public static func create(
             intentConfig: IntentConfiguration,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
@@ -247,6 +249,7 @@ extension PaymentSheet {
                 )
 
                 presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
+                self.isPresented = true
             }
 
             if let linkAccount = LinkAccountContext.shared.account,
@@ -329,10 +332,11 @@ extension PaymentSheet {
         /// Call this method when the IntentConfiguration values you used to initialize PaymentSheet.FlowController (amount, currency, etc.) change.
         /// This ensures the appropriate payment methods are displayed, etc.
         /// - Parameter intentConfiguration: An updated IntentConfiguration
-        /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry. TODO(Update): Tell the merchant they need to disable the buy button.
-        /// Don’t call this method while PaymentSheet is being presented.
-        @_spi(STP) public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
+        /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
+        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don’t call this method while PaymentSheet is being presented. 
+        @_spi(ExperimentPaymentSheetDecouplingAPI) public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
+            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
 
             let updateID = UUID()
             latestUpdateContext = UpdateContext(id: updateID)
@@ -441,6 +445,7 @@ extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerD
     ) {
         PaymentSheetFlowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
+            self.isPresented = false
         }
     }
 

@@ -11,7 +11,7 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 import Contacts
 import PassKit
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentPaymentSheetDecouplingAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -300,19 +300,16 @@ class PaymentSheetTestPlayground: UIViewController {
         case .payment:
             intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: nil),
-                                                                captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
                                                     confirmHandler: confirmHandler(_:_:))
         case .paymentWithSetup:
             intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
-                                                                captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
                                                     confirmHandler: confirmHandler(_:_:))
         case .setup:
             intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
                                                                    setupFutureUsage: .offSession),
-                                                                captureMethod: .automatic,
                                                     paymentMethodTypes: paymentMethodTypes,
                                                     confirmHandler: confirmHandler(_:_:))
         }

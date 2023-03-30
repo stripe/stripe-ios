@@ -12,7 +12,7 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(ExperimentPaymentSheetDecouplingAPI) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPIntentWithPreferencesTest: XCTestCase {
@@ -100,7 +100,6 @@ class STPIntentWithPreferencesTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             confirmHandler: { _, _ in })
 
@@ -130,7 +129,6 @@ class STPIntentWithPreferencesTest: XCTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
-                                                            captureMethod: .manual,
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             confirmHandler: { _, _ in })
 

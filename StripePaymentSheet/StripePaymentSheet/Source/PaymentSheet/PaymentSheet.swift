@@ -67,10 +67,10 @@ public class PaymentSheet {
     }
 
     /// 🚧 Under construction
-    /// Initializes a PaymentSheet
-    /// - Parameter intentConfig: The `IntentConfiguration` object
+    /// Initializes PaymentSheet with an `IntentConfiguration`
+    /// - Parameter intentConfiguration: Information about the payment or setup used to render the PaymentSheet UI
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(STP) public convenience init(intentConfig: IntentConfiguration, configuration: Configuration) {
+    @_spi(ExperimentPaymentSheetDecouplingAPI) public convenience init(intentConfig: IntentConfiguration, configuration: Configuration) {
         self.init(
             mode: .deferredIntent(intentConfig),
             configuration: configuration

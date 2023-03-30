@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 import UIKit
 
 @_spi(STP)@testable import StripeCore
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentPaymentSheetDecouplingAPI) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
@@ -489,7 +489,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            captureMethod: .automatic,
                                                             confirmHandler: confirmHandler(_:_:))
 
         preparePaymentSheet(intentConfig: intentConfig)
@@ -503,7 +502,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            captureMethod: .automatic,
                                                             confirmHandler: confirmHandler(_:_:))
 
         preparePaymentSheet(
