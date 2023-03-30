@@ -114,18 +114,30 @@ extension NativeFlowController {
         navigationController.setViewControllers(viewControllers, animated: animated)
     }
 
-    private func pushPane(_ pane: FinancialConnectionsSessionManifest.NextPane, animated: Bool) {
+    private func pushPane(
+        _ pane: FinancialConnectionsSessionManifest.NextPane,
+        animated: Bool,
+        // useful for cases where we want to prevent the user from navigating back
+        //
+        // keeping this logic in `pushPane` is helpful because we want to
+        // reuse `skipSuccessPane` and `manualEntryMode == .custom` logic
+        clearNavigationStack: Bool = false
+    ) {
         if pane == .success && dataManager.manifest.skipSuccessPane == true {
             closeAuthFlow(showConfirmationAlert: false, error: nil)
         } else if pane == .manualEntry && dataManager.manifest.manualEntryMode == .custom {
             closeAuthFlow(showConfirmationAlert: false, customManualEntry: true)
         } else {
-            let manualEntryViewController = CreatePaneViewController(
+            let paneViewController = CreatePaneViewController(
                 pane: pane,
                 nativeFlowController: self,
                 dataManager: dataManager
             )
-            pushViewController(manualEntryViewController, animated: animated)
+            if clearNavigationStack, let paneViewController = paneViewController {
+                setNavigationControllerViewControllers([paneViewController], animated: animated)
+            } else {
+                pushViewController(paneViewController, animated: animated)
+            }
         }
     }
 
@@ -581,10 +593,19 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
         pushPane(.networkingLinkVerification, animated: true)
     }
 
-    func networkingLinkLoginWarmupViewControllerDidSelectSkip(
-        _ viewController: NetworkingLinkLoginWarmupViewController
+    func networkingLinkLoginWarmupViewController(
+        _ viewController: NetworkingLinkLoginWarmupViewController,
+        didSelectSkipWithManifest manifest: FinancialConnectionsSessionManifest
     ) {
-        pushPane(.institutionPicker, animated: true)
+        dataManager.manifest = manifest
+        pushPane(
+            manifest.nextPane,
+            animated: true,
+            // skipping disables networking, which means
+            // we don't want the user to navigate back to
+            // the warm-up pane
+            clearNavigationStack: true
+        )
     }
 
     func networkingLinkLoginWarmupViewController(

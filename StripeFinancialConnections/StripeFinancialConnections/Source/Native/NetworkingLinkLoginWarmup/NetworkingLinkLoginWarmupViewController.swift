@@ -14,8 +14,9 @@ protocol NetworkingLinkLoginWarmupViewControllerDelegate: AnyObject {
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
         _ viewController: NetworkingLinkLoginWarmupViewController
     )
-    func networkingLinkLoginWarmupViewControllerDidSelectSkip(
-        _ viewController: NetworkingLinkLoginWarmupViewController
+    func networkingLinkLoginWarmupViewController(
+        _ viewController: NetworkingLinkLoginWarmupViewController,
+        didSelectSkipWithManifest manifest: FinancialConnectionsSessionManifest
     )
     func networkingLinkLoginWarmupViewController(_ viewController: NetworkingLinkLoginWarmupViewController, didReceiveTerminalError error: Error)
 }
@@ -82,8 +83,11 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success:
-                    self.delegate?.networkingLinkLoginWarmupViewControllerDidSelectSkip(self)
+                case .success(let manifest):
+                    self.delegate?.networkingLinkLoginWarmupViewController(
+                        self,
+                        didSelectSkipWithManifest: manifest
+                    )
                 case .failure(let error):
                     self.delegate?.networkingLinkLoginWarmupViewController(self, didReceiveTerminalError: error)
                 }
