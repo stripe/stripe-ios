@@ -62,7 +62,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
         view.backgroundColor = .customBackgroundColor
-        
+
         showLoadingView(true)
         dataSource.synchronize()
             .observe { [weak self] result in
@@ -87,7 +87,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 self.showLoadingView(false)
             }
     }
-    
+
     private func showContent(networkingLinkSignup: FinancialConnectionsNetworkingLinkSignup) {
         let footerView = NetworkingLinkSignupFooterView(
             aboveCtaText: networkingLinkSignup.aboveCta,
@@ -138,10 +138,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
         } else {
             formView.beginEditingEmailAddressField()
         }
-        
+
         assert(self.footerView != nil, "footer view should be initialized as part of displaying content")
     }
-    
+
     private func showLoadingView(_ show: Bool) {
         if show && loadingView.superview == nil {
             // first-time we are showing this, so add the view to hierarchy

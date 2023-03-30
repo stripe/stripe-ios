@@ -68,7 +68,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         let promise = Promise<FinancialConnectionsAuthSession>()
 
         apiClient
-            .generateSessionManifest(clientSecret: clientSecret, returnURL: nil)
+            .synchronize(clientSecret: clientSecret, returnURL: nil)
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
