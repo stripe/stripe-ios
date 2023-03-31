@@ -69,10 +69,10 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                 "Sign in to Link",
                 "The title of a screen where users are informed that they can sign-in-to Link."
             ),
-            subtitle: STPLocalizedString(
-                "Enter the code sent to \(redactedPhoneNumber)", // TODO(kgaidis): polish how the redacted phone numnber is displayed
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
-            ),
+            subtitle: String(format: STPLocalizedString(
+                "Enter the code sent to %@.",
+                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
+            ), redactedPhoneNumber),
             contentView: bodyView,
             footerView: nil
         )

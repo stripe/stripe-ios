@@ -101,7 +101,7 @@ final class LinkAccountPickerViewController: UIViewController {
                         .logUnexpectedError(
                             error,
                             errorName: "FetchNetworkedAccountsError",
-                            pane: .accountPicker
+                            pane: .linkAccountPicker
                         )
                     self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
                 }
@@ -171,9 +171,22 @@ final class LinkAccountPickerViewController: UIViewController {
                         if let institution = institutionList.data.first {
                             self.delegate?.linkAccountPickerViewController(self, didSelectAccount: selectedAccount, institution: institution)
                         } else {
-                            // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
-                            // could still have a chance at successfully connecting their account
-                            self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker) // TODO(kgaidis): double check whether this fall-back is fine...maybe we add support for success pane having no institution...
+                            // this should never happen, but in case it does we want to force a
+                            // a terminal error so user can start again with a fresh state
+                            let error = FinancialConnectionsSheetError.unknown(
+                                debugDescription: "Successfully selected an networked account but no institution was returned."
+                            )
+                            self.dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    error,
+                                    errorName: "SelectNetworkedAccountNoInstitutionError",
+                                    pane: .linkAccountPicker
+                                )
+                            self.delegate?.linkAccountPickerViewController(
+                                self,
+                                didReceiveTerminalError: error
+                            )
                         }
                     case .failure(let error):
                         self.dataSource
@@ -181,7 +194,7 @@ final class LinkAccountPickerViewController: UIViewController {
                             .logUnexpectedError(
                                 error,
                                 errorName: "SelectNetworkedAccountError",
-                                pane: .accountPicker
+                                pane: .linkAccountPicker
                             )
                         self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                     }
