@@ -70,7 +70,7 @@ public class PaymentSheet {
     /// Initializes PaymentSheet with an `IntentConfiguration`
     /// - Parameter intentConfiguration: Information about the payment or setup used to render the PaymentSheet UI
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(ExperimentPaymentSheetDecouplingAPI) public convenience init(intentConfiguration: IntentConfiguration, configuration: Configuration) {
+    @_spi(ExperimentalPaymentSheetDecouplingAPI) public convenience init(intentConfiguration: IntentConfiguration, configuration: Configuration) {
         self.init(
             mode: .deferredIntent(intentConfiguration),
             configuration: configuration

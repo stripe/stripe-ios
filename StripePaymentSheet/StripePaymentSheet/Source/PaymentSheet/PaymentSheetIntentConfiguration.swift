@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(ExperimentPaymentSheetDecouplingAPI) public extension PaymentSheet {
+@_spi(ExperimentalPaymentSheetDecouplingAPI) public extension PaymentSheet {
     /// 🚧 Under construction
     /// Contains information needed to render PaymentSheet
     /// The values are used to calculate the payment methods displayed and influence the UI.

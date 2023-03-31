@@ -7,10 +7,10 @@
 // This is an example of an integration using PaymentSheet.FlowController where you collect payment details before creating an Intent.
 //  ⚠️🏗 This integration is in private beta. Please email us at mobile-deferred-intents-beta@stripe.com if you're interested in participating!
 
-//  Note: Do not import Stripe using `@_spi(ExperimentPaymentSheetDecouplingAPI)` in production.
+//  Note: Do not import Stripe using `@_spi(ExperimentalPaymentSheetDecouplingAPI)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
-// TODO(porter) Remove ExperimentPaymentSheetDecouplingAPI usage before GA
-@_spi (ExperimentPaymentSheetDecouplingAPI) import StripePaymentSheet
+// TODO(porter) Remove ExperimentalPaymentSheetDecouplingAPI usage before GA
+@_spi (ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
