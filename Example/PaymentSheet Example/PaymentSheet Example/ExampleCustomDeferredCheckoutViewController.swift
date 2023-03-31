@@ -334,7 +334,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
         task.resume()
     }
-    
+
     struct ExampleError: LocalizedError {
        var errorDescription: String?
     }
