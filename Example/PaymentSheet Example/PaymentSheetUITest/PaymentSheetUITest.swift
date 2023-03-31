@@ -72,7 +72,7 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetCustom() throws {
-        app.staticTexts["PaymentSheet (Custom)"].tap()
+        app.staticTexts["PaymentSheet.FlowController"].tap()
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
 
         let paymentMethodButtonEnabledExpectation = expectation(
@@ -100,7 +100,7 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetCustomDeferred_update() throws {
-        app.staticTexts["PaymentSheet (Custom, Deferred)"].tap()
+        app.staticTexts["PaymentSheet.FlowController (Deferred)"].tap()
 
         // Update product quantities and enable subscription
         let subscribeSwitch = app.switches["subscribe_switch"]
