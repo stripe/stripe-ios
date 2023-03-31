@@ -28,7 +28,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
     private var paymentSheetFlowController: PaymentSheet.FlowController!
     // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
-    private static let baseUrl = "https://skitter-oxidized-astronomy.glitch.me"
+    private static let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
 
     private let backendCheckoutUrl = URL(string: ExampleCustomDeferredCheckoutViewController.baseUrl + "/checkout")!
     private let confirmIntentUrl = URL(string: ExampleCustomDeferredCheckoutViewController.baseUrl + "/confirm_intent")!
