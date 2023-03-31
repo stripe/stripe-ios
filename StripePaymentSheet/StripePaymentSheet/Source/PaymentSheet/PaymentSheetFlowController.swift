@@ -162,15 +162,15 @@ extension PaymentSheet {
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
-        /// - Parameter intentConfig: Information about the payment or setup used to render the UI
+        /// - Parameter intentConfiguration: Information about the payment or setup used to render the UI
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
         @_spi(ExperimentPaymentSheetDecouplingAPI) public static func create(
-            intentConfig: IntentConfiguration,
+            intentConfiguration: IntentConfiguration,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(mode: .deferredIntent(intentConfig),
+            create(mode: .deferredIntent(intentConfiguration),
                    configuration: configuration,
                    completion: completion
             )

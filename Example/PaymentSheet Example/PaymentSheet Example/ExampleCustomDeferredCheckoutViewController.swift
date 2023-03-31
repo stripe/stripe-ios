@@ -4,8 +4,8 @@
 //
 //  Created by Nick Porter on 3/27/23.
 //
+//  ⚠️🏗 This integration is in private beta. Please email us at mobile-deferred-intents-beta@stripe.com if you're interested in participating!
 
-import Foundation
 //  Note: Do not import Stripe using `@_spi(ExperimentPaymentSheetDecouplingAPI)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 // TODO(porter) Remove ExperimentPaymentSheetDecouplingAPI usage before GA
@@ -170,9 +170,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     func displayAlert(_ message: String) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
-            alertController.dismiss(animated: true) {
-                self.navigationController?.popViewController(animated: true)
-            }
+            alertController.dismiss(animated: true)
         }
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
@@ -228,7 +226,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     }
 
     private func loadCheckout() {
-        // MARK: Fetch the PaymentIntent and Customer information from the backend
+        // MARK: Fetch the publishable key, order information, and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -275,7 +273,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 configuration.allowsDelayedPaymentMethods = true
                 DispatchQueue.main.async {
                     PaymentSheet.FlowController.create(
-                        intentConfig: self.intentConfig,
+                        intentConfiguration: self.intentConfig,
                         configuration: configuration
                     ) { [weak self] result in
                         switch result {
@@ -322,16 +320,22 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 guard
                     error == nil,
                     let data = data,
-                    let json = try? JSONDecoder().decode([String: String].self, from: data),
-                    let clientSecret = json["intentClientSecret"]
+                    let json = try? JSONDecoder().decode([String: String].self, from: data)
                 else {
-                    completion(.failure(error!))
+                    completion(.failure(error ?? ExampleError(errorDescription: "An unknown error occurred.")))
                     return
                 }
-
-                completion(.success(clientSecret))
+                if let clientSecret = json["intentClientSecret"] {
+                    completion(.success(clientSecret))
+                } else {
+                    completion(.failure(error ?? ExampleError(errorDescription: json["error"] ?? "An unknown error occurred.")))
+                }
         })
 
         task.resume()
+    }
+
+    struct ExampleError: LocalizedError {
+       var errorDescription: String?
     }
 }

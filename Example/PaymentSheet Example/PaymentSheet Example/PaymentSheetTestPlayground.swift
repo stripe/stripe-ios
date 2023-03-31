@@ -409,7 +409,7 @@ class PaymentSheetTestPlayground: UIViewController {
                 mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
             }
         case .deferred:
-            mc = PaymentSheet(intentConfig: intentConfig, configuration: configuration)
+            mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         }
 
         mc.present(from: self) { result in
@@ -603,7 +603,7 @@ extension PaymentSheetTestPlayground {
 
                 case .deferred:
                     PaymentSheet.FlowController.create(
-                        intentConfig: self.intentConfig,
+                        intentConfiguration: self.intentConfig,
                         configuration: self.configuration,
                         completion: completion
                     )

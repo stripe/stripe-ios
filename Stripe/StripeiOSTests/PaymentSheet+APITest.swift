@@ -403,7 +403,7 @@ class PaymentSheetAPITest: XCTestCase {
         let firstUpdateExpectation = expectation(description: "First update completes")
         let secondUpdateExpectation = expectation(description: "Second update completes")
         // Given a PaymentSheet.FlowController instance...
-        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+        PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
                 // ...the vc's intent should match the initial intent config...
@@ -442,7 +442,7 @@ class PaymentSheetAPITest: XCTestCase {
 
         let failedUpdateExpectation = expectation(description: "First update fails")
         let secondUpdateExpectation = expectation(description: "Second update succeeds")
-        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+        PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
                 // ...updating w/ an invalid intent config should fail...
@@ -479,7 +479,7 @@ class PaymentSheetAPITest: XCTestCase {
         firstUpdateExpectation.isInverted = true
         let secondUpdateExpectation = expectation(description: "Second update succeeds")
         var flowController: PaymentSheet.FlowController!
-        PaymentSheet.FlowController.create(intentConfig: intentConfig, configuration: configuration) { result in
+        PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: configuration) { result in
             switch result {
             case .success(let sut):
                 flowController = sut
