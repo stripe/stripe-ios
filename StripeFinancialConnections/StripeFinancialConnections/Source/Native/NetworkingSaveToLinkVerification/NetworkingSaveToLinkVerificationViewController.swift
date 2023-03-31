@@ -72,7 +72,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
             ),
             subtitle: String(format: STPLocalizedString(
                 "Enter the code sent to %@.",
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone."
+                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
             ), redactedPhoneNumber),
             contentView: bodyView,
             footerView: NetworkingSaveToLinkFooterView(
