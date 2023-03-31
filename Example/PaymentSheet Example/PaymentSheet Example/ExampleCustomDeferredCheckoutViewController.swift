@@ -4,8 +4,8 @@
 //
 //  Created by Nick Porter on 3/27/23.
 //
+//  ⚠️🏗 This integration is in private beta. Please email us at mobile-deferred-intents-beta@stripe.com if you're interested in participating!
 
-import Foundation
 //  Note: Do not import Stripe using `@_spi(ExperimentPaymentSheetDecouplingAPI)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 // TODO(porter) Remove ExperimentPaymentSheetDecouplingAPI usage before GA
