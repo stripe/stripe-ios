@@ -91,11 +91,14 @@
 }
 
 - (void)testRetrieveMismatchedPublishableKey {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_dCyfhfyeO2CZkcvT5xyIDdJj"];
+    // Given an API Client with a publishable key for a test account A...
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent retrieve"];
 
+    // ...retrieving a PI attached to a *different* account
     [client retrievePaymentIntentWithClientSecret:@"pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_jbhwsI0DGWhKreJs3CCrluUGe"
                                        completion:^(STPPaymentIntent *paymentIntent, NSError *error) {
+                                           // ...should fail.
                                            XCTAssertNil(paymentIntent);
 
                                            XCTAssertNotNil(error);
