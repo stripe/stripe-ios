@@ -12,7 +12,7 @@ protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
-    func disableNetworking() -> Future<Void>
+    func disableNetworking() -> Future<FinancialConnectionsSessionManifest>
 }
 
 final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLoginWarmupDataSource {
@@ -34,13 +34,10 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
         self.analyticsClient = analyticsClient
     }
 
-    func disableNetworking() -> Future<Void> {
+    func disableNetworking() -> Future<FinancialConnectionsSessionManifest> {
         return apiClient.disableNetworking(
             disabledReason: nil,
             clientSecret: clientSecret
         )
-        .chained { _ in
-            return Promise(value: ())
-        }
     }
 }
