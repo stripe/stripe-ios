@@ -1,10 +1,10 @@
 //
-//  ExampleCustomDeferredCheckoutViewController.swift
+//  ExampleCheckoutDeferredViewController.swift
 //  PaymentSheet Example
 //
-//  Created by Nick Porter on 3/27/23.
+//  Created by Yuki Tokuhiro on 3/31/23.
 //
-// This is an example of an integration using PaymentSheet.FlowController where you collect payment details before creating an Intent.
+// This is an example of an integration using PaymentSheet where you collect payment details before creating an Intent.
 //  ⚠️🏗 This integration is in private beta. Please email us at mobile-deferred-intents-beta@stripe.com if you're interested in participating!
 
 //  Note: Do not import Stripe using `@_spi(ExperimentPaymentSheetDecouplingAPI)` in production.
@@ -16,10 +16,8 @@ import UIKit
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
 private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
 
-class ExampleCustomDeferredCheckoutViewController: UIViewController {
+class ExampleDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
-    @IBOutlet weak var paymentMethodButton: UIButton!
-    @IBOutlet weak var paymentMethodImage: UIImageView!
 
     @IBOutlet weak var hotDogQuantityLabel: UILabel!
     @IBOutlet weak var saladQuantityLabel: UILabel!
@@ -29,8 +27,6 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var salesTaxLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var subscribeSwitch: UISwitch!
-
-    private var paymentSheetFlowController: PaymentSheet.FlowController!
 
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!
     private let confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
@@ -44,7 +40,14 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
     private var computedTotals: ComputedTotals!
 
-    private var intentConfig: PaymentSheet.IntentConfiguration {
+    private var currencyFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
+
+    private var intentConfiguration: PaymentSheet.IntentConfiguration {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
@@ -53,21 +56,22 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         }
     }
 
-    private var currencyFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }
+    lazy var paymentSheetConfiguration: PaymentSheet.Configuration = {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = .init(
+            merchantId: "com.foo.example", merchantCountryCode: "US")
+        configuration.returnURL = "payments-example://stripe-redirect"
+        // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+        configuration.allowsDelayedPaymentMethods = true
+        return configuration
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         buyButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         buyButton.isEnabled = false
-
-        paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
-        paymentMethodButton.isEnabled = false
 
         hotDogStepper.isEnabled = false
         saladStepper.isEnabled = false
@@ -79,17 +83,10 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     // MARK: - Button handlers
 
     @objc
-    func didTapPaymentMethodButton() {
-        // MARK: Present payment options to the customer
-        paymentSheetFlowController.presentPaymentOptions(from: self) {
-            self.updateButtons()
-        }
-    }
-
-    @objc
     func didTapCheckoutButton() {
-        // MARK: Confirm payment
-        paymentSheetFlowController.confirm(from: self) { paymentResult in
+        // MARK: Start the checkout process
+        let paymentSheet = PaymentSheet(intentConfiguration: intentConfiguration, configuration: paymentSheetConfiguration)
+        paymentSheet.present(from: self) { paymentResult in
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
@@ -120,43 +117,11 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     private func updateUI() {
         // Disable buy and payment method buttons
         buyButton.isEnabled = false
-        paymentMethodButton.isEnabled = false
 
         fetchTotals { [weak self] in
             guard let self = self else { return }
             self.updateLabels()
-
-            // Update PaymentSheet with the latest `intentConfig`
-            self.paymentSheetFlowController.update(intentConfiguration: self.intentConfig) { [weak self] error in
-                if let error = error {
-                    print(error)
-                    self?.displayAlert("\(error)")
-                    // Retry - production code should use an exponential backoff
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-                        self?.updateUI()
-                    }
-                } else {
-                    // Re-enable your "Buy" and "Payment method" buttons
-                    self?.updateButtons()
-                  }
-            }
-        }
-    }
-
-    func updateButtons() {
-        paymentMethodButton.isEnabled = true
-
-        // MARK: Update the payment method and buy buttons
-        if let paymentOption = paymentSheetFlowController.paymentOption {
-            paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
-            paymentMethodImage.image = paymentOption.image
-            buyButton.isEnabled = true
-        } else {
-            paymentMethodButton.setTitle("Select", for: .normal)
-            paymentMethodButton.setTitleColor(.systemBlue, for: .normal)
-            paymentMethodImage.image = nil
-            buyButton.isEnabled = false
+            self.buyButton.isEnabled = true
         }
     }
 
@@ -243,7 +208,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
         let task = URLSession.shared.dataTask(
             with: request,
-            completionHandler: { [weak self] (data, _, error) in
+            completionHandler: { [weak self] (data, _, _) in
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],
@@ -259,38 +224,15 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                     return
                 }
 
-                self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
-                // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
-                STPAPIClient.shared.publishableKey = publishableKey
-
-                // MARK: Create a PaymentSheet.FlowController instance
-                var configuration = PaymentSheet.Configuration()
-                configuration.merchantDisplayName = "Example, Inc."
-                configuration.applePay = .init(
-                    merchantId: "com.foo.example", merchantCountryCode: "US")
-                configuration.customer = .init(
-                    id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
-                configuration.returnURL = "payments-example://stripe-redirect"
-                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
-                configuration.allowsDelayedPaymentMethods = true
                 DispatchQueue.main.async {
-                    PaymentSheet.FlowController.create(
-                        intentConfiguration: self.intentConfig,
-                        configuration: configuration
-                    ) { [weak self] result in
-                        switch result {
-                        case .failure(let error):
-                            print(error)
-                        case .success(let paymentSheetFlowController):
-                            self?.paymentSheetFlowController = paymentSheetFlowController
-                            self?.paymentMethodButton.isEnabled = true
-                            self?.hotDogStepper.isEnabled = true
-                            self?.saladStepper.isEnabled = true
-                            self?.subscribeSwitch.isEnabled = true
-                            self?.updateButtons()
-                            self?.updateLabels()
-                        }
-                    }
+                    self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
+                    // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
+                    STPAPIClient.shared.publishableKey = publishableKey
+
+                    // MARK: Update the configuration.customer details
+                    self.paymentSheetConfiguration.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+                    [self.hotDogStepper, self.saladStepper, self.subscribeSwitch, self.buyButton].forEach { $0?.isEnabled = true }
+                    self.updateLabels()
                 }
             })
 
