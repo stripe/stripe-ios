@@ -224,6 +224,7 @@ class AddPaymentMethodViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         sendEventToSubviews(.viewDidAppear, from: view)
+        delegate?.didUpdate(self)
     }
 
     // MARK: - Internal
