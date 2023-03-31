@@ -104,7 +104,10 @@ private func CreateResendCodeLabel(isEnabled: Bool, didSelect: @escaping () -> V
         textColor: .textDisabled,
         alignCenter: false
     )
-    let text = "Resend code" // TODO(kgaidis): localize
+    let text = STPLocalizedString(
+        "Resend code",
+        "The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it."
+    )
     if isEnabled {
         resendCodeLabel.setText(
             "[\(text)](https://www.just-fire-action.com)",
