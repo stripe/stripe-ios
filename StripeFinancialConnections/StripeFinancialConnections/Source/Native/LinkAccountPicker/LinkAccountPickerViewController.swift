@@ -101,7 +101,7 @@ final class LinkAccountPickerViewController: UIViewController {
                         .logUnexpectedError(
                             error,
                             errorName: "FetchNetworkedAccountsError",
-                            pane: .accountPicker
+                            pane: .linkAccountPicker
                         )
                     self.delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
                 }
@@ -181,7 +181,7 @@ final class LinkAccountPickerViewController: UIViewController {
                             .logUnexpectedError(
                                 error,
                                 errorName: "SelectNetworkedAccountError",
-                                pane: .accountPicker
+                                pane: .linkAccountPicker
                             )
                         self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                     }
