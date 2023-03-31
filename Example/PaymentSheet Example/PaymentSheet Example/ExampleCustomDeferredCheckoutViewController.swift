@@ -170,9 +170,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     func displayAlert(_ message: String) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
-            alertController.dismiss(animated: true) {
-                self.navigationController?.popViewController(animated: true)
-            }
+            alertController.dismiss(animated: true)
         }
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
@@ -322,16 +320,22 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 guard
                     error == nil,
                     let data = data,
-                    let json = try? JSONDecoder().decode([String: String].self, from: data),
-                    let clientSecret = json["intentClientSecret"]
+                    let json = try? JSONDecoder().decode([String: String].self, from: data)
                 else {
-                    completion(.failure(error!))
+                    completion(.failure(error ?? ExampleError(errorDescription: "An unknown error occurred.")))
                     return
                 }
-
-                completion(.success(clientSecret))
+                if let clientSecret = json["intentClientSecret"] {
+                    completion(.success(clientSecret))
+                } else {
+                    completion(.failure(error ?? ExampleError(errorDescription: json["error"] ?? "An unknown error occurred.")))
+                }
         })
 
         task.resume()
+    }
+    
+    struct ExampleError: LocalizedError {
+       var errorDescription: String?
     }
 }
