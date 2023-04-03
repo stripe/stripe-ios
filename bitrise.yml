@@ -365,6 +365,10 @@ workflows:
     - notify_ci
   legacy-tests-13:
     steps:
+    - script@1:
+        inputs:
+        - content: sudo xcodes runtimes install "iOS 13.7"
+        title: Install 13.7 sim
     - fastlane@3:
         inputs:
         - lane: legacy_tests_13
