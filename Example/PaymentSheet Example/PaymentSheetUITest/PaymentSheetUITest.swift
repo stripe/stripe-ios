@@ -257,7 +257,7 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetSwiftUICustom() throws {
-        app.staticTexts["PaymentSheet (SwiftUI Custom)"].tap()
+        app.staticTexts["PaymentSheet.FlowController (SwiftUI)"].tap()
         let paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.forceTapElement()
