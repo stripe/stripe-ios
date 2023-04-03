@@ -90,12 +90,12 @@ class ExampleDeferredCheckoutViewController: UIViewController {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                self.displayAlert("Your order is confirmed!")
+                self.displayAlert("Your order is confirmed!", success: true)
             case .canceled:
                 print("Canceled!")
             case .failed(let error):
                 print(error)
-                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
+                self.displayAlert("Payment failed: \n\(error.localizedDescription)", success: false)
             }
         }
     }
@@ -134,10 +134,14 @@ class ExampleDeferredCheckoutViewController: UIViewController {
         totalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.total / 100)) ?? "")"
     }
 
-    func displayAlert(_ message: String) {
+    func displayAlert(_ message: String, success: Bool) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (_) in
-            alertController.dismiss(animated: true)
+            alertController.dismiss(animated: true) {
+                if success {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
         }
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
