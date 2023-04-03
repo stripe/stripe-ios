@@ -53,6 +53,8 @@ final class NetworkingOTPView: UIView {
         theme.colors = {
             var colors = ElementsUITheme.Color()
             colors.border = .borderNeutral
+            colors.background = .customBackgroundColor
+            colors.textFieldText = .textPrimary
             return colors
         }()
         return theme
