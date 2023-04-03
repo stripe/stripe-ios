@@ -369,6 +369,29 @@ workflows:
         inputs:
         - content: sudo xcodes runtimes install "iOS 13.7"
         title: Install 13.7 sim
+    - set-env-var@0:
+        inputs:
+        - destination_keys: CONFIGURATION_BUILD_DIR
+        - value: $BITRISE_SOURCE_DIR/stpbuild/products
+        title: Set CONFIGURATION_BUILD_DIR
+    - set-env-var@0:
+        inputs:
+        - destination_keys: CONFIGURATION_TEMP_DIR
+        - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
+        title: Set CONFIGURATION_TEMP_DIR
+    - script@1:
+        inputs:
+        - content: bundle config set path 'vendor/bundle'
+        is_always_run: true
+        title: Set Bundler to use local vendor directory
+    - git-clone@6:
+        inputs:
+        - clone_depth: "1"
+    - tuist@0:
+        run_if: .IsCI
+        inputs:
+        - command: generate -n
+    - bundler@0: {}
     - fastlane@3:
         inputs:
         - lane: legacy_tests_13
