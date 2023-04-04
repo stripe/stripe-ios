@@ -387,17 +387,19 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: "1"
+    - cache-pull@2: {}
     - tuist@0:
         run_if: .IsCI
         inputs:
         - command: generate -n
     - bundler@0: {}
+    - restore-spm-cache@1: {}
     - fastlane@3:
         inputs:
         - lane: legacy_tests_13
         title: fastlane legacy_tests_13
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=13.7
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 11,OS=13.7
     after_run:
     - upload_logs
     - notify_ci
