@@ -369,6 +369,7 @@ workflows:
         inputs:
         - lane: legacy_tests_13
         title: fastlane legacy_tests_13
+    - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 11,OS=13.7
     before_run:
