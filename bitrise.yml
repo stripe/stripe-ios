@@ -183,7 +183,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-14.1.x-ventura
+        stack: osx-xcode-14.1.x
         machine_type_id: g2-m1.8core
   deploy-example-apps:
     steps:
@@ -365,48 +365,21 @@ workflows:
     - notify_ci
   legacy-tests-13:
     steps:
-    - script@1:
-        inputs:
-        - content: sudo xcodes runtimes install "iOS 13.7"
-        title: Install 13.7 sim
-    - set-env-var@0:
-        inputs:
-        - destination_keys: CONFIGURATION_BUILD_DIR
-        - value: $BITRISE_SOURCE_DIR/stpbuild/products
-        title: Set CONFIGURATION_BUILD_DIR
-    - set-env-var@0:
-        inputs:
-        - destination_keys: CONFIGURATION_TEMP_DIR
-        - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
-        title: Set CONFIGURATION_TEMP_DIR
-    - script@1:
-        inputs:
-        - content: bundle config set path 'vendor/bundle'
-        is_always_run: true
-        title: Set Bundler to use local vendor directory
-    - git-clone@6:
-        inputs:
-        - clone_depth: "1"
-    - cache-pull@2: {}
-    - tuist@0:
-        run_if: .IsCI
-        inputs:
-        - command: generate -n
-    - bundler@0: {}
-    - restore-spm-cache@1: {}
     - fastlane@3:
         inputs:
         - lane: legacy_tests_13
         title: fastlane legacy_tests_13
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 11,OS=13.7
+    before_run:
+    - prep_all
     after_run:
     - upload_logs
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-14.1.x-ventura
-        machine_type_id: g2.12core
+        stack: osx-xcode-14.1.x
+        machine_type_id: g2-m1.8core
   legacy-tests-14:
     steps:
     - fastlane@3:
