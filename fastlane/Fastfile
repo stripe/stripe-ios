@@ -84,11 +84,11 @@ platform :ios do
   end
 
   lane :legacy_tests_13 do
-    legacy_tests(device: 'iPhone 8', version: '13.7')
+    legacy_tests(device: 'iPhone 11', version: '13.7')
   end
 
   lane :legacy_tests_14 do
-    legacy_tests(device: 'iPhone 8', version: '14.5')
+    legacy_tests(device: 'iPhone 11', version: '14.5')
   end
 
   lane :e2e_only do
