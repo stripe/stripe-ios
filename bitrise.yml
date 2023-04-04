@@ -365,10 +365,10 @@ workflows:
     - notify_ci
   legacy-tests-13:
     steps:
-    - fastlane@3:
+    - script@1:
         inputs:
-        - lane: legacy_tests_13
-        title: fastlane legacy_tests_13
+        - content: bundle exec fastlane legacy_tests_13 > $BITRISE_DEPLOY_DIR/fastlane.log
+        title: Fastlane and send log to Bitrise
     - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 11,OS=13.7
