@@ -379,7 +379,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-14.1.x-ventura
-        machine_type_id: g2-m1.8core
+        machine_type_id: g2.12core
   legacy-tests-14:
     steps:
     - fastlane@3:
