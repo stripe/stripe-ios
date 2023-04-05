@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+import StripePayments
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -22,7 +22,6 @@ extension PaymentSheet {
             throw PaymentSheetError.unknown(debugDescription: "paymentMethodParams unexpectedly nil")
         }
 
-        paymentMethodParams.isDeferred = true
         return try await apiClient.createPaymentMethod(with: paymentMethodParams)
     }
 
@@ -83,7 +82,6 @@ extension PaymentSheet {
                             intent: intent,
                             paymentOption: deferredIntentContext.paymentOption,
                             paymentHandler: deferredIntentContext.paymentHandler,
-                            isDeferred: true,
                             completion: deferredIntentContext.completion)
                 }
 

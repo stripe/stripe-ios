@@ -92,9 +92,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
 
-    /// Internal use only, used to indicated these confirm params are used in a deferred workflow
-    @_spi(STP) public var isDeferred: Bool?
-
     /// Creates params for a card PaymentMethod.
     /// - Parameters:
     ///   - card:                An object containing the user's card details.

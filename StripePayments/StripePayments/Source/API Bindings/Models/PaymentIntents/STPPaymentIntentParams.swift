@@ -89,9 +89,6 @@ public class STPPaymentIntentParams: NSObject {
     /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
     public var setupFutureUsage: STPPaymentIntentSetupFutureUsage?
 
-    /// Internal use only, used to indicated these confirm params are used in a deferred workflow
-    @_spi(STP) public var isDeferred: Bool?
-
     /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
     /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
     /// This property should only be used in Objective-C. In Swift, use `setupFutureUsage`.
