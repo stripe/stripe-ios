@@ -33,6 +33,7 @@ extension PaymentSheet {
         intent: Intent,
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
+        isDeferred: Bool = false,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         // Translates a STPPaymentHandler result to a PaymentResult
@@ -113,7 +114,8 @@ extension PaymentSheet {
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
-                    
+                    paymentIntentParams.isDeferred = isDeferred
+
                     // Paypal requires mandate_data if setting up
                     if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal
                         && paymentIntent.setupFutureUsage == .offSession
@@ -130,6 +132,7 @@ extension PaymentSheet {
             case .setupIntent(let setupIntent):
                 let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
                 setupIntentParams.returnURL = configuration.returnURL
+                setupIntentParams.isDeferred = isDeferred
                 // Paypal requires mandate_data if setting up
                 if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal {
                     setupIntentParams.mandateData = .makeWithInferredValues()
@@ -165,6 +168,7 @@ extension PaymentSheet {
                 paymentIntentParams.returnURL = configuration.returnURL
                 paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                 paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                paymentIntentParams.isDeferred = isDeferred
                 // Overwrite in case payment_method_options was set previously - we don't want to save an already-saved payment method
                 paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
                 paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
@@ -191,6 +195,7 @@ extension PaymentSheet {
                 )
                 setupIntentParams.returnURL = configuration.returnURL
                 setupIntentParams.paymentMethodID = paymentMethod.stripeId
+                setupIntentParams.isDeferred = isDeferred
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
@@ -219,6 +224,7 @@ extension PaymentSheet {
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                    paymentIntentParams.isDeferred = isDeferred
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
@@ -228,6 +234,7 @@ extension PaymentSheet {
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                     setupIntentParams.paymentMethodParams = paymentMethodParams
                     setupIntentParams.returnURL = configuration.returnURL
+                    setupIntentParams.isDeferred = isDeferred
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,

@@ -11,10 +11,15 @@ import Foundation
 
 extension STPAPIClient {
     @_spi(STP) public class func paramsAddingPaymentUserAgent(
-        _ params: [String: Any]
+        _ params: [String: Any],
+        isDeferred: Bool? = nil
     ) -> [String: Any] {
         var newParams = params
-        newParams["payment_user_agent"] = PaymentsSDKVariant.paymentUserAgent
+        var paymentUserAgent = PaymentsSDKVariant.paymentUserAgent
+        if isDeferred ?? false {
+            paymentUserAgent = "\(paymentUserAgent); deferred"
+        }
+        newParams["payment_user_agent"] = paymentUserAgent
         return newParams
     }
 }

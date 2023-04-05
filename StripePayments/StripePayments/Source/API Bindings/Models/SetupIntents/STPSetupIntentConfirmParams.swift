@@ -81,6 +81,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
     private var _mandateData: STPMandateDataParams?
 
+    /// Internal use only, used to indicated these confirm params are used in a deferred workflow
+    @_spi(STP) public var isDeferred: Bool?
+
     internal var _paymentMethodType: STPPaymentMethodType?
     internal var paymentMethodType: STPPaymentMethodType? {
         if let type = _paymentMethodType {

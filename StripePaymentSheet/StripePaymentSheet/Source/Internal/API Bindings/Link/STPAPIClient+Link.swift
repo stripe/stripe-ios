@@ -163,6 +163,8 @@ extension STPAPIClient {
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
+        // TODO(porter) Add deferred to user agent for consumers/payment_details endpoint when Link is enabled
+
         let endpoint: String = "consumers/payment_details"
 
         let parameters: [String: Any] = [

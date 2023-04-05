@@ -488,11 +488,11 @@ extension STPAPIClient {
         var params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
-            sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
+            sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict, isDeferred: paymentIntentParams.isDeferred)
             params[SourceDataHash] = sourceParamsDict
         }
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
-            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict, isDeferred: paymentIntentParams.isDeferred)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if (expand?.count ?? 0) > 0 {
@@ -642,11 +642,11 @@ extension STPAPIClient {
         var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
-            sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
+            sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict, isDeferred: setupIntentParams.isDeferred)
             params[SourceDataHash] = sourceParamsDict
         }
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
-            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict, isDeferred: setupIntentParams.isDeferred)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if let expand = expand,
@@ -702,7 +702,7 @@ extension STPAPIClient {
             paymentMethodType: paymentMethodParams.rawTypeString
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
-        parameters = Self.paramsAddingPaymentUserAgent(parameters)
+        parameters = Self.paramsAddingPaymentUserAgent(parameters, isDeferred: paymentMethodParams.isDeferred)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
