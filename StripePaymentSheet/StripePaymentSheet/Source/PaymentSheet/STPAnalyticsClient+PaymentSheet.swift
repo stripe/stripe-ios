@@ -30,7 +30,7 @@ extension STPAnalyticsClient {
         linkEnabled: Bool,
         activeLinkSession: Bool,
         currency: String?,
-        intentConfig: PaymentSheet.IntentConfiguration?
+        intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         var success = false
         switch result {
@@ -63,7 +63,7 @@ extension STPAnalyticsClient {
         linkEnabled: Bool,
         activeLinkSession: Bool,
         currency: String?,
-        intentConfig: PaymentSheet.IntentConfiguration?
+        intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         AnalyticsHelper.shared.startTimeMeasurement(.checkout)
         logPaymentSheetEvent(
@@ -78,7 +78,7 @@ extension STPAnalyticsClient {
     func logPaymentSheetPaymentOptionSelect(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
-        intentConfig: PaymentSheet.IntentConfiguration?
+        intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
                                 isCustom: isCustom,
