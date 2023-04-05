@@ -113,7 +113,7 @@ extension PaymentSheet {
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
-
+                    
                     // Paypal requires mandate_data if setting up
                     if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal
                         && paymentIntent.setupFutureUsage == .offSession
