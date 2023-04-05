@@ -151,6 +151,6 @@ class DeferredIntentContext {
 
 extension PaymentSheet.IntentConfiguration: STPAnalyticsProtocol {
     public static var stp_analyticsIdentifier: String {
-        return "deferred"
+        return "deferred-intent""
     }
 }
