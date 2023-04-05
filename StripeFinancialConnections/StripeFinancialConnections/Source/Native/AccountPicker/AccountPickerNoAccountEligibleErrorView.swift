@@ -168,7 +168,13 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
 
     func makeUIView(context: Context) -> AccountPickerNoAccountEligibleErrorView {
         AccountPickerNoAccountEligibleErrorView(
-            institution: FinancialConnectionsInstitution(id: "123", name: institutionName, url: nil),
+            institution: FinancialConnectionsInstitution(
+                id: "123",
+                name: institutionName,
+                url: nil,
+                icon: nil,
+                logo: nil
+            ),
             bussinessName: businessName,
             institutionSkipAccountSelection: institutionSkipAccountSelection,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,

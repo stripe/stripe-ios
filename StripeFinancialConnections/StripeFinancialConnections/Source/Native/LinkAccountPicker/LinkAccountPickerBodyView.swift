@@ -63,7 +63,7 @@ final class LinkAccountPickerBodyView: UIView {
             // TODO(kgaidis): when we implement repair logic, this will have new text
             let rowTitles = AccountPickerHelpers.rowTitles(forAccount: account)
             accountRowView.configure(
-                institutionImageUrl: nil, // TODO(kgaidis): get image url from backend
+                institutionImageUrl: account.institution?.icon?.default,
                 leadingTitle: rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
                 subtitle: AccountPickerHelpers.rowSubtitle(forAccount: account),
@@ -103,7 +103,16 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                     supportedPaymentMethodTypes: [.usBankAccount],
                     allowSelection: true,
                     allowSelectionMessage: nil,
-                    status: "active"
+                    status: "active",
+                    institution: FinancialConnectionsInstitution(
+                        id: "abc",
+                        name: "N/A",
+                        url: nil,
+                        icon: FinancialConnectionsImage(
+                            default: "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png"
+                        ),
+                        logo: nil
+                    )
                 ),
                 FinancialConnectionsPartnerAccount(
                     id: "abc",
@@ -115,7 +124,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                     supportedPaymentMethodTypes: [.usBankAccount],
                     allowSelection: true,
                     allowSelectionMessage: nil,
-                    status: "disabled"
+                    status: "disabled",
+                    institution: nil
                 ),
             ]
         )

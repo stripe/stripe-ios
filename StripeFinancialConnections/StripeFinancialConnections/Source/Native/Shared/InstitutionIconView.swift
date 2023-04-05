@@ -110,7 +110,9 @@ private struct InstitutionIconViewUIViewRepresentable: UIViewRepresentable {
     private let institution: FinancialConnectionsInstitution = FinancialConnectionsInstitution(
         id: "123",
         name: "Chase",
-        url: nil
+        url: nil,
+        icon: nil,
+        logo: nil
     )
     let size: InstitutionIconView.Size
     let showWarning: Bool
