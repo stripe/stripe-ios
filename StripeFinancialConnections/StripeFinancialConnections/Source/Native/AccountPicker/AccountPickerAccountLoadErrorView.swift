@@ -104,7 +104,9 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
             institution: FinancialConnectionsInstitution(
                 id: "123",
                 name: institutionName,
-                url: nil
+                url: nil,
+                icon: nil,
+                logo: nil
             ),
             didSelectAnotherBank: {},
             didSelectTryAgain: didSelectTryAgain,
