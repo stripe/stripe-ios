@@ -270,9 +270,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         authSessionId: String,
         initialPollDelay: TimeInterval
     ) -> Future<FinancialConnectionsAuthSessionAccounts> {
-        let body = [
+        let body: [String: Any] = [
             "client_secret": clientSecret,
             "id": authSessionId,
+            "expand": ["data.institution"],
         ]
         let pollingHelper = APIPollingHelper(
             apiCall: { [weak self] in
@@ -281,7 +282,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
                     )
                 }
-                return self.post(resource: APIEndpointAuthSessionsAccounts, object: body)
+                return self.post(resource: APIEndpointAuthSessionsAccounts, parameters: body)
             },
             pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSessionAccounts>.PollTimingOptions(
                 initialPollDelay: initialPollDelay
@@ -299,6 +300,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "id": authSessionId,
             "selected_accounts": selectedAccountIds,
+            "expand": ["data.institution"],
         ]
         return self.post(resource: APIEndpointAuthSessionsSelectedAccounts, parameters: body)
     }
@@ -504,9 +506,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         consumerSessionClientSecret: String
     ) -> Future<FinancialConnectionsNetworkedAccountsResponse> {
-        let parameters = [
+        let parameters: [String: Any] = [
             "client_secret": clientSecret,
             "consumer_session_client_secret": consumerSessionClientSecret,
+            "expand": ["data.institution"],
         ]
         return get(resource: APIEndpointNetworkedAccounts, parameters: parameters)
     }
