@@ -51,7 +51,6 @@ stages:
     - size-report: {}
     - basic-integration-tests: {}
     - ui-tests: {}
-    - legacy-tests-13: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
     - pod-lint-tests: {}
@@ -61,7 +60,6 @@ stages:
     - basic-integration-tests: {}
     - ui-tests: {}
     - check-docs: {}
-    - legacy-tests-13: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
     - data-theorem-sast: {}
@@ -363,24 +361,6 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
-  legacy-tests-13:
-    steps:
-    - script@1:
-        inputs:
-        - content: bundle exec fastlane legacy_tests_13 > $BITRISE_DEPLOY_DIR/fastlane.log
-        title: Fastlane and send log to Bitrise
-    - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 11,OS=13.7
-    before_run:
-    - prep_all
-    after_run:
-    - upload_logs
-    - notify_ci
-    meta:
-      bitrise.io:
-        stack: osx-xcode-14.1.x-ventura-rosetta
-        machine_type_id: g2-m1.8core
   legacy-tests-14:
     steps:
     - fastlane@3:
