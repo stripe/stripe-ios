@@ -2,6 +2,9 @@
 ### All
 * Xcode 13 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 14.1 or later.
 
+### CardScan
+* [Changed] Added `expiryMonth`, `expiryYear` and `name` properties to `ScannedCard`.
+
 ## 23.6.0 2023-03-27
 ### PaymentSheet
 * [Added] Added `billingDetailsCollectionConfiguration` to configure how you want to collect billing details. See the docs [here](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#billing-details-collection).
