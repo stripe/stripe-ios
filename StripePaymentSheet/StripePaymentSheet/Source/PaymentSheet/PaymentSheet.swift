@@ -37,6 +37,15 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
+
+        var intentConfig: PaymentSheet.IntentConfiguration? {
+            switch self {
+            case .deferredIntent(let intentConfig):
+                return intentConfig
+            default:
+                return nil
+            }
+        }
     }
 
     /// This contains all configurable properties of PaymentSheet
@@ -82,7 +91,8 @@ public class PaymentSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
         self.configuration = configuration
-        STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration)
+        STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration,
+                                                                   intentConfig: mode.intentConfig)
     }
 
     /// Presents a sheet for a customer to complete their payment
@@ -371,7 +381,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
                 result: result,
                 linkEnabled: intent.supportsLink,
                 activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                currency: intent.currency
+                currency: intent.currency,
+                intentConfig: intent.intentConfig
             )
 
             completion(result)

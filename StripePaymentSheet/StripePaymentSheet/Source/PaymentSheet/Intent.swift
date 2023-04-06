@@ -62,6 +62,15 @@ enum Intent {
         }
     }
 
+    var intentConfig: PaymentSheet.IntentConfiguration? {
+        switch self {
+        case .deferredIntent(_, let intentConfig):
+            return intentConfig
+        default:
+            return nil
+        }
+    }
+
     var currency: String? {
         switch self {
         case .paymentIntent(let pi):

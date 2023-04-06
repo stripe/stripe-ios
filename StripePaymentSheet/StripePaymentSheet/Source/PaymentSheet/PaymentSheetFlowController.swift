@@ -115,7 +115,9 @@ extension PaymentSheet {
         ) {
             AnalyticsHelper.shared.generateSessionID()
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
-            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true, configuration: configuration)
+            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true,
+                                                                       configuration: configuration,
+                                                                       intentConfig: intent.intentConfig)
             self.configuration = configuration
             self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: savedPaymentMethods, isLinkEnabled: isLinkEnabled, configuration: configuration)
             self.viewController.delegate = self
@@ -316,7 +318,8 @@ extension PaymentSheet {
                     result: result,
                     linkEnabled: intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    currency: intent.currency
+                    currency: intent.currency,
+                    intentConfig: intent.intentConfig
                 )
 
                 if case .completed = result, case .link = paymentOption {

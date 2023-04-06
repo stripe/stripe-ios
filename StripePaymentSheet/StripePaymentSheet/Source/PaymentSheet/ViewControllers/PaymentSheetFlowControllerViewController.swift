@@ -223,7 +223,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-            currency: intent.currency
+            currency: intent.currency,
+            intentConfig: intent.intentConfig
         )
     }
 
@@ -444,7 +445,9 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: paymentMethodSelection.analyticsValue)
+        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: true,
+                                                                           paymentMethod: paymentMethodSelection.analyticsValue,
+                                                                           intentConfig: intent.intentConfig)
         guard case Mode.selectingSaved = mode else {
             assertionFailure()
             return

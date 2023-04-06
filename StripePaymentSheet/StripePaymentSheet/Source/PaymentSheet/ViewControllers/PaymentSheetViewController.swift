@@ -249,7 +249,8 @@ class PaymentSheetViewController: UIViewController {
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-            currency: intent.currency
+            currency: intent.currency,
+            intentConfig: intent.intentConfig
         )
     }
 
@@ -465,7 +466,8 @@ class PaymentSheetViewController: UIViewController {
                     result: result,
                     linkEnabled: self.intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    currency: self.intent.currency
+                    currency: self.intent.currency,
+                    intentConfig: self.intent.intentConfig
                 )
 
                 self.isPaymentInFlight = false
@@ -544,7 +546,8 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     ) {
         STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(
             isCustom: false,
-            paymentMethod: paymentMethodSelection.analyticsValue
+            paymentMethod: paymentMethodSelection.analyticsValue,
+            intentConfig: intent.intentConfig
         )
         if case .add = paymentMethodSelection {
             mode = .addingNew

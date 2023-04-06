@@ -14,12 +14,13 @@ import Foundation
 extension STPAnalyticsClient {
     // MARK: - Log events
     func logPaymentSheetInitialized(
-        isCustom: Bool = false, configuration: PaymentSheet.Configuration
+        isCustom: Bool = false, configuration: PaymentSheet.Configuration, intentConfig: PaymentSheet.IntentConfiguration?
     ) {
         logPaymentSheetEvent(event: paymentSheetInitEventValue(
                                 isCustom: isCustom,
                                 configuration: configuration),
-                             configuration: configuration)
+                             configuration: configuration,
+                             intentConfig: intentConfig)
     }
 
     func logPaymentSheetPayment(
@@ -28,7 +29,8 @@ extension STPAnalyticsClient {
         result: PaymentSheetResult,
         linkEnabled: Bool,
         activeLinkSession: Bool,
-        currency: String?
+        currency: String?,
+        intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         var success = false
         switch result {
@@ -50,7 +52,8 @@ extension STPAnalyticsClient {
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
-            currency: currency
+            currency: currency,
+            intentConfig: intentConfig
         )
     }
 
@@ -59,24 +62,28 @@ extension STPAnalyticsClient {
         paymentMethod: AnalyticsPaymentMethodType,
         linkEnabled: Bool,
         activeLinkSession: Bool,
-        currency: String?
+        currency: String?,
+        intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         AnalyticsHelper.shared.startTimeMeasurement(.checkout)
         logPaymentSheetEvent(
             event: paymentSheetShowEventValue(isCustom: isCustom, paymentMethod: paymentMethod),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
-            currency: currency
+            currency: currency,
+            intentConfig: intentConfig
         )
     }
 
     func logPaymentSheetPaymentOptionSelect(
         isCustom: Bool,
-        paymentMethod: AnalyticsPaymentMethodType
+        paymentMethod: AnalyticsPaymentMethodType,
+        intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
                                 isCustom: isCustom,
-                                paymentMethod: paymentMethod))
+                                paymentMethod: paymentMethod),
+                             intentConfig: intentConfig)
     }
 
     // MARK: - String builders
@@ -220,6 +227,7 @@ extension STPAnalyticsClient {
         activeLinkSession: Bool? = nil,
         configuration: PaymentSheet.Configuration? = nil,
         currency: String? = nil,
+        intentConfig: PaymentSheet.IntentConfiguration? = nil,
         params: [String: Any] = [:]
     ) {
         var additionalParams = [:] as [String: Any]
@@ -231,9 +239,13 @@ extension STPAnalyticsClient {
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
-        additionalParams["mpe_config"] = configuration?.analyticPayload
+        var mpeConfig = configuration?.analyticPayload
+        mpeConfig?["isServerSideConfirmation"] = intentConfig?.confirmHandlerForServerSideConfirmation != nil
+        additionalParams["mpe_config"] = mpeConfig
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency
+        additionalParams["isDecoupled"] = intentConfig != nil
+
         for (param, param_value) in params {
             additionalParams[param] = param_value
         }
@@ -358,7 +370,6 @@ extension PaymentSheet.Appearance {
         payload["font"] = font != PaymentSheet.Appearance.default.font
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
-
         // Convenience payload item to make querying high level appearance usage easier
         payload["usage"] = payload.values.contains(true)
 
