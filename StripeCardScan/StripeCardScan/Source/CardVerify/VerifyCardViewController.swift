@@ -217,7 +217,12 @@ class VerifyCardViewController: SimpleScanViewController {
             self.verifyDelegate?.verifyViewControllerDidFinish(
                 self,
                 verificationFramesData: verificationFramesData,
-                scannedCard: ScannedCard(pan: number)
+                scannedCard: ScannedCard(
+                    pan: number,
+                    expiryMonth: expiryMonth,
+                    expiryYear: expiryYear,
+                    name: self.predictedName
+                )
             )
         }
     }

@@ -81,7 +81,12 @@ extension CardScanSheet: SimpleScanDelegate {
         _ scanViewController: SimpleScanViewController,
         creditCard: CreditCard
     ) {
-        let scannedCard = ScannedCard(pan: creditCard.number)
+        let scannedCard = ScannedCard(
+            pan: creditCard.number,
+            expiryMonth: creditCard.expiryMonth,
+            expiryYear: creditCard.expiryYear,
+            name: creditCard.name
+        )
         completion?(.completed(card: scannedCard))
     }
 }

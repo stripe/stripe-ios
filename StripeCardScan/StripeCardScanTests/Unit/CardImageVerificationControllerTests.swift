@@ -15,6 +15,12 @@ import XCTest
 
 class CardImageVerificationControllerTests: APIStubbedTestCase {
     private let expectedCard = CardImageVerificationExpectedCard(last4: "1234", issuer: nil)
+    private let expectedScannedCard = ScannedCard(
+        pan: "4242",
+        expiryMonth: "10",
+        expiryYear: "2020",
+        name: "John Appleseed"
+    )
     private var result: CardImageVerificationSheetResult?
     private var resultExp: XCTestExpectation!
     private var verifyFramesRequestExp: XCTestExpectation!
@@ -100,14 +106,25 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         verificationSheetController.verifyViewControllerDidFinish(
             baseViewController,
             verificationFramesData: [mockVerificationFrameData],
-            scannedCard: ScannedCard(pan: "4242")
+            scannedCard: expectedScannedCard
         )
 
         /// Wait for submitVerificationFrames request to be made and the result to return
         wait(for: [resultExp, verifyFramesRequestExp, scanStatsRequestExp], timeout: 1)
 
-        guard case .completed(scannedCard: ScannedCard(pan: "4242")) = result else {
-            XCTFail("Expected .completed(scannedCard: ScannedCard(pan: \"4242\")")
+        guard case .completed(scannedCard: expectedScannedCard) = result else {
+            XCTFail(
+                """
+                Expected .completed(
+                    scannedCard: ScannedCard(
+                        pan: \"4242\",
+                        expiryMonth: \"10\",
+                        expiryYear \"2020\",
+                        name: \"John Appleseed\"
+                    )
+                )
+                """
+            )
             return
         }
     }
