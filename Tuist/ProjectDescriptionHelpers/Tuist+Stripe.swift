@@ -333,15 +333,21 @@ extension Project {
                 )
             )
         )
-        if testUtilsOptions != nil {
-            schemes.append(
-                Scheme(
-                    name: "\(name)TestUtils",
-                    shared: false,
-                    buildAction: .buildAction(targets: ["\(name)TestUtils"])
-                )
-            )
-        }
+// We shouldn't create schemes for TestUtils: There isn't a clear use for them,
+// and they cause issues with Carthage.
+// Marking them as `shared: false` doesn't appear to work: Tuist still generates
+// the xcscheme file, then Xcode deletes it as soon as you inspect the Manage Schemes page.
+// This won't work for the Carthage case, where Xcode won't even be opened before Carthage
+// attempts to build them.
+//        if testUtilsOptions != nil {
+//            schemes.append(
+//                Scheme(
+//                    name: "\(name)TestUtils",
+//                    shared: false,
+//                    buildAction: .buildAction(targets: ["\(name)TestUtils"])
+//                )
+//            )
+//        }
         return schemes
     }
 
