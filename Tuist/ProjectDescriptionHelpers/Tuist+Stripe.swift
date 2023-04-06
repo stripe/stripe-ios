@@ -337,6 +337,7 @@ extension Project {
             schemes.append(
                 Scheme(
                     name: "\(name)TestUtils",
+                    shared: false,
                     buildAction: .buildAction(targets: ["\(name)TestUtils"])
                 )
             )
