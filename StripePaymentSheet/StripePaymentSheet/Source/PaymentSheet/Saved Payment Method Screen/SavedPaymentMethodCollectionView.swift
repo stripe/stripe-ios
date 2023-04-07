@@ -295,11 +295,11 @@ extension SavedPaymentMethodCollectionView {
                     )
                 case .add:
                     label.text = STPLocalizedString(
-                        "+ Add",
+                        "Add",
                         "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
                     )
                     shadowRoundedRectangle.accessibilityLabel = String.Localized.add_new_payment_method
-                    shadowRoundedRectangle.accessibilityIdentifier = "+ Add"
+                    shadowRoundedRectangle.accessibilityIdentifier = "Add"
                     paymentMethodLogo.isHidden = true
                     plus.isHidden = false
                     plus.setNeedsDisplay()

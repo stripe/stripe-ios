@@ -1,5 +1,5 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
-"+ Add" = "+ Add";
+"Add" = "Add";
 
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";

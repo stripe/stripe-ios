@@ -82,7 +82,7 @@ class PaymentSheetUITest: XCTestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
-        let addCardButton = app.buttons["+ Add"]
+        let addCardButton = app.buttons["Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
@@ -125,7 +125,7 @@ class PaymentSheetUITest: XCTestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
-        let addCardButton = app.buttons["+ Add"]
+        let addCardButton = app.buttons["Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
@@ -262,7 +262,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.forceTapElement()
 
-        let addCardButton = app.buttons["+ Add"]
+        let addCardButton = app.buttons["Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
         try! fillCardData(app)
@@ -739,7 +739,7 @@ extension PaymentSheetUITest {
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
 
-        let addCardButton = app.buttons["+ Add"]
+        let addCardButton = app.buttons["Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
@@ -767,7 +767,7 @@ extension PaymentSheetUITest {
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
 
-        let addCardButton = app.buttons["+ Add"]
+        let addCardButton = app.buttons["Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
@@ -1029,7 +1029,7 @@ extension PaymentSheetUITest {
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
 
-        let addCardButton = app.buttons["+ Add"]
+        let addCardButton = app.buttons["Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
@@ -1058,7 +1058,7 @@ extension PaymentSheetUITest {
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
 
-        let addCardButton = app.buttons["+ Add"]
+        let addCardButton = app.buttons["Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
