@@ -59,7 +59,7 @@ final class AuthFlowHelpers {
     @available(iOSApplicationExtension, unavailable)
     static func networkingOTPErrorMessage(
         fromError error: Error,
-        otpType: String // TODO(kgaidis): move this to be type-safe after Link framework intro
+        otpType: String
     ) -> String? {
         if
             let error = error as? StripeError,
