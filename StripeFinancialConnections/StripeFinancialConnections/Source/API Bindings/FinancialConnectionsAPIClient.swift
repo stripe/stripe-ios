@@ -537,13 +537,13 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointLinkStepUpAuthenticationVerified, parameters: parameters)
     }
 
-    // MARK: - Link API's [TODO(kgaidis): delete these later]
+    // MARK: - Link API's
 
     func consumerSessionLookup(
         emailAddress: String
     ) -> Future<LookupConsumerSessionResponse> {
         let parameters: [String: Any] = [
-            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+            "request_surface": "ios_connections",
             "email_address":
                 emailAddress
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -553,13 +553,13 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     }
 
     func consumerSessionStartVerification(
-        otpType: String, // TODO(kgaidis): consider whether this should be an enum type SMS + EMAIL
-        customEmailType: String?, // TODO(kgaidis): consider whether this should be an enum type
+        otpType: String,
+        customEmailType: String?,
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
     ) -> Future<ConsumerSessionResponse> {
         var parameters: [String: Any] = [
-            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+            "request_surface": "ios_connections",
             "type": otpType,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
@@ -573,7 +573,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func consumerSessionConfirmVerification(
         otpCode: String,
-        otpType: String, // TODO(kgaidis): consider whether this should be an enum type SMS + EMAIL
+        otpType: String,
         consumerSessionClientSecret: String
     ) -> Future<ConsumerSessionResponse> {
         let parameters: [String: Any] = [
@@ -582,7 +582,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
-            "request_surface": "web_connections",  // TODO(kgaidis): request backend to add ios_connections
+            "request_surface": "ios_connections",
         ]
         return post(resource: "consumers/sessions/confirm_verification", parameters: parameters)
     }
