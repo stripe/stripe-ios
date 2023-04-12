@@ -47,8 +47,8 @@ class STPE2ETest: XCTestCase {
         func fetchPaymentIntent(id: String, completion: @escaping (E2EExpectation) -> Void) {
             requestAPI("fetch_pi", queryItems: [URLQueryItem(name: "pi", value: id)]) { (json) in
                 let resultAmount = json["amount"] as! Int
-                let resultCurrency = json["currency"] as! String
-                let resultAccountID = json["on_behalf_of"] as! String
+                let resultCurrency = json["on_behalf_of"] as! String
+                let resultAccountID = json["currency"] as! String
                 completion(
                     E2EExpectation(
                         amount: resultAmount,
