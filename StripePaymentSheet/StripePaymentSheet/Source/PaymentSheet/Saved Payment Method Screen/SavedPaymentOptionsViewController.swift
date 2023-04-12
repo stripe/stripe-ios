@@ -80,7 +80,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         set {
             collectionView.isRemovingPaymentMethods = newValue
-            collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
+            collectionView.reloadData()
             if !collectionView.isRemovingPaymentMethods {
                 // re-select
                 collectionView.selectItem(
