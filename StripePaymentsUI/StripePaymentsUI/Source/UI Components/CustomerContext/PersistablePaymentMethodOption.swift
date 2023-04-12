@@ -3,6 +3,8 @@
 //  StripePaymentsUI
 //
 
+import Foundation
+
 public enum PersistablePaymentMethodOptionError: Error {
     case unableToEncode(PersistablePaymentMethodOption)
     case unableToDecode(String?)
