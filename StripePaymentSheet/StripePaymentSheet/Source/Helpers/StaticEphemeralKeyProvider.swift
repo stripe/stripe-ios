@@ -34,7 +34,7 @@ class StaticEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
             "secret": ephemeralKeySecret,
             "expires": Date.distantFuture.timeIntervalSince1970,
             "associated_objects": [["type": "customer", "id": customerId]],
-            "livemode": [],
+            "livemode": [] as [String],
         ]
         completion(responseDict, nil)
     }

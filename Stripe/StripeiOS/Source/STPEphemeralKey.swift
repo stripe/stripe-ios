@@ -9,14 +9,14 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-@_spi(STP) public class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
+class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     private(set) var stripeID: String
     private(set) var created: Date
     private(set) var livemode = false
-    @_spi(STP) public private(set) var secret: String
+    private(set) var secret: String
     private(set) var expires: Date
     private(set) var customerID: String?
-    @_spi(STP) public private(set) var issuingCardID: String?
+    private(set) var issuingCardID: String?
 
     /// You cannot directly instantiate an `STPEphemeralKey`. You should instead use
     /// `decodedObjectFromAPIResponse:` to create a key from a JSON response.
@@ -33,9 +33,9 @@ import Foundation
         super.init()
     }
 
-    @_spi(STP) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
-    @_spi(STP) public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
         }
@@ -81,11 +81,11 @@ import Foundation
         return key
     }
 
-    @_spi(STP) public override var hash: Int {
+    override var hash: Int {
         return stripeID.hash
     }
 
-    @_spi(STP) public override func isEqual(_ object: Any?) -> Bool {
+    override func isEqual(_ object: Any?) -> Bool {
         if self === (object as? STPEphemeralKey) {
             return true
         }

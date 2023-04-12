@@ -15,7 +15,7 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api#update_customer
     func updateCustomer(
         withParameters parameters: [String: Any],
-        using ephemeralKey: STPEphemeralKey,
+        using ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPCustomerCompletionBlock
     ) {
         let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
@@ -33,7 +33,7 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/payment_methods/attach
     func attachPaymentMethod(
         _ paymentMethodID: String,
-        toCustomerUsing ephemeralKey: STPEphemeralKey,
+        toCustomerUsing ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPErrorBlock
     ) {
         guard let customerID = ephemeralKey.customerID else {
@@ -58,7 +58,7 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/payment_methods/detach
     func detachPaymentMethod(
         _ paymentMethodID: String,
-        fromCustomerUsing ephemeralKey: STPEphemeralKey,
+        fromCustomerUsing ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPErrorBlock
     ) {
         let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
@@ -75,7 +75,7 @@ extension STPAPIClient {
     /// Retrieves a list of Payment Methods attached to a customer.
     /// @note This only fetches card type Payment Methods
     func listPaymentMethodsForCustomer(
-        using ephemeralKey: STPEphemeralKey,
+        using ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
         let header = authorizationHeader(using: ephemeralKey.secret)
@@ -100,7 +100,7 @@ extension STPAPIClient {
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
     func retrieveCustomer(
-        using ephemeralKey: STPEphemeralKey,
+        using ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPCustomerCompletionBlock
     ) {
         let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
@@ -117,7 +117,7 @@ extension STPAPIClient {
     // MARK: Helpers
 
     /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
-    @_spi(STP) public func authorizationHeader(usingEphemeralKey ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
+    @_spi(STP) public func authorizationHeader(usingEphemeralKey ephemeralKey: _stpspmsbeta_STPEphemeralKey? = nil) -> [String: String] {
         return authorizationHeader(using: ephemeralKey?.secret)
     }
 }

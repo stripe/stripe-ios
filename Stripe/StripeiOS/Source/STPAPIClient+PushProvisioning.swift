@@ -31,7 +31,7 @@ extension STPAPIClient {
         APIRequest<STPPushProvisioningDetails>.getWith(
             self,
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(usingEphemeralKey: ephemeralKey),
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
             parameters: parameters
         ) { details, _, error in
             completion(details, error)

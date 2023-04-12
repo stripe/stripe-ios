@@ -57,7 +57,7 @@ public class STPPinManagementService: NSObject {
                 APIRequest<STPIssuingCardPin>.getWith(
                     self.apiClient,
                     endpoint: endpoint,
-                    additionalHeaders: self.apiClient.authorizationHeader(usingEphemeralKey: ephemeralKey),
+                    additionalHeaders: self.apiClient.authorizationHeader(using: ephemeralKey),
                     parameters: parameters
                 ) { details, _, error in
                     // Find if there were errors
@@ -112,7 +112,7 @@ public class STPPinManagementService: NSObject {
                 APIRequest<STPIssuingCardPin>.post(
                     with: self.apiClient,
                     endpoint: endpoint,
-                    additionalHeaders: self.apiClient.authorizationHeader(usingEphemeralKey: ephemeralKey),
+                    additionalHeaders: self.apiClient.authorizationHeader(using: ephemeralKey),
                     parameters: parameters
                 ) { details, _, error in
                     // Find if there were errors
