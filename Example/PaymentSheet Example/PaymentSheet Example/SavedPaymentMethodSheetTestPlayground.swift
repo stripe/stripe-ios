@@ -16,9 +16,7 @@ import SwiftUI
 import UIKit
 
 class SavedPaymentMethodSheetTestPlayground: UIViewController {
-    // TODO: Update backend
-    //    static let defaultSavedPaymentMethodEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
-    static let defaultSavedPaymentMethodEndpoint = "https://pool-seen-sandal.glitch.me"
+    static let defaultSavedPaymentMethodEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
     static var paymentSheetPlaygroundSettings: SavedPaymentMethodSheetPlaygroundSettings?
 
     // Configuration
