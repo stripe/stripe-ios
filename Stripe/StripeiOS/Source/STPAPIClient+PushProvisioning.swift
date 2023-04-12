@@ -8,6 +8,8 @@
 
 import Foundation
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 
 typealias STPPushProvisioningDetailsCompletionBlock = (STPPushProvisioningDetails?, Error?) -> Void
 extension STPAPIClient {
@@ -29,7 +31,7 @@ extension STPAPIClient {
         APIRequest<STPPushProvisioningDetails>.getWith(
             self,
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            additionalHeaders: authorizationHeader(usingEphemeralKey: ephemeralKey),
             parameters: parameters
         ) { details, _, error in
             completion(details, error)

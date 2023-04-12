@@ -39,6 +39,7 @@ import UIKit
     /// customer.  For example, `completion(paymentMethods)` (if your call succeeds) or
     /// `completion(error)` if an error is returned.
     func listPaymentMethodsForCustomer(completion: STPPaymentMethodsCompletionBlock?)
+
     /// Adds a Payment Method to a customer.
     /// If you are implementing your own <STPBackendAPIAdapter>:
     /// On your backend, retrieve the Stripe customer associated with your logged-in user.
@@ -53,6 +54,7 @@ import UIKit
     /// or `completion(error)` if an error is returned.
     func attachPaymentMethod(toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?)
 
+    
     /// Deletes the given Payment Method from the customer.
     /// If you are implementing your own <STPBackendAPIAdapter>:
     /// Call the Detach method ( https://stripe.com/docs/api/payment_methods/detach )
@@ -83,4 +85,15 @@ import UIKit
         withShippingAddress shipping: STPAddress,
         completion: STPErrorBlock?
     )
+    
+    /// Set the last selected Payment Method Option
+    @objc optional func setSelectedPaymentMethodOption(
+        paymentOption: PersistablePaymentMethodOption?,
+        completion: @escaping (Error?) -> Void
+    )
+    /// Retrieve the last selected Payment Method Option for the customer
+    @objc optional func retrieveSelectedPaymentMethodOption(
+        completion: @escaping (PersistablePaymentMethodOption?, Error?) -> Void
+    )
+
 }

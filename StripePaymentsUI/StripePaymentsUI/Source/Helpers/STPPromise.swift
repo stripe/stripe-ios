@@ -9,18 +9,19 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-class STPPromise<T>: NSObject {
-    typealias STPPromiseErrorBlock = (Error) -> Void
+@_spi(STP) public class STPPromise<T>: NSObject {
+    @_spi(STP) public typealias STPPromiseErrorBlock = (Error) -> Void
 
-    typealias STPPromiseValueBlock = (T) -> Void
+    @_spi(STP) public typealias STPPromiseValueBlock = (T) -> Void
 
-    typealias STPPromiseCompletionBlock = (T?, Error?) -> Void
+    @_spi(STP) public typealias STPPromiseCompletionBlock = (T?, Error?) -> Void
 
-    typealias STPPromiseMapBlock = (T) -> Any?
+    @_spi(STP) public typealias STPPromiseMapBlock = (T) -> Any?
 
-    typealias STPPromiseFlatMapBlock = (T) -> STPPromise
+    @_spi(STP) public typealias STPPromiseFlatMapBlock = (T) -> STPPromise
 
-    var completed: Bool {
+    
+    @_spi(STP) public var completed: Bool {
         return error != nil || value != nil
     }
     private(set) var value: T?
@@ -42,7 +43,7 @@ class STPPromise<T>: NSObject {
         self.init()
         self.succeed(value)
     }
-    func succeed(_ value: T) {
+    @_spi(STP) public func succeed(_ value: T) {
         if completed {
             return
         }
@@ -56,7 +57,7 @@ class STPPromise<T>: NSObject {
         })
     }
 
-    func fail(_ error: Error) {
+    @_spi(STP) public func fail(_ error: Error) {
         if completed {
             return
         }
@@ -70,7 +71,7 @@ class STPPromise<T>: NSObject {
         })
     }
 
-    func complete(with promise: STPPromise) {
+    @_spi(STP) public func complete(with promise: STPPromise) {
         weak var weakSelf = self
         promise.onSuccess({ value in
             let strongSelf = weakSelf
@@ -81,7 +82,7 @@ class STPPromise<T>: NSObject {
         })
     }
 
-    @discardableResult func onSuccess(_ callback: @escaping STPPromiseValueBlock) -> Self {
+    @discardableResult @_spi(STP) public func onSuccess(_ callback: @escaping STPPromiseValueBlock) -> Self {
         if let value = value {
             stpDispatchToMainThreadIfNecessary({
                 callback(value)
@@ -92,7 +93,7 @@ class STPPromise<T>: NSObject {
         return self
     }
 
-    @discardableResult func onFailure(_ callback: @escaping STPPromiseErrorBlock) -> Self {
+    @discardableResult @_spi(STP) public func onFailure(_ callback: @escaping STPPromiseErrorBlock) -> Self {
         if let error = error {
             stpDispatchToMainThreadIfNecessary({
                 callback(error)
@@ -111,7 +112,7 @@ class STPPromise<T>: NSObject {
         })
     }
 
-    @discardableResult func map(_ callback: @escaping STPPromiseMapBlock) -> STPPromise {
+    @discardableResult @_spi(STP) public func map(_ callback: @escaping STPPromiseMapBlock) -> STPPromise {
         let wrapper = STPPromise.init()
         onSuccess({ value in
             wrapper.succeed(callback(value) as! T)

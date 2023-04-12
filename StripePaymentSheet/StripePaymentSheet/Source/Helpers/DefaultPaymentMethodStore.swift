@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import StripePaymentsUI
 
 final class DefaultPaymentMethodStore {
     enum PaymentMethodIdentifier: Equatable {
@@ -45,8 +46,20 @@ final class DefaultPaymentMethodStore {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
+        //Set Default to legacy behavior
         customerToDefaultPaymentMethodID[key] = identifier.value
 
+        if let paymentMethodOption = PersistablePaymentMethodOption(legacyValue: identifier.value) {
+            let encoder = JSONEncoder()
+            do {
+                let data = try encoder.encode(paymentMethodOption)
+                if let data_string = String(data: data, encoding: .utf8) {
+                    customerToDefaultPaymentMethodID[key] = data_string
+                }
+            } catch {
+                //no-op
+            }
+        }
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
 
@@ -56,10 +69,27 @@ final class DefaultPaymentMethodStore {
     static func defaultPaymentMethod(for customerID: String?) -> PaymentMethodIdentifier? {
         let key = customerID ?? ""
 
-        guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
+        guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key],
+              let data = value.data(using: .utf8) else {
             return nil
         }
 
-        return PaymentMethodIdentifier(value: value)
+        let decoder = JSONDecoder()
+        do {
+            let decoded = try decoder.decode(PersistablePaymentMethodOption.self, from: data)
+            switch(decoded.type) {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .stripe:
+                return .stripe(id: decoded.stripePaymentMethodId ?? "")
+            @unknown default:
+                assertionFailure("Unaccounted for payment method type")
+                return .stripe(id: "")
+            }
+        } catch {
+            return PaymentMethodIdentifier(value: value)
+        }
     }
 }

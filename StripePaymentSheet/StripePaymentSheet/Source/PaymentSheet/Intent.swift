@@ -119,4 +119,15 @@ enum Intent {
             }
         }
     }
+
+    var isInTerminalState: Bool {
+        switch self {
+        case .paymentIntent(let pi):
+            return [.succeeded, .canceled].contains(pi.status)
+        case .setupIntent(let si):
+            return [.succeeded, .canceled].contains(si.status)
+        case .deferredIntent:
+            return false                             
+        }
+    }    
 }

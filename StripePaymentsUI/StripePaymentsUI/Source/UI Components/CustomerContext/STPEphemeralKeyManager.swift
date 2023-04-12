@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-protocol STPEphemeralKeyManagerProtocol {
+@_spi(STP) public protocol STPEphemeralKeyManagerProtocol {
     /// If the retriever's stored ephemeral key has not expired, it will be
     /// returned immediately to the given callback. If the stored key is expiring, a
     /// new key will be requested from the key provider, and returned to the callback.
@@ -19,8 +19,8 @@ protocol STPEphemeralKeyManagerProtocol {
     func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock)
 }
 
-typealias STPEphemeralKeyCompletionBlock = (STPEphemeralKey?, Error?) -> Void
-class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
+@_spi(STP) public typealias STPEphemeralKeyCompletionBlock = (STPEphemeralKey?, Error?) -> Void
+@_spi(STP) public class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
     private var _expirationInterval: TimeInterval = 0.0
     /// If the current ephemeral key expires in less than this time interval, a call
     /// to `getOrCreateKey` will request a new key from the manager's key provider.
@@ -42,7 +42,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
     ///   - apiVersion:                The Stripe API version the manager will use.
     ///   - performsEagerFetching:     If the manager should eagerly refresh its key on app foregrounding.
     /// - Returns: the newly-initiated `STPEphemeralKeyManager`.
-    @objc init(
+    @objc @_spi(STP) public init(
         keyProvider: Any?,
         apiVersion: String,
         performsEagerFetching: Bool
@@ -65,7 +65,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         )
     }
 
-    @objc dynamic func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
+    @objc @_spi(STP) public dynamic func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
         if currentKeyIsUnexpired() {
             completion(ephemeralKey, nil)
         } else {
