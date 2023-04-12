@@ -7,7 +7,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import StripePayments
 
-public enum SavedPaymentMethodsSheetError: Error {
+@_spi(PrivateBetaSavedPaymentMethodsSheet) public enum SavedPaymentMethodsSheetError: Error {
 
     case errorFetchingSavedPaymentMethods(Error)
 
