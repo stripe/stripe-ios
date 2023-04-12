@@ -127,7 +127,7 @@ enum Intent {
         case .setupIntent(let si):
             return [.succeeded, .canceled].contains(si.status)
         case .deferredIntent:
-            return false                             
+            return false
         }
-    }    
+    }
 }

@@ -6,12 +6,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 extension STPAPIClient {
-    
-    
+
     /// Update a customer with parameters
     /// - seealso: https://stripe.com/docs/api#update_customer
     func updateCustomer(
@@ -114,7 +113,7 @@ extension STPAPIClient {
             completion(object, error)
         }
     }
-    
+
     // MARK: Helpers
 
     /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.

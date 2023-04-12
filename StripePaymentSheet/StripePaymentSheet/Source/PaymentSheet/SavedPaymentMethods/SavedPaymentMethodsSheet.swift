@@ -8,11 +8,11 @@
 //  Doing so exposes internal functionality which may cause unexpected behavior if used directly.
 //
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+import UIKit
 
 @frozen public enum SavedPaymentMethodsSheetResult {
     /// The customer completed the payment or setup
@@ -24,7 +24,7 @@ import UIKit
     case completed(NSObject?)
 
     case canceled
-    
+
     /// The attempt failed.
     /// - Parameter error: The error encountered by the customer. You can display its `localizedDescription` to the customer.
     case failed(error: Error)
@@ -40,7 +40,9 @@ import UIKit
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+    lazy var paymentHandler: STPPaymentHandler = {
+        STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
+    }()
 
     /// The parent view controller to present
     @available(iOSApplicationExtension, unavailable)
@@ -98,8 +100,8 @@ import UIKit
             savedPaymentMethodsSheetDelegate?.didFail(with: error)
             return
         }
-        loadPaymentMethods() { result in
-            switch(result) {
+        loadPaymentMethods { result in
+            switch result {
             case .success(let savedPaymentMethods):
                 self.present(from: presentingViewController, savedPaymentMethods: savedPaymentMethods)
             case .failure(let error):
@@ -119,7 +121,7 @@ import UIKit
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
         }
-       
+
         loadSpecsPromise.observe { _ in
             DispatchQueue.main.async {
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
@@ -149,7 +151,7 @@ extension SavedPaymentMethodsSheet {
                 completion(.failure(.errorFetchingSavedPaymentMethods(error)))
                 return
             }
-            let filteredPaymentMethods = paymentMethods.filter{ $0.type == .card }
+            let filteredPaymentMethods = paymentMethods.filter { $0.type == .card }
             completion(.success(filteredPaymentMethods))
         }
 
@@ -169,7 +171,7 @@ extension SavedPaymentMethodsSheet: SavedPaymentMethodsViewControllerDelegate {
             completion(result)
         }
     }
-    
+
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController) {
         savedPaymentMethodsViewController.dismiss(animated: true) {
             self.completion?()
@@ -210,12 +212,12 @@ extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
                     completion(nil, error)
                     return
                 }
-                switch(paymentMethodOption.type) {
+                switch paymentMethodOption.type {
                 case .applePay:
                     completion(SavedPaymentMethodsSheet.PaymentOptionSelection.applePay(), nil)
                 case .stripe:
                     guard let stripePaymentMethod = paymentMethodOption.stripePaymentMethodId,
-                        let matchingPaymentMethod = paymentMethods.first(where:{ $0.stripeId == stripePaymentMethod }) else {
+                        let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == stripePaymentMethod }) else {
                         completion(nil, nil)
                         return
                     }

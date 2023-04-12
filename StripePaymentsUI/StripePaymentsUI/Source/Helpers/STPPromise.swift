@@ -20,7 +20,6 @@ import Foundation
 
     @_spi(STP) public typealias STPPromiseFlatMapBlock = (T) -> STPPromise
 
-    
     @_spi(STP) public var completed: Bool {
         return error != nil || value != nil
     }

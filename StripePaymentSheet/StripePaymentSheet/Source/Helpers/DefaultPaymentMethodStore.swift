@@ -46,7 +46,7 @@ final class DefaultPaymentMethodStore {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
-        //Set Default to legacy behavior
+        // Set Default to legacy behavior
         customerToDefaultPaymentMethodID[key] = identifier.value
 
         if let paymentMethodOption = PersistablePaymentMethodOption(legacyValue: identifier.value) {
@@ -57,7 +57,7 @@ final class DefaultPaymentMethodStore {
                     customerToDefaultPaymentMethodID[key] = data_string
                 }
             } catch {
-                //no-op
+                // no-op
             }
         }
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
@@ -77,7 +77,7 @@ final class DefaultPaymentMethodStore {
         let decoder = JSONDecoder()
         do {
             let decoded = try decoder.decode(PersistablePaymentMethodOption.self, from: data)
-            switch(decoded.type) {
+            switch decoded.type {
             case .applePay:
                 return .applePay
             case .link:

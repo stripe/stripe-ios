@@ -8,8 +8,8 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 protocol SavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
     func didUpdateSelection(
@@ -50,7 +50,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
             }
         }
         func toSavedPaymentOptionsViewControllerSelection() -> SavedPaymentOptionsViewController.Selection {
-            switch(self) {
+            switch self {
             case .applePay:
                 return .applePay
             case .add:
@@ -210,7 +210,6 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
         ])
         retrieveSelectedPaymentMethodAndUpdateUI()
     }
-    
 
     // MARK: - Private methods
     private func retrieveSelectedPaymentMethodAndUpdateUI() {
@@ -232,7 +231,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
             self.updateUI(selectedSavedPaymentOption: nil)
         }
     }
-    
+
     private func updateUI(selectedSavedPaymentOption: PersistablePaymentMethodOption?) {
         DispatchQueue.main.async {
             // Move default to front
@@ -243,26 +242,26 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
                 let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
                 savedPaymentMethods.insert(defaultPM, at: 0)
             }
-            
+
             // Transform saved PaymentMethods into ViewModels
             let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
                 return Selection.saved(paymentMethod: paymentMethod)
             }
-            
+
             self.viewModels =
             [.add]
             + (self.configuration.showApplePay ? [.applePay] : [])
             + savedPMViewModels
-            
+
             if self.configuration.autoSelectDefaultBehavior != .none {
                 // Select default
                 self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
                 ?? (self.configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
             }
-            
+
             self.collectionView.reloadData()
             self.collectionView.selectItem(at: self.selectedIndexPath, animated: false, scrollPosition: [])
-            self.collectionView.scrollRectToVisible(CGRectZero, animated: false)
+            self.collectionView.scrollRectToVisible(CGRect.zero, animated: false)
         }
     }
 

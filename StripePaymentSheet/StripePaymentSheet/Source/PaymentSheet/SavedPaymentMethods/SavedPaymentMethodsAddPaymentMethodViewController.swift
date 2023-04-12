@@ -4,15 +4,14 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol SavedPaymentMethodsAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: SavedPaymentMethodsAddPaymentMethodViewController)
 }
-
 
 @objc(STP_Internal_SavedPaymentMethodsAddPaymentMethodViewController)
 class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
