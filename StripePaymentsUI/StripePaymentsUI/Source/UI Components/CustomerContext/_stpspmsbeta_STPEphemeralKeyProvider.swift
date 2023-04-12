@@ -11,7 +11,7 @@ import Foundation
 /// You should make your application's API client conform to this interface.
 /// It provides a way for Stripe utility classes to request a new ephemeral key from
 /// your backend, which it will use to retrieve and update Stripe API objects.
-@objc public protocol _stpspmsbeta_STPCustomerEphemeralKeyProvider: NSObjectProtocol {
+@objc @_spi(PrivateBetaSavedPaymentMethodsSheet) public protocol _stpspmsbeta_STPCustomerEphemeralKeyProvider: NSObjectProtocol {
     /// Creates a new ephemeral key for retrieving and updating a Stripe customer.
     /// On your backend, you should create a new ephemeral key for the Stripe customer
     /// associated with your user, and return the raw JSON response from the Stripe API.
@@ -36,7 +36,7 @@ import Foundation
 /// You should make your application's API client conform to this interface.
 /// It provides a way for Stripe utility classes to request a new ephemeral key from
 /// your backend, which it will use to retrieve and update Stripe API objects.
-@objc public protocol _stpspmsbeta_STPIssuingCardEphemeralKeyProvider: NSObjectProtocol {
+@objc @_spi(PrivateBetaSavedPaymentMethodsSheet) public protocol _stpspmsbeta_STPIssuingCardEphemeralKeyProvider: NSObjectProtocol {
     /// Creates a new ephemeral key for retrieving and updating a Stripe Issuing Card.
     /// On your backend, you should create a new ephemeral key for your logged-in user's
     /// primary Issuing Card, and return the raw JSON response from the Stripe API.
