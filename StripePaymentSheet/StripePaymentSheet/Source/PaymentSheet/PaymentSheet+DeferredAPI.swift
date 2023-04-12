@@ -89,7 +89,7 @@ extension PaymentSheet {
                                 paymentHandler: deferredIntentContext.paymentHandler,
                                 completion: deferredIntentContext.completion)
                     case .new:
-                        // When confirming with a new payment method, confirm with the created STPPaymentMethod and not the create params
+                        // When confirming with a new payment method, confirm with the created STPPaymentMethod and not the confirm params
                         confirm(configuration: deferredIntentContext.configuration,
                                 authenticationContext: deferredIntentContext.authenticationContext,
                                 intent: intent,
