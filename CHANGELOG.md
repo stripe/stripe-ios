@@ -1,6 +1,8 @@
 ## X.X.X
 ### All
 * Xcode 13 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 14.1 or later.
+### PaymentSheet
+* [Fixed] Visual bug of the delete icon when deleting saved payment methods reported in [#2461](https://github.com/stripe/stripe-ios/issues/2461).
 
 ## 23.6.0 2023-03-27
 ### PaymentSheet
