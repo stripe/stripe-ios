@@ -544,7 +544,7 @@ extension PaymentSheetTestPlayground {
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0,
-            //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
+//            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
         makeRequest(with: checkoutEndpoint, body: body) { data, _, error in
