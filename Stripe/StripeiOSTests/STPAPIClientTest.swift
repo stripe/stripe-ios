@@ -12,6 +12,7 @@ import XCTest
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAPIClientTest: XCTestCase {
     func testSharedClient() {
@@ -63,7 +64,7 @@ class STPAPIClientTest: XCTestCase {
     func testEphemeralKeyOverwritesHeader() {
         let sut = STPAPIClient(publishableKey: "pk_foo")
         let ephemeralKey = STPFixtures.ephemeralKey()
-        let additionalHeaders = sut.authorizationHeader(using: ephemeralKey)
+        let additionalHeaders = sut.authorizationHeader(using: ephemeralKey.secret)
         let authHeader = sut.configuredRequest(
             for: URL(string: "https://www.stripe.com")!,
             additionalHeaders: additionalHeaders

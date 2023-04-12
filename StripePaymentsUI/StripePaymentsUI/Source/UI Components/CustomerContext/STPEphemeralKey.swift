@@ -13,7 +13,7 @@ import Foundation
     private(set) var stripeID: String
     private(set) var created: Date
     private(set) var livemode = false
-    private(set) var secret: String
+    @_spi(STP) public private(set) var secret: String
     private(set) var expires: Date
     private(set) var customerID: String?
     @_spi(STP) public private(set) var issuingCardID: String?
