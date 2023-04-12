@@ -7,7 +7,7 @@
 import UIKit
 import XCTest
 
-@testable import StripeIdentity
+@_spi(STP) import StripeIdentity
 
 class StripeIdentityAssetTests: XCTestCase {
 
