@@ -11,8 +11,8 @@ import Foundation
 
 /// The canonical set of all image files in the `StripeIdentity` module.
 /// This helps us avoid duplicates and automatically test that all images load properly
-enum Image: String, CaseIterable, ImageMaker {
-    typealias BundleLocator = StripeIdentityBundleLocator
+@_spi(STP) public enum Image: String, CaseIterable, ImageMaker {
+    @_spi(STP) public typealias BundleLocator = StripeIdentityBundleLocator
 
     case iconAdd = "icon_add"
     case iconCheckmark = "icon_checkmark"

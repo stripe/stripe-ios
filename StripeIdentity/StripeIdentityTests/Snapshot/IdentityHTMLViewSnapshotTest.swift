@@ -10,7 +10,7 @@ import Foundation
 import iOSSnapshotTestCase
 @_spi(STP) import StripeUICore
 
-@testable import StripeIdentity
+@testable @_spi(STP) import StripeIdentity
 
 final class IdentityHTMLViewSnapshotTest: FBSnapshotTestCase {
 
