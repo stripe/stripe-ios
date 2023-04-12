@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import StripePaymentsUI
+@_spi(STP) import StripePaymentsUI
 
 final class DefaultPaymentMethodStore {
     enum PaymentMethodIdentifier: Equatable {

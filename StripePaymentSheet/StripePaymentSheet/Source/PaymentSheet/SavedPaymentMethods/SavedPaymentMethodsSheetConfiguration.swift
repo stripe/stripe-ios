@@ -5,8 +5,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 import UIKit
 
 extension SavedPaymentMethodsSheet {
@@ -40,7 +40,7 @@ extension SavedPaymentMethodsSheet {
         public var applePayEnabled: Bool
 
         /// Configuration related to the Stripe Customer
-        public var customerContext: STPBackendAPIAdapter
+        public var customerContext: _stpspmsbeta_STPBackendAPIAdapter
 
         /// Optional configuration for setting the header text of the Payment Method selection screen
         public var headerTextForSelectionScreen: String?
@@ -50,7 +50,7 @@ extension SavedPaymentMethodsSheet {
         /// If this is not set, the PaymentMethod will be attached directly to the customer instead.
         public var createSetupIntentHandler: CreateSetupIntentHandlerCallback?
 
-        public init (customerContext: STPBackendAPIAdapter,
+        public init (customerContext: _stpspmsbeta_STPBackendAPIAdapter,
                      applePayEnabled: Bool) {
             self.customerContext = customerContext
             self.applePayEnabled = applePayEnabled

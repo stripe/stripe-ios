@@ -11,7 +11,7 @@ import Contacts
 import Foundation
 import PassKit
 @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentSheet
-import StripePaymentsUI
+@_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 import SwiftUI
 import UIKit
 
@@ -70,7 +70,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
 
     var ephemeralKey: String?
     var customerId: String?
-    var customerContext: STPCustomerContext?
+    var customerContext: _stpspmsbeta_STPCustomerContext?
     var savedPaymentMethodEndpoint: String = defaultSavedPaymentMethodEndpoint
     var appearance = PaymentSheet.Appearance.default
 
@@ -146,7 +146,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     }
 
     func savedPaymentMethodSheetConfiguration(customerId: String, ephemeralKey: String) -> SavedPaymentMethodsSheet.Configuration {
-        let customerContext = STPCustomerContext(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+        let customerContext = _stpspmsbeta_STPCustomerContext(customerId: customerId, ephemeralKeySecret: ephemeralKey)
         self.customerContext = customerContext
         var configuration = SavedPaymentMethodsSheet.Configuration(customerContext: customerContext,
                                                                    applePayEnabled: applePayEnabled())

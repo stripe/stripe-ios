@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import StripePaymentsUI
+@_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 
-public extension STPCustomerContext {
+@_spi(PrivateBetaSavedPaymentMethodsSheet) public extension _stpspmsbeta_STPCustomerContext {
     /// Initializes a new `STPCustomerContext` with the specified key provider.
     /// This is not recommended, use initWithKeyProvider and an STPCustomerEphemeralKeyProvider instead.
     /// The key will expire after 60 minutes.
@@ -23,7 +23,7 @@ public extension STPCustomerContext {
     }
 }
 
-class StaticEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
+class StaticEphemeralKeyProvider: NSObject, _stpspmsbeta_STPCustomerEphemeralKeyProvider {
     let customerId: String
     let ephemeralKeySecret: String
     // This is a bridge between the STPCustomerEphemeralKeyProvider and the way PaymentSheet requests keys.

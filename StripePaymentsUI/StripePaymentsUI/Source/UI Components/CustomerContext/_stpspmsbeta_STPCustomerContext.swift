@@ -15,7 +15,7 @@ import Foundation
 /// be sure to either create a new instance of `STPCustomerContext` or clear the current
 /// instance's cache. On your backend, be sure to create and return a
 /// new ephemeral key for the Customer object associated with the new user.
-@_spi(SPMSBeta) open class _stpspmsbeta_STPCustomerContext: NSObject, _stpspmsbeta_STPBackendAPIAdapter {
+@_spi(PrivateBetaSavedPaymentMethodsSheet) open class _stpspmsbeta_STPCustomerContext: NSObject, _stpspmsbeta_STPBackendAPIAdapter {
     /// Initializes a new `STPCustomerContext` with the specified key provider.
     /// Upon initialization, a CustomerContext will fetch a new ephemeral key from
     /// your backend and use it to prefetch the customer object specified in the key.

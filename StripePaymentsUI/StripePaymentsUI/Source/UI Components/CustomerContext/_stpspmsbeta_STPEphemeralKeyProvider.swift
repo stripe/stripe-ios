@@ -70,5 +70,5 @@ import Foundation
     message:
         "use `STPCustomerEphemeralKeyProvider` or `STPIssuingCardEphemeralKeyProvider` depending on the type of key that will be fetched."
 )
-@_spi(SPMSBeta) @objc public protocol _stpspmsbeta_STPEphemeralKeyProvider: _stpspmsbeta_STPCustomerEphemeralKeyProvider {
+@_spi(PrivateBetaSavedPaymentMethodsSheet) @objc public protocol _stpspmsbeta_STPEphemeralKeyProvider: _stpspmsbeta_STPCustomerEphemeralKeyProvider {
 }

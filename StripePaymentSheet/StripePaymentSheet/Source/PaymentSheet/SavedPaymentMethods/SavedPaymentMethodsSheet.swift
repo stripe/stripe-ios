@@ -10,7 +10,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -193,7 +193,7 @@ extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
     }
 }
 
-@_spi(PrivateBetaSavedPaymentMethodsSheet) extension STPCustomerContext {
+@_spi(PrivateBetaSavedPaymentMethodsSheet) extension _stpspmsbeta_STPCustomerContext {
     /// Returns the selected Payment Option for this customer context.
     /// You can use this to obtain the selected payment method without loading the SavedPaymentMethodsSheet.
     public func retrievePaymentOptionSelection(
