@@ -204,7 +204,7 @@ extension PayWithLinkViewController {
             guard case .confirmParams(confirmParams: let confirmParams) = newPaymentMethod else {
                 fatalError("Must confirm Link with confirm params")
             }
-            
+
             linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
                 guard let self = self else {
                     return

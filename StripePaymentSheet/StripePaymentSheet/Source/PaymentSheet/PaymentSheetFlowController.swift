@@ -23,11 +23,11 @@ extension PaymentSheet {
         case new(newPaymentMethod: NewPaymentMethod)
         case link(option: LinkConfirmOption)
     }
-    
+
     enum NewPaymentMethod {
         case confirmParams(confirmParams: IntentConfirmParams)
         case paymentMethod(paymentMethod: STPPaymentMethod)
-        
+
         var paymentSheetLabel: String {
             switch self {
             case .confirmParams(let confirmParams):
@@ -37,7 +37,7 @@ extension PaymentSheet {
             }
         }
     }
-    
+
     /// A class that presents the individual steps of a payment flow
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)

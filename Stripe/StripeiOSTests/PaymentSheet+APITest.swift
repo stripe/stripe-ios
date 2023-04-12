@@ -46,16 +46,14 @@ class PaymentSheetAPITest: XCTestCase {
         cardParams.cvc = "123"
         cardParams.expYear = 32
         cardParams.expMonth = 12
-        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
-            confirmParams: .init(
-                params: .init(
-                    card: cardParams,
-                    billingDetails: .init(),
-                    metadata: nil
-                ),
-                type: .card
-            )
-        )
+        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(newPaymentMethod: .confirmParams(confirmParams: .init(
+            params: .init(
+                card: cardParams,
+                billingDetails: .init(),
+                metadata: nil
+            ),
+            type: .card
+        )))
 
         return newCardPaymentOption
     }()

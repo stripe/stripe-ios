@@ -135,12 +135,13 @@ extension PaymentSheet {
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                    paymentIntentParams.paymentMethodId = paymentMethod.stripeId
 
                     // The Dashboard app requires MOTO
                     if configuration.apiClient.publishableKeyIsUserKey {
                         paymentIntentParams.paymentMethodOptions?.setMoto()
                     }
-                    
+
                     // Paypal requires mandate_data if setting up
                     if paymentMethod.type == .payPal
                         && paymentIntent.setupFutureUsage == .offSession
@@ -174,6 +175,7 @@ extension PaymentSheet {
                         paymentMethodType: paymentMethod.type
                     )
                     setupIntentParams.returnURL = configuration.returnURL
+                    setupIntentParams.paymentMethodID = paymentMethod.stripeId
                     // Paypal requires mandate_data if setting up
                     if paymentMethod.type == .payPal {
                         setupIntentParams.mandateData = .makeWithInferredValues()
@@ -187,7 +189,7 @@ extension PaymentSheet {
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
                 switch newPaymentMethod {
-                    
+
                 case .confirmParams(confirmParams: let confirmParams):
                     let deferredContext = DeferredIntentContext(configuration: configuration,
                                                                 intentConfig: intentConfig,

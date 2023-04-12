@@ -80,12 +80,23 @@ extension PaymentSheet {
                     // TODO(porter) Future optimization: Only fetch intent when strictly requried
                     let intent = try await deferredIntentContext.configuration.apiClient.retrieveIntent(for: deferredIntentContext.intentConfig,
                                                                                                         withClientSecret: clientSecret)
-                    confirm(configuration: deferredIntentContext.configuration,
-                            authenticationContext: deferredIntentContext.authenticationContext,
-                            intent: intent,
-                            paymentOption: deferredIntentContext.paymentOption,
-                            paymentHandler: deferredIntentContext.paymentHandler,
-                            completion: deferredIntentContext.completion)
+                    switch deferredIntentContext.paymentOption {
+                    case .applePay, .link, .saved:
+                        confirm(configuration: deferredIntentContext.configuration,
+                                authenticationContext: deferredIntentContext.authenticationContext,
+                                intent: intent,
+                                paymentOption: deferredIntentContext.paymentOption,
+                                paymentHandler: deferredIntentContext.paymentHandler,
+                                completion: deferredIntentContext.completion)
+                    case .new:
+                        // When confirming with a new payment method, confirm with the created STPPaymentMethod and not the create params
+                        confirm(configuration: deferredIntentContext.configuration,
+                                authenticationContext: deferredIntentContext.authenticationContext,
+                                intent: intent,
+                                paymentOption: .new(newPaymentMethod: .paymentMethod(paymentMethod: paymentMethod)),
+                                paymentHandler: deferredIntentContext.paymentHandler,
+                                completion: deferredIntentContext.completion)
+                    }
                 }
 
             } catch {
