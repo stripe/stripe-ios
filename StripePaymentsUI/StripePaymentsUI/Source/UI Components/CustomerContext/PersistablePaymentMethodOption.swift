@@ -17,7 +17,7 @@ public enum PersistablePaymentMethodOptionError: Error {
     public let stripePaymentMethodId: String?
     public let type: PersistablePaymentMethodOptionType
     public var value: String? {
-        switch(type) {
+        switch type {
         case .applePay:
             return "apple_pay"
         case .link:

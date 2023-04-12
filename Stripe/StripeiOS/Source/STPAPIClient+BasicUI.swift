@@ -47,7 +47,6 @@ extension STPAPIClient {
         }
     }
 
-
     // MARK: FPX
     /// Retrieves the online status of the FPX banks from the Stripe API.
     /// - Parameter completion:  The callback to run with the returned FPX bank list, or an error.

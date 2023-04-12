@@ -34,7 +34,6 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
         self.init(keyProvider: keyProvider, apiClient: STPAPIClient.shared)
     }
 
-    
     /// Initializes a new `STPCustomerContext` with the specified key provider.
     /// Upon initialization, a CustomerContext will fetch a new ephemeral key from
     /// your backend and use it to prefetch the customer object specified in the key.
@@ -133,7 +132,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
         self.keyManager = keyManager
         self.apiClient = apiClient
         _includeApplePayPaymentMethods = false
-        
+
         super.init()
         retrieveCustomer(nil)
         listPaymentMethodsForCustomer(completion: nil)
@@ -268,7 +267,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
             }
         })
     }
-    
+
     @objc
     public func attachPaymentMethod(
         toCustomer paymentMethod: STPPaymentMethod,
@@ -413,7 +412,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     @objc public func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?, completion: @escaping(Error?) -> Void
     ) {
         guard let paymentOption = paymentOption else {
-            //TODO: CLEAR OUT PAYENT METHOD
+            // TODO: CLEAR OUT PAYENT METHOD
             return
         }
         let encoder = JSONEncoder()
@@ -431,7 +430,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     }
     @objc public func retrieveSelectedPaymentMethodOption(completion: @escaping (PersistablePaymentMethodOption?, Error?) -> Void
     ) {
-        self.retrieveLastSelectedPaymentMethodIDForCustomer { paymentMethod, error in
+        self.retrieveLastSelectedPaymentMethodIDForCustomer { paymentMethod, _ in
             guard let paymentMethod = paymentMethod,
                   let data = paymentMethod.data(using: .utf8) else {
                 completion(nil, nil)

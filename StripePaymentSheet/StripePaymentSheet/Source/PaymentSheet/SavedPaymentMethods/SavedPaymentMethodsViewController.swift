@@ -12,8 +12,8 @@ import UIKit
 
 protocol SavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController,
-    with paymentOption: PaymentOption,
-completion: @escaping(SavedPaymentMethodsSheetResult) -> Void)
+                                                        with paymentOption: PaymentOption,
+                                                        completion: @escaping(SavedPaymentMethodsSheetResult) -> Void)
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController)
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController)
 }
@@ -53,7 +53,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             return savedPaymentOptionsViewController.selectedPaymentOption
         }
     }
-    
+
     // MARK: - Views
     internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
@@ -154,7 +154,7 @@ class SavedPaymentMethodsViewController: UIViewController {
 
         updateUI(animated: false)
     }
-    
+
     // MARK: Private Methods
     private func updateUI(animated: Bool = true) {
         let shouldEnableUserInteraction = !processingInFlight
@@ -167,11 +167,11 @@ class SavedPaymentMethodsViewController: UIViewController {
         view.isUserInteractionEnabled = shouldEnableUserInteraction
         isDismissable = !processingInFlight
         navigationBar.isUserInteractionEnabled = !processingInFlight
-        
+
         // Update our views (starting from the top of the screen):
         configureNavBar()
 
-        switch(mode) {
+        switch mode {
         case .selectingSaved:
             if let text = configuration.headerTextForSelectionScreen, !text.isEmpty {
                 headerLabel.text = text
@@ -197,11 +197,11 @@ class SavedPaymentMethodsViewController: UIViewController {
         }
 
         switchContentIfNecessary(to: contentViewController, containerView: paymentContainerView)
-        
+
         // Error
         switch mode {
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-            //does this even work?
+            // TODO: Test that this works
             errorLabel.text = error?.localizedDescription
         case .selectingSaved:
             errorLabel.text = error?.nonGenericDescription
@@ -209,7 +209,7 @@ class SavedPaymentMethodsViewController: UIViewController {
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
-        
+
         // Buy button
         var actionButtonStatus: ConfirmButton.Status = .enabled
         var showActionButton: Bool = true
@@ -225,7 +225,6 @@ class SavedPaymentMethodsViewController: UIViewController {
             self.actionButton.isHidden = false
         }
 
-        
         if processingInFlight {
             actionButtonStatus = .processing
         }
@@ -237,8 +236,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             animated: animated,
             completion: nil
         )
-       
-        
+
         let updateButtonVisibility = {
             self.actionButton.isHidden = !showActionButton
         }
@@ -247,7 +245,6 @@ class SavedPaymentMethodsViewController: UIViewController {
         } else {
             updateButtonVisibility()
         }
-        
     }
     private func contentViewControllerFor(mode: Mode) -> UIViewController? {
         if mode == .addingNewWithSetupIntent || mode == .addingNewPaymentMethodAttachToCustomer {
@@ -274,7 +271,6 @@ class SavedPaymentMethodsViewController: UIViewController {
                     self.navigationBar.additionalButton.removeTarget(
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
-                    //return savedPaymentMethods.isEmpty ? .close(showAdditionalButton: false) : .back
                     return .back
                 }
             }())
@@ -282,7 +278,7 @@ class SavedPaymentMethodsViewController: UIViewController {
     }
 
     private func callToAction() -> ConfirmButton.CallToActionType {
-        switch (mode) {
+        switch mode {
         case .selectingSaved:
             return .custom(title: STPLocalizedString(
                 "Confirm",
@@ -304,11 +300,12 @@ class SavedPaymentMethodsViewController: UIViewController {
 
         }
     }
+
     private func didTapActionButton() {
         error = nil
         updateUI()
 
-        switch (mode) {
+        switch mode {
         case .addingNewWithSetupIntent:
             guard let newPaymentOption = addPaymentMethodViewController?.paymentOption else {
                 return
@@ -321,7 +318,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             addPaymentOptionToCustomer(paymentOption: newPaymentOption)
         case .selectingSaved:
             if let selectedPaymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
-                switch(selectedPaymentOption) {
+                switch selectedPaymentOption {
                 case .applePay:
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.applePay()
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
@@ -330,7 +327,6 @@ class SavedPaymentMethodsViewController: UIViewController {
                         self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self)
                     }
-
 
                 case .saved(let paymentMethod):
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
@@ -349,14 +345,14 @@ class SavedPaymentMethodsViewController: UIViewController {
     }
 
     private func addPaymentOption(paymentOption: PaymentOption) {
-        guard case .new(_) = paymentOption else {
+        guard case .new = paymentOption else {
             return
         }
         self.processingInFlight = true
         updateUI(animated: false)
         self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(self, with: paymentOption, completion: { result in
             self.processingInFlight = false
-            switch(result) {
+            switch result {
             case .canceled:
                 self.updateUI()
             case .failed(let error):
@@ -386,7 +382,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             }
         })
     }
-   
+
     private func addPaymentOptionToCustomer(paymentOption: PaymentOption) {
         self.processingInFlight = true
         updateUI(animated: false)
@@ -454,7 +450,6 @@ class SavedPaymentMethodsViewController: UIViewController {
     private func setSelectablePaymentMethodAnimateButton(paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection,
                                                          onError: @escaping (Error) -> Void,
                                                          onSuccess: @escaping () -> Void) {
-        
         self.processingInFlight = true
         updateUI()
         self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
@@ -467,8 +462,9 @@ class SavedPaymentMethodsViewController: UIViewController {
             }
         }
     }
-    
-    private func setSelectablePaymentMethod(paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection, onError: @escaping (Error) -> Void,
+
+    private func setSelectablePaymentMethod(paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection,
+                                            onError: @escaping (Error) -> Void,
                                             onSuccess: @escaping () -> Void) {
         if let setSelectedPaymentMethodOption = self.configuration.customerContext.setSelectedPaymentMethodOption {
             let persistablePaymentOption = paymentOptionSelection.persistablePaymentMethodOption()
@@ -483,7 +479,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             onSuccess()
         }
     }
-    
+
     private func handleDismissSheet() {
         if savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod != nil &&
             savedPaymentOptionsViewController.selectedPaymentOption == nil {
@@ -554,7 +550,7 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
         viewController: SavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection) {
             // TODO: Add some boolean flag here to avoid making duplicate calls
-            switch(paymentMethodSelection) {
+            switch paymentMethodSelection {
             case .add:
                 error = nil
                 if let createSetupIntentHandler = self.configuration.createSetupIntentHandler {
@@ -569,12 +565,11 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
                                 return
                             }
                             self.fetchSetupIntent(clientSecret: clientSecret) { result in
-                                switch(result) {
+                                switch result {
                                 case .success(let stpSetupIntent):
                                     let setupIntent = Intent.setupIntent(stpSetupIntent)
                                     self.intent = setupIntent
                                     self.initAddPaymentMethodViewController(intent: setupIntent)
-                                    
                                 case .failure(let error):
                                     self.savedPaymentMethodsSheetDelegate?.didFail(with: .setupIntentFetchError(error))
                                 }
@@ -619,8 +614,6 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
                         // a payment method that is no longer there, the UI should be able to handle not selecting it.
                     }
                 })
-                
             })
         }
 }
-

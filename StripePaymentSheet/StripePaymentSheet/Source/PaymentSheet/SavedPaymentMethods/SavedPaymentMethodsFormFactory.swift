@@ -50,7 +50,7 @@ class SavedPaymentMethodsFormFactory {
 //        let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
         let cardFormElement = FormElement(elements: [
             CardSection(theme: theme),
-            //shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            // shouldDisplaySaveCheckbox ? saveCheckbox : nil,
         ], theme: theme)
 //        if isLinkEnabled {
 //            return LinkEnabledPaymentMethodElement(

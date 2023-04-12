@@ -40,7 +40,7 @@ extension SavedPaymentMethodsSheet {
            case .setupIntent(let setupIntent) = intent {
             let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
             setupIntentParams.returnURL = configuration.returnURL
-            setupIntentParams.additionalAPIParameters = ["expand" : ["payment_method"]]
+            setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
             paymentHandler.confirmSetupIntent(
                 setupIntentParams,
                 with: self.bottomSheetViewController,

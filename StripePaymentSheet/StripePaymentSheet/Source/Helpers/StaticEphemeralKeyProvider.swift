@@ -34,11 +34,11 @@ class StaticEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
             "secret": ephemeralKeySecret,
             "expires": Date.distantFuture.timeIntervalSince1970,
             "associated_objects": [["type": "customer", "id": customerId]],
-            "livemode": []
+            "livemode": [],
         ]
         completion(responseDict, nil)
     }
-    
+
     init(customerId: String, ephemeralKeySecret: String) {
         self.customerId = customerId
         self.ephemeralKeySecret = ephemeralKeySecret
