@@ -141,8 +141,13 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             case .applePay, .saved, .link:
                 // TODO(Link): Handle link when we re-enable it
                 return nil
-            case .new(confirmParams: let params):
-                return params
+            case .new(let newPaymentMethod):
+                switch newPaymentMethod {
+                case .confirmParams(let confirmParams):
+                    return confirmParams
+                case .paymentMethod:
+                    return nil
+                }
             }
         }()
         // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
