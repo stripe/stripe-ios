@@ -20,10 +20,24 @@ extension PaymentSheet {
     enum PaymentOption {
         case applePay
         case saved(paymentMethod: STPPaymentMethod)
-        case new(confirmParams: IntentConfirmParams)
+        case new(newPaymentMethod: NewPaymentMethod)
         case link(option: LinkConfirmOption)
     }
-
+    
+    enum NewPaymentMethod {
+        case confirmParams(confirmParams: IntentConfirmParams)
+        case paymentMethod(paymentMethod: STPPaymentMethod)
+        
+        var paymentSheetLabel: String {
+            switch self {
+            case .confirmParams(let confirmParams):
+                return confirmParams.paymentSheetLabel
+            case .paymentMethod(let paymentMethod):
+                return paymentMethod.paymentSheetLabel
+            }
+        }
+    }
+    
     /// A class that presents the individual steps of a payment flow
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
@@ -43,8 +57,8 @@ extension PaymentSheet {
                     label = String.Localized.apple_pay
                 case .saved(let paymentMethod):
                     label = paymentMethod.paymentSheetLabel
-                case .new(let confirmParams):
-                    label = confirmParams.paymentSheetLabel
+                case .new(let newPaymentMethod):
+                    label = newPaymentMethod.paymentSheetLabel
                 case .link(let option):
                     label = option.paymentSheetLabel
                 }

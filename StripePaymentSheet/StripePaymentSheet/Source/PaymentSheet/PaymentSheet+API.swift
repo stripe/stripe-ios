@@ -78,44 +78,71 @@ extension PaymentSheet {
             applePayContext.presentApplePay()
 
         // MARK: - New Payment Method
-        case let .new(confirmParams):
+        case let .new(newPaymentMethod):
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
-                // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
-                if configuration.apiClient.publishableKeyIsUserKey {
-                    configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
-                        paymentMethod,
-                        error in
-                        if let error = error {
-                            completion(.failed(error: error))
-                            return
+                switch newPaymentMethod {
+                case .confirmParams(let confirmParams):
+                    // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
+                    if configuration.apiClient.publishableKeyIsUserKey {
+                        configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
+                            paymentMethod,
+                            error in
+                            if let error = error {
+                                completion(.failed(error: error))
+                                return
+                            }
+                            let paymentIntentParams = confirmParams.makeDashboardParams(
+                                paymentIntentClientSecret: paymentIntent.clientSecret,
+                                paymentMethodID: paymentMethod?.stripeId ?? "",
+                                configuration: configuration
+                            )
+                            paymentIntentParams.shipping = makeShippingParams(
+                                for: paymentIntent,
+                                configuration: configuration
+                            )
+                            paymentHandler.confirmPayment(
+                                paymentIntentParams,
+                                with: authenticationContext,
+                                completion: paymentHandlerCompletion
+                            )
                         }
-                        let paymentIntentParams = confirmParams.makeDashboardParams(
+                    } else {
+                        let paymentIntentParams = confirmParams.makeParams(
                             paymentIntentClientSecret: paymentIntent.clientSecret,
-                            paymentMethodID: paymentMethod?.stripeId ?? "",
                             configuration: configuration
                         )
-                        paymentIntentParams.shipping = makeShippingParams(
-                            for: paymentIntent,
-                            configuration: configuration
-                        )
+                        paymentIntentParams.returnURL = configuration.returnURL
+                        paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+
+                        // Paypal requires mandate_data if setting up
+                        if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal
+                            && paymentIntent.setupFutureUsage == .offSession
+                        {
+                            paymentIntentParams.mandateData = .makeWithInferredValues()
+                        }
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
                             completion: paymentHandlerCompletion
                         )
                     }
-                } else {
-                    let paymentIntentParams = confirmParams.makeParams(
-                        paymentIntentClientSecret: paymentIntent.clientSecret,
-                        configuration: configuration
+                case .paymentMethod(let paymentMethod):
+                    let paymentIntentParams = STPPaymentIntentParams(
+                        clientSecret: paymentIntent.clientSecret,
+                        paymentMethodType: paymentMethod.type
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
 
+                    // The Dashboard app requires MOTO
+                    if configuration.apiClient.publishableKeyIsUserKey {
+                        paymentIntentParams.paymentMethodOptions?.setMoto()
+                    }
+                    
                     // Paypal requires mandate_data if setting up
-                    if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal
+                    if paymentMethod.type == .payPal
                         && paymentIntent.setupFutureUsage == .offSession
                     {
                         paymentIntentParams.mandateData = .makeWithInferredValues()
@@ -128,29 +155,53 @@ extension PaymentSheet {
                 }
             // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
-                let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
-                setupIntentParams.returnURL = configuration.returnURL
-                // Paypal requires mandate_data if setting up
-                if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal {
-                    setupIntentParams.mandateData = .makeWithInferredValues()
+                switch newPaymentMethod {
+                case .confirmParams(let confirmParams):
+                    let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
+                    setupIntentParams.returnURL = configuration.returnURL
+                    // Paypal requires mandate_data if setting up
+                    if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal {
+                        setupIntentParams.mandateData = .makeWithInferredValues()
+                    }
+                    paymentHandler.confirmSetupIntent(
+                        setupIntentParams,
+                        with: authenticationContext,
+                        completion: paymentHandlerCompletion
+                    )
+                case .paymentMethod(let paymentMethod):
+                    let setupIntentParams = STPSetupIntentConfirmParams(
+                        clientSecret: setupIntent.clientSecret,
+                        paymentMethodType: paymentMethod.type
+                    )
+                    setupIntentParams.returnURL = configuration.returnURL
+                    // Paypal requires mandate_data if setting up
+                    if paymentMethod.type == .payPal {
+                        setupIntentParams.mandateData = .makeWithInferredValues()
+                    }
+                    paymentHandler.confirmSetupIntent(
+                        setupIntentParams,
+                        with: authenticationContext,
+                        completion: paymentHandlerCompletion
+                    )
                 }
-                paymentHandler.confirmSetupIntent(
-                    setupIntentParams,
-                    with: authenticationContext,
-                    completion: paymentHandlerCompletion
-                )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
-                let deferredContext = DeferredIntentContext(configuration: configuration,
-                                                            intentConfig: intentConfig,
-                                                            paymentOption: paymentOption,
-                                                            authenticationContext: authenticationContext,
-                                                            paymentHandler: paymentHandler,
-                                                            completion: completion)
-                handleDeferredIntentConfirmation(deferredIntentContext: deferredContext,
-                                                 paymentMethod: nil,
-                                                 paymentMethodParams: confirmParams.paymentMethodParams,
-                                                 shouldSavePaymentMethod: confirmParams.saveForFutureUseCheckboxState == .selected)
+                switch newPaymentMethod {
+                    
+                case .confirmParams(confirmParams: let confirmParams):
+                    let deferredContext = DeferredIntentContext(configuration: configuration,
+                                                                intentConfig: intentConfig,
+                                                                paymentOption: paymentOption,
+                                                                authenticationContext: authenticationContext,
+                                                                paymentHandler: paymentHandler,
+                                                                completion: completion)
+                    handleDeferredIntentConfirmation(deferredIntentContext: deferredContext,
+                                                     paymentMethod: nil,
+                                                     paymentMethodParams: confirmParams.paymentMethodParams,
+                                                     shouldSavePaymentMethod: confirmParams.saveForFutureUseCheckboxState == .selected)
+                case .paymentMethod:
+                    fatalError("Confirming a deferred intent should never occur with an existing payment method")
+                }
             }
 
         // MARK: - Saved Payment Method

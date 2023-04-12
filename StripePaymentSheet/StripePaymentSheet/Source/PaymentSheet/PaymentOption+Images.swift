@@ -23,8 +23,13 @@ extension PaymentOption {
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod):
             return paymentMethod.makeIcon()
-        case .new(let confirmParams):
-            return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
+        case .new(let newPaymentMethod):
+            switch newPaymentMethod {
+            case .confirmParams(let confirmParams):
+                return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
+            case .paymentMethod(paymentMethod: let paymentMethod):
+                return paymentMethod.makeIcon()
+            }
         case .link:
             return Image.pm_type_link.makeImage()
         }
@@ -37,8 +42,13 @@ extension PaymentOption {
             return makeIcon(for: view.traitCollection, updateImageHandler: nil)
         case .saved(let paymentMethod):
             return paymentMethod.makeCarouselImage(for: view)
-        case .new(let confirmParams):
-            return confirmParams.paymentMethodParams.makeCarouselImage(for: view)
+        case .new(let newPaymentMethod):
+            switch newPaymentMethod {
+            case .confirmParams(let confirmParams):
+                return confirmParams.paymentMethodParams.makeCarouselImage(for: view)
+            case .paymentMethod(paymentMethod: let paymentMethod):
+                return paymentMethod.makeCarouselImage(for: view)
+            }
         case .link:
             return Image.link_carousel_logo.makeImage(template: true)
         }

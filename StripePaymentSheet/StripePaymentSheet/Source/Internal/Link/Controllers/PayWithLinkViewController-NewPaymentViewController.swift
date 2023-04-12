@@ -193,7 +193,7 @@ extension PayWithLinkViewController {
             }
 
             guard let newPaymentOption = addPaymentMethodVC.paymentOption,
-                  case .new(let confirmParams) = newPaymentOption else {
+                  case .new(let newPaymentMethod) = newPaymentOption else {
                 assertionFailure()
                 return
             }
@@ -201,6 +201,10 @@ extension PayWithLinkViewController {
             feedbackGenerator.prepare()
             confirmButton.update(state: .processing)
 
+            guard case .confirmParams(confirmParams: let confirmParams) = newPaymentMethod else {
+                fatalError("Must confirm Link with confirm params")
+            }
+            
             linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
                 guard let self = self else {
                     return

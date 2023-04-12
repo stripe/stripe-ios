@@ -81,7 +81,7 @@ final class LinkEnabledPaymentMethodElement: Element {
                 )
             )
         case .continueWithoutLink:
-            return .new(confirmParams: params)
+            return .new(newPaymentMethod: .confirmParams(confirmParams: params))
         case .none:
             return nil
         }
