@@ -91,7 +91,8 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
 extension XCTestCase {
     func fillCardData(_ app: XCUIApplication,
                       container: XCUIElement? = nil,
-                      cardNumber: String? = nil) throws {
+                      cardNumber: String? = nil,
+                      postalEnabled: Bool = true) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
@@ -99,8 +100,10 @@ extension XCTestCase {
         app.typeText(cardNumber ?? "4242424242424242")
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
-        app.typeText("12345") // Postal
+        if postalEnabled {
+            app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+            app.typeText("12345") // Postal
+        }
     }
 
     func waitToDisappear(_ target: Any?) {
