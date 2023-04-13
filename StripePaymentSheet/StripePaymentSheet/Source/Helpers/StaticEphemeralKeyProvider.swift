@@ -10,8 +10,8 @@ import Foundation
 
 @_spi(PrivateBetaSavedPaymentMethodsSheet) public extension _stpspmsbeta_STPCustomerContext {
     /// Initializes a new `STPCustomerContext` with the specified key provider.
-    /// This is not recommended, use initWithKeyProvider and an STPCustomerEphemeralKeyProvider instead.
-    /// The key will expire after 60 minutes.
+    /// This is not recommended, as the key will expire after 60 minutes.
+    /// Use initWithKeyProvider and an STPCustomerEphemeralKeyProvider instead.
     /// - Parameter keyProvider:   The key provider the customer context will use.
     /// - Returns: the newly-instantiated customer context.
     convenience init(
