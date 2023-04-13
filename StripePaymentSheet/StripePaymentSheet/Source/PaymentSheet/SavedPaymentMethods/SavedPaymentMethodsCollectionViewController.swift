@@ -355,8 +355,6 @@ extension SavedPaymentMethodsCollectionViewController: UICollectionViewDataSourc
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
-        // For wallet mode, I don't think we need to be setting the default --
-        // we can call the delegate, and just return the payment method instead
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }
