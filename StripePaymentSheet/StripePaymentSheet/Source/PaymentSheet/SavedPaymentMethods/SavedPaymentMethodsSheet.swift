@@ -14,7 +14,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@frozen public enum SavedPaymentMethodsSheetResult {
+@frozen @_spi(PrivateBetaSavedPaymentMethodsSheet) public enum SavedPaymentMethodsSheetResult {
     /// The customer completed the payment or setup
     /// - Note: The payment may still be processing at this point; don't assume money has successfully moved.
     ///
