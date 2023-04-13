@@ -172,14 +172,16 @@ extension SavedPaymentMethodsSheet: SavedPaymentMethodsViewControllerDelegate {
         }
     }
 
-    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController) {
+    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
         savedPaymentMethodsViewController.dismiss(animated: true) {
+            _completion()
             self.completion?()
         }
     }
 
-    func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController) {
+    func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
         savedPaymentMethodsViewController.dismiss(animated: true) {
+            _completion()
             self.completion?()
         }
     }

@@ -19,15 +19,16 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     static let defaultSavedPaymentMethodEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
     static var paymentSheetPlaygroundSettings: SavedPaymentMethodSheetPlaygroundSettings?
 
-    // Configuration
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
-    @IBOutlet weak var loadButton: UIButton!
-    @IBOutlet weak var headerTextForSelectionScreenTextField: UITextField!
 
     @IBOutlet weak var pmModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
-    @IBOutlet weak var selectPaymentMethodImage: UIImageView!
+    @IBOutlet weak var headerTextForSelectionScreenTextField: UITextField!
+
+    @IBOutlet weak var loadButton: UIButton!
+
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
+    @IBOutlet weak var selectPaymentMethodImage: UIImageView!
 
     var savedPaymentMethodsSheet: SavedPaymentMethodsSheet?
     var paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection?
@@ -40,12 +41,6 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     enum PaymentMethodMode {
         case setupIntent
         case createAndAttach
-    }
-
-    enum ShippingMode {
-        case on
-        case onWithDefaults
-        case off
     }
 
     var customerMode: CustomerMode {
@@ -224,10 +219,25 @@ extension SavedPaymentMethodSheetTestPlayground: SavedPaymentMethodsSheetDelegat
     func didFinish(with paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection?) {
         self.paymentOptionSelection = paymentOptionSelection
         self.updateButtons()
+        let alertController = self.makeAlertController()
+        if let paymentOptionSelection = paymentOptionSelection {
+            alertController.message = "Finished with: \(paymentOptionSelection.displayData().label)"
+        } else {
+            alertController.message = "Finished, payment method unset"
+        }
+        self.present(alertController, animated: true) {
+            self.load()
+        }
+
     }
 
     func didCancel() {
         self.updateButtons()
+        let alertController = self.makeAlertController()
+        alertController.message = "Canceled"
+        self.present(alertController, animated: true) {
+            self.load()
+        }
     }
 
     func didFail(with error: SavedPaymentMethodsSheetError) {

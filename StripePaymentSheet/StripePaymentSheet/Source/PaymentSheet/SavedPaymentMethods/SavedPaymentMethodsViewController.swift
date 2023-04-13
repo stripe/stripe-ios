@@ -14,8 +14,8 @@ protocol SavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController,
                                                         with paymentOption: PaymentOption,
                                                         completion: @escaping(SavedPaymentMethodsSheetResult) -> Void)
-    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController)
-    func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController)
+    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, completion: @escaping () -> Void)
+    func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, completion: @escaping () -> Void)
 }
 
 @objc(STP_Internal_SavedPaymentMethodsViewController)
@@ -324,8 +324,9 @@ class SavedPaymentMethodsViewController: UIViewController {
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
                         self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
                     } onSuccess: {
-                        self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
-                        self.delegate?.savedPaymentMethodsViewControllerDidFinish(self)
+                        self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                            self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                        }
                     }
 
                 case .saved(let paymentMethod):
@@ -333,8 +334,9 @@ class SavedPaymentMethodsViewController: UIViewController {
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
                         self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
                     } onSuccess: {
-                        self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
-                        self.delegate?.savedPaymentMethodsViewControllerDidFinish(self)
+                        self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                            self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                        }
                     }
                 default:
                     assertionFailure("Selected payment method was something other than a saved payment method or apple pay")
@@ -375,8 +377,9 @@ class SavedPaymentMethodsViewController: UIViewController {
                 } onSuccess: {
                     self.processingInFlight = false
                     self.actionButton.update(state: .succeeded, animated: true) {
-                        self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
-                        self.delegate?.savedPaymentMethodsViewControllerDidFinish(self)
+                        self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                            self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                        }
                     }
                 }
             }
@@ -415,8 +418,9 @@ class SavedPaymentMethodsViewController: UIViewController {
                     } onSuccess: {
                         self.processingInFlight = false
                         self.actionButton.update(state: .succeeded, animated: true) {
-                            self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
-                            self.delegate?.savedPaymentMethodsViewControllerDidFinish(self)
+                            self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                                self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                            }
                         }
                     }
                 }
@@ -483,11 +487,13 @@ class SavedPaymentMethodsViewController: UIViewController {
     private func handleDismissSheet() {
         if savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod != nil &&
             savedPaymentOptionsViewController.selectedPaymentOption == nil {
-            self.savedPaymentMethodsSheetDelegate?.didFinish(with: nil)
-            delegate?.savedPaymentMethodsViewControllerDidFinish(self)
+            delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                self.savedPaymentMethodsSheetDelegate?.didFinish(with: nil)
+            }
         } else {
-            self.savedPaymentMethodsSheetDelegate?.didCancel()
-            delegate?.savedPaymentMethodsViewControllerDidCancel(self)
+            delegate?.savedPaymentMethodsViewControllerDidCancel(self) {
+                self.savedPaymentMethodsSheetDelegate?.didCancel()
+            }
         }
     }
 
