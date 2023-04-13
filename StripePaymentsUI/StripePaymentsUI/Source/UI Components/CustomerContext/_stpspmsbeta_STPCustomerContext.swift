@@ -409,7 +409,7 @@ import Foundation
     @objc public func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?, completion: @escaping(Error?) -> Void
     ) {
         guard let paymentOption = paymentOption else {
-            // TODO: CLEAR OUT PAYENT METHOD
+            self.saveLastSelectedPaymentMethodID(forCustomer: nil, completion: completion)
             return
         }
         let encoder = JSONEncoder()

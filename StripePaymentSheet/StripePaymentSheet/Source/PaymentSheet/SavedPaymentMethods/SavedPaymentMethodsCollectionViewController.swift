@@ -222,7 +222,9 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
                 }
                 if let selectedSavedPaymentOption = paymentMethodOption {
                     self.updateUI(selectedSavedPaymentOption: selectedSavedPaymentOption)
-                    self.originalSelectedSavedPaymentMethod = selectedSavedPaymentOption
+                    if self.selectedIndexPath != nil {
+                        self.originalSelectedSavedPaymentMethod = selectedSavedPaymentOption
+                    }
                 } else {
                     self.updateUI(selectedSavedPaymentOption: nil)
                 }
@@ -233,32 +235,34 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     private func updateUI(selectedSavedPaymentOption: PersistablePaymentMethodOption?) {
+        // Move default to front
+        var savedPaymentMethods = self.savedPaymentMethods
+        if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
+            $0.stripeId == selectedSavedPaymentOption?.value
+        }) {
+            let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
+            savedPaymentMethods.insert(defaultPM, at: 0)
+        }
+
+        // Transform saved PaymentMethods into ViewModels
+        let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
+            return Selection.saved(paymentMethod: paymentMethod)
+        }
+
+        self.viewModels =
+        [.add]
+        + (self.configuration.showApplePay ? [.applePay] : [])
+        + savedPMViewModels
+
+        if self.configuration.autoSelectDefaultBehavior != .none {
+            // Select default
+            self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
+            ?? (self.configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
+        }
+
+        // Ensure that self.seelctedViewModelIndex is set before calling DispatchQueue.main.async
+        // so that callers have access to the selected payment method
         DispatchQueue.main.async {
-            // Move default to front
-            var savedPaymentMethods = self.savedPaymentMethods
-            if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-                $0.stripeId == selectedSavedPaymentOption?.value
-            }) {
-                let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
-                savedPaymentMethods.insert(defaultPM, at: 0)
-            }
-
-            // Transform saved PaymentMethods into ViewModels
-            let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
-                return Selection.saved(paymentMethod: paymentMethod)
-            }
-
-            self.viewModels =
-            [.add]
-            + (self.configuration.showApplePay ? [.applePay] : [])
-            + savedPMViewModels
-
-            if self.configuration.autoSelectDefaultBehavior != .none {
-                // Select default
-                self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
-                ?? (self.configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
-            }
-
             self.collectionView.reloadData()
             self.collectionView.selectItem(at: self.selectedIndexPath, animated: false, scrollPosition: [])
             self.collectionView.scrollRectToVisible(CGRect.zero, animated: false)
