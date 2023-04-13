@@ -64,7 +64,7 @@ class STPAPIClientTest: XCTestCase {
     func testEphemeralKeyOverwritesHeader() {
         let sut = STPAPIClient(publishableKey: "pk_foo")
         let ephemeralKey = STPFixtures.ephemeralKey()
-        let additionalHeaders = sut.authorizationHeader(using: ephemeralKey.secret)
+        let additionalHeaders = sut.authorizationHeader(using: ephemeralKey)
         let authHeader = sut.configuredRequest(
             for: URL(string: "https://www.stripe.com")!,
             additionalHeaders: additionalHeaders

@@ -45,7 +45,7 @@ extension STPAPIClient {
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey.secret),
+            additionalHeaders: authorizationHeader(usingEphemeralKey: ephemeralKey),
             parameters: [
                 "customer": customerID
             ]
@@ -78,7 +78,7 @@ extension STPAPIClient {
         using ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
-        let header = authorizationHeader(using: ephemeralKey.secret)
+        let header = authorizationHeader(usingEphemeralKey: ephemeralKey)
         let params: [String: Any] = [
             "customer": ephemeralKey.customerID ?? "",
             "type": "card",
