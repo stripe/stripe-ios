@@ -33,7 +33,7 @@ import Foundation
         super.init()
     }
 
-    @_spi(STP) public var allResponseFields: [AnyHashable: Any] = [:]
+    @_spi(STP) public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     @_spi(STP) public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {

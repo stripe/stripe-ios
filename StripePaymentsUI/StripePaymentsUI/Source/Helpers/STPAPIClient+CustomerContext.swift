@@ -18,7 +18,11 @@ extension STPAPIClient {
         using ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPCustomerCompletionBlock
     ) {
-        let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
+        guard let customerID = ephemeralKey.customerID else {
+            completion(nil, NSError.stp_ephemeralKeyDecodingError())
+            return
+        }
+        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
         APIRequest<STPCustomer>.post(
             with: self,
             endpoint: endpoint,
@@ -78,9 +82,13 @@ extension STPAPIClient {
         using ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
+        guard let customerID = ephemeralKey.customerID else {
+            completion(nil, NSError.stp_ephemeralKeyDecodingError())
+            return
+        }
         let header = authorizationHeader(usingEphemeralKey: ephemeralKey)
         let params: [String: Any] = [
-            "customer": ephemeralKey.customerID ?? "",
+            "customer": customerID,
             "type": "card",
         ]
         APIRequest<STPPaymentMethodListDeserializer>.getWith(
@@ -103,7 +111,11 @@ extension STPAPIClient {
         using ephemeralKey: _stpspmsbeta_STPEphemeralKey,
         completion: @escaping STPCustomerCompletionBlock
     ) {
-        let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
+        guard let customerID = ephemeralKey.customerID else {
+            completion(nil, NSError.stp_ephemeralKeyDecodingError())
+            return
+        }
+        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
         APIRequest<STPCustomer>.getWith(
             self,
             endpoint: endpoint,

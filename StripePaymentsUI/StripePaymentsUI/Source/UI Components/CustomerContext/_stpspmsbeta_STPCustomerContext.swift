@@ -397,12 +397,16 @@ import Foundation
                 })
                 return
             }
+            guard let customerID = ephemeralKey.customerID else {
+                completion(nil, NSError.stp_ephemeralKeyDecodingError())
+                return
+            }
 
             let customerToDefaultPaymentMethodID =
                 (UserDefaults.standard.dictionary(forKey: kLastSelectedPaymentMethodDefaultsKey))
                 as? [String: String] ?? [:]
             stpDispatchToMainThreadIfNecessary({
-                completion(customerToDefaultPaymentMethodID[ephemeralKey.customerID ?? ""], nil)
+                completion(customerToDefaultPaymentMethodID[customerID], nil)
             })
         })
     }
