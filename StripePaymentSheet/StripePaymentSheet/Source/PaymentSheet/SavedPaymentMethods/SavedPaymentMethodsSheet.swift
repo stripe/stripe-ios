@@ -14,19 +14,9 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@frozen public enum SavedPaymentMethodsSheetResult {
-    /// The customer completed the payment or setup
-    /// - Note: The payment may still be processing at this point; don't assume money has successfully moved.
-    ///
-    /// Your app should transition to a generic receipt view (e.g. a screen that displays "Your order is confirmed!"), and
-    /// fulfill the order (e.g. ship the product to the customer) after receiving a successful payment event from Stripe -
-    /// see https://stripe.com/docs/payments/handling-payment-events
+enum SavedPaymentMethodsSheetResult {
     case completed(NSObject?)
-
     case canceled
-
-    /// The attempt failed.
-    /// - Parameter error: The error encountered by the customer. You can display its `localizedDescription` to the customer.
     case failed(error: Error)
 }
 
@@ -64,9 +54,7 @@ import UIKit
             }
         )
 
-        if #available(iOS 13.0, *) {
-            configuration.style.configure(vc)
-        }
+        configuration.style.configure(vc)
         return vc
     }()
 
