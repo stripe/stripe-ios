@@ -54,9 +54,7 @@ enum SavedPaymentMethodsSheetResult {
             }
         )
 
-        if #available(iOS 13.0, *) {
-            configuration.style.configure(vc)
-        }
+        configuration.style.configure(vc)
         return vc
     }()
 

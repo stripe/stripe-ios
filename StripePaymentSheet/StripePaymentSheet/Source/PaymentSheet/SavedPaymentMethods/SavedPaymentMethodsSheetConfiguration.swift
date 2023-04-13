@@ -18,8 +18,7 @@ extension SavedPaymentMethodsSheet {
         /// The color styling to use for PaymentSheet UI
         /// Default value is SheetStyle.automatic
         /// @see SheetStyle
-        @available(iOS 13.0, *)
-        public var style: PaymentSheet.UserInterfaceStyle {  // stored properties can't be marked @available which is why this uses the styleRawValue private var
+        public var style: PaymentSheet.UserInterfaceStyle {
             get {
                 return PaymentSheet.UserInterfaceStyle(rawValue: styleRawValue)!
             }
