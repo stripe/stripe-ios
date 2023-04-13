@@ -9,9 +9,10 @@ import StripePayments
 
 @_spi(PrivateBetaSavedPaymentMethodsSheet) public enum SavedPaymentMethodsSheetError: Error {
 
+    /// Error while fetching saved payment methods attached to a customer
     case errorFetchingSavedPaymentMethods(Error)
 
-    /// setupIntent is invalid
+    /// When calling the setupIntentHandler, the completion block passed back an invalid setup Intent client secret.
     case setupIntentClientSecretInvalid
 
     /// Unable to fetch setup intent using client secret

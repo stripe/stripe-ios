@@ -127,16 +127,14 @@ enum SavedPaymentMethodsSheetResult {
 }
 
 extension SavedPaymentMethodsSheet {
-    func loadPaymentMethods(completion: @escaping (Result<[STPPaymentMethod], SavedPaymentMethodsSheetError>) -> Void) {
+    func loadPaymentMethods(completion: @escaping (Result<[STPPaymentMethod], Error>) -> Void) {
         configuration.customerContext.listPaymentMethodsForCustomer {
             paymentMethods, error in
             guard let paymentMethods = paymentMethods, error == nil else {
-                // TODO: Pass errors from the customerContext
-                let error = PaymentSheetError.unknown(debugDescription: "Failed to retrieve PaymentMethods for the customer")
-//                let error = error ?? PaymentSheetError.unknown(
-//                    debugDescription: "Failed to retrieve PaymentMethods for the customer"
-//                )
-                completion(.failure(.errorFetchingSavedPaymentMethods(error)))
+                let error = error ?? PaymentSheetError.unknown(
+                    debugDescription: "Failed to retrieve PaymentMethods for the customer"
+                )
+                completion(.failure(error))
                 return
             }
             let filteredPaymentMethods = paymentMethods.filter { $0.type == .card }
