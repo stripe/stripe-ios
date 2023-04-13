@@ -78,7 +78,7 @@ class KlarnaHelperTest: XCTestCase {
 
     func testCanBuyNow_shouldReturnTrue() {
         // https://site-admin.stripe.com/docs/payments/klarna#payment-options
-        let canBuyNow = ["de_AT", "nl_BE", "de_DE", "it_IT", "nl_NL", "es_ES", "sv_SE", "en_CA", "en_AU", "pl_PL", "es_PT", "de_CH"]
+        let canBuyNow = ["de_AT", "nl_BE", "de_DE", "it_IT", "nl_NL", "es_ES", "sv_SE", "en_CA", "en_AU", "pl_PL", "es_PT", "de_CH", "fr_CA"]
 
         for country in canBuyNow {
             XCTAssertTrue(KlarnaHelper.canBuyNow(locale: Locale(identifier: country)))
