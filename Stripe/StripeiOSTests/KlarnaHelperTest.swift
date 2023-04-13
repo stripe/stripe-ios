@@ -17,7 +17,7 @@ import XCTest
 class KlarnaHelperTest: XCTestCase {
 
     func testAvailableCountries_eur() {
-        let expected = ["AT", "FI", "DE", "NL", "BE", "ES", "IT", "FR"]
+        let expected = ["AT", "FI", "DE", "NL", "BE", "ES", "IT", "FR", "GR", "IE", "PT"]
         XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "eur"))
     }
 
@@ -46,13 +46,39 @@ class KlarnaHelperTest: XCTestCase {
         XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "usd"))
     }
 
-    func testAvailableCountries_aus() {
-        XCTAssertTrue(KlarnaHelper.availableCountries(currency: "aus").isEmpty)
+    func testAvailableCountries_aud() {
+        let expected = ["AU"]
+        XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "aud"))
+    }
+
+    func testAvailableCountries_cad() {
+        let expected = ["CA"]
+        XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "cad"))
+    }
+
+    func testAvailableCountries_czk() {
+        let expected = ["CZ"]
+        XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "czk"))
+    }
+
+    func testAvailableCountries_nzd() {
+        let expected = ["NZ"]
+        XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "nzd"))
+    }
+
+    func testAvailableCountries_pln() {
+        let expected = ["PL"]
+        XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "pln"))
+    }
+
+    func testAvailableCountries_chf() {
+        let expected = ["CH"]
+        XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "chf"))
     }
 
     func testCanBuyNow_shouldReturnTrue() {
         // https://site-admin.stripe.com/docs/payments/klarna#payment-options
-        let canBuyNow = ["de_AT", "nl_BE", "de_DE", "it_IT", "nl_NL", "es_ES", "sv_SE"]
+        let canBuyNow = ["de_AT", "nl_BE", "de_DE", "it_IT", "nl_NL", "es_ES", "sv_SE", "en_CA", "en_AU", "pl_PL", "es_PT", "de_CH"]
 
         for country in canBuyNow {
             XCTAssertTrue(KlarnaHelper.canBuyNow(locale: Locale(identifier: country)))

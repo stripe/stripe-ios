@@ -27,7 +27,7 @@ struct KlarnaHelper {
             "czk": ["CZ"],
             "nzd": ["NZ"],
             "pln": ["PL"],
-            "chf": ["CH"]
+            "chf": ["CH"],
         ]
         return currencyToCountry[currency.lowercased()] ?? []
     }
