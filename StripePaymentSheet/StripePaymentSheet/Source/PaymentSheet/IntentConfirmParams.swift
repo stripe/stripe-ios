@@ -12,7 +12,7 @@ import UIKit
 @_spi(STP) import StripePaymentsUI
 
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
-/// - Note: Assumes you're confirming with a new payment method
+/// - Note: Assumes you're confirming with a new payment method, unless a payment method ID is provided
 class IntentConfirmParams {
     /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
     enum SaveForFutureUseCheckboxState {
@@ -74,10 +74,17 @@ class IntentConfirmParams {
 
     func makeParams(
         paymentIntentClientSecret: String,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentSheet.Configuration,
+        paymentMethodID: String?
     ) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
-        params.paymentMethodParams = paymentMethodParams
+        // If a payment method ID was provided use that, otherwise use the payment method params
+        if let paymentMethodID = paymentMethodID {
+            params.paymentMethodId = paymentMethodID
+        } else {
+            params.paymentMethodParams = paymentMethodParams
+        }
+
         let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
             saveForFutureUseCheckboxState == .selected,
@@ -89,9 +96,14 @@ class IntentConfirmParams {
         return params
     }
 
-    func makeParams(setupIntentClientSecret: String) -> STPSetupIntentConfirmParams {
+    func makeParams(setupIntentClientSecret: String, paymentMethodID: String?) -> STPSetupIntentConfirmParams {
         let params = STPSetupIntentConfirmParams(clientSecret: setupIntentClientSecret)
-        params.paymentMethodParams = paymentMethodParams
+        // If a payment method ID was provided use that, otherwise use the payment method params
+        if let paymentMethodID = paymentMethodID {
+            params.paymentMethodID = paymentMethodID
+        } else {
+            params.paymentMethodParams = paymentMethodParams
+        }
         return params
     }
 
